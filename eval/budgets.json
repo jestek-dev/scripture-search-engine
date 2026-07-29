@@ -1,0 +1,47 @@
+{
+  "$comment": [
+    "Reviewed thresholds for the admission gauntlet. These are DATA, not code:",
+    "changing one changes what the system will accept, so a change here is a",
+    "reviewed PR like any other. Values marked null are unset until Phase 1",
+    "records real baselines on real data — a guessed threshold that never",
+    "fires is worse than an absent one, because it reads as protection."
+  ],
+  "size": {
+    "totalArtifactBytes": 167772160,
+    "$comment_total": "160 MiB. Base scripture corpus is ~122 MiB; Layers A+B are budgeted ~30 MiB with headroom.",
+    "perTableBytes": {
+      "concepts": 8388608,
+      "concept_lexicon": 4194304,
+      "concept_anchors": 4194304,
+      "passage_terms": 20971520,
+      "co_citations": 12582912,
+      "cross_references": 12582912
+    }
+  },
+  "latency": {
+    "$comment": "p95 over the probe set on the CI runner. Mobile numbers are promoted to gates once a consumer measures on target hardware.",
+    "p95Ms": 50
+  },
+  "collision": {
+    "$comment": "G4. Two concepts whose lexicons overlap beyond these thresholds are near-duplicates and must be merged or differentiated.",
+    "maxSharedPhraseRatio": 0.34,
+    "maxSharedTokenRatio": 0.6,
+    "minLexiconEntries": 2
+  },
+  "distinctiveness": {
+    "$comment": "G5. Terms below the PMI floor never enter a passage profile, so generic vocabulary cannot accumulate into evidence.",
+    "minPmi": 2.0,
+    "maxTermsPerPericope": 40
+  },
+  "noise": {
+    "$comment": "G8. Measured against the previous artifact. Exceeding any of these fails the build and names the offending probes.",
+    "maxTop10ChurnRatio": 0.4,
+    "minMeanDistinctiveness": null,
+    "maxWeakReasonShare": 0.5
+  },
+  "saturation": {
+    "$comment": "G9. A work that moves an already-covered pericope's profile less than minProfileDelta is recorded as saturated and skipped.",
+    "worksPerPericopeBeforeCheck": 5,
+    "minProfileDelta": 0.02
+  }
+}

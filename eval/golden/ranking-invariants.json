@@ -1,0 +1,84 @@
+{
+  "id": "ranking-invariants",
+  "status": "active",
+  "note": [
+    "Corpus-free fixtures over the pure ranker. These encode the ranking rules",
+    "from the 2026-07-20 plan as executable expectations, so they run in CI",
+    "from Phase 0 — before any corpus exists — and keep running unchanged as",
+    "the corpus grows. Each case is (candidates with evidence) -> expected",
+    "target order plus the reason family each result must actually carry."
+  ],
+  "cases": [
+    {
+      "id": "exact-phrase-outranks-accumulated-weak-evidence",
+      "rule": "Direct references and exact phrases dominate.",
+      "candidates": [
+        {
+          "targetId": "psalm-46-1",
+          "groupId": "psalm-46",
+          "evidence": [{ "family": "exact_phrase", "label": "Exact phrase", "strength": 1 }]
+        },
+        {
+          "targetId": "isaiah-25-4",
+          "groupId": "isaiah-25",
+          "evidence": [
+            { "family": "concept_lexicon", "label": "Theme: refuge", "strength": 1 },
+            { "family": "passage_terms", "label": "Preached vocabulary", "strength": 1 },
+            { "family": "cross_reference", "label": "Cross-reference", "strength": 1 },
+            { "family": "co_citation", "label": "Cited together", "strength": 1 },
+            { "family": "token_overlap", "label": "Shared words", "strength": 1 },
+            { "family": "proximity", "label": "Words near each other", "strength": 1 }
+          ]
+        }
+      ],
+      "expectedOrder": ["psalm-46-1", "isaiah-25-4"],
+      "requiredReasons": { "psalm-46-1": "exact_phrase" }
+    },
+    {
+      "id": "anchors-outrank-lexicon-only-matches",
+      "rule": "Curated anchors are authoritative; lexicon matches are a weak prior.",
+      "candidates": [
+        {
+          "targetId": "james-1-22",
+          "groupId": "james-1",
+          "evidence": [
+            { "family": "concept_anchor", "label": "Theme: hearing and doing", "strength": 1 }
+          ]
+        },
+        {
+          "targetId": "james-2-14",
+          "groupId": "james-2",
+          "evidence": [
+            { "family": "concept_lexicon", "label": "Theme: faith and works", "strength": 1 },
+            { "family": "passage_terms", "label": "Preached vocabulary", "strength": 1 }
+          ]
+        }
+      ],
+      "expectedOrder": ["james-1-22", "james-2-14"],
+      "requiredReasons": { "james-1-22": "concept_anchor" }
+    },
+    {
+      "id": "correlated-sources-do-not-stack",
+      "rule": "Do not count the same edge twice as independent evidence.",
+      "candidates": [
+        {
+          "targetId": "correlated",
+          "groupId": "g1",
+          "evidence": [
+            { "family": "cross_reference", "label": "Cross-reference", "strength": 1 },
+            { "family": "co_citation", "label": "Cited together", "strength": 1 }
+          ]
+        },
+        {
+          "targetId": "single-lexicon",
+          "groupId": "g2",
+          "evidence": [
+            { "family": "concept_lexicon", "label": "Theme match", "strength": 1 }
+          ]
+        }
+      ],
+      "expectedOrder": ["single-lexicon", "correlated"],
+      "requiredReasons": { "single-lexicon": "concept_lexicon" }
+    }
+  ]
+}

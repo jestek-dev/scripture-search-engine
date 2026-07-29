@@ -1,0 +1,165 @@
+/**
+ * Source manifests — the foundation of guardrail G1.
+ *
+ * Generalized from Maskil's `content-pipeline/manifests/*.json`, with two
+ * additions this engine needs: `derivedFrom`, which makes correlated sources
+ * declarable (G7), and `rightsClass`, which makes the "posted publicly is not
+ * a license" rule enforceable rather than remembered.
+ *
+ * Rule: every row in the shipped artifact traces to a manifest entry. A row
+ * that cannot is a BUILD ERROR, not a warning — the build fails closed, so no
+ * one has to notice a missing attribution to prevent shipping one.
+ */
+
+export type RightsClass =
+  /** Public domain by age or dedication; free to ship, attribution courteous. */
+  | 'public_domain'
+  /** Creative Commons Attribution; attribution REQUIRED in shipped output. */
+  | 'cc_by'
+  /** CC BY-SA; attribution + share-alike obligations on derived distribution. */
+  | 'cc_by_sa'
+  /** Owned by LH outright (own sermon manuscripts). */
+  | 'owned'
+  /** Authored by us for this dataset (editorial ontology entries). */
+  | 'editorial'
+  /**
+   * Text is public domain but this specific digitization carries a claim
+   * (CCEL's non-commercial terms, some transcription projects). Admissible
+   * only for tiers that honor the claim, and never silently.
+   */
+  | 'pd_text_claimed_transcription';
+
+export type DistributionTier =
+  /** Shippable in a public app build. The default; anything else is opt-in. */
+  | 'public_distribution'
+  /** Usable locally for evaluation only; can never enter a release artifact. */
+  | 'private_local'
+  /** Synthetic fixtures for tests. */
+  | 'dev_fixture';
+
+export interface SourceManifest {
+  /** Stable id used by every Provenance object that cites this source. */
+  readonly id: string;
+  /** Human-facing attribution string, rendered in result reasons and credits. */
+  readonly label: string;
+  readonly rightsClass: RightsClass;
+  /** Exact license/permission text or URL captured at acquisition time. */
+  readonly licenseRecord: string;
+  /** Authoritative retrieval location. */
+  readonly sourceUrl: string;
+  /** SHA-256 of the exact acquired artifact. */
+  readonly sha256: string;
+  /** Byte length of the acquired artifact, checked alongside the hash. */
+  readonly bytes: number;
+  /** Tier ceiling: a source may not be used above this. */
+  readonly maxTier: DistributionTier;
+  /**
+   * Ids of sources this one substantially derives from. OpenBible's
+   * cross-references draw heavily on TSK; Torrey overlaps Nave. Declaring it
+   * lets G7 place them in one correlation budget instead of counting the same
+   * scholarship twice as independent evidence.
+   */
+  readonly derivedFrom?: readonly string[];
+  /** Free-text note carried into credits (trademark notices, caveats). */
+  readonly attributionNote?: string;
+}
+
+export interface ManifestSet {
+  readonly sources: readonly SourceManifest[];
+}
+
+export class ProvenanceError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ProvenanceError';
+  }
+}
+
+const TIER_RANK: Readonly<Record<DistributionTier, number>> = {
+  dev_fixture: 0,
+  private_local: 1,
+  public_distribution: 2,
+};
+
+/** True when `source` may be used in a build targeting `tier`. */
+export function permitsTier(source: SourceManifest, tier: DistributionTier): boolean {
+  return TIER_RANK[tier] <= TIER_RANK[source.maxTier];
+}
+
+/**
+ * G1: every cited source id must exist, be admissible at the build tier, and
+ * carry a complete rights record. Returns the offending ids rather than
+ * throwing on the first one, so a build failure names everything wrong at once.
+ */
+export function checkProvenance(options: {
+  readonly manifests: ManifestSet;
+  readonly citedSourceIds: readonly string[];
+  readonly tier: DistributionTier;
+}): readonly string[] {
+  const bySourceId = new Map(options.manifests.sources.map((source) => [source.id, source]));
+  const failures: string[] = [];
+
+  for (const id of [...new Set(options.citedSourceIds)].sort()) {
+    const source = bySourceId.get(id);
+    if (!source) {
+      failures.push(`${id}: cited by artifact rows but has no manifest entry`);
+      continue;
+    }
+    if (!source.licenseRecord.trim()) {
+      failures.push(`${id}: manifest has an empty licenseRecord`);
+    }
+    if (source.rightsClass !== 'editorial' && !source.sha256.trim()) {
+      failures.push(`${id}: manifest has no source checksum`);
+    }
+    if (!permitsTier(source, options.tier)) {
+      failures.push(
+        `${id}: rights class '${source.rightsClass}' caps this source at ` +
+          `'${source.maxTier}', but the build targets '${options.tier}'`,
+      );
+    }
+  }
+  return failures;
+}
+
+/**
+ * Correlation groups derived from declared lineage (G7 input). Sources are
+ * grouped transitively: if co-citations derive from TSK and OpenBible derives
+ * from TSK, all three share one budget.
+ */
+export function correlationGroups(manifests: ManifestSet): readonly (readonly string[])[] {
+  const parent = new Map<string, string>();
+  const find = (id: string): string => {
+    let current = id;
+    while (parent.get(current) !== undefined && parent.get(current) !== current) {
+      current = parent.get(current)!;
+    }
+    return current;
+  };
+  const union = (a: string, b: string): void => {
+    const rootA = find(a);
+    const rootB = find(b);
+    if (rootA !== rootB) parent.set(rootA, rootB);
+  };
+
+  for (const source of manifests.sources) {
+    if (parent.get(source.id) === undefined) parent.set(source.id, source.id);
+    for (const ancestor of source.derivedFrom ?? []) {
+      if (parent.get(ancestor) === undefined) parent.set(ancestor, ancestor);
+      union(source.id, ancestor);
+    }
+  }
+
+  const groups = new Map<string, string[]>();
+  for (const source of manifests.sources) {
+    const root = find(source.id);
+    const group = groups.get(root);
+    if (group) group.push(source.id);
+    else groups.set(root, [source.id]);
+  }
+
+  // Sorted output keeps the derived config deterministic across runs.
+  return [...groups.values()]
+    .map((group) => [...group].sort())
+    .filter((group) => group.length > 1)
+    .sort((a, b) => (a[0]! < b[0]! ? -1 : 1));
+}

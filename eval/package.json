@@ -1,0 +1,21 @@
+{
+  "name": "@lh/scripture-eval",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The admission gauntlet: gates every data or weight change and emits the Admission Report.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "gauntlet": "tsx src/gauntlet.ts"
+  },
+  "dependencies": {
+    "@lh/scripture-engine": "*"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}

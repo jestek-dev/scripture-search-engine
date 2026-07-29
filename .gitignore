@@ -1,0 +1,19 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Build artifacts are GitHub Release assets, never Git objects.
+# Only the reviewed descriptor in artifacts/*.json is committed.
+output/
+*.db
+*.db-wal
+*.db-shm
+*.db.building
+*.db.candidate
+
+# Source corpora are fetched by manifest, checksummed, and never committed.
+pipeline/sources/
+pipeline/.cache/
+
+# Gauntlet run output (the committed baseline lives in eval/baselines/)
+eval/.runs/

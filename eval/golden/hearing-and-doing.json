@@ -1,0 +1,30 @@
+{
+  "id": "hearing-and-doing",
+  "query": "hearing and doing",
+  "status": "pending",
+  "pendingUntilPhase": 2,
+  "note": [
+    "FIXTURE #1 — the case that motivated this engine. On the prior system this",
+    "query matched only the literal words and could not deduce that the theme",
+    "means 'hearing the word, then acting on it'.",
+    "",
+    "Status 'pending' means: expected to fail until the Phase 2 concept layer",
+    "lands. The gauntlet reports pending fixtures separately and does NOT fail",
+    "the build on them, so the target is visible from day one without blocking",
+    "Phase 0 and 1 work. When Phase 2 admits the ontology, flip status to",
+    "'active' in the same PR that makes it pass."
+  ],
+  "expectedTop": [
+    { "reference": "James 1:22-25", "requiredReasonFamily": "concept_anchor" },
+    { "reference": "Matthew 7:24-27", "requiredReasonFamily": "concept_anchor" },
+    { "reference": "Luke 6:46-49", "requiredReasonFamily": "concept_anchor" }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": ["Ezekiel 33:31-32", "Romans 2:13", "John 13:17"],
+  "mustNotRank": [
+    {
+      "reference": "Genesis 5:1",
+      "why": "Contains no thematic relation; would indicate raw token noise ranking above concept evidence."
+    }
+  ]
+}

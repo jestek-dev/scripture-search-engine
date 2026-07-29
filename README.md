@@ -1,0 +1,118 @@
+# scripture-search-engine
+
+A deterministic, concept-aware Scripture search engine shared by **Maskil**,
+**LH Worship Setlist**, and **Versed**.
+
+It answers theme queries the way a well-read person would — "hearing and
+doing" should surface James 1:22–25 and Matthew 7:24–27 — using nothing but
+curated data, statistics, and lookups. **No AI runs at query time, ever.**
+AI may assist in *building* the datasets offline; every entry is
+human-admitted, and the runtime is arithmetic over reviewed tables.
+
+## Why it exists
+
+Lexical search finds words. It cannot deduce that "hearing and doing" means
+"hearing the word, then acting on it", so it misses the passages that matter
+most. The fix is not a model at runtime — it is giving each passage a richer
+vocabulary and concept signature at build time, distilled from centuries of
+public-domain preaching and community topical data.
+
+## Architecture
+
+| Layer | What it is | Ships? |
+|---|---|---|
+| **A — Concept ontology** | Curated concepts: modern labels, lexicons, scripture anchors, provenance. Seeded from Nave, Torrey, OpenBible topics. | Yes, ~MBs |
+| **B — Homiletical evidence** | Per-passage distinctive term profiles and co-citation edges, distilled offline from PD sermons and commentaries. | Distillate only — **sermons never ship and are never read at query time** |
+| **C — Runtime** | Intent ladder → candidates → deterministic ranking → typed reasons. Pure TS, zero I/O. | Yes, the published package |
+
+Full rationale: [docs/architecture.md](docs/architecture.md).
+Phased build: [docs/implementation-plan.md](docs/implementation-plan.md).
+
+## The reproducibility contract
+
+```
+(engineVersion, corpusFingerprint, query) → identical ordering, on every platform
+```
+
+CI enforces this on two operating systems. Any change that alters ordering
+must bump `ENGINE_VERSION` in the same commit, or gate G2 fails the PR.
+
+## The admission gauntlet
+
+Every change that can affect results — a new source, a concept pack, a weight
+change — is a PR. CI runs eleven gates and posts one **Admission Report**:
+
+> **ADMIT** · **ADMIT WITH WARNINGS** · **REJECT** (named gate, named rows) ·
+> **NO MEASURABLE EFFECT**
+
+You read a verdict, not a dataset. That last verdict matters as much as the
+others: an addition that changes no fixture outcome and moves no metric is
+weight without value, and merging it is how a corpus bloats past the point of
+diminishing returns.
+
+| Gate | Protects against |
+|---|---|
+| G1 provenance | Unattributed or wrongly-licensed rows (fails closed) |
+| G2 determinism | Ordering that drifts between runs or platforms |
+| G3 golden regression | Lost ordering **or** a right answer for the wrong reason |
+| G4 collision | Near-duplicate concepts diluting each other's anchors |
+| G5 distinctiveness | Generic vocabulary accumulating into false evidence |
+| G6 signal budgets | Any dataset outshouting exact matches — **bounded by construction** |
+| G7 correlation | Counting overlapping sources as independent evidence |
+| G8 noise probes | Precision erosion; the "everything returns everything" failure |
+| G9 saturation | Ingesting redundancy; makes diminishing returns a visible number |
+| G10 size | Artifact growth past what a device can ship |
+| G11 latency | Query-time regressions |
+
+G6 is the deepest: because caps are enforced *inside* the scoring core, the
+worst case of a bad admission is bounded. New data changes **which** candidates
+appear; it can never change **how loud** a signal class is allowed to be.
+
+## Layout
+
+```
+engine/     pure TS runtime — tokenizer, references, budgets, ranking (published)
+pipeline/   build-time only — manifests, importers, alignment, statistics
+ontology/   Layer A concept packs, reviewed like code
+eval/       the gauntlet: gates, golden fixtures, probes, budgets, report
+artifacts/  reviewed release descriptors (the .db itself is a Release asset)
+docs/       architecture + implementation plan
+```
+
+## Development
+
+```bash
+npm ci
+npm run verify      # typecheck + unit tests + gauntlet
+```
+
+Individual steps: `npm run typecheck`, `npm test`, `npm run gauntlet`.
+
+## Status
+
+**Phase 0 — bootstrap.** The pure core is real and tested: shared tokenizer,
+reference parser, signal budgets, deterministic ranker, provenance checker,
+and the gauntlet with G1–G4/G6/G10 implemented. Gates whose inputs do not
+exist yet report `not-applicable` with a reason — an unrun check must never
+look like a passing one.
+
+Golden fixture #1, `hearing-and-doing`, is committed with status `pending`:
+the target is visible from day one and turns green in Phase 2.
+
+## Distribution
+
+Two versioned deliverables, both free to host:
+
+1. `@lh/scripture-engine` — the pure TS package (semver).
+2. `content.db` + reviewed descriptor — a GitHub Release asset.
+
+Consumers pin both and verify the descriptor before opening the database.
+There is no server component; nothing runs anywhere but the user's device.
+
+## Provenance and rights
+
+Every shipped row traces to a manifest entry with a checksum, license record,
+and rights class. Sources whose *digitization* carries a claim (e.g. CCEL's
+non-commercial terms) are capped below public distribution — "the text is
+public domain" is not the same as "this file is free to ship", and G1 makes
+the distinction structural rather than remembered.

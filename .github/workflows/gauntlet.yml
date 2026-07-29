@@ -1,0 +1,52 @@
+name: Admission gauntlet
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same PR; the gauntlet is the slow job here.
+concurrency:
+  group: gauntlet-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify (${{ matrix.os }})
+    # Two operating systems is not redundancy — it is gate G2. Platform string
+    # collation and filesystem ordering are the classic sources of "works on my
+    # machine" ranking drift, and the reproducibility contract promises
+    # identical ordering everywhere.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Admission gauntlet
+        # Writes the Admission Report to the job summary and exits non-zero on
+        # REJECT, so a failed gate blocks the merge rather than being a note
+        # someone has to notice in the log.
+        run: npm run gauntlet
+
+  cross-platform-ordering:
+    name: cross-platform ordering (G2)
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Both platforms produced passing, identical gate results."

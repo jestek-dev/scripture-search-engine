@@ -1,0 +1,26 @@
+{
+  "name": "scripture-search-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic, concept-aware Scripture search shared by Maskil, LH Worship Setlist, and Versed. No runtime AI.",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "engine",
+    "pipeline",
+    "eval"
+  ],
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "gauntlet": "npm run gauntlet --workspace eval",
+    "verify": "npm run typecheck && npm run test && npm run gauntlet"
+  },
+  "devDependencies": {
+    "tsx": "4.23.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}

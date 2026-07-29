@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    // No rootDir/outDir: this package never emits. It typechecks against the
+    // engine's SOURCE (not its build output) so a gate change and an engine
+    // change are always validated against each other.
+    "noEmit": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@lh/scripture-engine": ["../engine/src/index.ts"]
+    }
+  },
+  "include": ["src", "test"]
+}

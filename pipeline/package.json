@@ -1,0 +1,15 @@
+{
+  "name": "@lh/scripture-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Build-time only. Admits sources, aligns passages, computes statistics, and emits the fingerprinted content artifact. Never shipped to a consumer.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}
