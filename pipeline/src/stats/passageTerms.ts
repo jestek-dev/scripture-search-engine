@@ -1,27 +1,41 @@
 /**
- * Layer B statistics — distinctive term profiles per pericope.
+ * Layer B statistics — corroborated term profiles, resolved to the VERSE.
  *
  * This is the answer to "how do sermons help without being read at query
  * time": a work about James 1:22 uses words at frequencies the rest of the
  * corpus does not, and those frequencies are computable once, offline.
  *
- * The measure is pointwise mutual information (PMI) between a term and a
- * pericope, against the background of every other pericope's prose:
+ * Three design rules, each earned by a measured failure:
  *
- *     pmi(t, p) = log2( P(t | p) / P(t) )
+ * 1. PMI, not raw frequency. Raw frequency yields "god", "lord", "man" for
+ *    every passage in the canon. PMI asks whether a word is MORE common here
+ *    than everywhere — guardrail G5 as arithmetic instead of a blocklist.
  *
- * PMI rather than raw frequency because raw frequency yields "god", "lord",
- * "man" for every passage in the canon. PMI asks a better question: is this
- * word MORE common here than it is everywhere? That is what makes "hearers",
- * "doers" and "mirror" surface for James 1 while "god" never does — which is
- * guardrail G5 expressed as arithmetic rather than as a blocklist somebody
- * has to maintain.
+ * 2. Corroboration across independent sources. One author's distinctive
+ *    vocabulary is distinctive OF THAT AUTHOR — the Maclaren-only build
+ *    faithfully surfaced `mellow` and `troth`. Only vocabulary that two or
+ *    more expositors independently reach for is evidence about the passage.
+ *
+ * 3. Agreement is resolved at the VERSE, not at the author's span. Authors
+ *    do not chop Scripture into the same pieces: Maclaren writes one essay
+ *    on Psalm 23:1-6 while Spurgeon writes a note per verse, and requiring
+ *    exact span equality meant two famous expositors "never agreed" about
+ *    Psalm 23 at all. Instead, every span PROJECTS to the verses it covers,
+ *    and a term is admitted for verse v when enough sources covering v used
+ *    it. Nobody has to decide canonical chunk boundaries — the authors' own
+ *    spans carry that information, and verse-level intersection extracts the
+ *    agreement. Deliberate thought-units (a "chunk attached to a thought")
+ *    are the CONCEPT layer's job, curated on purpose with provenance.
+ *
+ * Specificity is preserved rather than flattened: each admitted term records
+ * the narrowest attesting span, so a word from a one-verse note can outscore
+ * the same word inherited from a whole-psalm essay at query time.
  */
 
 import { significantWords, tokenStream } from '@lh/scripture-engine';
 
 export interface ExpositionDocument {
-  /** Pericope key: the passage this document expounds. */
+  /** The author's OWN span — never normalized to anyone else's chunking. */
   readonly startVerseId: number;
   readonly endVerseId: number;
   readonly sourceId: string;
@@ -29,69 +43,78 @@ export interface ExpositionDocument {
   readonly body: string;
 }
 
-export interface PassageTerm {
-  readonly startVerseId: number;
-  readonly endVerseId: number;
+export interface VerseTerm {
+  readonly verseId: number;
   readonly term: string;
+  /** Best (max) section-level PMI among the attesting sections. */
   readonly pmi: number;
-  /** Times the term occurs in this pericope's prose. */
+  /** Combined occurrences across all attesting sections. */
   readonly count: number;
-  /**
-   * Sources that actually used THIS TERM, joined with '+'.
-   *
-   * Previously this recorded the sources of the PERICOPE, which made the
-   * multi-source attestation count meaningless: a term used by one author on
-   * a passage two authors covered looked co-attested when it was not. Getting
-   * this wrong mattered, because co-attestation is the whole mechanism for
-   * telling theology from one writer's habits.
-   */
-  readonly sourceId: string;
-  /** How many distinct sources used this term. */
+  /** Sources that used this term in a section covering this verse, '+'-joined. */
+  readonly sourceIds: string;
   readonly sourceCount: number;
+  /**
+   * Verse-width of the NARROWEST attesting section. 1 means some author said
+   * this while writing about exactly this verse; 6 means the tightest thing
+   * we have is a six-verse essay. Query-time scoring uses this so tight
+   * commentary beats diffuse commentary without discarding the diffuse.
+   */
+  readonly minSpanVerses: number;
+  /** Locator of that narrowest attesting section, for provenance display. */
   readonly locator: string;
 }
 
 export interface TermProfileOptions {
   /** G5: terms below this PMI never enter a profile. */
   readonly minPmi: number;
-  /** G5: hard cap on profile size, so one verbose work cannot dominate. */
-  readonly maxTermsPerPericope: number;
+  /** G5: hard cap per verse, so one verbose author cannot dominate. */
+  readonly maxTermsPerVerse: number;
   /**
-   * A term must occur at least this many times in a pericope to be admitted.
-   * PMI is unstable for singletons: a word appearing once in one short
-   * document can score enormous PMI on no real evidence.
+   * Minimum combined occurrences across attesting sections. PMI is unstable
+   * for singletons: a word appearing once can score enormous PMI on no real
+   * evidence.
    */
   readonly minCount: number;
   /**
-   * Minimum number of distinct sources that must use a term.
-   *
-   * This is the lever that separates theology from idiolect. One author's
-   * distinctive vocabulary is genuinely distinctive OF THAT AUTHOR — PMI is
-   * right to surface `mellow`, `downy` and `kite`, they really are unusual
-   * words in that prose. But they say nothing about the passage. Vocabulary
-   * that TWO independent expositors reach for when handling the same text is
-   * evidence about the text.
-   *
-   * 1 keeps everything (correct when only one source exists). 2+ requires
-   * corroboration and is what makes a multi-author corpus pay.
+   * Minimum distinct sources that must attest a term AT THIS VERSE. This is
+   * the lever that separates theology from idiolect. 1 keeps everything
+   * (correct when only one source exists); 2+ requires corroboration.
    */
   readonly minSources: number;
 }
 
 export interface ProfileResult {
-  readonly terms: readonly PassageTerm[];
+  readonly terms: readonly VerseTerm[];
   readonly documentsProcessed: number;
   readonly termsConsidered: number;
   readonly termsAdmitted: number;
 }
 
+/** Longest span we will project; anything wider is a parse artifact. */
+const MAX_PROJECTION_VERSES = 200;
+
+function spanWidth(startVerseId: number, endVerseId: number): number {
+  // Within one chapter, verse ids are consecutive integers, so width is exact.
+  // Cross-chapter spans (rare; our parsers emit single-chapter sections) fall
+  // back to the id distance, which overstates width and therefore only ever
+  // UNDER-weights — the safe direction for an approximation.
+  return Math.min(MAX_PROJECTION_VERSES, endVerseId - startVerseId + 1);
+}
+
+interface Accumulator {
+  count: number;
+  bestPmi: number;
+  sources: Set<string>;
+  minSpan: number;
+  locator: string;
+}
+
 /**
- * Builds term profiles for a set of exposition documents.
+ * Builds verse-level term profiles from exposition documents.
  *
- * Documents covering the same pericope are MERGED before scoring: two works
- * on Psalm 23 are more evidence about Psalm 23, not two competing profiles.
- * This is also what makes the saturation check meaningful — it can ask
- * whether the second work changed the merged profile at all.
+ * The background distribution for PMI is the whole document set, so a term is
+ * "distinctive" relative to everything these expositors wrote — not relative
+ * to English at large, which we have no corpus for and do not need.
  */
 export function buildTermProfiles(
   documents: readonly ExpositionDocument[],
@@ -101,87 +124,100 @@ export function buildTermProfiles(
     return { terms: [], documentsProcessed: 0, termsConsidered: 0, termsAdmitted: 0 };
   }
 
-  // Merge by pericope key.
-  const byPericope = new Map<
-    string,
-    {
-      startVerseId: number;
-      endVerseId: number;
-      sourceIds: Set<string>;
-      locators: Set<string>;
-      counts: Map<string, number>;
-      /** Per-term source attribution — the fix for the attestation bug. */
-      termSources: Map<string, Set<string>>;
-      total: number;
-    }
-  >();
+  // Pass 1: background counts across every document.
   const backgroundCounts = new Map<string, number>();
   let backgroundTotal = 0;
-
+  const documentTokens: Map<string, number>[] = [];
   for (const document of documents) {
-    const key = `${document.startVerseId}-${document.endVerseId}`;
-    let entry = byPericope.get(key);
-    if (!entry) {
-      entry = {
-        startVerseId: document.startVerseId,
-        endVerseId: document.endVerseId,
-        sourceIds: new Set(),
-        locators: new Set(),
-        counts: new Map(),
-        termSources: new Map(),
-        total: 0,
-      };
-      byPericope.set(key, entry);
-    }
-    entry.sourceIds.add(document.sourceId);
-    entry.locators.add(document.locator);
-
+    const counts = new Map<string, number>();
     for (const { token } of tokenStream(document.body)) {
-      entry.counts.set(token, (entry.counts.get(token) ?? 0) + 1);
-      const sources = entry.termSources.get(token);
-      if (sources) sources.add(document.sourceId);
-      else entry.termSources.set(token, new Set([document.sourceId]));
-      entry.total += 1;
+      counts.set(token, (counts.get(token) ?? 0) + 1);
       backgroundCounts.set(token, (backgroundCounts.get(token) ?? 0) + 1);
       backgroundTotal += 1;
     }
+    documentTokens.push(counts);
+  }
+  if (backgroundTotal === 0) {
+    return { terms: [], documentsProcessed: documents.length, termsConsidered: 0, termsAdmitted: 0 };
   }
 
-  const terms: PassageTerm[] = [];
+  // Pass 2: per-section PMI, projected onto every verse the section covers.
+  const byVerse = new Map<number, Map<string, Accumulator>>();
   let considered = 0;
 
-  // Sorted keys so the output row order is identical on every machine.
-  for (const key of [...byPericope.keys()].sort()) {
-    const entry = byPericope.get(key)!;
-    if (entry.total === 0) continue;
+  documents.forEach((document, index) => {
+    const counts = documentTokens[index]!;
+    let sectionTotal = 0;
+    for (const value of counts.values()) sectionTotal += value;
+    if (sectionTotal === 0) return;
 
-    const scored: PassageTerm[] = [];
-    for (const [term, count] of entry.counts) {
+    const width = spanWidth(document.startVerseId, document.endVerseId);
+
+    for (const [term, count] of counts) {
       considered += 1;
-      if (count < options.minCount) continue;
-      const termSources = entry.termSources.get(term) ?? new Set<string>();
-      if (termSources.size < options.minSources) continue;
-      const pTermGivenPericope = count / entry.total;
+      const pTermGivenSection = count / sectionTotal;
       const pTerm = (backgroundCounts.get(term) ?? 0) / backgroundTotal;
       if (pTerm <= 0) continue;
-      const pmi = Math.log2(pTermGivenPericope / pTerm);
+      const pmi = Math.log2(pTermGivenSection / pTerm);
+      // Cheap pre-filter: a term that cannot clear the floor even at its best
+      // section never needs projecting.
       if (pmi < options.minPmi) continue;
-      scored.push({
-        startVerseId: entry.startVerseId,
-        endVerseId: entry.endVerseId,
+
+      for (
+        let verseId = document.startVerseId;
+        verseId <= document.endVerseId && verseId - document.startVerseId < MAX_PROJECTION_VERSES;
+        verseId += 1
+      ) {
+        let verseTerms = byVerse.get(verseId);
+        if (!verseTerms) {
+          verseTerms = new Map();
+          byVerse.set(verseId, verseTerms);
+        }
+        const existing = verseTerms.get(term);
+        if (existing) {
+          existing.count += count;
+          existing.sources.add(document.sourceId);
+          if (pmi > existing.bestPmi) existing.bestPmi = Number(pmi.toFixed(6));
+          if (width < existing.minSpan) {
+            existing.minSpan = width;
+            existing.locator = document.locator;
+          }
+        } else {
+          verseTerms.set(term, {
+            count,
+            bestPmi: Number(pmi.toFixed(6)),
+            sources: new Set([document.sourceId]),
+            minSpan: width,
+            locator: document.locator,
+          });
+        }
+      }
+    }
+  });
+
+  // Pass 3: admission per verse — corroboration, count floor, cap.
+  const terms: VerseTerm[] = [];
+  for (const verseId of [...byVerse.keys()].sort((a, b) => a - b)) {
+    const verseTerms = byVerse.get(verseId)!;
+    const admitted: VerseTerm[] = [];
+    for (const [term, accumulator] of verseTerms) {
+      if (accumulator.count < options.minCount) continue;
+      if (accumulator.sources.size < options.minSources) continue;
+      admitted.push({
+        verseId,
         term,
-        pmi: Number(pmi.toFixed(6)),
-        count,
-        sourceId: [...termSources].sort().join('+'),
-        sourceCount: termSources.size,
-        locator: [...entry.locators].sort().join('; '),
+        pmi: accumulator.bestPmi,
+        count: accumulator.count,
+        sourceIds: [...accumulator.sources].sort().join('+'),
+        sourceCount: accumulator.sources.size,
+        minSpanVerses: accumulator.minSpan,
+        locator: accumulator.locator,
       });
     }
-
     // Strongest first, then alphabetical: a total order, so the cap always
     // keeps the same terms rather than an arbitrary subset of tied ones.
-    scored.sort((a, b) => (b.pmi !== a.pmi ? b.pmi - a.pmi : a.term < b.term ? -1 : 1));
-    terms.push(...scored.slice(0, options.maxTermsPerPericope));
+    admitted.sort((a, b) => (b.pmi !== a.pmi ? b.pmi - a.pmi : a.term < b.term ? -1 : 1));
+    terms.push(...admitted.slice(0, options.maxTermsPerVerse));
   }
 
   return {
@@ -193,32 +229,26 @@ export function buildTermProfiles(
 }
 
 /**
- * Saturation check (G9).
- *
- * Answers the diminishing-returns question with a number instead of a
- * feeling: given a pericope already covered by K works, does adding this one
- * change its profile? Cosine distance between the before and after term
- * vectors; below `minProfileDelta` the work is recorded as saturated and its
- * prose is not ingested for that pericope.
- *
- * This is what makes "sermon #40 on Psalm 23" visibly worthless rather than
- * silently harmless.
+ * Saturation measure (G9): cosine distance between two profile sets, keyed by
+ * (verse, term). Near zero means the added documents changed nothing — the
+ * vein is mined out.
  */
 export function profileDelta(
-  before: readonly PassageTerm[],
-  after: readonly PassageTerm[],
+  before: readonly VerseTerm[],
+  after: readonly VerseTerm[],
 ): number {
-  const vectorBefore = new Map(before.map((term) => [term.term, term.pmi]));
-  const vectorAfter = new Map(after.map((term) => [term.term, term.pmi]));
+  const key = (term: VerseTerm): string => `${term.verseId}|${term.term}`;
+  const vectorBefore = new Map(before.map((term) => [key(term), term.pmi]));
+  const vectorAfter = new Map(after.map((term) => [key(term), term.pmi]));
   const keys = new Set([...vectorBefore.keys(), ...vectorAfter.keys()]);
   if (keys.size === 0) return 0;
 
   let dot = 0;
   let normBefore = 0;
   let normAfter = 0;
-  for (const key of keys) {
-    const a = vectorBefore.get(key) ?? 0;
-    const b = vectorAfter.get(key) ?? 0;
+  for (const entry of keys) {
+    const a = vectorBefore.get(entry) ?? 0;
+    const b = vectorAfter.get(entry) ?? 0;
     dot += a * b;
     normBefore += a * a;
     normAfter += b * b;

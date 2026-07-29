@@ -37,9 +37,9 @@
     "minLexiconEntries": 2
   },
   "distinctiveness": {
-    "$comment": "G5. Terms below the PMI floor never enter a passage profile, so generic vocabulary cannot accumulate into evidence.",
+    "$comment": "G5. Terms below the PMI floor never enter a verse profile, so generic vocabulary cannot accumulate into evidence. The cap is PER VERSE since Layer B resolved to verse keys.",
     "minPmi": 2.0,
-    "maxTermsPerPericope": 40
+    "maxTermsPerVerse": 40
   },
   "noise": {
     "$comment": "G8. Measured against the previous artifact. Exceeding any of these fails the build and names the offending probes.",

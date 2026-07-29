@@ -106,23 +106,38 @@ export function crossReferenceEvidence(
 export function passageTermEvidence(match: {
   matchedTerms: readonly string[];
   pmiSum: number;
-  sourceId: string;
+  sourceIds: string;
+  minSpanVerses: number;
   locator: string;
 }): Evidence {
   const saturating = Math.log1p(match.matchedTerms.length) / Math.log1p(6);
+  // Specificity: evidence distilled from a one-verse note is a stronger claim
+  // about THIS verse than the same words inherited from a whole-psalm essay.
+  // 1 verse -> 1.0, 6 verses -> ~0.61, a whole chapter -> ~0.45. Gentle on
+  // purpose: diffuse commentary is discounted, never discarded.
+  const span = Math.max(1, match.minSpanVerses);
+  const specificity = 1 / (1 + 0.25 * Math.log2(span));
   return {
     family: 'passage_terms',
     label:
       match.matchedTerms.length === 1
         ? `Preached vocabulary: ${match.matchedTerms[0]}`
         : `Preached vocabulary: ${match.matchedTerms.slice(0, 3).join(', ')}`,
-    strength: Math.max(0, Math.min(1, saturating)),
+    strength: Math.max(0, Math.min(1, saturating * specificity)),
     provenance: {
-      sourceId: match.sourceId,
-      label: sourceLabel(match.sourceId),
+      sourceId: match.sourceIds,
+      label: joinedSourceLabel(match.sourceIds),
       locator: match.locator,
     },
   };
+}
+
+/** '+'-joined source ids rendered as human labels. */
+function joinedSourceLabel(sourceIds: string): string {
+  return sourceIds
+    .split('+')
+    .map((id) => sourceLabel(id))
+    .join(' + ');
 }
 
 /**
@@ -140,6 +155,11 @@ function sourceLabel(sourceId: string): string {
       return 'OpenBible cross-references (CC BY)';
     case 'maclaren-psalms':
       return 'Maclaren, Expositions (public domain)';
+    case 'treasury-of-david-01':
+    case 'treasury-of-david-02':
+    case 'treasury-of-david-04':
+    case 'treasury-of-david-06':
+      return 'Spurgeon, Treasury of David (public domain)';
     default:
       return sourceId;
   }

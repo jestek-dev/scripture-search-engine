@@ -54,7 +54,7 @@ export interface ScriptureEngine {
   readonly engineVersion: string;
 }
 
-const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3']);
+const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4']);
 
 export async function createEngine(
   database: ContentQueryPort,

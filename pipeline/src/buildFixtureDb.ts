@@ -135,9 +135,9 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
     // Layer B distillate. Committed for the same hermeticity reason as the
     // OpenBible subset: the 1.3 MB source volume is gitignored, so a build
     // that depended on it would differ between a developer's machine and CI.
-    const passageTerms = existsSync(PASSAGE_TERMS_SUBSET)
+    const verseTerms = existsSync(PASSAGE_TERMS_SUBSET)
       ? (JSON.parse(readFileSync(PASSAGE_TERMS_SUBSET, 'utf8')) as {
-          terms: ConceptLayerInput['passageTerms'];
+          terms: ConceptLayerInput['verseTerms'];
         }).terms
       : [];
 
@@ -150,7 +150,7 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
             crossReferences,
             manifests: loadManifests(),
             presentVerseIds,
-            passageTerms,
+            verseTerms,
           })
         : null;
 
@@ -181,7 +181,7 @@ if (process.argv[1] && process.argv[1].endsWith('buildFixtureDb.ts')) {
           `  editorial anchors: ${result.conceptLayer.editorialAnchors}\n` +
           `  openbible topic anchors: ${result.conceptLayer.topicAnchors}\n` +
           `  cross references: ${result.conceptLayer.crossReferences}\n` +
-          `  passage terms: ${result.conceptLayer.passageTerms}\n` +
+          `  verse terms: ${result.conceptLayer.verseTerms}\n` +
           `  dropped (outside fixture corpus): ${result.conceptLayer.droppedOutOfCorpus}\n`
         : '  concept layer: none\n'),
   );

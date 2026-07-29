@@ -18,12 +18,13 @@
 import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
 
 export interface PassageTermRow {
-  readonly startVerseId: number;
-  readonly endVerseId: number;
+  readonly verseId: number;
   readonly term: string;
   readonly pmi: number;
   readonly count: number;
-  readonly sourceId: string;
+  readonly sourceIds: string;
+  readonly sourceCount: number;
+  readonly minSpanVerses: number;
   readonly locator: string;
 }
 
@@ -41,7 +42,7 @@ export interface DistillateFile {
 
 export function distinctivenessGate(
   distillate: DistillateFile | null,
-  thresholds: { readonly minPmi: number; readonly maxTermsPerPericope: number },
+  thresholds: { readonly minPmi: number; readonly maxTermsPerVerse: number },
 ): GateResult {
   if (!distillate || distillate.terms.length === 0) {
     return notApplicable(
@@ -62,19 +63,18 @@ export function distinctivenessGate(
     });
   }
 
-  const perPericope = new Map<string, number>();
+  const perVerse = new Map<number, number>();
   for (const term of distillate.terms) {
-    const key = `${term.startVerseId}-${term.endVerseId}`;
-    perPericope.set(key, (perPericope.get(key) ?? 0) + 1);
+    perVerse.set(term.verseId, (perVerse.get(term.verseId) ?? 0) + 1);
   }
-  const overCap = [...perPericope.entries()].filter(
-    ([, count]) => count > thresholds.maxTermsPerPericope,
+  const overCap = [...perVerse.entries()].filter(
+    ([, count]) => count > thresholds.maxTermsPerVerse,
   );
   if (overCap.length > 0) {
     findings.push({
       message:
-        `${overCap.length} pericope(s) exceed the ${thresholds.maxTermsPerPericope}-term cap. ` +
-        'One verbose work can then dominate a passage profile.',
+        `${overCap.length} verse(s) exceed the ${thresholds.maxTermsPerVerse}-term cap. ` +
+        'One verbose work can then dominate a verse profile.',
       subjects: overCap.slice(0, 5).map(([key, count]) => `${key}: ${count} terms`),
     });
   }
@@ -83,19 +83,19 @@ export function distinctivenessGate(
     return fail('G5-distinctiveness', 'Distinctiveness floor', 'floor not enforced', findings);
   }
 
-  const pericopes = perPericope.size;
+  const pericopes = perVerse.size;
   const considered = distillate.stats?.termsConsidered ?? 0;
   const admitted = distillate.stats?.termsAdmitted ?? distillate.terms.length;
   const rejectionRate = considered > 0 ? 1 - admitted / considered : 0;
   return pass(
     'G5-distinctiveness',
     'Distinctiveness floor',
-    `${distillate.terms.length} term(s) across ${pericopes} pericope(s); ` +
+    `${distillate.terms.length} term(s) across ${pericopes} verse(s); ` +
       `${(rejectionRate * 100).toFixed(1)}% of candidate terms rejected as insufficiently ` +
       `distinctive (PMI < ${thresholds.minPmi})`,
     {
       terms: distillate.terms.length,
-      pericopes,
+      verses: pericopes,
       rejectionRate: Number(rejectionRate.toFixed(4)),
     },
   );

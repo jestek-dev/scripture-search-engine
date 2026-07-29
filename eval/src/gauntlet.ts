@@ -60,7 +60,7 @@ interface Budgets {
   };
   readonly distinctiveness: {
     readonly minPmi: number;
-    readonly maxTermsPerPericope: number;
+    readonly maxTermsPerVerse: number;
   };
   readonly saturation: {
     readonly minProfileDelta: number;

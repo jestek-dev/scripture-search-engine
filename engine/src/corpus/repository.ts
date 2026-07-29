@@ -550,7 +550,8 @@ export class ConceptRepository {
   ): Promise<readonly (ScriptureVerse & {
     matchedTerms: readonly string[];
     pmiSum: number;
-    sourceId: string;
+    sourceIds: string;
+    minSpanVerses: number;
     locator: string;
   })[]> {
     const unique = [...new Set(terms)];
@@ -558,23 +559,24 @@ export class ConceptRepository {
     const placeholders = unique.map(() => '?').join(', ');
     const result = await this.database.execute(
       `WITH hits AS (
-         SELECT pt.start_verse_id AS s, pt.end_verse_id AS e,
-                group_concat(pt.term, ' ') AS terms,
-                SUM(pt.pmi) AS pmiSum,
-                MIN(pt.source_id) AS sourceId,
-                MIN(pt.locator) AS locator
-         FROM passage_terms pt
-         WHERE pt.term IN (${placeholders})
-         GROUP BY pt.start_verse_id, pt.end_verse_id
+         SELECT vt.verse_id AS vid,
+                group_concat(vt.term, ' ') AS terms,
+                SUM(vt.pmi) AS pmiSum,
+                MIN(vt.min_span_verses) AS minSpan,
+                MIN(vt.source_ids) AS sourceIds,
+                MIN(vt.locator) AS locator
+         FROM verse_terms vt
+         WHERE vt.term IN (${placeholders})
+         GROUP BY vt.verse_id
        )
        SELECT v.id AS id, v.verse_id AS verseId,
               v.translation_id AS translationId, t.code AS translationCode,
               v.book_id AS bookId, b.name AS bookName,
               v.chapter AS chapter, v.verse AS verse, v.text AS text,
-              h.terms AS terms, h.pmiSum AS pmiSum,
-              h.sourceId AS sourceId, h.locator AS locator
+              h.terms AS terms, h.pmiSum AS pmiSum, h.minSpan AS minSpan,
+              h.sourceIds AS sourceIds, h.locator AS locator
        FROM hits h
-       JOIN verses v ON v.verse_id BETWEEN h.s AND h.e
+       JOIN verses v ON v.verse_id = h.vid
        JOIN translations t ON t.id = v.translation_id
        JOIN books b ON b.id = v.book_id
        ORDER BY h.pmiSum DESC, v.verse_id, t.code
@@ -585,14 +587,15 @@ export class ConceptRepository {
       ...mapVerse(row),
       matchedTerms: [...new Set(str(row, 'terms').split(' ').filter(Boolean))].sort(),
       pmiSum: num(row, 'pmiSum'),
-      sourceId: str(row, 'sourceId'),
+      sourceIds: str(row, 'sourceIds'),
+      minSpanVerses: num(row, 'minSpan'),
       locator: str(row, 'locator'),
     }));
   }
 
   async hasPassageTerms(): Promise<boolean> {
     const result = await this.database.execute(
-      "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='passage_terms'",
+      "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='verse_terms'",
     );
     return num(result.rows[0] ?? { n: 0 }, 'n') > 0;
   }

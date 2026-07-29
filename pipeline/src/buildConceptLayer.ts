@@ -22,14 +22,15 @@ export interface ConceptLayerInput {
   readonly manifests: ManifestSet;
   /** Verse ids present in this artifact; anything outside is dropped. */
   readonly presentVerseIds: ReadonlySet<number>;
-  /** Layer B distillate. Empty until expositions are ingested. */
-  readonly passageTerms?: readonly {
-    startVerseId: number;
-    endVerseId: number;
+  /** Layer B distillate, verse-keyed. Empty until expositions are ingested. */
+  readonly verseTerms?: readonly {
+    verseId: number;
     term: string;
     pmi: number;
     count: number;
-    sourceId: string;
+    sourceIds: string;
+    sourceCount: number;
+    minSpanVerses: number;
     locator: string;
   }[];
 }
@@ -40,7 +41,7 @@ export interface ConceptLayerResult {
   readonly editorialAnchors: number;
   readonly topicAnchors: number;
   readonly crossReferences: number;
-  readonly passageTerms: number;
+  readonly verseTerms: number;
   readonly droppedOutOfCorpus: number;
   /**
    * Identifies everything in the curated layers that can change a result.
@@ -78,7 +79,7 @@ export function buildConceptLayer(
   const topicCited = input.ontology.topicSubscriptions.length > 0 ? ['openbible-topics'] : [];
   const xrefCited = input.crossReferences.length > 0 ? ['openbible-xrefs'] : [];
   const termCited = [
-    ...new Set((input.passageTerms ?? []).flatMap((term) => term.sourceId.split('+'))),
+    ...new Set((input.verseTerms ?? []).flatMap((term) => term.sourceIds.split('+'))),
   ];
   const failures = checkProvenance({
     manifests: input.manifests,
@@ -105,9 +106,10 @@ export function buildConceptLayer(
   const insertRelated = database.prepare(
     'INSERT INTO concept_related(concept_id, related_id) VALUES (?, ?)',
   );
-  const insertPassageTerm = database.prepare(
-    `INSERT INTO passage_terms(start_verse_id, end_verse_id, term, pmi, count, source_id, locator)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+  const insertVerseTerm = database.prepare(
+    `INSERT INTO verse_terms(verse_id, term, pmi, count, source_ids, source_count,
+                             min_span_verses, locator)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
   );
   const insertXref = database.prepare(
     `INSERT INTO cross_references(from_verse_id, to_start_verse_id, to_end_verse_id, source_id, votes)
@@ -117,7 +119,7 @@ export function buildConceptLayer(
   let editorialAnchors = 0;
   let topicAnchors = 0;
   let crossReferences = 0;
-  let passageTerms = 0;
+  let verseTerms = 0;
   let dropped = 0;
 
   database.exec('BEGIN');
@@ -195,21 +197,22 @@ export function buildConceptLayer(
       );
       crossReferences += 1;
     }
-    for (const term of input.passageTerms ?? []) {
-      if (!rangeIsPresent(term.startVerseId, term.endVerseId, input.presentVerseIds)) {
+    for (const term of input.verseTerms ?? []) {
+      if (!input.presentVerseIds.has(term.verseId)) {
         dropped += 1;
         continue;
       }
-      insertPassageTerm.run(
-        term.startVerseId,
-        term.endVerseId,
+      insertVerseTerm.run(
+        term.verseId,
         term.term,
         term.pmi,
         term.count,
-        term.sourceId,
+        term.sourceIds,
+        term.sourceCount,
+        term.minSpanVerses,
         term.locator,
       );
-      passageTerms += 1;
+      verseTerms += 1;
     }
     database.exec('COMMIT');
   } catch (error) {
@@ -255,7 +258,7 @@ export function buildConceptLayer(
   )) {
     feed(['r', edge.conceptId, edge.relatedId]);
   }
-  feed(['counts', topicAnchors, crossReferences, passageTerms]);
+  feed(['counts', topicAnchors, crossReferences, verseTerms]);
   const layerFingerprint = hash.digest('hex');
 
   // Written with REPLACE because the corpus build already populated meta.
@@ -270,7 +273,7 @@ export function buildConceptLayer(
     editorialAnchors,
     topicAnchors,
     crossReferences,
-    passageTerms,
+    verseTerms,
     droppedOutOfCorpus: dropped,
   };
 }

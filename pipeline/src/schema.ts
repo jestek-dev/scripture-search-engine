@@ -13,9 +13,13 @@
  *
  * v1 — Phase 1: scripture corpus + FTS + token postings.
  * v2 — Phase 2: curated concept layer + cross-reference edges.
- * v3 — Phase 3: homiletical term profiles (Layer B).
+ * v3 — Phase 3: homiletical term profiles keyed by author span.
+ * v4 — Layer B resolved to the verse: authors' spans project onto verses and
+ *      corroboration is checked per verse, because authors do not chop
+ *      Scripture into the same pieces (Maclaren's Psalm 23:1-6 essay vs
+ *      Spurgeon's verse-by-verse notes never matched under exact span keys).
  */
-export const SCHEMA_VERSION = '3';
+export const SCHEMA_VERSION = '4';
 
 /**
  * `verses.id` (plain rowid) is the true primary key, NOT `verse_id`. The
@@ -189,27 +193,30 @@ CREATE TABLE cross_references (
 CREATE INDEX idx_cross_references_from ON cross_references(from_verse_id, votes DESC);
 
 /*
- * ---- Layer B: homiletical evidence (schema v3) ----
+ * ---- Layer B: homiletical evidence (schema v4) ----
  *
- * Distinctive vocabulary that preachers and commentators use when expounding
- * a passage. The SOURCE PROSE IS NEVER STORED HERE and never ships - only
- * these distilled term/PMI pairs, which are a few bytes each.
+ * Distinctive vocabulary that expositors use when handling a verse. The
+ * SOURCE PROSE IS NEVER STORED and never ships — only these distilled rows.
  *
- * Keyed by pericope range rather than single verse because expositions treat
- * a unit of thought, not a verse number.
+ * Verse-keyed, not span-keyed. Each author's natural span was projected onto
+ * the verses it covers at build time, and a term was admitted only where
+ * enough independent sources covering that verse used it. min_span_verses
+ * records the narrowest attesting span so scoring can prefer tight
+ * commentary over diffuse commentary.
  */
-CREATE TABLE passage_terms (
-  start_verse_id INTEGER NOT NULL,
-  end_verse_id INTEGER NOT NULL,
+CREATE TABLE verse_terms (
+  verse_id INTEGER NOT NULL,
   term TEXT NOT NULL,
   pmi REAL NOT NULL,
   count INTEGER NOT NULL,
-  source_id TEXT NOT NULL,
+  source_ids TEXT NOT NULL,
+  source_count INTEGER NOT NULL,
+  min_span_verses INTEGER NOT NULL,
   locator TEXT NOT NULL
 );
 
-CREATE INDEX idx_passage_terms_term ON passage_terms(term, pmi DESC);
-CREATE INDEX idx_passage_terms_range ON passage_terms(start_verse_id, end_verse_id);
+CREATE INDEX idx_verse_terms_term ON verse_terms(term, pmi DESC);
+CREATE INDEX idx_verse_terms_verse ON verse_terms(verse_id);
 `;
 
 /**

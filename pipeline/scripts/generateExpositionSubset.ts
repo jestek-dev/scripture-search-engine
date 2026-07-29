@@ -34,7 +34,7 @@ import {
   buildTermProfiles,
   profileDelta,
   type ExpositionDocument,
-  type PassageTerm,
+  type VerseTerm,
 } from '../src/stats/passageTerms.js';
 import { makeVerseId } from '../src/verseId.js';
 import type { VerseArrayEntry, VerseArraySource } from '../src/importers/verseArrayImporter.js';
@@ -95,26 +95,17 @@ function loadSource(spec: ExpositionSourceSpec): LoadedSource | null {
   };
 }
 
-function inFixtureCorpus(terms: readonly PassageTerm[], present: Set<number>): PassageTerm[] {
-  return terms.filter((term) => {
-    for (
-      let id = term.startVerseId;
-      id <= term.endVerseId && id - term.startVerseId < 400;
-      id += 1
-    ) {
-      if (present.has(id)) return true;
-    }
-    return false;
-  });
+function inFixtureCorpus(terms: readonly VerseTerm[], present: Set<number>): VerseTerm[] {
+  return terms.filter((term) => present.has(term.verseId));
 }
 
 function main(): void {
   const budgets = JSON.parse(readFileSync(BUDGETS, 'utf8')) as {
-    distinctiveness: { minPmi: number; maxTermsPerPericope: number };
+    distinctiveness: { minPmi: number; maxTermsPerVerse: number };
   };
   const options = {
     minPmi: budgets.distinctiveness.minPmi,
-    maxTermsPerPericope: budgets.distinctiveness.maxTermsPerPericope,
+    maxTermsPerVerse: budgets.distinctiveness.maxTermsPerVerse,
     minCount: 2,
     // Corroboration required when we have more than one expositor. With a
     // single source there is nothing to corroborate against, so the floor
@@ -182,7 +173,7 @@ function main(): void {
     OUT,
     `${JSON.stringify(
       {
-        $schema: 'passage-terms-subset/2',
+        $schema: 'passage-terms-subset/3',
         note:
           'Distilled term profiles from passage-keyed expositions. The source prose is NOT ' +
           'included and never ships; see pipeline/manifests/*.json for rights and method.',
