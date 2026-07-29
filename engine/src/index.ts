@@ -9,6 +9,27 @@
 
 export { ENGINE_VERSION, TOKENIZER_VERSION } from './config/engineVersion.js';
 
+export { createEngine, type EngineOptions, type ScriptureEngine } from './createEngine.js';
+
+export {
+  CorpusRepository,
+  MAX_CANDIDATES,
+  MAX_PHRASE_LENGTH,
+  type CorpusMeta,
+  type PhraseMatch,
+  type TokenMatch,
+} from './corpus/repository.js';
+
+export {
+  groupIdFor,
+  mergeCandidates,
+  phraseEvidence,
+  queryIdfTotal,
+  referenceLabel,
+  targetIdFor,
+  tokenEvidence,
+} from './intents/lexical.js';
+
 export {
   normalizeToken,
   significantWords,

@@ -12,7 +12,16 @@
     "lands. The gauntlet reports pending fixtures separately and does NOT fail",
     "the build on them, so the target is visible from day one without blocking",
     "Phase 0 and 1 work. When Phase 2 admits the ontology, flip status to",
-    "'active' in the same PR that makes it pass."
+    "'active' in the same PR that makes it pass.",
+    "",
+    "PHASE 1 UPDATE (2026-07-29): the lexical ladder alone now returns",
+    "James 1:22, Luke 6:47 and Matthew 7:24 in the top three for this query,",
+    "because the tokenizer folds 'doing'->do and 'heareth'->hear. That is the",
+    "right VERSES for the wrong REASON: the evidence is token_overlap, not a",
+    "curated concept anchor, so the engine cannot yet say WHY these passages",
+    "belong together, and a query with no shared vocabulary (e.g. 'faith",
+    "without works') would still miss. The fixture stays pending until the",
+    "reasons are right, not merely the results."
   ],
   "expectedTop": [
     { "reference": "James 1:22-25", "requiredReasonFamily": "concept_anchor" },

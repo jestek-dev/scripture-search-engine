@@ -1,0 +1,40 @@
+{
+  "$comment": [
+    "The fixed probe set for G8. These queries are NEVER changed casually:",
+    "their whole value is that the same questions get asked of every build, so",
+    "a shift in results means the DATA changed, not the question. Adding a",
+    "probe is fine; editing or removing one invalidates the baseline and must",
+    "be done in a PR that says why.",
+    "",
+    "Chosen to span the failure modes we actually fear: broad queries that",
+    "could turn to mush as data accumulates, narrow queries that could get",
+    "buried by it, and adversarial near-misses that should NOT match."
+  ],
+  "probes": [
+    { "id": "broad-love", "query": "love", "kind": "broad" },
+    { "id": "broad-grace", "query": "grace", "kind": "broad" },
+    { "id": "broad-faith", "query": "faith", "kind": "broad" },
+    { "id": "broad-word", "query": "the word", "kind": "broad" },
+    { "id": "medium-refuge-trouble", "query": "refuge in trouble", "kind": "medium" },
+    { "id": "medium-fear-not", "query": "do not be afraid", "kind": "medium" },
+    { "id": "medium-light-darkness", "query": "walking in the light", "kind": "medium" },
+    { "id": "narrow-hearing-doing", "query": "hearing and doing", "kind": "narrow" },
+    { "id": "narrow-doers-word", "query": "be doers of the word not hearers only", "kind": "narrow" },
+    { "id": "narrow-house-rock", "query": "built his house on the rock", "kind": "narrow" },
+    { "id": "phrase-present-help", "query": "a very present help in trouble", "kind": "phrase" },
+    {
+      "id": "adversarial-nonsense",
+      "query": "quantum photosynthesis algorithm",
+      "kind": "adversarial",
+      "expectNoResults": true,
+      "why": "No scriptural content. If accumulated data ever makes this return matches, weak signals have started firing on nothing."
+    },
+    {
+      "id": "adversarial-common-only",
+      "query": "and the of",
+      "kind": "adversarial",
+      "expectNoResults": true,
+      "why": "Pure stopwords. Must produce no tokens and therefore no results, no matter how much data is admitted."
+    }
+  ]
+}

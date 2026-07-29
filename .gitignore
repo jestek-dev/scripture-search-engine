@@ -15,5 +15,7 @@ output/
 pipeline/sources/
 pipeline/.cache/
 
+**/.scratch/
+
 # Gauntlet run output (the committed baseline lives in eval/baselines/)
 eval/.runs/

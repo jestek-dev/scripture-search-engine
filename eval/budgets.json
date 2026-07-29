@@ -37,7 +37,15 @@
     "$comment": "G8. Measured against the previous artifact. Exceeding any of these fails the build and names the offending probes.",
     "maxTop10ChurnRatio": 0.4,
     "minMeanDistinctiveness": null,
-    "maxWeakReasonShare": 0.5
+    "$comment_weak": [
+      "Weak-reason share is gated as an INCREASE over baseline, not an absolute",
+      "ceiling. An absolute cap is meaningless while a query has no authoritative",
+      "signal available to it: a one-word thematic query like 'love' is 100% weak",
+      "in Phase 1 by construction, because concept anchors do not exist yet.",
+      "What we actually fear is the share CLIMBING as data accumulates - that is",
+      "precision erosion. So the delta is the gate and the absolute is recorded."
+    ],
+    "maxWeakReasonShareIncrease": 0.15
   },
   "saturation": {
     "$comment": "G9. A work that moves an already-covered pericope's profile less than minProfileDelta is recorded as saturated and skipped.",

@@ -7,11 +7,22 @@
  * roster — an unrun gate must never look like a passing one.
  */
 
-import { appendFileSync, readdirSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { createEngine } from '@lh/scripture-engine';
+
+import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import { collisionGate, type ConceptRecord } from './gates/collision.js';
+import {
+  latencyGate,
+  noiseGate,
+  observeProbes,
+  type Probe,
+  type ProbeBaseline,
+} from './gates/probes.js';
+import { openCorpus } from './nodeSqlitePort.js';
 import { determinismGate, goldenGate, type GoldenFixture } from './gates/golden.js';
 import { notApplicable, pass, fail, type GateResult } from './gates/types.js';
 import { buildReport } from './report.js';
@@ -21,6 +32,12 @@ const EVAL_ROOT = join(HERE, '..');
 const REPO_ROOT = join(EVAL_ROOT, '..');
 
 interface Budgets {
+  readonly latency: { readonly p95Ms: number };
+  readonly noise: {
+    readonly maxTop10ChurnRatio: number;
+    readonly maxWeakReasonShareIncrease: number;
+    readonly minMeanDistinctiveness: number | null;
+  };
   readonly size: {
     readonly totalArtifactBytes: number;
     readonly perTableBytes: Readonly<Record<string, number>>;
@@ -120,11 +137,61 @@ function provenanceGate(): GateResult {
   });
 }
 
-function main(): void {
+const BASELINE_PATH = join(EVAL_ROOT, 'baselines', 'probes.json');
+
+/**
+ * Runs the probe set against a freshly built fixture artifact.
+ *
+ * Rebuilding rather than reusing a checked-in database is deliberate: the
+ * gates must measure the code and data in THIS commit, and a stale binary
+ * would let a broken build pass on yesterday's evidence.
+ */
+async function runProbeGates(budgets: Budgets): Promise<GateResult[]> {
+  const probeFile = JSON.parse(readFileSync(join(EVAL_ROOT, 'probes', 'probes.json'), 'utf8')) as {
+    probes: Probe[];
+  };
+  const built = buildFixtureDatabase();
+  const engine = await createEngine(openCorpus(built.path));
+  try {
+    const { observations, latenciesMs } = await observeProbes(engine, probeFile.probes);
+    const baseline: ProbeBaseline | null = existsSync(BASELINE_PATH)
+      ? (JSON.parse(readFileSync(BASELINE_PATH, 'utf8')) as ProbeBaseline)
+      : null;
+
+    const noise = noiseGate({
+      probes: probeFile.probes,
+      observations,
+      baseline,
+      thresholds: budgets.noise,
+    });
+
+    // --update-baseline rewrites the committed baseline. Deliberately opt-in:
+    // if the gate could refresh its own reference automatically, a slow drift
+    // would never be caught, because every build would redefine "normal".
+    if (process.argv.includes('--update-baseline')) {
+      const next: ProbeBaseline = {
+        corpusFingerprint: engine.corpusFingerprint,
+        engineVersion: engine.engineVersion,
+        observations,
+      };
+      writeFileSync(BASELINE_PATH, `${JSON.stringify(next, null, 2)}
+`, 'utf8');
+      process.stderr.write(`Baseline updated: ${BASELINE_PATH}
+`);
+    }
+
+    return [noise, latencyGate(latenciesMs, budgets.latency.p95Ms)];
+  } finally {
+    await engine.close();
+  }
+}
+
+async function main(): Promise<void> {
   const budgets = readJson<Budgets>(join(EVAL_ROOT, 'budgets.json'));
   const fixtures = loadFixtures();
   const { concepts, fileCount } = loadConcepts();
 
+  const probeGates = await runProbeGates(budgets);
   const gates: GateResult[] = [
     provenanceGate(),
     determinismGate(fixtures),
@@ -147,10 +214,10 @@ function main(): void {
       'enforced structurally inside the scoring core; verified by engine unit tests',
     ),
     notApplicable('G7-correlation', 'Source correlation', 'no correlated sources admitted yet (Phase 2)'),
-    notApplicable('G8-noise-probes', 'Noise probes', 'no artifact to probe yet (Phase 2)'),
+    probeGates[0]!,
     notApplicable('G9-saturation', 'Saturation', 'no corpus ingestion yet (Phase 3)'),
     sizeGate(budgets),
-    notApplicable('G11-latency', 'Latency', 'no artifact to query yet (Phase 2)'),
+    probeGates[1]!,
   ];
 
   const report = buildReport({ gates });
@@ -169,4 +236,4 @@ function main(): void {
   if (report.verdict === 'REJECT') process.exit(1);
 }
 
-main();
+await main();

@@ -1,8 +1,17 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src"
+    // Build-time only: this package is always run through tsx and never
+    // emits. It resolves the engine's SOURCE so that a tokenizer change and
+    // a pipeline change are always validated against each other — an engine
+    // built to dist/ could silently lag the tokenizer the corpus was indexed
+    // with, which is the exact drift TOKENIZER_VERSION exists to catch.
+    "noEmit": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@lh/scripture-engine": ["../engine/src/index.ts"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "test", "scripts"]
 }

@@ -1,0 +1,11 @@
+{
+  "id": "web",
+  "label": "World English Bible",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain. The WEB text may be freely copied, modified, and distributed. See https://ebible.org/engwebp/copyright.htm",
+  "sourceUrl": "https://ebible.org/engwebp/",
+  "sha256": "ceaffd308775105a55fb9f9fe928af567abd100acf93b4b74a2f10a19dc6ce3b",
+  "bytes": 6094545,
+  "maxTier": "public_distribution",
+  "attributionNote": "\"World English Bible\" and \"WEB\" are trademarks of eBible.org / the WEB project. The TEXT is public domain, but a modified version must not be distributed under the \"World English Bible\" name without permission. Recorded here rather than flattened into a bare public-domain claim, because the trademark constraint survives the copyright dedication."
+}
