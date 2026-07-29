@@ -90,14 +90,22 @@ Individual steps: `npm run typecheck`, `npm test`, `npm run gauntlet`.
 
 ## Status
 
-**Phase 0 — bootstrap.** The pure core is real and tested: shared tokenizer,
-reference parser, signal budgets, deterministic ranker, provenance checker,
-and the gauntlet with G1–G4/G6/G10 implemented. Gates whose inputs do not
-exist yet report `not-applicable` with a reason — an unrun check must never
-look like a passing one.
+**Phases 0–4 complete. All eleven gates live.** Phase 5 (wiring Maskil,
+Setlist and Versed) is deliberately not started.
 
-Golden fixture #1, `hearing-and-doing`, is committed with status `pending`:
-the target is visible from day one and turns green in Phase 2.
+| Layer | State |
+|---|---|
+| Lexical ladder | reference, verbatim phrase + longest-fragment fallback, IDF tokens with proximity, archaic/inflection folding |
+| Concept spine | 8 curated concepts, OpenBible topical votes, cross-reference expansion |
+| Homiletical | Maclaren's *Expositions* distilled to PMI term profiles; source prose never ships |
+| Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow |
+
+**Golden fixture #1 is active and passing.** "hearing and doing" returns
+James 1:22, Matthew 7:24 and Luke 6:47 carrying `concept_anchor` evidence
+attributed to LH editorial — the right passages *for the right reason*, which
+is what the fixture actually asserts.
+
+Open decisions and known limits: **[docs/NEEDS-JESSE.md](docs/NEEDS-JESSE.md)**.
 
 ## Distribution
 
