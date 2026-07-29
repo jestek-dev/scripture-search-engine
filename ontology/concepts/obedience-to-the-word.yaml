@@ -1,0 +1,37 @@
+id: obedience-to-the-word
+label: Hearing and doing
+# The concept that motivated this engine. A purely lexical search finds the
+# words "hearing" and "doing"; it cannot know they name the move from
+# receiving the word to acting on it. This file is that knowledge.
+lexicon:
+  - hearing and doing
+  - hearers and doers
+  - doers of the word
+  - hear and obey
+  - obey the word
+  - practice what you hear
+  - putting the word into practice
+anchors:
+  - ref: James 1:22-25
+    sources: [editorial]
+    weight: 1.0
+  - ref: Matthew 7:24-27
+    sources: [editorial]
+    weight: 0.95
+  - ref: Luke 6:46-49
+    sources: [editorial]
+    weight: 0.95
+  - ref: Ezekiel 33:31-32
+    sources: [editorial]
+    weight: 0.7
+  - ref: Romans 2:13
+    sources: [editorial]
+    weight: 0.8
+  - ref: John 13:17
+    sources: [editorial]
+    weight: 0.7
+openbibleTopics:
+  - obedience
+related:
+  - faith-and-works
+  - building-on-the-rock

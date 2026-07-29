@@ -15,6 +15,13 @@ import { createEngine } from '@lh/scripture-engine';
 
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import { collisionGate, type ConceptRecord } from './gates/collision.js';
+import { corpusGoldenGate, type CorpusFixture } from './gates/corpusGolden.js';
+import { compileOntology } from '../../pipeline/src/importers/ontologyImporter.js';
+import {
+  correlationGroups,
+  type ManifestSet,
+  type SourceManifest,
+} from '../../pipeline/src/provenance/manifest.js';
 import {
   latencyGate,
   noiseGate,
@@ -25,6 +32,7 @@ import {
 import { openCorpus } from './nodeSqlitePort.js';
 import { determinismGate, goldenGate, type GoldenFixture } from './gates/golden.js';
 import { notApplicable, pass, fail, type GateResult } from './gates/types.js';
+import { DEFAULT_BUDGETS } from '@lh/scripture-engine';
 import { buildReport } from './report.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -68,20 +76,95 @@ function loadFixtures(): GoldenFixture[] {
   return listJson(join(EVAL_ROOT, 'golden')).map((path) => readJson<GoldenFixture>(path));
 }
 
-/**
- * Concepts live as YAML in ontology/concepts. Phase 0 ships no concepts, so
- * rather than pull in a YAML dependency for an empty directory, we count the
- * files and report the gate as not-applicable until Phase 2 adds the loader.
- */
-function loadConcepts(): { concepts: ConceptRecord[]; fileCount: number } {
+/** Compiles the curated ontology so G4 runs against the real concept set. */
+function loadConcepts(): { concepts: ConceptRecord[]; fileCount: number; errors: string[] } {
   const directory = join(REPO_ROOT, 'ontology', 'concepts');
-  let fileCount = 0;
+  let names: string[] = [];
   try {
-    fileCount = readdirSync(directory).filter((name) => name.endsWith('.yaml')).length;
+    names = readdirSync(directory).filter((name) => name.endsWith('.yaml')).sort();
   } catch {
-    fileCount = 0;
+    return { concepts: [], fileCount: 0, errors: [] };
   }
-  return { concepts: [], fileCount };
+  const files = names.map((name) => ({
+    name,
+    contents: readFileSync(join(directory, name), 'utf8'),
+  }));
+  const { ontology, errors } = compileOntology(files);
+  const lexiconByConcept = new Map<string, string[]>();
+  for (const entry of ontology.lexicon) {
+    const bucket = lexiconByConcept.get(entry.conceptId);
+    if (bucket) bucket.push(entry.phrase);
+    else lexiconByConcept.set(entry.conceptId, [entry.phrase]);
+  }
+  return {
+    concepts: ontology.concepts.map((concept) => ({
+      id: concept.id,
+      label: concept.label,
+      lexicon: lexiconByConcept.get(concept.id) ?? [],
+    })),
+    fileCount: names.length,
+    errors: [...errors],
+  };
+}
+
+function loadManifestSet(): ManifestSet {
+  const directory = join(REPO_ROOT, 'pipeline', 'manifests');
+  return {
+    sources: listJson(directory).map((path) => readJson<SourceManifest>(path)),
+  };
+}
+
+/**
+ * Which signal family each source's evidence lands in. G7's job is to verify
+ * that sources sharing scholarly ancestry also share a ranking budget — if a
+ * lineage group's families are budgeted separately, the same underlying
+ * scholarship gets counted twice as independent evidence.
+ */
+const SOURCE_FAMILY: Readonly<Record<string, string>> = {
+  'openbible-xrefs': 'cross_reference',
+  tsk: 'cross_reference',
+  'sermon-co-citations': 'co_citation',
+};
+
+function correlationGate(): GateResult {
+  const manifests = loadManifestSet();
+  const groups = correlationGroups(manifests);
+  if (groups.length === 0) {
+    return notApplicable(
+      'G7-correlation',
+      'Source correlation',
+      'no sources declare shared lineage yet',
+    );
+  }
+
+  const budgetedTogether = DEFAULT_BUDGETS.correlationGroups.map((group) => new Set(group));
+  const findings = [];
+  for (const group of groups) {
+    const families = [...new Set(group.map((id) => SOURCE_FAMILY[id]).filter(Boolean))];
+    if (families.length < 2) continue;
+    const shared = budgetedTogether.some((budget) =>
+      families.every((family) => budget.has(family as never)),
+    );
+    if (!shared) {
+      findings.push({
+        message:
+          `Sources ${group.join(', ')} declare shared lineage but their signal families ` +
+          `(${families.join(', ')}) are not in one correlation budget. The same scholarship ` +
+          'would be counted twice as independent evidence.',
+        subjects: [...group],
+      });
+    }
+  }
+  if (findings.length > 0) {
+    return fail('G7-correlation', 'Source correlation', 'lineage not reflected in budgets', findings);
+  }
+  return pass(
+    'G7-correlation',
+    'Source correlation',
+    `${groups.length} lineage group(s) declared and budgeted together: ` +
+      groups.map((group) => group.join('+')).join('; '),
+    { lineageGroups: groups.length },
+  );
 }
 
 /** G10: artifact size budgets, checked against the reviewed descriptor. */
@@ -180,7 +263,10 @@ async function runProbeGates(budgets: Budgets): Promise<GateResult[]> {
 `);
     }
 
-    return [noise, latencyGate(latenciesMs, budgets.latency.p95Ms)];
+    const corpusFixtures = loadFixtures() as unknown as CorpusFixture[];
+    const corpusGolden = await corpusGoldenGate(engine, corpusFixtures);
+
+    return [noise, latencyGate(latenciesMs, budgets.latency.p95Ms), corpusGolden];
   } finally {
     await engine.close();
   }
@@ -189,20 +275,28 @@ async function runProbeGates(budgets: Budgets): Promise<GateResult[]> {
 async function main(): Promise<void> {
   const budgets = readJson<Budgets>(join(EVAL_ROOT, 'budgets.json'));
   const fixtures = loadFixtures();
-  const { concepts, fileCount } = loadConcepts();
+  const { concepts, fileCount, errors: ontologyErrors } = loadConcepts();
 
   const probeGates = await runProbeGates(budgets);
   const gates: GateResult[] = [
     provenanceGate(),
     determinismGate(fixtures),
     goldenGate(fixtures),
+    probeGates[2]!,
     fileCount === 0
       ? notApplicable(
           'G4-collision',
           'Concept collision',
-          'no concepts in ontology/concepts yet (Phase 2); gate is implemented and unit-tested',
+          'no concepts in ontology/concepts yet; gate is implemented and unit-tested',
         )
-      : collisionGate(concepts, budgets.collision),
+      : ontologyErrors.length > 0
+        ? fail(
+            'G4-collision',
+            'Concept collision',
+            'ontology failed to compile',
+            ontologyErrors.map((message) => ({ message })),
+          )
+        : collisionGate(concepts, budgets.collision),
     notApplicable(
       'G5-distinctiveness',
       'Distinctiveness floor',
@@ -213,7 +307,7 @@ async function main(): Promise<void> {
       'Signal budgets',
       'enforced structurally inside the scoring core; verified by engine unit tests',
     ),
-    notApplicable('G7-correlation', 'Source correlation', 'no correlated sources admitted yet (Phase 2)'),
+    correlationGate(),
     probeGates[0]!,
     notApplicable('G9-saturation', 'Saturation', 'no corpus ingestion yet (Phase 3)'),
     sizeGate(budgets),

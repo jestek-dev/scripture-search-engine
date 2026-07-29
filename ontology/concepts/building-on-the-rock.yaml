@@ -1,0 +1,20 @@
+id: building-on-the-rock
+label: Building on the rock
+lexicon:
+  - built his house on the rock
+  - wise and foolish builders
+  - foundation on rock
+  - house built on sand
+  - firm foundation
+anchors:
+  - ref: Matthew 7:24-27
+    sources: [editorial]
+    weight: 1.0
+  - ref: Luke 6:46-49
+    sources: [editorial]
+    weight: 0.9
+  - ref: 1 Corinthians 3:10-15
+    sources: [editorial]
+    weight: 0.6
+related:
+  - obedience-to-the-word

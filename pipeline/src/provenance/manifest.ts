@@ -60,6 +60,13 @@ export interface SourceManifest {
    * scholarship twice as independent evidence.
    */
   readonly derivedFrom?: readonly string[];
+  /**
+   * True for a source that exists ONLY so others can declare lineage from it
+   * (G7 correlation). No artifact row may cite it directly — it has no
+   * imported artifact, so it has no checksum to verify, and citing it would
+   * be claiming provenance we never checked.
+   */
+  readonly lineageOnly?: boolean;
   /** Free-text note carried into credits (trademark notices, caveats). */
   readonly attributionNote?: string;
 }
@@ -107,6 +114,13 @@ export function checkProvenance(options: {
     }
     if (!source.licenseRecord.trim()) {
       failures.push(`${id}: manifest has an empty licenseRecord`);
+    }
+    if (source.lineageOnly) {
+      failures.push(
+        `${id}: is a lineage-only manifest (declared for correlation budgeting) and ` +
+          'must never be cited by an artifact row — it has no imported artifact to verify',
+      );
+      continue;
     }
     if (source.rightsClass !== 'editorial' && !source.sha256.trim()) {
       failures.push(`${id}: manifest has no source checksum`);

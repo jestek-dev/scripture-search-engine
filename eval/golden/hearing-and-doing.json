@@ -1,8 +1,7 @@
 {
   "id": "hearing-and-doing",
   "query": "hearing and doing",
-  "status": "pending",
-  "pendingUntilPhase": 2,
+  "status": "active",
   "note": [
     "FIXTURE #1 — the case that motivated this engine. On the prior system this",
     "query matched only the literal words and could not deduce that the theme",
@@ -21,7 +20,13 @@
     "curated concept anchor, so the engine cannot yet say WHY these passages",
     "belong together, and a query with no shared vocabulary (e.g. 'faith",
     "without works') would still miss. The fixture stays pending until the",
-    "reasons are right, not merely the results."
+    "reasons are right, not merely the results.",
+    "",
+    "PHASE 2 (2026-07-29): PROMOTED TO ACTIVE. The curated concept layer now",
+    "supplies concept_anchor evidence for all three anchors, so the engine can",
+    "say WHY these passages belong together and cite who says so. The gauntlet",
+    "detected this itself - it runs pending fixtures precisely so a target that",
+    "starts passing cannot go unnoticed."
   ],
   "expectedTop": [
     { "reference": "James 1:22-25", "requiredReasonFamily": "concept_anchor" },

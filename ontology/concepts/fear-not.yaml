@@ -1,0 +1,22 @@
+id: fear-not
+label: Do not be afraid
+lexicon:
+  - do not be afraid
+  - fear not
+  - take courage
+  - be not dismayed
+  - perfect love casts out fear
+anchors:
+  - ref: Isaiah 43:1-3
+    sources: [editorial]
+    weight: 1.0
+  - ref: Joshua 1:9
+    sources: [editorial]
+    weight: 0.95
+  - ref: 1 John 4:18
+    sources: [editorial]
+    weight: 0.8
+openbibleTopics:
+  - fear
+related:
+  - refuge-in-trouble

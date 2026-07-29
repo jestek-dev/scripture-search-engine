@@ -66,6 +66,17 @@ export interface PhraseMatch extends ScriptureVerse {
   readonly bm25: number;
 }
 
+/** The longest verbatim fragment of a query that occurs in the corpus. */
+export interface PhraseFragmentResult {
+  /** The fragment that matched, as the user wrote it. */
+  readonly fragment: string;
+  /** Words in the fragment. */
+  readonly fragmentWords: number;
+  /** Words in the whole query — the denominator for partial-match strength. */
+  readonly queryWords: number;
+  readonly matches: readonly PhraseMatch[];
+}
+
 /** One verse that matched at least one query token. */
 export interface TokenMatch extends ScriptureVerse {
   /** Distinct query tokens present in this verse. */
@@ -300,5 +311,228 @@ export class CorpusRepository implements ReferenceResolver {
       unique,
     );
     return new Map(result.rows.map((row) => [str(row, 'token'), num(row, 'df')]));
+  }
+}
+
+/** Longest fragment length worth searching; below this, phrases are noise. */
+const MIN_FRAGMENT_WORDS = 3;
+/** Queries longer than this skip fragment search to bound query cost. */
+const MAX_FRAGMENT_QUERY_WORDS = 14;
+
+/**
+ * Finds the LONGEST verbatim fragment of the query present in the corpus.
+ *
+ * Users paraphrase. "be doers of the word not hearers only" is nobody's
+ * translation verbatim, but "doers of the word" is exactly James 1:22 — and
+ * a search that only tries the whole query throws that away, leaving the
+ * decision to weaker signals.
+ *
+ * Longest-first with early exit: the first fragment length that matches wins,
+ * so we never pay for shorter, vaguer fragments once a strong one is found.
+ * Strength is computed by the caller as fragmentWords / queryWords, which
+ * makes partial verbatim evidence proportional to how much of the question it
+ * actually answers — a full verbatim match still earns full authority.
+ */
+export async function searchLongestFragment(
+  repository: CorpusRepository,
+  query: string,
+  limit = MAX_CANDIDATES,
+): Promise<PhraseFragmentResult | null> {
+  const words = query.trim().split(/\s+/).filter(Boolean);
+  if (words.length < MIN_FRAGMENT_WORDS || words.length > MAX_FRAGMENT_QUERY_WORDS) return null;
+
+  for (let size = words.length; size >= MIN_FRAGMENT_WORDS; size -= 1) {
+    for (let start = 0; start + size <= words.length; start += 1) {
+      const fragment = words.slice(start, start + size).join(' ');
+      const matches = await repository.searchPhrase(fragment, limit);
+      if (matches.length > 0) {
+        return { fragment, fragmentWords: size, queryWords: words.length, matches };
+      }
+    }
+  }
+  return null;
+}
+
+/** A concept whose lexicon matched the query. */
+export interface ConceptMatchRow {
+  readonly conceptId: string;
+  readonly label: string;
+  /** The author's original phrase that matched — shown, not the normalized form. */
+  readonly matchedPhrase: string;
+  /** Tokens in the matched phrase; longer phrases are more specific evidence. */
+  readonly matchedTokenCount: number;
+}
+
+/** A verse named by a concept, with the source that named it. */
+export interface ConceptAnchorRow extends ScriptureVerse {
+  readonly conceptId: string;
+  readonly conceptLabel: string;
+  readonly sourceId: string;
+  readonly weight: number;
+  readonly locator: string | null;
+}
+
+/** A verse reached by a curated cross-reference edge. */
+export interface CrossReferenceRow extends ScriptureVerse {
+  readonly fromVerseId: number;
+  readonly sourceId: string;
+  readonly votes: number;
+}
+
+/**
+ * Concept lookup and anchor expansion — Layer A at query time.
+ *
+ * Kept in the repository (not the intents module) because it is SQL; the
+ * scoring decisions live in `intents/concept.ts` so they stay pure.
+ */
+export class ConceptRepository {
+  constructor(private readonly database: ContentQueryPort) {}
+
+  /**
+   * Concepts whose lexicon phrase is fully contained in the query's tokens.
+   *
+   * Containment, not similarity: "hearing and doing" (tokens hear, do) fires
+   * the concept because every token of the lexicon phrase is present. A
+   * fuzzy threshold here would be a second, hidden ranking system competing
+   * with the real one — the lexicon is curated precisely so matching can be
+   * exact and explainable.
+   */
+  async matchConcepts(queryTokens: readonly string[]): Promise<readonly ConceptMatchRow[]> {
+    const tokens = [...new Set(queryTokens)];
+    if (tokens.length === 0) return [];
+    const result = await this.database.execute(
+      `SELECT cl.concept_id AS conceptId, c.label AS label,
+              cl.phrase AS phrase, cl.normalized AS normalized, cl.token_count AS tokenCount
+       FROM concept_lexicon cl
+       JOIN concepts c ON c.id = cl.concept_id`,
+    );
+    const present = new Set(tokens);
+    const best = new Map<string, ConceptMatchRow>();
+    for (const row of result.rows) {
+      const phraseTokens = str(row, 'normalized').split(' ').filter(Boolean);
+      if (phraseTokens.length === 0) continue;
+      if (!phraseTokens.every((token) => present.has(token))) continue;
+      const candidate: ConceptMatchRow = {
+        conceptId: str(row, 'conceptId'),
+        label: str(row, 'label'),
+        matchedPhrase: str(row, 'phrase'),
+        matchedTokenCount: num(row, 'tokenCount'),
+      };
+      // Keep the most specific matching phrase per concept: a three-token
+      // phrase matching is stronger evidence than a one-token one.
+      const existing = best.get(candidate.conceptId);
+      if (!existing || candidate.matchedTokenCount > existing.matchedTokenCount) {
+        best.set(candidate.conceptId, candidate);
+      }
+    }
+    return [...best.values()].sort((a, b) =>
+      a.conceptId < b.conceptId ? -1 : a.conceptId > b.conceptId ? 1 : 0,
+    );
+  }
+
+  /** Verses anchored by the given concepts. */
+  async anchorVerses(conceptIds: readonly string[]): Promise<readonly ConceptAnchorRow[]> {
+    const unique = [...new Set(conceptIds)];
+    if (unique.length === 0) return [];
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `SELECT v.id AS id, v.verse_id AS verseId,
+              v.translation_id AS translationId, t.code AS translationCode,
+              v.book_id AS bookId, b.name AS bookName,
+              v.chapter AS chapter, v.verse AS verse, v.text AS text,
+              a.concept_id AS conceptId, c.label AS conceptLabel,
+              a.source_id AS sourceId, a.weight AS weight, a.locator AS locator
+       FROM concept_anchors a
+       JOIN concepts c ON c.id = a.concept_id
+       JOIN verses v ON v.verse_id BETWEEN a.start_verse_id AND a.end_verse_id
+       JOIN translations t ON t.id = v.translation_id
+       JOIN books b ON b.id = v.book_id
+       WHERE a.concept_id IN (${placeholders})
+       ORDER BY a.concept_id, v.verse_id, t.code`,
+      unique,
+    );
+    return result.rows.map((row) => ({
+      ...mapVerse(row),
+      conceptId: str(row, 'conceptId'),
+      conceptLabel: str(row, 'conceptLabel'),
+      sourceId: str(row, 'sourceId'),
+      weight: num(row, 'weight'),
+      locator: typeof row['locator'] === 'string' ? row['locator'] : null,
+    }));
+  }
+
+  /** Concepts one hop away in the curated graph. */
+  async relatedConcepts(conceptIds: readonly string[]): Promise<readonly string[]> {
+    const unique = [...new Set(conceptIds)];
+    if (unique.length === 0) return [];
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `SELECT DISTINCT related_id AS relatedId FROM concept_related
+       WHERE concept_id IN (${placeholders}) ORDER BY related_id`,
+      unique,
+    );
+    return result.rows
+      .map((row) => str(row, 'relatedId'))
+      .filter((id) => !unique.includes(id));
+  }
+
+  /**
+   * Verses reached by cross-reference from the given seed verses.
+   *
+   * Bounded per seed: an unbounded expansion would let one well-connected
+   * verse flood the candidate set, which is precision erosion by another
+   * name.
+   */
+  async expandCrossReferences(
+    fromVerseIds: readonly number[],
+    perSeedLimit = 5,
+  ): Promise<readonly CrossReferenceRow[]> {
+    const unique = [...new Set(fromVerseIds)];
+    if (unique.length === 0) return [];
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `WITH ranked AS (
+         SELECT x.from_verse_id AS fromVerseId, x.to_start_verse_id AS toStart,
+                x.to_end_verse_id AS toEnd, x.source_id AS sourceId, x.votes AS votes,
+                ROW_NUMBER() OVER (
+                  PARTITION BY x.from_verse_id ORDER BY x.votes DESC, x.to_start_verse_id
+                ) AS rn
+         FROM cross_references x
+         WHERE x.from_verse_id IN (${placeholders})
+       )
+       SELECT v.id AS id, v.verse_id AS verseId,
+              v.translation_id AS translationId, t.code AS translationCode,
+              v.book_id AS bookId, b.name AS bookName,
+              v.chapter AS chapter, v.verse AS verse, v.text AS text,
+              r.fromVerseId AS fromVerseId, r.sourceId AS sourceId, r.votes AS votes
+       FROM ranked r
+       JOIN verses v ON v.verse_id BETWEEN r.toStart AND r.toEnd
+       JOIN translations t ON t.id = v.translation_id
+       JOIN books b ON b.id = v.book_id
+       WHERE r.rn <= ?
+       ORDER BY r.votes DESC, v.verse_id, t.code`,
+      [...unique, perSeedLimit],
+    );
+    return result.rows.map((row) => ({
+      ...mapVerse(row),
+      fromVerseId: num(row, 'fromVerseId'),
+      sourceId: str(row, 'sourceId'),
+      votes: num(row, 'votes'),
+    }));
+  }
+
+  /** Highest observed vote count, used to normalize vote-derived strength. */
+  async maxCrossReferenceVotes(): Promise<number> {
+    const result = await this.database.execute(
+      'SELECT COALESCE(MAX(votes), 0) AS maxVotes FROM cross_references',
+    );
+    return num(result.rows[0] ?? { maxVotes: 0 }, 'maxVotes');
+  }
+
+  async hasConceptLayer(): Promise<boolean> {
+    const result = await this.database.execute(
+      "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='concepts'",
+    );
+    return num(result.rows[0] ?? { n: 0 }, 'n') > 0;
   }
 }

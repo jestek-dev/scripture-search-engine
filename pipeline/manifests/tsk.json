@@ -1,0 +1,12 @@
+{
+  "id": "tsk",
+  "label": "Treasury of Scripture Knowledge",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain by age (published 1830s). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).",
+  "sourceUrl": "https://en.wikipedia.org/wiki/Treasury_of_Scripture_Knowledge",
+  "sha256": "",
+  "bytes": 0,
+  "maxTier": "public_distribution",
+  "lineageOnly": true,
+  "attributionNote": "LINEAGE-ONLY ENTRY. No rows in the artifact cite this source directly; it exists so that OpenBible cross-references and future homiletical co-citations can declare a shared ancestor and therefore share one correlation budget."
+}

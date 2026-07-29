@@ -1,6 +1,6 @@
 {
   "corpusFingerprint": "a601e37fe2eecb772161fa2fd6f84b63727863b83b8fbb019e3579136a162346",
-  "engineVersion": "0.1.0",
+  "engineVersion": "0.3.0",
   "observations": [
     {
       "id": "broad-love",
@@ -78,105 +78,109 @@
       "id": "medium-refuge-trouble",
       "top": [
         "WEB:19046001",
-        "WEB:19091015",
-        "WEB:19046007",
         "WEB:19091002",
-        "WEB:19091009",
-        "WEB:48001007",
-        "WEB:19046011",
-        "WEB:19091004"
+        "WEB:19091001",
+        "WEB:19046002",
+        "WEB:19046003",
+        "WEB:19121005",
+        "WEB:19121007",
+        "WEB:19121006",
+        "WEB:19121001",
+        "WEB:19121002"
       ],
-      "resultCount": 8,
-      "weakReasonShare": 1,
-      "meanTopScore": 2.564868
+      "resultCount": 25,
+      "weakReasonShare": 0.150947,
+      "meanTopScore": 28.295055
     },
     {
       "id": "medium-fear-not",
       "top": [
         "WEB:19091005",
-        "WEB:23043005",
-        "WEB:01003010",
-        "WEB:19046002",
-        "WEB:06001009",
         "WEB:23043001",
-        "WEB:58011023",
-        "WEB:23040009"
+        "WEB:06001009",
+        "WEB:23043002",
+        "WEB:23043003",
+        "WEB:19046002",
+        "WEB:19046001",
+        "WEB:19046003",
+        "WEB:19091001",
+        "WEB:19091002"
       ],
-      "resultCount": 8,
-      "weakReasonShare": 1,
-      "meanTopScore": 2.598121
+      "resultCount": 25,
+      "weakReasonShare": 0.352285,
+      "meanTopScore": 20.465796
     },
     {
       "id": "medium-light-darkness",
       "top": [
+        "WEB:01003008",
         "WEB:62001007",
-        "WEB:01001003",
+        "WEB:62001005",
+        "WEB:62001006",
         "WEB:43001004",
+        "WEB:43001009",
         "WEB:43001008",
-        "WEB:01005024",
-        "WEB:62002006",
-        "WEB:01001015",
+        "WEB:43001007",
         "WEB:43001005",
-        "WEB:45002019",
-        "WEB:19091006"
+        "WEB:43001006"
       ],
       "resultCount": 25,
-      "weakReasonShare": 1,
-      "meanTopScore": 2.85546
+      "weakReasonShare": 0.178616,
+      "meanTopScore": 30.022489
     },
     {
       "id": "narrow-hearing-doing",
       "top": [
-        "WEB:59001022",
         "WEB:42006047",
         "WEB:40007024",
+        "WEB:59001022",
         "WEB:59001023",
-        "WEB:45002013",
-        "WEB:59001025",
-        "WEB:43013015",
-        "WEB:05006004",
-        "WEB:40005027",
-        "WEB:40005038"
+        "WEB:40007026",
+        "WEB:42006049",
+        "WEB:40007025",
+        "WEB:40007027",
+        "WEB:42006046",
+        "WEB:59001025"
       ],
       "resultCount": 25,
-      "weakReasonShare": 1,
-      "meanTopScore": 5.665954
+      "weakReasonShare": 0.341409,
+      "meanTopScore": 41.111994
     },
     {
       "id": "narrow-doers-word",
       "top": [
         "WEB:59001022",
         "WEB:42006047",
-        "WEB:59001023",
         "WEB:40007024",
-        "WEB:62002007",
-        "WEB:26033032",
         "WEB:40007026",
-        "WEB:26033007",
-        "WEB:26033031",
-        "WEB:45002013"
+        "WEB:59001023",
+        "WEB:40007025",
+        "WEB:40007027",
+        "WEB:42006049",
+        "WEB:42006046",
+        "WEB:42006048"
       ],
       "resultCount": 25,
-      "weakReasonShare": 1,
-      "meanTopScore": 8.479592
+      "weakReasonShare": 0.333075,
+      "meanTopScore": 46.011163
     },
     {
       "id": "narrow-house-rock",
       "top": [
-        "WEB:40007024",
         "WEB:40007026",
+        "WEB:40007024",
         "WEB:40007025",
-        "WEB:42006048",
-        "WEB:49002022",
-        "WEB:58010021",
+        "WEB:40007027",
         "WEB:42006049",
-        "WEB:05006009",
-        "WEB:49002020",
-        "WEB:49002021"
+        "WEB:42006048",
+        "WEB:42006047",
+        "WEB:42006046",
+        "WEB:59001022",
+        "WEB:59001023"
       ],
-      "resultCount": 23,
-      "weakReasonShare": 1,
-      "meanTopScore": 3.157755
+      "resultCount": 25,
+      "weakReasonShare": 0.298764,
+      "meanTopScore": 43.979462
     },
     {
       "id": "phrase-present-help",

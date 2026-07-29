@@ -1,0 +1,22 @@
+id: grace-not-earned
+label: Grace, not earned
+lexicon:
+  - saved by grace
+  - not by works
+  - gift of god
+  - nothing to boast about
+  - unmerited favor
+anchors:
+  - ref: Ephesians 2:8-9
+    sources: [editorial]
+    weight: 1.0
+  - ref: Romans 3:23-24
+    sources: [editorial]
+    weight: 0.9
+  - ref: Titus 3:5
+    sources: [editorial]
+    weight: 0.8
+openbibleTopics:
+  - grace
+related:
+  - faith-and-works

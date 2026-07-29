@@ -11,7 +11,11 @@
  * 2 without changing anything above it.
  */
 
-import { CorpusRepository } from './corpus/repository.js';
+import {
+  ConceptRepository,
+  CorpusRepository,
+  searchLongestFragment,
+} from './corpus/repository.js';
 import { ENGINE_VERSION, TOKENIZER_VERSION } from './config/engineVersion.js';
 import {
   mergeCandidates,
@@ -22,6 +26,11 @@ import {
   targetIdFor,
   tokenEvidence,
 } from './intents/lexical.js';
+import {
+  conceptAnchorEvidence,
+  crossReferenceEvidence,
+  relatedConceptEvidence,
+} from './intents/concept.js';
 import { rank, type RankOptions } from './ranking/rank.js';
 import type { ContentQueryPort, DiscoveryResult, ResearchResult, ScriptureVerse } from './types.js';
 
@@ -43,7 +52,7 @@ export interface ScriptureEngine {
   readonly engineVersion: string;
 }
 
-const SUPPORTED_SCHEMA_VERSIONS = new Set(['1']);
+const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2']);
 
 export async function createEngine(
   database: ContentQueryPort,
@@ -66,6 +75,11 @@ export async function createEngine(
     );
   }
 
+  // The concept layer is optional: a v1 artifact has no concept tables, and
+  // the engine still works as a lexical search rather than refusing to open.
+  const conceptRepository = new ConceptRepository(database);
+  const concepts = (await conceptRepository.hasConceptLayer()) ? conceptRepository : null;
+
   const documentCount = await repository.documentCount();
   const identity = { engineVersion: ENGINE_VERSION, corpusFingerprint: meta.corpusFingerprint };
 
@@ -74,13 +88,35 @@ export async function createEngine(
     const contributions: { verse: ScriptureVerse; evidence: ReturnType<typeof tokenEvidence> }[] =
       [];
 
-    // Step 2 — exact phrase. Only meaningful for multi-word queries; a
-    // single word "matching a phrase" is just the token intent wearing an
-    // authoritative badge it has not earned.
+    // Step 2 — verbatim text. Tries the whole query first and falls back to
+    // its longest matching fragment, so a paraphrase still gets credit for
+    // the part the user quoted exactly. Only for multi-word queries: a single
+    // word "matching a phrase" is the token intent wearing an authoritative
+    // badge it has not earned.
     if (query.trim().includes(' ')) {
-      for (const match of await repository.searchPhrase(query)) {
-        verses.set(targetIdFor(match), match);
-        contributions.push({ verse: match, evidence: [phraseEvidence(match)] });
+      const whole = await repository.searchPhrase(query);
+      const queryWords = query.trim().split(/\s+/).filter(Boolean).length;
+      if (whole.length > 0) {
+        for (const match of whole) {
+          verses.set(targetIdFor(match), match);
+          contributions.push({
+            verse: match,
+            evidence: [phraseEvidence(query.trim(), queryWords, queryWords)],
+          });
+        }
+      } else {
+        const fragment = await searchLongestFragment(repository, query);
+        if (fragment) {
+          for (const match of fragment.matches) {
+            verses.set(targetIdFor(match), match);
+            contributions.push({
+              verse: match,
+              evidence: [
+                phraseEvidence(fragment.fragment, fragment.fragmentWords, fragment.queryWords),
+              ],
+            });
+          }
+        }
       }
     }
 
@@ -93,6 +129,59 @@ export async function createEngine(
       for (const match of await repository.searchTokens(tokens, documentCount)) {
         verses.set(targetIdFor(match), match);
         contributions.push({ verse: match, evidence: tokenEvidence(match, idfTotal) });
+      }
+    }
+
+    // Step 5 — curated concept expansion. This is the step that can find a
+    // passage sharing NO vocabulary with the query, because a human recorded
+    // that it belongs. Everything above it is untouched by its presence.
+    if (concepts && tokens.length > 0) {
+      const matched = await concepts.matchConcepts(tokens);
+      if (matched.length > 0) {
+        const specificity = new Map(
+          matched.map((match) => [match.conceptId, match.matchedTokenCount]),
+        );
+        const anchors = await concepts.anchorVerses(matched.map((match) => match.conceptId));
+        for (const anchor of anchors) {
+          verses.set(targetIdFor(anchor), anchor);
+          contributions.push({
+            verse: anchor,
+            evidence: [
+              conceptAnchorEvidence(anchor, specificity.get(anchor.conceptId) ?? 1),
+            ],
+          });
+        }
+
+        // One hop through the curated graph, filed as weak evidence.
+        const relatedIds = await concepts.relatedConcepts(
+          matched.map((match) => match.conceptId),
+        );
+        for (const anchor of await concepts.anchorVerses(relatedIds)) {
+          verses.set(targetIdFor(anchor), anchor);
+          contributions.push({ verse: anchor, evidence: [relatedConceptEvidence(anchor)] });
+        }
+
+        // Cross-reference expansion seeded ONLY from concept anchors, never
+        // from arbitrary lexical hits. Seeding from weak matches is how a
+        // curated graph turns into a random walk.
+        const seeds = [...new Set(anchors.map((anchor) => anchor.verseId))].sort(
+          (a, b) => a - b,
+        );
+        const seedLabels = new Map(anchors.map((anchor) => [anchor.verseId, referenceLabel(anchor)]));
+        const maxVotes = await concepts.maxCrossReferenceVotes();
+        for (const edge of await concepts.expandCrossReferences(seeds)) {
+          verses.set(targetIdFor(edge), edge);
+          contributions.push({
+            verse: edge,
+            evidence: [
+              crossReferenceEvidence(
+                edge,
+                maxVotes,
+                seedLabels.get(edge.fromVerseId) ?? 'a matched passage',
+              ),
+            ],
+          });
+        }
       }
     }
 

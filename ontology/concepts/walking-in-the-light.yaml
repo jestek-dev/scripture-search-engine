@@ -1,0 +1,19 @@
+id: walking-in-the-light
+label: Walking in the light
+lexicon:
+  - walking in the light
+  - walk in darkness
+  - fellowship with one another
+  - light and darkness
+anchors:
+  - ref: 1 John 1:5-7
+    sources: [editorial]
+    weight: 1.0
+  - ref: John 1:4-9
+    sources: [editorial]
+    weight: 0.7
+  - ref: Ephesians 5:8
+    sources: [editorial]
+    weight: 0.7
+related:
+  - obedience-to-the-word

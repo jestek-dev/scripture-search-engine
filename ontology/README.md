@@ -65,3 +65,20 @@ is not pretending to arbitrate.
 
 This is what keeps the "no theology scores, ever" commitment intact while
 still letting the ontology carry conviction.
+
+## Admitted sources (Phase 2)
+
+| Source | Role | Rights |
+|---|---|---|
+| `editorial` | Hand-authored concepts, lexicons and anchors | LH-owned; AI-drafted offline, human-admitted |
+| `openbible-topics` | Community-voted anchors, pulled in by `openbibleTopics:` | CC BY 4.0 |
+| `openbible-xrefs` | Cross-reference expansion from concept anchors | CC BY 4.0 |
+| `tsk` | Lineage-only — never cited by a row | PD (declared so OpenBible can express ancestry) |
+
+Both OpenBible downloads are **rolling URLs with no archival versioning**, so
+the checksum in each manifest *is* our snapshot. Re-downloading later produces
+a different file that must be re-admitted through the gauntlet as a change.
+
+Neither download contains verse text of any translation — references and
+scores only — which is what makes them usable without touching the ESV
+copyright that governs the website's display.

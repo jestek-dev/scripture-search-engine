@@ -1,0 +1,11 @@
+{
+  "id": "editorial",
+  "label": "LH editorial",
+  "rightsClass": "editorial",
+  "licenseRecord": "Authored for this dataset. LH holds all rights. Drafted with AI assistance offline and admitted by human review; no AI runs at query time.",
+  "sourceUrl": "",
+  "sha256": "",
+  "bytes": 0,
+  "maxTier": "public_distribution",
+  "attributionNote": "Marks entries that are LH's own theological judgment rather than a claim of neutral data. The distinction is load-bearing: the engine renders no verdicts, it reports that a named source associates a passage with a concept. Where that source is us, the reader can see it."
+}

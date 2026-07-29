@@ -1,0 +1,25 @@
+id: refuge-in-trouble
+label: Refuge in trouble
+lexicon:
+  - refuge in trouble
+  - shelter in the storm
+  - god is our refuge
+  - hiding place
+  - stronghold in distress
+anchors:
+  - ref: Psalms 46:1-3
+    sources: [editorial]
+    weight: 1.0
+  - ref: Psalms 91:1-2
+    sources: [editorial]
+    weight: 0.95
+  - ref: Isaiah 25:4
+    sources: [editorial]
+    weight: 0.8
+  - ref: Psalms 121:1-8
+    sources: [editorial]
+    weight: 0.7
+openbibleTopics:
+  - refuge
+related:
+  - fear-not

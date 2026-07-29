@@ -1,0 +1,11 @@
+{
+  "id": "openbible-topics",
+  "label": "OpenBible.info Topical Bible",
+  "rightsClass": "cc_by",
+  "licenseRecord": "Creative Commons Attribution 4.0. The data file's own header states: 'CC-BY License: www.openbible.info/topics'. Attribution required in shipped output.",
+  "sourceUrl": "https://a.openbible.info/data/topic-scores.zip",
+  "sha256": "2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60",
+  "bytes": 417866,
+  "maxTier": "public_distribution",
+  "attributionNote": "Topical data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info/topics/). Verse rankings are COMMUNITY VOTES: a useful prior for what people find relevant, never a correctness label, and never treated as one by the ranker. The downloadable file contains only references and scores - no copyrighted verse text of any translation. The upstream URL is a rolling 'latest' path with no archival versioning, so this checksum IS our snapshot: re-downloading later will produce a different file and must be re-admitted as a change."
+}

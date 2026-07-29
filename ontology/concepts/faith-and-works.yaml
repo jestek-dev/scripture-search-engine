@@ -1,0 +1,23 @@
+id: faith-and-works
+label: Faith and works
+lexicon:
+  - faith without works
+  - faith and works
+  - dead faith
+  - show me your faith
+  - justified by works
+anchors:
+  - ref: James 2:14-26
+    sources: [editorial]
+    weight: 1.0
+  - ref: Ephesians 2:8-10
+    sources: [editorial]
+    weight: 0.8
+  - ref: Galatians 5:6
+    sources: [editorial]
+    weight: 0.6
+openbibleTopics:
+  - faith and works
+related:
+  - obedience-to-the-word
+  - grace-not-earned

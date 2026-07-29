@@ -10,7 +10,7 @@
 import type { Candidate } from '../ranking/rank.js';
 import type { Evidence } from '../reasons/types.js';
 import { significantWords } from '../tokenizer/index.js';
-import type { PhraseMatch, TokenMatch } from '../corpus/repository.js';
+import type { TokenMatch } from '../corpus/repository.js';
 import type { ScriptureVerse } from '../types.js';
 
 /**
@@ -42,11 +42,21 @@ export function referenceLabel(verse: ScriptureVerse): string {
  * equal-strength matches fall through to the canonical-order tie-break,
  * which is what a reader expects from a concordance-style result.
  */
-export function phraseEvidence(match: PhraseMatch): Evidence {
+export function phraseEvidence(
+  fragment: string,
+  fragmentWords: number,
+  queryWords: number,
+): Evidence {
+  const complete = fragmentWords >= queryWords;
   return {
     family: 'exact_phrase',
-    label: 'Exact phrase',
-    strength: 1,
+    label: complete ? 'Exact phrase' : `Contains "${fragment}"`,
+    // Proportional to how much of the question this verbatim text answers.
+    // A whole-query match earns full authority; a four-word fragment of an
+    // eight-word paraphrase earns half. This is what lets a paraphrase like
+    // "be doers of the word not hearers only" still resolve decisively to
+    // James 1:22, without pretending a fragment is the whole quotation.
+    strength: Math.max(0, Math.min(1, fragmentWords / Math.max(1, queryWords))),
   };
 }
 

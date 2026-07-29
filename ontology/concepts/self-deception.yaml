@@ -1,0 +1,19 @@
+id: self-deception
+label: Deceiving yourself
+lexicon:
+  - deceiving yourselves
+  - deluding your own selves
+  - forgets what he looks like
+  - self deception
+anchors:
+  - ref: James 1:22-24
+    sources: [editorial]
+    weight: 1.0
+  - ref: Galatians 6:3
+    sources: [editorial]
+    weight: 0.7
+  - ref: 1 John 1:8
+    sources: [editorial]
+    weight: 0.8
+related:
+  - obedience-to-the-word

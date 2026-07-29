@@ -11,10 +11,11 @@
  * artifact whose schema version it does not recognize, so a stale artifact
  * fails loudly instead of returning quietly wrong results.
  *
- * v1 — Phase 1: scripture corpus + FTS. Concept tables land in v2 (Phase 2),
- * pericopes and homiletical evidence in v3 (Phase 3).
+ * v1 — Phase 1: scripture corpus + FTS + token postings.
+ * v2 — Phase 2: curated concept layer + cross-reference edges.
+ * v3 — Phase 3: pericopes and homiletical evidence.
  */
-export const SCHEMA_VERSION = '1';
+export const SCHEMA_VERSION = '2';
 
 /**
  * `verses.id` (plain rowid) is the true primary key, NOT `verse_id`. The
@@ -119,6 +120,73 @@ CREATE TABLE token_stats (
   document_count INTEGER NOT NULL,
   PRIMARY KEY (token, translation_id)
 );
+
+/*
+ * ---- Layer A: the curated concept spine (schema v2) ----
+ *
+ * Concepts are reviewed data, authored as YAML in ontology/concepts and
+ * compiled here. This is what lets the engine answer "hearing and doing"
+ * with James 1:22 and SAY WHY, rather than hoping shared vocabulary happens
+ * to land on the right verses.
+ */
+CREATE TABLE concepts (
+  id TEXT PRIMARY KEY,
+  label TEXT NOT NULL
+);
+
+/*
+ * Lexicon phrases, stored BOTH as the author wrote them and as normalized
+ * tokens. The normalized form is what queries match against, so inflection
+ * and archaic forms are handled by the same tokenizer as everything else;
+ * the original is what findings and UI show, because a reader should never
+ * have to translate 'hear do' back into what they typed.
+ */
+CREATE TABLE concept_lexicon (
+  concept_id TEXT NOT NULL REFERENCES concepts(id),
+  phrase TEXT NOT NULL,
+  normalized TEXT NOT NULL,
+  token_count INTEGER NOT NULL
+);
+
+CREATE INDEX idx_concept_lexicon_normalized ON concept_lexicon(normalized);
+
+/*
+ * Scripture a concept names. weight is a source-supplied PRIOR (OpenBible
+ * vote share, editorial confidence) and is never a correctness label - the
+ * ranker treats it as one input to strength, not as truth.
+ */
+CREATE TABLE concept_anchors (
+  concept_id TEXT NOT NULL REFERENCES concepts(id),
+  start_verse_id INTEGER NOT NULL,
+  end_verse_id INTEGER NOT NULL,
+  source_id TEXT NOT NULL,
+  weight REAL NOT NULL,
+  locator TEXT
+);
+
+CREATE INDEX idx_concept_anchors_concept ON concept_anchors(concept_id);
+CREATE INDEX idx_concept_anchors_range ON concept_anchors(start_verse_id, end_verse_id);
+
+CREATE TABLE concept_related (
+  concept_id TEXT NOT NULL REFERENCES concepts(id),
+  related_id TEXT NOT NULL,
+  PRIMARY KEY (concept_id, related_id)
+);
+
+/*
+ * Curated cross-reference edges. Verse-to-range, with the source that
+ * asserted the edge and its vote count. Correlated sources share one budget
+ * at scoring time (G7), which is why source_id travels with every row.
+ */
+CREATE TABLE cross_references (
+  from_verse_id INTEGER NOT NULL,
+  to_start_verse_id INTEGER NOT NULL,
+  to_end_verse_id INTEGER NOT NULL,
+  source_id TEXT NOT NULL,
+  votes INTEGER NOT NULL
+);
+
+CREATE INDEX idx_cross_references_from ON cross_references(from_verse_id, votes DESC);
 `;
 
 /**
