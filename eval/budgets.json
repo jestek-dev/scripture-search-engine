@@ -19,8 +19,16 @@
     }
   },
   "latency": {
-    "$comment": "p95 over the probe set on the CI runner. Mobile numbers are promoted to gates once a consumer measures on target hardware.",
-    "p95Ms": 50
+    "$comment": [
+      "p95 over the probe set, measured AFTER a warm-up pass, on whatever CI",
+      "runner GitHub provides. Deliberately loose relative to observed local",
+      "times (~5ms): a shared runner varies by several-fold, and a gate that",
+      "fails at random teaches people to ignore gates. What this catches is an",
+      "ALGORITHMIC regression - an accidental full scan, a dropped index - which",
+      "shows up as an order of magnitude, not a few milliseconds.",
+      "Target-hardware latency is a consumer's measurement, not this repo's."
+    ],
+    "p95Ms": 150
   },
   "collision": {
     "$comment": "G4. Two concepts whose lexicons overlap beyond these thresholds are near-duplicates and must be merged or differentiated.",

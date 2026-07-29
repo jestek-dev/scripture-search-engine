@@ -69,6 +69,15 @@ export async function observeProbes(
   const observations: ProbeObservation[] = [];
   const latenciesMs: number[] = [];
 
+  // Warm-up pass, discarded. The first query of a process pays for module
+  // initialization, the first database page reads, and SQLite compiling each
+  // statement's query plan. Including that in a p95 measures cold start, not
+  // query cost — which is why this gate was failing on a slow CI runner while
+  // passing locally, and would have kept failing at random.
+  for (const probe of probes) {
+    await engine.research(probe.query);
+  }
+
   for (const probe of probes) {
     const started = performance.now();
     const result = await engine.research(probe.query);
@@ -208,9 +217,10 @@ export function latencyGate(latenciesMs: readonly number[], budgetMs: number): G
     return fail('G11-latency', 'Latency', `p95 ${p95.toFixed(1)}ms exceeds ${budgetMs}ms`, [
       {
         message:
-          `Probe p95 is ${p95.toFixed(1)}ms against a ${budgetMs}ms budget. Note this is the CI ` +
-          'runner against the fixture corpus, not target hardware — it catches algorithmic ' +
-          'regressions, not device performance.',
+          `Probe p95 is ${p95.toFixed(1)}ms against a ${budgetMs}ms budget, measured after a ` +
+          'warm-up pass. This runs on a shared CI runner against the fixture corpus, so it ' +
+          'catches ALGORITHMIC regressions (an accidental full scan, an unindexed join), not ' +
+          'device performance. Target-hardware numbers must come from a consumer.',
       },
     ]);
   }

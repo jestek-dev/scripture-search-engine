@@ -93,6 +93,24 @@ has real baselines for churn, latency, and size. But:
 Neither is dangerous — both are floors on weak evidence. But do not treat
 them as validated.
 
+### 2.2b The latency gate was flaky and is now deliberately loose
+
+G11 failed on one CI run (55ms vs a 50ms budget) and passed on the next with
+identical code. Two real problems, both now fixed:
+
+- It was measuring **cold start** — first-query module init, first database
+  page reads, SQLite compiling query plans — not query cost. A warm-up pass
+  now runs before timing.
+- The 50ms budget was calibrated on a dev machine. Shared CI runners vary by
+  several-fold, and **a gate that fails at random teaches people to ignore
+  gates**, which is worse than having no gate.
+
+The budget is now 150ms against ~5ms observed. That is loose on purpose: it
+catches an algorithmic regression (an accidental full scan, a dropped index),
+which shows up as an order of magnitude — not a few milliseconds of runner
+noise. Real device latency has to come from a consumer measuring on target
+hardware; this repo cannot produce that number honestly.
+
 ### 2.3 OpenBible URLs are rolling, with no archive
 
 `https://a.openbible.info/data/*` is overwritten weekly. There is no versioned
