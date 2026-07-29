@@ -31,11 +31,17 @@ Phased build: [docs/implementation-plan.md](docs/implementation-plan.md).
 ## The reproducibility contract
 
 ```
-(engineVersion, corpusFingerprint, query) → identical ordering, on every platform
+(engineVersion, corpusFingerprint, layerFingerprint, query)
+  → identical ordering, on every platform
 ```
 
-CI enforces this on two operating systems. Any change that alters ordering
-must bump `ENGINE_VERSION` in the same commit, or gate G2 fails the PR.
+Three identities, because results can change for three independent reasons:
+engine code, scripture text, and the curated layers. Before
+`layerFingerprint` existed, editing one concept altered rankings while every
+published identity stayed the same — which made the contract quietly false.
+
+CI enforces this on two operating systems. Any code change that alters
+ordering must bump `ENGINE_VERSION` in the same commit, or gate G2 fails.
 
 ## The admission gauntlet
 

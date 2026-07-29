@@ -1,6 +1,6 @@
 {
   "corpusFingerprint": "a601e37fe2eecb772161fa2fd6f84b63727863b83b8fbb019e3579136a162346",
-  "engineVersion": "0.3.0",
+  "engineVersion": "0.5.0",
   "observations": [
     {
       "id": "broad-love",
@@ -117,16 +117,16 @@
         "WEB:62001007",
         "WEB:62001005",
         "WEB:62001006",
+        "WEB:62002006",
+        "WEB:59001017",
         "WEB:43001004",
-        "WEB:43001009",
-        "WEB:43001008",
-        "WEB:43001007",
-        "WEB:43001005",
-        "WEB:43001006"
+        "WEB:59001022",
+        "WEB:59001023",
+        "WEB:62002004"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.178616,
-      "meanTopScore": 30.022489
+      "weakReasonShare": 0.258986,
+      "meanTopScore": 20.998262
     },
     {
       "id": "narrow-hearing-doing",
@@ -187,18 +187,18 @@
       "top": [
         "WEB:19046001",
         "WEB:19091015",
-        "WEB:19046005",
         "WEB:19121001",
         "WEB:19121002",
+        "WEB:19091016",
+        "WEB:19046005",
         "WEB:48001007",
         "WEB:45008018",
         "WEB:48001004",
-        "WEB:45008038",
-        "WEB:45008026"
+        "WEB:45008038"
       ],
-      "resultCount": 11,
-      "weakReasonShare": 0.263605,
-      "meanTopScore": 8.147803
+      "resultCount": 12,
+      "weakReasonShare": 0.349635,
+      "meanTopScore": 9.225582
     },
     {
       "id": "adversarial-nonsense",

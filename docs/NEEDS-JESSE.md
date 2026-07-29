@@ -10,14 +10,24 @@ call that is yours, not mine.
 
 ## 1. Decisions I need from you
 
-### 1.1 Is the starter ontology theologically sound? ⚠️ **highest priority**
+### 1.1 Starter ontology — ✅ REVIEWED AND APPROVED (2026-07-29)
 
-I authored 8 concepts in `ontology/concepts/`. They are AI-drafted and
-admitted by the gates, but **no human has reviewed them theologically.** They
-carry `sources: [editorial]`, which renders in the product as *"LH
-editorial"* — your name, your judgment.
+Jesse reviewed all 8 concepts and approved them, with one correction:
 
-Please read these 8 files. They are short:
+- **`walking-in-the-light`** was scoped to the ETHICAL sense — living and
+  thinking the way the Word says, walking as Jesus walked. The cosmological
+  John 1:4-9 anchor was removed and 1 John 2:6 ("walk just like he walked")
+  added. `light` on its own stays broad, since it legitimately spans both
+  senses; the *walking* phrases pin the concept to conduct.
+  G8 confirmed the change dropped exactly John 1:5-9 from the light/darkness
+  probe and touched nothing else.
+
+The remaining eight items I flagged for judgment were all accepted as-is:
+Eph 2:8-10 under `faith-and-works`, the broad "gift of god" lexicon entry,
+Ezek 33:31-32 as the inverse case, and the deliberate James 1:22-24 anchor
+shared between `obedience-to-the-word` and `self-deception`.
+
+Original set for reference:
 
 | Concept | Anchors it asserts |
 |---|---|

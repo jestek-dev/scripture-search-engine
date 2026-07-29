@@ -1,17 +1,26 @@
 id: walking-in-the-light
 label: Walking in the light
+# Deliberately the ETHICAL sense: living and thinking the way the Word says —
+# walking as Jesus walked. NOT the cosmological light/darkness of the John 1
+# prologue, which is a different idea wearing the same vocabulary. Folding it
+# in made this concept fire on creation and incarnation texts that say nothing
+# about how a believer walks, so John 1:4-9 was removed.
+#
+# "light" on its own stays broad, because it legitimately spans both senses.
+# It is the WALKING phrases that pin this concept to conduct.
 lexicon:
   - walking in the light
+  - walk as Jesus walked
   - walk in darkness
   - fellowship with one another
-  - light and darkness
+  - live according to the word
 anchors:
   - ref: 1 John 1:5-7
     sources: [editorial]
     weight: 1.0
-  - ref: John 1:4-9
+  - ref: 1 John 2:6
     sources: [editorial]
-    weight: 0.7
+    weight: 0.95
   - ref: Ephesians 5:8
     sources: [editorial]
     weight: 0.7

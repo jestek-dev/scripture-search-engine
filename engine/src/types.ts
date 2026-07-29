@@ -45,13 +45,23 @@ export interface ScripturePassage {
 
 /**
  * Every result carries the identities that make it reproducible. A consumer
- * can record `(engineVersion, corpusFingerprint, query)` and any other
- * consumer, on any platform, can regenerate the identical ordering. This is
- * the machine-checkable form of the "deterministic" claim.
+ * can record `(engineVersion, corpusFingerprint, layerFingerprint, query)`
+ * and any other consumer, on any platform, can regenerate the identical
+ * ordering. This is the machine-checkable form of the "deterministic" claim.
  */
 export interface ResultIdentity {
   readonly engineVersion: string;
+  /** Identifies the scripture text. */
   readonly corpusFingerprint: string;
+  /**
+   * Identifies the curated concept and homiletical layers.
+   *
+   * Separate from the corpus fingerprint because they change for different
+   * reasons and at different rates — and because without it, editing a
+   * concept would silently alter rankings while every published identity
+   * stayed the same. Reproducing a result requires BOTH.
+   */
+  readonly layerFingerprint: string;
 }
 
 export interface DiscoveryResult {

@@ -101,6 +101,12 @@ export interface CorpusMeta {
   readonly verseCount: number;
   /** Mean significant-token length per verse — the avgdl of length normalization. */
   readonly avgVerseTokens: number;
+  /**
+   * Identity of the curated layers. Empty string when an artifact has no
+   * concept layer, which is a legitimate state (a v1 lexical-only artifact),
+   * not a missing value.
+   */
+  readonly layerFingerprint: string;
 }
 
 export class CorpusRepository implements ReferenceResolver {
@@ -124,6 +130,7 @@ export class CorpusRepository implements ReferenceResolver {
       corpusFingerprint: required('corpus_fingerprint'),
       verseCount: Number(required('verse_count')),
       avgVerseTokens: Number(required('avg_verse_tokens')),
+      layerFingerprint: map.get('layer_fingerprint') ?? '',
     };
   }
 

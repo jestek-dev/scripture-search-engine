@@ -1,13 +1,14 @@
 /**
  * The engine version participates in the reproducibility contract:
  *
- *   (engineVersion, corpusFingerprint, query) -> identical ordering
+ *   (engineVersion, corpusFingerprint, layerFingerprint, query)
+ *     -> identical ordering
  *
  * Any change that can alter ordering — weights, caps, tokenizer rules,
  * tie-breaks — MUST bump this in the same commit. Gate G2 fails a PR whose
  * ordering changed without a bump, so this is enforced, not merely asked for.
  */
-export const ENGINE_VERSION = '0.4.0';
+export const ENGINE_VERSION = '0.5.0';
 
 /**
  * Bumped independently of ENGINE_VERSION when the tokenizer changes, because

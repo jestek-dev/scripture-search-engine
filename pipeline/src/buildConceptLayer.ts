@@ -7,6 +7,8 @@
  * size-budgeted artifact is a cost with no benefit.
  */
 
+import { createHash } from 'node:crypto';
+
 import { checkProvenance, type ManifestSet } from './provenance/manifest.js';
 import type { CompiledOntology } from './importers/ontologyImporter.js';
 import type { CrossReferenceRow, TopicAnchorRow } from './importers/openbibleImporter.js';
@@ -40,6 +42,16 @@ export interface ConceptLayerResult {
   readonly crossReferences: number;
   readonly passageTerms: number;
   readonly droppedOutOfCorpus: number;
+  /**
+   * Identifies everything in the curated layers that can change a result.
+   *
+   * The corpus fingerprint covers scripture text only, so before this existed
+   * an ontology edit altered rankings while both published identities stayed
+   * the same — which made the reproducibility contract
+   * (engineVersion, corpusFingerprint, query) -> identical ordering
+   * quietly false. Consumers must pin this too.
+   */
+  readonly layerFingerprint: string;
 }
 
 /** True when any verse of the range exists in this artifact. */
@@ -205,7 +217,54 @@ export function buildConceptLayer(
     throw error;
   }
 
+  // Length-delimited canonical stream, same discipline as the corpus
+  // fingerprint: without length prefixes, differently-split fields could hash
+  // identically and the fingerprint would not be evidence of anything.
+  const hash = createHash('sha256');
+  const feed = (parts: readonly (string | number)[]): void => {
+    const record = parts.join(' ');
+    hash.update(String(record.length));
+    hash.update(' ');
+    hash.update(record);
+  };
+  for (const concept of [...input.ontology.concepts].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+    feed(['c', concept.id, concept.label]);
+  }
+  for (const entry of [...input.ontology.lexicon].sort((a, b) =>
+    a.conceptId !== b.conceptId
+      ? a.conceptId < b.conceptId
+        ? -1
+        : 1
+      : a.normalized < b.normalized
+        ? -1
+        : 1,
+  )) {
+    feed(['l', entry.conceptId, entry.normalized]);
+  }
+  for (const anchor of [...input.ontology.anchors].sort((a, b) =>
+    a.conceptId !== b.conceptId
+      ? a.conceptId < b.conceptId
+        ? -1
+        : 1
+      : a.startVerseId - b.startVerseId || (a.sourceId < b.sourceId ? -1 : 1),
+  )) {
+    feed(['a', anchor.conceptId, anchor.startVerseId, anchor.endVerseId, anchor.sourceId, anchor.weight]);
+  }
+  for (const edge of [...input.ontology.related].sort((a, b) =>
+    a.conceptId !== b.conceptId ? (a.conceptId < b.conceptId ? -1 : 1) : a.relatedId < b.relatedId ? -1 : 1,
+  )) {
+    feed(['r', edge.conceptId, edge.relatedId]);
+  }
+  feed(['counts', topicAnchors, crossReferences, passageTerms]);
+  const layerFingerprint = hash.digest('hex');
+
+  // Written with REPLACE because the corpus build already populated meta.
+  database
+    .prepare('INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)')
+    .run('layer_fingerprint', layerFingerprint);
+
   return {
+    layerFingerprint,
     concepts: input.ontology.concepts.length,
     lexiconEntries: input.ontology.lexicon.length,
     editorialAnchors,

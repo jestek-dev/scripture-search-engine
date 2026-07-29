@@ -50,6 +50,7 @@ export interface ScriptureEngine {
   research(query: string): Promise<ResearchResult>;
   close(): Promise<void>;
   readonly corpusFingerprint: string;
+  readonly layerFingerprint: string;
   readonly engineVersion: string;
 }
 
@@ -83,7 +84,11 @@ export async function createEngine(
 
   const hasPassageTerms = await conceptRepository.hasPassageTerms();
   const documentCount = await repository.documentCount();
-  const identity = { engineVersion: ENGINE_VERSION, corpusFingerprint: meta.corpusFingerprint };
+  const identity = {
+    engineVersion: ENGINE_VERSION,
+    corpusFingerprint: meta.corpusFingerprint,
+    layerFingerprint: meta.layerFingerprint,
+  };
 
   async function discover(query: string): Promise<readonly DiscoveryResult[]> {
     const verses = new Map<string, ScriptureVerse>();
@@ -211,6 +216,7 @@ export async function createEngine(
   return {
     engineVersion: ENGINE_VERSION,
     corpusFingerprint: meta.corpusFingerprint,
+    layerFingerprint: meta.layerFingerprint,
 
     async research(query: string): Promise<ResearchResult> {
       const trimmed = query.trim();
