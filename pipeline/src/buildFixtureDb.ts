@@ -16,9 +16,9 @@ import { DatabaseSync } from 'node:sqlite';
 import { buildConceptLayer, type ConceptLayerResult } from './buildConceptLayer.js';
 import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
 import { compileOntology } from './importers/ontologyImporter.js';
-import {
-  importCrossReferences,
-  importTopicScores,
+import type {
+  CrossReferenceRow,
+  TopicAnchorRow,
 } from './importers/openbibleImporter.js';
 import type { ManifestSet, SourceManifest } from './provenance/manifest.js';
 import { importVerseArray, type VerseArraySource } from './importers/verseArrayImporter.js';
@@ -32,7 +32,7 @@ const FIXTURE_JSON = join(PIPELINE_ROOT, 'fixtures', 'web-subset.json');
 const WEB_MANIFEST = join(PIPELINE_ROOT, 'manifests', 'web.json');
 const MANIFEST_DIR = join(PIPELINE_ROOT, 'manifests');
 const ONTOLOGY_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'concepts');
-const SOURCES_DIR = join(PIPELINE_ROOT, 'sources');
+const OPENBIBLE_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-subset.json');
 
 function loadManifests(): ManifestSet {
   const sources = readdirSync(MANIFEST_DIR)
@@ -115,17 +115,17 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
       throw new Error(`buildFixtureDb: ontology errors:\n  ${errors.join('\n  ')}`);
     }
 
-    // OpenBible sources are optional locally (they are gitignored downloads),
-    // so a developer without them still gets a working editorial-only build.
-    // CI fetches them, so the gates always see the full picture.
-    const topicPath = join(SOURCES_DIR, 'topic-scores.txt');
-    const xrefPath = join(SOURCES_DIR, 'cross_references.txt');
-    const topicRows = existsSync(topicPath)
-      ? importTopicScores(readFileSync(topicPath, 'utf8')).rows
-      : [];
-    const crossReferences = existsSync(xrefPath)
-      ? importCrossReferences(readFileSync(xrefPath, 'utf8')).rows
-      : [];
+    // The fixture build ALWAYS reads the committed, corpus-scoped OpenBible
+    // subset — never the full gitignored downloads. Preferring the downloads
+    // when present would make the build differ between a developer's machine
+    // and CI, and a probe baseline that means different things in different
+    // places measures nothing. Full sources are for real artifact builds.
+    const subset = JSON.parse(readFileSync(OPENBIBLE_SUBSET, 'utf8')) as {
+      topicRows: TopicAnchorRow[];
+      crossReferences: CrossReferenceRow[];
+    };
+    const topicRows = subset.topicRows;
+    const crossReferences = subset.crossReferences;
 
     const presentVerseIds = new Set(translation.verses.map((verse) => verse.verseId));
     const conceptLayer =
