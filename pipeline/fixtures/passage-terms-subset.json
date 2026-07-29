@@ -1,2537 +1,1277 @@
 {
-  "$schema": "passage-terms-subset/1",
-  "generatedFrom": {
-    "sourceId": "maclaren-psalms",
-    "sha256": "ca79e0cc06ef8dda8f7e139539f6db4e6782d3e0d5a6ebf94773b74b88e37c32"
-  },
-  "note": "Distilled term profiles. The source prose is NOT included and never ships; see pipeline/manifests/maclaren-psalms.json for rights and method.",
+  "$schema": "passage-terms-subset/2",
+  "note": "Distilled term profiles from passage-keyed expositions. The source prose is NOT included and never ships; see pipeline/manifests/*.json for rights and method.",
+  "sources": [
+    {
+      "sourceId": "maclaren-psalms",
+      "sha256": "ca79e0cc06ef8dda8f7e139539f6db4e6782d3e0d5a6ebf94773b74b88e37c32",
+      "sectionsParsed": 73,
+      "sectionsRejected": 6,
+      "termsAloneAdmitted": 2920,
+      "marginalProfileDelta": 0.738648
+    },
+    {
+      "sourceId": "treasury-of-david-01",
+      "sha256": "38d558e4d70a4bf6d903114f85a49a4e82091728eca06a903aa99aa65ceed6d8",
+      "sectionsParsed": 1183,
+      "sectionsRejected": 364,
+      "termsAloneAdmitted": 7768,
+      "marginalProfileDelta": 0.066365
+    },
+    {
+      "sourceId": "treasury-of-david-02",
+      "sha256": "913881bd61b061876a10a9c3ea2568c0eec1ef7e6b3b19ffb3514d9ec3fefd9b",
+      "sectionsParsed": 1433,
+      "sectionsRejected": 503,
+      "termsAloneAdmitted": 9525,
+      "marginalProfileDelta": 0.244935
+    },
+    {
+      "sourceId": "treasury-of-david-04",
+      "sha256": "a1e2108006f8f0f2aed78681934b27fad10ab41ccde4af0b9f8746463c8472b9",
+      "sectionsParsed": 1411,
+      "sectionsRejected": 294,
+      "termsAloneAdmitted": 9025,
+      "marginalProfileDelta": 0.165891
+    },
+    {
+      "sourceId": "treasury-of-david-06",
+      "sha256": "be4272ba2a15637655748f6bf06c0e20b7a75ec9deba7de1ba27b6a33f3e880f",
+      "sectionsParsed": 1498,
+      "sectionsRejected": 339,
+      "termsAloneAdmitted": 8804,
+      "marginalProfileDelta": 0.073225
+    }
+  ],
+  "missingSources": [],
   "stats": {
-    "sectionsParsed": 73,
-    "sectionsRejected": 6,
-    "termsConsidered": 51388,
-    "termsAdmitted": 2920,
-    "termsInFixtureCorpus": 280,
-    "halfCorpusProfileDelta": 0.276913
+    "documents": 5598,
+    "termsConsidered": 422512,
+    "termsAdmitted": 1106,
+    "termsInFixtureCorpus": 122,
+    "minSourcesRequired": 2,
+    "multiSourceAttestedTerms": 1106,
+    "halfCorpusProfileDelta": 0.246695
   },
   "terms": [
     {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "gorg",
-      "pmi": 6.15143,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "mellow",
-      "pmi": 6.15143,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "guardian",
-      "pmi": 5.566467,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "restor",
-      "pmi": 5.344075,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "childhood",
-      "pmi": 5.15143,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "leadeth",
-      "pmi": 5.15143,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "prepare",
-      "pmi": 4.929037,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "sheep",
-      "pmi": 4.64893,
-      "count": 6,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "glen",
-      "pmi": 4.566467,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "restoration",
-      "pmi": 4.566467,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "foe",
-      "pmi": 4.414464,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "table",
-      "pmi": 4.197234,
-      "count": 8,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "journey",
-      "pmi": 4.15143,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "rough",
-      "pmi": 4.15143,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "enjoy",
-      "pmi": 4.063967,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "dweller",
-      "pmi": 3.981505,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "flock",
-      "pmi": 3.981505,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "staff",
-      "pmi": 3.981505,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "valley",
-      "pmi": 3.929037,
-      "count": 6,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "shepherd",
-      "pmi": 3.855974,
-      "count": 11,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "brighter",
-      "pmi": 3.829502,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "detail",
-      "pmi": 3.829502,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "messenger",
-      "pmi": 3.829502,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "repose",
-      "pmi": 3.829502,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "sore",
-      "pmi": 3.829502,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "afford",
-      "pmi": 3.691998,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "gloomy",
-      "pmi": 3.691998,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "hot",
-      "pmi": 3.691998,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "meal",
-      "pmi": 3.691998,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "pleasure",
-      "pmi": 3.691998,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "sits",
-      "pmi": 3.691998,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "strife",
-      "pmi": 3.691998,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "food",
-      "pmi": 3.615377,
-      "count": 5,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "refreshment",
-      "pmi": 3.566467,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "led",
-      "pmi": 3.507574,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "stage",
-      "pmi": 3.45099,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "aside",
-      "pmi": 3.344075,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "palace",
-      "pmi": 3.344075,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "green",
-      "pmi": 3.276961,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
-      "startVerseId": 19023001,
-      "endVerseId": 19023006,
-      "term": "fold",
-      "pmi": 3.244539,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 23:1-6"
-    },
-    {
       "startVerseId": 19046011,
       "endVerseId": 19046011,
-      "term": "title",
-      "pmi": 6.266226,
+      "term": "thrill",
+      "pmi": 6.36869,
       "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-02",
+      "sourceCount": 2,
       "locator": "PSALM 46:11"
     },
     {
       "startVerseId": 19046011,
       "endVerseId": 19046011,
-      "term": "emperor",
-      "pmi": 5.681264,
+      "term": "wandering",
+      "pmi": 5.609698,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "enshrin",
-      "pmi": 5.681264,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "recall",
-      "pmi": 5.681264,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "jacob",
-      "pmi": 5.309295,
-      "count": 17,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "astonish",
-      "pmi": 5.266226,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "blindness",
-      "pmi": 5.266226,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "incredible",
-      "pmi": 5.266226,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "miracle",
-      "pmi": 5.266226,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "stronghold",
-      "pmi": 5.266226,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "ruler",
-      "pmi": 5.043834,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "cared",
-      "pmi": 4.944298,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "planet",
-      "pmi": 4.944298,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "skie",
-      "pmi": 4.944298,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "palac",
-      "pmi": 4.681264,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "armi",
-      "pmi": 4.565786,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "proof",
-      "pmi": 4.52926,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "distance",
-      "pmi": 4.458871,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "drew",
-      "pmi": 4.458871,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "ended",
-      "pmi": 4.458871,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "gulf",
-      "pmi": 4.458871,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "universe",
-      "pmi": 4.31203,
-      "count": 8,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-02",
+      "sourceCount": 2,
       "locator": "PSALM 46:11"
     },
     {
       "startVerseId": 19046011,
       "endVerseId": 19046011,
       "term": "host",
-      "pmi": 4.246327,
-      "count": 18,
-      "sourceId": "maclaren-psalms",
+      "pmi": 5.177506,
+      "count": 19,
+      "sourceId": "maclaren-psalms+treasury-of-david-02",
+      "sourceCount": 2,
       "locator": "PSALM 46:11"
     },
     {
       "startVerseId": 19046011,
       "endVerseId": 19046011,
-      "term": "ceas",
-      "pmi": 4.150749,
+      "term": "guid",
+      "pmi": 3.765349,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-02",
+      "sourceCount": 2,
+      "locator": "PSALM 46:11"
+    },
+    {
+      "startVerseId": 19046011,
+      "endVerseId": 19046011,
+      "term": "rais",
+      "pmi": 2.774509,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-02",
+      "sourceCount": 2,
+      "locator": "PSALM 46:11"
+    },
+    {
+      "startVerseId": 19046011,
+      "endVerseId": 19046011,
+      "term": "effect",
+      "pmi": 2.484167,
       "count": 3,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-02",
+      "sourceCount": 2,
       "locator": "PSALM 46:11"
     },
     {
       "startVerseId": 19046011,
       "endVerseId": 19046011,
-      "term": "section",
-      "pmi": 4.096301,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "discipline",
-      "pmi": 3.944298,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "harder",
-      "pmi": 3.944298,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "obedient",
-      "pmi": 3.944298,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "wondrou",
-      "pmi": 3.944298,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "refrain",
-      "pmi": 3.806794,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "thankfulness",
-      "pmi": 3.763726,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "captain",
-      "pmi": 3.681264,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "ends",
-      "pmi": 3.681264,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "stoop",
-      "pmi": 3.681264,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "account",
-      "pmi": 3.565786,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "conceiv",
-      "pmi": 3.565786,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "individual",
-      "pmi": 3.391757,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "top",
-      "pmi": 3.359335,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "wrought",
-      "pmi": 3.327627,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19046011,
-      "endVerseId": 19046011,
-      "term": "refuge",
-      "pmi": 3.31203,
-      "count": 12,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 46:11"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "foster",
-      "pmi": 6.476682,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "troth",
-      "pmi": 6.476682,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "urgency",
-      "pmi": 6.476682,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "pinion",
-      "pmi": 6.061645,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "downy",
-      "pmi": 5.89172,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "immunity",
-      "pmi": 5.89172,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "entirely",
-      "pmi": 5.306757,
+      "term": "enter",
+      "pmi": 2.428884,
       "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
+      "sourceId": "maclaren-psalms+treasury-of-david-02",
+      "sourceCount": 2,
+      "locator": "PSALM 46:11"
     },
     {
       "startVerseId": 19091004,
       "endVerseId": 19091004,
-      "term": "plague",
-      "pmi": 5.061645,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "brood",
-      "pmi": 4.89172,
+      "term": "kite",
+      "pmi": 6.740438,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "flight",
-      "pmi": 4.89172,
-      "count": 7,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "protection",
-      "pmi": 4.750857,
-      "count": 13,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "disaster",
-      "pmi": 4.739717,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "flying",
-      "pmi": 4.739717,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "wing",
-      "pmi": 4.726661,
-      "count": 22,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "shield",
-      "pmi": 4.711148,
-      "count": 5,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "drown",
-      "pmi": 4.669327,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "lurk",
-      "pmi": 4.669327,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "nigh",
-      "pmi": 4.628686,
-      "count": 5,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "convey",
-      "pmi": 4.476682,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "impregnable",
-      "pmi": 4.476682,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "passage",
-      "pmi": 4.476682,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "saved",
-      "pmi": 4.406293,
-      "count": 5,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:4"
     },
     {
       "startVerseId": 19091004,
       "endVerseId": 19091004,
       "term": "feather",
-      "pmi": 4.154754,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "cover",
-      "pmi": 4.061645,
-      "count": 9,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "habitation",
-      "pmi": 4.017251,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "hot",
-      "pmi": 4.017251,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "reader",
-      "pmi": 4.017251,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "befall",
-      "pmi": 3.974182,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "shelter",
-      "pmi": 3.974182,
+      "pmi": 6.392515,
       "count": 6,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:4"
     },
     {
       "startVerseId": 19091004,
       "endVerseId": 19091004,
-      "term": "calamity",
-      "pmi": 3.89172,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "term": "protection",
+      "pmi": 5.614907,
+      "count": 14,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:4"
     },
     {
       "startVerseId": 19091004,
       "endVerseId": 19091004,
-      "term": "distinct",
-      "pmi": 3.89172,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "term": "wing",
+      "pmi": 5.508335,
+      "count": 25,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:4"
     },
     {
       "startVerseId": 19091004,
       "endVerseId": 19091004,
-      "term": "prey",
-      "pmi": 3.89172,
+      "term": "buckler",
+      "pmi": 5.19987,
       "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:4"
+    },
+    {
+      "startVerseId": 19091004,
+      "endVerseId": 19091004,
+      "term": "shield",
+      "pmi": 4.797771,
+      "count": 7,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:4"
     },
     {
       "startVerseId": 19091004,
       "endVerseId": 19091004,
       "term": "secur",
-      "pmi": 3.89172,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "refuge",
-      "pmi": 3.844414,
-      "count": 15,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "provid",
-      "pmi": 3.776243,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "almighty",
-      "pmi": 3.669327,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "expand",
-      "pmi": 3.669327,
+      "pmi": 4.676308,
       "count": 3,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:4"
     },
     {
       "startVerseId": 19091004,
       "endVerseId": 19091004,
-      "term": "vivid",
-      "pmi": 3.669327,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:4"
-    },
-    {
-      "startVerseId": 19091004,
-      "endVerseId": 19091004,
-      "term": "main",
-      "pmi": 3.602213,
+      "term": "peril",
+      "pmi": 4.481051,
       "count": 3,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:4"
     },
     {
       "startVerseId": 19091004,
       "endVerseId": 19091004,
-      "term": "beneath",
-      "pmi": 3.583598,
-      "count": 7,
-      "sourceId": "maclaren-psalms",
+      "term": "cover",
+      "pmi": 4.396484,
+      "count": 13,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:4"
     },
     {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "precede",
-      "pmi": 5.730784,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
+      "startVerseId": 19091004,
+      "endVerseId": 19091004,
+      "term": "guard",
+      "pmi": 2.923745,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:4"
     },
     {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "habitation",
-      "pmi": 5.66367,
+      "startVerseId": 19091004,
+      "endVerseId": 19091004,
+      "term": "promise",
+      "pmi": 2.72955,
       "count": 6,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:4"
     },
     {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "canva",
-      "pmi": 5.538139,
+      "startVerseId": 19091004,
+      "endVerseId": 19091004,
+      "term": "bed",
+      "pmi": 2.622441,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:4"
     },
     {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "plague",
-      "pmi": 5.538139,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "scope",
-      "pmi": 5.216211,
+      "startVerseId": 19091004,
+      "endVerseId": 19091004,
+      "term": "four",
+      "pmi": 2.577818,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:4"
+    },
+    {
+      "startVerseId": 19091004,
+      "endVerseId": 19091004,
+      "term": "truth",
+      "pmi": 2.311803,
+      "count": 9,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:4"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
-      "term": "exemption",
-      "pmi": 4.953176,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "term": "befall",
+      "pmi": 5.737699,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
       "term": "nigh",
-      "pmi": 4.953176,
-      "count": 6,
-      "sourceId": "maclaren-psalms",
+      "pmi": 5.312394,
+      "count": 7,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
-      "term": "saidst",
-      "pmi": 4.953176,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "promis",
-      "pmi": 4.718711,
-      "count": 17,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "befall",
-      "pmi": 4.450676,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "tent",
-      "pmi": 4.290211,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "harp",
-      "pmi": 4.216211,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "observ",
-      "pmi": 4.216211,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "revis",
-      "pmi": 4.216211,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "term": "habitation",
+      "pmi": 4.984339,
+      "count": 7,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
       "term": "refuge",
-      "pmi": 4.086443,
-      "count": 17,
-      "sourceId": "maclaren-psalms",
+      "pmi": 4.967458,
+      "count": 18,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
-      "term": "abide",
-      "pmi": 4.078707,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "completeness",
-      "pmi": 4.078707,
+      "term": "store",
+      "pmi": 4.474665,
       "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
-      "term": "abode",
-      "pmi": 3.953176,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "term": "plague",
+      "pmi": 4.404276,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
-      "term": "bitterness",
-      "pmi": 3.953176,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "response",
-      "pmi": 3.953176,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "continuity",
-      "pmi": 3.837699,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "escape",
-      "pmi": 3.837699,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "respond",
-      "pmi": 3.837699,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "abundant",
-      "pmi": 3.730784,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "authoris",
-      "pmi": 3.730784,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "adopt",
-      "pmi": 3.631248,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "voice",
-      "pmi": 3.553246,
+      "term": "danger",
+      "pmi": 4.011595,
       "count": 12,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
-      "term": "namely",
-      "pmi": 3.538139,
+      "term": "afterward",
+      "pmi": 3.66731,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "home",
-      "pmi": 3.493745,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "preciou",
-      "pmi": 3.493745,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "recognition",
-      "pmi": 3.450676,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "blessing",
-      "pmi": 3.391297,
-      "count": 7,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "cut",
-      "pmi": 3.368214,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "version",
-      "pmi": 3.328685,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "recognis",
-      "pmi": 3.315746,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:9-10"
-    },
-    {
-      "startVerseId": 19091009,
-      "endVerseId": 19091010,
-      "term": "tempest",
-      "pmi": 3.290211,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
       "term": "dwell",
-      "pmi": 3.280751,
-      "count": 16,
-      "sourceId": "maclaren-psalms",
+      "pmi": 3.602126,
+      "count": 17,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
+    },
+    {
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "revelation",
+      "pmi": 3.592022,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
+    },
+    {
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "poison",
+      "pmi": 3.265212,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
+    },
+    {
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "giving",
+      "pmi": 3.252273,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
+    },
+    {
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "secure",
+      "pmi": 3.059627,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
+    },
+    {
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "evil",
+      "pmi": 3.022538,
+      "count": 18,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
       "term": "promise",
-      "pmi": 3.279404,
-      "count": 7,
-      "sourceId": "maclaren-psalms",
+      "pmi": 3.004345,
+      "count": 8,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
-      "term": "devout",
-      "pmi": 3.216211,
+      "term": "security",
+      "pmi": 2.889702,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
+    },
+    {
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "providence",
+      "pmi": 2.834661,
       "count": 5,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091009,
       "endVerseId": 19091010,
-      "term": "faithful",
-      "pmi": 3.216211,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
+      "term": "measure",
+      "pmi": 2.567774,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:9-10"
     },
     {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "acquaintance",
-      "pmi": 5.930644,
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "flesh",
+      "pmi": 2.547875,
       "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
     },
     {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "loose",
-      "pmi": 5.930644,
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "certain",
+      "pmi": 2.505039,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
+    },
+    {
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "sent",
+      "pmi": 2.437576,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
     },
     {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "speaker",
-      "pmi": 5.515606,
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "paul",
+      "pmi": 2.380147,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
     },
     {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "machine",
-      "pmi": 5.193678,
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "led",
+      "pmi": 2.366141,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
     },
     {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "hurt",
-      "pmi": 4.930644,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "purpose",
+      "pmi": 2.265212,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
     },
     {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "knot",
-      "pmi": 4.930644,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "cling",
-      "pmi": 4.799399,
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "high",
+      "pmi": 2.205204,
       "count": 7,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
     },
     {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "partly",
-      "pmi": 4.515606,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
+      "startVerseId": 19091009,
+      "endVerseId": 19091010,
+      "term": "deliverance",
+      "pmi": 2.078536,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:9-10"
     },
     {
       "startVerseId": 19091014,
       "endVerseId": 19091014,
       "term": "cleave",
-      "pmi": 4.428144,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "threefold",
-      "pmi": 4.345681,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "knowledge",
-      "pmi": 4.123289,
-      "count": 12,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "impression",
-      "pmi": 4.056175,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "chain",
-      "pmi": 3.930644,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "continuou",
-      "pmi": 3.930644,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "fasten",
-      "pmi": 3.930644,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "heighten",
-      "pmi": 3.930644,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "noise",
-      "pmi": 3.930644,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "bind",
-      "pmi": 3.883338,
-      "count": 5,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "bond",
-      "pmi": 3.87175,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "fancy",
-      "pmi": 3.852641,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "contact",
-      "pmi": 3.815167,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "familiar",
-      "pmi": 3.815167,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "confirm",
-      "pmi": 3.708251,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "distraction",
-      "pmi": 3.708251,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "occupy",
-      "pmi": 3.708251,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "tumult",
-      "pmi": 3.708251,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "saint",
-      "pmi": 3.577007,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "join",
-      "pmi": 3.515606,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "finger",
-      "pmi": 3.428144,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "third",
-      "pmi": 3.428144,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "deliver",
-      "pmi": 3.313973,
-      "count": 10,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "earlier",
-      "pmi": 3.267679,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "pmi": 5.319075,
+      "count": 6,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:14"
     },
     {
       "startVerseId": 19091014,
       "endVerseId": 19091014,
       "term": "imperfect",
-      "pmi": 3.267679,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "pmi": 4.660112,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:14"
     },
     {
       "startVerseId": 19091014,
       "endVerseId": 19091014,
-      "term": "somewhat",
-      "pmi": 3.193678,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "term": "knowledge",
+      "pmi": 4.520709,
+      "count": 23,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:14"
     },
     {
       "startVerseId": 19091014,
       "endVerseId": 19091014,
-      "term": "fortress",
-      "pmi": 3.146373,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
+      "term": "sole",
+      "pmi": 4.140738,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:14"
     },
     {
       "startVerseId": 19091014,
       "endVerseId": 19091014,
-      "term": "lose",
-      "pmi": 3.056175,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "profess",
-      "pmi": 3.056175,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "union",
-      "pmi": 3.056175,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "promise",
-      "pmi": 3.03448,
-      "count": 6,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091014,
-      "endVerseId": 19091014,
-      "term": "consciou",
-      "pmi": 3.023753,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:14"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "privilege",
-      "pmi": 6.29453,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "friction",
-      "pmi": 6.124605,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "polish",
-      "pmi": 6.124605,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "suppliant",
-      "pmi": 5.902212,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "grop",
-      "pmi": 5.709567,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "instinct",
-      "pmi": 5.709567,
-      "count": 6,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "clung",
-      "pmi": 5.387639,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "glorify",
-      "pmi": 5.387639,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "heel",
-      "pmi": 5.387639,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "specific",
-      "pmi": 5.387639,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "mortal",
-      "pmi": 5.124605,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "access",
-      "pmi": 4.972602,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "south",
-      "pmi": 4.902212,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "borne",
-      "pmi": 4.59409,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "trouble",
-      "pmi": 4.52194,
-      "count": 9,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "length",
-      "pmi": 4.387639,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "sunny",
-      "pmi": 4.387639,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "awake",
-      "pmi": 4.250136,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "honour",
-      "pmi": 4.250136,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
       "term": "sett",
-      "pmi": 4.124605,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
+      "pmi": 3.830037,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
     },
     {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "closer",
-      "pmi": 4.009127,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "perfectly",
+      "pmi": 3.508109,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
     },
     {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "set",
+      "pmi": 3.464982,
+      "count": 29,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "effort",
+      "pmi": 3.427452,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "deliver",
+      "pmi": 3.290878,
+      "count": 16,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "name",
+      "pmi": 3.094876,
+      "count": 36,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "love",
+      "pmi": 3.030545,
+      "count": 46,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "know",
+      "pmi": 2.953993,
+      "count": 52,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "lofty",
+      "pmi": 2.937646,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "includ",
+      "pmi": 2.923147,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "delight",
+      "pmi": 2.771406,
+      "count": 11,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "experienc",
+      "pmi": 2.696638,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "picture",
+      "pmi": 2.567003,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "namely",
+      "pmi": 2.51172,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "join",
+      "pmi": 2.403773,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "high",
+      "pmi": 2.364656,
+      "count": 11,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
       "term": "promise",
-      "pmi": 3.965406,
+      "pmi": 2.319075,
+      "count": 7,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "daily",
+      "pmi": 2.257148,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "blessedness",
+      "pmi": 2.233102,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "satisfy",
+      "pmi": 2.183299,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "another",
+      "pmi": 2.1669,
+      "count": 11,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "character",
+      "pmi": 2.160444,
+      "count": 6,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091014,
+      "endVerseId": 19091014,
+      "term": "mind",
+      "pmi": 2.029396,
       "count": 10,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:14"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "dispers",
+      "pmi": 4.975232,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "attain",
-      "pmi": 3.902212,
+      "term": "degrad",
+      "pmi": 4.422691,
       "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "range",
+      "pmi": 3.975232,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "expand",
+      "pmi": 3.927926,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
       "term": "devout",
-      "pmi": 3.873066,
-      "count": 7,
-      "sourceId": "maclaren-psalms",
+      "pmi": 3.8487,
+      "count": 8,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "chamber",
-      "pmi": 3.622104,
+      "term": "liken",
+      "pmi": 3.634195,
       "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "trial",
-      "pmi": 3.539642,
+      "term": "privilege",
+      "pmi": 3.578342,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "invention",
+      "pmi": 3.524571,
       "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "deliver",
-      "pmi": 3.507933,
-      "count": 10,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "earlier",
-      "pmi": 3.46164,
+      "term": "fleet",
+      "pmi": 3.358561,
       "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "previou",
-      "pmi": 3.436549,
+      "term": "confirm",
+      "pmi": 3.145157,
       "count": 3,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "salvation",
-      "pmi": 3.416785,
-      "count": 5,
-      "sourceId": "maclaren-psalms",
+      "term": "mortal",
+      "pmi": 2.963259,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "fully",
-      "pmi": 3.387639,
+      "term": "sorrowful",
+      "pmi": 2.927926,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "promis",
-      "pmi": 3.387639,
-      "count": 6,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
       "term": "satisfy",
-      "pmi": 3.283302,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
+      "pmi": 2.820346,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "nearer",
-      "pmi": 3.250136,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "sit",
-      "pmi": 3.250136,
+      "term": "drive",
+      "pmi": 2.816033,
       "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "satisfi",
+      "pmi": 2.808874,
+      "count": 6,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "surface",
+      "pmi": 2.773598,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "length",
+      "pmi": 2.75284,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "putt",
+      "pmi": 2.75284,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "silent",
+      "pmi": 2.728317,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "lower",
+      "pmi": 2.68245,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "belong",
+      "pmi": 2.604138,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "promis",
+      "pmi": 2.550391,
+      "count": 11,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "promise",
+      "pmi": 2.52728,
+      "count": 13,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "conception",
+      "pmi": 2.524571,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "essence",
+      "pmi": 2.524571,
+      "count": 2,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "trouble",
+      "pmi": 2.512889,
+      "count": 12,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
       "term": "days",
-      "pmi": 3.233834,
-      "count": 8,
-      "sourceId": "maclaren-psalms",
+      "pmi": 2.373271,
+      "count": 15,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "consolation",
+      "pmi": 2.369053,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "beginn",
+      "pmi": 2.342964,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "meant",
+      "pmi": 2.309233,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "felt",
+      "pmi": 2.198426,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "answer",
+      "pmi": 2.194545,
+      "count": 13,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "deliver",
+      "pmi": 2.190961,
+      "count": 12,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "get",
+      "pmi": 2.145157,
+      "count": 6,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
+      "locator": "PSALM 91:15-16"
+    },
+    {
+      "startVerseId": 19091015,
+      "endVerseId": 19091016,
+      "term": "age",
+      "pmi": 2.100763,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
       "term": "content",
-      "pmi": 3.186005,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "pmi": 2.087707,
+      "count": 4,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "troubl",
-      "pmi": 3.124605,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
+      "term": "circumstanc",
+      "pmi": 2.024142,
+      "count": 3,
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19091015,
       "endVerseId": 19091016,
-      "term": "wound",
-      "pmi": 3.124605,
+      "term": "lived",
+      "pmi": 2.011758,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 91:15-16"
-    },
-    {
-      "startVerseId": 19091015,
-      "endVerseId": 19091016,
-      "term": "merely",
-      "pmi": 3.094857,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-04",
+      "sourceCount": 2,
       "locator": "PSALM 91:15-16"
     },
     {
       "startVerseId": 19121001,
       "endVerseId": 19121002,
-      "term": "babylon",
-      "pmi": 6.117102,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "distant",
-      "pmi": 5.965099,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "exile",
-      "pmi": 5.53214,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "judah",
-      "pmi": 5.380137,
+      "term": "phantom",
+      "pmi": 6.738541,
       "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "fat",
-      "pmi": 5.117102,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "jews",
-      "pmi": 5.117102,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "flat",
-      "pmi": 4.89471,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "minute",
-      "pmi": 4.89471,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "spear",
-      "pmi": 4.89471,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "stimulat",
-      "pmi": 4.89471,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "weari",
-      "pmi": 4.89471,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "horizon",
-      "pmi": 4.795174,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "greatness",
-      "pmi": 4.586588,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "resolution",
-      "pmi": 4.53214,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "born",
-      "pmi": 4.380137,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "impotence",
-      "pmi": 4.380137,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "visible",
-      "pmi": 4.199565,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "heal",
-      "pmi": 4.178503,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "assurance",
-      "pmi": 4.166012,
-      "count": 5,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "country",
-      "pmi": 4.0391,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "realisation",
-      "pmi": 4.001625,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "reception",
-      "pmi": 4.001625,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "sick",
-      "pmi": 4.001625,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
       "locator": "PSALM 121:1-2"
     },
     {
       "startVerseId": 19121001,
       "endVerseId": 19121002,
       "term": "hill",
-      "pmi": 3.974144,
-      "count": 8,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "unseen",
-      "pmi": 3.965099,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "narrow",
-      "pmi": 3.89471,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "solid",
-      "pmi": 3.89471,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "weakness",
-      "pmi": 3.860763,
-      "count": 6,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "stretch",
-      "pmi": 3.795174,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "summit",
-      "pmi": 3.795174,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "yonder",
-      "pmi": 3.795174,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "vision",
-      "pmi": 3.72806,
-      "count": 7,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "jerusalem",
-      "pmi": 3.702065,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "weak",
-      "pmi": 3.702065,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "home",
-      "pmi": 3.657671,
-      "count": 4,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "eyes",
-      "pmi": 3.653702,
-      "count": 11,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "battle",
-      "pmi": 3.643171,
-      "count": 3,
-      "sourceId": "maclaren-psalms",
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "startVerseId": 19121001,
-      "endVerseId": 19121002,
-      "term": "peril",
-      "pmi": 3.614602,
-      "count": 2,
-      "sourceId": "maclaren-psalms",
+      "pmi": 4.416613,
+      "count": 10,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
       "locator": "PSALM 121:1-2"
     },
     {
       "startVerseId": 19121001,
       "endVerseId": 19121002,
       "term": "help",
-      "pmi": 3.566905,
-      "count": 14,
-      "sourceId": "maclaren-psalms",
+      "pmi": 3.866448,
+      "count": 17,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
       "locator": "PSALM 121:1-2"
     },
     {
       "startVerseId": 19121001,
       "endVerseId": 19121002,
-      "term": "mountain",
-      "pmi": 3.53214,
-      "count": 10,
-      "sourceId": "maclaren-psalms",
+      "term": "lift",
+      "pmi": 3.862239,
+      "count": 11,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
+      "locator": "PSALM 121:1-2"
+    },
+    {
+      "startVerseId": 19121001,
+      "endVerseId": 19121002,
+      "term": "eyes",
+      "pmi": 3.461701,
+      "count": 12,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
+      "locator": "PSALM 121:1-2"
+    },
+    {
+      "startVerseId": 19121001,
+      "endVerseId": 19121002,
+      "term": "home",
+      "pmi": 3.301478,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
+      "locator": "PSALM 121:1-2"
+    },
+    {
+      "startVerseId": 19121001,
+      "endVerseId": 19121002,
+      "term": "look",
+      "pmi": 2.660904,
+      "count": 12,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
+      "locator": "PSALM 121:1-2"
+    },
+    {
+      "startVerseId": 19121001,
+      "endVerseId": 19121002,
+      "term": "feel",
+      "pmi": 2.450296,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
+      "locator": "PSALM 121:1-2"
+    },
+    {
+      "startVerseId": 19121001,
+      "endVerseId": 19121002,
+      "term": "away",
+      "pmi": 2.077037,
+      "count": 6,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
+      "locator": "PSALM 121:1-2"
+    },
+    {
+      "startVerseId": 19121001,
+      "endVerseId": 19121002,
+      "term": "christian",
+      "pmi": 2.05355,
+      "count": 5,
+      "sourceId": "maclaren-psalms+treasury-of-david-06",
+      "sourceCount": 2,
       "locator": "PSALM 121:1-2"
     }
   ]

@@ -121,6 +121,89 @@ export function importExpositions(
   return { sections, rejected };
 }
 
+
+/**
+ * Alignment tier 1, second shape: works organized as a psalm heading followed
+ * by per-verse commentary entries.
+ *
+ * Spurgeon's *Treasury of David* prints "PSALM XXIII." as a section heading and
+ * then discusses verses under "Verse 1." / "Verses 1-3." markers. That is a
+ * different structure from Maclaren's citation-suffix convention, so it gets
+ * its own parser rather than one regex growing warts to cover both.
+ *
+ * Verse markers are interpreted RELATIVE to the most recent psalm heading. A
+ * verse marker with no preceding heading is rejected rather than guessed at:
+ * attaching commentary to the wrong psalm is a silent, unrecoverable error.
+ */
+export function importPsalmVerseHeadings(
+  text: string,
+  options: { readonly bookId: number },
+): { readonly sections: readonly ExpositionSection[]; readonly rejected: number } {
+  // Psalm headings: a line that is essentially "PSALM <roman>." and nothing
+  // else. OCR frequently mangles the trailing period and adds stray spacing,
+  // so both are tolerated — but the roman numeral itself is NOT guessed at: a
+  // corrupted numeral yields no heading rather than a wrong psalm.
+  const heading = /^[^\S\r\n]*PSALM\s+([IVXLCDM]+)\s*\.?[^\S\r\n]*$/gim;
+  // Verse markers: "Verse 1.", "Verses 1-3.", "Verse 1.—" (Treasury of David
+  // prints an em-dash after the marker; Maclaren-style works do not).
+  const verseMarker =
+    /(?:^|\n)[^\S\r\n]*Verses?\s+([0-9]{1,3}(?:\s*[-,]\s*[0-9]{1,3})*)\s*\.\s*[—–-]?/g;
+
+  const headings = [...text.matchAll(heading)]
+    .map((match) => ({ index: match.index ?? 0, chapter: parseRoman(match[1] ?? '') }))
+    .filter((entry): entry is { index: number; chapter: number } => entry.chapter !== null);
+
+  if (headings.length === 0) return { sections: [], rejected: 0 };
+
+  const chapterAt = (index: number): number | null => {
+    let current: number | null = null;
+    for (const entry of headings) {
+      if (entry.index <= index) current = entry.chapter;
+      else break;
+    }
+    return current;
+  };
+
+  const markers = [...text.matchAll(verseMarker)];
+  const sections: ExpositionSection[] = [];
+  let rejected = 0;
+
+  markers.forEach((marker, index) => {
+    const at = marker.index ?? 0;
+    const chapter = chapterAt(at);
+    const numbers = [...(marker[1] ?? '').matchAll(/\d{1,3}/g)].map((hit) => Number(hit[0]));
+    if (chapter === null || numbers.length === 0) {
+      rejected += 1;
+      return;
+    }
+
+    const bodyStart = at + marker[0].length;
+    const bodyEnd =
+      index + 1 < markers.length ? (markers[index + 1]!.index ?? text.length) : text.length;
+    const body = text.slice(bodyStart, bodyEnd).replace(/\s+/g, ' ').trim();
+    if (body.length < 200) {
+      rejected += 1;
+      return;
+    }
+
+    try {
+      const start = Math.min(...numbers);
+      const end = Math.max(...numbers);
+      sections.push({
+        bookId: options.bookId,
+        startVerseId: makeVerseId(options.bookId, chapter, start),
+        endVerseId: makeVerseId(options.bookId, chapter, end),
+        citation: `PSALM ${chapter}:${start}${end !== start ? `-${end}` : ''}`,
+        body,
+      });
+    } catch {
+      rejected += 1;
+    }
+  });
+
+  return { sections, rejected };
+}
+
 /** Strips Project Gutenberg's header and license footer. */
 export function stripGutenbergBoilerplate(text: string): string {
   const startMarker = /\*\*\*\s*START OF (?:THE|THIS) PROJECT GUTENBERG EBOOK[^*]*\*\*\*/i;

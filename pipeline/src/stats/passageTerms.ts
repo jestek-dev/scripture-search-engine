@@ -36,7 +36,18 @@ export interface PassageTerm {
   readonly pmi: number;
   /** Times the term occurs in this pericope's prose. */
   readonly count: number;
+  /**
+   * Sources that actually used THIS TERM, joined with '+'.
+   *
+   * Previously this recorded the sources of the PERICOPE, which made the
+   * multi-source attestation count meaningless: a term used by one author on
+   * a passage two authors covered looked co-attested when it was not. Getting
+   * this wrong mattered, because co-attestation is the whole mechanism for
+   * telling theology from one writer's habits.
+   */
   readonly sourceId: string;
+  /** How many distinct sources used this term. */
+  readonly sourceCount: number;
   readonly locator: string;
 }
 
@@ -51,6 +62,20 @@ export interface TermProfileOptions {
    * document can score enormous PMI on no real evidence.
    */
   readonly minCount: number;
+  /**
+   * Minimum number of distinct sources that must use a term.
+   *
+   * This is the lever that separates theology from idiolect. One author's
+   * distinctive vocabulary is genuinely distinctive OF THAT AUTHOR — PMI is
+   * right to surface `mellow`, `downy` and `kite`, they really are unusual
+   * words in that prose. But they say nothing about the passage. Vocabulary
+   * that TWO independent expositors reach for when handling the same text is
+   * evidence about the text.
+   *
+   * 1 keeps everything (correct when only one source exists). 2+ requires
+   * corroboration and is what makes a multi-author corpus pay.
+   */
+  readonly minSources: number;
 }
 
 export interface ProfileResult {
@@ -79,7 +104,16 @@ export function buildTermProfiles(
   // Merge by pericope key.
   const byPericope = new Map<
     string,
-    { startVerseId: number; endVerseId: number; sourceIds: Set<string>; locators: Set<string>; counts: Map<string, number>; total: number }
+    {
+      startVerseId: number;
+      endVerseId: number;
+      sourceIds: Set<string>;
+      locators: Set<string>;
+      counts: Map<string, number>;
+      /** Per-term source attribution — the fix for the attestation bug. */
+      termSources: Map<string, Set<string>>;
+      total: number;
+    }
   >();
   const backgroundCounts = new Map<string, number>();
   let backgroundTotal = 0;
@@ -94,6 +128,7 @@ export function buildTermProfiles(
         sourceIds: new Set(),
         locators: new Set(),
         counts: new Map(),
+        termSources: new Map(),
         total: 0,
       };
       byPericope.set(key, entry);
@@ -103,6 +138,9 @@ export function buildTermProfiles(
 
     for (const { token } of tokenStream(document.body)) {
       entry.counts.set(token, (entry.counts.get(token) ?? 0) + 1);
+      const sources = entry.termSources.get(token);
+      if (sources) sources.add(document.sourceId);
+      else entry.termSources.set(token, new Set([document.sourceId]));
       entry.total += 1;
       backgroundCounts.set(token, (backgroundCounts.get(token) ?? 0) + 1);
       backgroundTotal += 1;
@@ -121,6 +159,8 @@ export function buildTermProfiles(
     for (const [term, count] of entry.counts) {
       considered += 1;
       if (count < options.minCount) continue;
+      const termSources = entry.termSources.get(term) ?? new Set<string>();
+      if (termSources.size < options.minSources) continue;
       const pTermGivenPericope = count / entry.total;
       const pTerm = (backgroundCounts.get(term) ?? 0) / backgroundTotal;
       if (pTerm <= 0) continue;
@@ -132,7 +172,8 @@ export function buildTermProfiles(
         term,
         pmi: Number(pmi.toFixed(6)),
         count,
-        sourceId: [...entry.sourceIds].sort().join('+'),
+        sourceId: [...termSources].sort().join('+'),
+        sourceCount: termSources.size,
         locator: [...entry.locators].sort().join('; '),
       });
     }

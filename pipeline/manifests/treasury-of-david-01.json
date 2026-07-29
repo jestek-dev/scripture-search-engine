@@ -1,0 +1,11 @@
+{
+  "id": "treasury-of-david-01",
+  "label": "C. H. Spurgeon, The Treasury of David, Vol. 1 (Psalms 1-26)",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain by age (published 1869-1885; Spurgeon died 1892). Internet Archive scan from the University of Toronto set; IA asserts no additional copyright over the OCR text of a public-domain work.",
+  "sourceUrl": "https://archive.org/download/thetreasuryofdav01spuruoft/thetreasuryofdav01spuruoft_djvu.txt",
+  "sha256": "38d558e4d70a4bf6d903114f85a49a4e82091728eca06a903aa99aa65ceed6d8",
+  "bytes": 2328221,
+  "maxTier": "public_distribution",
+  "attributionNote": "Alignment tier 1, per-verse-heading shape: 'PSALM <roman>.' section headings with 'Verse N.--' commentary markers. OCR TEXT, not proofread - unlike the Maclaren volume, no Project Gutenberg edition of Treasury of David exists, so Internet Archive's OCR is the best cleanly-licensed option. Expect OCR noise (doubled spaces, mangled roman numerals, 'Title'->'Titte'); the parser rejects rather than guesses when a numeral is corrupted, because attaching commentary to the wrong psalm is a silent unrecoverable error. CCEL hosts a cleaner hand-corrected transcription but asks permission for commercial republication of THEIR files, so it is deliberately not used as the redistribution source - the text is public domain, that specific transcription is not unencumbered. Only distilled term/PMI pairs enter the artifact; the prose never ships."
+}
