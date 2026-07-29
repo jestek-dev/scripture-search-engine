@@ -13,9 +13,9 @@
  *
  * v1 — Phase 1: scripture corpus + FTS + token postings.
  * v2 — Phase 2: curated concept layer + cross-reference edges.
- * v3 — Phase 3: pericopes and homiletical evidence.
+ * v3 — Phase 3: homiletical term profiles (Layer B).
  */
-export const SCHEMA_VERSION = '2';
+export const SCHEMA_VERSION = '3';
 
 /**
  * `verses.id` (plain rowid) is the true primary key, NOT `verse_id`. The
@@ -187,6 +187,29 @@ CREATE TABLE cross_references (
 );
 
 CREATE INDEX idx_cross_references_from ON cross_references(from_verse_id, votes DESC);
+
+/*
+ * ---- Layer B: homiletical evidence (schema v3) ----
+ *
+ * Distinctive vocabulary that preachers and commentators use when expounding
+ * a passage. The SOURCE PROSE IS NEVER STORED HERE and never ships - only
+ * these distilled term/PMI pairs, which are a few bytes each.
+ *
+ * Keyed by pericope range rather than single verse because expositions treat
+ * a unit of thought, not a verse number.
+ */
+CREATE TABLE passage_terms (
+  start_verse_id INTEGER NOT NULL,
+  end_verse_id INTEGER NOT NULL,
+  term TEXT NOT NULL,
+  pmi REAL NOT NULL,
+  count INTEGER NOT NULL,
+  source_id TEXT NOT NULL,
+  locator TEXT NOT NULL
+);
+
+CREATE INDEX idx_passage_terms_term ON passage_terms(term, pmi DESC);
+CREATE INDEX idx_passage_terms_range ON passage_terms(start_verse_id, end_verse_id);
 `;
 
 /**

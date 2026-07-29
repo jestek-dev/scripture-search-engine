@@ -13,7 +13,11 @@ import { fileURLToPath } from 'node:url';
 
 import { DatabaseSync } from 'node:sqlite';
 
-import { buildConceptLayer, type ConceptLayerResult } from './buildConceptLayer.js';
+import {
+  buildConceptLayer,
+  type ConceptLayerInput,
+  type ConceptLayerResult,
+} from './buildConceptLayer.js';
 import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import type {
@@ -33,6 +37,7 @@ const WEB_MANIFEST = join(PIPELINE_ROOT, 'manifests', 'web.json');
 const MANIFEST_DIR = join(PIPELINE_ROOT, 'manifests');
 const ONTOLOGY_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'concepts');
 const OPENBIBLE_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-subset.json');
+const PASSAGE_TERMS_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'passage-terms-subset.json');
 
 function loadManifests(): ManifestSet {
   const sources = readdirSync(MANIFEST_DIR)
@@ -127,6 +132,15 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
     const topicRows = subset.topicRows;
     const crossReferences = subset.crossReferences;
 
+    // Layer B distillate. Committed for the same hermeticity reason as the
+    // OpenBible subset: the 1.3 MB source volume is gitignored, so a build
+    // that depended on it would differ between a developer's machine and CI.
+    const passageTerms = existsSync(PASSAGE_TERMS_SUBSET)
+      ? (JSON.parse(readFileSync(PASSAGE_TERMS_SUBSET, 'utf8')) as {
+          terms: ConceptLayerInput['passageTerms'];
+        }).terms
+      : [];
+
     const presentVerseIds = new Set(translation.verses.map((verse) => verse.verseId));
     const conceptLayer =
       ontology.concepts.length > 0
@@ -136,6 +150,7 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
             crossReferences,
             manifests: loadManifests(),
             presentVerseIds,
+            passageTerms,
           })
         : null;
 
@@ -166,6 +181,7 @@ if (process.argv[1] && process.argv[1].endsWith('buildFixtureDb.ts')) {
           `  editorial anchors: ${result.conceptLayer.editorialAnchors}\n` +
           `  openbible topic anchors: ${result.conceptLayer.topicAnchors}\n` +
           `  cross references: ${result.conceptLayer.crossReferences}\n` +
+          `  passage terms: ${result.conceptLayer.passageTerms}\n` +
           `  dropped (outside fixture corpus): ${result.conceptLayer.droppedOutOfCorpus}\n`
         : '  concept layer: none\n'),
   );

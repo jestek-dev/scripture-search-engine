@@ -1,0 +1,11 @@
+{
+  "id": "maclaren-psalms",
+  "label": "Alexander Maclaren, Expositions of Holy Scripture: Psalms",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain. Project Gutenberg eBook #7925, released with no restrictions for US users; Maclaren died 1910 and the work was published in the 1900s. Gutenberg's proofread transcription carries no additional claim for US use.",
+  "sourceUrl": "https://www.gutenberg.org/cache/epub/7925/pg7925.txt",
+  "sha256": "ca79e0cc06ef8dda8f7e139539f6db4e6782d3e0d5a6ebf94773b74b88e37c32",
+  "bytes": 1377271,
+  "maxTier": "public_distribution",
+  "attributionNote": "Alignment tier 1: every exposition states its text explicitly (e.g. '--PSALM xxiii. 1-6.'), so passage attribution is parsing rather than inference. Gutenberg's PROOFREAD text is used deliberately in preference to Archive.org OCR of the same volume: 19th-century typography produces long-s and ligature garbage that would poison every term profile derived from it. Only distilled term/PMI pairs enter the artifact - the prose itself is never stored and never ships."
+}

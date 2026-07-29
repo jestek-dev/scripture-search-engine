@@ -529,6 +529,67 @@ export class ConceptRepository {
     return num(result.rows[0] ?? { maxVotes: 0 }, 'maxVotes');
   }
 
+  /**
+   * Verses whose pericope profile contains query terms (Layer B).
+   *
+   * Weak evidence by design and by budget: a preacher using a word while
+   * expounding a passage is real signal about what the passage is ABOUT, but
+   * it is a long way from the passage saying it. G6 caps it so no volume of
+   * homiletical vocabulary can outrank a curated anchor or a verbatim quote.
+   */
+  async searchPassageTerms(
+    terms: readonly string[],
+    limit = 60,
+  ): Promise<readonly (ScriptureVerse & {
+    matchedTerms: readonly string[];
+    pmiSum: number;
+    sourceId: string;
+    locator: string;
+  })[]> {
+    const unique = [...new Set(terms)];
+    if (unique.length === 0) return [];
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `WITH hits AS (
+         SELECT pt.start_verse_id AS s, pt.end_verse_id AS e,
+                group_concat(pt.term, ' ') AS terms,
+                SUM(pt.pmi) AS pmiSum,
+                MIN(pt.source_id) AS sourceId,
+                MIN(pt.locator) AS locator
+         FROM passage_terms pt
+         WHERE pt.term IN (${placeholders})
+         GROUP BY pt.start_verse_id, pt.end_verse_id
+       )
+       SELECT v.id AS id, v.verse_id AS verseId,
+              v.translation_id AS translationId, t.code AS translationCode,
+              v.book_id AS bookId, b.name AS bookName,
+              v.chapter AS chapter, v.verse AS verse, v.text AS text,
+              h.terms AS terms, h.pmiSum AS pmiSum,
+              h.sourceId AS sourceId, h.locator AS locator
+       FROM hits h
+       JOIN verses v ON v.verse_id BETWEEN h.s AND h.e
+       JOIN translations t ON t.id = v.translation_id
+       JOIN books b ON b.id = v.book_id
+       ORDER BY h.pmiSum DESC, v.verse_id, t.code
+       LIMIT ?`,
+      [...unique, limit],
+    );
+    return result.rows.map((row) => ({
+      ...mapVerse(row),
+      matchedTerms: [...new Set(str(row, 'terms').split(' ').filter(Boolean))].sort(),
+      pmiSum: num(row, 'pmiSum'),
+      sourceId: str(row, 'sourceId'),
+      locator: str(row, 'locator'),
+    }));
+  }
+
+  async hasPassageTerms(): Promise<boolean> {
+    const result = await this.database.execute(
+      "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='passage_terms'",
+    );
+    return num(result.rows[0] ?? { n: 0 }, 'n') > 0;
+  }
+
   async hasConceptLayer(): Promise<boolean> {
     const result = await this.database.execute(
       "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='concepts'",

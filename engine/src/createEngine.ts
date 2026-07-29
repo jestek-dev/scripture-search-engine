@@ -29,6 +29,7 @@ import {
 import {
   conceptAnchorEvidence,
   crossReferenceEvidence,
+  passageTermEvidence,
   relatedConceptEvidence,
 } from './intents/concept.js';
 import { rank, type RankOptions } from './ranking/rank.js';
@@ -52,7 +53,7 @@ export interface ScriptureEngine {
   readonly engineVersion: string;
 }
 
-const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2']);
+const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3']);
 
 export async function createEngine(
   database: ContentQueryPort,
@@ -80,6 +81,7 @@ export async function createEngine(
   const conceptRepository = new ConceptRepository(database);
   const concepts = (await conceptRepository.hasConceptLayer()) ? conceptRepository : null;
 
+  const hasPassageTerms = await conceptRepository.hasPassageTerms();
   const documentCount = await repository.documentCount();
   const identity = { engineVersion: ENGINE_VERSION, corpusFingerprint: meta.corpusFingerprint };
 
@@ -129,6 +131,14 @@ export async function createEngine(
       for (const match of await repository.searchTokens(tokens, documentCount)) {
         verses.set(targetIdFor(match), match);
         contributions.push({ verse: match, evidence: tokenEvidence(match, idfTotal) });
+      }
+    }
+
+    // Step 5a — homiletical vocabulary. Weak by design and weak by budget.
+    if (hasPassageTerms && tokens.length > 0) {
+      for (const match of await conceptRepository.searchPassageTerms(tokens)) {
+        verses.set(targetIdFor(match), match);
+        contributions.push({ verse: match, evidence: [passageTermEvidence(match)] });
       }
     }
 

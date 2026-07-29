@@ -95,6 +95,37 @@ export function crossReferenceEvidence(
 }
 
 /**
+ * Homiletical term-profile evidence (Layer B).
+ *
+ * Strength saturates: matching three distinctive terms is meaningfully more
+ * than one, but twenty is not meaningfully more than ten, and a linear scale
+ * would let one verbose exposition dominate. Log growth also keeps the signal
+ * honest about what it is — a hint that people preaching this passage reach
+ * for these words, nothing stronger.
+ */
+export function passageTermEvidence(match: {
+  matchedTerms: readonly string[];
+  pmiSum: number;
+  sourceId: string;
+  locator: string;
+}): Evidence {
+  const saturating = Math.log1p(match.matchedTerms.length) / Math.log1p(6);
+  return {
+    family: 'passage_terms',
+    label:
+      match.matchedTerms.length === 1
+        ? `Preached vocabulary: ${match.matchedTerms[0]}`
+        : `Preached vocabulary: ${match.matchedTerms.slice(0, 3).join(', ')}`,
+    strength: Math.max(0, Math.min(1, saturating)),
+    provenance: {
+      sourceId: match.sourceId,
+      label: sourceLabel(match.sourceId),
+      locator: match.locator,
+    },
+  };
+}
+
+/**
  * Human-facing source names. Kept here rather than read from the artifact
  * because these strings appear in result chips, and a chip that says
  * "openbible-topics" leaks a database identifier into the product.
@@ -107,6 +138,8 @@ function sourceLabel(sourceId: string): string {
       return 'OpenBible topical votes (CC BY)';
     case 'openbible-xrefs':
       return 'OpenBible cross-references (CC BY)';
+    case 'maclaren-psalms':
+      return 'Maclaren, Expositions (public domain)';
     default:
       return sourceId;
   }

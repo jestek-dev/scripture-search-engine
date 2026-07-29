@@ -20,6 +20,16 @@ export interface ConceptLayerInput {
   readonly manifests: ManifestSet;
   /** Verse ids present in this artifact; anything outside is dropped. */
   readonly presentVerseIds: ReadonlySet<number>;
+  /** Layer B distillate. Empty until expositions are ingested. */
+  readonly passageTerms?: readonly {
+    startVerseId: number;
+    endVerseId: number;
+    term: string;
+    pmi: number;
+    count: number;
+    sourceId: string;
+    locator: string;
+  }[];
 }
 
 export interface ConceptLayerResult {
@@ -28,6 +38,7 @@ export interface ConceptLayerResult {
   readonly editorialAnchors: number;
   readonly topicAnchors: number;
   readonly crossReferences: number;
+  readonly passageTerms: number;
   readonly droppedOutOfCorpus: number;
 }
 
@@ -54,9 +65,17 @@ export function buildConceptLayer(
   // to remember not to release.
   const topicCited = input.ontology.topicSubscriptions.length > 0 ? ['openbible-topics'] : [];
   const xrefCited = input.crossReferences.length > 0 ? ['openbible-xrefs'] : [];
+  const termCited = [
+    ...new Set((input.passageTerms ?? []).flatMap((term) => term.sourceId.split('+'))),
+  ];
   const failures = checkProvenance({
     manifests: input.manifests,
-    citedSourceIds: [...input.ontology.citedSourceIds, ...topicCited, ...xrefCited],
+    citedSourceIds: [
+      ...input.ontology.citedSourceIds,
+      ...topicCited,
+      ...xrefCited,
+      ...termCited,
+    ],
     tier: 'public_distribution',
   });
   if (failures.length > 0) {
@@ -74,6 +93,10 @@ export function buildConceptLayer(
   const insertRelated = database.prepare(
     'INSERT INTO concept_related(concept_id, related_id) VALUES (?, ?)',
   );
+  const insertPassageTerm = database.prepare(
+    `INSERT INTO passage_terms(start_verse_id, end_verse_id, term, pmi, count, source_id, locator)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+  );
   const insertXref = database.prepare(
     `INSERT INTO cross_references(from_verse_id, to_start_verse_id, to_end_verse_id, source_id, votes)
      VALUES (?, ?, ?, ?, ?)`,
@@ -82,6 +105,7 @@ export function buildConceptLayer(
   let editorialAnchors = 0;
   let topicAnchors = 0;
   let crossReferences = 0;
+  let passageTerms = 0;
   let dropped = 0;
 
   database.exec('BEGIN');
@@ -159,6 +183,22 @@ export function buildConceptLayer(
       );
       crossReferences += 1;
     }
+    for (const term of input.passageTerms ?? []) {
+      if (!rangeIsPresent(term.startVerseId, term.endVerseId, input.presentVerseIds)) {
+        dropped += 1;
+        continue;
+      }
+      insertPassageTerm.run(
+        term.startVerseId,
+        term.endVerseId,
+        term.term,
+        term.pmi,
+        term.count,
+        term.sourceId,
+        term.locator,
+      );
+      passageTerms += 1;
+    }
     database.exec('COMMIT');
   } catch (error) {
     database.exec('ROLLBACK');
@@ -171,6 +211,7 @@ export function buildConceptLayer(
     editorialAnchors,
     topicAnchors,
     crossReferences,
+    passageTerms,
     droppedOutOfCorpus: dropped,
   };
 }

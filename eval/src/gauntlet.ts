@@ -7,7 +7,14 @@
  * roster — an unrun gate must never look like a passing one.
  */
 
-import { appendFileSync, existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import {
+  appendFileSync,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -16,6 +23,11 @@ import { createEngine } from '@lh/scripture-engine';
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import { collisionGate, type ConceptRecord } from './gates/collision.js';
 import { corpusGoldenGate, type CorpusFixture } from './gates/corpusGolden.js';
+import {
+  distinctivenessGate,
+  saturationGate,
+  type DistillateFile,
+} from './gates/layerB.js';
 import { compileOntology } from '../../pipeline/src/importers/ontologyImporter.js';
 import {
   correlationGroups,
@@ -45,6 +57,14 @@ interface Budgets {
     readonly maxTop10ChurnRatio: number;
     readonly maxWeakReasonShareIncrease: number;
     readonly minMeanDistinctiveness: number | null;
+  };
+  readonly distinctiveness: {
+    readonly minPmi: number;
+    readonly maxTermsPerPericope: number;
+  };
+  readonly saturation: {
+    readonly minProfileDelta: number;
+    readonly worksPerPericopeBeforeCheck: number;
   };
   readonly size: {
     readonly totalArtifactBytes: number;
@@ -167,18 +187,41 @@ function correlationGate(): GateResult {
   );
 }
 
-/** G10: artifact size budgets, checked against the reviewed descriptor. */
-function sizeGate(budgets: Budgets): GateResult {
-  const descriptors = listJson(join(REPO_ROOT, 'artifacts'));
-  if (descriptors.length === 0) {
-    return notApplicable(
-      'G10-size',
-      'Size budgets',
-      'no reviewed artifact descriptor in artifacts/ yet (Phase 2)',
-    );
-  }
+/**
+ * G10: artifact size budgets.
+ *
+ * Measures the artifact this build actually produced, then checks it against
+ * the reviewed descriptors. Measuring the live build rather than trusting a
+ * committed number is the point — a descriptor can go stale, a build cannot.
+ */
+function sizeGate(budgets: Budgets, builtPath: string): GateResult {
   const findings = [];
   let largest = 0;
+
+  if (existsSync(builtPath)) {
+    const bytes = statSync(builtPath).size;
+    largest = bytes;
+    if (bytes > budgets.size.totalArtifactBytes) {
+      findings.push({
+        message:
+          `Built artifact is ${(bytes / 1024 / 1024).toFixed(1)} MiB, over the ` +
+          `${(budgets.size.totalArtifactBytes / 1024 / 1024).toFixed(0)} MiB budget. Tighten a ` +
+          'pruning threshold in eval/budgets.json or reduce admitted rows.',
+      });
+    }
+  }
+
+  const descriptors = listJson(join(REPO_ROOT, 'artifacts'));
+  if (descriptors.length === 0 && findings.length === 0) {
+    return pass(
+      'G10-size',
+      'Size budgets',
+      `built artifact ${(largest / 1024 / 1024).toFixed(2)} MiB within the ` +
+        `${(budgets.size.totalArtifactBytes / 1024 / 1024).toFixed(0)} MiB budget ` +
+        '(no reviewed release descriptor yet)',
+      { builtArtifactBytes: largest },
+    );
+  }
   for (const path of descriptors) {
     const descriptor = readJson<{ databaseBytes?: number }>(path);
     const bytes = descriptor.databaseBytes ?? 0;
@@ -221,6 +264,11 @@ function provenanceGate(): GateResult {
 }
 
 const BASELINE_PATH = join(EVAL_ROOT, 'baselines', 'probes.json');
+const DISTILLATE_PATH = join(REPO_ROOT, 'pipeline', 'fixtures', 'passage-terms-subset.json');
+
+function loadDistillate(): DistillateFile | null {
+  return existsSync(DISTILLATE_PATH) ? readJson<DistillateFile>(DISTILLATE_PATH) : null;
+}
 
 /**
  * Runs the probe set against a freshly built fixture artifact.
@@ -277,6 +325,7 @@ async function main(): Promise<void> {
   const fixtures = loadFixtures();
   const { concepts, fileCount, errors: ontologyErrors } = loadConcepts();
 
+  const distillate = loadDistillate();
   const probeGates = await runProbeGates(budgets);
   const gates: GateResult[] = [
     provenanceGate(),
@@ -297,11 +346,7 @@ async function main(): Promise<void> {
             ontologyErrors.map((message) => ({ message })),
           )
         : collisionGate(concepts, budgets.collision),
-    notApplicable(
-      'G5-distinctiveness',
-      'Distinctiveness floor',
-      'no passage term profiles yet (Phase 3)',
-    ),
+    distinctivenessGate(distillate, budgets.distinctiveness),
     pass(
       'G6-signal-budgets',
       'Signal budgets',
@@ -309,8 +354,8 @@ async function main(): Promise<void> {
     ),
     correlationGate(),
     probeGates[0]!,
-    notApplicable('G9-saturation', 'Saturation', 'no corpus ingestion yet (Phase 3)'),
-    sizeGate(budgets),
+    saturationGate(distillate, budgets.saturation),
+    sizeGate(budgets, join(REPO_ROOT, 'pipeline', 'output', 'fixture.db')),
     probeGates[1]!,
   ];
 
