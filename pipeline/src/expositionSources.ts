@@ -59,6 +59,16 @@ export const EXPOSITION_SOURCES: readonly ExpositionSourceSpec[] = [
       'back into the spans he actually wrote.',
   },
   {
+    id: 'kd',
+    authorId: 'keil-delitzsch',
+    file: 'kd',
+    strategy: 'sword-zcom',
+    note:
+      'Old Testament only. Third OT voice, admitted to unblock the 9,835 verses ' +
+      'that had exactly one expositor — concentrated in the Pentateuch and ' +
+      'historical books, which is precisely what this commentary treats closely.',
+  },
+  {
     id: 'maclaren-psalms',
     authorId: 'maclaren',
     file: 'maclaren-psalms.txt',

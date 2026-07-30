@@ -120,15 +120,17 @@ Moving to a second book means finding 2+ PD commentators on it before ingesting
 anything — one author on a new book buys nothing now, which is a change from
 how this looked a phase ago.
 
-### 1.5 The size budget is now known to be 4x too loose
+### 1.5 The size budget is fine after all — my earlier advice was wrong
 
-`size.totalArtifactBytes` is 160 MiB; the real full artifact is 40.91 MiB. A
-threshold with that much slack will not fire before something has gone badly
-wrong. Tightening it to, say, 64 MiB would make it a real guardrail while
-leaving room for the Layer B growth you actually want.
+I previously recorded that 160 MiB against a 40.91 MiB artifact was "4x too
+loose" and suggested tightening to 64 MiB. **Do not do that.** Three
+commentators later the artifact is 97.48 MiB, and a 64 MiB ceiling would have
+blocked the work that took Bible coverage from 68% to 95%.
 
-Not changed unilaterally: budgets are reviewed data, and picking the number is
-a judgment about how much growth you intend to allow.
+The lesson is about when a budget can be judged, not about the number: I was
+measuring headroom against a corpus that was one-sixth built. Current position
+is 97.48 of 160 MiB, so roughly one more whole-Bible commentator fits. That is
+now a real constraint worth watching rather than a formality.
 
 ---
 
@@ -255,14 +257,21 @@ checksum must name a retrievable file, not a landing page. A separate opt-in
 
 ### 1.6 Two thresholds need your attention now that Layer B is large
 
-**a) Weak-reason share is the gate that will stop over-addition, and it is at
-80% of its allowance.** Admitting Matthew Henry raised weak-evidence share on
-`phrase-present-help` by 0.120 against a 0.15 budget, and on
-`medium-light-darkness` by 0.083. This is G8 doing exactly its job: "preached
-vocabulary" is a weak signal, and adding commentators adds a lot of it. The
-next author may trip it. That is the correct outcome and the number to watch —
-but decide in advance whether tripping it means *stop adding* or *re-baseline*,
-because deciding in the moment is how a gate becomes decoration.
+**a) Weak-reason share, and a probe set that no longer covers the corpus.**
+Matthew Henry raised weak-evidence share by 0.120 against a 0.15 budget on
+`phrase-present-help`. Keil & Delitzsch then moved it by 0.006 — but that is
+NOT reassurance. KD is Old Testament only, and all 13 probes sit in Psalms and
+the New Testament. **G8 barely measured the addition that changed coverage
+most.**
+
+The probe set was written when Layer B was Psalms-only. The corpus is now 99%
+covered in the OT, and nothing probes Genesis narrative, the law, the
+histories, or the prophets. Probes are the noise detector; a detector aimed
+away from where the data landed reports quiet regardless.
+
+Two things follow: add OT probes before admitting more OT material, and decide
+in advance whether a tripped weak-share gate means *stop adding* or
+*re-baseline* — deciding in the moment is how a gate becomes decoration.
 
 **b) `size.perTableBytes` is decoration today.** Six per-table budgets are
 declared in `eval/budgets.json` and **no gate reads them** — G10 checks only
@@ -271,6 +280,28 @@ was renamed verse_terms in schema v4, and co_citations was never built. By this
 repo's own rule an unfired threshold reads as protection while providing none.
 Either wire them into G10 or delete them; my preference is wire, since
 verse_terms is now the fastest-growing table by far.
+
+### 2.10 Whole-Bible coverage: 95.3%, and what still limits it
+
+Measured on the real artifact, not the fixture:
+
+| | verses with evidence |
+|---|---|
+| **Whole Bible** | 29,646 / 31,098 = **95.3%** |
+| Old Testament | **99.2%** |
+| New Testament | 84.2% |
+| Books under 50% | **1** (Mark) |
+
+The diagnosis that produced this: coverage was never limited by commentators
+being silent. Before KD, 9,835 verses (31.6%) had *exactly one* expositor and
+were blocked by the corroboration rule alone — essentially every verse in the
+Bible has someone writing about it. Adding a third OT voice converted almost
+all of them.
+
+**The remaining gap is entirely New Testament**, and it is a real property of
+the sources: Mark 47%, Luke 64%, John 84%, Acts 88%, Matthew 88%. Commentators
+habitually treat Mark by referring back to Matthew. Barnes (NT only) or JFB
+(whole Bible) is the direct fix; the NT is where the next author pays.
 
 ### 2.9 Layer B is off Psalms — Clarke and Matthew Henry are both in
 
@@ -281,6 +312,7 @@ Two whole-Bible expositors are admitted, and the second is what mattered.
 | Treasury + Maclaren (Psalms only) | 3,060 | 15 |
 | + Clarke | 19,741 | 45 |
 | + Matthew Henry | **233,011** | **677** |
+| + Keil & Delitzsch | **649,583** | **775** |
 
 Clarke alone changed nothing outside the Psalter, exactly as predicted: one
 author never clears corroboration, so all he bought was depth where two authors

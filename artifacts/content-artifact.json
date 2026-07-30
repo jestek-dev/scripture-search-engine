@@ -3,10 +3,10 @@
   "tokenizerVersion": "1.0.0",
   "engineVersion": "0.6.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
-  "layerFingerprint": "3b246000f61ec9e6905d0b35f1d2948d2a47a20fc6246a6e721bd985c33453f9",
-  "databaseSha256": "14df22407d6c5111f0ae241870dca331577d78446ede97aba209456138900583",
-  "databaseBytes": 64282624,
-  "builtAt": "2026-07-30T04:07:21.669Z",
+  "layerFingerprint": "71027ee8914c0f338bb383a6104fc4c02629a74bd4577ad9da0ca7ff9ef34b31",
+  "databaseSha256": "68285df0c1ac1d3e56be8bc4b341ecaaa3dfea197dab07906dd8027f640c76f4",
+  "databaseBytes": 102211584,
+  "builtAt": "2026-07-30T04:24:55.403Z",
   "translations": [
     {
       "code": "WEB",
@@ -21,12 +21,18 @@
     "editorialAnchors": 28,
     "topicAnchors": 63,
     "crossReferences": 341096,
-    "verseTerms": 233011
+    "verseTerms": 649583
   },
   "sources": [
     {
       "id": "clarke",
       "sha256": "56bb33d3bf0f50c1609f4dd10ac81e7450bb0e8aae93bf340074ccb5e207a44f",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "kd",
+      "sha256": "ca3bdb6a04c0b717ee2faed71b432d58195db96f217f490ce6f7d9c36a2876f7",
       "rightsClass": "public_domain",
       "maxTier": "public_distribution"
     },

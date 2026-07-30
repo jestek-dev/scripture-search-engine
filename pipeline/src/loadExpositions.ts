@@ -98,13 +98,16 @@ function collapseRepeatedBodies(
 }
 
 function readTestament(directory: string, prefix: string): SwordTestamentFiles | undefined {
-  const bzs = join(directory, `${prefix}.bzs`);
-  if (!existsSync(bzs)) return undefined;
-  return {
-    bzs: readFileSync(bzs),
-    bzv: readFileSync(join(directory, `${prefix}.bzv`)),
-    bzz: readFileSync(join(directory, `${prefix}.bzz`)),
-  };
+  const bzsPath = join(directory, `${prefix}.bzs`);
+  if (!existsSync(bzsPath)) return undefined;
+  const bzs = readFileSync(bzsPath);
+  const bzz = readFileSync(join(directory, `${prefix}.bzz`));
+  // A single-testament module (Keil & Delitzsch is Old Testament only, Barnes
+  // New Testament only) still ships a full-size index for the testament it
+  // does not cover, with every entry empty and no data blocks behind it.
+  // Treat that as absent rather than as a testament of blank commentary.
+  if (bzs.length === 0 || bzz.length === 0) return undefined;
+  return { bzs, bzv: readFileSync(join(directory, `${prefix}.bzv`)), bzz };
 }
 
 export function loadExposition(

@@ -32,9 +32,9 @@
         "WEB:49002005",
         "WEB:49002007",
         "WEB:58010029",
-        "WEB:40005012"
+        "WEB:19046007"
       ],
-      "resultCount": 23,
+      "resultCount": 25,
       "weakReasonShare": 1,
       "meanTopScore": 5.749874
     },
@@ -62,17 +62,17 @@
         "WEB:59001022",
         "WEB:43001001",
         "WEB:23040008",
+        "WEB:26033030",
         "WEB:59001018",
         "WEB:62002007",
         "WEB:58011003",
         "WEB:59001023",
         "WEB:62001001",
-        "WEB:06001013",
-        "WEB:58010028"
+        "WEB:06001013"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.054002,
-      "meanTopScore": 63.425076
+      "weakReasonShare": 0.058652,
+      "meanTopScore": 63.738379
     },
     {
       "id": "medium-refuge-trouble",
@@ -125,8 +125,8 @@
         "WEB:62002009"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.341618,
-      "meanTopScore": 23.633693
+      "weakReasonShare": 0.347908,
+      "meanTopScore": 23.861666
     },
     {
       "id": "narrow-hearing-doing",
