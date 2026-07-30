@@ -223,9 +223,40 @@ function sizeGate(budgets: Budgets, builtPath: string): GateResult {
     );
   }
   for (const path of descriptors) {
-    const descriptor = readJson<{ databaseBytes?: number }>(path);
+    const descriptor = readJson<{
+      databaseBytes?: number;
+      perTableBytes?: Readonly<Record<string, number>>;
+    }>(path);
     const bytes = descriptor.databaseBytes ?? 0;
     largest = Math.max(largest, bytes);
+
+    // Per-table budgets. These existed as data for months while no gate read
+    // them, and two of their keys named tables that had been renamed away —
+    // protection on paper only. A table with no budget is reported rather than
+    // waved through, because silence is how the next verse_terms appears.
+    for (const [table, tableBytes] of Object.entries(descriptor.perTableBytes ?? {})) {
+      const budget = budgets.size.perTableBytes[table];
+      if (budget === undefined) {
+        if (tableBytes > 1024 * 1024) {
+          findings.push({
+            message:
+              `${table} is ${(tableBytes / 1024 / 1024).toFixed(1)} MiB and has no budget in ` +
+              'eval/budgets.json. Give it one or explain why it cannot grow.',
+            subjects: [table],
+          });
+        }
+        continue;
+      }
+      if (tableBytes > budget) {
+        findings.push({
+          message:
+            `${table} is ${(tableBytes / 1024 / 1024).toFixed(1)} MiB, over its ` +
+            `${(budget / 1024 / 1024).toFixed(0)} MiB budget (indexes included). Tighten a ` +
+            'pruning threshold or reduce admitted rows for this table specifically.',
+          subjects: [table],
+        });
+      }
+    }
     if (bytes > budgets.size.totalArtifactBytes) {
       findings.push({
         message:
@@ -238,9 +269,15 @@ function sizeGate(budgets: Budgets, builtPath: string): GateResult {
   if (findings.length > 0) {
     return fail('G10-size', 'Size budgets', 'artifact exceeds its budget', findings);
   }
-  return pass('G10-size', 'Size budgets', `${descriptors.length} descriptor(s) within budget`, {
-    largestArtifactBytes: largest,
-  });
+  return pass(
+    'G10-size',
+    'Size budgets',
+    `${descriptors.length} descriptor(s) within budget: ` +
+      `${(largest / 1024 / 1024).toFixed(1)} MiB of ` +
+      `${(budgets.size.totalArtifactBytes / 1024 / 1024).toFixed(0)} MiB total, and every ` +
+      'table within its own',
+    { largestArtifactBytes: largest },
+  );
 }
 
 /**

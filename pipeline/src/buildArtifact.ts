@@ -113,6 +113,35 @@ function unzipSingleTextEntry(zip: Buffer): string {
   }
 }
 
+/** Minimal read surface for the size measurement. */
+interface SqliteReadable {
+  prepare(sql: string): { all(...params: unknown[]): unknown[] };
+}
+
+/**
+ * Bytes per table via SQLite's `dbstat`, with each index attributed to the
+ * table it serves. Measured from the built file rather than estimated from
+ * row counts, because the question a budget answers is "what will a device
+ * have to store", and only the pages know that.
+ */
+function measurePerTableBytes(database: SqliteReadable): Record<string, number> {
+  const owner = new Map<string, string>();
+  for (const row of database
+    .prepare("SELECT name, tbl_name FROM sqlite_master WHERE type IN ('index','table')")
+    .all() as { name: string; tbl_name: string }[]) {
+    owner.set(row.name, row.tbl_name);
+  }
+  const totals: Record<string, number> = {};
+  for (const row of database
+    .prepare('SELECT name, SUM(pgsize) AS bytes FROM dbstat GROUP BY name')
+    .all() as { name: string; bytes: number }[]) {
+    const table = owner.get(row.name) ?? row.name;
+    totals[table] = (totals[table] ?? 0) + Number(row.bytes);
+  }
+  // Sorted so the descriptor is byte-stable for the same database.
+  return Object.fromEntries(Object.entries(totals).sort(([a], [b]) => (a < b ? -1 : 1)));
+}
+
 function readEngineVersion(): string {
   const source = readFileSync(
     join(ROOT, '..', 'engine', 'src', 'config', 'engineVersion.ts'),
@@ -177,6 +206,15 @@ export interface ArtifactDescriptor {
   readonly layerFingerprint: string | null;
   readonly databaseSha256: string;
   readonly databaseBytes: number;
+  /**
+   * Bytes per table, INCLUDING each table's indexes.
+   *
+   * An index ships with its table and grows with it: verse_terms is 46 MiB of
+   * rows and 31 MiB of index, so budgeting the rows alone would miss two
+   * thirds of what admitting a commentator actually costs. G10 checks these,
+   * which is what makes a per-table budget a guardrail rather than a note.
+   */
+  readonly perTableBytes: Readonly<Record<string, number>>;
   readonly builtAt: string;
   readonly translations: readonly { code: string; verseCount: number }[];
   readonly counts: Readonly<Record<string, number>>;
@@ -288,6 +326,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
     );
 
     database.exec('VACUUM');
+    const perTableBytes = measurePerTableBytes(database as unknown as SqliteReadable);
     database.close();
 
     const databaseBytes = statSync(outPath).size;
@@ -301,6 +340,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       layerFingerprint: layer.layerFingerprint ?? null,
       databaseSha256,
       databaseBytes,
+      perTableBytes,
       builtAt,
       translations: corpus.translations,
       counts: {
