@@ -78,6 +78,9 @@ export {
 
 export type {
   ConceptMatch,
+  PassageResult,
+  RelatedResult,
+  SongInput,
   ContentQueryPort,
   ContentQueryResult,
   ContentScalar,
