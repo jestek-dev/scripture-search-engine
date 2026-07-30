@@ -24,8 +24,11 @@ reviews of numbers I had to pick to keep moving.
    which is your call, not mine. **This is the most user-visible open item in
    the system.**
 
-2. **Repo visibility and package name.** §1.2. Unanswered since the first
-   session, and it blocks publishing anything a consumer can pin.
+2. **Confirm the npm scope exists.** §1.2. Repo is now public and packages are
+   renamed `@jestek-dev/*`. An npm scope must match an npm account or org of
+   that name, which is separate from the GitHub owner — if `jestek-dev` is not
+   registered on npm, publishing will fail and we either register it or publish
+   via GitHub Packages instead.
 
 3. **Review `eval/budgets.json`.** §1.6b. Per-table budgets are now *enforced*
    and are first values I set from a single measurement. Wrong numbers will
@@ -73,17 +76,25 @@ shared between `obedience-to-the-word` and `self-deception`.
 | `walking-in-the-light` | 1 John 1:5-7, Eph 5:8, 1 John 2:6 |
 | `self-deception` | James 1:22-24, Gal 6:3, 1 John 1:8 |
 
-### 1.2 Repository visibility and the engine's name — still open
+### 1.2 Repository visibility and package scope — ✅ DONE (2026-07-30)
 
-The repo is private and called `scripture-search-engine`. Two things worth
-settling before consumers pin it:
+- **Repo is public**, per your call.
+- **Packages renamed** `@lh/*` → `@jestek-dev/*` across all three workspaces.
 
-- **Public or private long-term?** Private works fine (consumers authenticate
-  to pull releases). Public would let you publish `@jestek-dev/scripture-engine` to
-  npm without auth, and the corpora are all PD/CC BY so there is no rights
-  obstacle. Your call on whether the ontology is something you want visible.
-- **Package name.** I used `@jestek-dev/scripture-engine`. If you want a different
-  npm scope, changing it later means updating three consumers.
+Two consequences worth having seen deliberately rather than discovering:
+
+**The committed distillate is now public.** `pipeline/fixtures/passage-terms-subset.json`
+is 6.8 MB of term statistics, some derived from CCEL-sourced Matthew Henry and
+JFB. Your §1.4b decision — that a distillate is not republication of their
+transcription — already contemplated public distribution via Releases, so this
+is consistent with it. Flagging because going public makes that decision
+load-bearing in public rather than in a private repo. Say the word and I will
+revert visibility.
+
+**An npm scope is not a GitHub owner.** `@jestek-dev` on npm has to be a
+registered npm account or org. If it is not, publishing fails and the options
+are to register it or publish via GitHub Packages. I could not check this
+without your npm credentials.
 
 ### 1.3 When does Maskil adopt this? — still open, and now also blocked technically
 
