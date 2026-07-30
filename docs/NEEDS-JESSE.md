@@ -11,21 +11,35 @@ methods ship at ENGINE_VERSION 0.7.0. Phase 5 is unblocked but not started.
 
 ## 0. What I need from you, shortest path first
 
-1. **Is a single translation acceptable?** (§1.6a) Searching *"plans to prosper
-   you"* returns nothing, because that is NIV wording and the corpus is WEB
-   only. This will hit every consumer and is the most user-visible open item
-   here. Adding KJV is possible but the artifact is at 117.60 of 160 MiB.
-2. **Review `eval/budgets.json`.** Per-table budgets are now enforced and are
-   first values I set from one measurement (§1.6b). They are guardrails now —
-   wrong numbers will block real work or wave through real growth.
-3. **Repo visibility and package name** (§1.2) — still unanswered, and it
-   blocks publishing anything consumers can pin.
-4. **Phase 5 sequencing** (§1.3). The engine is ready; the remaining work is
-   inside Maskil, Setlist and Versed.
-5. **Everything else can wait.** Nothing below is blocking.
+Five things. The first two are decisions only you can make; the rest are
+reviews of numbers I had to pick to keep moving.
 
-Nothing here is blocking day-to-day work on the engine. Everything here is a
-call that is yours, not mine.
+1. **Approve (or reject) a `remembered-phrasings` concept pack.** §1.6a.
+   Searching *"plans to prosper you"* returns nothing, because that is NIV
+   wording and the corpus is WEB. I tested adding KJV: it fixes **zero** of the
+   ten phrasings I checked, because the wordings people remember are from
+   copyrighted translations. Layer A is the mechanism that fits — a concept
+   whose lexicon holds the remembered phrasing, anchored to the verse it means.
+   I did not build it because approving those anchors is a claim about meaning,
+   which is your call, not mine. **This is the most user-visible open item in
+   the system.**
+
+2. **Repo visibility and package name.** §1.2. Unanswered since the first
+   session, and it blocks publishing anything a consumer can pin.
+
+3. **Review `eval/budgets.json`.** §1.6b. Per-table budgets are now *enforced*
+   and are first values I set from a single measurement. Wrong numbers will
+   either block real work or wave through real growth. The artifact sits at
+   117.60 MiB of 160 MiB — roughly one more whole-Bible commentator fits.
+
+4. **Decide what a tripped weak-share gate means** — stop adding, or
+   re-baseline. §1.6c. Deciding in the moment is how a gate becomes decoration.
+   There is time: the last two admissions moved it +0.014 against a 0.15 budget.
+
+5. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
+   ship with contract tests. What remains is inside Maskil, Setlist and Versed.
+
+Everything else in this document is context, not a request.
 
 ---
 
@@ -323,7 +337,7 @@ the WEB verses they refer to, tagged `editorial`. It is mechanical once you
 approve the list, and it converts the single most user-visible failure in the
 system into a solved case.
 
-**b) Weak-reason share, and a probe set that no longer covers the corpus.**
+**c) Weak-reason share, and a probe set that no longer covers the corpus.**
 Matthew Henry raised weak-evidence share by 0.120 against a 0.15 budget on
 `phrase-present-help`. Keil & Delitzsch then moved it by 0.006 — but that is
 NOT reassurance. KD is Old Testament only, and all 13 probes sit in Psalms and
@@ -345,13 +359,29 @@ adding* or *re-baseline*. Deciding in the moment is how a gate becomes
 decoration. (Barnes and JFB moved it only +0.014 against a 0.15 budget, so
 there is time.)
 
-**b) `size.perTableBytes` is decoration today.** Six per-table budgets are
-declared in `eval/budgets.json` and **no gate reads them** — G10 checks only
-the artifact total. Two of the six name tables that do not exist: passage_terms
-was renamed verse_terms in schema v4, and co_citations was never built. By this
-repo's own rule an unfired threshold reads as protection while providing none.
-Either wire them into G10 or delete them; my preference is wire, since
-verse_terms is now the fastest-growing table by far.
+**b) `size.perTableBytes` — now enforced, and the numbers want review.**
+
+Previously these were declared and read by nothing, with two of six keys naming
+tables that had been renamed away. G10 now measures bytes per table from the
+built artifact (via SQLite's `dbstat`, with each index attributed to the table
+it serves) and fails on any table over budget.
+
+The values are mine, set from one measurement, and they are guardrails now:
+
+| table (incl. indexes) | measured | budget |
+|---|---|---|
+| verse_terms | 77.00 MiB | 100 MiB |
+| cross_references | 17.77 MiB | 24 MiB |
+| verse_tokens | 14.08 MiB | 20 MiB |
+| verses | 5.87 MiB | 8 MiB |
+
+`verse_terms` deliberately gets room for roughly one more whole-Bible author,
+since that is the table admission grows. If you intend more than that, raise it
+knowingly rather than discovering it as a failed build.
+
+The gate also reports any *unbudgeted* table over 1 MiB rather than passing it,
+which justified itself immediately by failing the first run on an FTS shadow
+table nobody had considered.
 
 ### 2.10 Whole-Bible coverage: 95.3%, and what still limits it
 
