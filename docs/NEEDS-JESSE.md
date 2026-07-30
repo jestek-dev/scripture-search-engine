@@ -1,8 +1,9 @@
 # Needs Jesse — decisions, risks, and open items
 
-**Last updated:** 2026-07-29, after Layer B verse-level corroboration
+**Last updated:** 2026-07-29, after the full-corpus build and Treasury vol. 3
 **Status:** Phases 0–4 complete. Layer B rebuilt on corroboration. Full-corpus
-build and Phase 5 (consumer adoption) both not started.
+artifact builds and is descriptor-pinned. Phase 5 (consumer adoption) not
+started. Layer B remains Psalms-only — that is now the largest gap.
 
 Nothing here is blocking day-to-day work on the engine. Everything here is a
 call that is yours, not mine.
@@ -62,21 +63,62 @@ The engine ships `research()` and nothing else. Setlist and Maskil both need
 `forSong()`, which is typed but unbuilt. So Phase 5 has real work in front of
 it regardless of when you want it (implementation plan §5).
 
+### 1.4a Treasury vol. 3 is in; vol. 5 is deliberately NOT — ✅ resolved
+
+Volume 3 (Psalms 55–87) was found in the same University of Toronto scan set as
+the others, so the parser's conventions carried over unchanged: 1,452
+expositions, and admitted terms went 2,583 → 3,060 (+18%).
+
+**Volume 5 (Psalms 111–119) was not added, on purpose.** That volume does not
+exist in the Toronto set. The only openly-readable copies come from a different
+seven-volume edition, whose volume 5 also covers Psalms 104–110 — ground the
+existing volume 4 already holds.
+
+Before the author fix (§2.8) that would have been actively harmful: two
+manifest ids on the same verses, read as two independent sources, manufacturing
+Spurgeon corroborating Spurgeon. That is now structurally impossible. But it
+also means the volume would contribute **nothing** today: Psalms 111–119 would
+have Spurgeon alone, and a single author never clears corroboration.
+
+Per this repo's own rule, an addition that changes no outcome is
+`NO MEASURABLE EFFECT` and should not be merged. It becomes worth adding the
+moment a second author covers those psalms.
+
+### 1.4b CCEL — ✅ DECIDED (2026-07-29)
+
+Jesse's call: **admit Matthew Henry and JFB**, on the reading that shipping a
+term-statistics distillate is not republication of CCEL's transcription. The
+underlying works are public domain; what we redistribute is counts and PMI
+scores, not their prose.
+
+To record when those sources are admitted: the reasoning goes in the manifest's
+`licenseRecord`, not into a bare `public_domain` claim, so the judgment is
+visible to anyone auditing the artifact rather than buried in a decision nobody
+can find. This is a different conclusion from the one taken for Treasury of
+David, and the manifests should say why rather than look inconsistent.
+
 ### 1.4 Which commentators come next — I have a recommendation, not a decision
 
 Corroboration (§2.1) means coverage now depends on **authors per verse**, not
 works ingested. Two candidates, different shapes:
 
-- **Finish *Treasury of David* (vols 3 and 5).** Cheap, mechanical, and it
-  closes a real hole: Psalms 58–87 and 111–119 currently have one author, which
-  is the exact condition that produces idiolect. I would do this first.
-- **Add a third voice on Psalms** (Matthew Henry, JFB, Barnes — all PD,
-  verse-keyed). Raises corroboration *quality* where two authors already agree,
-  and G9 will tell you when it stops paying.
+~~Finish Treasury vols 3 and 5~~ — settled in §1.4a.
 
-Beyond Psalms, moving to a second book means picking one and finding 2+ PD
-commentators on it before ingesting anything — one author on a new book buys
-almost nothing now, which is a change from how this looked a phase ago.
+What remains, in the order I would do it:
+
+- **Whole-Bible verse-keyed commentaries via SWORD modules.** Clarke (whole
+  Bible) + Keil & Delitzsch (OT) + Barnes (NT), plus Matthew Henry and JFB now
+  that §1.4b is decided. Verse-keyed by construction, so no OCR and no
+  alignment inference. Full survey and verified availability in
+  [docs/research/2026-07-29-whole-bible-exposition-sources.md](research/2026-07-29-whole-bible-exposition-sources.md).
+- **Spurgeon's sermons: later, deliberately.** 63 volumes exist as OCR, but
+  they need the alignment path the modules avoid, carry OCR noise, and cover
+  what a Victorian Baptist preached rather than the canon. Sermons are depth;
+  the current gap is breadth.
+
+Moving to a second book means finding 2+ PD commentators on it before ingesting
+anything — one author on a new book buys nothing now, which is a change from
+how this looked a phase ago.
 
 ### 1.5 The size budget is now known to be 4x too loose
 
@@ -211,6 +253,28 @@ G1 has been extended so this class of hole cannot recur: a manifest that pins a
 checksum must name a retrievable file, not a landing page. A separate opt-in
 `--check-sources` run verifies every pinned URL still resolves (all 8 do today).
 
+### 2.8 Corroboration counted VOLUMES, not authors — fixed before it could bite
+
+Found while planning the volume 5 addition. `minSources: 2` was counting
+distinct *manifest ids*, and every volume of a commentary has its own manifest
+id. So volume 4 of the Treasury could have corroborated volume 5, and a second
+edition could have corroborated the first — the same man agreeing with himself,
+which is precisely what corroboration exists to rule out.
+
+Nothing was wrong in the shipped data: the Toronto volumes cover disjoint
+psalms, so no verse was ever attested by two Treasury volumes. It was safe **by
+accident**, and the accident was one overlapping edition away from ending.
+
+Sources now carry an `authorId`. Corroboration counts authors; volume ids are
+kept for provenance display, so a result can still say which books the evidence
+came from. Three tests lock the rule down, including the exact case that
+prompted it.
+
+Worth noting the shape of this: like the per-term attribution bug in Phase 3,
+the metric looked correct and would have silently reported confidence it had
+not earned. Both were found by asking what a *new* source would do to the
+numbers, not by testing the numbers as they stood.
+
 ### 2.7 Treasury of David came from Internet Archive OCR, and it shows
 
 Deliberately not CCEL: *Treasury of David* is absent from Project Gutenberg, so
@@ -234,8 +298,8 @@ attaching commentary to the wrong psalm is a silent unrecoverable error.
    because both admitted commentators only wrote on Psalms. Sixty-five other
    books have no homiletical evidence at all. Needs 2+ public-domain
    commentators per book — see §1.4.
-3. **Finish *Treasury of David* vols 3 and 5** — cheap, closes the
-   single-author hole in Psalms 58–87 and 111–119.
+3. ~~Finish *Treasury of David* vols 3 and 5~~ — vol. 3 **done**; vol. 5
+   deliberately skipped with reasons (§1.4a).
 4. **Decide the size budget** (§1.5) now that there is a real number.
 5. **Try the curation skill on a real gap** — Phase 4's own gate is unmet until
    this runs once. You have said this is lower priority than breadth.

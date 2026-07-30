@@ -160,6 +160,7 @@ function distilLayerB(manifests: ManifestSet): ConceptLayerInput['verseTerms'] {
         startVerseId: section.startVerseId,
         endVerseId: section.endVerseId,
         sourceId: spec.id,
+        authorId: spec.authorId,
         locator: section.citation,
         body: section.body,
       });
@@ -170,12 +171,12 @@ function distilLayerB(manifests: ManifestSet): ConceptLayerInput['verseTerms'] {
   // corroborate against, so the floor drops to 1 rather than silently
   // emptying the layer — matching the subset generator exactly, because CI's
   // profiles and the artifact's profiles must come from the same rules.
-  const distinctSources = new Set(documents.map((document) => document.sourceId)).size;
+  const distinctAuthors = new Set(documents.map((document) => document.authorId)).size;
   const result = buildTermProfiles(documents, {
     minPmi: budgets.distinctiveness.minPmi,
     maxTermsPerVerse: budgets.distinctiveness.maxTermsPerVerse,
     minCount: 2,
-    minSources: distinctSources > 1 ? 2 : 1,
+    minSources: distinctAuthors > 1 ? 2 : 1,
   });
   process.stdout.write(
     `  ${String(result.documentsProcessed).padStart(6)} documents, ` +

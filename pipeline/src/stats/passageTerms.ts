@@ -38,7 +38,18 @@ export interface ExpositionDocument {
   /** The author's OWN span — never normalized to anyone else's chunking. */
   readonly startVerseId: number;
   readonly endVerseId: number;
+  /** Manifest id of the volume this came from. Provenance, not corroboration. */
   readonly sourceId: string;
+  /**
+   * Who WROTE it. Corroboration counts these, never sourceIds.
+   *
+   * A multi-volume work is many manifest ids and one author, and two editions
+   * of the same work are more ids still. Counting ids would let a second
+   * edition corroborate the first — the same man agreeing with himself, which
+   * is the exact failure `minSources` exists to prevent. The distinction is
+   * cheap here and impossible to recover downstream.
+   */
+  readonly authorId: string;
   readonly locator: string;
   readonly body: string;
 }
@@ -104,6 +115,9 @@ function spanWidth(startVerseId: number, endVerseId: number): number {
 interface Accumulator {
   count: number;
   bestPmi: number;
+  /** Distinct AUTHORS attesting this term — the corroboration count. */
+  authors: Set<string>;
+  /** Volume manifest ids, kept for provenance display only. */
   sources: Set<string>;
   minSpan: number;
   locator: string;
@@ -176,6 +190,7 @@ export function buildTermProfiles(
         const existing = verseTerms.get(term);
         if (existing) {
           existing.count += count;
+          existing.authors.add(document.authorId);
           existing.sources.add(document.sourceId);
           if (pmi > existing.bestPmi) existing.bestPmi = Number(pmi.toFixed(6));
           if (width < existing.minSpan) {
@@ -186,6 +201,7 @@ export function buildTermProfiles(
           verseTerms.set(term, {
             count,
             bestPmi: Number(pmi.toFixed(6)),
+            authors: new Set([document.authorId]),
             sources: new Set([document.sourceId]),
             minSpan: width,
             locator: document.locator,
@@ -202,14 +218,15 @@ export function buildTermProfiles(
     const admitted: VerseTerm[] = [];
     for (const [term, accumulator] of verseTerms) {
       if (accumulator.count < options.minCount) continue;
-      if (accumulator.sources.size < options.minSources) continue;
+      // Corroboration is measured in AUTHORS, not volumes or editions.
+      if (accumulator.authors.size < options.minSources) continue;
       admitted.push({
         verseId,
         term,
         pmi: accumulator.bestPmi,
         count: accumulator.count,
         sourceIds: [...accumulator.sources].sort().join('+'),
-        sourceCount: accumulator.sources.size,
+        sourceCount: accumulator.authors.size,
         minSpanVerses: accumulator.minSpan,
         locator: accumulator.locator,
       });

@@ -86,6 +86,7 @@ function loadSource(spec: ExpositionSourceSpec): LoadedSource | null {
       startVerseId: section.startVerseId,
       endVerseId: section.endVerseId,
       sourceId: spec.id,
+      authorId: spec.authorId,
       locator: section.citation,
       body: section.body,
     })),
@@ -129,8 +130,10 @@ function main(): void {
   }
 
   const allDocuments = loaded.flatMap((entry) => entry.documents);
-  const distinctSources = new Set(allDocuments.map((document) => document.sourceId)).size;
-  const admissionOptions = { ...options, minSources: distinctSources > 1 ? 2 : 1 };
+  // AUTHORS, not volumes: six volumes of one commentary are one voice, and a
+  // reprint is not a second opinion.
+  const distinctAuthors = new Set(allDocuments.map((document) => document.authorId)).size;
+  const admissionOptions = { ...options, minSources: distinctAuthors > 1 ? 2 : 1 };
   const combined = buildTermProfiles(allDocuments, admissionOptions);
   const combinedInCorpus = inFixtureCorpus(combined.terms, present);
 

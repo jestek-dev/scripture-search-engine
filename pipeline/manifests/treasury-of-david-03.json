@@ -1,0 +1,12 @@
+{
+  "id": "treasury-of-david-03",
+  "label": "C. H. Spurgeon, The Treasury of David, Vol. 3 (Psalms 55-87)",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain by age (published 1869-1885; Spurgeon died 1892). Internet Archive scan from the University of Toronto set; IA asserts no additional copyright over the OCR text of a public-domain work.",
+  "sourceUrl": "https://archive.org/download/thetreasuryofdav03spuruoft/thetreasuryofdav03spuruoft_djvu.txt",
+  "sha256": "99e6a259c619971ee1ca4bdf8c82cc6aba378fd229a600651d7c9cae3627cb46",
+  "bytes": 2593156,
+  "maxTier": "public_distribution",
+  "retrievedAt": "2026-07-29",
+  "attributionNote": "Same University of Toronto scan set as volumes 1, 2, 4 and 6, so the printed conventions the parser relies on are consistent across the series."
+}

@@ -3,10 +3,10 @@
   "tokenizerVersion": "1.0.0",
   "engineVersion": "0.6.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
-  "layerFingerprint": "b12da481eb22cd7abe06d471b616da691ea749e63436dfdf5031cf0fcdb7e933",
-  "databaseSha256": "1bc2dea5d117f5ffbcf540bba7660c08d3ae444bbdb1815e3c03bdff9131cbef",
-  "databaseBytes": 42893312,
-  "builtAt": "2026-07-30T03:19:13.416Z",
+  "layerFingerprint": "8abb545c61f42b1c7a9a67ac94cf2001ff9ce4e99a074f8aa768400ff3808b17",
+  "databaseSha256": "f8417d082ffd76fdb592da4d20b08735c64f714f5bc4b1d7ea2ba8538e741f16",
+  "databaseBytes": 42950656,
+  "builtAt": "2026-07-30T03:42:32.417Z",
   "translations": [
     {
       "code": "WEB",
@@ -21,7 +21,7 @@
     "editorialAnchors": 28,
     "topicAnchors": 63,
     "crossReferences": 341096,
-    "verseTerms": 2583
+    "verseTerms": 3060
   },
   "sources": [
     {
@@ -51,6 +51,12 @@
     {
       "id": "treasury-of-david-02",
       "sha256": "913881bd61b061876a10a9c3ea2568c0eec1ef7e6b3b19ffb3514d9ec3fefd9b",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-03",
+      "sha256": "99e6a259c619971ee1ca4bdf8c82cc6aba378fd229a600651d7c9cae3627cb46",
       "rightsClass": "public_domain",
       "maxTier": "public_distribution"
     },
