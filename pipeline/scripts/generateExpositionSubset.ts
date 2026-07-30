@@ -25,11 +25,7 @@ import { fileURLToPath } from 'node:url';
 
 import { findBook } from '../src/books.js';
 import { EXPOSITION_SOURCES, type ExpositionSourceSpec } from '../src/expositionSources.js';
-import {
-  importExpositions,
-  importPsalmVerseHeadings,
-  stripGutenbergBoilerplate,
-} from '../src/importers/expositionImporter.js';
+import { loadExposition } from '../src/loadExpositions.js';
 import {
   buildTermProfiles,
   profileDelta,
@@ -65,34 +61,25 @@ interface LoadedSource {
 }
 
 function loadSource(spec: ExpositionSourceSpec): LoadedSource | null {
-  const path = join(ROOT, 'sources', spec.file);
-  if (!existsSync(path)) return null;
+  const loaded = loadExposition(spec, join(ROOT, 'sources'));
+  if (!loaded) return null;
 
-  const raw = readFileSync(path);
-  const sha256 = createHash('sha256').update(raw).digest('hex');
-  const text = stripGutenbergBoilerplate(raw.toString('utf8'));
-
-  const result =
-    spec.strategy === 'citation-suffix'
-      ? importExpositions(text, {
-          bookId: spec.bookId,
-          citationWord: spec.citationWord ?? 'PSALM',
-        })
-      : importPsalmVerseHeadings(text, { bookId: spec.bookId });
+  // Directory-shaped sources (SWORD modules) are identified by the zip they
+  // were extracted from, which is what the manifest checksums.
+  const artifactPath = join(
+    ROOT,
+    'sources',
+    spec.strategy === 'sword-zcom' ? `${spec.file}.zip` : spec.file,
+  );
+  const sha256 = createHash('sha256').update(readFileSync(artifactPath)).digest('hex');
+  for (const note of loaded.notes) process.stdout.write(`  ${spec.id}: ${note}\n`);
 
   return {
     spec,
-    documents: result.sections.map((section) => ({
-      startVerseId: section.startVerseId,
-      endVerseId: section.endVerseId,
-      sourceId: spec.id,
-      authorId: spec.authorId,
-      locator: section.citation,
-      body: section.body,
-    })),
+    documents: [...loaded.documents],
     sha256,
-    parsed: result.sections.length,
-    rejected: result.rejected,
+    parsed: loaded.parsed,
+    rejected: loaded.rejected,
   };
 }
 

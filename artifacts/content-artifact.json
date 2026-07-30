@@ -3,10 +3,10 @@
   "tokenizerVersion": "1.0.0",
   "engineVersion": "0.6.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
-  "layerFingerprint": "8abb545c61f42b1c7a9a67ac94cf2001ff9ce4e99a074f8aa768400ff3808b17",
-  "databaseSha256": "f8417d082ffd76fdb592da4d20b08735c64f714f5bc4b1d7ea2ba8538e741f16",
-  "databaseBytes": 42950656,
-  "builtAt": "2026-07-30T03:42:32.417Z",
+  "layerFingerprint": "bfd18cc3e5a061e6af07f7991777c3a0de7bc54199dac7b79bf8b398414d3857",
+  "databaseSha256": "ee09b0b83f3841040703169f5b663508bb8a9c71c474f7713703af8ab948b745",
+  "databaseBytes": 44679168,
+  "builtAt": "2026-07-30T03:53:59.109Z",
   "translations": [
     {
       "code": "WEB",
@@ -21,9 +21,15 @@
     "editorialAnchors": 28,
     "topicAnchors": 63,
     "crossReferences": 341096,
-    "verseTerms": 3060
+    "verseTerms": 19741
   },
   "sources": [
+    {
+      "id": "clarke",
+      "sha256": "56bb33d3bf0f50c1609f4dd10ac81e7450bb0e8aae93bf340074ccb5e207a44f",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
     {
       "id": "maclaren-psalms",
       "sha256": "ca79e0cc06ef8dda8f7e139539f6db4e6782d3e0d5a6ebf94773b74b88e37c32",

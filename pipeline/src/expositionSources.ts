@@ -18,15 +18,18 @@ export interface ExpositionSourceSpec {
   readonly authorId: string;
   /** Filename under pipeline/sources/ (gitignored download). */
   readonly file: string;
-  /** Canonical book id this volume expounds. */
-  readonly bookId: number;
+  /**
+   * Canonical book id this volume expounds. Omitted for whole-Bible sources,
+   * which carry their own book keys.
+   */
+  readonly bookId?: number;
   /**
    * Which parser to use. `citation-suffix` handles works that END a quoted
    * passage with a citation ("...for ever.'--PSALM xxiii. 1-6."), which is
    * Maclaren's convention. Others get their own strategy as they are added,
    * rather than one regex growing warts.
    */
-  readonly strategy: 'citation-suffix' | 'psalm-verse-headings';
+  readonly strategy: 'citation-suffix' | 'psalm-verse-headings' | 'sword-zcom';
   /** For citation-suffix: the book word as printed, e.g. "PSALM". */
   readonly citationWord?: string;
   /** Human note explaining why this source is here. */
@@ -34,6 +37,17 @@ export interface ExpositionSourceSpec {
 }
 
 export const EXPOSITION_SOURCES: readonly ExpositionSourceSpec[] = [
+  {
+    id: 'clarke',
+    authorId: 'clarke',
+    // Directory of extracted SWORD module files, not a single text.
+    file: 'clarke',
+    strategy: 'sword-zcom',
+    note:
+      'First whole-Bible expositor. Verse-keyed by construction, so there is no ' +
+      'heading parser and no alignment inference — the failure mode that made ' +
+      'Treasury of David expensive does not exist here.',
+  },
   {
     id: 'maclaren-psalms',
     authorId: 'maclaren',

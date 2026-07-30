@@ -106,10 +106,10 @@ works ingested. Two candidates, different shapes:
 
 What remains, in the order I would do it:
 
-- **Whole-Bible verse-keyed commentaries via SWORD modules.** Clarke (whole
-  Bible) + Keil & Delitzsch (OT) + Barnes (NT), plus Matthew Henry and JFB now
-  that §1.4b is decided. Verse-keyed by construction, so no OCR and no
-  alignment inference. Full survey and verified availability in
+- **Whole-Bible verse-keyed commentaries via SWORD modules.** The importer is
+  built and **Clarke is admitted** (§2.9). Next: Keil & Delitzsch (OT) and
+  Barnes (NT), then Matthew Henry and JFB now that §1.4b is decided. Each is
+  now a data change — a manifest and a registry line — not new code. Survey in
   [docs/research/2026-07-29-whole-bible-exposition-sources.md](research/2026-07-29-whole-bible-exposition-sources.md).
 - **Spurgeon's sermons: later, deliberately.** 63 volumes exist as OCR, but
   they need the alignment path the modules avoid, carry OCR noise, and cover
@@ -252,6 +252,28 @@ re-recorded as a reviewed event.
 G1 has been extended so this class of hole cannot recur: a manifest that pins a
 checksum must name a retrievable file, not a landing page. A separate opt-in
 `--check-sources` run verifies every pinned URL still resolves (all 8 do today).
+
+### 2.9 Clarke is in, and Layer B is STILL Psalms-only — by design, for now
+
+Adam Clarke's whole-Bible commentary is admitted: 21,052 verse-keyed notes,
+covering every book. Admitted terms went 3,060 -> 19,741, and fixture-scoped
+coverage went 15 verses -> 45.
+
+**Every one of those terms is still in Psalms.** That is the correct result and
+worth understanding rather than fixing: Clarke is the only expositor outside
+the Psalter, and one author never clears corroboration. What Clarke bought was
+*depth* where two authors already agreed — Psalms 28:9, 63:7, 102:11, 116:13
+now carry preached vocabulary they did not have.
+
+Breadth arrives with the SECOND whole-Bible author, not the first. Keil &
+Delitzsch (OT) and Barnes (NT) are the next step, and adding them is now a
+manifest plus a registry line.
+
+The versification mapping was the risk, and it is verified rather than assumed:
+KJV arithmetic predicts 8,246 NT and 24,115 OT index entries, and Clarke's
+module has exactly those. Of 21,052 notes, exactly one disagrees with its own
+printed verse number — Matthew 23:14, a genuine editorial renumbering around a
+textual variant. A systematic off-by-one would have produced thousands.
 
 ### 2.8 Corroboration counted VOLUMES, not authors — fixed before it could bite
 

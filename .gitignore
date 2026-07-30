@@ -22,3 +22,5 @@ eval/.runs/
 
 # Extracted source texts (the zips beside them carry the checksums)
 pipeline/sources/vpl/
+pipeline/sources/clarke/
+pipeline/sources/kjv/

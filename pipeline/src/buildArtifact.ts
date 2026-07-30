@@ -38,12 +38,8 @@ import { fileURLToPath } from 'node:url';
 import { buildConceptLayer, type ConceptLayerInput } from './buildConceptLayer.js';
 import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
 import { EXPOSITION_SOURCES } from './expositionSources.js';
-import {
-  importExpositions,
-  importPsalmVerseHeadings,
-  stripGutenbergBoilerplate,
-} from './importers/expositionImporter.js';
 import { compileOntology } from './importers/ontologyImporter.js';
+import { loadExposition } from './loadExpositions.js';
 import { importCrossReferences, importTopicScores } from './importers/openbibleImporter.js';
 import { importVpl } from './importers/vplImporter.js';
 import { buildTermProfiles, type ExpositionDocument } from './stats/passageTerms.js';
@@ -141,30 +137,17 @@ function distilLayerB(manifests: ManifestSet): ConceptLayerInput['verseTerms'] {
 
   const documents: ExpositionDocument[] = [];
   for (const spec of EXPOSITION_SOURCES) {
-    const text = stripGutenbergBoilerplate(
-      readVerified(manifests, spec.id, spec.file).toString('utf8'),
-    );
-    const parsed =
-      spec.strategy === 'psalm-verse-headings'
-        ? importPsalmVerseHeadings(text, { bookId: spec.bookId })
-        : importExpositions(text, {
-            bookId: spec.bookId,
-            citationWord: spec.citationWord ?? 'PSALM',
-          });
+    // Checksum-verify before parsing. For directory-shaped sources the zip
+    // beside the extract is what carries the rights record.
+    readVerified(manifests, spec.id, spec.strategy === 'sword-zcom' ? `${spec.file}.zip` : spec.file);
+    const loaded = loadExposition(spec, SOURCES);
+    if (!loaded) throw new Error(`buildArtifact: source ${spec.id} not found under ${SOURCES}`);
     process.stdout.write(
-      `  ${spec.id.padEnd(22)} ${String(parsed.sections.length).padStart(5)} expositions` +
-        `${parsed.rejected > 0 ? ` (${parsed.rejected} rejected)` : ''}\n`,
+      `  ${spec.id.padEnd(22)} ${String(loaded.parsed).padStart(6)} expositions` +
+        `${loaded.rejected > 0 ? ` (${loaded.rejected} rejected)` : ''}\n`,
     );
-    for (const section of parsed.sections) {
-      documents.push({
-        startVerseId: section.startVerseId,
-        endVerseId: section.endVerseId,
-        sourceId: spec.id,
-        authorId: spec.authorId,
-        locator: section.citation,
-        body: section.body,
-      });
-    }
+    for (const note of loaded.notes) process.stdout.write(`      note: ${note}\n`);
+    documents.push(...loaded.documents);
   }
 
   // Corroboration floor. With a single expositor there is nothing to
