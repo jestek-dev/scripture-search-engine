@@ -4,9 +4,10 @@
   "rightsClass": "pd_text_claimed_transcription",
   "licenseRecord": "The WORK is public domain by age (Robert Jamieson, A. R. Fausset, David Brown; published 1871). The TRANSCRIPTION is CCEL's: CrossWire declares DistributionLicense=Public Domain with TextSource=https://ccel.org/ccel/j/jamieson/jfb/cache/jfb.txt. CCEL asks permission for commercial republication of their own files, which is why treasury-of-david-* avoided them. ADMITTED ON THE NARROWER READING decided by Jesse 2026-07-29 and recorded for mhc: this artifact ships a term-statistics distillate — term, PMI, occurrence count, provenance — never the prose, so nothing a reader could reconstruct the transcription from is redistributed. Stated in full so the judgment is auditable and the difference from the Treasury decision is visible rather than looking like an inconsistency.",
   "sourceUrl": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/JFB.zip",
-  "sha256": "15716f76fffd50a1949845e49a24120cf4c5bb7fedeeec0f73f0c71ca0f961b0",
+  "sha256": "afb0ccf348f350cacdeb7d47cf7d706d6ba23dfc434b8da876778117b1671442",
   "bytes": 5687741,
   "maxTier": "public_distribution",
   "retrievedAt": "2026-07-30",
-  "attributionNote": "Whole Bible. Fourth voice overall and the second on the New Testament outside Clarke and Henry, which is where the remaining coverage gap sits."
+  "attributionNote": "Whole Bible. Fourth voice overall and the second on the New Testament outside Clarke and Henry, which is where the remaining coverage gap sits.",
+  "contentSha256": "2cc2819dbdc32ed5b918832db9b8b80c0993fe8b103c6085d5f18b86cff16b40"
 }

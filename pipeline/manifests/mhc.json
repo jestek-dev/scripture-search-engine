@@ -8,5 +8,6 @@
   "bytes": 15195123,
   "maxTier": "public_distribution",
   "retrievedAt": "2026-07-29",
-  "attributionNote": "Second whole-Bible expositor, and therefore the source that first makes corroboration possible outside the Psalter. Written by SECTION, not by verse: the module stores one essay against every verse it covers, and the importer collapses those runs so the recorded span is the section Henry actually wrote about."
+  "attributionNote": "Second whole-Bible expositor, and therefore the source that first makes corroboration possible outside the Psalter. Written by SECTION, not by verse: the module stores one essay against every verse it covers, and the importer collapses those runs so the recorded span is the section Henry actually wrote about.",
+  "contentSha256": "87034886f3240152706489dd7ce7c8547f65222a382d81740a5f07cce12ccc78"
 }

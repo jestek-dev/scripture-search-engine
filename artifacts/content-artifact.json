@@ -4,7 +4,7 @@
   "engineVersion": "0.7.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
   "layerFingerprint": "316fba74372ca6bb12a0e082ac98d44213c96f78f757f431fefe6eff7c6f2c27",
-  "databaseSha256": "660f9963ad341d7b6ab82c86798385968d32fdfe7c5ddff59e739d08b9e8bd6b",
+  "databaseSha256": "bd715d526aaa8bb726208c6662cfcc5913ec44771b37de76c7172beb4595832e",
   "databaseBytes": 123310080,
   "perTableBytes": {
     "book_aliases": 12288,
@@ -26,7 +26,7 @@
     "verses_fts_docsize": 303104,
     "verses_fts_idx": 12288
   },
-  "builtAt": "2026-07-30T05:09:01.821Z",
+  "builtAt": "2026-07-30T19:50:33.462Z",
   "translations": [
     {
       "code": "WEB",
@@ -58,7 +58,7 @@
     },
     {
       "id": "jfb",
-      "sha256": "15716f76fffd50a1949845e49a24120cf4c5bb7fedeeec0f73f0c71ca0f961b0",
+      "sha256": "afb0ccf348f350cacdeb7d47cf7d706d6ba23dfc434b8da876778117b1671442",
       "rightsClass": "pd_text_claimed_transcription",
       "maxTier": "public_distribution"
     },

@@ -9,7 +9,8 @@
     "test": "vitest run",
     "build:fixture": "tsx src/buildFixtureDb.ts",
     "build:artifact": "node --max-old-space-size=8192 ../node_modules/.bin/tsx src/buildArtifact.ts",
-    "build:distillate": "node --max-old-space-size=8192 ../node_modules/.bin/tsx scripts/generateExpositionSubset.ts"
+    "build:distillate": "node --max-old-space-size=8192 ../node_modules/.bin/tsx scripts/generateExpositionSubset.ts",
+    "fetch:sources": "tsx scripts/fetchSources.ts"
   },
   "devDependencies": {
     "@types/node": "24.10.1",

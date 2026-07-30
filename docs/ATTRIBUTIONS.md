@@ -54,7 +54,7 @@ First whole-Bible expositor in the corpus. Verse-keyed by construction: the modu
 - **Rights:** Public-domain work, transcription carries a claim
 - **Source:** <https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/JFB.zip>
 - **Retrieved:** 2026-07-30
-- **Checksum:** `15716f76fffd50a1949845e49a24120cf4c5bb7fedeeec0f73f0c71ca0f961b0`
+- **Checksum:** `afb0ccf348f350cacdeb7d47cf7d706d6ba23dfc434b8da876778117b1671442`
 
 The WORK is public domain by age (Robert Jamieson, A. R. Fausset, David Brown; published 1871). The TRANSCRIPTION is CCEL's: CrossWire declares DistributionLicense=Public Domain with TextSource=https://ccel.org/ccel/j/jamieson/jfb/cache/jfb.txt. CCEL asks permission for commercial republication of their own files, which is why treasury-of-david-* avoided them. ADMITTED ON THE NARROWER READING decided by Jesse 2026-07-29 and recorded for mhc: this artifact ships a term-statistics distillate — term, PMI, occurrence count, provenance — never the prose, so nothing a reader could reconstruct the transcription from is redistributed. Stated in full so the judgment is auditable and the difference from the Treasury decision is visible rather than looking like an inconsistency.
 

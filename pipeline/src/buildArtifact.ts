@@ -40,6 +40,7 @@ import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
 import { EXPOSITION_SOURCES } from './expositionSources.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import { loadExposition } from './loadExpositions.js';
+import { fingerprintDirectory } from './provenance/contentFingerprint.js';
 import { importCrossReferences, importTopicScores } from './importers/openbibleImporter.js';
 import { importVpl } from './importers/vplImporter.js';
 import { buildTermProfiles, type ExpositionDocument } from './stats/passageTerms.js';
@@ -86,6 +87,31 @@ function readVerified(manifests: ManifestSet, id: string, fileName: string): Buf
   }
   const buffer = readFileSync(path);
   const sha256 = createHash('sha256').update(buffer).digest('hex');
+
+  // Where the manifest pins CONTENT, that is the identity that matters: some
+  // publishers repack their archives, and a build that refused an unchanged
+  // source because its zip was rebuilt would be enforcing packaging, not
+  // provenance. See src/provenance/contentFingerprint.ts.
+  if (manifest.contentSha256) {
+    const directory = join(SOURCES, contentDirectoryFor(id));
+    if (!existsSync(directory)) {
+      throw new Error(
+        `buildArtifact: ${id} declares a content fingerprint but ${directory} is missing. ` +
+          'Run `npm run fetch:sources --workspace pipeline`.',
+      );
+    }
+    const content = fingerprintDirectory(directory);
+    if (content !== manifest.contentSha256) {
+      throw new Error(
+        `buildArtifact: content mismatch for "${id}".\n` +
+          `  manifest: ${manifest.contentSha256}\n` +
+          `  on disk : ${content}\n` +
+          '  The payload changed, not merely its packaging. Re-admit as a reviewed change.',
+      );
+    }
+    return buffer;
+  }
+
   if (manifest.sha256 && sha256 !== manifest.sha256) {
     throw new Error(
       `buildArtifact: checksum mismatch for "${id}".\n` +
@@ -96,6 +122,17 @@ function readVerified(manifests: ManifestSet, id: string, fileName: string): Buf
     );
   }
   return buffer;
+}
+
+/**
+ * Where a content-fingerprinted source's payload lives, relative to sources/.
+ * SWORD modules use their registry `file`; WEB unpacks to `vpl`.
+ */
+function contentDirectoryFor(id: string): string {
+  if (id === 'web') return 'vpl';
+  const spec = EXPOSITION_SOURCES.find((candidate) => candidate.id === id);
+  if (!spec) throw new Error(`buildArtifact: no content directory known for "${id}"`);
+  return spec.file;
 }
 
 /** Both OpenBible downloads are zips wrapping a single text file. */

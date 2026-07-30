@@ -49,6 +49,17 @@ export interface SourceManifest {
   readonly sourceUrl: string;
   /** SHA-256 of the exact acquired artifact. */
   readonly sha256: string;
+  /**
+   * SHA-256 of what the archive CONTAINS, independent of packaging.
+   *
+   * Present only for archive sources. Where it is present it is the identity
+   * admission checks, because some publishers regenerate their archives —
+   * CrossWire's module zips change checksum on a repack while every file
+   * inside stays byte-identical. Gating on the archive would report an
+   * unchanged source as altered, and a gate that fires on nothing teaches
+   * people to update checksums without reading them.
+   */
+  readonly contentSha256?: string;
   /** Byte length of the acquired artifact, checked alongside the hash. */
   readonly bytes: number;
   /** Tier ceiling: a source may not be used above this. */

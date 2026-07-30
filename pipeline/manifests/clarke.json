@@ -8,5 +8,6 @@
   "bytes": 8627265,
   "maxTier": "public_distribution",
   "retrievedAt": "2026-07-29",
-  "attributionNote": "First whole-Bible expositor in the corpus. Verse-keyed by construction: the module states which entry belongs to which verse, so alignment is a lookup rather than inference from printed headings."
+  "attributionNote": "First whole-Bible expositor in the corpus. Verse-keyed by construction: the module states which entry belongs to which verse, so alignment is a lookup rather than inference from printed headings.",
+  "contentSha256": "57a72b54b582da661a8cf26877617c6508094d863fcefca040a326b3ca64d18c"
 }
