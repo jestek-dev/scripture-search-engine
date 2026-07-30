@@ -123,6 +123,26 @@ function readTestament(directory: string, prefix: string): SwordTestamentFiles |
   return { bzs, bzv: readFileSync(join(directory, `${prefix}.${found.letter}zv`)), bzz };
 }
 
+/**
+ * Keeps only documents lying entirely inside a spec's admitted range.
+ *
+ * Entirely, not partially: a document straddling the boundary carries prose
+ * about verses outside the range, and its terms would be attributed to the
+ * whole span. Dropping it loses a little evidence; keeping it would file
+ * evidence against passages the spec deliberately excluded.
+ */
+function withinRange(
+  documents: readonly ExpositionDocument[],
+  spec: ExpositionSourceSpec,
+): readonly ExpositionDocument[] {
+  const range = spec.restrictToVerseRange;
+  if (!range) return documents;
+  return documents.filter(
+    (document) =>
+      document.startVerseId >= range.startVerseId && document.endVerseId <= range.endVerseId,
+  );
+}
+
 export function loadExposition(
   spec: ExpositionSourceSpec,
   sourcesRoot: string,
@@ -135,7 +155,7 @@ export function loadExposition(
       { ot: readTestament(path, 'ot'), nt: readTestament(path, 'nt') },
       { strict: true, mismatchTolerance: VERSE_NUMBER_MISMATCH_TOLERANCE },
     );
-    const documents = collapseRepeatedBodies(result.entries, spec);
+    const documents = withinRange(collapseRepeatedBodies(result.entries, spec), spec);
     return {
       spec,
       documents,
@@ -167,9 +187,8 @@ export function loadExposition(
           citationWord: spec.citationWord ?? 'PSALM',
         });
 
-  return {
-    spec,
-    documents: result.sections.map((section) => ({
+  const documents = withinRange(
+    result.sections.map((section) => ({
       startVerseId: section.startVerseId,
       endVerseId: section.endVerseId,
       sourceId: spec.id,
@@ -177,8 +196,16 @@ export function loadExposition(
       locator: section.citation,
       body: section.body,
     })),
-    parsed: result.sections.length,
+    spec,
+  );
+
+  return {
+    spec,
+    documents,
+    parsed: documents.length,
     rejected: result.rejected,
-    notes: [],
+    notes: spec.restrictToVerseRange
+      ? [`${result.sections.length} sections parsed, ${documents.length} inside the admitted range`]
+      : [],
   };
 }

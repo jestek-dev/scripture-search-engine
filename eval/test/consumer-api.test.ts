@@ -14,7 +14,7 @@ import { join } from 'node:path';
 
 import { beforeAll, afterAll, describe, expect, it } from 'vitest';
 
-import { createEngine, type ScriptureEngine } from '@lh/scripture-engine';
+import { createEngine, type ScriptureEngine } from '@jestek-dev/scripture-engine';
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 
 import { openCorpus } from '../src/nodeSqlitePort.js';

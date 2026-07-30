@@ -79,10 +79,10 @@ The repo is private and called `scripture-search-engine`. Two things worth
 settling before consumers pin it:
 
 - **Public or private long-term?** Private works fine (consumers authenticate
-  to pull releases). Public would let you publish `@lh/scripture-engine` to
+  to pull releases). Public would let you publish `@jestek-dev/scripture-engine` to
   npm without auth, and the corpora are all PD/CC BY so there is no rights
   obstacle. Your call on whether the ontology is something you want visible.
-- **Package name.** I used `@lh/scripture-engine`. If you want a different
+- **Package name.** I used `@jestek-dev/scripture-engine`. If you want a different
   npm scope, changing it later means updating three consumers.
 
 ### 1.3 When does Maskil adopt this? — still open, and now also blocked technically

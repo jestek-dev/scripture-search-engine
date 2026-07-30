@@ -18,7 +18,7 @@ import {
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createEngine } from '@lh/scripture-engine';
+import { createEngine } from '@jestek-dev/scripture-engine';
 
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import { collisionGate, type ConceptRecord } from './gates/collision.js';
@@ -44,7 +44,7 @@ import {
 import { openCorpus } from './nodeSqlitePort.js';
 import { determinismGate, goldenGate, type GoldenFixture } from './gates/golden.js';
 import { notApplicable, pass, fail, warn, type GateResult } from './gates/types.js';
-import { DEFAULT_BUDGETS } from '@lh/scripture-engine';
+import { DEFAULT_BUDGETS } from '@jestek-dev/scripture-engine';
 import { buildReport } from './report.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));

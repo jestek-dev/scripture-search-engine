@@ -32,7 +32,7 @@
  * the same word inherited from a whole-psalm essay at query time.
  */
 
-import { significantWords, tokenStream } from '@lh/scripture-engine';
+import { significantWords, tokenStream } from '@jestek-dev/scripture-engine';
 
 export interface ExpositionDocument {
   /** The author's OWN span — never normalized to anyone else's chunking. */

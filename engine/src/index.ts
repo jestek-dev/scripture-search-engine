@@ -1,5 +1,5 @@
 /**
- * Public API for @lh/scripture-engine.
+ * Public API for @jestek-dev/scripture-engine.
  *
  * Phase 0 exports the pure core that later phases build on: the shared
  * tokenizer, the reference parser, the typed reason vocabulary, the signal

@@ -8,7 +8,7 @@
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "@lh/scripture-engine": ["../engine/src/index.ts"]
+      "@jestek-dev/scripture-engine": ["../engine/src/index.ts"]
     }
   },
   "include": ["src", "test"]

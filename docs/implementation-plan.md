@@ -39,7 +39,7 @@ New in this plan: the concept ontology, the homiletical evidence graph, and the
 
 ## 2. Repository — *as built*
 
-Repo name: **`scripture-search-engine`** (private). Package: `@lh/scripture-engine`.
+Repo name: **`scripture-search-engine`** (private). Package: `@jestek-dev/scripture-engine`.
 Both are still open questions — see `NEEDS-JESSE.md` §1.2.
 
 ```
@@ -77,7 +77,7 @@ scripture-search-engine/
   tiers stay unbuilt until a source requires them.
 
 **Deliverables per release, both free:**
-1. `@lh/scripture-engine` — pure TS package (npm or git tag), semver.
+1. `@jestek-dev/scripture-engine` — pure TS package (npm or git tag), semver.
 2. `content.db` + descriptor — GitHub Release asset. **Measured: 117.60 MiB**
    against a 160 MiB budget, with per-table budgets enforced inside it.
 

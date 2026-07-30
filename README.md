@@ -142,11 +142,18 @@ Open decisions and known limits: **[docs/NEEDS-JESSE.md](docs/NEEDS-JESSE.md)**.
 
 Two versioned deliverables, both free to host:
 
-1. `@lh/scripture-engine` — the pure TS package (semver).
+1. `@jestek-dev/scripture-engine` — the pure TS package (semver).
 2. `content.db` + reviewed descriptor — a GitHub Release asset.
 
 Consumers pin both and verify the descriptor before opening the database.
 There is no server component; nothing runs anywhere but the user's device.
+
+## Sources
+
+Every expositor, dataset and translation the engine draws on is named in
+**[docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md)**, generated from the manifests
+so it cannot drift from what the artifact actually contains. It also records
+what is deliberately absent, and why.
 
 ## Provenance and rights
 

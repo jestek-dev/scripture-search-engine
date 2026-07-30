@@ -32,6 +32,26 @@ export interface ExpositionSourceSpec {
   readonly strategy: 'citation-suffix' | 'psalm-verse-headings' | 'sword-zcom';
   /** For citation-suffix: the book word as printed, e.g. "PSALM". */
   readonly citationWord?: string;
+  /**
+   * Admit only documents falling inside this verse-id range.
+   *
+   * Exists because a work can be genuinely useful for a passage we do not yet
+   * cover while overlapping passages we already have from the same author. A
+   * different EDITION of the Treasury covers Psalms 111-119 — the one gap in
+   * the Toronto set — but also re-covers Psalms 104-110 and 120-124, which
+   * volumes 4 and 6 already supply.
+   *
+   * Admitting the whole volume would not corrupt corroboration (that counts
+   * authors, and it is the same Spurgeon), but it would duplicate his voice on
+   * passages he already speaks to, inflating term counts with no new evidence.
+   * Taking only the gap is both cheaper and more honest.
+   *
+   * No source uses this today. It was built for the Treasury gap and then the
+   * measurement said not to admit that gap — see docs/NEEDS-JESSE.md §1.4a.
+   * Kept because the situation recurs: any future source that covers new
+   * ground and old ground in one file wants exactly this.
+   */
+  readonly restrictToVerseRange?: { readonly startVerseId: number; readonly endVerseId: number };
   /** Human note explaining why this source is here. */
   readonly note: string;
 }

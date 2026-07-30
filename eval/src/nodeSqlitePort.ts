@@ -12,7 +12,7 @@
 
 import { DatabaseSync } from 'node:sqlite';
 
-import type { ContentQueryPort, ContentQueryResult, ContentScalar } from '@lh/scripture-engine';
+import type { ContentQueryPort, ContentQueryResult, ContentScalar } from '@jestek-dev/scripture-engine';
 
 export function openCorpus(path: string): ContentQueryPort {
   const database = new DatabaseSync(path, { readOnly: true });
