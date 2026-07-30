@@ -1,7 +1,8 @@
 # Needs Jesse — decisions, risks, and open items
 
-**Last updated:** 2026-07-29, after Phase 4
-**Status:** Phases 0–4 complete and pushed. Phase 5 (consumer adoption) deliberately not started.
+**Last updated:** 2026-07-29, after Layer B verse-level corroboration
+**Status:** Phases 0–4 complete. Layer B rebuilt on corroboration. Full-corpus
+build and Phase 5 (consumer adoption) both not started.
 
 Nothing here is blocking day-to-day work on the engine. Everything here is a
 call that is yours, not mine.
@@ -27,8 +28,6 @@ Eph 2:8-10 under `faith-and-works`, the broad "gift of god" lexicon entry,
 Ezek 33:31-32 as the inverse case, and the deliberate James 1:22-24 anchor
 shared between `obedience-to-the-word` and `self-deception`.
 
-Original set for reference:
-
 | Concept | Anchors it asserts |
 |---|---|
 | `obedience-to-the-word` | James 1:22-25, Matt 7:24-27, Luke 6:46-49, Ezek 33:31-32, Rom 2:13, John 13:17 |
@@ -37,14 +36,10 @@ Original set for reference:
 | `grace-not-earned` | Eph 2:8-9, Rom 3:23-24, Titus 3:5 |
 | `refuge-in-trouble` | Ps 46:1-3, Ps 91:1-2, Isa 25:4, Ps 121:1-8 |
 | `fear-not` | Isa 43:1-3, Josh 1:9, 1 John 4:18 |
-| `walking-in-the-light` | 1 John 1:5-7, John 1:4-9, Eph 5:8 |
+| `walking-in-the-light` | 1 John 1:5-7, Eph 5:8, 1 John 2:6 |
 | `self-deception` | James 1:22-24, Gal 6:3, 1 John 1:8 |
 
-If any anchor is wrong or any weight is off, say so and I will fix it. If the
-whole set is fine, say that too — I would rather have your explicit yes on
-record than assume silence means approval.
-
-### 1.2 Repository visibility and the engine's name
+### 1.2 Repository visibility and the engine's name — still open
 
 The repo is private and called `scripture-search-engine`. Two things worth
 settling before consumers pin it:
@@ -56,106 +51,148 @@ settling before consumers pin it:
 - **Package name.** I used `@lh/scripture-engine`. If you want a different
   npm scope, changing it later means updating three consumers.
 
-### 1.3 When does Maskil adopt this?
+### 1.3 When does Maskil adopt this? — still open, and now also blocked technically
 
 Phase 5 is written but not started, per your instruction. Maskil's own July
 audit deliberately sequenced the broad research engine *after* the
-collaboration pilot. Adopting now would contradict that; adopting later means
-Maskil keeps its current exact-phrase-only panel in the meantime.
+collaboration pilot.
 
-The engine is ready whenever you are. This is a product-sequencing call.
+New since I last wrote this: adoption is no longer *only* a sequencing call.
+The engine ships `research()` and nothing else. Setlist and Maskil both need
+`forSong()`, which is typed but unbuilt. So Phase 5 has real work in front of
+it regardless of when you want it (implementation plan §5).
+
+### 1.4 Which commentators come next — I have a recommendation, not a decision
+
+Corroboration (§2.1) means coverage now depends on **authors per verse**, not
+works ingested. Two candidates, different shapes:
+
+- **Finish *Treasury of David* (vols 3 and 5).** Cheap, mechanical, and it
+  closes a real hole: Psalms 58–87 and 111–119 currently have one author, which
+  is the exact condition that produces idiolect. I would do this first.
+- **Add a third voice on Psalms** (Matthew Henry, JFB, Barnes — all PD,
+  verse-keyed). Raises corroboration *quality* where two authors already agree,
+  and G9 will tell you when it stops paying.
+
+Beyond Psalms, moving to a second book means picking one and finding 2+ PD
+commentators on it before ingesting anything — one author on a new book buys
+almost nothing now, which is a change from how this looked a phase ago.
 
 ---
 
-## 2. Things you should know that I could not fix
+## 2. Things you should know
 
-### 2.1 One author produces authorial idiolect, not theology
+### 2.1 The idiolect problem is SOLVED — and it changed the design
 
-Real finding from Phase 3. With 73 expositions from Maclaren alone, the
-highest-PMI terms for a passage include `mellow`, `friction`, `troth`,
-`polish` — Victorian rhetorical habits, not theological vocabulary.
+Previously flagged as an open limitation. It is closed, and the fix reshaped
+Layer B.
 
-This is not a bug and not fixable by tuning. It is what PMI *should* do with
-a single-author corpus: those words genuinely are distinctive of that
-passage's prose *in this corpus*. The fix is more authors per passage, so
-shared theological vocabulary rises and per-author quirks fall.
+With 73 expositions from Maclaren alone, the highest-PMI terms for a passage
+were `mellow`, `friction`, `troth`, `polish` — Victorian rhetorical habits, not
+theology. That was never a tuning problem; it is what PMI *should* do with a
+single-author corpus.
 
-Until then Layer B is weak evidence with a small budget, which is why adding
-it moved probe results by only 10%. It is not hurting anything; it is just
-not yet paying much.
+Requiring **2+ independent sources** to attest a term is the mechanism that
+separates theology from one writer's habits. Psalm 91:4's profile went from
+`gorg/mellow/friction/polish/troth` to `feather/wing/protection/buckler/shield`,
+which is what Psalm 91:4 says. It is now a build-time admission rule, and G5
+reports 99.5% of candidate terms rejected.
 
-**What would help:** ingesting 2–4 more PD commentators on the same books
-(Spurgeon's *Treasury of David* for Psalms is the obvious next one). The
-curation skill handles this, and G9 will tell you when it stops paying.
+**Caveat that replaces it:** corroboration is only as good as coverage. See §1.4.
 
-### 2.2 Some gate thresholds are still guesses
+### 2.2 The pericope model was replaced, not tuned
 
-I flagged this before and it is still partly true. `eval/budgets.json` now
-has real baselines for churn, latency, and size. But:
+Previously flagged as an open design decision ("choosing canonical pericope
+boundaries"). You gave the direction — *verse-specific unless a group of verses
+is deliberately attached to a thought* — and it is implemented as three levels:
+authors keep their natural spans, agreement resolves at the verse, and
+deliberate thought-units are the concept layer's job. Specificity is scored via
+`min_span_verses` rather than assumed.
+
+Result: Psalm 23 went from **no profile at all** to six verse-precise ones.
+Full rationale in implementation plan §3.1. **No hand-curated pericope table is
+needed, now or later** — that burden is gone.
+
+### 2.3 Some gate thresholds are still guesses
 
 - `distinctiveness.minPmi: 2.0` — chosen before data existed. It now rejects
-  94.3% of candidate terms, which *feels* right, but nobody has checked
+  99.5% of candidate terms, which *feels* right, but nobody has checked
   whether 1.5 or 2.5 gives better results.
-- `saturation.minProfileDelta: 0.02` — never yet triggered. The one real
-  measurement (0.2769) is an order of magnitude above it, so the threshold is
-  untested.
+- `saturation.minProfileDelta: 0.02` — **still never triggered.** The Treasury
+  ingestion measured 0.2017, an order of magnitude above it. The threshold
+  remains untested, which by this repo's own rule means it reads as protection
+  without yet being it. It will get its first real test when a *third* author
+  lands on Psalms.
 
-Neither is dangerous — both are floors on weak evidence. But do not treat
-them as validated.
+Neither is dangerous — both are floors on weak evidence. But do not treat them
+as validated.
 
-### 2.2b The latency gate was flaky and is now deliberately loose
+### 2.4 The latency gate is deliberately loose
 
-G11 failed on one CI run (55ms vs a 50ms budget) and passed on the next with
-identical code. Two real problems, both now fixed:
+G11 failed once on CI (55ms vs a 50ms budget) and passed on the next run with
+identical code. Two real problems, both fixed: it was measuring **cold start**
+rather than query cost (a warm-up pass now runs first), and the 50ms budget was
+calibrated on a dev machine.
 
-- It was measuring **cold start** — first-query module init, first database
-  page reads, SQLite compiling query plans — not query cost. A warm-up pass
-  now runs before timing.
-- The 50ms budget was calibrated on a dev machine. Shared CI runners vary by
-  several-fold, and **a gate that fails at random teaches people to ignore
-  gates**, which is worse than having no gate.
+The budget is now 150ms against ~7.5ms observed. Loose on purpose: it catches an
+algorithmic regression (an accidental full scan, a dropped index), which shows
+up as an order of magnitude — not runner noise. **A gate that fails at random
+teaches people to ignore gates.** Real device latency has to come from a
+consumer measuring on target hardware; this repo cannot produce that number
+honestly.
 
-The budget is now 150ms against ~5ms observed. That is loose on purpose: it
-catches an algorithmic regression (an accidental full scan, a dropped index),
-which shows up as an order of magnitude — not a few milliseconds of runner
-noise. Real device latency has to come from a consumer measuring on target
-hardware; this repo cannot produce that number honestly.
-
-### 2.3 OpenBible URLs are rolling, with no archive
+### 2.5 OpenBible URLs are rolling, with no archive
 
 `https://a.openbible.info/data/*` is overwritten weekly. There is no versioned
 or archival URL. The checksums in `pipeline/manifests/openbible-*.json` are
 therefore *our* snapshot, and re-downloading later will produce a different
 file that must be re-admitted as a change.
 
-This is handled correctly today (the committed subset makes builds hermetic),
-but if you ever want to reproduce a build from scratch months from now, you
-need the original download — not just the URL. Worth keeping a copy somewhere
-durable if that matters to you.
+Handled correctly today (the committed subset makes builds hermetic), but if
+you ever want to reproduce a build from scratch months from now, you need the
+original download — not just the URL. Worth keeping a copy somewhere durable.
 
-### 2.4 The corpus is a fixture, not the whole Bible
+### 2.6 The corpus is still a fixture, not the whole Bible
 
-Everything above runs against **828 WEB verses** — the passages the fixtures
-and probes need. That is deliberate: CI must be hermetic and fast.
+Everything above runs against **828 WEB verses** — the passages the fixtures and
+probes need. Deliberate: CI must be hermetic and fast.
 
 Building the full 31,103-verse artifact (both translations, all concepts, the
-full 344k cross-references) is a pipeline run that has not been done yet.
-It is not hard, but it has not been proven, and its size is unmeasured against
-the 160 MiB budget.
+full 344k cross-references) **has still not been done.** It is not hard, but it
+is unproven, and its size is unmeasured against the 160 MiB budget. Until it
+runs there is no reviewed release descriptor in `artifacts/`, and therefore
+nothing a consumer could actually pin.
+
+### 2.7 Treasury of David came from Internet Archive OCR, and it shows
+
+Deliberately not CCEL: *Treasury of David* is absent from Project Gutenberg, so
+unlike the proofread Maclaren volume there is no clean-text option, and CCEL's
+hand-corrected transcription asks permission for commercial republication of
+*their files* — unusable as a redistribution source even though the underlying
+text is public domain. The manifests record that distinction rather than eliding
+it.
+
+OCR noise is real and visible (`kite`, `phantom` survive corroboration). The
+parser rejects rather than guesses when a roman numeral is corrupted, because
+attaching commentary to the wrong psalm is a silent unrecoverable error.
 
 ---
 
 ## 3. Suggested next moves, in the order I would do them
 
-1. **Review the 8 concepts** (§1.1). Everything else builds on them.
-2. **Run the full-corpus build** to get real size and latency numbers, and
-   produce the first reviewed release descriptor in `artifacts/`.
-3. **Ingest Treasury of David** for Psalms — a second author on the same book
-   directly tests the idiolect problem in §2.1, and G9 will quantify it.
-4. **Try the curation skill on a real gap** — your Mormon-evangelism example
-   is a good first test because it exercises `editorial` provenance on
-   genuinely contested ground.
-5. **Then** decide Phase 5 sequencing (§1.3).
+1. **Run the full-corpus build** (§2.6). Everything else is measured against a
+   fixture until this happens, and it produces the first real size/latency
+   numbers plus the first reviewed release descriptor.
+2. **Finish *Treasury of David* vols 3 and 5** (§1.4). Cheap, closes a
+   single-author hole, and gives G9 a second data point.
+3. **Add a third Psalms commentator** — the first real test of the saturation
+   threshold (§2.3), and the first chance to see corroboration quality rise
+   rather than coverage.
+4. **Try the curation skill on a real gap** — your Mormon-evangelism example is
+   a good first test because it exercises `editorial` provenance on genuinely
+   contested ground. Phase 4's own gate is unmet until this runs once.
+5. **Then** decide Phase 5 sequencing (§1.3) — and budget for building
+   `forSong()`, which it needs and does not have.
 
 ---
 
@@ -167,10 +204,10 @@ the 160 MiB budget.
   — `better-sqlite3` needs a C++ toolchain this machine does not have, and a
   build that can fail on toolchain availability will eventually block a
   release for a reason unrelated to the data.
-- Accepted and re-baselined G8 probe churn twice (Phase 2 concepts, Phase 3
-  terms). Both times the churn was confined to the probes the new data was
-  written for; broad, phrase and adversarial probes were untouched. Reasoning
-  is in the commit messages.
+- Accepted and re-baselined G8 probe churn three times (Phase 2 concepts,
+  Phase 3 terms, Layer B verse resolution). Each time the churn was confined to
+  the probes the new data was written for; broad, phrase and adversarial probes
+  were untouched. Reasoning is in the commit messages.
 - Moved a research report out of the Maskil repo. A background agent wrote
   `docs/research/2026-07-29-nave-torrey-topical-bible-sources.md` into Maskil
   despite your "don't touch other projects" instruction; I moved it to this

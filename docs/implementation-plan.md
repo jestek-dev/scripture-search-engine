@@ -1,10 +1,14 @@
 # Shared deterministic Scripture engine — implementation plan
 
-**Date:** 2026-07-29
-**Status:** Approved direction; supersedes the "someday" portions of the Phase 5
-research scope by moving them to a shared repository
+**Date:** 2026-07-29 · **Last reconciled against the code:** 2026-07-29, after Layer B
+**Status:** Phases 0–4 complete; Layer B rebuilt on verse-level corroboration.
+Phase 5 deliberately not started.
 **Consumers:** Maskil, LH Worship Setlist, Versed (and future LH projects)
-**Companion:** `docs/design/2026-07-29-theological-concept-engine.md` (architecture rationale)
+**Companion:** `docs/architecture.md` (rationale) · `docs/NEEDS-JESSE.md` (open calls)
+
+> **Reading note.** Sections marked *as built* describe what exists and has been
+> measured. Where the build departed from the original design, the departure and
+> its reason are stated rather than edited out — the reasons are the useful part.
 
 **Decisions already made (Jesse, 2026-07-29):**
 - AI may assist *building* datasets (offline, human-admitted). No onboard/runtime AI, ever.
@@ -32,37 +36,43 @@ research scope by moving them to a shared repository
 New in this plan: the concept ontology, the homiletical evidence graph, and the
 **admission gauntlet** (guardrails).
 
-## 2. Repository
+## 2. Repository — *as built*
 
-Working name: **`scripture-engine`** (rename at Jesse's pleasure; "Versed" stays
-an app identity, not the engine's).
+Repo name: **`scripture-search-engine`** (private). Package: `@lh/scripture-engine`.
+Both are still open questions — see `NEEDS-JESSE.md` §1.2.
 
 ```
-scripture-engine/
-├── ontology/                 # Layer A: concept packs (YAML), PR-reviewed like code
-│   ├── concepts/…            # one file per concept; provenance-tagged entries
-│   └── lexicon-normalization/# archaic forms (doeth→does), spelling variants
+scripture-search-engine/
+├── ontology/concepts/        # Layer A: 8 concept packs (YAML), PR-reviewed like code
 ├── pipeline/                 # build-time only; never ships
-│   ├── manifests/            # pinned sources: URL, SHA-256, license, derivation lineage
-│   ├── importers/            # bible, nave/torrey, openbible, gutenberg, sermon indexes
-│   ├── align/                # tiered passage alignment (keyed → header → citation-mined)
-│   ├── stats/                # PMI/TF-IDF term profiles, co-citation graph, pruning
-│   └── build/                # schema, artifact assembly, fingerprints (from Maskil)
-├── engine/                   # Layer C: pure TS, zero I/O, published package
-│   ├── tokenizer/            # ONE shared tokenizer (Setlist stopwords/stemming, grown)
-│   ├── intents/              # reference | exact-phrase | tokens | normalized | theme
-│   ├── ranking/              # scoring core (Setlist pattern), caps, tie-breaks, diversify
-│   ├── reasons/              # typed reason objects w/ points + provenance handles
-│   └── config/               # SIGNAL BUDGETS + engine version (reviewed, versioned)
+│   ├── manifests/            # 10 pinned sources: URL, SHA-256, license, lineage
+│   ├── importers/            # openbible, verse arrays, ontology, expositions
+│   ├── stats/passageTerms.ts # PMI profiles + corroboration (see §3)
+│   ├── expositionSources.ts  # declarative commentator registry — adding one is a data change
+│   ├── schema.ts             # artifact schema (v4) + fingerprints
+│   └── fixtures/             # committed subsets that make CI hermetic
+├── engine/src/               # Layer C: pure TS, zero I/O, published package
+│   ├── tokenizer/            # ONE shared tokenizer, separately versioned
+│   ├── intents/              # lexical.ts, concept.ts
+│   ├── ranking/              # rank.ts + budgets.ts (caps enforced here)
+│   ├── reasons/              # typed reason objects w/ points + provenance
+│   └── config/               # ENGINE_VERSION + TOKENIZER_VERSION
 ├── eval/                     # the guardrail suite (see §4)
-│   ├── golden/               # fixtures: query → expected ordering + expected reasons
-│   ├── probes/               # fixed broad/narrow probe queries for noise metrics
-│   ├── budgets.json          # size, latency, signal, churn thresholds (reviewed)
-│   └── report/               # admission-report generator (posts to PR)
-├── artifacts/                # reviewed release descriptors (Maskil's model, generalized)
-└── .claude/skills/
-    └── concept-curation/     # the enrichment skill (see §6)
+│   ├── src/gates/            # collision, golden, corpusGolden, probes, layerB
+│   ├── src/gauntlet.ts       # runs all eleven; src/report.ts renders the verdict
+│   ├── golden/ · probes/ · baselines/
+│   └── budgets.json          # reviewed thresholds (data, not code)
+└── .claude/skills/concept-curation/
 ```
+
+**Not yet built, and named here so their absence is visible:**
+- `artifacts/` — no reviewed release descriptor exists, because the full-corpus
+  build has never been run (see §7, Phase 3½).
+- `ontology/lexicon-normalization/` — archaic-form folding lives inside the
+  tokenizer instead. Fine for now; revisit if the table outgrows code.
+- `pipeline/align/` — alignment never needed its own tier system. Both admitted
+  commentators are passage-keyed, so alignment is a lookup. Citation-mining
+  tiers stay unbuilt until a source requires them.
 
 **Deliverables per release, both free:**
 1. `@lh/scripture-engine` — pure TS package (npm or git tag), semver.
@@ -72,23 +82,92 @@ Reproducibility contract: `(engineVersion, corpusFingerprint, query) → identic
 ordering` on every platform, in every consuming app. This is a CI-enforced gate,
 not a promise.
 
-## 3. Engine architecture (condensed; rationale in companion doc)
+## 3. Engine architecture — *as built*
 
 - **Layer A — concept ontology:** concepts with modern labels, lexicons, scripture
-  anchors, related-concept edges; seeded from Nave + Torrey + OpenBible topic
-  votes (CC BY); every entry provenance-tagged (`nave`, `openbible`,
-  `editorial`, `source:<id>`); human-admitted via PR.
-- **Layer B — homiletical evidence graph:** build-time distillation of PD
-  sermons/commentaries into `passage_terms` (top-N distinctive terms per
-  pericope), `co_citations`, and full per-edge provenance. Sermons never ship.
+  anchors, related-concept edges; every entry provenance-tagged (`editorial`,
+  `openbible`, `source:<id>`); human-admitted via PR. **8 concepts today**, all
+  reviewed and approved by Jesse. Nave and Torrey are researched but *not yet
+  imported* — the current spine is editorial plus OpenBible topical votes.
+- **Layer B — homiletical evidence:** build-time distillation of PD commentaries
+  into `verse_terms` and full per-term provenance. Source prose never ships.
 - **Layer C — runtime:** intent ladder over SQLite; pure scoring core; typed
   reasons carrying score components and provenance; deterministic ordering.
-- **Pericope model:** Layer B keys on passage ranges, not single verses; the
-  artifact carries a reviewed pericope table (seeded from translation paragraph
-  breaks + commentary section boundaries, human-adjustable).
-- **AI-at-build policy:** AI may draft ontology entries, alignment guesses, and
-  normalization tables. Nothing AI-drafted reaches the artifact without passing
+- **AI-at-build policy:** unchanged and holding. AI may draft ontology entries and
+  normalization tables; nothing AI-drafted reaches the artifact without passing
   the gauntlet *and* human PR merge. The runtime is statistics + lookups only.
+
+### 3.1 Granularity: verse-level corroboration replaced the pericope table
+
+**The original design** gave Layer B a reviewed pericope table and keyed term
+profiles to passage ranges. **That design was built, measured, and discarded.**
+
+It failed on contact with a second author. Maclaren treats Psalm 23:1–6 as one
+essay; Spurgeon's *Treasury of David* goes verse by verse. With exact-range keys
+the two most famous expositors of that psalm *never agreed about anything*, and
+Psalm 23 — the single most-preached passage in the Psalter — got no profile at all.
+Choosing canonical boundaries by hand for the whole Bible would have been a large,
+permanent, and constantly-contested curation burden to fix a problem that didn't
+need to exist.
+
+**What replaced it** (Jesse's direction: *verse-specific unless a group of verses
+is deliberately attached to a thought*) is three levels, each doing one job:
+
+1. **Authors keep their natural spans.** No canonical pericope table, no hand-drawn
+   chunk boundaries. An author's own span *is* their claim about scope.
+2. **Agreement resolves at the verse.** Every span projects onto the verses it
+   covers; a term is admitted for verse *v* only when enough independent sources
+   covering *v* used it. This is the mechanism the exact-span keys blocked.
+3. **Deliberate thought-units are Layer A's job.** A chunk genuinely attached to a
+   thought (the Sermon on the Mount's anger section) is curated on purpose with
+   provenance — never inferred from statistics.
+
+Specificity is **scored, not assumed**: each admitted term records its narrowest
+attesting span (`min_span_verses`), and evidence strength discounts diffuse
+commentary. A word from a one-verse note outweighs the same word inherited from a
+whole-psalm essay, without the essay being thrown away.
+
+Schema v4: `verse_terms` replaces `passage_terms`. `ENGINE_VERSION` 0.6.0.
+
+### 3.2 Corroboration is what separates theology from idiolect
+
+The more important discovery, and it is not in the original plan at all.
+
+A PMI floor against corpus background — the plan's entire G5 — is **not sufficient**.
+With one author, the highest-PMI terms for a passage were `gorg`, `mellow`,
+`friction`, `polish`, `troth`, `dawson`: Maclaren's Victorian rhetorical habits.
+That is not a tuning failure. It is what PMI *should* do with a single-author
+corpus, because those words genuinely are distinctive of that author's prose.
+
+Requiring **`minSources: 2`** — corroboration across independent expositors — is
+now a build-time admission rule, and it changes profiles in kind, not degree:
+
+| | Psalm 91:4 profile |
+|---|---|
+| Maclaren alone | gorg, mellow, friction, polish, troth, dawson |
+| 2+ authors required | feather, wing, protection, buckler, shield, refuge |
+
+The second row is what Psalm 91:4 actually says. Cost: 1,106 terms instead of
+36,922 — the right trade.
+
+A bug found on the way is worth recording, because it was invisible and would have
+silently invalidated the metric: per-term attribution was recording the sources of
+the *pericope*, not of the *term*, so a word used by one author on a passage two
+authors covered looked co-attested. The hypothesis rested entirely on that count.
+Per-term source sets are now tracked properly.
+
+### 3.3 The reproducibility contract has three identities, not two
+
+```
+(engineVersion, corpusFingerprint, layerFingerprint, query) → identical ordering
+```
+
+`layerFingerprint` was added because results can change for three independent
+reasons — engine code, scripture text, and the curated layers — and before it
+existed, editing one concept altered rankings while every published identity
+stayed the same. The contract was quietly false. `TOKENIZER_VERSION` is versioned
+separately again, because a tokenizer change invalidates precomputed term profiles:
+the artifact stamps it and the engine refuses a mismatch.
 
 ## 4. The admission gauntlet — pre-baked guardrails
 
@@ -125,10 +204,12 @@ threshold). Overlap ⇒ REJECT with a merge/differentiate suggestion naming the
 colliding concept. This is the near-duplicate-concept protection — the single
 most likely way a well-meaning addition degrades the system.
 
-**G5 · Distinctiveness floor.** `passage_terms` only admits terms above a PMI
-threshold vs. the whole-corpus background, hard-capped at N terms per pericope.
-Generic vocabulary ("god", "lord", "love" as bare tokens) can never enter a
-profile no matter how many sermons repeat it. The thresholds live in
+**G5 · Distinctiveness floor + corroboration.** `verse_terms` admits a term only if
+it clears a PMI threshold vs. the whole-corpus background **and** is attested by
+≥2 independent sources covering that verse (§3.2), hard-capped at N terms per
+*verse*. Generic vocabulary ("god", "lord", "love" as bare tokens) can never enter
+a profile no matter how many works repeat it; single-author idiolect can't either.
+Currently rejecting 99.5% of candidate terms. Thresholds live in
 `eval/budgets.json` and are themselves change-gated.
 
 **G6 · Signal budget (structural, not advisory).** The ranking config assigns
@@ -184,22 +265,36 @@ need to be clairvoyant — they need to measure, and everything here is measurab
 
 ## 5. Runtime API (consumer contract)
 
+**Shipped today** — one method, deliberately. The ladder auto-detects intent, so
+`research()` covers reference, verbatim phrase, concept and lexical queries without
+the caller choosing:
+
 ```ts
-createEngine(db: ContentQueryPort, config?: EngineConfig): ScriptureEngine
+createEngine(port: ContentQueryPort, opts?: EngineOptions): ScriptureEngine
 
-engine.research(query: string, opts?): ResearchResult
-  // full ladder: reference | exact-phrase | theme | lexical — auto-detected intent
-engine.themes(query: string): ConceptMatch[]        // concept resolution only
-engine.passage(ref: string): Passage | InvalidRef    // parse + fetch + context
-engine.related(ref: string): RelatedResult           // cross-refs/co-citations for a passage
-engine.forSong(input: { title?, themes?, lyrics?, foundationalRef? }): ResearchResult
-  // multi-field: Setlist sermon-matching and Maskil song-creation both call this
+engine.research(query: string): Promise<ResearchResult>
+engine.close(): Promise<void>
 
-// every result:
-{ targetId, pericope, excerpt, score,
+// every result carries:
+{ …ResearchOutcome,
   reasons: [{ kind, label, points, provenance }],   // Setlist's shape, kept
-  engineVersion, corpusFingerprint }                 // Maskil's identities, kept
+  engineVersion, corpusFingerprint, layerFingerprint }
 ```
+
+**Designed, typed, not yet implemented.** `ConceptMatch` exists as a type; the
+methods below do not exist. They are named here as the intended surface, and no
+consumer should be told otherwise:
+
+```ts
+engine.themes(query): ConceptMatch[]       // concept resolution only
+engine.passage(ref): Passage | InvalidRef  // parse + fetch + context
+engine.related(ref): RelatedResult         // cross-refs / co-citations
+engine.forSong({ title?, themes?, lyrics?, foundationalRef? }): ResearchResult
+```
+
+`forSong()` is the one Phase 5 actually blocks on: Setlist's sermon-matching and
+Maskil's song-creation both need multi-field input, and neither can adopt the
+engine through `research()` alone.
 
 Per-consumer adapters stay per-app: Maskil's Yjs selection bridge and panel;
 Setlist's musical-compatibility scoring (key/BPM/flow stays in Setlist — it is
@@ -228,7 +323,30 @@ The same skill handles bulk sermon ingestion ("add Spurgeon volumes 20–40"):
 it runs the pipeline, reads the saturation report, and tells you what the batch
 actually bought before you commit to it.
 
-## 7. Phases
+## 7. Phases — *status as of 2026-07-29, after Layer B*
+
+| Phase | State | Note |
+|---|---|---|
+| 0 · Bootstrap | ✅ complete | G1/G2/G3/G4/G10 live from the first commit |
+| 1 · Lexical ladder | ✅ complete | probe baselines recorded; G8/G11 live |
+| 2 · Concept layer | ⚠️ complete *with a caveat* | fixture #1 green. But `themes()`/`forSong()` were listed in this phase's gate and **were not built** (§5). Nave/Torrey **not imported** — the spine is 8 editorial concepts + OpenBible votes |
+| 3 · Evidence graph pilot | ⚠️ complete, **narrower than scoped** | Psalms only; **James was never ingested**. Maclaren + *Treasury of David* vols 1, 2, 4, 6 — **vols 3 and 5 are missing**, so Psalms 58–87 and 111–119 have single-author coverage, the exact condition that produces idiolect (§3.2) |
+| 3½ · Full-corpus build | ❌ **not started** | Everything measured to date runs against **828 WEB verses**, not 31,103. No `artifacts/` descriptor exists. Size and latency are therefore unproven at real scale |
+| 4 · Curation skill | ✅ complete | skill ships; **not yet run end-to-end on a real gap**, so its own gate is unmet |
+| 5 · Consumer adoption | ❌ not started | deliberate — see `NEEDS-JESSE.md` §1.3 |
+
+**Measured Layer B outcome on the fixture corpus:** corroborated coverage went from
+6 pericopes to 15 verses, 122 → 423 admitted terms. Psalm 23 went from *no profile*
+to six verse-precise ones (23:1 sheep/pasture/shepherd, 23:4 valley/staff,
+23:5 anointest/cup). "shepherd" ranks Psalm 23:1 first at 7.8 with 23:2–3 present
+but subordinate at 2.8 — the thought continues past verse 1 and the ranking says so.
+G8 churn stayed within threshold: the layer sharpened without reshaping searches it
+had no business touching.
+
+**Honest read:** the mechanism is proven and the coverage is tiny. 15 verses have
+profiles. Layer B is demonstrated, not deployed.
+
+### Original phase definitions (kept for the gates they specify)
 
 **Phase 0 — Bootstrap (the repo exists and refuses bad data before it does
 anything useful).** Create repo; extract Maskil's `content-pipeline/` + pure
@@ -283,6 +401,8 @@ starts, sized deliberately small.
 
 | Risk | Answer |
 |---|---|
+| **Single-author corpora yield idiolect, not theology** *(realized in Phase 3; not anticipated by this plan)* | Corroboration across ≥2 independent sources is now a build-time admission rule (§3.2). The residual risk is uneven coverage: any book with one commentator is back in the failure mode, and Psalms 58–87 / 111–119 are there today |
+| **A metric can be silently meaningless** *(realized)* | Per-term attribution was recording pericope sources, not term sources — the corroboration count looked right and measured nothing. Caught only because a second author made the numbers inspectable. Argues for testing metrics against a case where you know the answer, not just for gating on them |
 | Guardrail thresholds themselves are wrong at first | They're versioned data in `budgets.json`, change-gated like everything else; Phase 1 records baselines before any gate tightens |
 | Gauntlet CI time grows with corpus | Full rebuild is batch and cache-friendly; Actions free tier is sufficient through Phase 3; artifact build is the only slow step and caches on manifest fingerprints |
 | Ontology curation stalls (human bottleneck) | AI-drafted, fixture-first flow reduces Jesse's role to product judgment + merge; Nave/Torrey/OpenBible give ~2k concepts mechanically before any hand-curation |

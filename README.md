@@ -22,7 +22,7 @@ public-domain preaching and community topical data.
 | Layer | What it is | Ships? |
 |---|---|---|
 | **A — Concept ontology** | Curated concepts: modern labels, lexicons, scripture anchors, provenance. Seeded from Nave, Torrey, OpenBible topics. | Yes, ~MBs |
-| **B — Homiletical evidence** | Per-passage distinctive term profiles and co-citation edges, distilled offline from PD sermons and commentaries. | Distillate only — **sermons never ship and are never read at query time** |
+| **B — Homiletical evidence** | Per-**verse** distinctive term profiles, distilled offline from PD commentaries. A term is admitted only when 2+ independent expositors covering that verse used it — corroboration is what separates theology from one author's habits. | Distillate only — **source prose never ships and is never read at query time** |
 | **C — Runtime** | Intent ladder → candidates → deterministic ranking → typed reasons. Pure TS, zero I/O. | Yes, the published package |
 
 Full rationale: [docs/architecture.md](docs/architecture.md).
@@ -62,7 +62,7 @@ diminishing returns.
 | G2 determinism | Ordering that drifts between runs or platforms |
 | G3 golden regression | Lost ordering **or** a right answer for the wrong reason |
 | G4 collision | Near-duplicate concepts diluting each other's anchors |
-| G5 distinctiveness | Generic vocabulary accumulating into false evidence |
+| G5 distinctiveness | Generic vocabulary **and single-author idiolect** accumulating into false evidence |
 | G6 signal budgets | Any dataset outshouting exact matches — **bounded by construction** |
 | G7 correlation | Counting overlapping sources as independent evidence |
 | G8 noise probes | Precision erosion; the "everything returns everything" failure |
@@ -81,9 +81,11 @@ engine/     pure TS runtime — tokenizer, references, budgets, ranking (publish
 pipeline/   build-time only — manifests, importers, alignment, statistics
 ontology/   Layer A concept packs, reviewed like code
 eval/       the gauntlet: gates, golden fixtures, probes, budgets, report
-artifacts/  reviewed release descriptors (the .db itself is a Release asset)
-docs/       architecture + implementation plan
+docs/       architecture + implementation plan + open decisions
 ```
+
+`artifacts/` (reviewed release descriptors) does not exist yet — the
+full-corpus build has not been run, so there is nothing for a consumer to pin.
 
 ## Development
 
@@ -96,20 +98,25 @@ Individual steps: `npm run typecheck`, `npm test`, `npm run gauntlet`.
 
 ## Status
 
-**Phases 0–4 complete. All eleven gates live.** Phase 5 (wiring Maskil,
-Setlist and Versed) is deliberately not started.
+**Phases 0–4 complete. All eleven gates live, verdict ADMIT.** Phase 5 (wiring
+Maskil, Setlist and Versed) is deliberately not started.
 
 | Layer | State |
 |---|---|
 | Lexical ladder | reference, verbatim phrase + longest-fragment fallback, IDF tokens with proximity, archaic/inflection folding |
-| Concept spine | 8 curated concepts, OpenBible topical votes, cross-reference expansion |
-| Homiletical | Maclaren's *Expositions* distilled to PMI term profiles; source prose never ships |
-| Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow |
+| Concept spine | 8 curated concepts, OpenBible topical votes, cross-reference expansion. Nave/Torrey researched, not yet imported |
+| Homiletical | Maclaren's *Expositions* + Spurgeon's *Treasury of David* (4 of 6 vols, 5,525 expositions) → verse-level corroborated term profiles. **15 verses have profiles** — the mechanism is proven, the coverage is small |
+| Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow, not yet run on a real gap |
+| Runtime API | `research()` only. `themes()` / `forSong()` are typed but unbuilt |
 
 **Golden fixture #1 is active and passing.** "hearing and doing" returns
 James 1:22, Matthew 7:24 and Luke 6:47 carrying `concept_anchor` evidence
 attributed to LH editorial — the right passages *for the right reason*, which
 is what the fixture actually asserts.
+
+**Everything above is measured against 828 WEB verses**, not the full 31,103.
+The fixture corpus keeps CI hermetic; the full-corpus build has not been run,
+so artifact size and real latency remain unproven.
 
 Open decisions and known limits: **[docs/NEEDS-JESSE.md](docs/NEEDS-JESSE.md)**.
 
