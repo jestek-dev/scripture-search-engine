@@ -276,31 +276,52 @@ checksum must name a retrievable file, not a landing page. A separate opt-in
 
 ### 1.6 Two thresholds need your attention now that Layer B is large
 
-**a) CROSS-TRANSLATION PHRASING IS A REAL PRODUCT GAP — probably the most
-user-visible thing in this document.**
+**a) REMEMBERED PHRASING IS A REAL PRODUCT GAP — and a second translation does
+NOT fix it. I measured.**
 
-Searching *"plans to prosper you"* returns nothing useful. That is the NIV
-wording of Jeremiah 29:11; the WEB — the only translation in the artifact —
-reads *"thoughts of peace, and not of evil, to give you hope and a future."*
-No shared words, so no match.
+Searching *"plans to prosper you"* returns nothing useful. That is NIV wording;
+the WEB reads *"thoughts of peace, and not of evil, to give you hope and a
+future."* No shared words, no match.
 
-This is not a bug in the engine. It is what a single-translation corpus does,
-and it will hit every consumer, because people remember verses in whatever
-translation they learned them in. Versed users typing a half-remembered verse
-and Setlist users typing a sermon theme will both land on it.
+My first instinct — recorded here yesterday — was to admit KJV as a second
+public-domain translation. **I tested that and it is wrong.** Ten commonly
+remembered phrasings, checked against both texts:
 
-Three possible answers, none of them free, and the choice is yours:
-- **Admit a second translation** (KJV is public domain and already downloaded
-  for the versification table). Doubles verse rows and roughly doubles the
-  lexical index; the artifact is at 117.60 of 160 MiB, so this may not fit
-  without raising the budget.
-- **Add familiar phrasings to the concept lexicons** as `editorial` entries —
-  cheap, targeted, and only covers verses somebody curates.
-- **Accept it** and document the limitation for consumers.
+| remembered as | WEB | KJV |
+|---|---|---|
+| "plans to prosper you" | ✗ | ✗ |
+| "lean not on your own understanding" | ✗ | ✗ |
+| "soar on wings like eagles" | ✗ | ✗ |
+| "seek first the kingdom" | ✗ | ✗ |
+| "confidence in what we hope for" | ✗ | ✗ |
+| "I can do all things through Christ" | ✓ | ✓ |
+| "fearfully and wonderfully made" | ✓ | ✓ |
+| "all things work together for good" | ✓ | ✓ |
+| "God so loved the world" | ✓ | ✓ |
+| "a new creation" | ✓ | ✗ |
 
-I found this because a probe I wrote failed: I used the phrasing I remembered
-rather than the corpus's own, and the probe returned noise. It is worth
-recording that the probe caught a product gap rather than a data one.
+WEB alone 5/10. KJV alone 4/10. **Either translation: still 5/10.** KJV adds
+nothing, and would cost roughly 22 MiB of artifact.
+
+The reason is structural: the phrasings people remember are NIV and ESV, and
+those are copyrighted. **No public-domain translation will ever close this**,
+so this is not a corpus problem to be solved by buying more corpus.
+
+**Layer A is the mechanism that fits.** A concept whose lexicon contains "plans
+to prosper you" and whose anchor is Jeremiah 29:11 solves it exactly — that is
+what the curated ontology is *for*, and it is the one layer where LH's own
+voice is allowed to be explicit.
+
+I did not do it, deliberately: the curation flow puts fixtures first, and
+confirming the fixtures is the product judgment reserved for you. It is also
+theologically load-bearing in a way term statistics are not — deciding that
+"plans to prosper you" should surface Jeremiah 29:11 is a claim about meaning.
+
+**What I would ask you to approve:** a `remembered-phrasings` concept pack
+covering the top ~50 most-searched verses in their NIV/ESV wording, anchored to
+the WEB verses they refer to, tagged `editorial`. It is mechanical once you
+approve the list, and it converts the single most user-visible failure in the
+system into a solved case.
 
 **b) Weak-reason share, and a probe set that no longer covers the corpus.**
 Matthew Henry raised weak-evidence share by 0.120 against a 0.15 budget on
