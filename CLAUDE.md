@@ -9,8 +9,10 @@ are working in.
    AI-generated reaches the artifact without passing the gauntlet and a human
    PR merge. The runtime is statistics and lookups. No exceptions, no "just
    for this one intent".
-2. **Determinism is the product.** `(engineVersion, corpusFingerprint, query)`
-   must yield identical ordering on every platform. If you change anything
+2. **Determinism is the product.** `(engineVersion, corpusFingerprint,
+   layerFingerprint, query)` must yield identical ordering on every platform.
+   Three identities, because results change for three independent reasons:
+   engine code, scripture text, and the curated layers. If you change anything
    that can alter ordering — weights, caps, tokenizer rules, tie-breaks —
    bump `ENGINE_VERSION` in the same commit. Gate G2 will catch you.
 3. **The engine package does no I/O.** `ContentQueryPort` is the only seam.

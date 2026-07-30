@@ -28,6 +28,19 @@ public-domain preaching and community topical data.
 Full rationale: [docs/architecture.md](docs/architecture.md).
 Phased build: [docs/implementation-plan.md](docs/implementation-plan.md).
 
+## Coverage
+
+| | verses carrying homiletical evidence |
+|---|---|
+| **Whole Bible** | 30,777 / 31,098 = **99.0%** |
+| Old Testament | 99.6% |
+| New Testament | 97.3% |
+
+Evidence is admitted only where **two or more independent expositors** used the
+same distinctive term about the same verse. That rule is what separates
+theology from one writer's habits — with a single author, the highest-scoring
+terms for a passage are that author's stylistic tics, not its subject.
+
 ## The reproducibility contract
 
 ```
@@ -112,8 +125,8 @@ James 1:22, Matthew 7:24 and Luke 6:47 carrying `concept_anchor` evidence
 attributed to LH editorial — the right passages *for the right reason*, which
 is what the fixture actually asserts.
 
-**The full artifact builds**: 31,098 verses, 40.91 MiB against a 160 MiB
-budget, 341k cross-references, queries in 2.6–42 ms.
+**The full artifact builds**: 31,098 verses, **117.60 MiB** against a 160 MiB
+budget, 341k cross-references, 877k corroborated terms, queries under 10 ms.
 
 ```bash
 npm run build:artifact --workspace pipeline

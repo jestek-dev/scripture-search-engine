@@ -1,9 +1,28 @@
 # Needs Jesse — decisions, risks, and open items
 
-**Last updated:** 2026-07-29, after the full-corpus build and Treasury vol. 3
-**Status:** Phases 0–4 complete. Layer B rebuilt on corroboration. Full-corpus
-artifact builds and is descriptor-pinned. Phase 5 (consumer adoption) not
-started. Layer B remains Psalms-only — that is now the largest gap.
+**Last updated:** 2026-07-30, overnight session
+**Status:** Layer B covers **99.0% of the Bible** from seven expositors. Full
+artifact builds at 117.60 MiB and is descriptor-pinned. All five consumer API
+methods ship at ENGINE_VERSION 0.7.0. Phase 5 is unblocked but not started.
+
+> **Read §0 first.** It is the short list of things only you can decide.
+
+---
+
+## 0. What I need from you, shortest path first
+
+1. **Is a single translation acceptable?** (§1.6a) Searching *"plans to prosper
+   you"* returns nothing, because that is NIV wording and the corpus is WEB
+   only. This will hit every consumer and is the most user-visible open item
+   here. Adding KJV is possible but the artifact is at 117.60 of 160 MiB.
+2. **Review `eval/budgets.json`.** Per-table budgets are now enforced and are
+   first values I set from one measurement (§1.6b). They are guardrails now —
+   wrong numbers will block real work or wave through real growth.
+3. **Repo visibility and package name** (§1.2) — still unanswered, and it
+   blocks publishing anything consumers can pin.
+4. **Phase 5 sequencing** (§1.3). The engine is ready; the remaining work is
+   inside Maskil, Setlist and Versed.
+5. **Everything else can wait.** Nothing below is blocking.
 
 Nothing here is blocking day-to-day work on the engine. Everything here is a
 call that is yours, not mine.

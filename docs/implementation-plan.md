@@ -1,8 +1,9 @@
 # Shared deterministic Scripture engine — implementation plan
 
-**Date:** 2026-07-29 · **Last reconciled against the code:** 2026-07-29, after Layer B
-**Status:** Phases 0–4 complete; Layer B rebuilt on verse-level corroboration.
-Phase 5 deliberately not started.
+**Date:** 2026-07-29 · **Last reconciled against the code:** 2026-07-30
+**Status:** Phases 0–4 complete. Layer B covers **99.0% of the Bible** from seven
+expositors. The full artifact builds and is descriptor-pinned. All five consumer
+API methods ship at ENGINE_VERSION 0.7.0. Phase 5 is unblocked but not started.
 **Consumers:** Maskil, LH Worship Setlist, Versed (and future LH projects)
 **Companion:** `docs/architecture.md` (rationale) · `docs/NEEDS-JESSE.md` (open calls)
 
@@ -48,6 +49,8 @@ scripture-search-engine/
 │   ├── manifests/            # 10 pinned sources: URL, SHA-256, license, lineage
 │   ├── importers/            # openbible, verse arrays, ontology, expositions
 │   ├── stats/passageTerms.ts # PMI profiles + corroboration (see §3)
+│   ├── importers/swordZcomImporter.ts  # verse-keyed commentary modules
+│   ├── versification/kjv.ts  # GENERATED table the module mapping depends on
 │   ├── expositionSources.ts  # declarative commentator registry — adding one is a data change
 │   ├── schema.ts             # artifact schema (v4) + fingerprints
 │   └── fixtures/             # committed subsets that make CI hermetic
@@ -57,6 +60,7 @@ scripture-search-engine/
 │   ├── ranking/              # rank.ts + budgets.ts (caps enforced here)
 │   ├── reasons/              # typed reason objects w/ points + provenance
 │   └── config/               # ENGINE_VERSION + TOKENIZER_VERSION
+├── artifacts/                # reviewed release descriptor (content-artifact.json)
 ├── eval/                     # the guardrail suite (see §4)
 │   ├── src/gates/            # collision, golden, corpusGolden, probes, layerB
 │   ├── src/gauntlet.ts       # runs all eleven; src/report.ts renders the verdict
@@ -66,8 +70,6 @@ scripture-search-engine/
 ```
 
 **Not yet built, and named here so their absence is visible:**
-- `artifacts/` — no reviewed release descriptor exists, because the full-corpus
-  build has never been run (see §7, Phase 3½).
 - `ontology/lexicon-normalization/` — archaic-form folding lives inside the
   tokenizer instead. Fine for now; revisit if the table outgrows code.
 - `pipeline/align/` — alignment never needed its own tier system. Both admitted
@@ -76,14 +78,20 @@ scripture-search-engine/
 
 **Deliverables per release, both free:**
 1. `@lh/scripture-engine` — pure TS package (npm or git tag), semver.
-2. `content.db` + descriptor — GitHub Release asset (≤2 GB free limit; we're ~150 MB).
+2. `content.db` + descriptor — GitHub Release asset. **Measured: 117.60 MiB**
+   against a 160 MiB budget, with per-table budgets enforced inside it.
 
-Reproducibility contract: `(engineVersion, corpusFingerprint, query) → identical
-ordering` on every platform, in every consuming app. This is a CI-enforced gate,
-not a promise.
+Reproducibility contract: `(engineVersion, corpusFingerprint, layerFingerprint,
+query) → identical ordering` on every platform, in every consuming app. This is
+a CI-enforced gate, not a promise. See §3.3 for why there are three identities.
 
 ## 3. Engine architecture — *as built*
 
+- **Layer B sources — seven expositors.** Adam Clarke, Matthew Henry, Keil &
+  Delitzsch (OT), Albert Barnes (NT) and JFB come from SWORD `zcom` modules,
+  which are *verse-keyed by construction* — no OCR, no alignment inference.
+  Spurgeon's *Treasury of David* and Maclaren remain on Psalms from OCR. Adding
+  a commentator is a manifest plus a registry line.
 - **Layer A — concept ontology:** concepts with modern labels, lexicons, scripture
   anchors, related-concept edges; every entry provenance-tagged (`editorial`,
   `openbible`, `source:<id>`); human-admitted via PR. **8 concepts today**, all
@@ -275,9 +283,9 @@ need to be clairvoyant — they need to measure, and everything here is measurab
 
 ## 5. Runtime API (consumer contract)
 
-**Shipped today** — one method, deliberately. The ladder auto-detects intent, so
-`research()` covers reference, verbatim phrase, concept and lexical queries without
-the caller choosing:
+**All five methods are implemented** as of ENGINE_VERSION 0.7.0. The ladder
+auto-detects intent, so `research()` covers reference, verbatim phrase, concept
+and lexical queries without the caller choosing:
 
 ```ts
 createEngine(port: ContentQueryPort, opts?: EngineOptions): ScriptureEngine
@@ -291,20 +299,26 @@ engine.close(): Promise<void>
   engineVersion, corpusFingerprint, layerFingerprint }
 ```
 
-**Designed, typed, not yet implemented.** `ConceptMatch` exists as a type; the
-methods below do not exist. They are named here as the intended surface, and no
-consumer should be told otherwise:
-
 ```ts
-engine.themes(query): ConceptMatch[]       // concept resolution only
-engine.passage(ref): Passage | InvalidRef  // parse + fetch + context
-engine.related(ref): RelatedResult         // cross-refs / co-citations
-engine.forSong({ title?, themes?, lyrics?, foundationalRef? }): ResearchResult
+engine.themes(query): Promise<readonly ConceptMatch[]>   // concept resolution only
+engine.passage(ref): Promise<PassageResult>              // parse + fetch, typed invalid
+engine.related(ref): Promise<RelatedResult>              // CURATED links, not similarity
+engine.forSong({ title?, themes?, lyrics?, foundationalRef? }): Promise<ResearchResult>
 ```
 
-`forSong()` is the one Phase 5 actually blocks on: Setlist's sermon-matching and
-Maskil's song-creation both need multi-field input, and neither can adopt the
-engine through `research()` alone.
+Three design commitments a consumer can rely on:
+
+- **Invalid input is a typed kind, never an exception.** Consumers render the
+  invalid-reference case; throwing would make every caller wrap a try/catch
+  around something the type system already expresses.
+- **`related()` is not similarity.** Every entry exists because a human
+  recorded the link — a cross-reference edge, or a concept whose curated
+  anchors include the passage. Similarity is what `research()` does, and
+  conflating them is how a curated graph becomes a random walk.
+- **`forSong()` is order-independent.** Fields are combined in a fixed order
+  decided by the engine, not by how a caller built the object, and lyrics are
+  capped at 40 tokens. Otherwise two consumers passing identical data get
+  different rankings and the reproducibility contract is false.
 
 Per-consumer adapters stay per-app: Maskil's Yjs selection bridge and panel;
 Setlist's musical-compatibility scoring (key/BPM/flow stays in Setlist — it is
@@ -340,10 +354,10 @@ actually bought before you commit to it.
 | 0 · Bootstrap | ✅ complete | G1/G2/G3/G4/G10 live from the first commit |
 | 1 · Lexical ladder | ✅ complete | probe baselines recorded; G8/G11 live |
 | 2 · Concept layer | ⚠️ complete *with a caveat* | fixture #1 green. But `themes()`/`forSong()` were listed in this phase's gate and **were not built** (§5). Nave/Torrey **not imported** — the spine is 8 editorial concepts + OpenBible votes |
-| 3 · Evidence graph pilot | ⚠️ complete, **narrower than scoped** | Psalms only; **James was never ingested**. Maclaren + *Treasury of David* vols 1, 2, 4, 6 — **vols 3 and 5 are missing**, so Psalms 58–87 and 111–119 have single-author coverage, the exact condition that produces idiolect (§3.2) |
+| 3 · Evidence graph | ✅ **complete, and far past the pilot** | Seven expositors: Clarke, Matthew Henry, Keil & Delitzsch, Barnes, JFB (whole-Bible or testament-wide) plus Spurgeon and Maclaren on Psalms. **99.0% of verses carry corroborated evidence**; 877,300 terms |
 | 3½ · Full-corpus build | ✅ **complete** | 31,098 verses, **40.91 MiB** (budget 160 MiB), 341k cross-references, 2.6–42 ms queries. First reviewed descriptor in `artifacts/`. `npm run build:artifact --workspace pipeline` |
 | 4 · Curation skill | ✅ complete | skill ships; **not yet run end-to-end on a real gap**, so its own gate is unmet |
-| 5 · Consumer adoption | ❌ not started | deliberate — see `NEEDS-JESSE.md` §1.3 |
+| 5 · Consumer adoption | ⏳ **unblocked, not started** | The API blocker is gone: all five methods ship at 0.7.0 with contract tests. What remains is per-app work in each consumer's repo, plus Jesse's sequencing call — see `NEEDS-JESSE.md` §1.3 |
 
 **Measured Layer B outcome on the fixture corpus:** corroborated coverage went from
 6 pericopes to 15 verses, 122 → 423 admitted terms. Psalm 23 went from *no profile*
