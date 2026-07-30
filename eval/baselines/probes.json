@@ -5,20 +5,20 @@
     {
       "id": "broad-love",
       "top": [
-        "WEB:19091014",
         "WEB:42006032",
         "WEB:05006005",
         "WEB:43013035",
         "WEB:40005043",
         "WEB:40005046",
-        "WEB:42006027",
         "WEB:43013034",
         "WEB:49002004",
-        "WEB:62002010"
+        "WEB:62002010",
+        "WEB:19091014",
+        "WEB:62002015"
       ],
-      "resultCount": 24,
+      "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 4.225442
+      "meanTopScore": 6.748467
     },
     {
       "id": "broad-grace",
@@ -31,12 +31,12 @@
         "WEB:48001006",
         "WEB:49002005",
         "WEB:49002007",
-        "WEB:43001014",
-        "WEB:58010029"
+        "WEB:58010029",
+        "WEB:40005012"
       ],
-      "resultCount": 10,
+      "resultCount": 23,
       "weakReasonShare": 1,
-      "meanTopScore": 3.100216
+      "meanTopScore": 5.749874
     },
     {
       "id": "broad-faith",
@@ -47,20 +47,20 @@
         "WEB:58011039",
         "WEB:59001003",
         "WEB:59002024",
-        "WEB:58010039",
-        "WEB:48001023",
         "WEB:58010038",
-        "WEB:58011001"
+        "WEB:58011001",
+        "WEB:58011028",
+        "WEB:59001006"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 4.089286
+      "meanTopScore": 6.78061
     },
     {
       "id": "broad-word",
       "top": [
-        "WEB:43001001",
         "WEB:59001022",
+        "WEB:43001001",
         "WEB:23040008",
         "WEB:59001018",
         "WEB:62002007",
@@ -71,8 +71,8 @@
         "WEB:58010028"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.049732,
-      "meanTopScore": 63.14011
+      "weakReasonShare": 0.054002,
+      "meanTopScore": 63.425076
     },
     {
       "id": "medium-refuge-trouble",
@@ -89,8 +89,8 @@
         "WEB:19121002"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.144468,
-      "meanTopScore": 28.080769
+      "weakReasonShare": 0.187234,
+      "meanTopScore": 29.558306
     },
     {
       "id": "medium-fear-not",
@@ -107,8 +107,8 @@
         "WEB:19091002"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.353344,
-      "meanTopScore": 20.499313
+      "weakReasonShare": 0.36221,
+      "meanTopScore": 20.784279
     },
     {
       "id": "medium-light-darkness",
@@ -119,21 +119,21 @@
         "WEB:62001006",
         "WEB:62002006",
         "WEB:59001017",
+        "WEB:62002010",
         "WEB:43001004",
-        "WEB:59001022",
-        "WEB:59001023",
-        "WEB:62002004"
+        "WEB:43001009",
+        "WEB:62002009"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.258785,
-      "meanTopScore": 20.992546
+      "weakReasonShare": 0.341618,
+      "meanTopScore": 23.633693
     },
     {
       "id": "narrow-hearing-doing",
       "top": [
         "WEB:42006047",
-        "WEB:40007024",
         "WEB:59001022",
+        "WEB:40007024",
         "WEB:59001023",
         "WEB:40007026",
         "WEB:42006049",
@@ -143,16 +143,16 @@
         "WEB:59001025"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.341466,
-      "meanTopScore": 41.115559
+      "weakReasonShare": 0.35488,
+      "meanTopScore": 41.970456
     },
     {
       "id": "narrow-doers-word",
       "top": [
         "WEB:59001022",
+        "WEB:40007026",
         "WEB:42006047",
         "WEB:40007024",
-        "WEB:40007026",
         "WEB:59001023",
         "WEB:40007025",
         "WEB:40007027",
@@ -161,8 +161,8 @@
         "WEB:42006048"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.33312,
-      "meanTopScore": 46.014268
+      "weakReasonShare": 0.347604,
+      "meanTopScore": 47.035859
     },
     {
       "id": "narrow-house-rock",
@@ -179,26 +179,26 @@
         "WEB:59001023"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.292121,
-      "meanTopScore": 44.979462
+      "weakReasonShare": 0.318751,
+      "meanTopScore": 46.737679
     },
     {
       "id": "phrase-present-help",
       "top": [
         "WEB:19046001",
         "WEB:19091015",
+        "WEB:19046005",
         "WEB:19121002",
         "WEB:19121001",
-        "WEB:19023005",
-        "WEB:19046005",
-        "WEB:48001007",
-        "WEB:45008018",
         "WEB:48001004",
-        "WEB:45008038"
+        "WEB:45008038",
+        "WEB:45008026",
+        "WEB:01002018",
+        "WEB:01002020"
       ],
-      "resultCount": 12,
-      "weakReasonShare": 0.32413,
-      "meanTopScore": 8.87745
+      "resultCount": 25,
+      "weakReasonShare": 0.444114,
+      "meanTopScore": 10.793572
     },
     {
       "id": "adversarial-nonsense",

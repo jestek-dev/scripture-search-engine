@@ -49,6 +49,16 @@ export const EXPOSITION_SOURCES: readonly ExpositionSourceSpec[] = [
       'Treasury of David expensive does not exist here.',
   },
   {
+    id: 'mhc',
+    authorId: 'henry',
+    file: 'mhc',
+    strategy: 'sword-zcom',
+    note:
+      'Second whole-Bible expositor — the one that makes corroboration possible ' +
+      'outside Psalms. Writes by section, so the loader collapses repeated bodies ' +
+      'back into the spans he actually wrote.',
+  },
+  {
     id: 'maclaren-psalms',
     authorId: 'maclaren',
     file: 'maclaren-psalms.txt',

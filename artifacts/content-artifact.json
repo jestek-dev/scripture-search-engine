@@ -3,10 +3,10 @@
   "tokenizerVersion": "1.0.0",
   "engineVersion": "0.6.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
-  "layerFingerprint": "bfd18cc3e5a061e6af07f7991777c3a0de7bc54199dac7b79bf8b398414d3857",
-  "databaseSha256": "ee09b0b83f3841040703169f5b663508bb8a9c71c474f7713703af8ab948b745",
-  "databaseBytes": 44679168,
-  "builtAt": "2026-07-30T03:53:59.109Z",
+  "layerFingerprint": "3b246000f61ec9e6905d0b35f1d2948d2a47a20fc6246a6e721bd985c33453f9",
+  "databaseSha256": "14df22407d6c5111f0ae241870dca331577d78446ede97aba209456138900583",
+  "databaseBytes": 64282624,
+  "builtAt": "2026-07-30T04:07:21.669Z",
   "translations": [
     {
       "code": "WEB",
@@ -21,7 +21,7 @@
     "editorialAnchors": 28,
     "topicAnchors": 63,
     "crossReferences": 341096,
-    "verseTerms": 19741
+    "verseTerms": 233011
   },
   "sources": [
     {
@@ -34,6 +34,12 @@
       "id": "maclaren-psalms",
       "sha256": "ca79e0cc06ef8dda8f7e139539f6db4e6782d3e0d5a6ebf94773b74b88e37c32",
       "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "mhc",
+      "sha256": "6bcb936873ca144e317805e5c1677940fd86e2403f7c14517752e44f25c8882b",
+      "rightsClass": "pd_text_claimed_transcription",
       "maxTier": "public_distribution"
     },
     {

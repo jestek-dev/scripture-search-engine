@@ -11,9 +11,17 @@
  * FORMAT (per testament, three files):
  *   .bzs  block index — 12 bytes/block: uint32 offset, uint32 compressed size,
  *         uint32 uncompressed size
- *   .bzv  entry index — 10 bytes/entry: uint32 block, uint32 offset in the
- *         inflated block, uint16 length
+ *   .bzv  entry index — uint32 block, uint32 offset in the inflated block,
+ *         then the entry length: uint16 in `zcom`, uint32 in `zcom4`. So a
+ *         record is 10 bytes or 12 depending on the driver the module was
+ *         built with, and nothing inside the files says which.
  *   .bzz  the zlib-compressed blocks themselves
+ *
+ * The record size is DERIVED rather than guessed: we already know exactly how
+ * many entries a testament must have, so whichever size divides the index into
+ * that many records is the right one, and if neither does the file is not what
+ * we think it is. Guessing wrong would read the length field from the middle
+ * of the next record and truncate every entry.
  *
  * ENTRY ORDER is KJV versification, and this is the part that must be exactly
  * right:
@@ -124,8 +132,30 @@ function readTestament(
   mismatches: string[],
 ): number {
   const { bzs, bzv, bzz } = files;
-  const entryCount = Math.floor(bzv.length / 10);
   const blocks = new Map<number, Buffer>();
+
+  // Predict the index size before reading it. If the arithmetic disagrees with
+  // the file under both record sizes, the layout assumption is wrong and every
+  // mapping below would be silently offset — so this is a precondition, not a
+  // diagnostic.
+  let entryCount = 2 + bookIds.length;
+  for (const bookId of bookIds) {
+    const chapters = KJV_VERSES_PER_CHAPTER[bookId - 1]!;
+    entryCount += chapters.length;
+    for (const verses of chapters) entryCount += verses;
+  }
+
+  const recordSize =
+    bzv.length === entryCount * 10 ? 10 : bzv.length === entryCount * 12 ? 12 : 0;
+  if (recordSize === 0) {
+    throw new Error(
+      `importSwordZcom: index is ${bzv.length} bytes, which is neither ${entryCount} ` +
+        `zcom records (${entryCount * 10}) nor ${entryCount} zcom4 records ` +
+        `(${entryCount * 12}). The entry layout assumption is wrong; refusing to map ` +
+        'entries to verses, because a wrong mapping produces plausible commentary on ' +
+        'the wrong text.',
+    );
+  }
 
   const block = (index: number): Buffer => {
     const cached = blocks.get(index);
@@ -138,29 +168,14 @@ function readTestament(
   };
 
   const textAt = (index: number): string => {
-    const length = bzv.readUInt16LE(index * 10 + 8);
+    const base = index * recordSize;
+    const length =
+      recordSize === 12 ? bzv.readUInt32LE(base + 8) : bzv.readUInt16LE(base + 8);
     if (length === 0) return '';
-    const blockIndex = bzv.readUInt32LE(index * 10);
-    const offset = bzv.readUInt32LE(index * 10 + 4);
+    const blockIndex = bzv.readUInt32LE(base);
+    const offset = bzv.readUInt32LE(base + 4);
     return stripOsis(block(blockIndex).subarray(offset, offset + length).toString('utf8'));
   };
-
-  // Predict the index size before walking it. If the arithmetic disagrees with
-  // the file, the layout assumption is wrong and every mapping below would be
-  // silently offset — so this is a precondition, not a diagnostic.
-  let expected = 2 + bookIds.length;
-  for (const bookId of bookIds) {
-    const chapters = KJV_VERSES_PER_CHAPTER[bookId - 1]!;
-    expected += chapters.length;
-    for (const verses of chapters) expected += verses;
-  }
-  if (expected !== entryCount) {
-    throw new Error(
-      `importSwordZcom: index has ${entryCount} entries but KJV versification predicts ` +
-        `${expected}. The entry layout assumption is wrong; refusing to map entries to ` +
-        'verses, because a wrong mapping produces plausible commentary on the wrong text.',
-    );
-  }
 
   let empty = 0;
   let cursor = 2; // skip module heading and testament heading

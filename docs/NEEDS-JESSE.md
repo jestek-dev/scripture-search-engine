@@ -253,21 +253,53 @@ G1 has been extended so this class of hole cannot recur: a manifest that pins a
 checksum must name a retrievable file, not a landing page. A separate opt-in
 `--check-sources` run verifies every pinned URL still resolves (all 8 do today).
 
-### 2.9 Clarke is in, and Layer B is STILL Psalms-only — by design, for now
+### 1.6 Two thresholds need your attention now that Layer B is large
 
-Adam Clarke's whole-Bible commentary is admitted: 21,052 verse-keyed notes,
-covering every book. Admitted terms went 3,060 -> 19,741, and fixture-scoped
-coverage went 15 verses -> 45.
+**a) Weak-reason share is the gate that will stop over-addition, and it is at
+80% of its allowance.** Admitting Matthew Henry raised weak-evidence share on
+`phrase-present-help` by 0.120 against a 0.15 budget, and on
+`medium-light-darkness` by 0.083. This is G8 doing exactly its job: "preached
+vocabulary" is a weak signal, and adding commentators adds a lot of it. The
+next author may trip it. That is the correct outcome and the number to watch —
+but decide in advance whether tripping it means *stop adding* or *re-baseline*,
+because deciding in the moment is how a gate becomes decoration.
 
-**Every one of those terms is still in Psalms.** That is the correct result and
-worth understanding rather than fixing: Clarke is the only expositor outside
-the Psalter, and one author never clears corroboration. What Clarke bought was
-*depth* where two authors already agreed — Psalms 28:9, 63:7, 102:11, 116:13
-now carry preached vocabulary they did not have.
+**b) `size.perTableBytes` is decoration today.** Six per-table budgets are
+declared in `eval/budgets.json` and **no gate reads them** — G10 checks only
+the artifact total. Two of the six name tables that do not exist: passage_terms
+was renamed verse_terms in schema v4, and co_citations was never built. By this
+repo's own rule an unfired threshold reads as protection while providing none.
+Either wire them into G10 or delete them; my preference is wire, since
+verse_terms is now the fastest-growing table by far.
 
-Breadth arrives with the SECOND whole-Bible author, not the first. Keil &
-Delitzsch (OT) and Barnes (NT) are the next step, and adding them is now a
-manifest plus a registry line.
+### 2.9 Layer B is off Psalms — Clarke and Matthew Henry are both in
+
+Two whole-Bible expositors are admitted, and the second is what mattered.
+
+| | terms admitted | fixture verses covered |
+|---|---|---|
+| Treasury + Maclaren (Psalms only) | 3,060 | 15 |
+| + Clarke | 19,741 | 45 |
+| + Matthew Henry | **233,011** | **677** |
+
+Clarke alone changed nothing outside the Psalter, exactly as predicted: one
+author never clears corroboration, so all he bought was depth where two authors
+already agreed. Breadth needed the second whole-Bible voice. All 15 books in
+the fixture now carry evidence, and the terms are the right ones — Matthew 7:24
+gets *stormy, parable, firm, foundation, wind, rock*; Ephesians 2:8 gets
+*boast, gift, salvation, merit, grace, faith*.
+
+**Henry writes by SECTION, and taking the module literally would have lied
+about that.** SWORD modules must store a body for every verse, so Henry's one
+essay is repeated against each verse it covers — he would have appeared to
+write 31,098 verse-specific notes with `min_span_verses: 1`, out-specifying
+Clarke's genuinely per-verse notes on their own ground and inflating every term
+count by the length of the run.
+
+Collapsing consecutive identical bodies recovers what he actually wrote: 31,098
+entries -> 4,249 documents at a median span of 6 verses. The same rule reads
+Clarke correctly too (21,052 -> 21,051 documents, span 1), which is the test of
+whether it describes the sources or flatters one of them.
 
 The versification mapping was the risk, and it is verified rather than assumed:
 KJV arithmetic predicts 8,246 NT and 24,115 OT index entries, and Clarke's

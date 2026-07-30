@@ -116,11 +116,27 @@ interface Accumulator {
   count: number;
   bestPmi: number;
   /** Distinct AUTHORS attesting this term — the corroboration count. */
-  authors: Set<string>;
-  /** Volume manifest ids, kept for provenance display only. */
-  sources: Set<string>;
+  /**
+   * Attesting authors and volumes as BITMASKS, not Sets.
+   *
+   * There is one accumulator per (verse, term) pair and there are millions of
+   * them — Matthew Henry's section essays alone project several million. Two
+   * Set objects each costs more than the rest of the accumulator combined, and
+   * the build ran out of memory at 12 GB before this change. Authors and
+   * volumes number in the dozens at most, so a bit each is exact, not an
+   * approximation.
+   */
+  authorMask: number;
+  sourceMask: number;
   minSpan: number;
   locator: string;
+}
+
+/** Populated count of set bits — the corroboration count. */
+function popcount(mask: number): number {
+  let value = mask - ((mask >> 1) & 0x55555555);
+  value = (value & 0x33333333) + ((value >> 2) & 0x33333333);
+  return (((value + (value >> 4)) & 0x0f0f0f0f) * 0x01010101) >> 24;
 }
 
 /**
@@ -137,6 +153,19 @@ export function buildTermProfiles(
   if (documents.length === 0) {
     return { terms: [], documentsProcessed: 0, termsConsidered: 0, termsAdmitted: 0 };
   }
+
+  // Bit assignments, taken in SORTED id order so the masks — and therefore
+  // every downstream tie-break — are identical on every machine and every run.
+  const authorIds = [...new Set(documents.map((d) => d.authorId))].sort();
+  const sourceIds = [...new Set(documents.map((d) => d.sourceId))].sort();
+  if (authorIds.length > 31 || sourceIds.length > 31) {
+    throw new Error(
+      `buildTermProfiles: ${authorIds.length} authors / ${sourceIds.length} sources exceeds ` +
+        'the 31 a bitmask can hold. Widen to BigInt before admitting more.',
+    );
+  }
+  const authorBit = new Map(authorIds.map((id, index) => [id, 1 << index]));
+  const sourceBit = new Map(sourceIds.map((id, index) => [id, 1 << index]));
 
   // Pass 1: background counts across every document.
   const backgroundCounts = new Map<string, number>();
@@ -190,8 +219,8 @@ export function buildTermProfiles(
         const existing = verseTerms.get(term);
         if (existing) {
           existing.count += count;
-          existing.authors.add(document.authorId);
-          existing.sources.add(document.sourceId);
+          existing.authorMask |= authorBit.get(document.authorId)!;
+          existing.sourceMask |= sourceBit.get(document.sourceId)!;
           if (pmi > existing.bestPmi) existing.bestPmi = Number(pmi.toFixed(6));
           if (width < existing.minSpan) {
             existing.minSpan = width;
@@ -201,8 +230,8 @@ export function buildTermProfiles(
           verseTerms.set(term, {
             count,
             bestPmi: Number(pmi.toFixed(6)),
-            authors: new Set([document.authorId]),
-            sources: new Set([document.sourceId]),
+            authorMask: authorBit.get(document.authorId)!,
+            sourceMask: sourceBit.get(document.sourceId)!,
             minSpan: width,
             locator: document.locator,
           });
@@ -219,14 +248,14 @@ export function buildTermProfiles(
     for (const [term, accumulator] of verseTerms) {
       if (accumulator.count < options.minCount) continue;
       // Corroboration is measured in AUTHORS, not volumes or editions.
-      if (accumulator.authors.size < options.minSources) continue;
+      if (popcount(accumulator.authorMask) < options.minSources) continue;
       admitted.push({
         verseId,
         term,
         pmi: accumulator.bestPmi,
         count: accumulator.count,
-        sourceIds: [...accumulator.sources].sort().join('+'),
-        sourceCount: accumulator.authors.size,
+        sourceIds: sourceIds.filter((_, index) => accumulator.sourceMask & (1 << index)).join('+'),
+        sourceCount: popcount(accumulator.authorMask),
         minSpanVerses: accumulator.minSpan,
         locator: accumulator.locator,
       });
