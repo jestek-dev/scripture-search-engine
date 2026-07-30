@@ -69,6 +69,22 @@ export const EXPOSITION_SOURCES: readonly ExpositionSourceSpec[] = [
       'historical books, which is precisely what this commentary treats closely.',
   },
   {
+    id: 'barnes',
+    authorId: 'barnes',
+    file: 'barnes',
+    strategy: 'sword-zcom',
+    note:
+      'New Testament only. Admitted against the measured NT gap — 84.2% against ' +
+      'the OT 99.2%, with Mark the worst-covered book in the Bible at 47%.',
+  },
+  {
+    id: 'jfb',
+    authorId: 'jfb',
+    file: 'jfb',
+    strategy: 'sword-zcom',
+    note: 'Whole Bible. Fourth voice overall, second on the NT where coverage is thinnest.',
+  },
+  {
     id: 'maclaren-psalms',
     authorId: 'maclaren',
     file: 'maclaren-psalms.txt',

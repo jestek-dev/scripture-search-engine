@@ -97,17 +97,30 @@ function collapseRepeatedBodies(
   return documents;
 }
 
+/**
+ * The letter before `z` in a module's filenames encodes its BLOCK SIZE, not
+ * its compression: `b` for BlockType=BOOK, `c` for CHAPTER, `v` for VERSE.
+ * Every module we admit is CompressType=ZIP regardless, so the same reader
+ * serves all three — only the filename differs. Barnes is CHAPTER-blocked,
+ * Clarke and Henry are BOOK-blocked.
+ */
+const BLOCK_PREFIXES = ['b', 'c', 'v'] as const;
+
 function readTestament(directory: string, prefix: string): SwordTestamentFiles | undefined {
-  const bzsPath = join(directory, `${prefix}.bzs`);
-  if (!existsSync(bzsPath)) return undefined;
-  const bzs = readFileSync(bzsPath);
-  const bzz = readFileSync(join(directory, `${prefix}.bzz`));
+  const found = BLOCK_PREFIXES.map((letter) => ({
+    letter,
+    path: join(directory, `${prefix}.${letter}zs`),
+  })).find((candidate) => existsSync(candidate.path));
+  if (!found) return undefined;
+
+  const bzs = readFileSync(found.path);
+  const bzz = readFileSync(join(directory, `${prefix}.${found.letter}zz`));
   // A single-testament module (Keil & Delitzsch is Old Testament only, Barnes
   // New Testament only) still ships a full-size index for the testament it
   // does not cover, with every entry empty and no data blocks behind it.
   // Treat that as absent rather than as a testament of blank commentary.
   if (bzs.length === 0 || bzz.length === 0) return undefined;
-  return { bzs, bzv: readFileSync(join(directory, `${prefix}.bzv`)), bzz };
+  return { bzs, bzv: readFileSync(join(directory, `${prefix}.${found.letter}zv`)), bzz };
 }
 
 export function loadExposition(

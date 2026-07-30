@@ -287,10 +287,14 @@ Measured on the real artifact, not the fixture:
 
 | | verses with evidence |
 |---|---|
-| **Whole Bible** | 29,646 / 31,098 = **95.3%** |
-| Old Testament | **99.2%** |
-| New Testament | 84.2% |
-| Books under 50% | **1** (Mark) |
+| **Whole Bible** | 30,777 / 31,098 = **99.0%** |
+| Old Testament | **99.6%** |
+| New Testament | **97.3%** |
+| Books under 90% | **1** (Mark, 86%) |
+
+Five expositors are now admitted: Clarke, Matthew Henry, Keil & Delitzsch
+(OT), Barnes (NT) and JFB, alongside Spurgeon and Maclaren on Psalms.
+Artifact 117.60 MiB of a 160 MiB budget.
 
 The diagnosis that produced this: coverage was never limited by commentators
 being silent. Before KD, 9,835 verses (31.6%) had *exactly one* expositor and
@@ -298,10 +302,12 @@ were blocked by the corroboration rule alone — essentially every verse in the
 Bible has someone writing about it. Adding a third OT voice converted almost
 all of them.
 
-**The remaining gap is entirely New Testament**, and it is a real property of
-the sources: Mark 47%, Luke 64%, John 84%, Acts 88%, Matthew 88%. Commentators
-habitually treat Mark by referring back to Matthew. Barnes (NT only) or JFB
-(whole Bible) is the direct fix; the NT is where the next author pays.
+**Mark is the last real gap at 86%**, and it is a property of the sources
+rather than of the pipeline: commentators habitually treat Mark by referring
+back to Matthew, so a note on Mark 4 often reads "see Matthew 13". Closing it
+means a commentator who treats Mark on its own terms. Diminishing returns are
+now visible in the marginal deltas — Barnes contributed 0.053 and the Psalms
+specialists 0.004-0.007, against Henry's 0.383.
 
 ### 2.9 Layer B is off Psalms — Clarke and Matthew Henry are both in
 

@@ -1,0 +1,12 @@
+{
+  "id": "barnes",
+  "label": "Albert Barnes, Notes on the New Testament",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain by age (Albert Barnes, 1798-1870; Notes published 1832-1851). Distributed by CrossWire as a SWORD module declaring DistributionLicense=Public Domain. The module records no TextSource, so the transcription's origin is unverified — admitted as public domain on the strength of the work's age and CrossWire's declaration, with that gap stated here rather than implied away. If a transcription claim ever surfaces, this manifest is where it gets recorded.",
+  "sourceUrl": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/Barnes.zip",
+  "sha256": "9e8edc0333875c214124371b3862df118ad3a76ade7753cb2faeed3484615baf",
+  "bytes": 5812827,
+  "maxTier": "public_distribution",
+  "retrievedAt": "2026-07-30",
+  "attributionNote": "New Testament only, CHAPTER-blocked. Admitted to close the measured New Testament gap: with Clarke and Henry alone the NT sat at 84.2% while the OT reached 99.2%, and Mark at 47% was the worst-covered book in the Bible."
+}

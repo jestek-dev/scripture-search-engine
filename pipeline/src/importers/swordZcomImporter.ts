@@ -96,17 +96,36 @@ function stripOsis(xml: string): string {
 }
 
 /**
- * Reads the printed verse number a commentator put at the head of their own
- * note, when there is one.
+ * Does the commentator's own printed numbering cover this verse?
  *
  * This is the check that makes the versification walk falsifiable. Clarke and
- * Barnes both open a note with "Verse 17" or "Verses 3-5"; if the index says
- * we are at verse 4 and the commentator says 17, one of us is wrong and it is
- * not the commentator.
+ * Barnes both label their notes; if the index says verse 4 and every marker in
+ * the note says 17, one of us is wrong and it is not the commentator.
+ *
+ * Returns null when the entry carries no numbering at all — Matthew Henry's
+ * section essays never do, and silence is not disagreement.
  */
-function printedVerseNumber(body: string): number | null {
-  const match = /^Verses?\s+(\d+)/.exec(body);
-  return match ? Number(match[1]) : null;
+function printedVerseCovers(body: string, verse: number): boolean | null {
+  // Commentators mark their notes in two shapes, often BOTH in one entry:
+  // Barnes writes a range header then the specific note — "Verses 8-12. …
+  // Verse 9. …" — so reading only the first marker compares a range start to
+  // a verse inside the range and reports a mismatch that is not one.
+  //
+  // Scan the leading portion for every marker and ask the only question that
+  // matters: does the commentator's own numbering cover the verse the index
+  // placed this at? An off-by-one walk fails that for nearly every entry;
+  // legitimate range notes pass it.
+  const head = body.slice(0, 400);
+  const pattern = /Verses?\s+(\d+)(?:\s*[-–]\s*(\d+))?/g;
+  let found = false;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(head)) !== null) {
+    found = true;
+    const start = Number(match[1]);
+    const end = match[2] ? Number(match[2]) : start;
+    if (verse >= start && verse <= end) return true;
+  }
+  return found ? false : null;
 }
 
 export interface SwordImportOptions {
@@ -193,10 +212,10 @@ function readTestament(
           continue;
         }
         const chapter = chapterIndex + 1;
-        const printed = printedVerseNumber(body);
-        if (printed !== null && printed !== verse) {
+        if (printedVerseCovers(body, verse) === false) {
           mismatches.push(
-            `${BOOKS[bookId - 1]!.name} ${chapter}:${verse} — entry says "Verse ${printed}"`,
+            `${BOOKS[bookId - 1]!.name} ${chapter}:${verse} — entry's own numbering ` +
+              `does not cover it: ${body.slice(0, 60)}`,
           );
         }
         entries.push({
