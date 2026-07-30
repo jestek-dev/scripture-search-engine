@@ -1,10 +1,10 @@
 {
-  "schemaVersion": "4",
+  "schemaVersion": "5",
   "tokenizerVersion": "1.0.0",
   "engineVersion": "0.7.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
   "layerFingerprint": "316fba74372ca6bb12a0e082ac98d44213c96f78f757f431fefe6eff7c6f2c27",
-  "databaseSha256": "edc554a0670a9e8985984411a52887fab6002cafe63373b8497f0b1c047a0315",
+  "databaseSha256": "660f9963ad341d7b6ab82c86798385968d32fdfe7c5ddff59e739d08b9e8bd6b",
   "databaseBytes": 123310080,
   "perTableBytes": {
     "book_aliases": 12288,
@@ -26,7 +26,7 @@
     "verses_fts_docsize": 303104,
     "verses_fts_idx": 12288
   },
-  "builtAt": "2026-07-30T04:55:24.366Z",
+  "builtAt": "2026-07-30T05:09:01.821Z",
   "translations": [
     {
       "code": "WEB",

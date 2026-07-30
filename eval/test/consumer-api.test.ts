@@ -144,3 +144,17 @@ describe('forSong()', () => {
     expect(result.results).toEqual([]);
   });
 });
+
+describe('related() regression', () => {
+  it('returns each concept with its anchors populated, not an empty array', async () => {
+    // Found in review: this was hard-coded to []. An empty array here reads as
+    // "this concept anchors nothing" rather than as data we declined to fetch,
+    // and no test noticed because nothing asserted on it.
+    const result = await engine.related('Psalm 46:1');
+    if (result.kind !== 'related') throw new Error('expected related');
+    const refuge = result.concepts.find((c) => c.conceptId === 'refuge-in-trouble');
+    expect(refuge).toBeDefined();
+    expect(refuge!.anchors.length).toBeGreaterThan(0);
+    expect(refuge!.anchors).toContain('Psalms 46:1');
+  });
+});

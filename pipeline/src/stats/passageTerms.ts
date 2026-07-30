@@ -63,7 +63,8 @@ export interface VerseTerm {
   readonly count: number;
   /** Sources that used this term in a section covering this verse, '+'-joined. */
   readonly sourceIds: string;
-  readonly sourceCount: number;
+  /** Distinct AUTHORS attesting this term. Volumes are in `sourceIds`. */
+  readonly authorCount: number;
   /**
    * Verse-width of the NARROWEST attesting section. 1 means some author said
    * this while writing about exactly this verse; 6 means the tightest thing
@@ -255,7 +256,7 @@ export function buildTermProfiles(
         pmi: accumulator.bestPmi,
         count: accumulator.count,
         sourceIds: sourceIds.filter((_, index) => accumulator.sourceMask & (1 << index)).join('+'),
-        sourceCount: popcount(accumulator.authorMask),
+        authorCount: popcount(accumulator.authorMask),
         minSpanVerses: accumulator.minSpan,
         locator: accumulator.locator,
       });

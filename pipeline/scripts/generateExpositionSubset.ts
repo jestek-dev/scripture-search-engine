@@ -147,7 +147,7 @@ function main(): void {
   // Terms attested by MORE THAN ONE source. These are the rows that are
   // evidence about the PASSAGE rather than about an author's habits, so the
   // count is the headline number for "is adding authors working?"
-  const multiAttested = combined.terms.filter((term) => term.sourceCount > 1).length;
+  const multiAttested = combined.terms.filter((term) => term.authorCount > 1).length;
 
   // Saturation on the combined corpus. Reported, never enforced (see G9).
   const half = Math.floor(allDocuments.length / 2);

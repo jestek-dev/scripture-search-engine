@@ -65,9 +65,11 @@ describe('corroboration counts authors', () => {
     );
     expect(result.terms.length).toBeGreaterThan(0);
     const term = result.terms[0]!;
-    expect(term.sourceCount).toBe(2);
+    expect(term.authorCount).toBe(2);
     // Volume-level provenance is still reported, so a result can say which
-    // books the evidence came from even though the count is per author.
+    // books the evidence came from even though the count is per author. The
+    // two fields are named for what they hold: authorCount counts authors,
+    // sourceIds lists volumes, and one author can supply several.
     expect(term.sourceIds).toBe('maclaren-psalms+treasury-of-david-01');
   });
 });

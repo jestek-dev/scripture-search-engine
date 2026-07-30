@@ -29,7 +29,7 @@ export interface ConceptLayerInput {
     pmi: number;
     count: number;
     sourceIds: string;
-    sourceCount: number;
+    authorCount: number;
     minSpanVerses: number;
     locator: string;
   }[];
@@ -107,7 +107,7 @@ export function buildConceptLayer(
     'INSERT INTO concept_related(concept_id, related_id) VALUES (?, ?)',
   );
   const insertVerseTerm = database.prepare(
-    `INSERT INTO verse_terms(verse_id, term, pmi, count, source_ids, source_count,
+    `INSERT INTO verse_terms(verse_id, term, pmi, count, source_ids, author_count,
                              min_span_verses, locator)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
   );
@@ -208,7 +208,7 @@ export function buildConceptLayer(
         term.pmi,
         term.count,
         term.sourceIds,
-        term.sourceCount,
+        term.authorCount,
         term.minSpanVerses,
         term.locator,
       );

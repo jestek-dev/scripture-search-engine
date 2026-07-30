@@ -94,7 +94,7 @@ export interface ScriptureEngine {
   readonly engineVersion: string;
 }
 
-const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4']);
+const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5']);
 
 /**
  * Lyric tokens admitted to forSong(). A full lyric sheet is hundreds of
@@ -274,6 +274,24 @@ export async function createEngine(
 
       const anchoring = await concepts.conceptsAnchoring(resolved.startId, resolved.endId);
 
+      // Populate each concept's full anchor list, exactly as themes() does.
+      // A consumer showing "this passage belongs to Refuge in trouble" wants
+      // the rest of that concept's passages as the obvious next click, and an
+      // empty array here reads as "this concept anchors nothing" rather than
+      // as data we declined to fetch.
+      const anchorsByConcept = new Map<string, string[]>();
+      for (const anchor of await concepts.anchorVerses(
+        anchoring.map((concept) => concept.conceptId),
+      )) {
+        const bucket = anchorsByConcept.get(anchor.conceptId);
+        const label = referenceLabel(anchor);
+        if (bucket) {
+          if (!bucket.includes(label)) bucket.push(label);
+        } else {
+          anchorsByConcept.set(anchor.conceptId, [label]);
+        }
+      }
+
       // Seed cross-reference expansion from the verses the user actually
       // named. Unlike discovery, there is no query to be wrong about: the
       // passage IS the input, so its edges are exactly what was asked for.
@@ -303,7 +321,7 @@ export async function createEngine(
           conceptId: concept.conceptId,
           label: concept.label,
           matchedOn: resolved.label,
-          anchors: [],
+          anchors: anchorsByConcept.get(concept.conceptId) ?? [],
         })),
         results: ranked.map((result) => {
           const verse = verses.get(result.targetId)!;
