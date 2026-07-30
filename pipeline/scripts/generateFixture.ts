@@ -23,7 +23,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { findBook } from '../src/books.js';
+import { BOOKS, findBook } from '../src/books.js';
+import { importVpl } from '../src/importers/vplImporter.js';
 import type { VerseArrayEntry, VerseArraySource } from '../src/importers/verseArrayImporter.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -51,6 +52,29 @@ const SELECTION: readonly { book: string; chapters: readonly number[]; why: stri
   { book: 'Joshua', chapters: [1], why: 'observe/do vocabulary' },
 ];
 
+/**
+ * Adapts eBible's verse-per-line export into the flat verse-array shape the
+ * committed fixture uses. Keeps the fixture format stable across a change of
+ * upstream distribution format, so nothing downstream of the fixture had to
+ * change when WEB was re-admitted from a reachable URL.
+ */
+function vplAsVerseArray(contents: string): VerseArraySource {
+  const { verses } = importVpl(contents);
+  return {
+    verses: verses.map((verse) => {
+      const book = BOOKS.find((candidate) => candidate.id === verse.bookId);
+      if (!book) throw new Error(`generateFixture: unknown book id ${verse.bookId}`);
+      return {
+        book_name: book.name,
+        book: verse.bookId,
+        chapter: verse.chapter,
+        verse: verse.verse,
+        text: verse.text,
+      };
+    }),
+  };
+}
+
 interface FixtureFile {
   readonly $schema: string;
   readonly generatedFrom: {
@@ -70,9 +94,17 @@ function main(): void {
     return;
   }
 
+  // The checksum recorded in the fixture must be the one in the MANIFEST, so
+  // buildFixtureDb's provenance check compares like with like. For the VPL
+  // route that is the zip's checksum, not the extracted text's — the zip is
+  // what carries the rights record and what anyone else can re-download.
   const raw = readFileSync(sourcePath);
-  const sourceSha256 = createHash('sha256').update(raw).digest('hex');
-  const source = JSON.parse(raw.toString('utf8')) as VerseArraySource;
+  const source: VerseArraySource = sourcePath.endsWith('.txt')
+    ? vplAsVerseArray(readFileSync(sourcePath, 'utf8'))
+    : (JSON.parse(raw.toString('utf8')) as VerseArraySource);
+  const sourceSha256 = sourcePath.endsWith('.txt')
+    ? createHash('sha256').update(readFileSync(join(HERE, '..', 'sources', 'engwebp_vpl.zip'))).digest('hex')
+    : createHash('sha256').update(raw).digest('hex');
 
   const wanted = new Map<number, Set<number>>();
   for (const entry of SELECTION) {

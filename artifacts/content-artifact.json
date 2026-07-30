@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "4",
+  "tokenizerVersion": "1.0.0",
+  "engineVersion": "0.6.0",
+  "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
+  "layerFingerprint": "b12da481eb22cd7abe06d471b616da691ea749e63436dfdf5031cf0fcdb7e933",
+  "databaseSha256": "1bc2dea5d117f5ffbcf540bba7660c08d3ae444bbdb1815e3c03bdff9131cbef",
+  "databaseBytes": 42893312,
+  "builtAt": "2026-07-30T03:19:13.416Z",
+  "translations": [
+    {
+      "code": "WEB",
+      "verseCount": 31098
+    }
+  ],
+  "counts": {
+    "verses": 31098,
+    "distinctTokens": 9570,
+    "concepts": 8,
+    "lexiconEntries": 41,
+    "editorialAnchors": 28,
+    "topicAnchors": 63,
+    "crossReferences": 341096,
+    "verseTerms": 2583
+  },
+  "sources": [
+    {
+      "id": "maclaren-psalms",
+      "sha256": "ca79e0cc06ef8dda8f7e139539f6db4e6782d3e0d5a6ebf94773b74b88e37c32",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "openbible-topics",
+      "sha256": "2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60",
+      "rightsClass": "cc_by",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "openbible-xrefs",
+      "sha256": "36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829",
+      "rightsClass": "cc_by",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-01",
+      "sha256": "38d558e4d70a4bf6d903114f85a49a4e82091728eca06a903aa99aa65ceed6d8",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-02",
+      "sha256": "913881bd61b061876a10a9c3ea2568c0eec1ef7e6b3b19ffb3514d9ec3fefd9b",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-04",
+      "sha256": "a1e2108006f8f0f2aed78681934b27fad10ab41ccde4af0b9f8746463c8472b9",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-06",
+      "sha256": "be4272ba2a15637655748f6bf06c0e20b7a75ec9deba7de1ba27b6a33f3e880f",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "web",
+      "sha256": "3458ca34420c0547ec01b3dbda58a10a2d8fc511bdcd2e047ddd17fbe860b7b6",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    }
+  ]
+}

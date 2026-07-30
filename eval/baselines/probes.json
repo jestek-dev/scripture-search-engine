@@ -1,24 +1,24 @@
 {
-  "corpusFingerprint": "a601e37fe2eecb772161fa2fd6f84b63727863b83b8fbb019e3579136a162346",
-  "engineVersion": "0.5.0",
+  "corpusFingerprint": "300844086c889cae68944325566d00fee053d2b0fae26845b2742dd88c429edc",
+  "engineVersion": "0.6.0",
   "observations": [
     {
       "id": "broad-love",
       "top": [
+        "WEB:19091014",
         "WEB:42006032",
         "WEB:05006005",
         "WEB:43013035",
         "WEB:40005043",
         "WEB:40005046",
         "WEB:42006027",
+        "WEB:43013034",
         "WEB:49002004",
-        "WEB:58010024",
-        "WEB:62002010",
-        "WEB:19091014"
+        "WEB:62002010"
       ],
       "resultCount": 24,
       "weakReasonShare": 1,
-      "meanTopScore": 3.940476
+      "meanTopScore": 4.225442
     },
     {
       "id": "broad-grace",
@@ -36,7 +36,7 @@
       ],
       "resultCount": 10,
       "weakReasonShare": 1,
-      "meanTopScore": 3.114502
+      "meanTopScore": 3.100216
     },
     {
       "id": "broad-faith",
@@ -44,35 +44,35 @@
         "WEB:59002017",
         "WEB:59002022",
         "WEB:49002008",
+        "WEB:58011039",
         "WEB:59001003",
         "WEB:59002024",
         "WEB:58010039",
-        "WEB:58011039",
         "WEB:48001023",
         "WEB:58010038",
         "WEB:58011001"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 4.035714
+      "meanTopScore": 4.089286
     },
     {
       "id": "broad-word",
       "top": [
         "WEB:43001001",
-        "WEB:26033001",
-        "WEB:26033023",
         "WEB:59001022",
         "WEB:23040008",
         "WEB:59001018",
         "WEB:62002007",
         "WEB:58011003",
         "WEB:59001023",
-        "WEB:62001001"
+        "WEB:62001001",
+        "WEB:06001013",
+        "WEB:58010028"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.057768,
-      "meanTopScore": 63.678571
+      "weakReasonShare": 0.049732,
+      "meanTopScore": 63.14011
     },
     {
       "id": "medium-refuge-trouble",
@@ -89,8 +89,8 @@
         "WEB:19121002"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.150947,
-      "meanTopScore": 28.295055
+      "weakReasonShare": 0.144468,
+      "meanTopScore": 28.080769
     },
     {
       "id": "medium-fear-not",
@@ -107,8 +107,8 @@
         "WEB:19091002"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.352285,
-      "meanTopScore": 20.465796
+      "weakReasonShare": 0.353344,
+      "meanTopScore": 20.499313
     },
     {
       "id": "medium-light-darkness",
@@ -125,8 +125,8 @@
         "WEB:62002004"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.258986,
-      "meanTopScore": 20.998262
+      "weakReasonShare": 0.258785,
+      "meanTopScore": 20.992546
     },
     {
       "id": "narrow-hearing-doing",
@@ -143,8 +143,8 @@
         "WEB:59001025"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.341409,
-      "meanTopScore": 41.111994
+      "weakReasonShare": 0.341466,
+      "meanTopScore": 41.115559
     },
     {
       "id": "narrow-doers-word",
@@ -161,14 +161,14 @@
         "WEB:42006048"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.333075,
-      "meanTopScore": 46.011163
+      "weakReasonShare": 0.33312,
+      "meanTopScore": 46.014268
     },
     {
       "id": "narrow-house-rock",
       "top": [
-        "WEB:40007026",
         "WEB:40007024",
+        "WEB:40007026",
         "WEB:40007025",
         "WEB:40007027",
         "WEB:42006049",
@@ -179,17 +179,17 @@
         "WEB:59001023"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.298764,
-      "meanTopScore": 43.979462
+      "weakReasonShare": 0.292121,
+      "meanTopScore": 44.979462
     },
     {
       "id": "phrase-present-help",
       "top": [
         "WEB:19046001",
         "WEB:19091015",
-        "WEB:19121001",
         "WEB:19121002",
-        "WEB:19091016",
+        "WEB:19121001",
+        "WEB:19023005",
         "WEB:19046005",
         "WEB:48001007",
         "WEB:45008018",
@@ -197,8 +197,8 @@
         "WEB:45008038"
       ],
       "resultCount": 12,
-      "weakReasonShare": 0.349635,
-      "meanTopScore": 9.225582
+      "weakReasonShare": 0.32413,
+      "meanTopScore": 8.87745
     },
     {
       "id": "adversarial-nonsense",

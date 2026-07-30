@@ -78,6 +78,16 @@ Beyond Psalms, moving to a second book means picking one and finding 2+ PD
 commentators on it before ingesting anything — one author on a new book buys
 almost nothing now, which is a change from how this looked a phase ago.
 
+### 1.5 The size budget is now known to be 4x too loose
+
+`size.totalArtifactBytes` is 160 MiB; the real full artifact is 40.91 MiB. A
+threshold with that much slack will not fire before something has gone badly
+wrong. Tightening it to, say, 64 MiB would make it a real guardrail while
+leaving room for the Layer B growth you actually want.
+
+Not changed unilaterally: budgets are reviewed data, and picking the number is
+a judgment about how much growth you intend to allow.
+
 ---
 
 ## 2. Things you should know
@@ -152,16 +162,54 @@ Handled correctly today (the committed subset makes builds hermetic), but if
 you ever want to reproduce a build from scratch months from now, you need the
 original download — not just the URL. Worth keeping a copy somewhere durable.
 
-### 2.6 The corpus is still a fixture, not the whole Bible
+### 2.6 The full-corpus build is DONE — and the size budget was far too pessimistic
 
-Everything above runs against **828 WEB verses** — the passages the fixtures and
-probes need. Deliberate: CI must be hermetic and fast.
+Built 2026-07-29. `artifacts/content-artifact.json` is the first reviewed
+release descriptor; `npm run build:artifact --workspace pipeline` reproduces it.
 
-Building the full 31,103-verse artifact (both translations, all concepts, the
-full 344k cross-references) **has still not been done.** It is not hard, but it
-is unproven, and its size is unmeasured against the 160 MiB budget. Until it
-runs there is no reviewed release descriptor in `artifacts/`, and therefore
-nothing a consumer could actually pin.
+| | measured |
+|---|---|
+| verses | 31,098 |
+| artifact size | **40.91 MiB** against a 160 MiB budget |
+| cross-references | 341,096 |
+| corroborated verse terms | 2,583 |
+| query latency, full corpus | 2.6–42 ms cold, no warm-up |
+
+The size number is the surprise. The plan assumed a ~122 MiB base corpus and
+budgeted ~30 MiB of headroom for Layers A+B; the real artifact is a quarter of
+that. The 122 MiB figure came from Maskil, whose database carries two
+translations plus an FTS index this one builds differently.
+
+**This is worth a decision at some point** (§1.5), because a 160 MiB budget
+against a 41 MiB artifact is not a guardrail — there is room for a 4x mistake
+before it fires. I have not changed it, because thresholds are reviewed data.
+
+CI still gates against the 828-verse fixture, and should: hermetic and fast is
+correct for a per-PR check. The two builds are now genuinely different tools
+rather than one tool and one aspiration.
+
+### 2.6b The WEB text was re-admitted, and 24% of verse wording changed
+
+The old `manifests/web.json` pinned a checksum for a JSON export whose download
+URL was never recorded — `sourceUrl` held only eBible's landing page. That
+checksum identified a file nobody could retrieve, which means the corpus could
+not be rebuilt or verified by anyone, including us.
+
+Re-admitted from eBible's own canonical verse-per-line publication, which has a
+stable direct URL. The text differs because WEB has been revised since: of the
+828 fixture verses, 243 were byte-identical, 390 differed only in typography
+(curly vs straight quotes, which the tokenizer discards), and **195 carried real
+revisions** — "put forth grass" → "yield grass", "Let us make man" → "Let's make
+man".
+
+Measured effect: no golden fixture broke, all 49 tests stayed green, and probe
+churn was 0–20% with the *narrow* concept probes unmoved and weak-evidence share
+slightly **down**. Only two broad lexical probes swapped results. Baseline
+re-recorded as a reviewed event.
+
+G1 has been extended so this class of hole cannot recur: a manifest that pins a
+checksum must name a retrievable file, not a landing page. A separate opt-in
+`--check-sources` run verifies every pinned URL still resolves (all 8 do today).
 
 ### 2.7 Treasury of David came from Internet Archive OCR, and it shows
 
@@ -180,18 +228,18 @@ attaching commentary to the wrong psalm is a silent unrecoverable error.
 
 ## 3. Suggested next moves, in the order I would do them
 
-1. **Run the full-corpus build** (§2.6). Everything else is measured against a
-   fixture until this happens, and it produces the first real size/latency
-   numbers plus the first reviewed release descriptor.
-2. **Finish *Treasury of David* vols 3 and 5** (§1.4). Cheap, closes a
-   single-author hole, and gives G9 a second data point.
-3. **Add a third Psalms commentator** — the first real test of the saturation
-   threshold (§2.3), and the first chance to see corroboration quality rise
-   rather than coverage.
-4. **Try the curation skill on a real gap** — your Mormon-evangelism example is
-   a good first test because it exercises `editorial` provenance on genuinely
-   contested ground. Phase 4's own gate is unmet until this runs once.
-5. **Then** decide Phase 5 sequencing (§1.3) — and budget for building
+1. ~~Run the full-corpus build~~ — **done** (§2.6).
+2. **Get Layer B off Psalms.** This is now the biggest gap by far: 2,583
+   corroborated terms exist and essentially all of them are in the Psalter,
+   because both admitted commentators only wrote on Psalms. Sixty-five other
+   books have no homiletical evidence at all. Needs 2+ public-domain
+   commentators per book — see §1.4.
+3. **Finish *Treasury of David* vols 3 and 5** — cheap, closes the
+   single-author hole in Psalms 58–87 and 111–119.
+4. **Decide the size budget** (§1.5) now that there is a real number.
+5. **Try the curation skill on a real gap** — Phase 4's own gate is unmet until
+   this runs once. You have said this is lower priority than breadth.
+6. **Then** decide Phase 5 sequencing (§1.3) — and budget for building
    `forSong()`, which it needs and does not have.
 
 ---

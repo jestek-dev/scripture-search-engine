@@ -43,7 +43,7 @@ import {
 } from './gates/probes.js';
 import { openCorpus } from './nodeSqlitePort.js';
 import { determinismGate, goldenGate, type GoldenFixture } from './gates/golden.js';
-import { notApplicable, pass, fail, type GateResult } from './gates/types.js';
+import { notApplicable, pass, fail, warn, type GateResult } from './gates/types.js';
 import { DEFAULT_BUDGETS } from '@lh/scripture-engine';
 import { buildReport } from './report.js';
 
@@ -247,10 +247,21 @@ function sizeGate(budgets: Budgets, builtPath: string): GateResult {
  * G1: in Phase 0 there is no artifact to walk, but the manifest directory
  * itself is checkable — an empty manifests/ means no source has been admitted,
  * which is the correct state before Phase 2 and is reported as such.
+ *
+ * Beyond presence, every manifest that claims a checksum must also say WHERE
+ * the checksummed bytes came from, precisely enough to fetch them again. This
+ * gate previously passed a manifest whose `sourceUrl` was a landing page and
+ * whose `sha256` therefore identified a file nobody could retrieve — a
+ * checksum with nothing on the other end of it, which reads as provenance
+ * while providing none. A corpus you cannot re-fetch is a corpus you cannot
+ * verify, so the shape of the URL is checked structurally here.
+ *
+ * Whether the URL still RESOLVES is a separate, network-dependent question;
+ * see reachabilityGate, which reports rather than blocks.
  */
 function provenanceGate(): GateResult {
-  const manifests = listJson(join(REPO_ROOT, 'pipeline', 'manifests'));
-  if (manifests.length === 0) {
+  const files = listJson(join(REPO_ROOT, 'pipeline', 'manifests'));
+  if (files.length === 0) {
     return notApplicable(
       'G1-provenance',
       'Provenance',
@@ -258,9 +269,107 @@ function provenanceGate(): GateResult {
         'in pipeline/, and runs against artifact rows from Phase 2',
     );
   }
-  return pass('G1-provenance', 'Provenance', `${manifests.length} source manifest(s) present`, {
-    manifests: manifests.length,
-  });
+
+  const findings: string[] = [];
+  for (const file of files) {
+    // listJson returns full paths already.
+    const manifest = JSON.parse(readFileSync(file, 'utf8')) as SourceManifest;
+
+    // A manifest with no checksum is declarative — it exists so other sources
+    // can express lineage against it (G7), and pins no bytes of its own.
+    if (!manifest.sha256) continue;
+
+    if (!manifest.sourceUrl) {
+      findings.push(`${manifest.id}: pins a checksum but records no sourceUrl`);
+      continue;
+    }
+    // A directory or bare origin cannot identify the checksummed bytes: the
+    // page it serves changes, and the file the checksum describes is one of
+    // many things linked from it.
+    if (/\/$/.test(manifest.sourceUrl)) {
+      findings.push(
+        `${manifest.id}: sourceUrl "${manifest.sourceUrl}" is a landing page, not a file — ` +
+          'the checksum cannot be re-verified from it',
+      );
+    }
+  }
+
+  if (findings.length > 0) {
+    return fail(
+      'G1-provenance',
+      'Provenance',
+      'checksum(s) with unrecoverable origin',
+      findings.map((message) => ({ message })),
+    );
+  }
+
+  return pass(
+    'G1-provenance',
+    'Provenance',
+    `${files.length} source manifest(s); every checksum names a retrievable file`,
+    { manifests: files.length },
+  );
+}
+
+/**
+ * G1b: are the pinned source URLs still reachable?
+ *
+ * Reported, never blocking. A third party being down for an hour is not a
+ * reason to fail someone's PR, and a gate that fails for reasons unrelated to
+ * the change teaches people to ignore gates. What this catches is the slow
+ * failure — a source that quietly disappears — which matters at the moment
+ * you need to rebuild, not at the moment it vanishes.
+ *
+ * Skipped entirely offline and in CI unless explicitly requested, so the
+ * gauntlet stays hermetic by default.
+ */
+async function reachabilityGate(): Promise<GateResult> {
+  if (!process.argv.includes('--check-sources')) {
+    return notApplicable(
+      'G1b-reachability',
+      'Source reachability',
+      'network check is opt-in; run `npm run gauntlet -- --check-sources` to verify ' +
+        'every pinned sourceUrl still resolves',
+    );
+  }
+
+  const files = listJson(join(REPO_ROOT, 'pipeline', 'manifests'));
+  const findings: string[] = [];
+  let checked = 0;
+
+  for (const file of files) {
+    const manifest = JSON.parse(readFileSync(file, 'utf8')) as SourceManifest;
+    if (!manifest.sha256 || !manifest.sourceUrl) continue;
+    checked += 1;
+    try {
+      const response = await fetch(manifest.sourceUrl, {
+        method: 'HEAD',
+        signal: AbortSignal.timeout(15_000),
+      });
+      if (!response.ok) {
+        findings.push(`${manifest.id}: HTTP ${response.status} for ${manifest.sourceUrl}`);
+      }
+    } catch (error) {
+      findings.push(
+        `${manifest.id}: unreachable (${error instanceof Error ? error.message : 'error'})`,
+      );
+    }
+  }
+
+  if (findings.length > 0) {
+    return warn(
+      'G1b-reachability',
+      'Source reachability',
+      `${findings.length} of ${checked} pinned source(s) did not respond`,
+      findings.map((message) => ({ message })),
+    );
+  }
+  return pass(
+    'G1b-reachability',
+    'Source reachability',
+    `${checked} pinned source URL(s) still resolve`,
+    { checked },
+  );
 }
 
 const BASELINE_PATH = join(EVAL_ROOT, 'baselines', 'probes.json');
@@ -329,6 +438,7 @@ async function main(): Promise<void> {
   const probeGates = await runProbeGates(budgets);
   const gates: GateResult[] = [
     provenanceGate(),
+    await reachabilityGate(),
     determinismGate(fixtures),
     goldenGate(fixtures),
     probeGates[2]!,

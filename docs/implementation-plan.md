@@ -187,6 +187,16 @@ adding is harmful." You read a verdict, not a dataset.
 manifest entry with checksum + license + retrieval record. Unknown provenance
 is a build error, not a warning. (Maskil's model, now mandatory for every table.)
 
+*Strengthened 2026-07-29.* The gate originally checked only that a manifest
+existed carrying a checksum — and passed a manifest whose `sourceUrl` was a
+landing page, so its checksum identified a file nobody could retrieve. A
+corpus you cannot re-fetch is a corpus you cannot verify, and a checksum with
+nothing on the other end of it reads as provenance while providing none. G1 now
+requires every pinned checksum to name a retrievable file. **G1b** additionally
+verifies that those URLs still resolve; it is opt-in (`--check-sources`) and
+warns rather than blocks, because a third party being down is not a reason to
+fail someone's PR.
+
 **G2 · Determinism.** The full eval suite runs twice, and on two OS runners;
 orderings must be byte-identical. Any intentional ordering change requires an
 engine or artifact version bump in the same PR, or the gate fails.
@@ -331,7 +341,7 @@ actually bought before you commit to it.
 | 1 · Lexical ladder | ✅ complete | probe baselines recorded; G8/G11 live |
 | 2 · Concept layer | ⚠️ complete *with a caveat* | fixture #1 green. But `themes()`/`forSong()` were listed in this phase's gate and **were not built** (§5). Nave/Torrey **not imported** — the spine is 8 editorial concepts + OpenBible votes |
 | 3 · Evidence graph pilot | ⚠️ complete, **narrower than scoped** | Psalms only; **James was never ingested**. Maclaren + *Treasury of David* vols 1, 2, 4, 6 — **vols 3 and 5 are missing**, so Psalms 58–87 and 111–119 have single-author coverage, the exact condition that produces idiolect (§3.2) |
-| 3½ · Full-corpus build | ❌ **not started** | Everything measured to date runs against **828 WEB verses**, not 31,103. No `artifacts/` descriptor exists. Size and latency are therefore unproven at real scale |
+| 3½ · Full-corpus build | ✅ **complete** | 31,098 verses, **40.91 MiB** (budget 160 MiB), 341k cross-references, 2.6–42 ms queries. First reviewed descriptor in `artifacts/`. `npm run build:artifact --workspace pipeline` |
 | 4 · Curation skill | ✅ complete | skill ships; **not yet run end-to-end on a real gap**, so its own gate is unmet |
 | 5 · Consumer adoption | ❌ not started | deliberate — see `NEEDS-JESSE.md` §1.3 |
 

@@ -81,11 +81,9 @@ engine/     pure TS runtime — tokenizer, references, budgets, ranking (publish
 pipeline/   build-time only — manifests, importers, alignment, statistics
 ontology/   Layer A concept packs, reviewed like code
 eval/       the gauntlet: gates, golden fixtures, probes, budgets, report
+artifacts/  reviewed release descriptors (the .db itself is a Release asset)
 docs/       architecture + implementation plan + open decisions
 ```
-
-`artifacts/` (reviewed release descriptors) does not exist yet — the
-full-corpus build has not been run, so there is nothing for a consumer to pin.
 
 ## Development
 
@@ -114,9 +112,16 @@ James 1:22, Matthew 7:24 and Luke 6:47 carrying `concept_anchor` evidence
 attributed to LH editorial — the right passages *for the right reason*, which
 is what the fixture actually asserts.
 
-**Everything above is measured against 828 WEB verses**, not the full 31,103.
-The fixture corpus keeps CI hermetic; the full-corpus build has not been run,
-so artifact size and real latency remain unproven.
+**The full artifact builds**: 31,098 verses, 40.91 MiB against a 160 MiB
+budget, 341k cross-references, queries in 2.6–42 ms.
+
+```bash
+npm run build:artifact --workspace pipeline
+```
+
+CI still gates against an 828-verse fixture, deliberately — a per-PR check must
+be hermetic and fast. The two builds answer different questions: the fixture
+says whether the code is correct, the artifact says what you would ship.
 
 Open decisions and known limits: **[docs/NEEDS-JESSE.md](docs/NEEDS-JESSE.md)**.
 
