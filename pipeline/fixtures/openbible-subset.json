@@ -157,33 +157,27 @@
     },
     {
       "fromVerseId": 1001001,
+      "toStartVerseId": 2020011,
+      "toEndVerseId": 2020011,
+      "votes": 153
+    },
+    {
+      "fromVerseId": 1001001,
+      "toStartVerseId": 20003019,
+      "toEndVerseId": 20003019,
+      "votes": 85
+    },
+    {
+      "fromVerseId": 1001001,
       "toStartVerseId": 19121002,
       "toEndVerseId": 19121002,
       "votes": 65
     },
     {
       "fromVerseId": 1001001,
-      "toStartVerseId": 23040028,
-      "toEndVerseId": 23040028,
-      "votes": 65
-    },
-    {
-      "fromVerseId": 1001001,
-      "toStartVerseId": 23040026,
-      "toEndVerseId": 23040026,
-      "votes": 59
-    },
-    {
-      "fromVerseId": 1001001,
       "toStartVerseId": 62001001,
       "toEndVerseId": 62001001,
       "votes": 59
-    },
-    {
-      "fromVerseId": 1001002,
-      "toStartVerseId": 23040012,
-      "toEndVerseId": 23040014,
-      "votes": 34
     },
     {
       "fromVerseId": 1001003,
@@ -342,18 +336,6 @@
       "votes": 8
     },
     {
-      "fromVerseId": 1001014,
-      "toStartVerseId": 23040026,
-      "toEndVerseId": 23040026,
-      "votes": 8
-    },
-    {
-      "fromVerseId": 1001016,
-      "toStartVerseId": 23040026,
-      "toEndVerseId": 23040026,
-      "votes": 7
-    },
-    {
       "fromVerseId": 1001020,
       "toStartVerseId": 1002019,
       "toEndVerseId": 1002019,
@@ -445,12 +427,6 @@
     },
     {
       "fromVerseId": 1001027,
-      "toStartVerseId": 23043007,
-      "toEndVerseId": 23043007,
-      "votes": 31
-    },
-    {
-      "fromVerseId": 1001027,
       "toStartVerseId": 1002018,
       "toEndVerseId": 1002018,
       "votes": 21
@@ -478,6 +454,12 @@
       "toStartVerseId": 1002016,
       "toEndVerseId": 1002016,
       "votes": 8
+    },
+    {
+      "fromVerseId": 1001031,
+      "toStartVerseId": 2020011,
+      "toEndVerseId": 2020011,
+      "votes": 13
     },
     {
       "fromVerseId": 1001031,
@@ -517,15 +499,15 @@
     },
     {
       "fromVerseId": 1002001,
-      "toStartVerseId": 1001001,
-      "toEndVerseId": 1001001,
-      "votes": 8
+      "toStartVerseId": 2020011,
+      "toEndVerseId": 2020011,
+      "votes": 10
     },
     {
       "fromVerseId": 1002001,
-      "toStartVerseId": 23040026,
-      "toEndVerseId": 23040028,
-      "votes": 4
+      "toStartVerseId": 1001001,
+      "toEndVerseId": 1001001,
+      "votes": 8
     },
     {
       "fromVerseId": 1002001,
@@ -541,9 +523,21 @@
     },
     {
       "fromVerseId": 1002002,
+      "toStartVerseId": 2020008,
+      "toEndVerseId": 2020011,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 1002002,
       "toStartVerseId": 1001031,
       "toEndVerseId": 1001031,
       "votes": 1
+    },
+    {
+      "fromVerseId": 1002003,
+      "toStartVerseId": 2020008,
+      "toEndVerseId": 2020011,
+      "votes": 12
     },
     {
       "fromVerseId": 1002004,
@@ -601,6 +595,12 @@
     },
     {
       "fromVerseId": 1002007,
+      "toStartVerseId": 21003020,
+      "toEndVerseId": 21003021,
+      "votes": 14
+    },
+    {
+      "fromVerseId": 1002007,
       "toStartVerseId": 1003023,
       "toEndVerseId": 1003023,
       "votes": 10
@@ -616,6 +616,12 @@
       "toStartVerseId": 1003022,
       "toEndVerseId": 1003022,
       "votes": 23
+    },
+    {
+      "fromVerseId": 1002009,
+      "toStartVerseId": 20003018,
+      "toEndVerseId": 20003018,
+      "votes": 10
     },
     {
       "fromVerseId": 1002009,
@@ -805,6 +811,12 @@
     },
     {
       "fromVerseId": 1003005,
+      "toStartVerseId": 2020007,
+      "toEndVerseId": 2020007,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 1003005,
       "toStartVerseId": 40006023,
       "toEndVerseId": 40006023,
       "votes": 6
@@ -936,6 +948,24 @@
       "votes": 2
     },
     {
+      "fromVerseId": 1003015,
+      "toStartVerseId": 23053003,
+      "toEndVerseId": 23053004,
+      "votes": 24
+    },
+    {
+      "fromVerseId": 1003015,
+      "toStartVerseId": 23053012,
+      "toEndVerseId": 23053012,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 1003016,
+      "toStartVerseId": 23053011,
+      "toEndVerseId": 23053011,
+      "votes": 1
+    },
+    {
       "fromVerseId": 1003017,
       "toStartVerseId": 45008020,
       "toEndVerseId": 45008022,
@@ -972,6 +1002,12 @@
       "votes": 13
     },
     {
+      "fromVerseId": 1003019,
+      "toStartVerseId": 21003020,
+      "toEndVerseId": 21003020,
+      "votes": 7
+    },
+    {
       "fromVerseId": 1003020,
       "toStartVerseId": 1002023,
       "toEndVerseId": 1002023,
@@ -994,6 +1030,12 @@
       "toStartVerseId": 1003007,
       "toEndVerseId": 1003007,
       "votes": 7
+    },
+    {
+      "fromVerseId": 1003022,
+      "toStartVerseId": 20003018,
+      "toEndVerseId": 20003018,
+      "votes": 10
     },
     {
       "fromVerseId": 1003022,
@@ -1147,6 +1189,12 @@
     },
     {
       "fromVerseId": 1005022,
+      "toStartVerseId": 33006008,
+      "toEndVerseId": 33006008,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 1005022,
       "toStartVerseId": 62001007,
       "toEndVerseId": 62001007,
       "votes": 6
@@ -1200,10 +1248,616 @@
       "votes": 3
     },
     {
+      "fromVerseId": 2020002,
+      "toStartVerseId": 3019036,
+      "toEndVerseId": 3019036,
+      "votes": 16
+    },
+    {
+      "fromVerseId": 2020002,
+      "toStartVerseId": 5006004,
+      "toEndVerseId": 5006005,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 2020003,
+      "toStartVerseId": 5006005,
+      "toEndVerseId": 5006005,
+      "votes": 23
+    },
+    {
+      "fromVerseId": 2020003,
+      "toStartVerseId": 5006014,
+      "toEndVerseId": 5006014,
+      "votes": 23
+    },
+    {
+      "fromVerseId": 2020003,
+      "toStartVerseId": 2020023,
+      "toEndVerseId": 2020023,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 2020004,
+      "toStartVerseId": 3019004,
+      "toEndVerseId": 3019004,
+      "votes": 20
+    },
+    {
+      "fromVerseId": 2020005,
+      "toStartVerseId": 5006015,
+      "toEndVerseId": 5006015,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 2020005,
+      "toStartVerseId": 45008007,
+      "toEndVerseId": 45008007,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 2020007,
+      "toStartVerseId": 3019012,
+      "toEndVerseId": 3019012,
+      "votes": 26
+    },
+    {
+      "fromVerseId": 2020007,
+      "toStartVerseId": 40005033,
+      "toEndVerseId": 40005037,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 2020008,
+      "toStartVerseId": 3019003,
+      "toEndVerseId": 3019003,
+      "votes": 18
+    },
+    {
+      "fromVerseId": 2020008,
+      "toStartVerseId": 1002003,
+      "toEndVerseId": 1002003,
+      "votes": 16
+    },
+    {
+      "fromVerseId": 2020008,
+      "toStartVerseId": 3019030,
+      "toEndVerseId": 3019030,
+      "votes": 14
+    },
+    {
+      "fromVerseId": 2020010,
+      "toStartVerseId": 1002002,
+      "toEndVerseId": 1002003,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 2020011,
+      "toStartVerseId": 1001001,
+      "toEndVerseId": 1001002,
+      "votes": 34
+    },
+    {
+      "fromVerseId": 2020011,
+      "toStartVerseId": 1002002,
+      "toEndVerseId": 1002003,
+      "votes": 13
+    },
+    {
+      "fromVerseId": 2020011,
+      "toStartVerseId": 1001028,
+      "toEndVerseId": 1001028,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 2020012,
+      "toStartVerseId": 3019003,
+      "toEndVerseId": 3019003,
+      "votes": 24
+    },
+    {
+      "fromVerseId": 2020012,
+      "toStartVerseId": 3019032,
+      "toEndVerseId": 3019032,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 2020012,
+      "toStartVerseId": 20003016,
+      "toEndVerseId": 20003016,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 2020013,
+      "toStartVerseId": 40005021,
+      "toEndVerseId": 40005022,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 2020013,
+      "toStartVerseId": 59002011,
+      "toEndVerseId": 59002011,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 2020013,
+      "toStartVerseId": 59002013,
+      "toEndVerseId": 59002013,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 2020014,
+      "toStartVerseId": 40005027,
+      "toEndVerseId": 40005028,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 2020014,
+      "toStartVerseId": 39003005,
+      "toEndVerseId": 39003005,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 2020014,
+      "toStartVerseId": 24029022,
+      "toEndVerseId": 24029023,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 2020015,
+      "toStartVerseId": 3019011,
+      "toEndVerseId": 3019011,
+      "votes": 18
+    },
+    {
+      "fromVerseId": 2020015,
+      "toStartVerseId": 3019013,
+      "toEndVerseId": 3019013,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 2020015,
+      "toStartVerseId": 3019035,
+      "toEndVerseId": 3019037,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 2020015,
+      "toStartVerseId": 33006010,
+      "toEndVerseId": 33006011,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 2020016,
+      "toStartVerseId": 3019011,
+      "toEndVerseId": 3019011,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 2020016,
+      "toStartVerseId": 3019016,
+      "toEndVerseId": 3019016,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 2020017,
+      "toStartVerseId": 40005028,
+      "toEndVerseId": 40005028,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 2020017,
+      "toStartVerseId": 26033031,
+      "toEndVerseId": 26033031,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 2020017,
+      "toStartVerseId": 1003006,
+      "toEndVerseId": 1003006,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 2020020,
+      "toStartVerseId": 20003007,
+      "toEndVerseId": 20003007,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 2020020,
+      "toStartVerseId": 5006002,
+      "toEndVerseId": 5006002,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 2020023,
+      "toStartVerseId": 2020003,
+      "toEndVerseId": 2020005,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 2020024,
+      "toStartVerseId": 14007016,
+      "toEndVerseId": 14007016,
+      "votes": 20
+    },
+    {
+      "fromVerseId": 2020024,
+      "toStartVerseId": 4006024,
+      "toEndVerseId": 4006027,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 3019002,
+      "toStartVerseId": 40005048,
+      "toEndVerseId": 40005048,
+      "votes": 16
+    },
+    {
+      "fromVerseId": 3019003,
+      "toStartVerseId": 2020012,
+      "toEndVerseId": 2020012,
+      "votes": 14
+    },
+    {
+      "fromVerseId": 3019003,
+      "toStartVerseId": 2020008,
+      "toEndVerseId": 2020008,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 3019004,
+      "toStartVerseId": 2020023,
+      "toEndVerseId": 2020023,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 3019004,
+      "toStartVerseId": 2020003,
+      "toEndVerseId": 2020005,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 3019005,
+      "toStartVerseId": 49002013,
+      "toEndVerseId": 49002014,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 3019011,
+      "toStartVerseId": 2020015,
+      "toEndVerseId": 2020015,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 3019011,
+      "toStartVerseId": 2020017,
+      "toEndVerseId": 2020017,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 3019012,
+      "toStartVerseId": 2020007,
+      "toEndVerseId": 2020007,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 3019012,
+      "toStartVerseId": 40005033,
+      "toEndVerseId": 40005034,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 3019012,
+      "toStartVerseId": 39003005,
+      "toEndVerseId": 39003005,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 3019013,
+      "toStartVerseId": 39003005,
+      "toEndVerseId": 39003005,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 3019014,
+      "toStartVerseId": 3019032,
+      "toEndVerseId": 3019032,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 3019015,
+      "toStartVerseId": 3019035,
+      "toEndVerseId": 3019035,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 3019015,
+      "toStartVerseId": 59002006,
+      "toEndVerseId": 59002009,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 3019016,
+      "toStartVerseId": 2020016,
+      "toEndVerseId": 2020016,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 3019017,
+      "toStartVerseId": 62002009,
+      "toEndVerseId": 62002009,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 3019017,
+      "toStartVerseId": 62002011,
+      "toEndVerseId": 62002011,
+      "votes": 11
+    },
+    {
+      "fromVerseId": 3019018,
+      "toStartVerseId": 59002008,
+      "toEndVerseId": 59002008,
+      "votes": 22
+    },
+    {
+      "fromVerseId": 3019018,
+      "toStartVerseId": 40005043,
+      "toEndVerseId": 40005044,
+      "votes": 15
+    },
+    {
+      "fromVerseId": 3019018,
+      "toStartVerseId": 58010030,
+      "toEndVerseId": 58010030,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 3019024,
+      "toStartVerseId": 20003009,
+      "toEndVerseId": 20003009,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 3019025,
+      "toStartVerseId": 20003009,
+      "toEndVerseId": 20003010,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 3019025,
+      "toStartVerseId": 39003008,
+      "toEndVerseId": 39003010,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 3019026,
+      "toStartVerseId": 39003005,
+      "toEndVerseId": 39003005,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 3019030,
+      "toStartVerseId": 3019003,
+      "toEndVerseId": 3019003,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 3019030,
+      "toStartVerseId": 2020008,
+      "toEndVerseId": 2020008,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 3019031,
+      "toStartVerseId": 3019026,
+      "toEndVerseId": 3019026,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 3019032,
+      "toStartVerseId": 3019014,
+      "toEndVerseId": 3019014,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 3019033,
+      "toStartVerseId": 39003005,
+      "toEndVerseId": 39003005,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 3019034,
+      "toStartVerseId": 3019018,
+      "toEndVerseId": 3019018,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 3019034,
+      "toStartVerseId": 40005043,
+      "toEndVerseId": 40005043,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 3019035,
+      "toStartVerseId": 3019015,
+      "toEndVerseId": 3019015,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 3019035,
+      "toStartVerseId": 33006001,
+      "toEndVerseId": 33006001,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 3019035,
+      "toStartVerseId": 40007002,
+      "toEndVerseId": 40007002,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 3019036,
+      "toStartVerseId": 2020002,
+      "toEndVerseId": 2020002,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 3019037,
+      "toStartVerseId": 5006001,
+      "toEndVerseId": 5006002,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006002,
+      "toStartVerseId": 4006005,
+      "toEndVerseId": 4006006,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006002,
+      "toStartVerseId": 48001015,
+      "toEndVerseId": 48001015,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006004,
+      "toStartVerseId": 4006005,
+      "toEndVerseId": 4006005,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 4006004,
+      "toStartVerseId": 4006008,
+      "toEndVerseId": 4006009,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006004,
+      "toStartVerseId": 4006012,
+      "toEndVerseId": 4006013,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006004,
+      "toStartVerseId": 4006018,
+      "toEndVerseId": 4006019,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006004,
+      "toStartVerseId": 4006021,
+      "toEndVerseId": 4006021,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006006,
+      "toStartVerseId": 3019028,
+      "toEndVerseId": 3019028,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 4006009,
+      "toStartVerseId": 4006018,
+      "toEndVerseId": 4006018,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 4006012,
+      "toStartVerseId": 59002010,
+      "toEndVerseId": 59002010,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006018,
+      "toStartVerseId": 4006009,
+      "toEndVerseId": 4006009,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 4006018,
+      "toStartVerseId": 4006005,
+      "toEndVerseId": 4006005,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006020,
+      "toStartVerseId": 23053010,
+      "toEndVerseId": 23053012,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 4006023,
+      "toStartVerseId": 58011020,
+      "toEndVerseId": 58011021,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 4006024,
+      "toStartVerseId": 19121004,
+      "toEndVerseId": 19121007,
+      "votes": 46
+    },
+    {
+      "fromVerseId": 4006024,
+      "toStartVerseId": 19091011,
+      "toEndVerseId": 19091011,
+      "votes": 27
+    },
+    {
+      "fromVerseId": 4006025,
+      "toStartVerseId": 43001017,
+      "toEndVerseId": 43001017,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 4006026,
+      "toStartVerseId": 49002014,
+      "toEndVerseId": 49002017,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 4006027,
+      "toStartVerseId": 14007014,
+      "toEndVerseId": 14007014,
+      "votes": 15
+    },
+    {
+      "fromVerseId": 5006002,
+      "toStartVerseId": 2020020,
+      "toEndVerseId": 2020020,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 5006002,
+      "toStartVerseId": 20003001,
+      "toEndVerseId": 20003002,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 5006002,
+      "toStartVerseId": 20003016,
+      "toEndVerseId": 20003016,
+      "votes": 6
+    },
+    {
       "fromVerseId": 5006002,
       "toStartVerseId": 5006007,
       "toEndVerseId": 5006007,
       "votes": 3
+    },
+    {
+      "fromVerseId": 5006006,
+      "toStartVerseId": 20003005,
+      "toEndVerseId": 20003005,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 5006006,
+      "toStartVerseId": 20003001,
+      "toEndVerseId": 20003003,
+      "votes": 6
     },
     {
       "fromVerseId": 5006007,
@@ -1218,10 +1872,34 @@
       "votes": 8
     },
     {
+      "fromVerseId": 5006007,
+      "toStartVerseId": 39003016,
+      "toEndVerseId": 39003016,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 5006008,
+      "toStartVerseId": 20003003,
+      "toEndVerseId": 20003003,
+      "votes": 14
+    },
+    {
+      "fromVerseId": 5006013,
+      "toStartVerseId": 3019012,
+      "toEndVerseId": 3019012,
+      "votes": 7
+    },
+    {
       "fromVerseId": 5006013,
       "toStartVerseId": 5006002,
       "toEndVerseId": 5006002,
       "votes": 4
+    },
+    {
+      "fromVerseId": 5006015,
+      "toStartVerseId": 2020005,
+      "toEndVerseId": 2020005,
+      "votes": 7
     },
     {
       "fromVerseId": 5006017,
@@ -1260,6 +1938,12 @@
       "votes": 5
     },
     {
+      "fromVerseId": 5006021,
+      "toStartVerseId": 2020002,
+      "toEndVerseId": 2020002,
+      "votes": 3
+    },
+    {
       "fromVerseId": 5006022,
       "toStartVerseId": 19091008,
       "toEndVerseId": 19091008,
@@ -1291,6 +1975,12 @@
     },
     {
       "fromVerseId": 6001001,
+      "toStartVerseId": 11019016,
+      "toEndVerseId": 11019016,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 6001001,
       "toStartVerseId": 59001001,
       "toEndVerseId": 59001001,
       "votes": 2
@@ -1318,12 +2008,6 @@
       "toStartVerseId": 6001009,
       "toEndVerseId": 6001009,
       "votes": 44
-    },
-    {
-      "fromVerseId": 6001005,
-      "toStartVerseId": 23043002,
-      "toEndVerseId": 23043005,
-      "votes": 29
     },
     {
       "fromVerseId": 6001005,
@@ -1366,6 +2050,12 @@
       "toStartVerseId": 6001001,
       "toEndVerseId": 6001001,
       "votes": 3
+    },
+    {
+      "fromVerseId": 6001008,
+      "toStartVerseId": 20003001,
+      "toEndVerseId": 20003001,
+      "votes": 154
     },
     {
       "fromVerseId": 6001008,
@@ -1422,18 +2112,6 @@
       "votes": 126
     },
     {
-      "fromVerseId": 6001009,
-      "toStartVerseId": 23043001,
-      "toEndVerseId": 23043001,
-      "votes": 105
-    },
-    {
-      "fromVerseId": 6001009,
-      "toStartVerseId": 23043005,
-      "toEndVerseId": 23043005,
-      "votes": 102
-    },
-    {
       "fromVerseId": 6001017,
       "toStartVerseId": 6001005,
       "toEndVerseId": 6001005,
@@ -1464,6 +2142,354 @@
       "votes": 2
     },
     {
+      "fromVerseId": 8001006,
+      "toStartVerseId": 24029010,
+      "toEndVerseId": 24029010,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 8001006,
+      "toStartVerseId": 40006011,
+      "toEndVerseId": 40006011,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 8001007,
+      "toStartVerseId": 8001010,
+      "toEndVerseId": 8001010,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 8001007,
+      "toStartVerseId": 8001014,
+      "toEndVerseId": 8001014,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 8001008,
+      "toStartVerseId": 8001005,
+      "toEndVerseId": 8001005,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 8001014,
+      "toStartVerseId": 58010039,
+      "toEndVerseId": 58010039,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 8001014,
+      "toStartVerseId": 11019020,
+      "toEndVerseId": 11019020,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 8001015,
+      "toStartVerseId": 58010038,
+      "toEndVerseId": 58010038,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 8001015,
+      "toStartVerseId": 62002019,
+      "toEndVerseId": 62002019,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 8001016,
+      "toStartVerseId": 43013037,
+      "toEndVerseId": 43013037,
+      "votes": 14
+    },
+    {
+      "fromVerseId": 8001017,
+      "toStartVerseId": 11019002,
+      "toEndVerseId": 11019002,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 11019002,
+      "toStartVerseId": 8001017,
+      "toEndVerseId": 8001017,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 11019004,
+      "toStartVerseId": 11019003,
+      "toEndVerseId": 11019003,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 11019004,
+      "toStartVerseId": 40006026,
+      "toEndVerseId": 40006026,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 11019006,
+      "toStartVerseId": 40006032,
+      "toEndVerseId": 40006032,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 11019009,
+      "toStartVerseId": 1003009,
+      "toEndVerseId": 1003009,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 11019009,
+      "toStartVerseId": 11019013,
+      "toEndVerseId": 11019013,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 11019009,
+      "toStartVerseId": 58011038,
+      "toEndVerseId": 58011038,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 11019010,
+      "toStartVerseId": 2020005,
+      "toEndVerseId": 2020005,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 11019010,
+      "toStartVerseId": 11019002,
+      "toEndVerseId": 11019002,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 11019010,
+      "toStartVerseId": 11019014,
+      "toEndVerseId": 11019014,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 11019010,
+      "toStartVerseId": 33006016,
+      "toEndVerseId": 33006016,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 11019011,
+      "toStartVerseId": 2020018,
+      "toEndVerseId": 2020018,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 11019013,
+      "toStartVerseId": 11019009,
+      "toEndVerseId": 11019009,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 11019014,
+      "toStartVerseId": 11019009,
+      "toEndVerseId": 11019010,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 11019016,
+      "toStartVerseId": 11019019,
+      "toEndVerseId": 11019021,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 11019018,
+      "toStartVerseId": 2020005,
+      "toEndVerseId": 2020005,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 11019019,
+      "toStartVerseId": 11019013,
+      "toEndVerseId": 11019013,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 14007001,
+      "toStartVerseId": 39003001,
+      "toEndVerseId": 39003002,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 14007005,
+      "toStartVerseId": 33006007,
+      "toEndVerseId": 33006007,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 14007006,
+      "toStartVerseId": 14007003,
+      "toEndVerseId": 14007003,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 14007008,
+      "toStartVerseId": 16008013,
+      "toEndVerseId": 16008018,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 14007009,
+      "toStartVerseId": 16008018,
+      "toEndVerseId": 16008018,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 14007010,
+      "toStartVerseId": 16008010,
+      "toEndVerseId": 16008010,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 14007012,
+      "toStartVerseId": 14007016,
+      "toEndVerseId": 14007016,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 14007014,
+      "toStartVerseId": 26033011,
+      "toEndVerseId": 26033011,
+      "votes": 111
+    },
+    {
+      "fromVerseId": 14007016,
+      "toStartVerseId": 14007015,
+      "toEndVerseId": 14007015,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 14007016,
+      "toStartVerseId": 14007012,
+      "toEndVerseId": 14007012,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 16008001,
+      "toStartVerseId": 16008004,
+      "toEndVerseId": 16008009,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008001,
+      "toStartVerseId": 16008016,
+      "toEndVerseId": 16008016,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008003,
+      "toStartVerseId": 40007028,
+      "toEndVerseId": 40007029,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008006,
+      "toStartVerseId": 40006013,
+      "toEndVerseId": 40006013,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008007,
+      "toStartVerseId": 16008004,
+      "toEndVerseId": 16008004,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008008,
+      "toStartVerseId": 40005021,
+      "toEndVerseId": 40005022,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 16008008,
+      "toStartVerseId": 40005027,
+      "toEndVerseId": 40005028,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 16008009,
+      "toStartVerseId": 16008002,
+      "toEndVerseId": 16008002,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 16008009,
+      "toStartVerseId": 21003004,
+      "toEndVerseId": 21003004,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 16008009,
+      "toStartVerseId": 16008007,
+      "toEndVerseId": 16008008,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008010,
+      "toStartVerseId": 21003013,
+      "toEndVerseId": 21003013,
+      "votes": 17
+    },
+    {
+      "fromVerseId": 16008012,
+      "toStartVerseId": 16008007,
+      "toEndVerseId": 16008008,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 16008013,
+      "toStartVerseId": 16008007,
+      "toEndVerseId": 16008008,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008016,
+      "toStartVerseId": 16008003,
+      "toEndVerseId": 16008003,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 16008016,
+      "toStartVerseId": 16008001,
+      "toEndVerseId": 16008001,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 16008017,
+      "toStartVerseId": 14007008,
+      "toEndVerseId": 14007010,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 16008017,
+      "toStartVerseId": 43001014,
+      "toEndVerseId": 43001014,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008017,
+      "toStartVerseId": 58011009,
+      "toEndVerseId": 58011009,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008017,
+      "toStartVerseId": 58011013,
+      "toEndVerseId": 58011013,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 16008017,
+      "toStartVerseId": 6001001,
+      "toEndVerseId": 6001001,
+      "votes": 1
+    },
+    {
       "fromVerseId": 19001001,
       "toStartVerseId": 40007013,
       "toEndVerseId": 40007014,
@@ -1474,6 +2500,12 @@
       "toStartVerseId": 19001006,
       "toEndVerseId": 19001006,
       "votes": 90
+    },
+    {
+      "fromVerseId": 19001001,
+      "toStartVerseId": 20003034,
+      "toEndVerseId": 20003034,
+      "votes": 46
     },
     {
       "fromVerseId": 19001001,
@@ -1500,16 +2532,16 @@
       "votes": 48
     },
     {
+      "fromVerseId": 19001005,
+      "toStartVerseId": 39003018,
+      "toEndVerseId": 39003018,
+      "votes": 21
+    },
+    {
       "fromVerseId": 19001006,
       "toStartVerseId": 40007013,
       "toEndVerseId": 40007013,
       "votes": 17
-    },
-    {
-      "fromVerseId": 19023001,
-      "toStartVerseId": 23040011,
-      "toEndVerseId": 23040011,
-      "votes": 279
     },
     {
       "fromVerseId": 19023001,
@@ -1528,12 +2560,6 @@
       "toStartVerseId": 19046004,
       "toEndVerseId": 19046004,
       "votes": 37
-    },
-    {
-      "fromVerseId": 19023004,
-      "toStartVerseId": 23043001,
-      "toEndVerseId": 23043002,
-      "votes": 100
     },
     {
       "fromVerseId": 19023004,
@@ -1596,6 +2622,12 @@
       "votes": 4
     },
     {
+      "fromVerseId": 19046003,
+      "toStartVerseId": 11019011,
+      "toEndVerseId": 11019011,
+      "votes": 3
+    },
+    {
       "fromVerseId": 19046004,
       "toStartVerseId": 19023002,
       "toEndVerseId": 19023002,
@@ -1605,6 +2637,12 @@
       "fromVerseId": 19046004,
       "toStartVerseId": 19091001,
       "toEndVerseId": 19091001,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 19046004,
+      "toStartVerseId": 33006006,
+      "toEndVerseId": 33006006,
       "votes": 2
     },
     {
@@ -1662,16 +2700,10 @@
       "votes": 10
     },
     {
-      "fromVerseId": 19091004,
-      "toStartVerseId": 23043001,
-      "toEndVerseId": 23043002,
-      "votes": 27
-    },
-    {
       "fromVerseId": 19091005,
-      "toStartVerseId": 23043002,
-      "toEndVerseId": 23043002,
-      "votes": 27
+      "toStartVerseId": 20003023,
+      "toEndVerseId": 20003025,
+      "votes": 21
     },
     {
       "fromVerseId": 19091005,
@@ -1684,6 +2716,12 @@
       "toStartVerseId": 19121005,
       "toEndVerseId": 19121006,
       "votes": 14
+    },
+    {
+      "fromVerseId": 19091008,
+      "toStartVerseId": 20003025,
+      "toEndVerseId": 20003026,
+      "votes": 18
     },
     {
       "fromVerseId": 19091009,
@@ -1702,6 +2740,18 @@
       "toStartVerseId": 45008025,
       "toEndVerseId": 45008025,
       "votes": 29
+    },
+    {
+      "fromVerseId": 19091011,
+      "toStartVerseId": 20003006,
+      "toEndVerseId": 20003006,
+      "votes": 34
+    },
+    {
+      "fromVerseId": 19091012,
+      "toStartVerseId": 20003023,
+      "toEndVerseId": 20003023,
+      "votes": 11
     },
     {
       "fromVerseId": 19091014,
@@ -1735,9 +2785,21 @@
     },
     {
       "fromVerseId": 19091015,
-      "toStartVerseId": 23043001,
-      "toEndVerseId": 23043002,
-      "votes": 12
+      "toStartVerseId": 24029012,
+      "toEndVerseId": 24029013,
+      "votes": 13
+    },
+    {
+      "fromVerseId": 19091016,
+      "toStartVerseId": 20003002,
+      "toEndVerseId": 20003002,
+      "votes": 33
+    },
+    {
+      "fromVerseId": 19091016,
+      "toStartVerseId": 20003016,
+      "toEndVerseId": 20003016,
+      "votes": 31
     },
     {
       "fromVerseId": 19091016,
@@ -1747,15 +2809,21 @@
     },
     {
       "fromVerseId": 19121002,
-      "toStartVerseId": 23040028,
-      "toEndVerseId": 23040029,
-      "votes": 49
-    },
-    {
-      "fromVerseId": 19121002,
       "toStartVerseId": 19046001,
       "toEndVerseId": 19046001,
       "votes": 36
+    },
+    {
+      "fromVerseId": 19121003,
+      "toStartVerseId": 20003026,
+      "toEndVerseId": 20003026,
+      "votes": 42
+    },
+    {
+      "fromVerseId": 19121003,
+      "toStartVerseId": 20003023,
+      "toEndVerseId": 20003023,
+      "votes": 33
     },
     {
       "fromVerseId": 19121003,
@@ -1800,382 +2868,718 @@
       "votes": 9
     },
     {
-      "fromVerseId": 23040002,
-      "toStartVerseId": 23043025,
-      "toEndVerseId": 23043025,
-      "votes": 7
+      "fromVerseId": 19121008,
+      "toStartVerseId": 20003006,
+      "toEndVerseId": 20003006,
+      "votes": 26
     },
     {
-      "fromVerseId": 23040003,
-      "toStartVerseId": 43001023,
-      "toEndVerseId": 43001023,
-      "votes": 77
-    },
-    {
-      "fromVerseId": 23040003,
-      "toStartVerseId": 23043019,
-      "toEndVerseId": 23043019,
-      "votes": 43
-    },
-    {
-      "fromVerseId": 23040005,
-      "toStartVerseId": 43001014,
-      "toEndVerseId": 43001014,
-      "votes": 6
-    },
-    {
-      "fromVerseId": 23040006,
-      "toStartVerseId": 59001010,
-      "toEndVerseId": 59001011,
-      "votes": 13
-    },
-    {
-      "fromVerseId": 23040006,
-      "toStartVerseId": 23040003,
-      "toEndVerseId": 23040003,
-      "votes": 3
-    },
-    {
-      "fromVerseId": 23040008,
-      "toStartVerseId": 40005018,
-      "toEndVerseId": 40005018,
-      "votes": 39
-    },
-    {
-      "fromVerseId": 23040011,
-      "toStartVerseId": 19023001,
-      "toEndVerseId": 19023006,
-      "votes": 27
-    },
-    {
-      "fromVerseId": 23040013,
-      "toStartVerseId": 43001013,
-      "toEndVerseId": 43001013,
-      "votes": 3
-    },
-    {
-      "fromVerseId": 23040014,
-      "toStartVerseId": 59001017,
-      "toEndVerseId": 59001017,
-      "votes": 1
-    },
-    {
-      "fromVerseId": 23040015,
-      "toStartVerseId": 23040022,
-      "toEndVerseId": 23040022,
-      "votes": 5
-    },
-    {
-      "fromVerseId": 23040016,
-      "toStartVerseId": 58010005,
-      "toEndVerseId": 58010010,
-      "votes": 1
-    },
-    {
-      "fromVerseId": 23040018,
-      "toStartVerseId": 23040025,
-      "toEndVerseId": 23040025,
-      "votes": 17
-    },
-    {
-      "fromVerseId": 23040022,
-      "toStartVerseId": 23040015,
-      "toEndVerseId": 23040015,
-      "votes": 4
-    },
-    {
-      "fromVerseId": 23040022,
-      "toStartVerseId": 23040017,
-      "toEndVerseId": 23040017,
-      "votes": 3
-    },
-    {
-      "fromVerseId": 23040024,
-      "toStartVerseId": 23040007,
-      "toEndVerseId": 23040007,
-      "votes": 2
-    },
-    {
-      "fromVerseId": 23040025,
-      "toStartVerseId": 23040018,
-      "toEndVerseId": 23040018,
-      "votes": 13
-    },
-    {
-      "fromVerseId": 23040026,
-      "toStartVerseId": 1002001,
-      "toEndVerseId": 1002002,
-      "votes": 3
-    },
-    {
-      "fromVerseId": 23040028,
-      "toStartVerseId": 23040021,
-      "toEndVerseId": 23040021,
-      "votes": 24
-    },
-    {
-      "fromVerseId": 23040029,
-      "toStartVerseId": 58011034,
-      "toEndVerseId": 58011034,
-      "votes": 21
-    },
-    {
-      "fromVerseId": 23040031,
-      "toStartVerseId": 45008025,
-      "toEndVerseId": 45008025,
-      "votes": 143
-    },
-    {
-      "fromVerseId": 23043001,
-      "toStartVerseId": 23043007,
-      "toEndVerseId": 23043007,
-      "votes": 59
-    },
-    {
-      "fromVerseId": 23043001,
-      "toStartVerseId": 49002010,
-      "toEndVerseId": 49002010,
+      "fromVerseId": 20003001,
+      "toStartVerseId": 5006006,
+      "toEndVerseId": 5006009,
       "votes": 28
     },
     {
-      "fromVerseId": 23043001,
-      "toStartVerseId": 23043021,
-      "toEndVerseId": 23043021,
-      "votes": 25
-    },
-    {
-      "fromVerseId": 23043001,
-      "toStartVerseId": 23043014,
-      "toEndVerseId": 23043015,
-      "votes": 4
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 6001009,
-      "toEndVerseId": 6001009,
-      "votes": 127
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 19023004,
-      "toEndVerseId": 19023004,
-      "votes": 100
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 19091015,
-      "toEndVerseId": 19091015,
-      "votes": 71
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 19091003,
-      "toEndVerseId": 19091005,
-      "votes": 42
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 6001005,
-      "toEndVerseId": 6001005,
-      "votes": 39
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 40007025,
-      "toEndVerseId": 40007027,
-      "votes": 33
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 58011029,
-      "toEndVerseId": 58011029,
-      "votes": 33
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 19046004,
-      "toEndVerseId": 19046007,
-      "votes": 28
-    },
-    {
-      "fromVerseId": 23043002,
-      "toStartVerseId": 58011033,
-      "toEndVerseId": 58011038,
+      "fromVerseId": 20003002,
+      "toStartVerseId": 19091016,
+      "toEndVerseId": 19091016,
       "votes": 19
     },
     {
-      "fromVerseId": 23043005,
-      "toStartVerseId": 23043002,
-      "toEndVerseId": 23043002,
-      "votes": 11
-    },
-    {
-      "fromVerseId": 23043007,
-      "toStartVerseId": 49002010,
-      "toEndVerseId": 49002010,
-      "votes": 29
-    },
-    {
-      "fromVerseId": 23043007,
-      "toStartVerseId": 23043021,
-      "toEndVerseId": 23043021,
-      "votes": 27
-    },
-    {
-      "fromVerseId": 23043007,
-      "toStartVerseId": 23043001,
-      "toEndVerseId": 23043001,
-      "votes": 11
-    },
-    {
-      "fromVerseId": 23043007,
-      "toStartVerseId": 49002004,
-      "toEndVerseId": 49002007,
-      "votes": 4
-    },
-    {
-      "fromVerseId": 23043007,
-      "toStartVerseId": 59002007,
-      "toEndVerseId": 59002007,
-      "votes": 4
-    },
-    {
-      "fromVerseId": 23043009,
-      "toStartVerseId": 23043026,
-      "toEndVerseId": 23043026,
-      "votes": 3
-    },
-    {
-      "fromVerseId": 23043010,
-      "toStartVerseId": 23043012,
-      "toEndVerseId": 23043012,
-      "votes": 17
-    },
-    {
-      "fromVerseId": 23043010,
-      "toStartVerseId": 23040021,
-      "toEndVerseId": 23040022,
-      "votes": 13
-    },
-    {
-      "fromVerseId": 23043010,
-      "toStartVerseId": 43001007,
-      "toEndVerseId": 43001008,
-      "votes": 8
-    },
-    {
-      "fromVerseId": 23043011,
-      "toStartVerseId": 23043003,
-      "toEndVerseId": 23043003,
-      "votes": 18
-    },
-    {
-      "fromVerseId": 23043011,
-      "toStartVerseId": 5006004,
-      "toEndVerseId": 5006004,
-      "votes": 11
-    },
-    {
-      "fromVerseId": 23043012,
-      "toStartVerseId": 23043010,
-      "toEndVerseId": 23043010,
+      "fromVerseId": 20003002,
+      "toStartVerseId": 20003016,
+      "toEndVerseId": 20003017,
       "votes": 5
     },
     {
-      "fromVerseId": 23043013,
-      "toStartVerseId": 43001001,
-      "toEndVerseId": 43001002,
-      "votes": 4
+      "fromVerseId": 20003003,
+      "toStartVerseId": 58010016,
+      "toEndVerseId": 58010016,
+      "votes": 20
     },
     {
-      "fromVerseId": 23043014,
-      "toStartVerseId": 23043001,
-      "toEndVerseId": 23043001,
-      "votes": 2
+      "fromVerseId": 20003003,
+      "toStartVerseId": 5006008,
+      "toEndVerseId": 5006008,
+      "votes": 7
     },
     {
-      "fromVerseId": 23043014,
-      "toStartVerseId": 23043003,
-      "toEndVerseId": 23043004,
-      "votes": 2
-    },
-    {
-      "fromVerseId": 23043015,
-      "toStartVerseId": 23043001,
-      "toEndVerseId": 23043001,
-      "votes": 4
-    },
-    {
-      "fromVerseId": 23043015,
-      "toStartVerseId": 23040025,
-      "toEndVerseId": 23040025,
-      "votes": 3
-    },
-    {
-      "fromVerseId": 23043015,
-      "toStartVerseId": 23043003,
-      "toEndVerseId": 23043003,
-      "votes": 3
-    },
-    {
-      "fromVerseId": 23043015,
-      "toStartVerseId": 23043007,
-      "toEndVerseId": 23043007,
-      "votes": 3
-    },
-    {
-      "fromVerseId": 23043015,
-      "toStartVerseId": 23043021,
-      "toEndVerseId": 23043021,
-      "votes": 2
-    },
-    {
-      "fromVerseId": 23043016,
-      "toStartVerseId": 23043002,
-      "toEndVerseId": 23043002,
+      "fromVerseId": 20003004,
+      "toStartVerseId": 6001007,
+      "toEndVerseId": 6001008,
       "votes": 10
     },
     {
-      "fromVerseId": 23043017,
-      "toStartVerseId": 19046008,
-      "toEndVerseId": 19046009,
+      "fromVerseId": 20003005,
+      "toStartVerseId": 20003007,
+      "toEndVerseId": 20003007,
+      "votes": 271
+    },
+    {
+      "fromVerseId": 20003006,
+      "toStartVerseId": 59001005,
+      "toEndVerseId": 59001005,
+      "votes": 101
+    },
+    {
+      "fromVerseId": 20003009,
+      "toStartVerseId": 39003008,
+      "toEndVerseId": 39003010,
+      "votes": 23
+    },
+    {
+      "fromVerseId": 20003010,
+      "toStartVerseId": 39003010,
+      "toEndVerseId": 39003011,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 20003015,
+      "toStartVerseId": 45008018,
+      "toEndVerseId": 45008018,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 20003016,
+      "toStartVerseId": 20003002,
+      "toEndVerseId": 20003002,
+      "votes": 14
+    },
+    {
+      "fromVerseId": 20003018,
+      "toStartVerseId": 1002009,
+      "toEndVerseId": 1002009,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 20003018,
+      "toStartVerseId": 1003022,
+      "toEndVerseId": 1003022,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 20003019,
+      "toStartVerseId": 43001003,
+      "toEndVerseId": 43001003,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 20003020,
+      "toStartVerseId": 1001009,
+      "toEndVerseId": 1001009,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 20003021,
+      "toStartVerseId": 6001008,
+      "toEndVerseId": 6001008,
+      "votes": 15
+    },
+    {
+      "fromVerseId": 20003021,
+      "toStartVerseId": 5006006,
+      "toEndVerseId": 5006009,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 20003021,
+      "toStartVerseId": 62002027,
+      "toEndVerseId": 62002027,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 20003021,
+      "toStartVerseId": 20003001,
+      "toEndVerseId": 20003003,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 20003021,
+      "toStartVerseId": 62002024,
+      "toEndVerseId": 62002024,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 20003023,
+      "toStartVerseId": 19091011,
+      "toEndVerseId": 19091012,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 20003023,
+      "toStartVerseId": 19121003,
+      "toEndVerseId": 19121003,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 20003023,
+      "toStartVerseId": 19121008,
+      "toEndVerseId": 19121008,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 20003024,
+      "toStartVerseId": 19121004,
+      "toEndVerseId": 19121007,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 20003025,
+      "toStartVerseId": 19091005,
+      "toEndVerseId": 19091005,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 20003025,
+      "toStartVerseId": 19046001,
+      "toEndVerseId": 19046003,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 20003026,
+      "toStartVerseId": 19091003,
+      "toEndVerseId": 19091003,
+      "votes": 31
+    },
+    {
+      "fromVerseId": 20003026,
+      "toStartVerseId": 19091009,
+      "toEndVerseId": 19091010,
+      "votes": 27
+    },
+    {
+      "fromVerseId": 20003027,
+      "toStartVerseId": 59002015,
+      "toEndVerseId": 59002016,
+      "votes": 38
+    },
+    {
+      "fromVerseId": 20003028,
+      "toStartVerseId": 3019013,
+      "toEndVerseId": 3019013,
+      "votes": 13
+    },
+    {
+      "fromVerseId": 20003030,
+      "toStartVerseId": 40005039,
+      "toEndVerseId": 40005041,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 20003033,
+      "toStartVerseId": 19091010,
+      "toEndVerseId": 19091010,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 20003033,
+      "toStartVerseId": 19001003,
+      "toEndVerseId": 19001003,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 21003001,
+      "toStartVerseId": 21003017,
+      "toEndVerseId": 21003017,
+      "votes": 64
+    },
+    {
+      "fromVerseId": 21003004,
+      "toStartVerseId": 42006021,
+      "toEndVerseId": 42006025,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 21003004,
+      "toStartVerseId": 16008009,
+      "toEndVerseId": 16008012,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 21003006,
+      "toStartVerseId": 58010034,
+      "toEndVerseId": 58010035,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 21003010,
+      "toStartVerseId": 1003019,
+      "toEndVerseId": 1003019,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 21003011,
+      "toStartVerseId": 1001031,
+      "toEndVerseId": 1001031,
+      "votes": 24
+    },
+    {
+      "fromVerseId": 21003012,
+      "toStartVerseId": 21003022,
+      "toEndVerseId": 21003022,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 21003014,
+      "toStartVerseId": 59001017,
+      "toEndVerseId": 59001017,
+      "votes": 19
+    },
+    {
+      "fromVerseId": 21003016,
+      "toStartVerseId": 59002006,
+      "toEndVerseId": 59002006,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 21003017,
+      "toStartVerseId": 21003001,
+      "toEndVerseId": 21003001,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 21003017,
+      "toStartVerseId": 45002005,
+      "toEndVerseId": 45002010,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 21003017,
+      "toStartVerseId": 24029010,
+      "toEndVerseId": 24029011,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 21003018,
+      "toStartVerseId": 1003017,
+      "toEndVerseId": 1003019,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 21003020,
+      "toStartVerseId": 1003019,
+      "toEndVerseId": 1003019,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 21003020,
+      "toStartVerseId": 21003021,
+      "toEndVerseId": 21003021,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 21003022,
+      "toStartVerseId": 21003011,
+      "toEndVerseId": 21003012,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 21003022,
+      "toStartVerseId": 40006034,
+      "toEndVerseId": 40006034,
       "votes": 2
     },
     {
-      "fromVerseId": 23043019,
-      "toStartVerseId": 23040003,
-      "toEndVerseId": 23040004,
+      "fromVerseId": 23053001,
+      "toStartVerseId": 43001012,
+      "toEndVerseId": 43001012,
+      "votes": 20
+    },
+    {
+      "fromVerseId": 23053001,
+      "toStartVerseId": 43001007,
+      "toEndVerseId": 43001007,
+      "votes": 13
+    },
+    {
+      "fromVerseId": 23053002,
+      "toStartVerseId": 43001010,
+      "toEndVerseId": 43001014,
+      "votes": 17
+    },
+    {
+      "fromVerseId": 23053002,
+      "toStartVerseId": 45008003,
+      "toEndVerseId": 45008003,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 23053003,
+      "toStartVerseId": 43001010,
+      "toEndVerseId": 43001011,
+      "votes": 37
+    },
+    {
+      "fromVerseId": 23053003,
+      "toStartVerseId": 23053010,
+      "toEndVerseId": 23053010,
+      "votes": 24
+    },
+    {
+      "fromVerseId": 23053003,
+      "toStartVerseId": 23053004,
+      "toEndVerseId": 23053004,
+      "votes": 18
+    },
+    {
+      "fromVerseId": 23053004,
+      "toStartVerseId": 62002002,
+      "toEndVerseId": 62002002,
+      "votes": 42
+    },
+    {
+      "fromVerseId": 23053004,
+      "toStartVerseId": 23053005,
+      "toEndVerseId": 23053006,
+      "votes": 27
+    },
+    {
+      "fromVerseId": 23053004,
+      "toStartVerseId": 23053011,
+      "toEndVerseId": 23053012,
+      "votes": 22
+    },
+    {
+      "fromVerseId": 23053005,
+      "toStartVerseId": 23053010,
+      "toEndVerseId": 23053012,
+      "votes": 68
+    },
+    {
+      "fromVerseId": 23053005,
+      "toStartVerseId": 58010014,
+      "toEndVerseId": 58010014,
+      "votes": 64
+    },
+    {
+      "fromVerseId": 23053005,
+      "toStartVerseId": 58010010,
+      "toEndVerseId": 58010010,
+      "votes": 48
+    },
+    {
+      "fromVerseId": 23053005,
+      "toStartVerseId": 23053006,
+      "toEndVerseId": 23053008,
       "votes": 41
     },
     {
-      "fromVerseId": 23043020,
-      "toStartVerseId": 23043019,
-      "toEndVerseId": 23043019,
+      "fromVerseId": 23053005,
+      "toStartVerseId": 1003015,
+      "toEndVerseId": 1003015,
+      "votes": 27
+    },
+    {
+      "fromVerseId": 23053006,
+      "toStartVerseId": 23053010,
+      "toEndVerseId": 23053010,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 23053008,
+      "toStartVerseId": 23053012,
+      "toEndVerseId": 23053012,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 23053008,
+      "toStartVerseId": 23053005,
+      "toEndVerseId": 23053005,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 23053010,
+      "toStartVerseId": 45008032,
+      "toEndVerseId": 45008032,
+      "votes": 17
+    },
+    {
+      "fromVerseId": 23053010,
+      "toStartVerseId": 23053003,
+      "toEndVerseId": 23053006,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 23053010,
+      "toStartVerseId": 58010006,
+      "toEndVerseId": 58010012,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 23053010,
+      "toStartVerseId": 23053012,
+      "toEndVerseId": 23053012,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 23053010,
+      "toStartVerseId": 45008008,
+      "toEndVerseId": 45008008,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 23053010,
+      "toStartVerseId": 26033011,
+      "toEndVerseId": 26033011,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 23053011,
+      "toStartVerseId": 23053004,
+      "toEndVerseId": 23053006,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 23053011,
+      "toStartVerseId": 23053012,
+      "toEndVerseId": 23053012,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 23053011,
+      "toStartVerseId": 23053008,
+      "toEndVerseId": 23053008,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 23053011,
+      "toStartVerseId": 62002001,
+      "toEndVerseId": 62002001,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 23053012,
+      "toStartVerseId": 62002012,
+      "toEndVerseId": 62002012,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 23053012,
+      "toStartVerseId": 23053006,
+      "toEndVerseId": 23053006,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 23053012,
+      "toStartVerseId": 45008034,
+      "toEndVerseId": 45008034,
+      "votes": 8
+    },
+    {
+      "fromVerseId": 23053012,
+      "toStartVerseId": 62002001,
+      "toEndVerseId": 62002001,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 23053012,
+      "toStartVerseId": 23053008,
+      "toEndVerseId": 23053008,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 23053012,
+      "toStartVerseId": 23053010,
+      "toEndVerseId": 23053011,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 23053012,
+      "toStartVerseId": 1003015,
+      "toEndVerseId": 1003015,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029001,
+      "toStartVerseId": 24029025,
+      "toEndVerseId": 24029029,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 24029005,
+      "toStartVerseId": 24029028,
+      "toEndVerseId": 24029028,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 24029005,
+      "toStartVerseId": 24029010,
+      "toEndVerseId": 24029010,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 24029006,
+      "toStartVerseId": 1001027,
+      "toEndVerseId": 1001028,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029008,
+      "toStartVerseId": 42006026,
+      "toEndVerseId": 42006026,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029009,
+      "toStartVerseId": 24029031,
+      "toEndVerseId": 24029031,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 24029009,
+      "toStartVerseId": 24029023,
+      "toEndVerseId": 24029023,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 24029012,
+      "toStartVerseId": 40007007,
+      "toEndVerseId": 40007008,
+      "votes": 82
+    },
+    {
+      "fromVerseId": 24029013,
+      "toStartVerseId": 40007007,
+      "toEndVerseId": 40007007,
+      "votes": 100
+    },
+    {
+      "fromVerseId": 24029013,
+      "toStartVerseId": 19091015,
+      "toEndVerseId": 19091015,
+      "votes": 60
+    },
+    {
+      "fromVerseId": 24029014,
+      "toStartVerseId": 19046001,
+      "toEndVerseId": 19046001,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029015,
+      "toStartVerseId": 24029008,
+      "toEndVerseId": 24029009,
       "votes": 2
     },
     {
-      "fromVerseId": 23043025,
-      "toStartVerseId": 58010017,
-      "toEndVerseId": 58010017,
-      "votes": 298
+      "fromVerseId": 24029016,
+      "toStartVerseId": 24029003,
+      "toEndVerseId": 24029003,
+      "votes": 2
     },
     {
-      "fromVerseId": 23043025,
-      "toStartVerseId": 23043011,
-      "toEndVerseId": 23043011,
-      "votes": 112
+      "fromVerseId": 24029017,
+      "toStartVerseId": 24029018,
+      "toEndVerseId": 24029018,
+      "votes": 3
     },
     {
-      "fromVerseId": 23043026,
-      "toStartVerseId": 23043009,
-      "toEndVerseId": 23043009,
-      "votes": 11
+      "fromVerseId": 24029018,
+      "toStartVerseId": 14007019,
+      "toEndVerseId": 14007022,
+      "votes": 2
     },
     {
-      "fromVerseId": 23043026,
-      "toStartVerseId": 45008033,
-      "toEndVerseId": 45008033,
-      "votes": 9
+      "fromVerseId": 24029018,
+      "toStartVerseId": 24029022,
+      "toEndVerseId": 24029022,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 24029021,
+      "toStartVerseId": 24029008,
+      "toEndVerseId": 24029009,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029023,
+      "toStartVerseId": 39003005,
+      "toEndVerseId": 39003005,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 24029023,
+      "toStartVerseId": 24029008,
+      "toEndVerseId": 24029009,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029023,
+      "toStartVerseId": 24029021,
+      "toEndVerseId": 24029021,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029024,
+      "toStartVerseId": 24029031,
+      "toEndVerseId": 24029032,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 24029025,
+      "toStartVerseId": 24029029,
+      "toEndVerseId": 24029029,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029026,
+      "toStartVerseId": 24029027,
+      "toEndVerseId": 24029027,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 24029027,
+      "toStartVerseId": 24029026,
+      "toEndVerseId": 24029026,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 24029028,
+      "toStartVerseId": 24029005,
+      "toEndVerseId": 24029005,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 24029028,
+      "toStartVerseId": 24029001,
+      "toEndVerseId": 24029001,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 24029028,
+      "toStartVerseId": 24029010,
+      "toEndVerseId": 24029010,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 24029029,
+      "toStartVerseId": 24029025,
+      "toEndVerseId": 24029025,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 24029031,
+      "toStartVerseId": 24029009,
+      "toEndVerseId": 24029009,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 24029031,
+      "toStartVerseId": 24029023,
+      "toEndVerseId": 24029024,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 24029032,
+      "toStartVerseId": 2020005,
+      "toEndVerseId": 2020005,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 24029032,
+      "toStartVerseId": 24029010,
+      "toEndVerseId": 24029014,
+      "votes": 2
     },
     {
       "fromVerseId": 26033002,
@@ -2257,6 +3661,12 @@
     },
     {
       "fromVerseId": 26033012,
+      "toStartVerseId": 14007014,
+      "toEndVerseId": 14007014,
+      "votes": 9
+    },
+    {
+      "fromVerseId": 26033012,
       "toStartVerseId": 26033018,
       "toEndVerseId": 26033019,
       "votes": 9
@@ -2292,10 +3702,10 @@
       "votes": 4
     },
     {
-      "fromVerseId": 26033016,
-      "toStartVerseId": 23043025,
-      "toEndVerseId": 23043025,
-      "votes": 6
+      "fromVerseId": 26033014,
+      "toStartVerseId": 33006008,
+      "toEndVerseId": 33006008,
+      "votes": 3
     },
     {
       "fromVerseId": 26033016,
@@ -2340,9 +3750,21 @@
       "votes": 6
     },
     {
+      "fromVerseId": 26033025,
+      "toStartVerseId": 3019026,
+      "toEndVerseId": 3019026,
+      "votes": 2
+    },
+    {
       "fromVerseId": 26033027,
       "toStartVerseId": 26033024,
       "toEndVerseId": 26033024,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 26033029,
+      "toStartVerseId": 33006009,
+      "toEndVerseId": 33006012,
       "votes": 2
     },
     {
@@ -2382,6 +3804,228 @@
       "votes": 2
     },
     {
+      "fromVerseId": 33006003,
+      "toStartVerseId": 33006005,
+      "toEndVerseId": 33006005,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 33006004,
+      "toStartVerseId": 2020002,
+      "toEndVerseId": 2020002,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 33006005,
+      "toStartVerseId": 62001009,
+      "toEndVerseId": 62001009,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 33006005,
+      "toStartVerseId": 49002011,
+      "toEndVerseId": 49002011,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 33006006,
+      "toStartVerseId": 58010004,
+      "toEndVerseId": 58010010,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 33006008,
+      "toStartVerseId": 42006036,
+      "toEndVerseId": 42006036,
+      "votes": 66
+    },
+    {
+      "fromVerseId": 33006008,
+      "toStartVerseId": 40005007,
+      "toEndVerseId": 40005007,
+      "votes": 46
+    },
+    {
+      "fromVerseId": 33006008,
+      "toStartVerseId": 40005003,
+      "toEndVerseId": 40005003,
+      "votes": 34
+    },
+    {
+      "fromVerseId": 33006008,
+      "toStartVerseId": 59002020,
+      "toEndVerseId": 59002020,
+      "votes": 18
+    },
+    {
+      "fromVerseId": 33006008,
+      "toStartVerseId": 1005022,
+      "toEndVerseId": 1005022,
+      "votes": 15
+    },
+    {
+      "fromVerseId": 33006010,
+      "toStartVerseId": 3019035,
+      "toEndVerseId": 3019036,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 33006011,
+      "toStartVerseId": 3019036,
+      "toEndVerseId": 3019036,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 33006016,
+      "toStartVerseId": 19001001,
+      "toEndVerseId": 19001001,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 39003001,
+      "toStartVerseId": 43001006,
+      "toEndVerseId": 43001007,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 39003001,
+      "toStartVerseId": 43001015,
+      "toEndVerseId": 43001023,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 39003001,
+      "toStartVerseId": 43001033,
+      "toEndVerseId": 43001034,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 39003002,
+      "toStartVerseId": 58010028,
+      "toEndVerseId": 58010029,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 39003004,
+      "toStartVerseId": 14007001,
+      "toEndVerseId": 14007003,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 39003004,
+      "toStartVerseId": 14007010,
+      "toEndVerseId": 14007012,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 39003005,
+      "toStartVerseId": 3019013,
+      "toEndVerseId": 3019013,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 39003005,
+      "toStartVerseId": 24029023,
+      "toEndVerseId": 24029023,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 39003005,
+      "toStartVerseId": 58010030,
+      "toEndVerseId": 58010031,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 39003006,
+      "toStartVerseId": 59001017,
+      "toEndVerseId": 59001017,
+      "votes": 87
+    },
+    {
+      "fromVerseId": 39003006,
+      "toStartVerseId": 45008028,
+      "toEndVerseId": 45008032,
+      "votes": 49
+    },
+    {
+      "fromVerseId": 39003007,
+      "toStartVerseId": 39003013,
+      "toEndVerseId": 39003013,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 39003008,
+      "toStartVerseId": 20003009,
+      "toEndVerseId": 20003010,
+      "votes": 30
+    },
+    {
+      "fromVerseId": 39003008,
+      "toStartVerseId": 45002022,
+      "toEndVerseId": 45002022,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 39003010,
+      "toStartVerseId": 40006033,
+      "toEndVerseId": 40006033,
+      "votes": 101
+    },
+    {
+      "fromVerseId": 39003010,
+      "toStartVerseId": 20003009,
+      "toEndVerseId": 20003010,
+      "votes": 93
+    },
+    {
+      "fromVerseId": 39003013,
+      "toStartVerseId": 39003008,
+      "toEndVerseId": 39003008,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 39003016,
+      "toStartVerseId": 58010024,
+      "toEndVerseId": 58010024,
+      "votes": 13
+    },
+    {
+      "fromVerseId": 39003016,
+      "toStartVerseId": 39003005,
+      "toEndVerseId": 39003005,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 39003016,
+      "toStartVerseId": 43001040,
+      "toEndVerseId": 43001047,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 39003016,
+      "toStartVerseId": 5006006,
+      "toEndVerseId": 5006008,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 39003017,
+      "toStartVerseId": 45008032,
+      "toEndVerseId": 45008032,
+      "votes": 12
+    },
+    {
+      "fromVerseId": 39003018,
+      "toStartVerseId": 39003014,
+      "toEndVerseId": 39003015,
+      "votes": 11
+    },
+    {
+      "fromVerseId": 39003018,
+      "toStartVerseId": 45002005,
+      "toEndVerseId": 45002006,
+      "votes": 4
+    },
+    {
       "fromVerseId": 40005001,
       "toStartVerseId": 42006013,
       "toEndVerseId": 42006016,
@@ -2392,6 +4036,12 @@
       "toStartVerseId": 42006020,
       "toEndVerseId": 42006026,
       "votes": 6
+    },
+    {
+      "fromVerseId": 40005003,
+      "toStartVerseId": 14007014,
+      "toEndVerseId": 14007014,
+      "votes": 75
     },
     {
       "fromVerseId": 40005003,
@@ -2410,6 +4060,12 @@
       "toStartVerseId": 40005003,
       "toEndVerseId": 40005012,
       "votes": 42
+    },
+    {
+      "fromVerseId": 40005003,
+      "toStartVerseId": 33006008,
+      "toEndVerseId": 33006008,
+      "votes": 34
     },
     {
       "fromVerseId": 40005003,
@@ -2476,6 +4132,12 @@
       "toStartVerseId": 59002013,
       "toEndVerseId": 59002013,
       "votes": 35
+    },
+    {
+      "fromVerseId": 40005007,
+      "toStartVerseId": 33006008,
+      "toEndVerseId": 33006008,
+      "votes": 25
     },
     {
       "fromVerseId": 40005007,
@@ -2599,6 +4261,12 @@
     },
     {
       "fromVerseId": 40005012,
+      "toStartVerseId": 11019010,
+      "toEndVerseId": 11019014,
+      "votes": 4
+    },
+    {
+      "fromVerseId": 40005012,
       "toStartVerseId": 40006001,
       "toEndVerseId": 40006002,
       "votes": 4
@@ -2689,12 +4357,6 @@
     },
     {
       "fromVerseId": 40005018,
-      "toStartVerseId": 23040008,
-      "toEndVerseId": 23040008,
-      "votes": 25
-    },
-    {
-      "fromVerseId": 40005018,
       "toStartVerseId": 40005026,
       "toEndVerseId": 40005026,
       "votes": 3
@@ -2746,6 +4408,12 @@
       "toStartVerseId": 40007021,
       "toEndVerseId": 40007021,
       "votes": 7
+    },
+    {
+      "fromVerseId": 40005021,
+      "toStartVerseId": 2020013,
+      "toEndVerseId": 2020013,
+      "votes": 19
     },
     {
       "fromVerseId": 40005021,
@@ -2821,6 +4489,12 @@
     },
     {
       "fromVerseId": 40005027,
+      "toStartVerseId": 2020014,
+      "toEndVerseId": 2020014,
+      "votes": 14
+    },
+    {
+      "fromVerseId": 40005027,
       "toStartVerseId": 40005021,
       "toEndVerseId": 40005021,
       "votes": 4
@@ -2836,6 +4510,12 @@
       "toStartVerseId": 59001014,
       "toEndVerseId": 59001015,
       "votes": 27
+    },
+    {
+      "fromVerseId": 40005028,
+      "toStartVerseId": 2020017,
+      "toEndVerseId": 2020017,
+      "votes": 19
     },
     {
       "fromVerseId": 40005028,
@@ -2880,6 +4560,18 @@
       "votes": 8
     },
     {
+      "fromVerseId": 40005033,
+      "toStartVerseId": 3019012,
+      "toEndVerseId": 3019012,
+      "votes": 38
+    },
+    {
+      "fromVerseId": 40005033,
+      "toStartVerseId": 2020007,
+      "toEndVerseId": 2020007,
+      "votes": 5
+    },
+    {
       "fromVerseId": 40005036,
       "toStartVerseId": 40006027,
       "toEndVerseId": 40006027,
@@ -2904,6 +4596,12 @@
       "votes": 16
     },
     {
+      "fromVerseId": 40005039,
+      "toStartVerseId": 3019018,
+      "toEndVerseId": 3019018,
+      "votes": 12
+    },
+    {
       "fromVerseId": 40005040,
       "toStartVerseId": 42006029,
       "toEndVerseId": 42006029,
@@ -2917,9 +4615,21 @@
     },
     {
       "fromVerseId": 40005042,
+      "toStartVerseId": 20003027,
+      "toEndVerseId": 20003028,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 40005042,
       "toStartVerseId": 59002015,
       "toEndVerseId": 59002016,
       "votes": 5
+    },
+    {
+      "fromVerseId": 40005043,
+      "toStartVerseId": 3019018,
+      "toEndVerseId": 3019018,
+      "votes": 30
     },
     {
       "fromVerseId": 40005043,
@@ -2986,6 +4696,12 @@
       "toStartVerseId": 59001004,
       "toEndVerseId": 59001004,
       "votes": 46
+    },
+    {
+      "fromVerseId": 40005048,
+      "toStartVerseId": 3019002,
+      "toEndVerseId": 3019002,
+      "votes": 42
     },
     {
       "fromVerseId": 40005048,
@@ -3124,6 +4840,12 @@
       "toStartVerseId": 40006002,
       "toEndVerseId": 40006002,
       "votes": 29
+    },
+    {
+      "fromVerseId": 40006005,
+      "toStartVerseId": 24029012,
+      "toEndVerseId": 24029012,
+      "votes": 14
     },
     {
       "fromVerseId": 40006005,
@@ -3312,6 +5034,12 @@
       "votes": 8
     },
     {
+      "fromVerseId": 40006016,
+      "toStartVerseId": 39003014,
+      "toEndVerseId": 39003014,
+      "votes": 6
+    },
+    {
       "fromVerseId": 40006018,
       "toStartVerseId": 40006004,
       "toEndVerseId": 40006004,
@@ -3433,6 +5161,12 @@
     },
     {
       "fromVerseId": 40006027,
+      "toStartVerseId": 21003014,
+      "toEndVerseId": 21003014,
+      "votes": 24
+    },
+    {
+      "fromVerseId": 40006027,
       "toStartVerseId": 40005036,
       "toEndVerseId": 40005036,
       "votes": 8
@@ -3456,12 +5190,6 @@
       "votes": 8
     },
     {
-      "fromVerseId": 40006030,
-      "toStartVerseId": 23040006,
-      "toEndVerseId": 23040008,
-      "votes": 2
-    },
-    {
       "fromVerseId": 40006032,
       "toStartVerseId": 40006008,
       "toEndVerseId": 40006008,
@@ -3472,6 +5200,12 @@
       "toStartVerseId": 40005006,
       "toEndVerseId": 40005006,
       "votes": 507
+    },
+    {
+      "fromVerseId": 40006033,
+      "toStartVerseId": 20003009,
+      "toEndVerseId": 20003010,
+      "votes": 231
     },
     {
       "fromVerseId": 40006033,
@@ -3559,6 +5293,12 @@
     },
     {
       "fromVerseId": 40007007,
+      "toStartVerseId": 24029012,
+      "toEndVerseId": 24029013,
+      "votes": 119
+    },
+    {
+      "fromVerseId": 40007007,
       "toStartVerseId": 40007008,
       "toEndVerseId": 40007008,
       "votes": 116
@@ -3613,6 +5353,24 @@
     },
     {
       "fromVerseId": 40007012,
+      "toStartVerseId": 3019018,
+      "toEndVerseId": 3019018,
+      "votes": 45
+    },
+    {
+      "fromVerseId": 40007012,
+      "toStartVerseId": 33006008,
+      "toEndVerseId": 33006008,
+      "votes": 33
+    },
+    {
+      "fromVerseId": 40007012,
+      "toStartVerseId": 39003005,
+      "toEndVerseId": 39003005,
+      "votes": 18
+    },
+    {
+      "fromVerseId": 40007012,
       "toStartVerseId": 59002010,
       "toEndVerseId": 59002013,
       "votes": 13
@@ -3634,6 +5392,18 @@
       "toStartVerseId": 42006026,
       "toEndVerseId": 42006026,
       "votes": 10
+    },
+    {
+      "fromVerseId": 40007015,
+      "toStartVerseId": 24029021,
+      "toEndVerseId": 24029021,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 40007015,
+      "toStartVerseId": 24029032,
+      "toEndVerseId": 24029032,
+      "votes": 6
     },
     {
       "fromVerseId": 40007016,
@@ -3682,6 +5452,12 @@
       "toStartVerseId": 59002020,
       "toEndVerseId": 59002026,
       "votes": 20
+    },
+    {
+      "fromVerseId": 40007022,
+      "toStartVerseId": 39003017,
+      "toEndVerseId": 39003018,
+      "votes": 13
     },
     {
       "fromVerseId": 40007022,
@@ -3772,6 +5548,12 @@
       "toStartVerseId": 62002019,
       "toEndVerseId": 62002019,
       "votes": 4
+    },
+    {
+      "fromVerseId": 40007025,
+      "toStartVerseId": 39003003,
+      "toEndVerseId": 39003003,
+      "votes": 3
     },
     {
       "fromVerseId": 40007026,
@@ -3955,6 +5737,24 @@
     },
     {
       "fromVerseId": 42006023,
+      "toStartVerseId": 11019002,
+      "toEndVerseId": 11019002,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 42006023,
+      "toStartVerseId": 11019010,
+      "toEndVerseId": 11019010,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 42006023,
+      "toStartVerseId": 11019014,
+      "toEndVerseId": 11019014,
+      "votes": 1
+    },
+    {
+      "fromVerseId": 42006023,
       "toStartVerseId": 40006001,
       "toEndVerseId": 40006002,
       "votes": 1
@@ -4080,6 +5880,12 @@
       "votes": 2
     },
     {
+      "fromVerseId": 42006030,
+      "toStartVerseId": 20003027,
+      "toEndVerseId": 20003028,
+      "votes": 1
+    },
+    {
       "fromVerseId": 42006031,
       "toStartVerseId": 40007012,
       "toEndVerseId": 40007012,
@@ -4156,6 +5962,12 @@
       "toStartVerseId": 40006014,
       "toEndVerseId": 40006015,
       "votes": 11
+    },
+    {
+      "fromVerseId": 42006038,
+      "toStartVerseId": 20003009,
+      "toEndVerseId": 20003010,
+      "votes": 61
     },
     {
       "fromVerseId": 42006038,
@@ -4380,12 +6192,6 @@
       "votes": 47
     },
     {
-      "fromVerseId": 43001001,
-      "toStartVerseId": 23040009,
-      "toEndVerseId": 23040011,
-      "votes": 36
-    },
-    {
       "fromVerseId": 43001003,
       "toStartVerseId": 1001026,
       "toEndVerseId": 1001026,
@@ -4429,9 +6235,9 @@
     },
     {
       "fromVerseId": 43001006,
-      "toStartVerseId": 23040003,
-      "toEndVerseId": 23040005,
-      "votes": 14
+      "toStartVerseId": 39003001,
+      "toEndVerseId": 39003001,
+      "votes": 18
     },
     {
       "fromVerseId": 43001006,
@@ -4536,6 +6342,12 @@
       "votes": 9
     },
     {
+      "fromVerseId": 43001011,
+      "toStartVerseId": 23053002,
+      "toEndVerseId": 23053003,
+      "votes": 36
+    },
+    {
       "fromVerseId": 43001012,
       "toStartVerseId": 45008014,
       "toEndVerseId": 45008014,
@@ -4567,12 +6379,6 @@
     },
     {
       "fromVerseId": 43001014,
-      "toStartVerseId": 23040005,
-      "toEndVerseId": 23040005,
-      "votes": 72
-    },
-    {
-      "fromVerseId": 43001014,
       "toStartVerseId": 62001001,
       "toEndVerseId": 62001002,
       "votes": 53
@@ -4582,6 +6388,12 @@
       "toStartVerseId": 45008003,
       "toEndVerseId": 45008003,
       "votes": 35
+    },
+    {
+      "fromVerseId": 43001014,
+      "toStartVerseId": 23053002,
+      "toEndVerseId": 23053002,
+      "votes": 21
     },
     {
       "fromVerseId": 43001014,
@@ -4651,6 +6463,12 @@
     },
     {
       "fromVerseId": 43001017,
+      "toStartVerseId": 2020001,
+      "toEndVerseId": 2020017,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 43001017,
       "toStartVerseId": 58011039,
       "toEndVerseId": 58011040,
       "votes": 5
@@ -4660,12 +6478,6 @@
       "toStartVerseId": 43001014,
       "toEndVerseId": 43001014,
       "votes": 18
-    },
-    {
-      "fromVerseId": 43001018,
-      "toStartVerseId": 23040011,
-      "toEndVerseId": 23040011,
-      "votes": 8
     },
     {
       "fromVerseId": 43001018,
@@ -4680,12 +6492,6 @@
       "votes": 7
     },
     {
-      "fromVerseId": 43001023,
-      "toStartVerseId": 23040003,
-      "toEndVerseId": 23040005,
-      "votes": 54
-    },
-    {
       "fromVerseId": 43001025,
       "toStartVerseId": 43001020,
       "toEndVerseId": 43001022,
@@ -4696,6 +6502,12 @@
       "toStartVerseId": 43001010,
       "toEndVerseId": 43001011,
       "votes": 8
+    },
+    {
+      "fromVerseId": 43001026,
+      "toStartVerseId": 39003001,
+      "toEndVerseId": 39003002,
+      "votes": 2
     },
     {
       "fromVerseId": 43001027,
@@ -4711,9 +6523,21 @@
     },
     {
       "fromVerseId": 43001029,
+      "toStartVerseId": 23053007,
+      "toEndVerseId": 23053007,
+      "votes": 51
+    },
+    {
+      "fromVerseId": 43001029,
       "toStartVerseId": 62002002,
       "toEndVerseId": 62002002,
       "votes": 47
+    },
+    {
+      "fromVerseId": 43001029,
+      "toStartVerseId": 23053011,
+      "toEndVerseId": 23053011,
+      "votes": 26
     },
     {
       "fromVerseId": 43001029,
@@ -4741,6 +6565,12 @@
     },
     {
       "fromVerseId": 43001031,
+      "toStartVerseId": 39003001,
+      "toEndVerseId": 39003001,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 43001031,
       "toStartVerseId": 43001007,
       "toEndVerseId": 43001007,
       "votes": 5
@@ -4750,12 +6580,6 @@
       "toStartVerseId": 43001033,
       "toEndVerseId": 43001033,
       "votes": 5
-    },
-    {
-      "fromVerseId": 43001031,
-      "toStartVerseId": 23040003,
-      "toEndVerseId": 23040005,
-      "votes": 4
     },
     {
       "fromVerseId": 43001032,
@@ -4788,6 +6612,12 @@
       "votes": 3
     },
     {
+      "fromVerseId": 43001035,
+      "toStartVerseId": 39003016,
+      "toEndVerseId": 39003016,
+      "votes": 4
+    },
+    {
       "fromVerseId": 43001036,
       "toStartVerseId": 43001029,
       "toEndVerseId": 43001029,
@@ -4804,6 +6634,18 @@
       "toStartVerseId": 43001049,
       "toEndVerseId": 43001049,
       "votes": 7
+    },
+    {
+      "fromVerseId": 43001038,
+      "toStartVerseId": 8001016,
+      "toEndVerseId": 8001016,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 43001038,
+      "toStartVerseId": 20003018,
+      "toEndVerseId": 20003018,
+      "votes": 2
     },
     {
       "fromVerseId": 43001039,
@@ -4864,6 +6706,12 @@
       "toStartVerseId": 42006014,
       "toEndVerseId": 42006014,
       "votes": 2
+    },
+    {
+      "fromVerseId": 43001045,
+      "toStartVerseId": 23053002,
+      "toEndVerseId": 23053002,
+      "votes": 16
     },
     {
       "fromVerseId": 43001045,
@@ -5155,9 +7003,9 @@
     },
     {
       "fromVerseId": 43013019,
-      "toStartVerseId": 23043010,
-      "toEndVerseId": 23043010,
-      "votes": 10
+      "toStartVerseId": 39003001,
+      "toEndVerseId": 39003001,
+      "votes": 3
     },
     {
       "fromVerseId": 43013019,
@@ -5226,10 +7074,22 @@
       "votes": 3
     },
     {
+      "fromVerseId": 43013032,
+      "toStartVerseId": 23053010,
+      "toEndVerseId": 23053012,
+      "votes": 3
+    },
+    {
       "fromVerseId": 43013033,
       "toStartVerseId": 62002001,
       "toEndVerseId": 62002001,
       "votes": 3
+    },
+    {
+      "fromVerseId": 43013034,
+      "toStartVerseId": 3019018,
+      "toEndVerseId": 3019018,
+      "votes": 72
     },
     {
       "fromVerseId": 43013034,
@@ -5242,6 +7102,12 @@
       "toStartVerseId": 62002007,
       "toEndVerseId": 62002010,
       "votes": 28
+    },
+    {
+      "fromVerseId": 43013034,
+      "toStartVerseId": 3019034,
+      "toEndVerseId": 3019034,
+      "votes": 18
     },
     {
       "fromVerseId": 43013035,
@@ -5377,6 +7243,12 @@
     },
     {
       "fromVerseId": 45002010,
+      "toStartVerseId": 4006026,
+      "toEndVerseId": 4006026,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 45002010,
       "toStartVerseId": 45002007,
       "toEndVerseId": 45002007,
       "votes": 4
@@ -5398,6 +7270,12 @@
       "toStartVerseId": 59002022,
       "toEndVerseId": 59002022,
       "votes": 3
+    },
+    {
+      "fromVerseId": 45002010,
+      "toStartVerseId": 20003016,
+      "toEndVerseId": 20003017,
+      "votes": 2
     },
     {
       "fromVerseId": 45002012,
@@ -5485,6 +7363,12 @@
     },
     {
       "fromVerseId": 45002016,
+      "toStartVerseId": 21003017,
+      "toEndVerseId": 21003017,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 45002016,
       "toStartVerseId": 45002005,
       "toEndVerseId": 45002005,
       "votes": 3
@@ -5530,6 +7414,12 @@
       "toStartVerseId": 40006023,
       "toEndVerseId": 40006023,
       "votes": 3
+    },
+    {
+      "fromVerseId": 45002022,
+      "toStartVerseId": 39003008,
+      "toEndVerseId": 39003008,
+      "votes": 4
     },
     {
       "fromVerseId": 45002023,
@@ -5742,6 +7632,12 @@
       "votes": 4
     },
     {
+      "fromVerseId": 45008007,
+      "toStartVerseId": 2020005,
+      "toEndVerseId": 2020005,
+      "votes": 2
+    },
+    {
       "fromVerseId": 45008008,
       "toStartVerseId": 45008009,
       "toEndVerseId": 45008009,
@@ -5905,6 +7801,12 @@
     },
     {
       "fromVerseId": 45008019,
+      "toStartVerseId": 39003017,
+      "toEndVerseId": 39003018,
+      "votes": 23
+    },
+    {
+      "fromVerseId": 45008019,
       "toStartVerseId": 45008023,
       "toEndVerseId": 45008023,
       "votes": 22
@@ -6019,6 +7921,12 @@
     },
     {
       "fromVerseId": 45008027,
+      "toStartVerseId": 24029012,
+      "toEndVerseId": 24029013,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 45008027,
       "toStartVerseId": 59001005,
       "toEndVerseId": 59001006,
       "votes": 5
@@ -6052,6 +7960,12 @@
       "toStartVerseId": 45008030,
       "toEndVerseId": 45008030,
       "votes": 169
+    },
+    {
+      "fromVerseId": 45008028,
+      "toStartVerseId": 2020006,
+      "toEndVerseId": 2020006,
+      "votes": 87
     },
     {
       "fromVerseId": 45008028,
@@ -6144,6 +8058,12 @@
       "votes": 65
     },
     {
+      "fromVerseId": 45008032,
+      "toStartVerseId": 23053010,
+      "toEndVerseId": 23053010,
+      "votes": 13
+    },
+    {
       "fromVerseId": 45008033,
       "toStartVerseId": 45008001,
       "toEndVerseId": 45008001,
@@ -6172,6 +8092,12 @@
       "toStartVerseId": 62002001,
       "toEndVerseId": 62002002,
       "votes": 11
+    },
+    {
+      "fromVerseId": 45008034,
+      "toStartVerseId": 23053012,
+      "toEndVerseId": 23053012,
+      "votes": 9
     },
     {
       "fromVerseId": 45008034,
@@ -6208,6 +8134,12 @@
       "toStartVerseId": 59001002,
       "toEndVerseId": 59001004,
       "votes": 9
+    },
+    {
+      "fromVerseId": 45008036,
+      "toStartVerseId": 23053007,
+      "toEndVerseId": 23053007,
+      "votes": 25
     },
     {
       "fromVerseId": 45008038,
@@ -6457,6 +8389,12 @@
     },
     {
       "fromVerseId": 49002003,
+      "toStartVerseId": 23053006,
+      "toEndVerseId": 23053006,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 49002003,
       "toStartVerseId": 43001013,
       "toEndVerseId": 43001013,
       "votes": 2
@@ -6529,12 +8467,6 @@
     },
     {
       "fromVerseId": 49002010,
-      "toStartVerseId": 23043021,
-      "toEndVerseId": 23043021,
-      "votes": 60
-    },
-    {
-      "fromVerseId": 49002010,
       "toStartVerseId": 58010024,
       "toEndVerseId": 58010024,
       "votes": 48
@@ -6592,12 +8524,6 @@
       "toStartVerseId": 49002019,
       "toEndVerseId": 49002022,
       "votes": 15
-    },
-    {
-      "fromVerseId": 49002013,
-      "toStartVerseId": 23043006,
-      "toEndVerseId": 23043006,
-      "votes": 12
     },
     {
       "fromVerseId": 49002013,
@@ -6709,12 +8635,6 @@
     },
     {
       "fromVerseId": 58010002,
-      "toStartVerseId": 23043025,
-      "toEndVerseId": 23043025,
-      "votes": 10
-    },
-    {
-      "fromVerseId": 58010002,
       "toStartVerseId": 58010017,
       "toEndVerseId": 58010017,
       "votes": 4
@@ -6724,6 +8644,12 @@
       "toStartVerseId": 58010011,
       "toEndVerseId": 58010011,
       "votes": 20
+    },
+    {
+      "fromVerseId": 58010004,
+      "toStartVerseId": 33006006,
+      "toEndVerseId": 33006008,
+      "votes": 13
     },
     {
       "fromVerseId": 58010004,
@@ -7104,12 +9030,6 @@
       "votes": 11
     },
     {
-      "fromVerseId": 58011003,
-      "toStartVerseId": 23040026,
-      "toEndVerseId": 23040026,
-      "votes": 10
-    },
-    {
       "fromVerseId": 58011005,
       "toStartVerseId": 1005021,
       "toEndVerseId": 1005024,
@@ -7132,6 +9052,12 @@
       "toStartVerseId": 58011003,
       "toEndVerseId": 58011004,
       "votes": 5
+    },
+    {
+      "fromVerseId": 58011006,
+      "toStartVerseId": 24029013,
+      "toEndVerseId": 24029014,
+      "votes": 158
     },
     {
       "fromVerseId": 58011006,
@@ -7258,6 +9184,12 @@
       "toStartVerseId": 59002021,
       "toEndVerseId": 59002024,
       "votes": 8
+    },
+    {
+      "fromVerseId": 58011017,
+      "toStartVerseId": 39003002,
+      "toEndVerseId": 39003003,
+      "votes": 2
     },
     {
       "fromVerseId": 58011019,
@@ -7393,15 +9325,45 @@
     },
     {
       "fromVerseId": 58011034,
-      "toStartVerseId": 23043002,
-      "toEndVerseId": 23043002,
-      "votes": 2
+      "toStartVerseId": 11019003,
+      "toEndVerseId": 11019003,
+      "votes": 3
     },
     {
       "fromVerseId": 58011036,
       "toStartVerseId": 58010034,
       "toEndVerseId": 58010034,
       "votes": 3
+    },
+    {
+      "fromVerseId": 58011036,
+      "toStartVerseId": 24029026,
+      "toEndVerseId": 24029026,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 58011037,
+      "toStartVerseId": 11019010,
+      "toEndVerseId": 11019010,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 58011037,
+      "toStartVerseId": 11019001,
+      "toEndVerseId": 11019001,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 58011037,
+      "toStartVerseId": 11019014,
+      "toEndVerseId": 11019014,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 58011038,
+      "toStartVerseId": 11019009,
+      "toEndVerseId": 11019009,
+      "votes": 7
     },
     {
       "fromVerseId": 58011039,
@@ -7507,6 +9469,18 @@
     },
     {
       "fromVerseId": 59001005,
+      "toStartVerseId": 24029012,
+      "toEndVerseId": 24029013,
+      "votes": 76
+    },
+    {
+      "fromVerseId": 59001005,
+      "toStartVerseId": 20003005,
+      "toEndVerseId": 20003007,
+      "votes": 72
+    },
+    {
+      "fromVerseId": 59001005,
       "toStartVerseId": 40007007,
       "toEndVerseId": 40007011,
       "votes": 48
@@ -7561,21 +9535,9 @@
     },
     {
       "fromVerseId": 59001010,
-      "toStartVerseId": 23040006,
-      "toEndVerseId": 23040006,
-      "votes": 4
-    },
-    {
-      "fromVerseId": 59001010,
       "toStartVerseId": 40006030,
       "toEndVerseId": 40006030,
       "votes": 4
-    },
-    {
-      "fromVerseId": 59001011,
-      "toStartVerseId": 23040007,
-      "toEndVerseId": 23040008,
-      "votes": 12
     },
     {
       "fromVerseId": 59001012,
@@ -7597,6 +9559,12 @@
     },
     {
       "fromVerseId": 59001012,
+      "toStartVerseId": 20003011,
+      "toEndVerseId": 20003012,
+      "votes": 28
+    },
+    {
+      "fromVerseId": 59001012,
       "toStartVerseId": 45002007,
       "toEndVerseId": 45002010,
       "votes": 24
@@ -7612,6 +9580,18 @@
       "toStartVerseId": 58011017,
       "toEndVerseId": 58011017,
       "votes": 15
+    },
+    {
+      "fromVerseId": 59001012,
+      "toStartVerseId": 2020006,
+      "toEndVerseId": 2020006,
+      "votes": 14
+    },
+    {
+      "fromVerseId": 59001012,
+      "toStartVerseId": 39003002,
+      "toEndVerseId": 39003003,
+      "votes": 14
     },
     {
       "fromVerseId": 59001013,
@@ -7687,6 +9667,12 @@
     },
     {
       "fromVerseId": 59001017,
+      "toStartVerseId": 39003006,
+      "toEndVerseId": 39003006,
+      "votes": 38
+    },
+    {
+      "fromVerseId": 59001017,
       "toStartVerseId": 1001002,
       "toEndVerseId": 1001005,
       "votes": 26
@@ -7747,9 +9733,27 @@
     },
     {
       "fromVerseId": 59001019,
+      "toStartVerseId": 16008002,
+      "toEndVerseId": 16008003,
+      "votes": 7
+    },
+    {
+      "fromVerseId": 59001019,
+      "toStartVerseId": 16008012,
+      "toEndVerseId": 16008014,
+      "votes": 5
+    },
+    {
+      "fromVerseId": 59001019,
       "toStartVerseId": 62002021,
       "toEndVerseId": 62002021,
       "votes": 3
+    },
+    {
+      "fromVerseId": 59001019,
+      "toStartVerseId": 16008018,
+      "toEndVerseId": 16008018,
+      "votes": 2
     },
     {
       "fromVerseId": 59001021,
@@ -7885,6 +9889,12 @@
     },
     {
       "fromVerseId": 59001026,
+      "toStartVerseId": 39003014,
+      "toEndVerseId": 39003014,
+      "votes": 6
+    },
+    {
+      "fromVerseId": 59001026,
       "toStartVerseId": 59002020,
       "toEndVerseId": 59002020,
       "votes": 4
@@ -7912,6 +9922,12 @@
       "toStartVerseId": 59002009,
       "toEndVerseId": 59002009,
       "votes": 24
+    },
+    {
+      "fromVerseId": 59002001,
+      "toStartVerseId": 3019015,
+      "toEndVerseId": 3019015,
+      "votes": 20
     },
     {
       "fromVerseId": 59002001,
@@ -7969,6 +9985,12 @@
     },
     {
       "fromVerseId": 59002005,
+      "toStartVerseId": 2020006,
+      "toEndVerseId": 2020006,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 59002005,
       "toStartVerseId": 45008017,
       "toEndVerseId": 45008017,
       "votes": 3
@@ -7981,15 +10003,39 @@
     },
     {
       "fromVerseId": 59002006,
+      "toStartVerseId": 33006011,
+      "toEndVerseId": 33006012,
+      "votes": 3
+    },
+    {
+      "fromVerseId": 59002006,
       "toStartVerseId": 59002003,
       "toEndVerseId": 59002003,
       "votes": 3
+    },
+    {
+      "fromVerseId": 59002006,
+      "toStartVerseId": 23053003,
+      "toEndVerseId": 23053003,
+      "votes": 2
+    },
+    {
+      "fromVerseId": 59002008,
+      "toStartVerseId": 3019018,
+      "toEndVerseId": 3019018,
+      "votes": 22
     },
     {
       "fromVerseId": 59002008,
       "toStartVerseId": 59002012,
       "toEndVerseId": 59002012,
       "votes": 12
+    },
+    {
+      "fromVerseId": 59002008,
+      "toStartVerseId": 3019034,
+      "toEndVerseId": 3019034,
+      "votes": 10
     },
     {
       "fromVerseId": 59002008,
@@ -8005,6 +10051,12 @@
     },
     {
       "fromVerseId": 59002009,
+      "toStartVerseId": 3019015,
+      "toEndVerseId": 3019015,
+      "votes": 10
+    },
+    {
+      "fromVerseId": 59002009,
       "toStartVerseId": 59002001,
       "toEndVerseId": 59002004,
       "votes": 4
@@ -8014,6 +10066,12 @@
       "toStartVerseId": 40005018,
       "toEndVerseId": 40005019,
       "votes": 23
+    },
+    {
+      "fromVerseId": 59002011,
+      "toStartVerseId": 2020013,
+      "toEndVerseId": 2020014,
+      "votes": 13
     },
     {
       "fromVerseId": 59002011,
@@ -8148,6 +10206,12 @@
       "votes": 1
     },
     {
+      "fromVerseId": 59002016,
+      "toStartVerseId": 20003027,
+      "toEndVerseId": 20003028,
+      "votes": 14
+    },
+    {
       "fromVerseId": 59002017,
       "toStartVerseId": 59002026,
       "toEndVerseId": 59002026,
@@ -8212,12 +10276,6 @@
       "toStartVerseId": 5006004,
       "toEndVerseId": 5006004,
       "votes": 12
-    },
-    {
-      "fromVerseId": 59002019,
-      "toStartVerseId": 23043010,
-      "toEndVerseId": 23043010,
-      "votes": 8
     },
     {
       "fromVerseId": 59002019,
@@ -8503,6 +10561,12 @@
     },
     {
       "fromVerseId": 62001008,
+      "toStartVerseId": 23053006,
+      "toEndVerseId": 23053006,
+      "votes": 33
+    },
+    {
+      "fromVerseId": 62001008,
       "toStartVerseId": 62002004,
       "toEndVerseId": 62002004,
       "votes": 28
@@ -8640,6 +10704,12 @@
       "votes": 9
     },
     {
+      "fromVerseId": 62002003,
+      "toStartVerseId": 23053011,
+      "toEndVerseId": 23053011,
+      "votes": 2
+    },
+    {
       "fromVerseId": 62002004,
       "toStartVerseId": 62001006,
       "toEndVerseId": 62001006,
@@ -8716,6 +10786,18 @@
       "toStartVerseId": 62002028,
       "toEndVerseId": 62002028,
       "votes": 19
+    },
+    {
+      "fromVerseId": 62002007,
+      "toStartVerseId": 3019018,
+      "toEndVerseId": 3019018,
+      "votes": 15
+    },
+    {
+      "fromVerseId": 62002007,
+      "toStartVerseId": 3019034,
+      "toEndVerseId": 3019034,
+      "votes": 8
     },
     {
       "fromVerseId": 62002007,
@@ -8929,12 +11011,6 @@
     },
     {
       "fromVerseId": 62002017,
-      "toStartVerseId": 23040006,
-      "toEndVerseId": 23040008,
-      "votes": 16
-    },
-    {
-      "fromVerseId": 62002017,
       "toStartVerseId": 40007021,
       "toEndVerseId": 40007021,
       "votes": 11
@@ -8968,12 +11044,6 @@
       "toStartVerseId": 19023005,
       "toEndVerseId": 19023005,
       "votes": 15
-    },
-    {
-      "fromVerseId": 62002020,
-      "toStartVerseId": 23043003,
-      "toEndVerseId": 23043003,
-      "votes": 3
     },
     {
       "fromVerseId": 62002022,
@@ -9046,6 +11116,12 @@
       "toStartVerseId": 62002028,
       "toEndVerseId": 62002028,
       "votes": 14
+    },
+    {
+      "fromVerseId": 62002028,
+      "toStartVerseId": 39003002,
+      "toEndVerseId": 39003002,
+      "votes": 9
     },
     {
       "fromVerseId": 62002028,

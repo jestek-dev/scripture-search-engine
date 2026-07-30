@@ -257,7 +257,33 @@ checksum must name a retrievable file, not a landing page. A separate opt-in
 
 ### 1.6 Two thresholds need your attention now that Layer B is large
 
-**a) Weak-reason share, and a probe set that no longer covers the corpus.**
+**a) CROSS-TRANSLATION PHRASING IS A REAL PRODUCT GAP — probably the most
+user-visible thing in this document.**
+
+Searching *"plans to prosper you"* returns nothing useful. That is the NIV
+wording of Jeremiah 29:11; the WEB — the only translation in the artifact —
+reads *"thoughts of peace, and not of evil, to give you hope and a future."*
+No shared words, so no match.
+
+This is not a bug in the engine. It is what a single-translation corpus does,
+and it will hit every consumer, because people remember verses in whatever
+translation they learned them in. Versed users typing a half-remembered verse
+and Setlist users typing a sermon theme will both land on it.
+
+Three possible answers, none of them free, and the choice is yours:
+- **Admit a second translation** (KJV is public domain and already downloaded
+  for the versification table). Doubles verse rows and roughly doubles the
+  lexical index; the artifact is at 117.60 of 160 MiB, so this may not fit
+  without raising the budget.
+- **Add familiar phrasings to the concept lexicons** as `editorial` entries —
+  cheap, targeted, and only covers verses somebody curates.
+- **Accept it** and document the limitation for consumers.
+
+I found this because a probe I wrote failed: I used the phrasing I remembered
+rather than the corpus's own, and the probe returned noise. It is worth
+recording that the probe caught a product gap rather than a data one.
+
+**b) Weak-reason share, and a probe set that no longer covers the corpus.**
 Matthew Henry raised weak-evidence share by 0.120 against a 0.15 budget on
 `phrase-present-help`. Keil & Delitzsch then moved it by 0.006 — but that is
 NOT reassurance. KD is Old Testament only, and all 13 probes sit in Psalms and
@@ -269,9 +295,15 @@ covered in the OT, and nothing probes Genesis narrative, the law, the
 histories, or the prophets. Probes are the noise detector; a detector aimed
 away from where the data landed reports quiet regardless.
 
-Two things follow: add OT probes before admitting more OT material, and decide
-in advance whether a tripped weak-share gate means *stop adding* or
-*re-baseline* — deciding in the moment is how a gate becomes decoration.
+RESOLVED for the probe set: 12 OT probes were added covering law, narrative,
+histories, wisdom and prophecy, and the fixture grew from 828 to 1,077 verses
+so those probes have something to measure. All 25 probes now hit their intended
+passage.
+
+STILL OPEN: decide in advance whether a tripped weak-share gate means *stop
+adding* or *re-baseline*. Deciding in the moment is how a gate becomes
+decoration. (Barnes and JFB moved it only +0.014 against a 0.15 budget, so
+there is time.)
 
 **b) `size.perTableBytes` is decoration today.** Six per-table budgets are
 declared in `eval/budgets.json` and **no gate reads them** — G10 checks only

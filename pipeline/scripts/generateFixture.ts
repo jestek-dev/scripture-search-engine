@@ -50,6 +50,26 @@ const SELECTION: readonly { book: string; chapters: readonly number[]; why: stri
   { book: '1 John', chapters: [1, 2], why: 'obedience + walking in light vocabulary' },
   { book: 'Deuteronomy', chapters: [6], why: 'hear/obey vocabulary (Shema) — archaic-fold test material' },
   { book: 'Joshua', chapters: [1], why: 'observe/do vocabulary' },
+
+  // --- Old Testament breadth, added 2026-07-30 ---
+  // Layer B went from Psalms-only to 99% of the Bible, but every probe still
+  // sat in Psalms and the New Testament. A noise detector aimed away from
+  // where the data landed reports quiet whatever happens. These chapters give
+  // the probe set something to measure in the genres the OT commentators
+  // actually cover: law, narrative, histories, wisdom and prophecy.
+  { book: 'Exodus', chapters: [20], why: 'law: the Decalogue — dense legal register' },
+  { book: 'Leviticus', chapters: [19], why: 'law: holiness code, the worst-covered genre before KD' },
+  { book: 'Numbers', chapters: [6], why: 'law/liturgy: Aaronic blessing; Numbers was the least-covered book' },
+  { book: 'Ruth', chapters: [1], why: 'narrative: kinsman-redeemer vocabulary' },
+  { book: '1 Kings', chapters: [19], why: 'histories: Elijah at Horeb — narrative with strong imagery' },
+  { book: '2 Chronicles', chapters: [7], why: 'histories: "if my people" — Chronicles was 32% covered before KD' },
+  { book: 'Nehemiah', chapters: [8], why: 'histories: reading the law; still the weakest OT book' },
+  { book: 'Proverbs', chapters: [3], why: 'wisdom: trust/lean-not — distinct sapiential register' },
+  { book: 'Ecclesiastes', chapters: [3], why: 'wisdom: a time for everything' },
+  { book: 'Isaiah', chapters: [53], why: 'prophets: the suffering servant' },
+  { book: 'Jeremiah', chapters: [29], why: 'prophets: plans to prosper you — high-traffic, easily mis-surfaced' },
+  { book: 'Micah', chapters: [6], why: 'minor prophets: do justly, love mercy' },
+  { book: 'Malachi', chapters: [3], why: 'minor prophets: tithes and the refiner' },
 ];
 
 /**
