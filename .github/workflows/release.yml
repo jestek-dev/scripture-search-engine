@@ -1,0 +1,86 @@
+name: Release artifact
+
+# Consumers pin (engine semver, artifact descriptor). This is what produces the
+# second half of that pair: a content.db anyone can download and a descriptor
+# they can verify it against.
+#
+# The build runs from the MANIFESTS, not from anything cached on a maintainer's
+# machine. That is the point — if this workflow can build the artifact, so can
+# anyone else, and the reproducibility claim is a fact rather than a promise.
+
+on:
+  push:
+    tags: ['v*']
+  # Buildable on demand so the release path can be exercised without minting a
+  # tag. A tagless run uploads nothing.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      # The gauntlet gates the CODE against the committed fixture. It runs here
+      # too: a release built from code that cannot pass admission is not a
+      # release, it is an accident with a version number on it.
+      - name: Admission gauntlet
+        run: npm run verify
+
+      - name: Fetch pinned sources
+        run: npm run fetch:sources --workspace pipeline
+
+      - name: Build artifact
+        run: npm run build:artifact --workspace pipeline
+
+      # The descriptor is committed, so this catches a build that no longer
+      # reproduces the reviewed artifact — a source drifting under us, or a
+      # pipeline change nobody re-descriptored.
+      - name: Verify the built artifact matches the reviewed descriptor
+        run: |
+          node -e "
+            const fs = require('node:fs'), crypto = require('node:crypto');
+            const d = JSON.parse(fs.readFileSync('artifacts/content-artifact.json', 'utf8'));
+            const bytes = fs.readFileSync('pipeline/output/content.db');
+            const sha = crypto.createHash('sha256').update(bytes).digest('hex');
+            const ok = sha === d.databaseSha256;
+            console.log('descriptor sha256:', d.databaseSha256);
+            console.log('built      sha256:', sha);
+            console.log('corpus  fingerprint:', d.corpusFingerprint);
+            console.log('layer   fingerprint:', d.layerFingerprint);
+            if (!ok) {
+              console.error(
+                '\nBuilt artifact does not match the reviewed descriptor. Either a source ' +
+                'changed upstream or the pipeline changed without re-running the build; ' +
+                'either way the descriptor must be re-reviewed, not overwritten here.'
+              );
+              process.exit(1);
+            }
+          "
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            pipeline/output/content.db
+            artifacts/content-artifact.json
+          body: |
+            Deterministic Scripture artifact.
+
+            Consumers pin **both** the engine semver and this descriptor.
+            Verify `content.db` against `databaseSha256` in
+            `content-artifact.json` before opening it — the engine's admission
+            check expects a database whose identity you have confirmed.
+
+            Sources and rights: see `docs/ATTRIBUTIONS.md`.

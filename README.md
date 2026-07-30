@@ -145,8 +145,34 @@ Two versioned deliverables, both free to host:
 1. `@jestek-dev/scripture-engine` — the pure TS package (semver).
 2. `content.db` + reviewed descriptor — a GitHub Release asset.
 
-Consumers pin both and verify the descriptor before opening the database.
+Consumers pin **both** and verify the descriptor before opening the database.
 There is no server component; nothing runs anywhere but the user's device.
+
+```ts
+import { createEngine } from '@jestek-dev/scripture-engine';
+
+const engine = await createEngine(port);          // port: your ContentQueryPort
+const result = await engine.research('hearing and doing');
+const themes = await engine.themes('a sermon on obedience');
+const passage = await engine.passage('James 1:22-25');
+const related = await engine.related('Psalm 46:1');
+const forSong = await engine.forSong({ themes: ['refuge'], title: 'Our Shelter' });
+```
+
+Every result carries `engineVersion`, `corpusFingerprint` and
+`layerFingerprint`. Store them with anything you cache: they are what let you
+tell whether a saved result is still reproducible.
+
+### Building the artifact yourself
+
+```bash
+npm run fetch:sources --workspace pipeline   # 14 sources, checksum-verified
+npm run build:artifact --workspace pipeline
+```
+
+Nothing here depends on a maintainer's machine. Every source is fetched from
+its pinned URL and verified before use — which is the difference between a
+reproducibility claim and a reproducibility fact.
 
 ## Sources
 
