@@ -43,6 +43,12 @@ reviews of numbers I had to pick to keep moving.
 5. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
+6. **Approve (or amend) the telemetry privacy commitments.** §1.7. The
+   gap-mining design is written and cannot hurt results by construction —
+   but its §4 decides what LH logs about what its people search for, which
+   is a values call, not a technical one. Nothing may be logged before you
+   sign it.
+
 Everything else in this document is context, not a request.
 
 ---
@@ -96,6 +102,29 @@ revert visibility.
 registered npm account or org. If it is not, publishing fails and the options
 are to register it or publish via GitHub Packages. I could not check this
 without your npm credentials.
+
+### 1.7 Telemetry and gap mining — design written, privacy section is yours
+
+`docs/telemetry-and-gap-mining.md` designs the loop that replaces guessed
+gap lists (which is what remembered-phrasings had to run on) with evidence:
+consumers log query + outcome locally, a pipeline script mines exports into
+a Gap Report, humans curate through the existing gauntlet. The engine never
+reads telemetry — there is no code path by which an event can alter a
+ranking, so the "could this hurt results" answer is structural.
+
+What needs you, specifically, is **§4 — the privacy commitments**: no user
+identity, raw events never leave the device, date-only timestamps, a
+k=3 device threshold before any query string becomes visible, 90-day
+retention, per-app disclosure and off-switch. A church's search log is
+closer to a prayer log than a query log, and §4 also names the residual
+risk that survives all of that (the person running an export still sees
+thresholded aggregates). Approving, tightening, or narrowing it to
+zero-result queries only is the decision. T0 in the plan gates all logging
+on that signature — collection must not start before the commitments exist.
+
+The evidence base (click bias, the AOL re-identification, feedback-loop
+failures, reformulation mining as established practice) is in
+`docs/research/2026-07-31-search-telemetry-mining.md`.
 
 ### 1.3 When does Maskil adopt this? — still open, and now also blocked technically
 
