@@ -17,15 +17,15 @@ on:
 
 permissions:
   contents: write
+  # Lets GitHub mint an OIDC token that npm verifies against the trusted
+  # publisher configured for this package. This is what replaces a stored
+  # secret: nothing to leak, nothing to rotate, and nothing that stops working
+  # when npm removes publishing from bypass-2FA tokens in January 2027.
+  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Job-level, because a step's `if:` is evaluated BEFORE that step's own
-    # `env:` block exists — guarding on a step-local variable would read as
-    # empty every time and silently never publish.
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v5
 
@@ -106,19 +106,27 @@ jobs:
           # command in the release notes from 404ing.
           echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
 
-      # Publishing to npm is OPTIONAL and additive. Anyone who pinned the
-      # tarball URL is unaffected by it happening or not happening, which is
-      # why the release does not depend on it: no NPM_TOKEN means this step is
-      # skipped, not failed.
+      # Publishes via TRUSTED PUBLISHING (OIDC) — no token anywhere. npm
+      # verifies the OIDC claim against a trusted publisher configured on the
+      # package: this repository, this workflow filename. A workflow that is
+      # not the configured one cannot publish, which is a stronger guarantee
+      # than a secret provides, since a secret authorises whoever holds it.
       #
       # --access public is not a default. npm treats scoped packages as private
       # unless told otherwise, and a private publish on a free account fails
       # with a billing error that reads nothing like the actual problem.
+      #
+      # Skipped when the version is already on the registry, so re-running a
+      # release does not fail on a duplicate publish.
       - name: Publish to npm
-        if: startsWith(github.ref, 'refs/tags/v') && env.NPM_TOKEN != ''
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --workspace engine --access public
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          VERSION=$(node -p "require('./engine/package.json').version")
+          if npm view "@jestek-dev/scripture-engine@$VERSION" version >/dev/null 2>&1; then
+            echo "@jestek-dev/scripture-engine@$VERSION is already published — skipping"
+            exit 0
+          fi
+          npm publish --workspace engine --access public
 
       - name: Attach to release
         if: startsWith(github.ref, 'refs/tags/v')
