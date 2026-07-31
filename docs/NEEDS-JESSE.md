@@ -338,16 +338,149 @@ to prosper you" and whose anchor is Jeremiah 29:11 solves it exactly — that is
 what the curated ontology is *for*, and it is the one layer where LH's own
 voice is allowed to be explicit.
 
-I did not do it, deliberately: the curation flow puts fixtures first, and
-confirming the fixtures is the product judgment reserved for you. It is also
-theologically load-bearing in a way term statistics are not — deciding that
-"plans to prosper you" should surface Jeremiah 29:11 is a claim about meaning.
+> **CORRECTION, 2026-07-31 — the table above measures the wrong thing, and the
+> gap is about a quarter the size it implies.**
+>
+> Those ✓/✗ marks record whether the phrase occurs *verbatim in the text*.
+> That is the right test for "would admitting KJV help" — the answer is still
+> no — but it is not the question a user asks, which is "does the engine
+> return the verse". The ladder's longest-fragment fallback plus IDF tokens
+> with proximity already recover most paraphrases.
+>
+> Re-measured by running 65 commonly-searched phrasings through `research()`
+> against the **full artifact** rather than checking the text: **48 of 65
+> already returned the intended verse at #1**, including three the table
+> marks ✗ — "lean not on your own understanding" (Proverbs 3:5), "soar on
+> wings like eagles" (Isaiah 40:31) and "seek first the kingdom"
+> (Matthew 6:33).
+>
+> So the pack needed to be **13 concepts, not ~50**. The lesson generalises:
+> a claim about the corpus is not a claim about the engine, and this document
+> stated one while measuring the other.
 
-**What I would ask you to approve:** a `remembered-phrasings` concept pack
-covering the top ~50 most-searched verses in their NIV/ESV wording, anchored to
-the WEB verses they refer to, tagged `editorial`. It is mechanical once you
-approve the list, and it converts the single most user-visible failure in the
-system into a solved case.
+**RESOLVED 2026-07-31 — the packs are written, gated and measured.** Twelve
+`remembered-*` packs plus two lexicon entries added to `refuge-in-trouble`
+(Psalm 91:1 already had an anchor there; minting a second concept over the
+same verse is the dilution G4 exists to prevent). Fourteen golden fixtures,
+each asserting `concept_anchor` rather than mere position, so a corpus change
+that drifts into the right answer for the wrong reason still fails.
+
+Measured on the full 31,098-verse artifact, before → after:
+
+| query | before | after |
+|---|---|---|
+| plans to prosper you | absent | **1** |
+| I know the plans I have for you | 3 | **1** |
+| confidence in what we hope for | absent | **2** |
+| consider it pure joy | absent | **1** |
+| fixing our eyes on Jesus | absent | **1** |
+| do not be anxious about anything | 8 | **1** |
+| tempted beyond what you can bear | 7 | **1** |
+| faith as small as a mustard seed | 2 | **1** |
+| do not conform to the pattern of this world | 4 | **1** |
+| put on the full armor of God | 2 | **1** |
+| fruit of the spirit | 2 | **1** |
+| dwells in the shelter of the most high | 11 | **2** |
+
+All carry `concept_anchor` provenance attributed to LH editorial. Probe churn
+attributable to the packs is **0% on all 25 probes**, and weak-reason share
+moved **0.0000** — measured by building the fixture twice, once with the
+corpus growth alone and once with the packs on top, so the two causes could
+not be confused. An editorial anchor pack should change the queries it names
+and nothing else; this one does.
+
+**Two candidates were REJECTED on evidence**, which is the part worth reading:
+
+- **Acts 1:8 / "you will be my witnesses"** — dropped. The phrase normalises
+  to the single token `witness`, so a lexicon entry short enough to match the
+  query would fire on every query containing that word. In the gated fixture
+  the verse already ranks #1 on `exact_phrase`, so the pack was
+  `NO MEASURABLE EFFECT` there and could not have earned its way in.
+- **The bare "work at it with all your heart"** — the Colossians 3:23 pack
+  ships, but its fixture asserts the fuller remembered form. The bare form
+  normalises to `{work, heart}` and the WEB renders "with all your heart"
+  verbatim in some twenty places; on the full artifact the anchor only lifts
+  it from absent to #23. Asserting the bare form would have passed on the
+  1,417-verse fixture while production stayed broken.
+
+**Still yours to decide:** the candidate list was mine, drawn from general
+knowledge of commonly-searched verses rather than LH's own query logs. If
+Maskil or the website can export real queries, re-running the same probe
+against them would replace my judgment with your evidence — and would likely
+name misses I did not think to test. The anchors themselves are claims about
+meaning; they are reviewable as data in `ontology/concepts/remembered-*.yaml`,
+one file per claim.
+
+**Rights note, for the manifest rather than for assumption:** these packs put
+NIV/ESV-shaped wording into `content.db` as search keys. Each is a short
+fragment used as an index term, which is a different act from reproducing a
+translation — but this repo records that class of judgment in a
+`licenseRecord` rather than leaving it implied, exactly as §1.4b did for
+CCEL. The `editorial` manifest should say so in your words before the next
+release.
+
+### 1.6d Five lexicon entries normalise to ONE token — and one of them is doing damage
+
+Found while tracing why "work at it with all your heart" returns Ephesians 2:9
+first. Concept matching requires every token of a lexicon phrase to be present
+in the query, so a phrase that normalises to a single token fires on **any**
+query containing that word — and fires `concept_anchor`, which is an
+*authoritative* family, uncapped in aggregate by G6.
+
+| concept | entry | normalises to |
+|---|---|---|
+| `grace-not-earned` | "not by works" | `work` |
+| `fear-not` | "do not be afraid" | `afraid` |
+| `fear-not` | "fear not" | `fear` |
+| `fear-not` | "be not dismayed" | `dismay` |
+| `self-deception` | "deceiving yourselves" | `deceiv` |
+
+`grace-not-earned` is the harmful one: every query containing "work" — "work
+at it with all your heart", "the work of ministry", "good works" — receives
+Ephesians 2:8-9 as authoritative curated evidence. The other four are closer
+to defensible, since "fear"/"afraid" genuinely are the concept, but they are
+the same mechanism and worth deciding on together.
+
+**I have not changed them.** These are reviewed theological data you approved
+in §1.1, the fix changes existing ranking behaviour, and it wants its own
+fixtures — precisely the process this repo asks for. Three ways to go:
+
+1. Require a minimum token count per entry, enforced in G4 the way
+   `minLexiconEntries` already is. Clean and structural, but it fails the
+   build on data already shipped until the entries are rewritten.
+2. Rewrite just the entries, leaving the gate alone — "not by works but by
+   grace", "do not be afraid I am with you". Cheapest, but nothing stops the
+   next one.
+3. Decide single-token entries are legitimate for concepts whose *name* is
+   that word, and gate only the ones that are not.
+
+My recommendation is (1) with the rewrites in the same PR, because a rule the
+gate does not know is a rule that decays. But which entries survive the
+rewrite is a judgment about meaning, so it is yours.
+
+### 1.6e The reviewed descriptor is now STALE, and only CI can refresh it
+
+The ontology changed, so `artifacts/content-artifact.json` no longer describes
+what the pipeline builds — its `layerFingerprint` and `databaseSha256` are
+both from before the packs. **The next tagged release will fail** at the
+verify step, which is the new behaviour working as intended rather than a
+regression: before §2.11 it would have sailed through and shipped a mismatch.
+
+It cannot be refreshed from a laptop. SQLite's byte layout depends on the
+SQLite compiled into Node, so a locally-built checksum will not match what CI
+builds, and committing one would just move the failure. The workflow now
+uploads the descriptor it builds as a run artifact on **every** run, including
+the tagless `workflow_dispatch` one, so the refresh is:
+
+1. Run the "Release artifact" workflow manually from the Actions tab.
+2. Download the `content-artifact-descriptor` artifact.
+3. Review the diff — `layerFingerprint` and `databaseSha256` should move,
+   `corpusFingerprint` and `manifestFingerprint` should not, since neither the
+   scripture text nor the sources changed.
+4. Commit it, then tag.
+
+Worth doing before the next release regardless of the packs, since the
+committed descriptor's checksum was independently wrong until today (§2.11).
 
 **c) Weak-reason share, and a probe set that no longer covers the corpus.**
 Matthew Henry raised weak-evidence share by 0.120 against a 0.15 budget on

@@ -70,6 +70,28 @@ const SELECTION: readonly { book: string; chapters: readonly number[]; why: stri
   { book: 'Jeremiah', chapters: [29], why: 'prophets: plans to prosper you — high-traffic, easily mis-surfaced' },
   { book: 'Micah', chapters: [6], why: 'minor prophets: do justly, love mercy' },
   { book: 'Malachi', chapters: [3], why: 'minor prophets: tithes and the refiner' },
+
+  // --- remembered-phrasings targets, added 2026-07-31 ---
+  // Anchors for the remembered-phrasings packs. Measured against the full
+  // artifact, these are the passages a searcher types in NIV/ESV wording and
+  // does NOT reach: the WEB renders them differently enough that no lexical
+  // rung fires. A golden fixture can only assert that a curated anchor fixed
+  // it if the anchor's verse is in the corpus being gated, so the chapters
+  // come in with the packs rather than leaving the fixtures pending.
+  { book: 'Hebrews', chapters: [12], why: 'remembered: "fixing our eyes on Jesus" (12:2)' },
+  { book: 'Colossians', chapters: [3], why: 'remembered: "work at it with all your heart" (3:23)' },
+  { book: 'Acts', chapters: [1], why: 'remembered: "you will be my witnesses" (1:8)' },
+  { book: 'Philippians', chapters: [4], why: 'remembered: "do not be anxious about anything" (4:6-7)' },
+  { book: '1 Corinthians', chapters: [10], why: 'remembered: "tempted beyond what you can bear" (10:13)' },
+  { book: 'Matthew', chapters: [17], why: 'remembered: "faith as small as a mustard seed" (17:20)' },
+  { book: 'Romans', chapters: [12], why: 'remembered: "do not conform to the pattern of this world" (12:2)' },
+  { book: 'Ephesians', chapters: [6], why: 'remembered: "put on the full armor of God" (6:11)' },
+  { book: 'Galatians', chapters: [5], why: 'remembered: "fruit of the spirit" (5:22-23)' },
+  // Competitors the packs must NOT dislodge. A fixture that adds only the
+  // right answer cannot detect an anchor that outranks a better lexical hit,
+  // which is the precise failure mode an editorial anchor introduces.
+  { book: 'Ephesians', chapters: [5], why: 'competitor: Eph 5:9 outranks Gal 5:22 on "fruit of the spirit"' },
+  { book: 'Romans', chapters: [13], why: 'competitor: Rom 13:12 outranks Eph 6:11 on "armor"' },
 ];
 
 /**
@@ -126,11 +148,19 @@ function main(): void {
     ? createHash('sha256').update(readFileSync(join(HERE, '..', 'sources', 'engwebp_vpl.zip'))).digest('hex')
     : createHash('sha256').update(raw).digest('hex');
 
+  // Chapters MERGE across selection entries. A book may legitimately appear
+  // more than once — the reason a chapter is in the fixture is worth
+  // recording per passage, not flattened into one row per book — and an
+  // assigning `set` here would silently drop the earlier entry's chapters.
+  // Adding "Matthew 17 — mustard seed" would have deleted Matthew 5-7 and
+  // with them golden fixture #1's anchor, with nothing reporting a loss.
   const wanted = new Map<number, Set<number>>();
   for (const entry of SELECTION) {
     const book = findBook(entry.book);
     if (!book) throw new Error(`generateFixture: unknown book "${entry.book}"`);
-    wanted.set(book.id, new Set(entry.chapters));
+    const chapters = wanted.get(book.id) ?? new Set<number>();
+    for (const chapter of entry.chapters) chapters.add(chapter);
+    wanted.set(book.id, chapters);
   }
 
   const verses = source.verses

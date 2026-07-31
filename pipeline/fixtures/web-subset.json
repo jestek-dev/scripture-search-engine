@@ -216,6 +216,83 @@
         3
       ],
       "why": "minor prophets: tithes and the refiner"
+    },
+    {
+      "book": "Hebrews",
+      "chapters": [
+        12
+      ],
+      "why": "remembered: \"fixing our eyes on Jesus\" (12:2)"
+    },
+    {
+      "book": "Colossians",
+      "chapters": [
+        3
+      ],
+      "why": "remembered: \"work at it with all your heart\" (3:23)"
+    },
+    {
+      "book": "Acts",
+      "chapters": [
+        1
+      ],
+      "why": "remembered: \"you will be my witnesses\" (1:8)"
+    },
+    {
+      "book": "Philippians",
+      "chapters": [
+        4
+      ],
+      "why": "remembered: \"do not be anxious about anything\" (4:6-7)"
+    },
+    {
+      "book": "1 Corinthians",
+      "chapters": [
+        10
+      ],
+      "why": "remembered: \"tempted beyond what you can bear\" (10:13)"
+    },
+    {
+      "book": "Matthew",
+      "chapters": [
+        17
+      ],
+      "why": "remembered: \"faith as small as a mustard seed\" (17:20)"
+    },
+    {
+      "book": "Romans",
+      "chapters": [
+        12
+      ],
+      "why": "remembered: \"do not conform to the pattern of this world\" (12:2)"
+    },
+    {
+      "book": "Ephesians",
+      "chapters": [
+        6
+      ],
+      "why": "remembered: \"put on the full armor of God\" (6:11)"
+    },
+    {
+      "book": "Galatians",
+      "chapters": [
+        5
+      ],
+      "why": "remembered: \"fruit of the spirit\" (5:22-23)"
+    },
+    {
+      "book": "Ephesians",
+      "chapters": [
+        5
+      ],
+      "why": "competitor: Eph 5:9 outranks Gal 5:22 on \"fruit of the spirit\""
+    },
+    {
+      "book": "Romans",
+      "chapters": [
+        13
+      ],
+      "why": "competitor: Rom 13:12 outranks Eph 6:11 on \"armor\""
     }
   ],
   "verses": [
@@ -3246,6 +3323,419 @@
     {
       "book_name": "Isaiah",
       "book": 23,
+      "chapter": 40,
+      "verse": 1,
+      "text": "“Comfort, comfort my people,” says your God."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 2,
+      "text": "“Speak comfortably to Jerusalem, and call out to her that her warfare is accomplished, that her iniquity is pardoned, that she has received of the LORD’s hand double for all her sins.”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 3,
+      "text": "The voice of one who calls out, “Prepare the way of the LORD in the wilderness! Make a level highway in the desert for our God."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 4,
+      "text": "Every valley shall be exalted, and every mountain and hill shall be made low. The uneven shall be made level, and the rough places a plain."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 5,
+      "text": "The LORD’s glory shall be revealed, and all flesh shall see it together; for the mouth of the LORD has spoken it.”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 6,
+      "text": "The voice of one saying, “Cry out!” One said, “What shall I cry?” “All flesh is like grass, and all its glory is like the flower of the field."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 7,
+      "text": "The grass withers, the flower fades, because the LORD’s breath blows on it. Surely the people are like grass."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 8,
+      "text": "The grass withers, the flower fades; but the word of our God stands forever.”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 9,
+      "text": "You who tell good news to Zion, go up on a high mountain. You who tell good news to Jerusalem, lift up your voice with strength! Lift it up! Don’t be afraid! Say to the cities of Judah, “Behold, your God!”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 10,
+      "text": "Behold, the Lord GOD will come as a mighty one, and his arm will rule for him. Behold, his reward is with him, and his recompense before him."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 11,
+      "text": "He will feed his flock like a shepherd. He will gather the lambs in his arm, and carry them in his bosom. He will gently lead those who have their young."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 12,
+      "text": "Who has measured the waters in the hollow of his hand, and marked off the sky with his span, and calculated the dust of the earth in a measuring basket, and weighed the mountains in scales, and the hills in a balance?"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 13,
+      "text": "Who has directed the LORD’s Spirit, or has taught him as his counselor?"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 14,
+      "text": "Who did he take counsel with, and who instructed him, and taught him in the path of justice, and taught him knowledge, and showed him the way of understanding?"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 15,
+      "text": "Behold, the nations are like a drop in a bucket, and are regarded as a speck of dust on a balance. Behold, he lifts up the islands like a very little thing."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 16,
+      "text": "Lebanon is not sufficient to burn, nor its animals sufficient for a burnt offering."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 17,
+      "text": "All the nations are like nothing before him. They are regarded by him as less than nothing, and vanity."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 18,
+      "text": "To whom then will you liken God? Or what likeness will you compare to him?"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 19,
+      "text": "A workman has cast an image, and the goldsmith overlays it with gold, and casts silver chains for it."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 20,
+      "text": "He who is too impoverished for such an offering chooses a tree that will not rot. He seeks a skillful workman to set up a carved image for him that will not be moved."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 21,
+      "text": "Haven’t you known? Haven’t you heard? Haven’t you been told from the beginning? Haven’t you understood from the foundations of the earth?"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 22,
+      "text": "It is he who sits above the circle of the earth, and its inhabitants are like grasshoppers; who stretches out the heavens like a curtain, and spreads them out like a tent to dwell in,"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 23,
+      "text": "who brings princes to nothing, who makes the judges of the earth meaningless."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 24,
+      "text": "They are planted scarcely. They are sown scarcely. Their stock has scarcely taken root in the ground. He merely blows on them, and they wither, and the whirlwind takes them away as stubble."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 25,
+      "text": "“To whom then will you liken me? Who is my equal?” says the Holy One."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 26,
+      "text": "Lift up your eyes on high, and see who has created these, who brings out their army by number. He calls them all by name. By the greatness of his might, and because he is strong in power, not one is lacking."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 27,
+      "text": "Why do you say, Jacob, and speak, Israel, “My way is hidden from the LORD, and the justice due me is disregarded by my God”?"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 28,
+      "text": "Haven’t you known? Haven’t you heard? The everlasting God, the LORD, the Creator of the ends of the earth, doesn’t faint. He isn’t weary. His understanding is unsearchable."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 29,
+      "text": "He gives power to the weak. He increases the strength of him who has no might."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 30,
+      "text": "Even the youths faint and get weary, and the young men utterly fall;"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 40,
+      "verse": 31,
+      "text": "but those who wait for the LORD will renew their strength. They will mount up with wings like eagles. They will run, and not be weary. They will walk, and not faint."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 1,
+      "text": "But now the LORD who created you, Jacob, and he who formed you, Israel, says: “Don’t be afraid, for I have redeemed you. I have called you by your name. You are mine."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 2,
+      "text": "When you pass through the waters, I will be with you, and through the rivers, they will not overflow you. When you walk through the fire, you will not be burned, and flame will not scorch you."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 3,
+      "text": "For I am the LORD your God, the Holy One of Israel, your Savior. I have given Egypt as your ransom, Ethiopia and Seba in your place."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 4,
+      "text": "Since you have been precious and honored in my sight, and I have loved you, therefore I will give people in your place, and nations instead of your life."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 5,
+      "text": "Don’t be afraid, for I am with you. I will bring your offspring from the east, and gather you from the west."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 6,
+      "text": "I will tell the north, ‘Give them up!’ and tell the south, ‘Don’t hold them back! Bring my sons from far away, and my daughters from the ends of the earth—"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 7,
+      "text": "everyone who is called by my name, and whom I have created for my glory, whom I have formed, yes, whom I have made.’”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 8,
+      "text": "Bring out the blind people who have eyes, and the deaf who have ears."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 9,
+      "text": "Let all the nations be gathered together, and let the peoples be assembled. Who among them can declare this, and show us former things? Let them bring their witnesses, that they may be justified, or let them hear, and say, “That is true.”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 10,
+      "text": "“You are my witnesses,” says the LORD, “With my servant whom I have chosen; that you may know and believe me, and understand that I am he. Before me there was no God formed, neither will there be after me."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 11,
+      "text": "I myself am the LORD. Besides me, there is no savior."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 12,
+      "text": "I have declared, I have saved, and I have shown, and there was no strange god among you. Therefore you are my witnesses”, says the LORD, “and I am God."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 13,
+      "text": "Yes, since the day was, I am he. There is no one who can deliver out of my hand. I will work, and who can hinder it?”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 14,
+      "text": "The LORD, your Redeemer, the Holy One of Israel says: “For your sake, I have sent to Babylon, and I will bring all of them down as fugitives, even the Chaldeans, in the ships of their rejoicing."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 15,
+      "text": "I am the LORD, your Holy One, the Creator of Israel, your King.”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 16,
+      "text": "The LORD, who makes a way in the sea, and a path in the mighty waters,"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 17,
+      "text": "who brings out the chariot and horse, the army and the mighty man (they lie down together, they shall not rise; they are extinct, they are quenched like a wick) says:"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 18,
+      "text": "“Don’t remember the former things, and don’t consider the things of old."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 19,
+      "text": "Behold, I will do a new thing. It springs out now. Don’t you know it? I will even make a way in the wilderness, and rivers in the desert."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 20,
+      "text": "The animals of the field, the jackals and the ostriches, shall honor me, because I give water in the wilderness and rivers in the desert, to give drink to my people, my chosen,"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 21,
+      "text": "the people which I formed for myself, that they might declare my praise."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 22,
+      "text": "Yet you have not called on me, Jacob; but you have been weary of me, Israel."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 23,
+      "text": "You have not brought me any of your sheep for burnt offerings, neither have you honored me with your sacrifices. I have not burdened you with offerings, nor wearied you with frankincense."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 24,
+      "text": "You have bought me no sweet cane with money, nor have you filled me with the fat of your sacrifices, but you have burdened me with your sins. You have wearied me with your iniquities."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 25,
+      "text": "I, even I, am he who blots out your transgressions for my own sake; and I will not remember your sins."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 26,
+      "text": "Put me in remembrance. Let us plead together. Declare your case, that you may be justified."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 27,
+      "text": "Your first father sinned, and your teachers have transgressed against me."
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
+      "chapter": 43,
+      "verse": 28,
+      "text": "Therefore I will profane the princes of the sanctuary; and I will make Jacob a curse, and Israel an insult.”"
+    },
+    {
+      "book_name": "Isaiah",
+      "book": 23,
       "chapter": 53,
       "verse": 1,
       "text": "Who has believed our message? To whom has the LORD’s arm been revealed?"
@@ -4798,6 +5288,195 @@
       "text": "for he taught them with authority, and not like the scribes."
     },
     {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 1,
+      "text": "After six days, Jesus took with him Peter, James, and John his brother, and brought them up into a high mountain by themselves."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 2,
+      "text": "He was changed before them. His face shone like the sun, and his garments became as white as the light."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 3,
+      "text": "Behold, Moses and Elijah appeared to them talking with him."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 4,
+      "text": "Peter answered and said to Jesus, “Lord, it is good for us to be here. If you want, let’s make three tents here: one for you, one for Moses, and one for Elijah.”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 5,
+      "text": "While he was still speaking, behold, a bright cloud overshadowed them. Behold, a voice came out of the cloud, saying, “This is my beloved Son, in whom I am well pleased. Listen to him.”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 6,
+      "text": "When the disciples heard it, they fell on their faces, and were very afraid."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 7,
+      "text": "Jesus came and touched them and said, “Get up, and don’t be afraid.”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 8,
+      "text": "Lifting up their eyes, they saw no one, except Jesus alone."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 9,
+      "text": "As they were coming down from the mountain, Jesus commanded them, saying, “Don’t tell anyone what you saw, until the Son of Man has risen from the dead.”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 10,
+      "text": "His disciples asked him, saying, “Then why do the scribes say that Elijah must come first?”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 11,
+      "text": "Jesus answered them, “Elijah indeed comes first, and will restore all things;"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 12,
+      "text": "but I tell you that Elijah has come already, and they didn’t recognize him, but did to him whatever they wanted to. Even so the Son of Man will also suffer by them.”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 13,
+      "text": "Then the disciples understood that he spoke to them of John the Baptizer."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 14,
+      "text": "When they came to the multitude, a man came to him, kneeling down to him and saying,"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 15,
+      "text": "“Lord, have mercy on my son, for he is epileptic and suffers grievously; for he often falls into the fire, and often into the water."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 16,
+      "text": "So I brought him to your disciples, and they could not cure him.”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 17,
+      "text": "Jesus answered, “Faithless and perverse generation! How long will I be with you? How long will I bear with you? Bring him here to me.”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 18,
+      "text": "Jesus rebuked the demon, and it went out of him, and the boy was cured from that hour."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 19,
+      "text": "Then the disciples came to Jesus privately, and said, “Why weren’t we able to cast it out?”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 20,
+      "text": "He said to them, “Because of your unbelief. For most certainly I tell you, if you have faith as a grain of mustard seed, you will tell this mountain, ‘Move from here to there,’ and it will move; and nothing will be impossible for you."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 21,
+      "text": "But this kind doesn’t go out except by prayer and fasting.”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 22,
+      "text": "While they were staying in Galilee, Jesus said to them, “The Son of Man is about to be delivered up into the hands of men,"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 23,
+      "text": "and they will kill him, and the third day he will be raised up.” They were exceedingly sorry."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 24,
+      "text": "When they had come to Capernaum, those who collected the didrachma coins came to Peter, and said, “Doesn’t your teacher pay the didrachma?”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 25,
+      "text": "He said, “Yes.” When he came into the house, Jesus anticipated him, saying, “What do you think, Simon? From whom do the kings of the earth receive toll or tribute? From their children, or from strangers?”"
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 26,
+      "text": "Peter said to him, “From strangers.” Jesus said to him, “Therefore the children are exempt."
+    },
+    {
+      "book_name": "Matthew",
+      "book": 40,
+      "chapter": 17,
+      "verse": 27,
+      "text": "But, lest we cause them to stumble, go to the sea, cast a hook, and take up the first fish that comes up. When you have opened its mouth, you will find a stater coin. Take that, and give it to them for me and you.”"
+    },
+    {
       "book_name": "Luke",
       "book": 42,
       "chapter": 6,
@@ -5764,6 +6443,188 @@
       "text": "Jesus answered him, “Will you lay down your life for me? Most certainly I tell you, the rooster won’t crow until you have denied me three times."
     },
     {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 1,
+      "text": "The first book I wrote, Theophilus, concerned all that Jesus began both to do and to teach,"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 2,
+      "text": "until the day in which he was received up, after he had given commandment through the Holy Spirit to the apostles whom he had chosen."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 3,
+      "text": "To these he also showed himself alive after he suffered, by many proofs, appearing to them over a period of forty days and speaking about God’s Kingdom."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 4,
+      "text": "Being assembled together with them, he commanded them, “Don’t depart from Jerusalem, but wait for the promise of the Father, which you heard from me."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 5,
+      "text": "For John indeed baptized in water, but you will be baptized in the Holy Spirit not many days from now.”"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 6,
+      "text": "Therefore, when they had come together, they asked him, “Lord, are you now restoring the kingdom to Israel?”"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 7,
+      "text": "He said to them, “It isn’t for you to know times or seasons which the Father has set within his own authority."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 8,
+      "text": "But you will receive power when the Holy Spirit has come upon you. You will be witnesses to me in Jerusalem, in all Judea and Samaria, and to the uttermost parts of the earth.”"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 9,
+      "text": "When he had said these things, as they were looking, he was taken up, and a cloud received him out of their sight."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 10,
+      "text": "While they were looking steadfastly into the sky as he went, behold, two men stood by them in white clothing,"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 11,
+      "text": "who also said, “You men of Galilee, why do you stand looking into the sky? This Jesus, who was received up from you into the sky, will come back in the same way as you saw him going into the sky.”"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 12,
+      "text": "Then they returned to Jerusalem from the mountain called Olivet, which is near Jerusalem, a Sabbath day’s journey away."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 13,
+      "text": "When they had come in, they went up into the upper room where they were staying, that is Peter, John, James, Andrew, Philip, Thomas, Bartholomew, Matthew, James the son of Alphaeus, Simon the Zealot, and Judas the son of James."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 14,
+      "text": "All these with one accord continued steadfastly in prayer and supplication, along with the women and Mary the mother of Jesus, and with his brothers."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 15,
+      "text": "In these days, Peter stood up in the middle of the disciples (and the number of names was about one hundred twenty), and said,"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 16,
+      "text": "“Brothers, it was necessary that this Scripture should be fulfilled, which the Holy Spirit spoke before by the mouth of David concerning Judas, who was guide to those who took Jesus."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 17,
+      "text": "For he was counted with us, and received his portion in this ministry."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 18,
+      "text": "Now this man obtained a field with the reward for his wickedness; and falling headlong, his body burst open and all his intestines gushed out."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 19,
+      "text": "It became known to everyone who lived in Jerusalem that in their language that field was called ‘Akeldama,’ that is, ‘The field of blood.’"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 20,
+      "text": "For it is written in the book of Psalms, ‘Let his habitation be made desolate. Let no one dwell in it;’ and, ‘Let another take his office.’"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 21,
+      "text": "“Of the men therefore who have accompanied us all the time that the Lord Jesus went in and out among us,"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 22,
+      "text": "beginning from the baptism of John to the day that he was received up from us, of these one must become a witness with us of his resurrection.”"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 23,
+      "text": "They put forward two: Joseph called Barsabbas, who was also called Justus, and Matthias."
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 24,
+      "text": "They prayed and said, “You, Lord, who know the hearts of all men, show which one of these two you have chosen"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 25,
+      "text": "to take part in this ministry and apostleship from which Judas fell away, that he might go to his own place.”"
+    },
+    {
+      "book_name": "Acts",
+      "book": 44,
+      "chapter": 1,
+      "verse": 26,
+      "text": "They drew lots for them, and the lot fell on Matthias; and he was counted with the eleven apostles."
+    },
+    {
       "book_name": "Romans",
       "book": 45,
       "chapter": 2,
@@ -6240,6 +7101,482 @@
       "text": "nor height, nor depth, nor any other created thing will be able to separate us from God’s love which is in Christ Jesus our Lord."
     },
     {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 1,
+      "text": "Therefore I urge you, brothers, by the mercies of God, to present your bodies a living sacrifice, holy, acceptable to God, which is your spiritual service."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 2,
+      "text": "Don’t be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what is the good, well-pleasing, and perfect will of God."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 3,
+      "text": "For I say through the grace that was given me, to everyone who is among you, not to think of yourself more highly than you ought to think; but to think reasonably, as God has apportioned to each person a measure of faith."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 4,
+      "text": "For even as we have many members in one body, and all the members don’t have the same function,"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 5,
+      "text": "so we, who are many, are one body in Christ, and individually members of one another,"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 6,
+      "text": "having gifts differing according to the grace that was given to us: if prophecy, let’s prophesy according to the proportion of our faith;"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 7,
+      "text": "or service, let’s give ourselves to service; or he who teaches, to his teaching;"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 8,
+      "text": "or he who exhorts, to his exhorting; he who gives, let him do it with generosity; he who rules, with diligence; he who shows mercy, with cheerfulness."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 9,
+      "text": "Let love be without hypocrisy. Abhor that which is evil. Cling to that which is good."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 10,
+      "text": "In love of the brothers be tenderly affectionate to one another; in honor prefer one another,"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 11,
+      "text": "not lagging in diligence, fervent in spirit, serving the Lord,"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 12,
+      "text": "rejoicing in hope, enduring in troubles, continuing steadfastly in prayer,"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 13,
+      "text": "contributing to the needs of the saints, and given to hospitality."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 14,
+      "text": "Bless those who persecute you; bless, and don’t curse."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 15,
+      "text": "Rejoice with those who rejoice. Weep with those who weep."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 16,
+      "text": "Be of the same mind one toward another. Don’t set your mind on high things, but associate with the humble. Don’t be wise in your own conceits."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 17,
+      "text": "Repay no one evil for evil. Respect what is honorable in the sight of all men."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 18,
+      "text": "If it is possible, as much as it is up to you, be at peace with all men."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 19,
+      "text": "Don’t seek revenge yourselves, beloved, but give place to God’s wrath. For it is written, “Vengeance belongs to me; I will repay, says the Lord.”"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 20,
+      "text": "Therefore “If your enemy is hungry, feed him. If he is thirsty, give him a drink; for in doing so, you will heap coals of fire on his head.”"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 12,
+      "verse": 21,
+      "text": "Don’t be overcome by evil, but overcome evil with good."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 1,
+      "text": "Let every soul be in subjection to the higher authorities, for there is no authority except from God, and those who exist are ordained by God."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 2,
+      "text": "Therefore he who resists the authority withstands the ordinance of God; and those who withstand will receive to themselves judgment."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 3,
+      "text": "For rulers are not a terror to the good work, but to the evil. Do you desire to have no fear of the authority? Do that which is good, and you will have praise from the authority,"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 4,
+      "text": "for he is a servant of God to you for good. But if you do that which is evil, be afraid, for he doesn’t bear the sword in vain; for he is a servant of God, an avenger for wrath to him who does evil."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 5,
+      "text": "Therefore you need to be in subjection, not only because of the wrath, but also for conscience’ sake."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 6,
+      "text": "For this reason you also pay taxes, for they are servants of God’s service, continually doing this very thing."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 7,
+      "text": "Therefore give everyone what you owe: if you owe taxes, pay taxes; if customs, then customs; if respect, then respect; if honor, then honor."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 8,
+      "text": "Owe no one anything, except to love one another; for he who loves his neighbor has fulfilled the law."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 9,
+      "text": "For the commandments, “You shall not commit adultery,” “You shall not murder,” “You shall not steal,” “You shall not covet,” and whatever other commandments there are, are all summed up in this saying, namely, “You shall love your neighbor as yourself.”"
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 10,
+      "text": "Love doesn’t harm a neighbor. Love therefore is the fulfillment of the law."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 11,
+      "text": "Do this, knowing the time, that it is already time for you to awaken out of sleep, for salvation is now nearer to us than when we first believed."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 12,
+      "text": "The night is far gone, and the day is near. Let’s therefore throw off the deeds of darkness, and let’s put on the armor of light."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 13,
+      "text": "Let’s walk properly, as in the day; not in reveling and drunkenness, not in sexual promiscuity and lustful acts, and not in strife and jealousy."
+    },
+    {
+      "book_name": "Romans",
+      "book": 45,
+      "chapter": 13,
+      "verse": 14,
+      "text": "But put on the Lord Jesus Christ, and make no provision for the flesh, for its lusts."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 1,
+      "text": "Now I would not have you ignorant, brothers, that our fathers were all under the cloud, and all passed through the sea;"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 2,
+      "text": "and were all baptized into Moses in the cloud and in the sea;"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 3,
+      "text": "and all ate the same spiritual food;"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 4,
+      "text": "and all drank the same spiritual drink. For they drank of a spiritual rock that followed them, and the rock was Christ."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 5,
+      "text": "However with most of them, God was not well pleased, for they were overthrown in the wilderness."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 6,
+      "text": "Now these things were our examples, to the intent we should not lust after evil things as they also lusted."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 7,
+      "text": "Don’t be idolaters, as some of them were. As it is written, “The people sat down to eat and drink, and rose up to play.”"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 8,
+      "text": "Let’s not commit sexual immorality, as some of them committed, and in one day twenty-three thousand fell."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 9,
+      "text": "Let’s not test Christ, as some of them tested, and perished by the serpents."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 10,
+      "text": "Don’t grumble, as some of them also grumbled, and perished by the destroyer."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 11,
+      "text": "Now all these things happened to them by way of example, and they were written for our admonition, on whom the ends of the ages have come."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 12,
+      "text": "Therefore let him who thinks he stands be careful that he doesn’t fall."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 13,
+      "text": "No temptation has taken you except what is common to man. God is faithful, who will not allow you to be tempted above what you are able, but will with the temptation also make the way of escape, that you may be able to endure it."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 14,
+      "text": "Therefore, my beloved, flee from idolatry."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 15,
+      "text": "I speak as to wise men. Judge what I say."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 16,
+      "text": "The cup of blessing which we bless, isn’t it a sharing of the blood of Christ? The bread which we break, isn’t it a sharing of the body of Christ?"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 17,
+      "text": "Because there is one loaf of bread, we, who are many, are one body; for we all partake of the one loaf of bread."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 18,
+      "text": "Consider Israel according to the flesh. Don’t those who eat the sacrifices participate in the altar?"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 19,
+      "text": "What am I saying then? That a thing sacrificed to idols is anything, or that an idol is anything?"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 20,
+      "text": "But I say that the things which the Gentiles sacrifice, they sacrifice to demons and not to God, and I don’t desire that you would have fellowship with demons."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 21,
+      "text": "You can’t both drink the cup of the Lord and the cup of demons. You can’t both partake of the table of the Lord and of the table of demons."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 22,
+      "text": "Or do we provoke the Lord to jealousy? Are we stronger than he?"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 23,
+      "text": "“All things are lawful for me,” but not all things are profitable. “All things are lawful for me,” but not all things build up."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 24,
+      "text": "Let no one seek his own, but each one his neighbor’s good."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 25,
+      "text": "Whatever is sold in the butcher shop, eat, asking no question for the sake of conscience,"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 26,
+      "text": "for “the earth is the Lord’s, and its fullness.”"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 27,
+      "text": "But if one of those who don’t believe invites you to a meal, and you are inclined to go, eat whatever is set before you, asking no questions for the sake of conscience."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 28,
+      "text": "But if anyone says to you, “This was offered to idols,” don’t eat it for the sake of the one who told you, and for the sake of conscience. For “the earth is the Lord’s, with all its fullness.”"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 29,
+      "text": "Conscience, I say, not your own, but the other’s conscience. For why is my liberty judged by another conscience?"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 30,
+      "text": "If I partake with thankfulness, why am I denounced for something I give thanks for?"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 31,
+      "text": "Whether therefore you eat or drink, or whatever you do, do all to the glory of God."
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 32,
+      "text": "Give no occasion for stumbling, whether to Jews, to Greeks, or to the assembly of God;"
+    },
+    {
+      "book_name": "1 Corinthians",
+      "book": 46,
+      "chapter": 10,
+      "verse": 33,
+      "text": "even as I also please all men in all things, not seeking my own profit, but the profit of the many, that they may be saved."
+    },
+    {
       "book_name": "Galatians",
       "book": 48,
       "chapter": 1,
@@ -6408,6 +7745,188 @@
       "text": "So they glorified God in me."
     },
     {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 1,
+      "text": "Stand firm therefore in the liberty by which Christ has made us free, and don’t be entangled again with a yoke of bondage."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 2,
+      "text": "Behold, I, Paul, tell you that if you receive circumcision, Christ will profit you nothing."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 3,
+      "text": "Yes, I testify again to every man who receives circumcision that he is a debtor to do the whole law."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 4,
+      "text": "You are alienated from Christ, you who desire to be justified by the law. You have fallen away from grace."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 5,
+      "text": "For we through the Spirit, by faith wait for the hope of righteousness."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 6,
+      "text": "For in Christ Jesus neither circumcision nor uncircumcision amounts to anything, but faith working through love."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 7,
+      "text": "You were running well! Who interfered with you that you should not obey the truth?"
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 8,
+      "text": "This persuasion is not from him who calls you."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 9,
+      "text": "A little yeast grows through the whole lump."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 10,
+      "text": "I have confidence toward you in the Lord that you will think no other way. But he who troubles you will bear his judgment, whoever he is."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 11,
+      "text": "But I, brothers, if I still preach circumcision, why am I still persecuted? Then the stumbling block of the cross has been removed."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 12,
+      "text": "I wish that those who disturb you would cut themselves off."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 13,
+      "text": "For you, brothers, were called for freedom. Only don’t use your freedom as an opportunity for the flesh, but through love be servants to one another."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 14,
+      "text": "For the whole law is fulfilled in one word, in this: “You shall love your neighbor as yourself.”"
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 15,
+      "text": "But if you bite and devour one another, be careful that you don’t consume one another."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 16,
+      "text": "But I say, walk by the Spirit, and you won’t fulfill the lust of the flesh."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 17,
+      "text": "For the flesh lusts against the Spirit, and the Spirit against the flesh; and these are contrary to one another, that you may not do the things that you desire."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 18,
+      "text": "But if you are led by the Spirit, you are not under the law."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 19,
+      "text": "Now the deeds of the flesh are obvious, which are: adultery, sexual immorality, uncleanness, lustfulness,"
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 20,
+      "text": "idolatry, sorcery, hatred, strife, jealousies, outbursts of anger, rivalries, divisions, heresies,"
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 21,
+      "text": "envy, murders, drunkenness, orgies, and things like these; of which I forewarn you, even as I also forewarned you, that those who practice such things will not inherit God’s Kingdom."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 22,
+      "text": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faith,"
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 23,
+      "text": "gentleness, and self-control. Against such things there is no law."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 24,
+      "text": "Those who belong to Christ have crucified the flesh with its passions and lusts."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 25,
+      "text": "If we live by the Spirit, let’s also walk by the Spirit."
+    },
+    {
+      "book_name": "Galatians",
+      "book": 48,
+      "chapter": 5,
+      "verse": 26,
+      "text": "Let’s not become conceited, provoking one another, and envying one another."
+    },
+    {
       "book_name": "Ephesians",
       "book": 49,
       "chapter": 2,
@@ -6560,6 +8079,741 @@
       "chapter": 2,
       "verse": 22,
       "text": "in whom you also are built together for a habitation of God in the Spirit."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 1,
+      "text": "Be therefore imitators of God, as beloved children."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 2,
+      "text": "Walk in love, even as Christ also loved us and gave himself up for us, an offering and a sacrifice to God for a sweet-smelling fragrance."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 3,
+      "text": "But sexual immorality, and all uncleanness or covetousness, let it not even be mentioned among you, as becomes saints;"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 4,
+      "text": "nor filthiness, nor foolish talking, nor jesting, which are not appropriate, but rather giving of thanks."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 5,
+      "text": "Know this for sure, that no sexually immoral person, nor unclean person, nor covetous man (who is an idolater), has any inheritance in the Kingdom of Christ and God."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 6,
+      "text": "Let no one deceive you with empty words, for because of these things the wrath of God comes on the children of disobedience."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 7,
+      "text": "Therefore don’t be partakers with them."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 8,
+      "text": "For you were once darkness, but are now light in the Lord. Walk as children of light,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 9,
+      "text": "for the fruit of the Spirit is in all goodness and righteousness and truth,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 10,
+      "text": "proving what is well pleasing to the Lord."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 11,
+      "text": "Have no fellowship with the unfruitful deeds of darkness, but rather even reprove them."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 12,
+      "text": "For it is a shame even to speak of the things which are done by them in secret."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 13,
+      "text": "But all things, when they are reproved, are revealed by the light, for everything that reveals is light."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 14,
+      "text": "Therefore he says, “Awake, you who sleep, and arise from the dead, and Christ will shine on you.”"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 15,
+      "text": "Therefore watch carefully how you walk, not as unwise, but as wise,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 16,
+      "text": "redeeming the time, because the days are evil."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 17,
+      "text": "Therefore, don’t be foolish, but understand what the will of the Lord is."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 18,
+      "text": "Don’t be drunken with wine, in which is dissipation, but be filled with the Spirit,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 19,
+      "text": "speaking to one another in psalms, hymns, and spiritual songs; singing and making melody in your heart to the Lord;"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 20,
+      "text": "giving thanks always concerning all things in the name of our Lord Jesus Christ to God, even the Father;"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 21,
+      "text": "subjecting yourselves to one another in the fear of Christ."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 22,
+      "text": "Wives, be subject to your own husbands, as to the Lord."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 23,
+      "text": "For the husband is the head of the wife, as Christ also is the head of the assembly, being himself the savior of the body."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 24,
+      "text": "But as the assembly is subject to Christ, so let the wives also be to their own husbands in everything."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 25,
+      "text": "Husbands, love your wives, even as Christ also loved the assembly and gave himself up for her,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 26,
+      "text": "that he might sanctify her, having cleansed her by the washing of water with the word,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 27,
+      "text": "that he might present the assembly to himself gloriously, not having spot or wrinkle or any such thing, but that she should be holy and without defect."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 28,
+      "text": "Even so husbands also ought to love their own wives as their own bodies. He who loves his own wife loves himself."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 29,
+      "text": "For no man ever hated his own flesh, but nourishes and cherishes it, even as the Lord also does the assembly,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 30,
+      "text": "because we are members of his body, of his flesh and bones."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 31,
+      "text": "“For this cause a man will leave his father and mother and will be joined to his wife. Then the two will become one flesh.”"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 32,
+      "text": "This mystery is great, but I speak concerning Christ and the assembly."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 5,
+      "verse": 33,
+      "text": "Nevertheless each of you must also love his own wife even as himself; and let the wife see that she respects her husband."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 1,
+      "text": "Children, obey your parents in the Lord, for this is right."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 2,
+      "text": "“Honor your father and mother,” which is the first commandment with a promise:"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 3,
+      "text": "“that it may be well with you, and you may live long on the earth.”"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 4,
+      "text": "You fathers, don’t provoke your children to wrath, but nurture them in the discipline and instruction of the Lord."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 5,
+      "text": "Servants, be obedient to those who according to the flesh are your masters, with fear and trembling, in singleness of your heart, as to Christ,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 6,
+      "text": "not in the way of service only when eyes are on you, as men pleasers, but as servants of Christ, doing the will of God from the heart,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 7,
+      "text": "with good will doing service as to the Lord and not to men,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 8,
+      "text": "knowing that whatever good thing each one does, he will receive the same good again from the Lord, whether he is bound or free."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 9,
+      "text": "You masters, do the same things to them, and give up threatening, knowing that he who is both their Master and yours is in heaven, and there is no partiality with him."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 10,
+      "text": "Finally, be strong in the Lord and in the strength of his might."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 11,
+      "text": "Put on the whole armor of God, that you may be able to stand against the wiles of the devil."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 12,
+      "text": "For our wrestling is not against flesh and blood, but against the principalities, against the powers, against the world’s rulers of the darkness of this age, and against the spiritual forces of wickedness in the heavenly places."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 13,
+      "text": "Therefore put on the whole armor of God, that you may be able to withstand in the evil day, and having done all, to stand."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 14,
+      "text": "Stand therefore, having the utility belt of truth buckled around your waist, and having put on the breastplate of righteousness,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 15,
+      "text": "and having fitted your feet with the preparation of the Good News of peace,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 16,
+      "text": "above all, taking up the shield of faith, with which you will be able to quench all the fiery darts of the evil one."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 17,
+      "text": "And take the helmet of salvation, and the sword of the Spirit, which is the word of God;"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 18,
+      "text": "with all prayer and requests, praying at all times in the Spirit, and being watchful to this end in all perseverance and requests for all the saints."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 19,
+      "text": "Pray for me, that utterance may be given to me in opening my mouth, to make known with boldness the mystery of the Good News,"
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 20,
+      "text": "for which I am an ambassador in chains; that in it I may speak boldly, as I ought to speak."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 21,
+      "text": "But that you also may know my affairs, how I am doing, Tychicus, the beloved brother and faithful servant in the Lord, will make known to you all things."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 22,
+      "text": "I have sent him to you for this very purpose, that you may know our state and that he may comfort your hearts."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 23,
+      "text": "Peace be to the brothers, and love with faith, from God the Father and the Lord Jesus Christ."
+    },
+    {
+      "book_name": "Ephesians",
+      "book": 49,
+      "chapter": 6,
+      "verse": 24,
+      "text": "Grace be with all those who love our Lord Jesus Christ with incorruptible love. Amen."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 1,
+      "text": "Therefore, my brothers, beloved and longed for, my joy and crown, stand firm in the Lord in this way, my beloved."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 2,
+      "text": "I exhort Euodia, and I exhort Syntyche, to think the same way in the Lord."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 3,
+      "text": "Yes, I beg you also, true partner, help these women, for they labored with me in the Good News with Clement also, and the rest of my fellow workers, whose names are in the book of life."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 4,
+      "text": "Rejoice in the Lord always! Again I will say, “Rejoice!”"
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 5,
+      "text": "Let your gentleness be known to all men. The Lord is at hand."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 6,
+      "text": "In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 7,
+      "text": "And the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 8,
+      "text": "Finally, brothers, whatever things are true, whatever things are honorable, whatever things are just, whatever things are pure, whatever things are lovely, whatever things are of good report: if there is any virtue and if there is anything worthy of praise, think about these things."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 9,
+      "text": "Do the things which you learned, received, heard, and saw in me, and the God of peace will be with you."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 10,
+      "text": "But I rejoice in the Lord greatly that now at length you have revived your thought for me; in which you did indeed take thought, but you lacked opportunity."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 11,
+      "text": "Not that I speak because of lack, for I have learned in whatever state I am, to be content in it."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 12,
+      "text": "I know how to be humbled, and I also know how to abound. In any and all circumstances I have learned the secret both to be filled and to be hungry, both to abound and to be in need."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 13,
+      "text": "I can do all things through Christ who strengthens me."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 14,
+      "text": "However you did well that you shared in my affliction."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 15,
+      "text": "You yourselves also know, you Philippians, that in the beginning of the Good News, when I departed from Macedonia, no assembly shared with me in the matter of giving and receiving but you only."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 16,
+      "text": "For even in Thessalonica you sent once and again to my need."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 17,
+      "text": "Not that I seek for the gift, but I seek for the fruit that increases to your account."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 18,
+      "text": "But I have all things and abound. I am filled, having received from Epaphroditus the things that came from you, a sweet-smelling fragrance, an acceptable and well-pleasing sacrifice to God."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 19,
+      "text": "My God will supply every need of yours according to his riches in glory in Christ Jesus."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 20,
+      "text": "Now to our God and Father be the glory forever and ever! Amen."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 21,
+      "text": "Greet every saint in Christ Jesus. The brothers who are with me greet you."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 22,
+      "text": "All the saints greet you, especially those who are of Caesar’s household."
+    },
+    {
+      "book_name": "Philippians",
+      "book": 50,
+      "chapter": 4,
+      "verse": 23,
+      "text": "The grace of the Lord Jesus Christ be with you all. Amen."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 1,
+      "text": "If then you were raised together with Christ, seek the things that are above, where Christ is, seated on the right hand of God."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 2,
+      "text": "Set your mind on the things that are above, not on the things that are on the earth."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 3,
+      "text": "For you died, and your life is hidden with Christ in God."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 4,
+      "text": "When Christ, our life, is revealed, then you will also be revealed with him in glory."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 5,
+      "text": "Put to death therefore your members which are on the earth: sexual immorality, uncleanness, depraved passion, evil desire, and covetousness, which is idolatry."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 6,
+      "text": "For these things’ sake the wrath of God comes on the children of disobedience."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 7,
+      "text": "You also once walked in those, when you lived in them,"
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 8,
+      "text": "but now you must put them all away: anger, wrath, malice, slander, and shameful speaking out of your mouth."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 9,
+      "text": "Don’t lie to one another, seeing that you have put off the old man with his doings,"
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 10,
+      "text": "and have put on the new man, who is being renewed in knowledge after the image of his Creator,"
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 11,
+      "text": "where there can’t be Greek and Jew, circumcision and uncircumcision, barbarian, Scythian, bondservant, or free person; but Christ is all, and in all."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 12,
+      "text": "Put on therefore, as God’s chosen ones, holy and beloved, a heart of compassion, kindness, lowliness, humility, and perseverance;"
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 13,
+      "text": "bearing with one another, and forgiving each other, if any man has a complaint against any; even as Christ forgave you, so you also do."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 14,
+      "text": "Above all these things, walk in love, which is the bond of perfection."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 15,
+      "text": "And let the peace of God rule in your hearts, to which also you were called in one body, and be thankful."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 16,
+      "text": "Let the word of Christ dwell in you richly; in all wisdom teaching and admonishing one another with psalms, hymns, and spiritual songs, singing with grace in your heart to the Lord."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 17,
+      "text": "Whatever you do, in word or in deed, do all in the name of the Lord Jesus, giving thanks to God the Father through him."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 18,
+      "text": "Wives, be in subjection to your husbands, as is fitting in the Lord."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 19,
+      "text": "Husbands, love your wives, and don’t be bitter against them."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 20,
+      "text": "Children, obey your parents in all things, for this pleases the Lord."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 21,
+      "text": "Fathers, don’t provoke your children, so that they won’t be discouraged."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 22,
+      "text": "Servants, obey in all things those who are your masters according to the flesh, not just when they are looking, as men pleasers, but in singleness of heart, fearing God."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 23,
+      "text": "And whatever you do, work heartily, as for the Lord and not for men,"
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 24,
+      "text": "knowing that from the Lord you will receive the reward of the inheritance; for you serve the Lord Christ."
+    },
+    {
+      "book_name": "Colossians",
+      "book": 51,
+      "chapter": 3,
+      "verse": 25,
+      "text": "But he who does wrong will receive again for the wrong that he has done, and there is no partiality."
     },
     {
       "book_name": "Hebrews",
@@ -7113,6 +9367,209 @@
       "chapter": 11,
       "verse": 40,
       "text": "God having provided some better thing concerning us, so that apart from us they should not be made perfect."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 1,
+      "text": "Therefore let’s also, seeing we are surrounded by so great a cloud of witnesses, lay aside every weight and the sin which so easily entangles us, and let’s run with perseverance the race that is set before us,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 2,
+      "text": "looking to Jesus, the author and perfecter of faith, who for the joy that was set before him endured the cross, despising its shame, and has sat down at the right hand of the throne of God."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 3,
+      "text": "For consider him who has endured such contradiction of sinners against himself, that you don’t grow weary, fainting in your souls."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 4,
+      "text": "You have not yet resisted to blood, striving against sin."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 5,
+      "text": "You have forgotten the exhortation which reasons with you as with children, “My son, don’t take lightly the chastening of the Lord, nor faint when you are reproved by him;"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 6,
+      "text": "for whom the Lord loves, he disciplines, and chastises every son whom he receives.”"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 7,
+      "text": "It is for discipline that you endure. God deals with you as with children, for what son is there whom his father doesn’t discipline?"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 8,
+      "text": "But if you are without discipline, of which all have been made partakers, then you are illegitimate, and not children."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 9,
+      "text": "Furthermore, we had the fathers of our flesh to chasten us, and we paid them respect. Shall we not much rather be in subjection to the Father of spirits and live?"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 10,
+      "text": "For they indeed for a few days disciplined us as seemed good to them, but he for our profit, that we may be partakers of his holiness."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 11,
+      "text": "All chastening seems for the present to be not joyous but grievous; yet afterward it yields the peaceful fruit of righteousness to those who have been trained by it."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 12,
+      "text": "Therefore lift up the hands that hang down and the feeble knees,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 13,
+      "text": "and make straight paths for your feet, so what is lame may not be dislocated, but rather be healed."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 14,
+      "text": "Follow after peace with all men, and the sanctification without which no man will see the Lord,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 15,
+      "text": "looking carefully lest there be any man who falls short of the grace of God, lest any root of bitterness springing up trouble you and many be defiled by it,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 16,
+      "text": "lest there be any sexually immoral person or profane person, like Esau, who sold his birthright for one meal."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 17,
+      "text": "For you know that even when he afterward desired to inherit the blessing, he was rejected, for he found no place for a change of mind though he sought it diligently with tears."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 18,
+      "text": "For you have not come to a mountain that might be touched and that burned with fire, and to blackness, darkness, storm,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 19,
+      "text": "the sound of a trumpet, and the voice of words; which those who heard it begged that not one more word should be spoken to them,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 20,
+      "text": "for they could not stand that which was commanded, “If even an animal touches the mountain, it shall be stoned”."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 21,
+      "text": "So fearful was the appearance that Moses said, “I am terrified and trembling.”"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 22,
+      "text": "But you have come to Mount Zion and to the city of the living God, the heavenly Jerusalem, and to innumerable multitudes of angels,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 23,
+      "text": "to the festal gathering and assembly of the firstborn who are enrolled in heaven, to God the Judge of all, to the spirits of just men made perfect,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 24,
+      "text": "to Jesus, the mediator of a new covenant, and to the blood of sprinkling that speaks better than that of Abel."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 25,
+      "text": "See that you don’t refuse him who speaks. For if they didn’t escape when they refused him who warned on the earth, how much more will we not escape who turn away from him who warns from heaven,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 26,
+      "text": "whose voice shook the earth then, but now he has promised, saying, “Yet once more I will shake not only the earth, but also the heavens.”"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 27,
+      "text": "This phrase, “Yet once more” signifies the removing of those things that are shaken, as of things that have been made, that those things which are not shaken may remain."
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 28,
+      "text": "Therefore, receiving a Kingdom that can’t be shaken, let’s have grace, through which we serve God acceptably, with reverence and awe,"
+    },
+    {
+      "book_name": "Hebrews",
+      "book": 58,
+      "chapter": 12,
+      "verse": 29,
+      "text": "for our God is a consuming fire."
     },
     {
       "book_name": "James",

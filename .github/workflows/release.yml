@@ -101,6 +101,18 @@ jobs:
             }
           "
 
+      # The descriptor a maintainer commits must come from HERE, because only
+      # this environment produces the byte layout the check above compares
+      # against. Uploading it on every run — including the tagless
+      # workflow_dispatch one — makes refreshing it a download rather than
+      # copying a checksum out of a log. Run this workflow manually after any
+      # change to the ontology, manifests or pipeline, and commit the result.
+      - name: Upload the built descriptor for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-artifact-descriptor
+          path: artifacts/content-artifact.json
+
       # A tarball, not a registry publish. An npm scope has to be a registered
       # npm account, which is separate from the GitHub owner and may not exist
       # — and consumers should not be blocked on that. This installs with

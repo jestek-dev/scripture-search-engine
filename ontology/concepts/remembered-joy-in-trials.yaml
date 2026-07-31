@@ -1,0 +1,26 @@
+# REMEMBERED-PHRASING PACK
+#
+# People search in the wording they memorised, which is usually NIV or ESV.
+# The corpus is the WEB. Measured against the full artifact, this query does
+# not reach its passage by any lexical rung: absent from results entirely (the WEB reads "count it all joy").
+#
+# A public-domain translation cannot close this — the remembered wordings are
+# copyrighted, so the phrasing will never appear in the text we ship. Layer A
+# is the mechanism that fits: the lexicon holds the remembered phrasing, the
+# anchor names the verse it refers to, and the reason chip says LH editorial
+# said so. The engine reports that a curated source names this passage; it
+# does not claim the wording is the verse.
+#
+# ONE anchor per pack, deliberately. Every anchor of a matched concept fires,
+# so a pack bundling ten phrasings against ten anchors would answer "plans to
+# prosper you" with all ten passages. Narrow anchor, narrow claim.
+id: remembered-joy-in-trials
+label: Joy in trials
+lexicon:
+  - consider it pure joy
+  - pure joy when you face trials
+  - trials of many kinds
+anchors:
+  - ref: James 1:2
+    sources: [editorial]
+    weight: 1.0
