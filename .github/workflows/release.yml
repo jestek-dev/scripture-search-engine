@@ -21,6 +21,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Job-level, because a step's `if:` is evaluated BEFORE that step's own
+    # `env:` block exists — guarding on a step-local variable would read as
+    # empty every time and silently never publish.
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v5
 
@@ -28,6 +33,9 @@ jobs:
         with:
           node-version: '24'
           cache: npm
+          # Required for npm to authenticate on publish. Harmless when no
+          # token is configured — it only writes a registry line to .npmrc.
+          registry-url: 'https://registry.npmjs.org'
 
       - run: npm ci
 
@@ -97,6 +105,20 @@ jobs:
           # real filename rather than reconstructing it keeps the install
           # command in the release notes from 404ing.
           echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+
+      # Publishing to npm is OPTIONAL and additive. Anyone who pinned the
+      # tarball URL is unaffected by it happening or not happening, which is
+      # why the release does not depend on it: no NPM_TOKEN means this step is
+      # skipped, not failed.
+      #
+      # --access public is not a default. npm treats scoped packages as private
+      # unless told otherwise, and a private publish on a free account fails
+      # with a billing error that reads nothing like the actual problem.
+      - name: Publish to npm
+        if: startsWith(github.ref, 'refs/tags/v') && env.NPM_TOKEN != ''
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --workspace engine --access public
 
       - name: Attach to release
         if: startsWith(github.ref, 'refs/tags/v')
