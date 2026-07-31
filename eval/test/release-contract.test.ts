@@ -36,6 +36,25 @@ describe('published package version', () => {
   });
 });
 
+describe('published package metadata', () => {
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'engine', 'package.json'), 'utf8')) as {
+    repository?: { type?: string; url?: string; directory?: string };
+  };
+
+  it('declares the repository it is built from', () => {
+    // Trusted publishing signs a provenance statement naming the repository
+    // the build came from, and npm REFUSES the publish unless package.json
+    // makes the same claim. v0.7.1 failed exactly here — after authenticating
+    // and after writing to Sigstore's transparency log — because this field
+    // was absent.
+    expect(pkg.repository?.url).toBe(
+      'git+https://github.com/jestek-dev/scripture-search-engine.git',
+    );
+    // The package lives in a workspace, not at the repository root.
+    expect(pkg.repository?.directory).toBe('engine');
+  });
+});
+
 describe('release descriptor satisfies the consumer contract', () => {
   const descriptor = JSON.parse(
     readFileSync(join(ROOT, 'artifacts', 'content-artifact.json'), 'utf8'),
