@@ -82,10 +82,21 @@ jobs:
         id: pack
         run: |
           npm pack --workspace engine --pack-destination .
+          TARBALL=$(ls jestek-dev-scripture-engine-*.tgz)
+          # Assert the package contains code. `files: ["dist"]` ships only the
+          # build output, so a pack without a build produces a tarball holding
+          # nothing but package.json — which installs cleanly and then fails at
+          # the consumer's first import. v0.7.0 shipped exactly that.
+          if ! tar tzf "$TARBALL" | grep -q 'package/dist/index.js'; then
+            echo "::error::$TARBALL contains no dist/ — the engine was not built before packing"
+            tar tzf "$TARBALL"
+            exit 1
+          fi
+          echo "packed $TARBALL with $(tar tzf "$TARBALL" | wc -l) entries"
           # The tag is v0.7.0; the tarball npm produces is 0.7.0. Emitting the
           # real filename rather than reconstructing it keeps the install
           # command in the release notes from 404ing.
-          echo "tarball=$(ls jestek-dev-scripture-engine-*.tgz)" >> "$GITHUB_OUTPUT"
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
 
       - name: Attach to release
         if: startsWith(github.ref, 'refs/tags/v')
