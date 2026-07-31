@@ -48,28 +48,47 @@ jobs:
       - name: Fetch pinned sources
         run: npm run fetch:sources --workspace pipeline
 
+      # Snapshot the REVIEWED descriptor before building. buildArtifact.ts
+      # writes artifacts/content-artifact.json as its own output, so a verify
+      # step that reads the file AFTER the build compares the build to itself
+      # — a check that can never fail. It didn't fail on v0.7.1, when the
+      # shipped database no longer matched the committed descriptor's
+      # databaseSha256 and nothing said so.
+      - name: Snapshot the reviewed descriptor
+        run: cp artifacts/content-artifact.json "$RUNNER_TEMP/reviewed-descriptor.json"
+
       # Rebuild AT THE REVIEWED BUILD TIME. built_at lands in the database's
       # meta table and therefore in its checksum, so without pinning it every
       # rebuild differs and the verification below could never mean anything.
       - name: Build artifact, reproducing the reviewed one
         run: |
-          BUILT_AT=$(node -p "require('./artifacts/content-artifact.json').builtAt")
+          BUILT_AT=$(node -p "JSON.parse(require('node:fs').readFileSync(process.env.RUNNER_TEMP + '/reviewed-descriptor.json', 'utf8')).builtAt")
           echo "reproducing build stamped $BUILT_AT"
           npm run build:artifact --workspace pipeline -- --built-at "$BUILT_AT"
 
       # The descriptor is committed, so this catches a build that no longer
       # reproduces the reviewed artifact — a source drifting under us, or a
-      # pipeline change nobody re-descriptored.
+      # pipeline change nobody re-descriptored. Both checks read the SNAPSHOT
+      # taken before the build, never the file the build just wrote.
+      #
+      # Caveat this check enforces: the canonical build environment is THIS
+      # workflow. SQLite byte layout varies with the SQLite version compiled
+      # into Node, so a database built with a different Node (a maintainer's
+      # laptop) can carry identical fingerprints and row counts yet a
+      # different file checksum. The reviewed descriptor must therefore come
+      # from a CI build — which is also the only build a consumer can audit.
       - name: Verify the built artifact matches the reviewed descriptor
         run: |
+          echo "descriptor drift (empty means none):"
+          diff "$RUNNER_TEMP/reviewed-descriptor.json" artifacts/content-artifact.json
           node -e "
             const fs = require('node:fs'), crypto = require('node:crypto');
-            const d = JSON.parse(fs.readFileSync('artifacts/content-artifact.json', 'utf8'));
+            const d = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/reviewed-descriptor.json', 'utf8'));
             const bytes = fs.readFileSync('pipeline/output/content.db');
             const sha = crypto.createHash('sha256').update(bytes).digest('hex');
             const ok = sha === d.databaseSha256;
-            console.log('descriptor sha256:', d.databaseSha256);
-            console.log('built      sha256:', sha);
+            console.log('reviewed sha256:', d.databaseSha256);
+            console.log('built    sha256:', sha);
             console.log('corpus  fingerprint:', d.corpusFingerprint);
             console.log('layer   fingerprint:', d.layerFingerprint);
             if (!ok) {

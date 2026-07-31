@@ -395,7 +395,7 @@ The gate also reports any *unbudgeted* table over 1 MiB rather than passing it,
 which justified itself immediately by failing the first run on an FTS shadow
 table nobody had considered.
 
-### 2.10 Whole-Bible coverage: 95.3%, and what still limits it
+### 2.10 Whole-Bible coverage: 99.0%, and what still limits it
 
 Measured on the real artifact, not the fixture:
 
@@ -563,16 +563,39 @@ credentials: enabling 2FA (npm now offers only security keys — Touch ID counts
 and the first `npm publish`, which needs a fingerprint prompt. Everything after
 this is automatic.
 
-### One gap this surfaced: the package has no licence
+### ~~One gap this surfaced: the package has no licence~~ — ✅ RESOLVED (2026-07-31)
 
-npm displays it as **Proprietary**, because `engine/package.json` declares no
-`license` field and the repository has no LICENSE file. The repo is public,
-which means as it stands nobody has permission to use the code — the default
-for published-but-unlicensed work is all rights reserved.
+MIT was chosen: `LICENSE` is committed at the repo root and
+`engine/package.json` declares `"license": "MIT"`. `engine/LICENSE` and
+`engine/README.md` are also committed so the npm **tarball** carries the
+licence text and the registry page shows a readme — npm auto-includes those
+files only from the package directory, not the repo root, which is why 0.7.1
+shipped with neither. The distinction the LICENSE section of the README draws
+still stands: MIT covers the code, not the corpora it is built from.
 
-For Maskil, Setlist and Versed that changes nothing; you own them. It matters
-if anyone else ever finds it, and it is a two-line fix. I have not chosen one:
-a licence is a rights decision, not a technical one. MIT if you want it freely
-usable, Apache-2.0 if you want an explicit patent grant, or leave it
-proprietary deliberately — but deliberately rather than by omission.
+### 2.11 The release verify step was a tautology — fixed, and the descriptor was wrong
+
+The release workflow's "verify the built artifact matches the reviewed
+descriptor" step read `artifacts/content-artifact.json` **after** the build —
+but the build writes that same file, so the step compared the build to itself
+and could never fail. It didn't fail on v0.7.1, when it should have: the
+committed descriptor said `databaseSha256: 403d0fb9…` while the `content.db`
+actually attached to the release is `b57d3676…`. A consumer following the
+README's instruction to verify against the reviewed descriptor would have
+rejected a good database.
+
+Every *other* field of the two descriptors was byte-identical — corpus and
+layer fingerprints, per-table bytes, all counts — so this was SQLite byte
+layout differing between build environments (the committed descriptor came
+from a local build on a different Node/SQLite than CI's Node 24), not data
+drift. The ranking contract held; the checksum claim didn't.
+
+Fixed three ways: the workflow snapshots the reviewed descriptor before the
+build and verifies against the snapshot (plus a full-descriptor diff); the
+committed descriptor now carries the CI-built sha `b57d3676…`, matching what
+consumers actually download; and the workflow records that the canonical
+build environment is CI. Consequence worth knowing: a local
+`npm run build:artifact` may now produce a *different* `databaseSha256` and
+overwrite the descriptor with it. That diff is expected — review it, don't
+commit it. Only a CI build produces the sha a release will verify against.
 

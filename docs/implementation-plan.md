@@ -296,7 +296,7 @@ engine.close(): Promise<void>
 
 // every result carries:
 { …ResearchOutcome,
-  reasons: [{ kind, label, points, provenance }],   // Setlist's shape, kept
+  reasons: [{ family, label, points, provenance }], // Setlist's shape, with `kind` renamed `family`
   engineVersion, corpusFingerprint, layerFingerprint }
 ```
 
