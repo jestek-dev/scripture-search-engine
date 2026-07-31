@@ -1,6 +1,6 @@
 {
   "name": "@jestek-dev/scripture-engine",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "type": "module",
   "description": "Pure deterministic Scripture retrieval and ranking core. Zero I/O, zero runtime AI.",
   "main": "dist/index.js",
