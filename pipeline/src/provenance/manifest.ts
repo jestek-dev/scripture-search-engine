@@ -29,7 +29,16 @@ export type RightsClass =
    * (CCEL's non-commercial terms, some transcription projects). Admissible
    * only for tiers that honor the claim, and never silently.
    */
-  | 'pd_text_claimed_transcription';
+  | 'pd_text_claimed_transcription'
+  /**
+   * A copyrighted work that is INDEXED but never reproduced. What ships is a
+   * derivative — vocabulary statistics — from which the work cannot be
+   * reconstructed. Distinct from every class above because the underlying work
+   * is not free: only the derivative is redistributable, and a source in this
+   * class must state in its licence record exactly what is derived and why
+   * that is not a copy.
+   */
+  | 'derived_index_only';
 
 export type DistributionTier =
   /** Shippable in a public app build. The default; anything else is opt-in. */

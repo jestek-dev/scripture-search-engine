@@ -8,7 +8,7 @@
  * tie-breaks — MUST bump this in the same commit. Gate G2 fails a PR whose
  * ordering changed without a bump, so this is enforced, not merely asked for.
  */
-export const ENGINE_VERSION = '0.7.1';
+export const ENGINE_VERSION = '0.8.0';
 
 /**
  * Bumped independently of ENGINE_VERSION when the tokenizer changes, because

@@ -1,0 +1,12 @@
+{
+  "id": "translation-variants",
+  "label": "Cross-translation vocabulary (KJV, ESV, NIV, NLT)",
+  "rightsClass": "derived_index_only",
+  "licenseRecord": "DERIVED INDEX ONLY. No translation text is stored or shipped. What this source contributes is, per verse, the set of word STEMS appearing in some English translation of that verse but not in the shipped one — unordered, deduplicated, stopwords removed, stemmed, and merged across all four sources so no single translation's contribution is separable. There is no word order, no punctuation and no function words, so the prose cannot be reconstructed from it. KJV is public domain (eBible.org verse-per-line export). ESV, NIV and NLT are copyrighted; licensed copies held by Jesse Freeman were read ONCE, locally, to derive this index, and never entered this repository or the artifact. The relationship is that of a search index to the works it indexes rather than a copy of them. Recorded here in full because the distinction is the entire basis on which this source is admitted, and a reader must be able to check it rather than take it on trust.",
+  "sourceUrl": "",
+  "sha256": "",
+  "bytes": 0,
+  "maxTier": "public_distribution",
+  "retrievedAt": "2026-07-31",
+  "attributionNote": "Scripture quotations derived from: the Holy Bible, English Standard Version (ESV); the Holy Bible, New International Version (NIV); the Holy Bible, New Living Translation (NLT); and the King James Version. Only vocabulary statistics are redistributed. This source exists so a reader who learned a verse in one translation can find it in another — of ten commonly remembered phrasings tested, the shipped public-domain text carried five, and adding another public-domain translation fixed none of the remaining five."
+}

@@ -570,6 +570,83 @@ export class ConceptRepository {
    * it is a long way from the passage saying it. G6 caps it so no volume of
    * homiletical vocabulary can outrank a curated anchor or a verbatim quote.
    */
+  /**
+   * Verses whose CROSS-TRANSLATION vocabulary matches the query.
+   *
+   * This is what lets someone search in the translation they learned a verse
+   * in. The stems here appear in some English translation of the verse but not
+   * in the one shipped, so a query using that wording reaches the verse
+   * anyway. See pipeline/src/schema.ts for what is and is not stored.
+   *
+   * Ranked by how MANY query stems a verse accounts for, then by verse id. No
+   * IDF weighting: these stems are already the residue after the shipped
+   * wording is subtracted, so a stem appearing here is by construction
+   * something the shipped text does not say.
+   */
+  async searchTranslationTokens(
+    tokens: readonly string[],
+    limit = 60,
+  ): Promise<readonly (ScriptureVerse & { matchedTokens: readonly string[] })[]> {
+    const unique = [...new Set(tokens)];
+    if (unique.length === 0) return [];
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `WITH hits AS (
+         SELECT vtt.verse_id AS vid,
+                group_concat(vtt.token, ' ') AS tokens,
+                COUNT(*) AS matched
+         FROM verse_translation_tokens vtt
+         WHERE vtt.token IN (${placeholders})
+         GROUP BY vtt.verse_id
+       )
+       SELECT v.id AS id, v.verse_id AS verseId,
+              v.translation_id AS translationId, t.code AS translationCode,
+              v.book_id AS bookId, b.name AS bookName,
+              v.chapter AS chapter, v.verse AS verse, v.text AS text,
+              h.tokens AS tokens, h.matched AS matched
+       FROM hits h
+       JOIN verses v ON v.verse_id = h.vid
+       JOIN translations t ON t.id = v.translation_id
+       JOIN books b ON b.id = v.book_id
+       ORDER BY h.matched DESC, v.verse_id, t.code
+       LIMIT ?`,
+      [...unique, limit],
+    );
+    return result.rows.map((row) => ({
+      ...mapVerse(row),
+      matchedTokens: [...new Set(str(row, 'tokens').split(' ').filter(Boolean))].sort(),
+    }));
+  }
+
+  /** How many verses carry each stem — the df for weighting alternate wording. */
+  async translationTokenDocumentCounts(
+    tokens: readonly string[],
+  ): Promise<ReadonlyMap<string, number>> {
+    const unique = [...new Set(tokens)];
+    if (unique.length === 0) return new Map();
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `SELECT token, COUNT(DISTINCT verse_id) AS n
+       FROM verse_translation_tokens
+       WHERE token IN (${placeholders})
+       GROUP BY token`,
+      unique,
+    );
+    return new Map(result.rows.map((row) => [str(row, 'token'), num(row, 'n')]));
+  }
+
+  /** Whether the artifact carries cross-translation vocabulary at all. */
+  async hasTranslationTokens(): Promise<boolean> {
+    try {
+      const result = await this.database.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'verse_translation_tokens'",
+      );
+      return result.rows.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
   async searchPassageTerms(
     terms: readonly string[],
     limit = 60,

@@ -18,6 +18,7 @@
       "token_stats": 2097152,
       "verse_terms": 104857600,
       "verse_tokens": 20971520,
+      "verse_translation_tokens": 25165824,
       "verses": 8388608,
       "verses_fts_data": 8388608,
       "verses_fts_docsize": 2097152,

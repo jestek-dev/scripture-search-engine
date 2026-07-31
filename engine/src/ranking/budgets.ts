@@ -56,6 +56,11 @@ export const DEFAULT_BUDGETS: SignalBudgets = {
     // Weak — individually modest, collectively capped below.
     concept_lexicon: { maxPoints: 12, maxReasons: 2 },
     token_overlap: { maxPoints: 10, maxReasons: 1 },
+    // Above token_overlap because it is not an inference: the verse genuinely
+    // reads this way somewhere. Still weak, and still inside the aggregate
+    // cap, because the match is to a bag of stems rather than to the shipped
+    // wording — it says "this could be the verse you mean", not "this is it".
+    translation_variant: { maxPoints: 14, maxReasons: 1 },
     proximity: { maxPoints: 6, maxReasons: 1 },
     passage_terms: { maxPoints: 8, maxReasons: 2 },
     cross_reference: { maxPoints: 6, maxReasons: 2 },
