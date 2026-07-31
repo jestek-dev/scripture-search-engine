@@ -1,0 +1,13 @@
+{
+  "id": "clarke",
+  "label": "Adam Clarke, Commentary and Critical Notes on the Bible",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain by age (Adam Clarke, 1760/62-1832; commentary published 1810-1826). Distributed by CrossWire as a SWORD module declaring DistributionLicense=Public Domain, with TextSource=https://en.wikisource.org/wiki/Commentary_and_critical_notes_on_the_Bible. Wikisource contributions are released CC BY-SA or public domain; for a faithful transcription of a public-domain work no new copyright arises in the US (Bridgeman v. Corel). Deliberately NOT sourced from CCEL, whose transcriptions carry their own terms.",
+  "sourceUrl": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/Clarke.zip",
+  "sha256": "56bb33d3bf0f50c1609f4dd10ac81e7450bb0e8aae93bf340074ccb5e207a44f",
+  "bytes": 8627265,
+  "maxTier": "public_distribution",
+  "retrievedAt": "2026-07-29",
+  "attributionNote": "First whole-Bible expositor in the corpus. Verse-keyed by construction: the module states which entry belongs to which verse, so alignment is a lookup rather than inference from printed headings.",
+  "contentSha256": "57a72b54b582da661a8cf26877617c6508094d863fcefca040a326b3ca64d18c"
+}

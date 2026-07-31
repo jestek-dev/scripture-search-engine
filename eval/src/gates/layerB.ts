@@ -23,7 +23,7 @@ export interface PassageTermRow {
   readonly pmi: number;
   readonly count: number;
   readonly sourceIds: string;
-  readonly sourceCount: number;
+  readonly authorCount: number;
   readonly minSpanVerses: number;
   readonly locator: string;
 }

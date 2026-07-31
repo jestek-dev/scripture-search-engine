@@ -10,7 +10,7 @@
  * and would have told us the concept layer worked when it did not exist.
  */
 
-import type { ScriptureEngine } from '@lh/scripture-engine';
+import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 
 import { parseAnchorRef } from '../../../pipeline/src/importers/ontologyImporter.js';
 import { fail, pass, type GateFinding, type GateResult } from './types.js';

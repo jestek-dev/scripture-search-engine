@@ -468,6 +468,32 @@ export class ConceptRepository {
     }));
   }
 
+  /**
+   * The reverse of anchorVerses: which curated concepts name THIS passage?
+   *
+   * Powers `related()`, whose contract is "what did a human connect to this
+   * text", not "what resembles it". An anchor overlapping the passage at all
+   * counts, because a concept anchored to James 1:22-25 is about James 1:23
+   * even though it does not name that verse alone.
+   */
+  async conceptsAnchoring(
+    startVerseId: number,
+    endVerseId: number,
+  ): Promise<readonly { conceptId: string; label: string }[]> {
+    const result = await this.database.execute(
+      `SELECT DISTINCT a.concept_id AS conceptId, c.label AS label
+       FROM concept_anchors a
+       JOIN concepts c ON c.id = a.concept_id
+       WHERE a.start_verse_id <= ? AND a.end_verse_id >= ?
+       ORDER BY a.concept_id`,
+      [endVerseId, startVerseId],
+    );
+    return result.rows.map((row) => ({
+      conceptId: str(row, 'conceptId'),
+      label: str(row, 'label'),
+    }));
+  }
+
   /** Concepts one hop away in the curated graph. */
   async relatedConcepts(conceptIds: readonly string[]): Promise<readonly string[]> {
     const unique = [...new Set(conceptIds)];

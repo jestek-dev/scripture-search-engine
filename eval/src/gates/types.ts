@@ -9,6 +9,8 @@
 
 export type GateId =
   | 'G1-provenance'
+  /** Companion to G1: are the pinned source URLs still retrievable? */
+  | 'G1b-reachability'
   | 'G2-determinism'
   | 'G3-golden'
   | 'G4-collision'
@@ -73,4 +75,20 @@ export function fail(
 
 export function notApplicable(gate: GateId, title: string, reason: string): GateResult {
   return { gate, title, status: 'not-applicable', summary: reason };
+}
+
+/**
+ * Ran, found something, but does not block admission.
+ *
+ * Reserved for findings whose cause is outside the change under review — a
+ * third-party host being down, say. Blocking on those trains people to
+ * override gates, which costs more than the finding is worth.
+ */
+export function warn(
+  gate: GateId,
+  title: string,
+  summary: string,
+  findings: readonly GateFinding[],
+): GateResult {
+  return { gate, title, status: 'warn', summary, findings };
 }

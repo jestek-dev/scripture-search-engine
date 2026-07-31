@@ -1,0 +1,144 @@
+{
+  "formatVersion": 1,
+  "distributionTier": "public_distribution",
+  "schemaVersion": "5",
+  "tokenizerVersion": "1.0.0",
+  "engineVersion": "0.7.0",
+  "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
+  "layerFingerprint": "316fba74372ca6bb12a0e082ac98d44213c96f78f757f431fefe6eff7c6f2c27",
+  "manifestFingerprint": "94b733e5e39c50443d84ef449e6f18691e2548a563a2695cda2b7dfb8034d904",
+  "databaseSha256": "403d0fb9cba69cac13bc075325fbcfc2bcad1d209ef015841186fd6eca1dd237",
+  "databaseBytes": 123310080,
+  "perTableBytes": {
+    "book_aliases": 12288,
+    "books": 4096,
+    "concept_anchors": 20480,
+    "concept_lexicon": 8192,
+    "concept_related": 8192,
+    "concepts": 8192,
+    "cross_references": 18636800,
+    "meta": 8192,
+    "sqlite_schema": 12288,
+    "token_stats": 319488,
+    "translations": 8192,
+    "verse_terms": 80736256,
+    "verse_tokens": 14766080,
+    "verses": 6152192,
+    "verses_fts_config": 4096,
+    "verses_fts_data": 2289664,
+    "verses_fts_docsize": 303104,
+    "verses_fts_idx": 12288
+  },
+  "builtAt": "2026-07-30T00:00:00.000Z",
+  "translations": [
+    {
+      "code": "WEB",
+      "name": "World English Bible",
+      "sourceSha256": "335445efdbbda8e4e0e9740c088f1f915c7940ea05914212631c693643554a1c",
+      "verseCount": 31098
+    }
+  ],
+  "rowCounts": {
+    "books": 66,
+    "bookAliases": 195,
+    "translations": 1,
+    "verses": 31098,
+    "indexedVerses": 31098
+  },
+  "counts": {
+    "verses": 31098,
+    "distinctTokens": 9570,
+    "concepts": 8,
+    "lexiconEntries": 41,
+    "editorialAnchors": 28,
+    "topicAnchors": 63,
+    "crossReferences": 341096,
+    "verseTerms": 877300
+  },
+  "sources": [
+    {
+      "id": "barnes",
+      "sha256": "9e8edc0333875c214124371b3862df118ad3a76ade7753cb2faeed3484615baf",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "clarke",
+      "sha256": "56bb33d3bf0f50c1609f4dd10ac81e7450bb0e8aae93bf340074ccb5e207a44f",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "jfb",
+      "sha256": "afb0ccf348f350cacdeb7d47cf7d706d6ba23dfc434b8da876778117b1671442",
+      "rightsClass": "pd_text_claimed_transcription",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "kd",
+      "sha256": "ca3bdb6a04c0b717ee2faed71b432d58195db96f217f490ce6f7d9c36a2876f7",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "maclaren-psalms",
+      "sha256": "ca79e0cc06ef8dda8f7e139539f6db4e6782d3e0d5a6ebf94773b74b88e37c32",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "mhc",
+      "sha256": "6bcb936873ca144e317805e5c1677940fd86e2403f7c14517752e44f25c8882b",
+      "rightsClass": "pd_text_claimed_transcription",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "openbible-topics",
+      "sha256": "2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60",
+      "rightsClass": "cc_by",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "openbible-xrefs",
+      "sha256": "36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829",
+      "rightsClass": "cc_by",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-01",
+      "sha256": "38d558e4d70a4bf6d903114f85a49a4e82091728eca06a903aa99aa65ceed6d8",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-02",
+      "sha256": "913881bd61b061876a10a9c3ea2568c0eec1ef7e6b3b19ffb3514d9ec3fefd9b",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-03",
+      "sha256": "99e6a259c619971ee1ca4bdf8c82cc6aba378fd229a600651d7c9cae3627cb46",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-04",
+      "sha256": "a1e2108006f8f0f2aed78681934b27fad10ab41ccde4af0b9f8746463c8472b9",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "treasury-of-david-06",
+      "sha256": "be4272ba2a15637655748f6bf06c0e20b7a75ec9deba7de1ba27b6a33f3e880f",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "web",
+      "sha256": "3458ca34420c0547ec01b3dbda58a10a2d8fc511bdcd2e047ddd17fbe860b7b6",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    }
+  ]
+}

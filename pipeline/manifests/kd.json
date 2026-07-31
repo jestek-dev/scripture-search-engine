@@ -1,0 +1,13 @@
+{
+  "id": "kd",
+  "label": "Keil & Delitzsch, Biblical Commentary on the Old Testament",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain by age (Karl Friedrich Keil 1807-1888, Franz Delitzsch 1813-1890; the 10-volume commentary published from 1864, English translation soon after). Distributed by CrossWire as a SWORD module declaring DistributionLicense=Public Domain with TextSource=https://en.wikisource.org/wiki/Biblical_commentary_the_Old_Testament. Deliberately NOT sourced from CCEL, so no transcription claim applies and this needs no reliance on the narrower reading recorded for mhc.",
+  "sourceUrl": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/KD.zip",
+  "sha256": "ca3bdb6a04c0b717ee2faed71b432d58195db96f217f490ce6f7d9c36a2876f7",
+  "bytes": 11170353,
+  "maxTier": "public_distribution",
+  "retrievedAt": "2026-07-30",
+  "attributionNote": "Old Testament only. Admitted specifically to close the measured gap: 9,835 verses had exactly one expositor and were therefore blocked by the corroboration rule, concentrated in Numbers, Genesis, 1-2 Chronicles, Deuteronomy, Ezekiel and Leviticus — the Pentateuch and historical books this commentary treats in most detail.",
+  "contentSha256": "66736287b5218ea28e3850b623ed402ba45c2b582629517917b61fcfa525b8f0"
+}

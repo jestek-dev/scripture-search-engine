@@ -22,11 +22,24 @@ public-domain preaching and community topical data.
 | Layer | What it is | Ships? |
 |---|---|---|
 | **A — Concept ontology** | Curated concepts: modern labels, lexicons, scripture anchors, provenance. Seeded from Nave, Torrey, OpenBible topics. | Yes, ~MBs |
-| **B — Homiletical evidence** | Per-passage distinctive term profiles and co-citation edges, distilled offline from PD sermons and commentaries. | Distillate only — **sermons never ship and are never read at query time** |
+| **B — Homiletical evidence** | Per-**verse** distinctive term profiles, distilled offline from PD commentaries. A term is admitted only when 2+ independent expositors covering that verse used it — corroboration is what separates theology from one author's habits. | Distillate only — **source prose never ships and is never read at query time** |
 | **C — Runtime** | Intent ladder → candidates → deterministic ranking → typed reasons. Pure TS, zero I/O. | Yes, the published package |
 
 Full rationale: [docs/architecture.md](docs/architecture.md).
 Phased build: [docs/implementation-plan.md](docs/implementation-plan.md).
+
+## Coverage
+
+| | verses carrying homiletical evidence |
+|---|---|
+| **Whole Bible** | 30,777 / 31,098 = **99.0%** |
+| Old Testament | 99.6% |
+| New Testament | 97.3% |
+
+Evidence is admitted only where **two or more independent expositors** used the
+same distinctive term about the same verse. That rule is what separates
+theology from one writer's habits — with a single author, the highest-scoring
+terms for a passage are that author's stylistic tics, not its subject.
 
 ## The reproducibility contract
 
@@ -62,7 +75,7 @@ diminishing returns.
 | G2 determinism | Ordering that drifts between runs or platforms |
 | G3 golden regression | Lost ordering **or** a right answer for the wrong reason |
 | G4 collision | Near-duplicate concepts diluting each other's anchors |
-| G5 distinctiveness | Generic vocabulary accumulating into false evidence |
+| G5 distinctiveness | Generic vocabulary **and single-author idiolect** accumulating into false evidence |
 | G6 signal budgets | Any dataset outshouting exact matches — **bounded by construction** |
 | G7 correlation | Counting overlapping sources as independent evidence |
 | G8 noise probes | Precision erosion; the "everything returns everything" failure |
@@ -82,7 +95,7 @@ pipeline/   build-time only — manifests, importers, alignment, statistics
 ontology/   Layer A concept packs, reviewed like code
 eval/       the gauntlet: gates, golden fixtures, probes, budgets, report
 artifacts/  reviewed release descriptors (the .db itself is a Release asset)
-docs/       architecture + implementation plan
+docs/       architecture + implementation plan + open decisions
 ```
 
 ## Development
@@ -96,20 +109,32 @@ Individual steps: `npm run typecheck`, `npm test`, `npm run gauntlet`.
 
 ## Status
 
-**Phases 0–4 complete. All eleven gates live.** Phase 5 (wiring Maskil,
-Setlist and Versed) is deliberately not started.
+**Phases 0–4 complete. All eleven gates live, verdict ADMIT.** Phase 5 (wiring
+Maskil, Setlist and Versed) is deliberately not started.
 
 | Layer | State |
 |---|---|
 | Lexical ladder | reference, verbatim phrase + longest-fragment fallback, IDF tokens with proximity, archaic/inflection folding |
-| Concept spine | 8 curated concepts, OpenBible topical votes, cross-reference expansion |
-| Homiletical | Maclaren's *Expositions* distilled to PMI term profiles; source prose never ships |
-| Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow |
+| Concept spine | 8 curated concepts, OpenBible topical votes, cross-reference expansion. Nave/Torrey researched, not yet imported |
+| Homiletical | Maclaren's *Expositions* + Spurgeon's *Treasury of David* (4 of 6 vols, 5,525 expositions) → verse-level corroborated term profiles. **15 verses have profiles** — the mechanism is proven, the coverage is small |
+| Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow, not yet run on a real gap |
+| Runtime API | `research()` only. `themes()` / `forSong()` are typed but unbuilt |
 
 **Golden fixture #1 is active and passing.** "hearing and doing" returns
 James 1:22, Matthew 7:24 and Luke 6:47 carrying `concept_anchor` evidence
 attributed to LH editorial — the right passages *for the right reason*, which
 is what the fixture actually asserts.
+
+**The full artifact builds**: 31,098 verses, **117.60 MiB** against a 160 MiB
+budget, 341k cross-references, 877k corroborated terms, queries under 10 ms.
+
+```bash
+npm run build:artifact --workspace pipeline
+```
+
+CI still gates against an 828-verse fixture, deliberately — a per-PR check must
+be hermetic and fast. The two builds answer different questions: the fixture
+says whether the code is correct, the artifact says what you would ship.
 
 Open decisions and known limits: **[docs/NEEDS-JESSE.md](docs/NEEDS-JESSE.md)**.
 
@@ -117,11 +142,44 @@ Open decisions and known limits: **[docs/NEEDS-JESSE.md](docs/NEEDS-JESSE.md)**.
 
 Two versioned deliverables, both free to host:
 
-1. `@lh/scripture-engine` — the pure TS package (semver).
+1. `@jestek-dev/scripture-engine` — the pure TS package (semver).
 2. `content.db` + reviewed descriptor — a GitHub Release asset.
 
-Consumers pin both and verify the descriptor before opening the database.
+Consumers pin **both** and verify the descriptor before opening the database.
 There is no server component; nothing runs anywhere but the user's device.
+
+```ts
+import { createEngine } from '@jestek-dev/scripture-engine';
+
+const engine = await createEngine(port);          // port: your ContentQueryPort
+const result = await engine.research('hearing and doing');
+const themes = await engine.themes('a sermon on obedience');
+const passage = await engine.passage('James 1:22-25');
+const related = await engine.related('Psalm 46:1');
+const forSong = await engine.forSong({ themes: ['refuge'], title: 'Our Shelter' });
+```
+
+Every result carries `engineVersion`, `corpusFingerprint` and
+`layerFingerprint`. Store them with anything you cache: they are what let you
+tell whether a saved result is still reproducible.
+
+### Building the artifact yourself
+
+```bash
+npm run fetch:sources --workspace pipeline   # 14 sources, checksum-verified
+npm run build:artifact --workspace pipeline
+```
+
+Nothing here depends on a maintainer's machine. Every source is fetched from
+its pinned URL and verified before use — which is the difference between a
+reproducibility claim and a reproducibility fact.
+
+## Sources
+
+Every expositor, dataset and translation the engine draws on is named in
+**[docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md)**, generated from the manifests
+so it cannot drift from what the artifact actually contains. It also records
+what is deliberately absent, and why.
 
 ## Provenance and rights
 

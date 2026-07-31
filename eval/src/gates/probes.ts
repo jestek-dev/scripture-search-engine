@@ -21,8 +21,8 @@
  *    system that has stopped discriminating.
  */
 
-import type { ScriptureEngine } from '@lh/scripture-engine';
-import { isAuthoritative } from '@lh/scripture-engine';
+import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
+import { isAuthoritative } from '@jestek-dev/scripture-engine';
 
 import { fail, pass, type GateFinding, type GateResult } from './types.js';
 

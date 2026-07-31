@@ -32,13 +32,24 @@
  * the same word inherited from a whole-psalm essay at query time.
  */
 
-import { significantWords, tokenStream } from '@lh/scripture-engine';
+import { significantWords, tokenStream } from '@jestek-dev/scripture-engine';
 
 export interface ExpositionDocument {
   /** The author's OWN span — never normalized to anyone else's chunking. */
   readonly startVerseId: number;
   readonly endVerseId: number;
+  /** Manifest id of the volume this came from. Provenance, not corroboration. */
   readonly sourceId: string;
+  /**
+   * Who WROTE it. Corroboration counts these, never sourceIds.
+   *
+   * A multi-volume work is many manifest ids and one author, and two editions
+   * of the same work are more ids still. Counting ids would let a second
+   * edition corroborate the first — the same man agreeing with himself, which
+   * is the exact failure `minSources` exists to prevent. The distinction is
+   * cheap here and impossible to recover downstream.
+   */
+  readonly authorId: string;
   readonly locator: string;
   readonly body: string;
 }
@@ -52,7 +63,8 @@ export interface VerseTerm {
   readonly count: number;
   /** Sources that used this term in a section covering this verse, '+'-joined. */
   readonly sourceIds: string;
-  readonly sourceCount: number;
+  /** Distinct AUTHORS attesting this term. Volumes are in `sourceIds`. */
+  readonly authorCount: number;
   /**
    * Verse-width of the NARROWEST attesting section. 1 means some author said
    * this while writing about exactly this verse; 6 means the tightest thing
@@ -104,9 +116,28 @@ function spanWidth(startVerseId: number, endVerseId: number): number {
 interface Accumulator {
   count: number;
   bestPmi: number;
-  sources: Set<string>;
+  /** Distinct AUTHORS attesting this term — the corroboration count. */
+  /**
+   * Attesting authors and volumes as BITMASKS, not Sets.
+   *
+   * There is one accumulator per (verse, term) pair and there are millions of
+   * them — Matthew Henry's section essays alone project several million. Two
+   * Set objects each costs more than the rest of the accumulator combined, and
+   * the build ran out of memory at 12 GB before this change. Authors and
+   * volumes number in the dozens at most, so a bit each is exact, not an
+   * approximation.
+   */
+  authorMask: number;
+  sourceMask: number;
   minSpan: number;
   locator: string;
+}
+
+/** Populated count of set bits — the corroboration count. */
+function popcount(mask: number): number {
+  let value = mask - ((mask >> 1) & 0x55555555);
+  value = (value & 0x33333333) + ((value >> 2) & 0x33333333);
+  return (((value + (value >> 4)) & 0x0f0f0f0f) * 0x01010101) >> 24;
 }
 
 /**
@@ -123,6 +154,19 @@ export function buildTermProfiles(
   if (documents.length === 0) {
     return { terms: [], documentsProcessed: 0, termsConsidered: 0, termsAdmitted: 0 };
   }
+
+  // Bit assignments, taken in SORTED id order so the masks — and therefore
+  // every downstream tie-break — are identical on every machine and every run.
+  const authorIds = [...new Set(documents.map((d) => d.authorId))].sort();
+  const sourceIds = [...new Set(documents.map((d) => d.sourceId))].sort();
+  if (authorIds.length > 31 || sourceIds.length > 31) {
+    throw new Error(
+      `buildTermProfiles: ${authorIds.length} authors / ${sourceIds.length} sources exceeds ` +
+        'the 31 a bitmask can hold. Widen to BigInt before admitting more.',
+    );
+  }
+  const authorBit = new Map(authorIds.map((id, index) => [id, 1 << index]));
+  const sourceBit = new Map(sourceIds.map((id, index) => [id, 1 << index]));
 
   // Pass 1: background counts across every document.
   const backgroundCounts = new Map<string, number>();
@@ -176,7 +220,8 @@ export function buildTermProfiles(
         const existing = verseTerms.get(term);
         if (existing) {
           existing.count += count;
-          existing.sources.add(document.sourceId);
+          existing.authorMask |= authorBit.get(document.authorId)!;
+          existing.sourceMask |= sourceBit.get(document.sourceId)!;
           if (pmi > existing.bestPmi) existing.bestPmi = Number(pmi.toFixed(6));
           if (width < existing.minSpan) {
             existing.minSpan = width;
@@ -186,7 +231,8 @@ export function buildTermProfiles(
           verseTerms.set(term, {
             count,
             bestPmi: Number(pmi.toFixed(6)),
-            sources: new Set([document.sourceId]),
+            authorMask: authorBit.get(document.authorId)!,
+            sourceMask: sourceBit.get(document.sourceId)!,
             minSpan: width,
             locator: document.locator,
           });
@@ -202,14 +248,15 @@ export function buildTermProfiles(
     const admitted: VerseTerm[] = [];
     for (const [term, accumulator] of verseTerms) {
       if (accumulator.count < options.minCount) continue;
-      if (accumulator.sources.size < options.minSources) continue;
+      // Corroboration is measured in AUTHORS, not volumes or editions.
+      if (popcount(accumulator.authorMask) < options.minSources) continue;
       admitted.push({
         verseId,
         term,
         pmi: accumulator.bestPmi,
         count: accumulator.count,
-        sourceIds: [...accumulator.sources].sort().join('+'),
-        sourceCount: accumulator.sources.size,
+        sourceIds: sourceIds.filter((_, index) => accumulator.sourceMask & (1 << index)).join('+'),
+        authorCount: popcount(accumulator.authorMask),
         minSpanVerses: accumulator.minSpan,
         locator: accumulator.locator,
       });

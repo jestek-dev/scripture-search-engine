@@ -12,7 +12,7 @@
  * detected" without a suggested move just moves the guesswork.
  */
 
-import { significantWords } from '@lh/scripture-engine';
+import { significantWords } from '@jestek-dev/scripture-engine';
 
 import { fail, pass, type GateFinding, type GateResult } from './types.js';
 

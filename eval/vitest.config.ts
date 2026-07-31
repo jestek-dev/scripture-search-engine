@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   resolve: {
     alias: {
-      '@lh/scripture-engine': fileURLToPath(new URL('../engine/src/index.ts', import.meta.url)),
+      '@jestek-dev/scripture-engine': fileURLToPath(new URL('../engine/src/index.ts', import.meta.url)),
     },
   },
 });

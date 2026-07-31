@@ -3,9 +3,12 @@
   "label": "World English Bible",
   "rightsClass": "public_domain",
   "licenseRecord": "Public domain. The WEB text may be freely copied, modified, and distributed. See https://ebible.org/engwebp/copyright.htm",
-  "sourceUrl": "https://ebible.org/engwebp/",
-  "sha256": "ceaffd308775105a55fb9f9fe928af567abd100acf93b4b74a2f10a19dc6ce3b",
-  "bytes": 6094545,
+  "sourceUrl": "https://ebible.org/Scriptures/engwebp_vpl.zip",
+  "sha256": "3458ca34420c0547ec01b3dbda58a10a2d8fc511bdcd2e047ddd17fbe860b7b6",
+  "bytes": 4281524,
   "maxTier": "public_distribution",
-  "attributionNote": "\"World English Bible\" and \"WEB\" are trademarks of eBible.org / the WEB project. The TEXT is public domain, but a modified version must not be distributed under the \"World English Bible\" name without permission. Recorded here rather than flattened into a bare public-domain claim, because the trademark constraint survives the copyright dedication."
+  "attributionNote": "\"World English Bible\" and \"WEB\" are trademarks of eBible.org / the WEB project. The TEXT is public domain, but a modified version must not be distributed under the \"World English Bible\" name without permission. Recorded here rather than flattened into a bare public-domain claim, because the trademark constraint survives the copyright dedication.",
+  "retrievedAt": "2026-07-29",
+  "provenanceNote": "RE-ADMITTED 2026-07-29. The previous record pinned sha256 ceaffd30..9dc6ce3b for a 6,094,545-byte JSON export whose download URL was never captured - sourceUrl held only eBible's landing page. That checksum was unverifiable and the corpus unreproducible: a receipt with no way to re-obtain the goods. This record pins eBible's own canonical verse-per-line publication, which has a stable direct URL and can be re-fetched and re-verified by anyone. The text differs from the old export: of the 828 verses previously committed as fixtures, 243 were byte-identical, 390 differed only in typography (straight vs curly quotation marks, which the tokenizer discards), and 195 carried genuine WEB revisions ('put forth grass' -> 'yield grass', 'Let us make man' -> 'Let us make' contracted). The old export was an older revision of the translation.",
+  "contentSha256": "335445efdbbda8e4e0e9740c088f1f915c7940ea05914212631c693643554a1c"
 }

@@ -8,20 +8,70 @@
     "",
     "Chosen to span the failure modes we actually fear: broad queries that",
     "could turn to mush as data accumulates, narrow queries that could get",
-    "buried by it, and adversarial near-misses that should NOT match."
+    "buried by it, and adversarial near-misses that should NOT match.",
+    "",
+    "2026-07-30: OT probes added. Layer B grew from Psalms-only to 99% of the",
+    "Bible while every probe still sat in Psalms and the New Testament, so the",
+    "gate could not see the material that changed most. These probe the genres",
+    "the OT expositors actually cover \u2014 law, narrative, histories, wisdom,",
+    "prophecy \u2014 against fixture chapters added for the purpose."
   ],
   "probes": [
-    { "id": "broad-love", "query": "love", "kind": "broad" },
-    { "id": "broad-grace", "query": "grace", "kind": "broad" },
-    { "id": "broad-faith", "query": "faith", "kind": "broad" },
-    { "id": "broad-word", "query": "the word", "kind": "broad" },
-    { "id": "medium-refuge-trouble", "query": "refuge in trouble", "kind": "medium" },
-    { "id": "medium-fear-not", "query": "do not be afraid", "kind": "medium" },
-    { "id": "medium-light-darkness", "query": "walking in the light", "kind": "medium" },
-    { "id": "narrow-hearing-doing", "query": "hearing and doing", "kind": "narrow" },
-    { "id": "narrow-doers-word", "query": "be doers of the word not hearers only", "kind": "narrow" },
-    { "id": "narrow-house-rock", "query": "built his house on the rock", "kind": "narrow" },
-    { "id": "phrase-present-help", "query": "a very present help in trouble", "kind": "phrase" },
+    {
+      "id": "broad-love",
+      "query": "love",
+      "kind": "broad"
+    },
+    {
+      "id": "broad-grace",
+      "query": "grace",
+      "kind": "broad"
+    },
+    {
+      "id": "broad-faith",
+      "query": "faith",
+      "kind": "broad"
+    },
+    {
+      "id": "broad-word",
+      "query": "the word",
+      "kind": "broad"
+    },
+    {
+      "id": "medium-refuge-trouble",
+      "query": "refuge in trouble",
+      "kind": "medium"
+    },
+    {
+      "id": "medium-fear-not",
+      "query": "do not be afraid",
+      "kind": "medium"
+    },
+    {
+      "id": "medium-light-darkness",
+      "query": "walking in the light",
+      "kind": "medium"
+    },
+    {
+      "id": "narrow-hearing-doing",
+      "query": "hearing and doing",
+      "kind": "narrow"
+    },
+    {
+      "id": "narrow-doers-word",
+      "query": "be doers of the word not hearers only",
+      "kind": "narrow"
+    },
+    {
+      "id": "narrow-house-rock",
+      "query": "built his house on the rock",
+      "kind": "narrow"
+    },
+    {
+      "id": "phrase-present-help",
+      "query": "a very present help in trouble",
+      "kind": "phrase"
+    },
     {
       "id": "adversarial-nonsense",
       "query": "quantum photosynthesis algorithm",
@@ -35,6 +85,78 @@
       "kind": "adversarial",
       "expectNoResults": true,
       "why": "Pure stopwords. Must produce no tokens and therefore no results, no matter how much data is admitted."
+    },
+    {
+      "id": "ot-law-decalogue",
+      "query": "you shall not covet",
+      "kind": "narrow",
+      "why": "Law. Exodus 20 is dense legal register; should surface the commandment, not every occurrence of 'not'."
+    },
+    {
+      "id": "ot-law-neighbour",
+      "query": "love your neighbor as yourself",
+      "kind": "medium",
+      "why": "Law. Leviticus 19:18 is the OT root of a heavily-quoted NT phrase \u2014 tests that the OT source is not buried by NT restatements."
+    },
+    {
+      "id": "ot-blessing",
+      "query": "the LORD bless you and keep you",
+      "kind": "phrase",
+      "why": "Liturgy. Numbers was the least-covered book before Keil & Delitzsch; this is its most-quoted passage."
+    },
+    {
+      "id": "ot-narrative-ruth",
+      "query": "where you go I will go",
+      "kind": "phrase",
+      "why": "Narrative. Ruth 1:16 \u2014 tests that narrative speech is retrievable, a genre absent from the fixture until now."
+    },
+    {
+      "id": "ot-histories-elijah",
+      "query": "a still small voice",
+      "kind": "narrow",
+      "why": "Histories. 1 Kings 19 \u2014 strong imagery in a genre commentators treat unevenly."
+    },
+    {
+      "id": "ot-histories-humble",
+      "query": "if my people who are called by my name humble themselves",
+      "kind": "phrase",
+      "why": "Histories. 2 Chronicles 7:14. Chronicles sat at 32% coverage before KD; this verifies the new evidence surfaces."
+    },
+    {
+      "id": "ot-wisdom-trust",
+      "query": "trust in the LORD with all your heart",
+      "kind": "phrase",
+      "why": "Wisdom. Proverbs 3:5 \u2014 sapiential register, distinct vocabulary from law and prophecy."
+    },
+    {
+      "id": "ot-wisdom-time",
+      "query": "a time for every purpose",
+      "kind": "medium",
+      "why": "Wisdom. Ecclesiastes 3 \u2014 repetitive structure that could easily turn to mush as term profiles accumulate."
+    },
+    {
+      "id": "ot-prophets-servant",
+      "query": "he was pierced for our transgressions",
+      "kind": "narrow",
+      "why": "Prophecy. Isaiah 53 \u2014 heavily expounded, so a good test of whether volume of commentary distorts ranking."
+    },
+    {
+      "id": "ot-prophets-plans",
+      "query": "thoughts of peace and not of evil",
+      "kind": "medium",
+      "why": "Prophecy. Jeremiah 29:11 in the WEB's own wording. The familiar 'plans to prosper you' is NIV phrasing and appears nowhere in this corpus \u2014 a real product gap recorded in NEEDS-JESSE, not something a probe can paper over. Probes must ask questions the corpus can answer, or they measure the question rather than the data."
+    },
+    {
+      "id": "ot-prophets-justly",
+      "query": "do justly love mercy walk humbly",
+      "kind": "narrow",
+      "why": "Minor prophets. Micah 6:8 \u2014 a genre with no coverage at all before this round."
+    },
+    {
+      "id": "ot-adversarial-census",
+      "query": "all the days of Seth",
+      "kind": "narrow",
+      "why": "Genealogical register, targeting Genesis 5 which the fixture carries. List-material has almost no distinctive theological vocabulary, so this watches for the failure mode where accumulated commentary makes genealogy match thematic queries across the canon."
     }
   ]
 }

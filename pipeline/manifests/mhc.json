@@ -1,0 +1,13 @@
+{
+  "id": "mhc",
+  "label": "Matthew Henry, Complete Commentary on the Whole Bible",
+  "rightsClass": "pd_text_claimed_transcription",
+  "licenseRecord": "The WORK is public domain by age (Matthew Henry, 1662-1714; commentary published 1706-1721). The TRANSCRIPTION is CCEL's: CrossWire distributes this module as DistributionLicense=Public Domain with TextSource=http://www.ccel.org/, and its About field states 'Public Domain--Copy Freely'. CCEL nonetheless asks permission for commercial republication of their own files, which is why treasury-of-david-* deliberately avoided them. ADMITTED HERE ON A NARROWER READING, decided by Jesse 2026-07-29: this artifact redistributes a term-statistics distillate — term, PMI, occurrence count and provenance — never the prose. Nothing a reader could reconstruct the transcription from is shipped, so the distillate is not republication of CCEL's files. Recorded in full rather than flattened to 'public_domain' so the judgment is auditable and so the difference from the Treasury decision is visible rather than looking like an inconsistency.",
+  "sourceUrl": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/MHC.zip",
+  "sha256": "6bcb936873ca144e317805e5c1677940fd86e2403f7c14517752e44f25c8882b",
+  "bytes": 15195123,
+  "maxTier": "public_distribution",
+  "retrievedAt": "2026-07-29",
+  "attributionNote": "Second whole-Bible expositor, and therefore the source that first makes corroboration possible outside the Psalter. Written by SECTION, not by verse: the module stores one essay against every verse it covers, and the importer collapses those runs so the recorded span is the section Henry actually wrote about.",
+  "contentSha256": "87034886f3240152706489dd7ce7c8547f65222a382d81740a5f07cce12ccc78"
+}

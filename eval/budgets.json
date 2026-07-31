@@ -3,20 +3,39 @@
     "Reviewed thresholds for the admission gauntlet. These are DATA, not code:",
     "changing one changes what the system will accept, so a change here is a",
     "reviewed PR like any other. Values marked null are unset until Phase 1",
-    "records real baselines on real data — a guessed threshold that never",
+    "records real baselines on real data \u2014 a guessed threshold that never",
     "fires is worse than an absent one, because it reads as protection."
   ],
   "size": {
     "totalArtifactBytes": 167772160,
     "$comment_total": "160 MiB. Base scripture corpus is ~122 MiB; Layers A+B are budgeted ~30 MiB with headroom.",
     "perTableBytes": {
-      "concepts": 8388608,
-      "concept_lexicon": 4194304,
       "concept_anchors": 4194304,
-      "passage_terms": 20971520,
-      "co_citations": 12582912,
-      "cross_references": 12582912
-    }
+      "concept_lexicon": 4194304,
+      "concept_related": 4194304,
+      "concepts": 4194304,
+      "cross_references": 25165824,
+      "token_stats": 2097152,
+      "verse_terms": 104857600,
+      "verse_tokens": 20971520,
+      "verses": 8388608,
+      "verses_fts_data": 8388608,
+      "verses_fts_docsize": 2097152,
+      "verses_fts_idx": 2097152
+    },
+    "$comment_perTable": [
+      "Per-table byte budgets, INCLUDING each table's indexes \u2014 an index ships with",
+      "its table and grows with it, so budgeting the table alone would miss two",
+      "thirds of what verse_terms actually costs.",
+      "",
+      "Set 2026-07-30 from the first measured artifact (117.60 MiB total), with",
+      "headroom sized to intent rather than uniformly: verse_terms is the table that",
+      "grows when a commentator is admitted, so it gets room for roughly one more",
+      "whole-Bible author; the corpus tables are fixed by the translation and get",
+      "little. These are FIRST REAL VALUES and want Jesse's review \u2014 before today",
+      "these budgets named tables that did not exist and no gate read them.",
+      "FTS shadow tables are budgeted too: they are part of what ships, they grow with the corpus, and the gate reports any unbudgeted table over 1 MiB rather than passing it silently \u2014 which is how verses_fts_data was found."
+    ]
   },
   "latency": {
     "$comment": [

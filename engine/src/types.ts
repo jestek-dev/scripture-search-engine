@@ -91,3 +91,41 @@ export interface ConceptMatch {
   readonly matchedOn: string;
   readonly anchors: readonly string[];
 }
+
+/** `engine.passage()` — a lookup, with invalid references typed rather than thrown. */
+export type PassageResult =
+  | ({ readonly kind: 'passage'; readonly passage: ScripturePassage } & ResultIdentity)
+  | ({ readonly kind: 'invalid-reference'; readonly query: string } & ResultIdentity);
+
+/**
+ * `engine.related()` — what a curated source connects to a passage.
+ *
+ * Deliberately NOT "verses that resemble this one". Every entry here exists
+ * because a human recorded a link: a cross-reference edge, or a concept whose
+ * anchors include this passage. Similarity is what `research()` does.
+ */
+export type RelatedResult =
+  | ({
+      readonly kind: 'related';
+      readonly reference: string;
+      /** Concepts whose curated anchors include this passage. */
+      readonly concepts: readonly ConceptMatch[];
+      readonly results: readonly DiscoveryResult[];
+    } & ResultIdentity)
+  | ({ readonly kind: 'invalid-reference'; readonly query: string } & ResultIdentity);
+
+/**
+ * Multi-field input for `engine.forSong()`.
+ *
+ * Setlist matches a sermon theme to songs; Maskil starts from a song being
+ * written. Both need more than one field, and neither wants to pre-concatenate
+ * them, because the fields differ in evidential weight — a stated theme is a
+ * claim about meaning, a lyric line is raw text that happens to be present.
+ */
+export interface SongInput {
+  readonly title?: string;
+  readonly themes?: readonly string[];
+  readonly lyrics?: string;
+  /** A passage the song is built on. Seeds curated expansion, not text search. */
+  readonly foundationalRef?: string;
+}

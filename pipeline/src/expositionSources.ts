@@ -10,26 +10,103 @@
 export interface ExpositionSourceSpec {
   /** Must match a manifest id in pipeline/manifests/. */
   readonly id: string;
+  /**
+   * Who wrote it. Volumes of one work, and editions of one work, share an
+   * authorId — corroboration counts THESE, so that a six-volume commentary
+   * cannot corroborate itself and a reprint cannot corroborate its original.
+   */
+  readonly authorId: string;
   /** Filename under pipeline/sources/ (gitignored download). */
   readonly file: string;
-  /** Canonical book id this volume expounds. */
-  readonly bookId: number;
+  /**
+   * Canonical book id this volume expounds. Omitted for whole-Bible sources,
+   * which carry their own book keys.
+   */
+  readonly bookId?: number;
   /**
    * Which parser to use. `citation-suffix` handles works that END a quoted
    * passage with a citation ("...for ever.'--PSALM xxiii. 1-6."), which is
    * Maclaren's convention. Others get their own strategy as they are added,
    * rather than one regex growing warts.
    */
-  readonly strategy: 'citation-suffix' | 'psalm-verse-headings';
+  readonly strategy: 'citation-suffix' | 'psalm-verse-headings' | 'sword-zcom';
   /** For citation-suffix: the book word as printed, e.g. "PSALM". */
   readonly citationWord?: string;
+  /**
+   * Admit only documents falling inside this verse-id range.
+   *
+   * Exists because a work can be genuinely useful for a passage we do not yet
+   * cover while overlapping passages we already have from the same author. A
+   * different EDITION of the Treasury covers Psalms 111-119 — the one gap in
+   * the Toronto set — but also re-covers Psalms 104-110 and 120-124, which
+   * volumes 4 and 6 already supply.
+   *
+   * Admitting the whole volume would not corrupt corroboration (that counts
+   * authors, and it is the same Spurgeon), but it would duplicate his voice on
+   * passages he already speaks to, inflating term counts with no new evidence.
+   * Taking only the gap is both cheaper and more honest.
+   *
+   * No source uses this today. It was built for the Treasury gap and then the
+   * measurement said not to admit that gap — see docs/NEEDS-JESSE.md §1.4a.
+   * Kept because the situation recurs: any future source that covers new
+   * ground and old ground in one file wants exactly this.
+   */
+  readonly restrictToVerseRange?: { readonly startVerseId: number; readonly endVerseId: number };
   /** Human note explaining why this source is here. */
   readonly note: string;
 }
 
 export const EXPOSITION_SOURCES: readonly ExpositionSourceSpec[] = [
   {
+    id: 'clarke',
+    authorId: 'clarke',
+    // Directory of extracted SWORD module files, not a single text.
+    file: 'clarke',
+    strategy: 'sword-zcom',
+    note:
+      'First whole-Bible expositor. Verse-keyed by construction, so there is no ' +
+      'heading parser and no alignment inference — the failure mode that made ' +
+      'Treasury of David expensive does not exist here.',
+  },
+  {
+    id: 'mhc',
+    authorId: 'henry',
+    file: 'mhc',
+    strategy: 'sword-zcom',
+    note:
+      'Second whole-Bible expositor — the one that makes corroboration possible ' +
+      'outside Psalms. Writes by section, so the loader collapses repeated bodies ' +
+      'back into the spans he actually wrote.',
+  },
+  {
+    id: 'kd',
+    authorId: 'keil-delitzsch',
+    file: 'kd',
+    strategy: 'sword-zcom',
+    note:
+      'Old Testament only. Third OT voice, admitted to unblock the 9,835 verses ' +
+      'that had exactly one expositor — concentrated in the Pentateuch and ' +
+      'historical books, which is precisely what this commentary treats closely.',
+  },
+  {
+    id: 'barnes',
+    authorId: 'barnes',
+    file: 'barnes',
+    strategy: 'sword-zcom',
+    note:
+      'New Testament only. Admitted against the measured NT gap — 84.2% against ' +
+      'the OT 99.2%, with Mark the worst-covered book in the Bible at 47%.',
+  },
+  {
+    id: 'jfb',
+    authorId: 'jfb',
+    file: 'jfb',
+    strategy: 'sword-zcom',
+    note: 'Whole Bible. Fourth voice overall, second on the NT where coverage is thinnest.',
+  },
+  {
     id: 'maclaren-psalms',
+    authorId: 'maclaren',
     file: 'maclaren-psalms.txt',
     bookId: 19,
     strategy: 'citation-suffix',
@@ -40,6 +117,7 @@ export const EXPOSITION_SOURCES: readonly ExpositionSourceSpec[] = [
   },
   {
     id: 'treasury-of-david-01',
+    authorId: 'spurgeon',
     file: 'thetreasuryofdav01spuruoft.txt',
     bookId: 19,
     strategy: 'psalm-verse-headings',
@@ -47,13 +125,23 @@ export const EXPOSITION_SOURCES: readonly ExpositionSourceSpec[] = [
   },
   {
     id: 'treasury-of-david-02',
+    authorId: 'spurgeon',
     file: 'thetreasuryofdav02spuruoft.txt',
     bookId: 19,
     strategy: 'psalm-verse-headings',
     note: 'Treasury of David vol. 2 (Psalms 27-57). OCR source; second voice on the same psalms as Maclaren, which is the point.',
   },
   {
+    id: 'treasury-of-david-03',
+    authorId: 'spurgeon',
+    file: 'thetreasuryofdav03spuruoft.txt',
+    bookId: 19,
+    strategy: 'psalm-verse-headings',
+    note: 'Treasury of David vol. 3 (Psalms 55-87). Closes the single-author hole Maclaren alone could not corroborate.',
+  },
+  {
     id: 'treasury-of-david-04',
+    authorId: 'spurgeon',
     file: 'treasuryofdavid04spuruoft.txt',
     bookId: 19,
     strategy: 'psalm-verse-headings',
@@ -61,6 +149,7 @@ export const EXPOSITION_SOURCES: readonly ExpositionSourceSpec[] = [
   },
   {
     id: 'treasury-of-david-06',
+    authorId: 'spurgeon',
     file: 'treasuryofdavid06spuruoft.txt',
     bookId: 19,
     strategy: 'psalm-verse-headings',

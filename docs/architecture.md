@@ -1,7 +1,11 @@
 # The deterministic theologian — concept-aware Scripture discovery
 
 **Date:** 2026-07-29
-**Status:** Proposal for Jesse's review
+**Status:** Original design rationale, approved. **Two sections have been
+superseded by what the build measured** — §2 Layer B (granularity and
+corroboration) and §3 (the covenant question, now decided). Both are annotated
+inline. Current state: `docs/implementation-plan.md`; open calls:
+`docs/NEEDS-JESSE.md`.
 **Problem instance:** searching the theme "hearing and doing" finds verses containing
 those literal words, but cannot deduce that the theme means "hearing the word, then
 acting on the word" and should surface James 1:22–25, Matthew 7:24–27, Luke 6:46–49,
@@ -79,6 +83,13 @@ compact tables:
   background and pruned hard. This is what makes "hearing and doing" hit James 1
   even before the ontology matures: sermons on James 1:22 use those words at
   frequencies the background corpus doesn't.
+
+  > **⚠️ Superseded.** Built, measured, replaced. Two problems this design did not
+  > foresee: (a) keying on pericopes meant authors who chunk a passage differently
+  > never corroborate each other — Psalm 23 got no profile at all; (b) a PMI floor
+  > alone yields *authorial idiolect*, not theology (`mellow`, `friction`, `troth`).
+  > Now `verse_terms`: agreement resolves at the verse, and a term needs 2+
+  > independent attesting sources. See implementation plan §3.1–3.2.
 - **`co_citations`** — verses cited together inside sermon bodies, a
   cross-reference graph with homiletical (not editorial) provenance; merges with
   the OpenBible cross-reference plan (CC BY, ~340k relations) as a *separate,
@@ -121,7 +132,14 @@ tie-break, same engine version + corpus fingerprint + input ⇒ same ordering, a
 That provenance chip is what makes the system *feel* AI-accurate while being the
 opposite of generative: every edge a human wrote, every weight reproducible.
 
-## 3. The no-AI covenant question (needs Jesse's decision)
+## 3. The no-AI covenant question — ✅ DECIDED
+
+> **Resolved 2026-07-29: Path 2**, with the boundary stated precisely as "no AI at
+> runtime, ever" rather than "no AI ever". AI may assist in building datasets
+> offline; nothing AI-drafted reaches the artifact without passing the gauntlet and
+> a human PR merge. This is now non-negotiable #1 in `CLAUDE.md`, and the
+> `editorial` manifest records the asterisk in the shipped provenance rather than
+> hiding it. Original framing kept below.
 
 The published boundary is "no generative AI, ever — deterministic analysis only."
 Two build paths:

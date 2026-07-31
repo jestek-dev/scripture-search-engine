@@ -19,7 +19,7 @@
  *      Scripture into the same pieces (Maclaren's Psalm 23:1-6 essay vs
  *      Spurgeon's verse-by-verse notes never matched under exact span keys).
  */
-export const SCHEMA_VERSION = '4';
+export const SCHEMA_VERSION = '5';
 
 /**
  * `verses.id` (plain rowid) is the true primary key, NOT `verse_id`. The
@@ -210,7 +210,11 @@ CREATE TABLE verse_terms (
   pmi REAL NOT NULL,
   count INTEGER NOT NULL,
   source_ids TEXT NOT NULL,
-  source_count INTEGER NOT NULL,
+  /* Distinct AUTHORS attesting the term — the corroboration count. Named
+     for what it holds: source_ids lists volumes, and one author can supply
+     several, so a 'source count' beside them would invite the reader to
+     assume it counts those. */
+  author_count INTEGER NOT NULL,
   min_span_verses INTEGER NOT NULL,
   locator TEXT NOT NULL
 );
