@@ -69,7 +69,15 @@ const UNPACK: Readonly<Record<string, Unpack>> = {
  */
 function fileNameFor(manifest: SourceManifest): string {
   const spec = EXPOSITION_SOURCES.find((candidate) => candidate.id === manifest.id);
-  if (spec && spec.strategy !== 'sword-zcom') return spec.file;
+  if (spec) {
+    // SWORD archives are saved as `<registry file>.zip`, which is what
+    // buildArtifact checksums. The URL's own basename is capitalised
+    // (`Clarke.zip`) while the registry entry is not (`clarke`), and on a
+    // case-insensitive filesystem those are the same file — so this worked on
+    // macOS and failed on Linux CI with "missing source clarke.zip" while
+    // Clarke.zip sat right there.
+    return spec.strategy === 'sword-zcom' ? `${spec.file}.zip` : spec.file;
+  }
   const last = manifest.sourceUrl.split('/').pop() ?? manifest.id;
   return last.includes('.') ? last : `${manifest.id}.bin`;
 }
@@ -192,7 +200,7 @@ if (process.argv[1] && process.argv[1].endsWith('fetchSources.ts')) {
   void main();
 }
 
-export { UNPACK };
+export { UNPACK, fileNameFor };
 
 /** Exported for the test that keeps UNPACK and the registry in step. */
 export function unpackRuleIds(): readonly string[] {

@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { EXPOSITION_SOURCES } from '../src/expositionSources.js';
-import { UNPACK } from '../scripts/fetchSources.js';
+import { fileNameFor, UNPACK } from '../scripts/fetchSources.js';
 import type { SourceManifest } from '../src/provenance/manifest.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -55,6 +55,19 @@ describe('source registry and manifests agree', () => {
       expect(known, `${manifest.id} pins contentSha256 but nothing knows where it unpacks`).toBe(
         true,
       );
+    }
+  });
+
+  it('saves each source under the exact name the build reads, case included', () => {
+    // Regression: the download name came from the URL's basename, so
+    // Clarke.zip landed on disk while buildArtifact looked for clarke.zip.
+    // Identical on macOS, fatal on Linux — the class of bug a case-insensitive
+    // filesystem hides from every local test run.
+    for (const spec of EXPOSITION_SOURCES) {
+      const expected = spec.strategy === 'sword-zcom' ? `${spec.file}.zip` : spec.file;
+      const manifest = manifests().find((entry) => entry.id === spec.id);
+      expect(manifest, `no manifest for ${spec.id}`).toBeDefined();
+      expect(fileNameFor(manifest!)).toBe(expected);
     }
   });
 
