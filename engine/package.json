@@ -3,6 +3,15 @@
   "version": "0.7.1",
   "type": "module",
   "description": "Pure deterministic Scripture retrieval and ranking core. Zero I/O, zero runtime AI.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jestek-dev/scripture-search-engine.git",
+    "directory": "engine"
+  },
+  "homepage": "https://github.com/jestek-dev/scripture-search-engine#readme",
+  "bugs": {
+    "url": "https://github.com/jestek-dev/scripture-search-engine/issues"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
