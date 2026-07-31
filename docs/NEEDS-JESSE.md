@@ -530,3 +530,52 @@ attaching commentary to the wrong psalm is a silent unrecoverable error.
   despite your "don't touch other projects" instruction; I moved it to this
   repo's `docs/research/` and confirmed Maskil's working tree was left exactly
   as found.
+
+---
+
+## 7. Publishing to npm — what only you can do
+
+The engine is already installable without npm, from the release tarball, so
+nothing is blocked on this. Publishing is additive: anyone who pinned the
+tarball URL is unaffected either way.
+
+**Why I cannot do it.** Publishing needs an npm account, and I do not create
+accounts or handle credentials. The token must be minted by you and stored
+where I never see it.
+
+**The setup, once:**
+
+1. **Claim the scope.** An npm scope is an npm *account or org name* — GitHub
+   ownership does not carry over. `@jestek-dev` needs a user or org named
+   exactly `jestek-dev` on npmjs.com. `@jestek-dev/scripture-engine` is
+   currently unclaimed. If you would rather use a different scope, say so
+   before publishing: changing it afterwards means every consumer updates an
+   import.
+2. **Mint a granular access token** (npmjs.com → Access Tokens → Granular).
+   Scope it to *packages and scopes: read and write*, restricted to that one
+   scope, with an expiry you are willing to rotate. A classic "Automation"
+   token also works and does not expire, which is convenient and worse.
+3. **Store it as a repository secret** named `NPM_TOKEN`
+   (Settings → Secrets and variables → Actions → New repository secret).
+   Paste it there and nowhere else — not into a terminal, not into a file, not
+   into this chat.
+
+That is the whole job. The release workflow already has the publish step; it is
+guarded on the secret existing, so today it skips silently and the moment
+`NPM_TOKEN` is present the next tag publishes.
+
+**One trap worth knowing.** npm treats scoped packages as *private* by default,
+and a private publish on a free account fails with a billing error that reads
+nothing like the real problem. The workflow passes `--access public`
+explicitly, so this will not bite you — but it is why the flag is there.
+
+**To publish the current version** after adding the secret, re-cut the tag:
+
+```
+git tag -d v0.7.0 && git push origin :refs/tags/v0.7.0
+git tag -a v0.7.0 -m "v0.7.0" && git push origin v0.7.0
+```
+
+Or leave 0.7.0 as tarball-only and let the next version be the first on npm —
+which is tidier, since re-cutting a tag that already produced a release is the
+kind of thing that confuses people later.
