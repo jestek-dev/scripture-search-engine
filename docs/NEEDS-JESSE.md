@@ -3,7 +3,8 @@
 **Last updated:** 2026-07-30, overnight session
 **Status:** Layer B covers **99.0% of the Bible** from seven expositors. Full
 artifact builds at 117.60 MiB and is descriptor-pinned. All five consumer API
-methods ship at ENGINE_VERSION 0.7.0. Phase 5 is unblocked but not started.
+methods ship at ENGINE_VERSION 0.7.1 on npm. Phase 5 is unblocked but not
+started.
 
 > **Read §0 first.** It is the short list of things only you can decide.
 
@@ -535,9 +536,14 @@ attaching commentary to the wrong psalm is a silent unrecoverable error.
 
 ## 7. Publishing to npm — ✅ DONE (2026-07-31)
 
-`@jestek-dev/scripture-engine@0.7.0` is on the public registry. Verified by
-installing it from npm into a clean directory: 30 exports, `createEngine`
-resolves, ENGINE_VERSION 0.7.0.
+`@jestek-dev/scripture-engine@0.7.1` is on the public registry, published
+through OIDC with **signed SLSA provenance** recorded in Sigstore's public
+transparency log. Verified by installing from npm into a clean directory.
+
+The provenance is worth more than the convenience: it ties the published
+tarball to the exact commit and workflow that produced it, so a consumer can
+verify the code on npm matches the code on GitHub without trusting anyone. A
+stored token would never have produced that.
 
 ```bash
 npm i @jestek-dev/scripture-engine

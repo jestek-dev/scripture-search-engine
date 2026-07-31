@@ -3,7 +3,8 @@
 **Date:** 2026-07-29 · **Last reconciled against the code:** 2026-07-30
 **Status:** Phases 0–4 complete. Layer B covers **99.0% of the Bible** from seven
 expositors. The full artifact builds and is descriptor-pinned. All five consumer
-API methods ship at ENGINE_VERSION 0.7.0. Phase 5 is unblocked but not started.
+API methods ship at ENGINE_VERSION 0.7.1, published to npm with SLSA
+provenance. Phase 5 is unblocked but not started.
 **Consumers:** Maskil, LH Worship Setlist, Versed (and future LH projects)
 **Companion:** `docs/architecture.md` (rationale) · `docs/NEEDS-JESSE.md` (open calls)
 
@@ -283,7 +284,7 @@ need to be clairvoyant — they need to measure, and everything here is measurab
 
 ## 5. Runtime API (consumer contract)
 
-**All five methods are implemented** as of ENGINE_VERSION 0.7.0. The ladder
+**All five methods are implemented** as of ENGINE_VERSION 0.7.1. The ladder
 auto-detects intent, so `research()` covers reference, verbatim phrase, concept
 and lexical queries without the caller choosing:
 
@@ -357,7 +358,7 @@ actually bought before you commit to it.
 | 3 · Evidence graph | ✅ **complete, and far past the pilot** | Seven expositors: Clarke, Matthew Henry, Keil & Delitzsch, Barnes, JFB (whole-Bible or testament-wide) plus Spurgeon and Maclaren on Psalms. **99.0% of verses carry corroborated evidence**; 877,300 terms |
 | 3½ · Full-corpus build | ✅ **complete** | 31,098 verses, **40.91 MiB** (budget 160 MiB), 341k cross-references, 2.6–42 ms queries. First reviewed descriptor in `artifacts/`. `npm run build:artifact --workspace pipeline` |
 | 4 · Curation skill | ✅ complete | skill ships; **not yet run end-to-end on a real gap**, so its own gate is unmet |
-| 5 · Consumer adoption | ⏳ **unblocked, not started** | The API blocker is gone: all five methods ship at 0.7.0 with contract tests. What remains is per-app work in each consumer's repo, plus Jesse's sequencing call — see `NEEDS-JESSE.md` §1.3 |
+| 5 · Consumer adoption | ⏳ **unblocked, not started** | The API blocker is gone: all five methods ship at 0.7.1 on npm, with contract tests. What remains is per-app work in each consumer's repo, plus Jesse's sequencing call — see `NEEDS-JESSE.md` §1.3 |
 
 **Measured Layer B outcome on the fixture corpus:** corroborated coverage went from
 6 pericopes to 15 verses, 122 → 423 admitted terms. Psalm 23 went from *no profile*

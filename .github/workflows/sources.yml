@@ -1,0 +1,42 @@
+name: Source reachability
+
+# G1b, on a schedule.
+#
+# The gate has existed since the WEB provenance hole was found, and it has
+# never once run — it is opt-in, and nothing invoked it. A guardrail nobody
+# invokes is the same as a guardrail that does not exist, which is the failure
+# this repository is built to avoid.
+#
+# What it catches is slow: a pinned source quietly disappearing. That does no
+# harm until the day someone needs to rebuild, and then it is discovered at the
+# worst possible moment. Weekly is often enough to notice, rare enough to be
+# polite to the hosts we depend on.
+
+on:
+  schedule:
+    # Mondays, 07:00 UTC.
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+
+      - name: Verify every pinned source still resolves
+        run: |
+          npm run gauntlet --workspace eval -- --check-sources | tee report.md
+          # G1b WARNS rather than fails, deliberately: a third party being down
+          # must not fail someone's PR. On a schedule the calculus inverts —
+          # nobody is waiting on this run, and a silent warning in a log nobody
+          # opens is not a notification.
+          if grep -q 'did not respond' report.md; then
+            echo "::error::One or more pinned sources are unreachable — see the Admission Report above"
+            exit 1
+          fi

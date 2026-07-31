@@ -17,6 +17,22 @@ most. The fix is not a model at runtime — it is giving each passage a richer
 vocabulary and concept signature at build time, distilled from centuries of
 public-domain preaching and community topical data.
 
+## Install
+
+```bash
+npm i @jestek-dev/scripture-engine
+```
+
+Published with [SLSA provenance](https://slsa.dev) — the tarball on npm is
+cryptographically tied to the commit and workflow that built it, recorded in
+Sigstore's public transparency log. You can verify the code you install came
+from the code you can read, without trusting the maintainer.
+
+The scripture artifact (`content.db`) ships separately, as a
+[GitHub Release](https://github.com/jestek-dev/scripture-search-engine/releases)
+asset. Consumers pin **both** and verify the database against `databaseSha256`
+in the descriptor before opening it.
+
 ## Architecture
 
 | Layer | What it is | Ships? |
