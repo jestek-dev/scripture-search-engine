@@ -73,7 +73,13 @@ jobs:
       # — and consumers should not be blocked on that. This installs with
       # `npm i <url>` and needs no registry at all.
       - name: Pack the engine
-        run: npm pack --workspace engine --pack-destination .
+        id: pack
+        run: |
+          npm pack --workspace engine --pack-destination .
+          # The tag is v0.7.0; the tarball npm produces is 0.7.0. Emitting the
+          # real filename rather than reconstructing it keeps the install
+          # command in the release notes from 404ing.
+          echo "tarball=$(ls jestek-dev-scripture-engine-*.tgz)" >> "$GITHUB_OUTPUT" 
 
       - name: Attach to release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -94,7 +100,7 @@ jobs:
             **Installing the engine** — no npm registry required:
 
             ```bash
-            npm i https://github.com/jestek-dev/scripture-search-engine/releases/download/${{ github.ref_name }}/jestek-dev-scripture-engine-${{ github.ref_name }}.tgz
+            npm i https://github.com/jestek-dev/scripture-search-engine/releases/download/${{ github.ref_name }}/${{ steps.pack.outputs.tarball }}
             ```
 
             Sources and rights: see `docs/ATTRIBUTIONS.md`.
