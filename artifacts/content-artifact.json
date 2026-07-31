@@ -1,10 +1,13 @@
 {
+  "formatVersion": 1,
+  "distributionTier": "public_distribution",
   "schemaVersion": "5",
   "tokenizerVersion": "1.0.0",
   "engineVersion": "0.7.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
   "layerFingerprint": "316fba74372ca6bb12a0e082ac98d44213c96f78f757f431fefe6eff7c6f2c27",
-  "databaseSha256": "bd715d526aaa8bb726208c6662cfcc5913ec44771b37de76c7172beb4595832e",
+  "manifestFingerprint": "94b733e5e39c50443d84ef449e6f18691e2548a563a2695cda2b7dfb8034d904",
+  "databaseSha256": "2f0bcf27990dd228c2728dc1d4f4c008955a88b758c8250125ed8734f13de6a1",
   "databaseBytes": 123310080,
   "perTableBytes": {
     "book_aliases": 12288,
@@ -26,13 +29,22 @@
     "verses_fts_docsize": 303104,
     "verses_fts_idx": 12288
   },
-  "builtAt": "2026-07-30T19:50:33.462Z",
+  "builtAt": "2026-07-31T01:33:18.620Z",
   "translations": [
     {
       "code": "WEB",
+      "name": "World English Bible",
+      "sourceSha256": "335445efdbbda8e4e0e9740c088f1f915c7940ea05914212631c693643554a1c",
       "verseCount": 31098
     }
   ],
+  "rowCounts": {
+    "books": 66,
+    "bookAliases": 195,
+    "translations": 1,
+    "verses": 31098,
+    "indexedVerses": 31098
+  },
   "counts": {
     "verses": 31098,
     "distinctTokens": 9570,

@@ -11,6 +11,8 @@
  * one has to notice a missing attribution to prevent shipping one.
  */
 
+import { createHash } from 'node:crypto';
+
 export type RightsClass =
   /** Public domain by age or dedication; free to ship, attribution courteous. */
   | 'public_domain'
@@ -100,6 +102,32 @@ const TIER_RANK: Readonly<Record<DistributionTier, number>> = {
 };
 
 /** True when `source` may be used in a build targeting `tier`. */
+/**
+ * Identifies the SET of sources admitted to a build.
+ *
+ * The third of the three supply-chain identities Maskil established, and the
+ * one the other two cannot express: databaseSha256 says which file you have,
+ * corpusFingerprint says which scripture text is in it, and this says which
+ * sources were allowed to contribute. Admitting a new commentator changes this
+ * and nothing else, so a consumer can tell "same text, different evidence"
+ * from "same everything" without diffing the artifact.
+ *
+ * Built from each source's id and its content identity, sorted and
+ * length-delimited so it cannot collide on reordering.
+ */
+export function manifestFingerprint(manifests: ManifestSet): string {
+  const hash = createHash('sha256');
+  const entries = manifests.sources
+    .map((source) => `${source.id} ${source.contentSha256 ?? source.sha256 ?? ''}`)
+    .sort();
+  for (const entry of entries) {
+    hash.update(String(entry.length));
+    hash.update(' ');
+    hash.update(entry);
+  }
+  return hash.digest('hex');
+}
+
 export function permitsTier(source: SourceManifest, tier: DistributionTier): boolean {
   return TIER_RANK[tier] <= TIER_RANK[source.maxTier];
 }

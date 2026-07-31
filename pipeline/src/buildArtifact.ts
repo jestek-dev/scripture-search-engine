@@ -41,10 +41,11 @@ import { EXPOSITION_SOURCES } from './expositionSources.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import { loadExposition } from './loadExpositions.js';
 import { fingerprintDirectory } from './provenance/contentFingerprint.js';
+import { manifestFingerprint } from './provenance/manifest.js';
 import { importCrossReferences, importTopicScores } from './importers/openbibleImporter.js';
 import { importVpl } from './importers/vplImporter.js';
 import { buildTermProfiles, type ExpositionDocument } from './stats/passageTerms.js';
-import type { ManifestSet, SourceManifest } from './provenance/manifest.js';
+import type { DistributionTier, ManifestSet, SourceManifest } from './provenance/manifest.js';
 import type { TranslationImport } from './importers/types.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -236,11 +237,28 @@ function distilLayerB(manifests: ManifestSet): ConceptLayerInput['verseTerms'] {
 }
 
 export interface ArtifactDescriptor {
+  /**
+   * Shape version of THIS FILE, distinct from the database's schemaVersion.
+   *
+   * A consumer must be able to tell "I do not understand this descriptor" from
+   * "I do not support that database", because the remedies differ: the first
+   * needs a newer consumer, the second a different artifact.
+   */
+  readonly formatVersion: 1;
+  /**
+   * Ceiling of the most restrictive source admitted. A consumer refuses an
+   * artifact whose tier exceeds what it is entitled to ship, which is how the
+   * rights position travels with the bytes instead of living in a document
+   * someone has to remember to read.
+   */
+  readonly distributionTier: DistributionTier;
   readonly schemaVersion: string;
   readonly tokenizerVersion: string;
   readonly engineVersion: string;
   readonly corpusFingerprint: string;
   readonly layerFingerprint: string | null;
+  /** Which SOURCES were admitted. See provenance/manifest.ts. */
+  readonly manifestFingerprint: string;
   readonly databaseSha256: string;
   readonly databaseBytes: number;
   /**
@@ -253,7 +271,26 @@ export interface ArtifactDescriptor {
    */
   readonly perTableBytes: Readonly<Record<string, number>>;
   readonly builtAt: string;
-  readonly translations: readonly { code: string; verseCount: number }[];
+  readonly translations: readonly {
+    code: string;
+    name: string;
+    /** Checksum of the source text this translation was imported from. */
+    sourceSha256: string;
+    verseCount: number;
+  }[];
+  /**
+   * Row counts a consumer can check the database against before trusting it.
+   * Cheap to verify on open and catches a truncated download that still
+   * hashes... it cannot, of course — but it catches a database built from a
+   * partial import, which a hash cannot distinguish from a correct one.
+   */
+  readonly rowCounts: {
+    readonly books: number;
+    readonly bookAliases: number;
+    readonly translations: number;
+    readonly verses: number;
+    readonly indexedVerses: number;
+  };
   readonly counts: Readonly<Record<string, number>>;
   readonly sources: readonly {
     id: string;
@@ -369,17 +406,58 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
     const databaseBytes = statSync(outPath).size;
     const databaseSha256 = createHash('sha256').update(readFileSync(outPath)).digest('hex');
 
+    // The artifact may be shipped no more widely than its most restricted
+    // source allows. Computed rather than declared, so adding a restricted
+    // source cannot silently leave a permissive claim in place.
+    const TIER_ORDER: readonly DistributionTier[] = [
+      'public_distribution',
+      'private_local',
+      'dev_fixture',
+    ];
+    const tier = manifests.sources
+      .filter((source) => source.sha256)
+      .reduce<DistributionTier>(
+        (worst, source) =>
+          TIER_ORDER.indexOf(source.maxTier) > TIER_ORDER.indexOf(worst) ? source.maxTier : worst,
+        'public_distribution',
+      );
+
+    const rowCount = (table: string): number => {
+      const reopened = new DatabaseSync(outPath, { readOnly: true });
+      try {
+        const row = reopened.prepare(`SELECT COUNT(*) AS n FROM "${table}"`).get() as { n: number };
+        return Number(row.n);
+      } finally {
+        reopened.close();
+      }
+    };
+
     descriptor = {
+      formatVersion: 1,
+      distributionTier: tier,
       schemaVersion: corpus.schemaVersion,
       tokenizerVersion: corpus.tokenizerVersion,
       engineVersion: readEngineVersion(),
       corpusFingerprint: corpus.corpusFingerprint,
       layerFingerprint: layer.layerFingerprint ?? null,
+      manifestFingerprint: manifestFingerprint(manifests),
       databaseSha256,
       databaseBytes,
       perTableBytes,
       builtAt,
-      translations: corpus.translations,
+      translations: corpus.translations.map((entry) => ({
+        code: entry.code,
+        name: webManifest.label,
+        sourceSha256: webManifest.contentSha256 ?? webManifest.sha256,
+        verseCount: entry.verseCount,
+      })),
+      rowCounts: {
+        books: rowCount('books'),
+        bookAliases: rowCount('book_aliases'),
+        translations: rowCount('translations'),
+        verses: rowCount('verses'),
+        indexedVerses: rowCount('verses_fts'),
+      },
       counts: {
         verses: corpus.verseCount,
         distinctTokens: corpus.distinctTokenCount,
