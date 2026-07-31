@@ -3,6 +3,7 @@
   "version": "0.7.1",
   "type": "module",
   "description": "Pure deterministic Scripture retrieval and ranking core. Zero I/O, zero runtime AI.",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jestek-dev/scripture-search-engine.git",

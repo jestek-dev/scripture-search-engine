@@ -204,3 +204,14 @@ and rights class. Sources whose *digitization* carries a claim (e.g. CCEL's
 non-commercial terms) are capped below public distribution — "the text is
 public domain" is not the same as "this file is free to ship", and G1 makes
 the distinction structural rather than remembered.
+
+## Licence
+
+MIT — see [LICENSE](LICENSE).
+
+The CODE is MIT. The DATA it is built from is not uniformly so: the corpora
+carry their own terms, from public domain through CC BY (which requires
+attribution) to sources whose transcription carries a claim. Those are
+recorded per source in [docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md), and the
+distinction matters — an MIT licence on this repository does not relicense
+somebody else's commentary.
