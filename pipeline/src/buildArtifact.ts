@@ -15,7 +15,20 @@
  * record describes, so the build fails rather than shipping rows whose
  * provenance claim is fiction.
  *
- * Usage: npx tsx src/buildArtifact.ts [--out <path>] [--no-layer-b]
+ * Usage:
+ *   npx tsx src/buildArtifact.ts [--out <path>] [--no-layer-b]
+ *   npx tsx src/buildArtifact.ts --built-at <iso8601>
+ *
+ * REPRODUCIBILITY. The build stamps `built_at` into the database's meta table,
+ * so it lands in the bytes and therefore in databaseSha256 — meaning two runs
+ * over identical sources produce different checksums, and "rebuild it and
+ * compare" cannot verify anything.
+ *
+ * `--built-at` fixes that: pass the value from a reviewed descriptor and the
+ * rebuild reproduces that artifact exactly. The claim is then precise and
+ * checkable — given the same sources and the same declared build time, the
+ * bytes are identical. The fixture build has always done this for the same
+ * reason.
  */
 
 import { execFileSync } from 'node:child_process';
@@ -501,8 +514,10 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
 
 if (process.argv[1] && process.argv[1].endsWith('buildArtifact.ts')) {
   const outIndex = process.argv.indexOf('--out');
+  const builtAtIndex = process.argv.indexOf('--built-at');
   buildArtifact({
     outPath: outIndex > -1 ? process.argv[outIndex + 1] : undefined,
     includeLayerB: !process.argv.includes('--no-layer-b'),
+    builtAt: builtAtIndex > -1 ? process.argv[builtAtIndex + 1] : undefined,
   });
 }

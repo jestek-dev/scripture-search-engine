@@ -101,4 +101,13 @@ describe('release descriptor satisfies the consumer contract', () => {
   it('reports the engine version it was built by', () => {
     expect(descriptor['engineVersion']).toBe(ENGINE_VERSION);
   });
+
+  it('records the build time, without which the artifact cannot be reproduced', () => {
+    // built_at is stamped into the database's meta table, so it lands in the
+    // bytes and in databaseSha256. A rebuild can only reproduce the checksum
+    // if it knows this value — pass it with `--built-at`. Without it recorded,
+    // "rebuild and compare" verifies nothing, which is how the release
+    // workflow would have failed on its first real run.
+    expect(descriptor['builtAt']).toMatch(/^\d{4}-\d{2}-\d{2}T[\d:.]+Z$/);
+  });
 });

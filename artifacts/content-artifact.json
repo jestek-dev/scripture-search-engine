@@ -7,7 +7,7 @@
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
   "layerFingerprint": "316fba74372ca6bb12a0e082ac98d44213c96f78f757f431fefe6eff7c6f2c27",
   "manifestFingerprint": "94b733e5e39c50443d84ef449e6f18691e2548a563a2695cda2b7dfb8034d904",
-  "databaseSha256": "2f0bcf27990dd228c2728dc1d4f4c008955a88b758c8250125ed8734f13de6a1",
+  "databaseSha256": "403d0fb9cba69cac13bc075325fbcfc2bcad1d209ef015841186fd6eca1dd237",
   "databaseBytes": 123310080,
   "perTableBytes": {
     "book_aliases": 12288,
@@ -29,7 +29,7 @@
     "verses_fts_docsize": 303104,
     "verses_fts_idx": 12288
   },
-  "builtAt": "2026-07-31T01:33:18.620Z",
+  "builtAt": "2026-07-30T00:00:00.000Z",
   "translations": [
     {
       "code": "WEB",

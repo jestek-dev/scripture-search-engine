@@ -40,8 +40,14 @@ jobs:
       - name: Fetch pinned sources
         run: npm run fetch:sources --workspace pipeline
 
-      - name: Build artifact
-        run: npm run build:artifact --workspace pipeline
+      # Rebuild AT THE REVIEWED BUILD TIME. built_at lands in the database's
+      # meta table and therefore in its checksum, so without pinning it every
+      # rebuild differs and the verification below could never mean anything.
+      - name: Build artifact, reproducing the reviewed one
+        run: |
+          BUILT_AT=$(node -p "require('./artifacts/content-artifact.json').builtAt")
+          echo "reproducing build stamped $BUILT_AT"
+          npm run build:artifact --workspace pipeline -- --built-at "$BUILT_AT"
 
       # The descriptor is committed, so this catches a build that no longer
       # reproduces the reviewed artifact — a source drifting under us, or a
