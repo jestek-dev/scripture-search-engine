@@ -1,6 +1,6 @@
 {
   "corpusFingerprint": "d4835d2052b6923f253fce337e77952571f6618a1799911f17c1548ee80c12c8",
-  "engineVersion": "0.6.0",
+  "engineVersion": "0.7.1",
   "observations": [
     {
       "id": "broad-love",
@@ -151,18 +151,18 @@
       "top": [
         "WEB:59001022",
         "WEB:40007026",
+        "WEB:42006049",
         "WEB:40007024",
         "WEB:42006047",
         "WEB:59001023",
-        "WEB:42006049",
         "WEB:40007025",
         "WEB:40007027",
         "WEB:59001024",
         "WEB:42006046"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.357038,
-      "meanTopScore": 47.943728
+      "weakReasonShare": 0.368557,
+      "meanTopScore": 48.818315
     },
     {
       "id": "narrow-house-rock",
@@ -256,14 +256,14 @@
         "WEB:19121008",
         "WEB:03019003",
         "WEB:03019030",
+        "WEB:05006024",
+        "WEB:01003024",
         "WEB:39003012",
-        "WEB:20003033",
-        "WEB:20003026",
-        "WEB:04006027"
+        "WEB:20003033"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.636549,
-      "meanTopScore": 16.508428
+      "weakReasonShare": 0.6437,
+      "meanTopScore": 16.839735
     },
     {
       "id": "ot-narrative-ruth",
@@ -297,18 +297,18 @@
       "top": [
         "WEB:14007014",
         "WEB:59002007",
+        "WEB:01005002",
+        "WEB:01005003",
+        "WEB:01005029",
         "WEB:24029025",
+        "WEB:20003004",
         "WEB:04006027",
         "WEB:33006009",
-        "WEB:01003020",
-        "WEB:45008028",
-        "WEB:43001042",
-        "WEB:40005011",
-        "WEB:33006002"
+        "WEB:01003020"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.558681,
-      "meanTopScore": 11.123689
+      "weakReasonShare": 0.581223,
+      "meanTopScore": 11.722455
     },
     {
       "id": "ot-wisdom-trust",
@@ -316,17 +316,17 @@
         "WEB:20003005",
         "WEB:19091002",
         "WEB:05006005",
+        "WEB:19091014",
+        "WEB:58010035",
         "WEB:20003001",
         "WEB:58010016",
         "WEB:14007010",
         "WEB:16008010",
-        "WEB:05006006",
-        "WEB:14007011",
-        "WEB:26033013"
+        "WEB:05006006"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.537616,
-      "meanTopScore": 12.976227
+      "weakReasonShare": 0.571847,
+      "meanTopScore": 14.013668
     },
     {
       "id": "ot-wisdom-time",
@@ -387,18 +387,18 @@
       "top": [
         "WEB:33006008",
         "WEB:49002004",
+        "WEB:20003003",
         "WEB:62002006",
         "WEB:62002010",
         "WEB:02020006",
         "WEB:62002005",
-        "WEB:01003024",
-        "WEB:49002005",
-        "WEB:59002012",
-        "WEB:40005007"
+        "WEB:14007003",
+        "WEB:14007006",
+        "WEB:19023006"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 6.516149
+      "meanTopScore": 6.914312
     },
     {
       "id": "ot-adversarial-census",

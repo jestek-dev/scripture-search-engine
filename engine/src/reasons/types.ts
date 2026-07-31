@@ -25,6 +25,7 @@ export type SignalFamily =
   // Weak: helpful, individually capped, collectively capped.
   | 'concept_lexicon'   // query matched a concept's lexicon, not its anchors
   | 'token_overlap'     // distinctive tokens shared with the passage
+  | 'translation_variant' // the verse reads this way in another translation
   | 'proximity'         // matched tokens occur near each other
   | 'passage_terms'     // homiletical term profile for this pericope
   | 'cross_reference'   // curated cross-reference edge (OpenBible et al.)

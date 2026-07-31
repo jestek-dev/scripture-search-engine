@@ -19,7 +19,7 @@
  *      Scripture into the same pieces (Maclaren's Psalm 23:1-6 essay vs
  *      Spurgeon's verse-by-verse notes never matched under exact span keys).
  */
-export const SCHEMA_VERSION = '5';
+export const SCHEMA_VERSION = '6';
 
 /**
  * `verses.id` (plain rowid) is the true primary key, NOT `verse_id`. The
@@ -218,6 +218,27 @@ CREATE TABLE verse_terms (
   min_span_verses INTEGER NOT NULL,
   locator TEXT NOT NULL
 );
+
+/*
+ * Cross-translation vocabulary: word STEMS that appear in some other English
+ * translation of a verse but not in the one shipped here.
+ *
+ * Why it exists: people search in the translation they learned a verse in.
+ * "plans to prosper you" is NIV wording for Jeremiah 29:11 and finds nothing
+ * against a text reading "thoughts of peace, and not of evil". This closes
+ * that without shipping a second translation.
+ *
+ * What is stored is deliberately minimal: a stem, unordered, deduplicated,
+ * merged across sources so no translation is separable, with no order, no
+ * function words and no punctuation. It is an index over those works, not a
+ * copy of any of them, and it cannot be reversed into one.
+ */
+CREATE TABLE verse_translation_tokens (
+  verse_id INTEGER NOT NULL,
+  token TEXT NOT NULL
+);
+CREATE INDEX idx_verse_translation_tokens_token ON verse_translation_tokens(token);
+CREATE INDEX idx_verse_translation_tokens_verse ON verse_translation_tokens(verse_id);
 
 CREATE INDEX idx_verse_terms_term ON verse_terms(term, pmi DESC);
 CREATE INDEX idx_verse_terms_verse ON verse_terms(verse_id);

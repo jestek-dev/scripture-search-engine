@@ -31,6 +31,7 @@ import {
   crossReferenceEvidence,
   passageTermEvidence,
   relatedConceptEvidence,
+  translationVariantEvidence,
 } from './intents/concept.js';
 import { rank, type RankOptions } from './ranking/rank.js';
 import type {
@@ -94,7 +95,7 @@ export interface ScriptureEngine {
   readonly engineVersion: string;
 }
 
-const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5']);
+const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5', '6']);
 
 /**
  * Lyric tokens admitted to forSong(). A full lyric sheet is hundreds of
@@ -130,6 +131,7 @@ export async function createEngine(
   const concepts = (await conceptRepository.hasConceptLayer()) ? conceptRepository : null;
 
   const hasPassageTerms = await conceptRepository.hasPassageTerms();
+  const hasTranslationTokens = await conceptRepository.hasTranslationTokens();
   const documentCount = await repository.documentCount();
   const identity = {
     engineVersion: ENGINE_VERSION,
@@ -183,6 +185,26 @@ export async function createEngine(
       for (const match of await repository.searchTokens(tokens, documentCount)) {
         verses.set(targetIdFor(match), match);
         contributions.push({ verse: match, evidence: tokenEvidence(match, idfTotal) });
+      }
+    }
+
+    // Step 4b — cross-translation vocabulary. Placed AFTER the shipped text
+    // has had its chance: if the query matches what this artifact actually
+    // says, that is the better evidence and this only adds to it. What this
+    // catches is the reader who learned the verse elsewhere.
+    if (hasTranslationTokens && tokens.length > 1) {
+      const variantFrequencies = await conceptRepository.translationTokenDocumentCounts(tokens);
+      const variantIdfTotal = queryIdfTotal(tokens, variantFrequencies, documentCount);
+      for (const match of await conceptRepository.searchTranslationTokens(tokens)) {
+        const evidence = translationVariantEvidence(
+          match,
+          variantIdfTotal,
+          variantFrequencies,
+          documentCount,
+        );
+        if (!evidence) continue;
+        verses.set(targetIdFor(match), match);
+        contributions.push({ verse: match, evidence: [evidence] });
       }
     }
 

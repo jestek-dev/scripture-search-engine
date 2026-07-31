@@ -38,6 +38,7 @@ const MANIFEST_DIR = join(PIPELINE_ROOT, 'manifests');
 const ONTOLOGY_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'concepts');
 const OPENBIBLE_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-subset.json');
 const PASSAGE_TERMS_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'passage-terms-subset.json');
+const TRANSLATION_TOKENS = join(PIPELINE_ROOT, 'fixtures', 'translation-tokens.json');
 
 function loadManifests(): ManifestSet {
   const sources = readdirSync(MANIFEST_DIR)
@@ -141,6 +142,18 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
         }).terms
       : [];
 
+    // Cross-translation vocabulary, scoped to the fixture corpus by the
+    // builder's presentVerseIds check.
+    const translationTokens = new Map<number, readonly string[]>();
+    if (existsSync(TRANSLATION_TOKENS)) {
+      const file = JSON.parse(readFileSync(TRANSLATION_TOKENS, 'utf8')) as {
+        tokens: Record<string, string>;
+      };
+      for (const [verseId, tokens] of Object.entries(file.tokens)) {
+        translationTokens.set(Number(verseId), tokens.split(' ').filter(Boolean));
+      }
+    }
+
     const presentVerseIds = new Set(translation.verses.map((verse) => verse.verseId));
     const conceptLayer =
       ontology.concepts.length > 0
@@ -151,6 +164,7 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
             manifests: loadManifests(),
             presentVerseIds,
             verseTerms,
+            translationTokens,
           })
         : null;
 
@@ -182,6 +196,7 @@ if (process.argv[1] && process.argv[1].endsWith('buildFixtureDb.ts')) {
           `  openbible topic anchors: ${result.conceptLayer.topicAnchors}\n` +
           `  cross references: ${result.conceptLayer.crossReferences}\n` +
           `  verse terms: ${result.conceptLayer.verseTerms}\n` +
+          `  translation tokens: ${result.conceptLayer.translationTokens}\n` +
           `  dropped (outside fixture corpus): ${result.conceptLayer.droppedOutOfCorpus}\n`
         : '  concept layer: none\n'),
   );

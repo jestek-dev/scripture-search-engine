@@ -187,6 +187,7 @@ can declare that lineage, which keeps the engine from counting the same
 scholarship twice as independent evidence.
 
 - **LH editorial** — Authored for this dataset. LH holds all rights. Drafted with AI assistance offline and admitted by human review; no AI runs at query time.
+- **Cross-translation vocabulary (KJV, ESV, NIV, NLT)** — DERIVED INDEX ONLY. No translation text is stored or shipped. What this source contributes is, per verse, the set of word STEMS appearing in some English translation of that verse but not in the shipped one — unordered, deduplicated, stopwords removed, stemmed, and merged across all four sources so no single translation's contribution is separable. There is no word order, no punctuation and no function words, so the prose cannot be reconstructed from it. KJV is public domain (eBible.org verse-per-line export). ESV, NIV and NLT are copyrighted; licensed copies held by Jesse Freeman were read ONCE, locally, to derive this index, and never entered this repository or the artifact. The relationship is that of a search index to the works it indexes rather than a copy of them. Recorded here in full because the distinction is the entire basis on which this source is admitted, and a reader must be able to check it rather than take it on trust.
 - **Treasury of Scripture Knowledge** — Public domain by age (published 1830s). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).
 
 ---
