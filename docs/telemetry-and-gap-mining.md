@@ -125,14 +125,16 @@ These commitments are load-bearing. They were approved by Jesse on
    whether the person is willing to share their searches to make Scripture
    search better for everyone. Yes enables logging; no means nothing is
    ever recorded, and the choice can be changed in settings at any time
-   (off also purges the local log). Draft consent copy, **pending Jesse's
-   sign-off**, written so that every clause is mechanically true:
+   (off also purges the local log). Consent copy, **✅ APPROVED by Jesse
+   2026-07-31** (amended at his direction to say *why* — so the reader
+   understands sharing improves results), every clause mechanically true:
 
-   > *Help improve Scripture search? Share what you search — never who you
-   > are. We don't record names, accounts, or devices; searches about
-   > personal crises are never recorded at all; and a search is only ever
-   > reported once several different people have made it. You can turn
-   > this off anytime.*
+   > *Help improve Scripture search? Sharing what you search shows us
+   > which searches return poor results, so we can fix them for everyone.
+   > We never record who you are — no names, accounts, or devices;
+   > searches about personal crises are never recorded at all; and a
+   > search is only reported once several different people have made it.
+   > You can turn this off anytime.*
 
    The word "anonymous" is deliberately absent as a bare claim — the AOL
    release proved query text can identify on its own, which is exactly why

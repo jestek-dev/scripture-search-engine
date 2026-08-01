@@ -43,12 +43,11 @@ reviews of numbers I had to pick to keep moving.
 5. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
-6. **Telemetry: two sign-offs remain.** §1.7. You approved the model on
-   2026-07-31 and the repo half is built. Before any app logs anything:
-   (a) approve or reword the consent-screen copy (design doc §4.1 has the
-   draft), and (b) review `pipeline/telemetry/sensitive-categories.json` —
-   the list of crisis topics that are never recorded. Both are your words,
-   and the second is a pastoral judgment I only drafted.
+6. ~~**Telemetry: two sign-offs remain.**~~ ✅ BOTH SIGNED (2026-07-31):
+   consent copy approved (amended to state the why — improving results)
+   and the sensitive-category list approved as drafted, judgment calls
+   included. §1.7. T0 is now fully gated-through; collection may begin
+   whenever a consumer app ships its shim (Phase 5).
 
 Everything else in this document is context, not a request.
 
