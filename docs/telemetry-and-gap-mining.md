@@ -1,8 +1,19 @@
 # Telemetry and the gap-mining loop — learning without a learning system
 
-**Date:** 2026-07-31 · **Status:** DESIGN, awaiting Jesse's review — nothing
-here is built, and §4 (privacy commitments) requires his explicit approval
-before any consumer logs a single event.
+**Date:** 2026-07-31 · **Status:** APPROVED by Jesse (2026-07-31), amended to
+his decisions the same day. This repo's half (schemas, category list,
+distillation reference, miner) is **built** — see §7. Consumer-side work
+(consent screen, shims, transport) lands with Phase 5.
+**Decisions recorded (Jesse, 2026-07-31):** install-time opt-in consent;
+all query *wording* kept permanently in a master analyzed record; raw
+histories deleted after every audit (and after 90 days on-device
+regardless); crisis-category exclusion upheld — those searches are never
+recorded, consent notwithstanding; collection is automatic after consent
+(no per-export review step), via per-app private stores, never a shared
+public document.
+**Still needing Jesse:** the consent screen wording (§4.1 drafts it) and
+review of `pipeline/telemetry/sensitive-categories.json` (§4.5 — the list
+is data, and it is a pastoral judgment, not a technical one).
 **Companion:** `docs/research/2026-07-31-search-telemetry-mining.md` (the
 evidence this design stands on) · `docs/implementation-plan.md` §7 (Phase 5,
 which this couples to) · `docs/NEEDS-JESSE.md` §1.7 (the decision entry)
@@ -107,24 +118,47 @@ k-anonymity thresholds weaken as the population shrinks — in a community of
 hundreds, "at least 3 distinct devices" is a much thinner shield than at web
 scale.
 
-These commitments are load-bearing. Approving them is a values call, which
-is why this document is a decision for Jesse and not a default:
+These commitments are load-bearing. They were approved by Jesse on
+2026-07-31, with his amendments folded in:
 
-1. **No user identity, ever.** Events carry no user id, no account id, no
-   device id. The only correlation key is an ephemeral session id that
-   rotates per app launch and exists solely so a reformulation chain can be
-   reassembled. It maps to nothing.
-2. **Raw events never leave the device. Full stop.** Each app keeps its own
-   local log; nothing is transmitted anywhere on a schedule, and there is no
-   telemetry endpoint because there is no server. What can leave — only by
-   a deliberate act, and only after the user has seen it — is a **distillate**
-   (§5a): per-query aggregates with sessions and dates stripped. The AOL
-   release proved that a pseudonymous per-user query *history* is itself
-   re-identifying (research note §4), so the history is the thing that must
-   never exist off-device, no matter how anonymous its labels.
-3. **Coarse time only.** Events carry a date, not a timestamp. "Someone
-   searched X on Sunday at 9:47" is an identity clue in a congregation;
-   "someone searched X in March" is not.
+1. **Consent is opt-in, at install, and honest.** During setup the app asks
+   whether the person is willing to share their searches to make Scripture
+   search better for everyone. Yes enables logging; no means nothing is
+   ever recorded, and the choice can be changed in settings at any time
+   (off also purges the local log). Draft consent copy, **pending Jesse's
+   sign-off**, written so that every clause is mechanically true:
+
+   > *Help improve Scripture search? Share what you search — never who you
+   > are. We don't record names, accounts, or devices; searches about
+   > personal crises are never recorded at all; and a search is only ever
+   > reported once several different people have made it. You can turn
+   > this off anytime.*
+
+   The word "anonymous" is deliberately absent as a bare claim — the AOL
+   release proved query text can identify on its own, which is exactly why
+   commitments 4 and 5 exist. The copy promises the specific protections
+   we actually deliver instead.
+2. **No user identity, ever.** Events carry no user id, no account id, no
+   device id. On-device, the only correlation key is an ephemeral session
+   id that rotates per app launch and exists solely so a reformulation
+   chain can be reassembled; it maps to nothing and never leaves. In
+   exports, the only key is a random **audit token that rotates every
+   audit period** — it lets the miner count "5 distinct installs this
+   quarter" and blunt poisoning, but cannot link anyone across quarters,
+   so no long-lived pseudonym ever accumulates a history (the precise
+   failure of AOL's "anonymized" user numbers).
+3. **Raw histories never leave the device. Full stop.** Each app keeps its
+   own local log. What uploads — automatically, under the standing consent
+   of commitment 1 — is the **distillate** (§5a): per-query aggregates
+   with sessions and dates stripped, sent to that app's own private store.
+   Never a shared or public document (§6a). The AOL release proved that a
+   per-user query *history* is itself re-identifying (research note §4),
+   so the history is the artifact that must never exist off-device, no
+   matter how anonymous its labels.
+   **Coarse time only**, as part of the same rule: on-device events carry a
+   date (needed for retention), and distillates coarsen it to the audit
+   period. "Someone searched X on Sunday at 9:47" is an identity clue in a
+   congregation; "someone searched X in Q3" is not.
 4. **k-threshold before any query string becomes visible.** The Gap Report
    shows a query string only when it was seen from **≥ 3 distinct devices**
    (tunable in `eval/budgets.json` as reviewed data, like every other
@@ -135,49 +169,61 @@ is why this document is a decision for Jesse and not a default:
    chosen floor, not an inherited industry constant, and at congregation
    scale it is necessary but **not sufficient**, which is why commitment 5
    exists.
-5. **Sensitive categories are excluded by category, not by count.** The
+5. **Sensitive categories are excluded by category, not by count — consent
+   notwithstanding.** Jesse's call, 2026-07-31, upholding the design: the
    re-identification literature is blunt that thresholds alone fail when
    the report's readers personally know the population (research note §5)
-   — and ours will. So a reviewed keyword list (suicide, self-harm, abuse,
-   divorce, addiction, illness, grief and kin — the pastoral-crisis
-   categories, maintained as data in this repo) is applied twice: the
-   logging shim **drops matching queries before they are ever written**,
-   and the miner applies the same list again defensively, since a device's
-   list may lag the repo's. This mirrors the category-based exclusions
-   major engines apply to autocomplete and Trends rather than trusting
-   frequency alone. The cost is stated plainly: search gaps in exactly
-   these topics cannot be mined. That is the right trade — a pastor does
-   not need telemetry to know people search about suicide, and
-   conviction-driven curation (the path every existing concept pack took)
-   remains open for them. What telemetry must never become is the
-   instrument that tells anyone *who was searching*.
-6. **Retention limit.** Raw local events are deleted after 90 days,
-   enforced by the logging library, not by policy memory. (The strictest
-   published regulatory position on search logs — the EU working party's —
-   held that even a web engine had no basis for keeping them beyond six
-   months; a church app has far less need, so 90 days.) Distilled exports
-   (already thresholded and category-filtered) may be kept.
+   — and ours will. Consent at install cannot reach the 2 a.m. moment
+   someone searches about suicide; the person who ticked yes in January
+   was not consenting to that. So a reviewed keyword list
+   (`pipeline/telemetry/sensitive-categories.json` — suicide, self-harm,
+   abuse, divorce, addiction, illness, grief and kin, the pastoral-crisis
+   categories) is applied twice: the logging shim **drops matching queries
+   before they are ever written**, and the miner applies the same list
+   again defensively, since a device's list may lag the repo's. This
+   mirrors the category-based exclusions major engines apply to
+   autocomplete and Trends rather than trusting frequency alone. The cost
+   is stated plainly: search gaps in exactly these topics cannot be mined.
+   That is the right trade — a pastor does not need telemetry to know
+   people search about suicide, and conviction-driven curation (the path
+   every existing concept pack took) remains open for them. What telemetry
+   must never become is the instrument that tells anyone *who was
+   searching*.
+6. **Wording is kept forever; linkage is destroyed.** Jesse's requirement
+   — "keep all data so we can see nuance in wording" — is met by keeping
+   the right *half* of the data permanently. The **master analyzed
+   record** (§6b) accumulates every query string that cleared the
+   thresholds, with counts, outcomes, reformulation pairs, verdicts, and
+   what was done about them — the wording nuance, forever. The **audit
+   dump** (the device distillates an audit was run on) is **deleted when
+   the audit closes**, and raw on-device events are deleted after 90 days
+   regardless (the strictest published regulatory position on search logs
+   — the EU working party's — held that even a web engine had no basis
+   for keeping them beyond six months; a church app has far less need).
+   Nothing analytical is ever lost by these deletions: pairs are mined
+   before the dump dies, and every above-threshold string lives on in the
+   master. What dies is the ability to reconstruct *any person's* or *any
+   device's* search history — which is the one capability this system must
+   never have.
 7. **Disclosure.** Each consumer app states plainly, in its settings, what
-   is logged, that it stays on the device, and how to turn it off. Off is
-   respected absolutely.
-8. **The repo never holds raw logs.** Only Gap Reports and the thresholded
-   aggregate exports behind them enter any git history — mirroring Layer B's
-   rule that source prose never ships, only the distillate.
+   is logged, where it goes, and how to turn it off. Off is respected
+   absolutely, and purges the local log.
+8. **The repo never holds raw logs or dumps.** Only Gap Reports and the
+   master analyzed record enter any git history — mirroring Layer B's rule
+   that source prose never ships, only the distillate.
 
 **Known residual risk, stated rather than hidden:** the person who runs the
 miner receives the device distillates *before* the k-threshold is applied —
 suppression protects the report, not the runner's screen. At LH scale that
 person is likely Jesse or a trusted admin. Three things bound the exposure:
-sensitive categories were dropped on-device and never arrive at all; every
-user saw and approved their own distillate before it left (§5a); and a
-distillate carries no dates, sessions, or ids to correlate. But "someone at
-this church searched X this quarter" is still pastoral information, and no
-mechanism removes it while a human runs the pipeline. If that residue is
-unacceptable, the alternatives are restricting distillates to zero-result
-queries only (less sensitive — mostly phrasing failures) or having the
-miner apply thresholds before printing anything to the terminal; both are
-small changes, and the choice should be revisited after the first real
-export.
+sensitive categories were dropped on-device and never arrive at all; a
+distillate carries no dates, sessions, or durable ids to correlate; and the
+audit dump is deleted when the audit closes, so the exposure has no
+archive. But "someone at this church searched X this quarter" is still
+pastoral information, and no mechanism removes it while a human runs the
+pipeline. If that residue is ever unacceptable, the alternative is a miner
+mode that applies thresholds before printing anything; it is a small
+change, and the question should be revisited after the first real audit.
 
 ## 5. The event schema
 
@@ -237,7 +283,8 @@ reduction is where several commitments become mechanical:
 {
   "v": 1,
   "app": "maskil",
-  "period": "2026-Q3",                          // dates coarsen to a quarter
+  "period": "2026-Q3",                          // dates coarsen to the audit period
+  "token": "9f41c2…",                           // random; REGENERATED each period — see below
   "queries": [
     {
       "query": "plans to prosper you",
@@ -252,20 +299,25 @@ reduction is where several commitments become mechanical:
 }
 ```
 
-- **One distillate file per device, no device id inside it.** The file
-  boundary *is* the device count: a query seen in 5 files was typed on 5
-  devices. The k-threshold (§4.4) needs nothing more, so no device
-  identifier ever exists in any format.
+- **Upload is automatic under the standing install-time consent** — no
+  per-export ceremony, which is what makes the data arrive "no matter who
+  installs it". The shim distills and uploads on a period boundary; a
+  person who opted out simply has nothing to upload.
+- **The audit token is the device count, and it forgets.** A query
+  attested by 5 distinct tokens this period was typed on 5 installs — that
+  is all the k-threshold (§4.4) needs. The token is random, carries
+  nothing, and is regenerated every audit period, so it can never
+  accumulate a cross-quarter history. (A *stable* pseudonym here would be
+  the AOL user number all over again; rotation is what makes it safe.)
 - **Sessions never leave.** Reformulation pairs are mined on the device,
-  where the sessions live, by the shim (to a spec and test suite defined in
-  this repo). The exported pair is (failed query → converted query) with a
-  count — the chain that produced it stays behind and dies with the 90-day
-  retention.
-- **The user sees the distillate before it goes.** Export shows the actual
-  list — every query string about to leave — and requires an explicit yes.
-  A person who searched something they consider private is the only party
-  qualified to catch what every filter missed, and this is the step that
-  makes them part of the defense rather than its subject.
+  where the sessions live, by the shim (to the spec and conformance tests
+  in `pipeline/src/telemetry/distill.ts`). The exported pair is (failed
+  query → converted query) with a count — the chain that produced it stays
+  behind and dies with the 90-day retention.
+- **The settings screen shows what has been shared.** Not a gate on each
+  upload (consent is standing), but standing transparency: the person can
+  always see the distillate their device sent this period, and turning
+  telemetry off purges the local log.
 
 ## 6. The mining pipeline
 
@@ -273,16 +325,52 @@ A build-time script, sibling to the gauntlet, run by a human on an exported
 aggregate:
 
 ```
-consumer app (on device)                this repo (offline)              human
-────────────────────────                ───────────────────              ─────
-event log → distillate → user reviews → mineSearchLog        →  Gap Report → curation skill
-(≤90 days)  (§5a)        & exports      merge+replay+cluster                → fixtures → gauntlet → PR
+consumer app (on device)              per-app private store       this repo (offline, per audit)         human
+────────────────────────              ─────────────────────       ──────────────────────────────         ─────
+event log → distillate (§5a),  ──────→ accumulates          ──→   mineSearchLog:                    ──→  Gap Report → curation skill
+(≤90 days)  auto-upload each period    distillates                merge+replay+cluster                    → fixtures → gauntlet → PR
+                                       (audit dump —              + update master analyzed record
+                                       DELETED after audit)         (kept forever)
 ```
+
+### 6a. Transport — why there is no shared online document
+
+The obvious-sounding mechanism — one online doc that every install writes
+to — is ruled out, because it is a public unauthenticated endpoint wearing
+a friendly name. If it is readable, everyone's searches are published (the
+AOL release as a subscription service); if it is writable by anyone, the
+data is poisonable by anyone; and either way it is a server this project
+has structurally refused.
+
+Instead: **each app uploads distillates to its own private, write-only
+store**, and the audit pulls from those stores. The store is a per-app
+implementation decision made at Phase 5 — an app with an existing backend
+(Maskil's collaboration sync) rides it; an app with none can use any
+free-tier private option, or fall back to a manual file share, which costs
+nothing. The contract this repo owns is the **distillate format and the
+privacy invariants**, not the pipe. The miner reads distillate files from a
+directory and does not care how they got there — which also means the
+transport can change per app, later, without touching anything here.
+
+### 6b. The master analyzed record — Jesse's two-document model
+
+Two artifacts, with opposite lifetimes (§4.6):
+
+| | contents | lifetime |
+|---|---|---|
+| **Master analyzed record** (`telemetry/master-record.json`, committed) | every above-threshold query string with cumulative counts, outcomes, converted-target ranks, reformulation pairs, per-audit verdicts, and what was curated in response | forever — this is where wording nuance accumulates across years |
+| **Audit dump** (the distillate files an audit ran on) | per-device distillates for one period | deleted when the audit closes; never committed |
+
+The miner updates the master record as part of every audit, so the record
+is the system's long-term memory and the dump is its working set. Every
+entry in the master already cleared the k-threshold and the category
+filter — it is safe to commit precisely because everything dangerous was
+structurally unable to reach it.
 
 `pipeline/scripts/mineSearchLog.ts`:
 
 1. **Validate** every distillate against the schema; refuse mixed schema
-   versions. Count devices as files (§5a).
+   versions. Count devices as distinct audit tokens (§5a).
 2. **Replay** each distinct query against the pinned artifact version its
    distillate names (downloaded by descriptor from Releases, verified
    against `databaseSha256` — the same verification consumers do). Replay
@@ -347,14 +435,35 @@ Telemetry depends on consumers actually using the engine, so T1 onward is
 coupled to Phase 5 — this is Phase 5's instrumentation arm, not a detour
 before it.
 
-| Phase | Where | Work | Gate |
+| Phase | Where | Work | Status / gate |
 |---|---|---|---|
-| **T0 — Spec** | this repo | This document reviewed; §4 approved or amended by Jesse; event schema committed to `pipeline/telemetry/event.schema.json` with validation tests; k-threshold and retention added to `eval/budgets.json` as reviewed data; the sensitive-category exclusion list drafted and reviewed as data (§4.5) | Jesse signs off §4. **Nothing may be logged before this gate — a privacy commitment adopted after collection starts is an apology, not a commitment** |
-| **T1 — Logging shims** | consumer repos | shim per app: append event on search resolution (with displayed rank on conversion), drop sensitive-category queries before writing, mark conversion on the app's own conversion action, rotate session id, enforce 90-day deletion, settings toggle + disclosure copy; **export flow**: build the distillate (§5a), show it to the user, share only on explicit yes | events and distillates validate against their schemas; toggle verified to stop logging; category-drop verified with the reviewed list; raw events and session ids verified absent from the distillate |
-| **T2 — Miner** | this repo | `mineSearchLog.ts`: validate → replay (descriptor-verified artifact download) → rank cross-check (§5) → cluster → Gap Report. Tests: suppression rule, category rule, replay determinism (same distillates + same artifact ⇒ byte-identical report), rank-mismatch flagging, mixed-version refusal | synthetic distillates produce a correct report; the suppression and category tests pass |
-| **T3 — Reformulation pairs** | both | pair-mining spec + conformance tests in this repo (`pipeline/telemetry/`), implemented in each shim where the sessions live; miner merges pair candidates; RENAMED verdict | shim conformance suite passes, including a false-pair case it must NOT emit; miner surfaces candidates with device counts |
-| **T4 — First real cycle** | both | run one export → Gap Report → curation → gauntlet → release, end to end; record zero-conversion rate as the baseline the whole feature is measured by | one pack sourced from telemetry merges on an ADMIT verdict; the *next* export's zero-conversion rate is compared against baseline |
+| **T0 — Spec** | this repo | This document; event + distillate schemas in `pipeline/telemetry/`; k-threshold, retention and weak-rank thresholds in `eval/budgets.json` as reviewed data; the sensitive-category exclusion list drafted as data (§4.5) | ✅ **built 2026-07-31.** Remaining: Jesse signs off the consent copy (§4.1) and reviews the category list — both are his words, not defaults. **Nothing may be logged before that — a privacy commitment adopted after collection starts is an apology, not a commitment** |
+| **T1 — Logging shims** | consumer repos | shim per app: consent question at install (§4.1 copy); append event on search resolution (with displayed rank on conversion); drop sensitive-category queries before writing; mark conversion on the app's own conversion action; rotate session id per launch; enforce 90-day deletion; settings screen (§5a transparency + off-purges); distill + auto-upload each period with a fresh audit token | ⏳ rides Phase 5. Gate: events and distillates validate against the schemas; toggle verified to stop logging and purge; category-drop verified against the reviewed list; raw events and session ids verified absent from the distillate. The reference distillation in `pipeline/src/telemetry/distill.ts` is the spec — a shim is conformant when it matches its test suite's behaviour |
+| **T2 — Miner** | this repo | `mineSearchLog.ts`: validate → replay → rank cross-check (§5) → cluster → k-threshold → Gap Report + master-record update. Tests: suppression rule, category rule, replay determinism (same distillates + same artifact ⇒ byte-identical report), rank-mismatch flagging, mixed-version refusal | ✅ **built 2026-07-31**, tested against synthetic distillates and the fixture artifact |
+| **T3 — Reformulation pairs** | both | pair mining in the reference distillation (device-side, precision-over-recall, false-pair conformance case); miner merges candidates into RENAMED verdicts with device counts | ✅ repo half **built 2026-07-31**; shim ports land with T1 |
+| **T4 — First real audit** | both | consent live in at least one app → a period of collection → audit → Gap Report → curation → gauntlet → release; record zero-conversion rate as the baseline the feature is measured by; delete the dump | one pack sourced from telemetry merges on an ADMIT verdict; the *next* audit's zero-conversion rate is compared against baseline |
 | **T5 — usage as a ranking signal** | — | **deliberately not planned.** See §9 |
+
+### 7a. Cost — zero, verified
+
+Nothing in this design requires a paid service, and the repo half runs on
+what the project already uses:
+
+- **This repo**: public GitHub repository, Actions (free for public
+  repos), Releases (free; the 123 MiB artifact is far under the 2 GiB
+  per-asset limit), npm public publishing (free). The miner and schemas
+  add **no dependencies** — Node built-ins only, same as the rest of the
+  pipeline.
+- **On device**: logging and distillation are local file work inside apps
+  that already exist. Free.
+- **Transport** (§6a): rides whatever each app already has. An app with a
+  backend uses it at no marginal cost; an app with none can use a manual
+  file share (free) or any free-tier private store if automation is wanted
+  later. The design deliberately does not *require* any hosted endpoint —
+  the miner reads files from a directory.
+
+The only thing money could buy here is convenience of transport, and the
+fallback that costs nothing (files) is fully supported.
 
 Effort honestly stated: T0+T2+T3 are a few days in this repo. T1 is small
 per app but rides Phase 5's schedule. T4 is calendar time — at LH scale,
@@ -422,7 +531,7 @@ Absent all five, the answer stays no, and this section is the record of why.
 
 | Risk | Handling |
 |---|---|
-| Telemetry poisoning (deliberate or accidental — one enthusiastic user) | device-count thresholds, not event counts; human review; fixture-first stops non-gaps at zero cost; worst case bounded (§2.4) |
+| Telemetry poisoning (deliberate or accidental — one enthusiastic user) | device counting by audit token, not event counts, so volume from one install never multiplies; private write-only stores rather than an open endpoint; human review; fixture-first stops non-gaps at zero cost; worst case bounded (§2.4) |
 | Privacy breach via query strings | §4 in full: no ids, coarse time, k-threshold, category exclusion applied on-device, retention, histories never leave the device (§5a distillate), user-reviewed export, suppression tested structurally |
 | Volume too low to matter at LH scale | quarterly cadence; the report says "n distinct devices" so thin evidence *looks* thin; even a handful of RENAMED pairs is more ground truth than the guesswork it replaces |
 | Consumer apps log inconsistently | one shared JSON Schema, versioned; miner refuses what it cannot validate rather than guessing |

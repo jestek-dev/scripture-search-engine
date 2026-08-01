@@ -78,5 +78,22 @@
     "$comment": "G9. A work that moves an already-covered pericope's profile less than minProfileDelta is recorded as saturated and skipped.",
     "worksPerPericopeBeforeCheck": 5,
     "minProfileDelta": 0.02
+  },
+  "telemetry": {
+    "$comment": [
+      "Gap-mining thresholds (docs/telemetry-and-gap-mining.md). Reviewed data",
+      "like everything else here. minDistinctDevices: a query string appears in",
+      "a Gap Report only when attested by at least this many distinct audit",
+      "tokens - below it, counted in aggregate, never printed. No major engine",
+      "publishes its own suppression threshold, so 3 is OUR chosen floor, not",
+      "an industry constant, and at congregation scale it is necessary but not",
+      "sufficient (the category exclusion list is the other half).",
+      "rawRetentionDays: on-device event lifetime, enforced by the shim.",
+      "weakConvertedRank: a cluster whose best converted rank is deeper than",
+      "this is verdict WEAK - we matched, but ranked it poorly."
+    ],
+    "minDistinctDevices": 3,
+    "rawRetentionDays": 90,
+    "weakConvertedRank": 3
   }
 }
