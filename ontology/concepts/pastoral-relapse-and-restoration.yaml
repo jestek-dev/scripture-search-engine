@@ -1,0 +1,52 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# Split from freedom-from-bondage because the pastoral moment differs:
+# bondage asks "can I be free?", relapse asks "am I finished?" — and
+# the answers are different passages. Micah 7:8 leads ("when I fall,
+# I will arise"); 1 John 1:9 is the post-failure verse. Proverbs 24:16
+# was REJECTED on review: "falls seven times" is calamity, not
+# repeated sin, and citing it for relapse overstates the verse.
+id: relapse-and-restoration
+label: Rising after a fall
+lexicon:
+  - relapse
+  - relapsed
+  - broke my sobriety
+  - fell back into sin
+  - failed again
+  - back to my old ways
+  - started drinking again
+  - started using again
+anchors:
+  - ref: Micah 7:8
+    sources: [editorial]
+    weight: 1
+  - ref: 1 John 1:9
+    sources: [editorial]
+    weight: 0.95
+  - ref: Psalms 51:10-12
+    sources: [editorial]
+    weight: 0.9
+  - ref: Galatians 6:1-2
+    sources: [editorial]
+    weight: 0.85
+  - ref: Philippians 1:6
+    sources: [editorial]
+    weight: 0.8
+  - ref: James 5:16
+    sources: [editorial]
+    weight: 0.75
+related:
+  - freedom-from-bondage

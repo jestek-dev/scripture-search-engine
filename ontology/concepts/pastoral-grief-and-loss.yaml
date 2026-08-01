@@ -1,0 +1,62 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# John 11 leads because it holds resurrection hope and Jesus' tears
+# together — grief answered with presence before doctrine. Psalm
+# 116:15 was REJECTED from this pack and globally gated: "precious in
+# the LORD's sight is the death of his saints" is true and easily
+# devastating out of context. "overdose" appears here AND in
+# freedom-from-bondage: the same word is an addict's fear and a
+# survivor's grief, and the engine serves both readings rather than
+# guessing which searcher is typing.
+id: grief-and-loss
+label: Grief and loss
+lexicon:
+  - grief
+  - grieving
+  - death of a loved one
+  - lost a loved one
+  - losing someone you love
+  - comfort in grief
+  - grieve with hope
+  - my child died
+  - overdose
+anchors:
+  - ref: John 11:25-26
+    sources: [editorial]
+    weight: 1
+  - ref: 1 Thessalonians 4:13-14
+    sources: [editorial]
+    weight: 0.95
+  - ref: Revelation 21:3-4
+    sources: [editorial]
+    weight: 0.95
+  - ref: Psalms 34:18
+    sources: [editorial]
+    weight: 0.85
+  - ref: 1 Corinthians 15:54-57
+    sources: [editorial]
+    weight: 0.85
+  - ref: John 11:33-36
+    sources: [editorial]
+    weight: 0.83
+  - ref: Isaiah 25:8
+    sources: [editorial]
+    weight: 0.75
+  - ref: Romans 12:15
+    sources: [editorial]
+    weight: 0.75
+related:
+  - pregnancy-and-child-loss
+  - near-to-the-brokenhearted

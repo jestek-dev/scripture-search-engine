@@ -92,6 +92,55 @@ const SELECTION: readonly { book: string; chapters: readonly number[]; why: stri
   // which is the precise failure mode an editorial anchor introduces.
   { book: 'Ephesians', chapters: [5], why: 'competitor: Eph 5:9 outranks Gal 5:22 on "fruit of the spirit"' },
   { book: 'Romans', chapters: [13], why: 'competitor: Rom 13:12 outranks Eph 6:11 on "armor"' },
+
+  // --- pastoral-care packs, added 2026-07-31 ---
+  // Two kinds of chapter arrive together, and the second kind is the point.
+  //
+  // ANCHOR chapters carry the passages the pastoral packs assert (approved
+  // by Jesse 2026-07-31 after two external reviews). A golden fixture can
+  // only prove an anchor fires if the anchor's verse is in the gated corpus.
+  { book: 'Psalms', chapters: [9, 10, 11, 13, 27, 34, 40, 42, 51, 55, 56, 73, 82, 88, 101, 103, 139, 147], why: 'pastoral anchors: justice for the oppressed (9-11, 82), lament (13, 42, 88), brokenhearted (34, 147), pit (40), renewal (51), betrayal (55), tears kept (56), strength when flesh fails (73), pure eyes (101), heals diseases (103), formed in the womb (139)' },
+  { book: 'Genesis', chapters: [16], why: 'pastoral anchor: Hagar names the God who sees (16:13)' },
+  { book: 'Exodus', chapters: [3], why: 'pastoral anchor: I have surely seen the affliction (3:7)' },
+  { book: '2 Samuel', chapters: [12], why: 'pastoral anchor: David after his infant’s death (12:22-23)' },
+  { book: 'Job', chapters: [31], why: 'pastoral anchor: covenant with my eyes (31:1)' },
+  { book: 'Proverbs', chapters: [27], why: 'pastoral anchor: the prudent sees danger and takes refuge (27:12)' },
+  { book: 'Isaiah', chapters: [1, 25, 54, 61], why: 'pastoral anchors: seek justice (1:17), death swallowed up (25:8), the forsaken wife (54), bind up the brokenhearted (61)' },
+  { book: 'Jeremiah', chapters: [17], why: 'pastoral anchor: heal me and I will be healed (17:14)' },
+  { book: 'Lamentations', chapters: [3], why: 'pastoral anchor: hope lost, then mercies new every morning (3:17-26)' },
+  { book: 'Micah', chapters: [7], why: 'pastoral anchor: when I fall, I will arise (7:8)' },
+  { book: 'Malachi', chapters: [2], why: 'pastoral anchor: divorce teaching, textually contested, weighted low (2:13-16)' },
+  { book: 'Matthew', chapters: [11, 19], why: 'pastoral anchors: come to me, all who labor (11:28-30); divorce teaching + let the children come (19)' },
+  { book: 'Mark', chapters: [1], why: 'pastoral anchor: Jesus willing to heal the leper (1:40-42)' },
+  { book: 'John', chapters: [8, 11, 14], why: 'pastoral anchors: free indeed (8:36), the resurrection and the life + Jesus wept (11), many rooms (14:1-3)' },
+  { book: 'Romans', chapters: [6, 7, 14], why: 'pastoral anchors: no longer slaves of sin (6), the war within (7), whether we live or die (14:8)' },
+  { book: '1 Corinthians', chapters: [6, 7, 15], why: 'pastoral anchors: not brought under the power of anything (6:12), marriage instructions (7), resurrection victory (15:51-57)' },
+  { book: '2 Corinthians', chapters: [1, 4, 12], why: 'pastoral anchors: despaired even of life (1:8-10), outward decay, inward renewal (4:16-18), grace sufficient in weakness (12:9-10)' },
+  { book: 'Galatians', chapters: [6], why: 'pastoral anchor: restore gently, bear burdens (6:1-2)' },
+  { book: 'Philippians', chapters: [1], why: 'pastoral anchor: he who began a good work (1:6) — AND harm gate: desire to depart (1:21-23) must never rank for despair queries' },
+  { book: '1 Thessalonians', chapters: [4], why: 'pastoral anchors: sanctification (4:3-5) and grief with hope (4:13-18)' },
+  { book: '2 Timothy', chapters: [2], why: 'pastoral anchor: flee youthful lusts (2:22)' },
+  { book: 'Titus', chapters: [2], why: 'pastoral anchor: grace trains us to renounce (2:11-14)' },
+  { book: 'Hebrews', chapters: [4], why: 'pastoral anchor: a high priest touched by our weakness (4:15-16)' },
+  { book: 'James', chapters: [5], why: 'pastoral anchor: the prayer of faith for the sick (5:13-16)' },
+  { book: 'Revelation', chapters: [21], why: 'pastoral anchor: every tear wiped away (21:3-5)' },
+
+  // HARM chapters exist so mustNotRank assertions BITE. A mustNotRank for a
+  // verse absent from the gated corpus passes vacuously — protection that
+  // reads as real and is decoration, this repo’s named failure mode. These
+  // chapters are the canon’s suicide narratives, self-harm-adjacent wording,
+  // and the passages weaponized against abuse victims; the goldens assert
+  // they never rank for crisis queries, and that assertion must be falsifiable.
+  { book: 'Matthew', chapters: [18, 27], why: 'harm gates: cut-it-off sayings + seventy-times-seven (18); Judas hangs himself (27:5)' },
+  { book: 'Mark', chapters: [5, 6, 9], why: 'harm gates: cutting himself (5:5); Herodias asks for a head, the measured worst result for despair (6:25); cut-it-off sayings (9:43-47)' },
+  { book: '1 Samuel', chapters: [31], why: 'harm gate: Saul falls on his sword (31:4-5)' },
+  { book: '2 Samuel', chapters: [13, 17], why: 'harm gates: Amnon "forced her" — real lexical risk for abuse-disclosure queries (13); Ahithophel hangs himself (17:23)' },
+  { book: 'Judges', chapters: [16], why: 'harm gate: Samson pulls the house down (16:30)' },
+  { book: '1 Kings', chapters: [16, 18], why: 'harm gates: Zimri burns the house over himself (16:18); prophets of Baal cut themselves (18:28)' },
+  { book: 'Deuteronomy', chapters: [14, 22], why: 'harm gates: cuttings for the dead (14:1); "force her" case law, must not answer a disclosure (22:23-29)' },
+  { book: 'Zechariah', chapters: [13], why: 'harm gate: strike the shepherd (13:7), the measured worst result for "brokenhearted"' },
+  { book: 'Psalms', chapters: [116], why: 'harm gate: precious in the LORD’s sight is the death of his saints (116:15), globally excluded from despair and grief queries' },
+  { book: '1 Peter', chapters: [2, 3], why: 'harm gates: submission passages (2:18-3:6) must never answer an abuse disclosure' },
 ];
 
 /**

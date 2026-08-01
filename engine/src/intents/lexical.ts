@@ -48,15 +48,32 @@ export function phraseEvidence(
   queryWords: number,
 ): Evidence {
   const complete = fragmentWords >= queryWords;
+  const coverage = Math.max(0, Math.min(1, fragmentWords / Math.max(1, queryWords)));
   return {
-    family: 'exact_phrase',
+    // Authoritative only while the verbatim text covers the MAJORITY of the
+    // query. G6's definition of the exact_phrase family is "the query text
+    // occurs verbatim in the verse" — half a query occurring verbatim is not
+    // that, it is partial lexical overlap, which is precisely what the weak
+    // tier exists to hold. Filed under token_overlap, a minority fragment
+    // keeps its honest label but competes under weak-family caps instead of
+    // outranking curated anchors.
+    family: complete || coverage >= 0.5 ? 'exact_phrase' : 'token_overlap',
     label: complete ? 'Exact phrase' : `Contains "${fragment}"`,
     // Proportional to how much of the question this verbatim text answers.
     // A whole-query match earns full authority; a four-word fragment of an
     // eight-word paraphrase earns half. This is what lets a paraphrase like
     // "be doers of the word not hearers only" still resolve decisively to
     // James 1:22, without pretending a fragment is the whole quotation.
-    strength: Math.max(0, Math.min(1, fragmentWords / Math.max(1, queryWords))),
+    //
+    // Since 0.8.0 the caller passes SIGNIFICANT word counts, not raw ones.
+    // Raw counts let a verbatim run of function words wear authority it had
+    // not earned: "God is close to the brokenhearted" contains the fragment
+    // "is close to" — one significant word — which under raw counting scored
+    // 3/6 of full phrase authority and put Zechariah 13:7 ("the man who is
+    // close to me": strike the shepherd) above Psalm 34:18 for a grieving
+    // searcher. Coverage of MEANING, not of words, is what this signal
+    // claims to measure.
+    strength: coverage,
   };
 }
 

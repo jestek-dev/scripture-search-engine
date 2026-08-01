@@ -131,7 +131,7 @@ Maskil, Setlist and Versed) is deliberately not started.
 | Layer | State |
 |---|---|
 | Lexical ladder | reference, verbatim phrase + longest-fragment fallback, IDF tokens with proximity, archaic/inflection folding |
-| Concept spine | 19 curated concepts (8 thematic + 11 remembered-phrasing packs), OpenBible topical votes, cross-reference expansion. Nave/Torrey researched, not yet imported |
+| Concept spine | 33 curated concepts (8 thematic + 11 remembered-phrasing + 14 pastoral-care packs), OpenBible topical votes, cross-reference expansion. Nave/Torrey researched, not yet imported |
 | Homiletical | Maclaren's *Expositions* + Spurgeon's *Treasury of David* (4 of 6 vols, 5,525 expositions) → verse-level corroborated term profiles. **15 verses have profiles** — the mechanism is proven, the coverage is small |
 | Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow, not yet run on a real gap |
 | Runtime API | all five methods ship — `research()`, `themes()`, `passage()`, `related()`, `forSong()` — with contract tests |

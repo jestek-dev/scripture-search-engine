@@ -132,6 +132,46 @@ The evidence base (click bias, the AOL re-identification, feedback-loop
 failures, reformulation mining as established practice) is in
 `docs/research/2026-07-31-search-telemetry-mining.md`.
 
+### 1.8 Pastoral-care packs — ✅ BUILT (2026-07-31), with an engine change the work forced
+
+Fourteen packs covering the crisis topics telemetry deliberately cannot see
+(§4.5 of the telemetry design): despair/depression/suicide (one merged
+concept, not three — near-duplicates dilute), brokenhearted, the God who
+sees, justice for the oppressed, freedom from bondage, relapse (split out:
+"am I finished?" is a different question than "can I be free?"), sexual
+purity, marriage teaching vs. betrayal (split registers), healing, serious
+illness, grief, child loss, strength in weakness. Both external reviews'
+content was adopted where verified; their rejections are recorded in the
+pack comments (Prov 24:16 misapplied to relapse; 2 Sam 12:23 overstated;
+Mal 2:16 textually contested → 0.6; Hosea excluded from the crisis pack).
+
+**Measured on the full artifact, engine 0.8.0**: 20/20 crisis queries reach
+an intended passage in the top 10 (was 2/20), and **0 surface a forbidden
+verse** (was 4 — including Mark 6:25 for "hopeless and want to give up" and
+Eph 5:22 as the top answer to "my husband hits me"). Probe churn from the
+packs: 0% on all 25 probes; weak-share delta 0.0000 (decomposed
+corpus-growth-vs-packs, same method as the remembered-phrasing admission).
+
+**ENGINE_VERSION 0.7.1 → 0.8.0.** The audit exposed a scoring defect:
+fragment authority was measured in RAW words, so "God is close to the
+brokenhearted" gave Zechariah 13:7 ("the man who **is close to** me —
+strike the shepherd") half of full phrase authority for a three-stopword
+run. Fragments are now measured in significant words, and a fragment
+covering a minority of the query's meaning files as weak token_overlap
+rather than authoritative exact_phrase — G6's own definition, applied.
+Whole-query matches are untouched.
+
+**The lesson worth keeping**: mustNotRank against a verse absent from the
+fixture corpus passes vacuously. The fixture grew 1,417 → 3,305 verses
+specifically so the canon's suicide narratives, "cut it off" sayings, and
+submission passages are IN the gated corpus and the safety assertions can
+fail. Never add a harm gate without adding its target chapter.
+
+**Before the next tagged release**: the committed descriptor's
+`databaseSha256` is from a local build — run the release workflow manually
+and commit the CI-built descriptor per §1.6e. Everything else in the
+descriptor (fingerprints, counts) is deterministic and already correct.
+
 ### 1.3 When does Maskil adopt this? — still open, and now also blocked technically
 
 Phase 5 is written but not started, per your instruction. Maskil's own July

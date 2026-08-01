@@ -327,6 +327,32 @@ not Scripture evidence); Versed's memorization-pack builder. Each app pins
 `(engine semver, artifact descriptor)` and verifies the descriptor exactly as
 Maskil does today.
 
+**Pastoral-crisis queries — a consumer REQUIREMENT, not a suggestion
+(2026-07-31).** The engine's job for crisis searches is done in data: the
+pastoral-care packs return the right passages and the goldens forbid the
+harmful ones. What the engine cannot do is the rest of the pastoral job, and
+serving Psalm 34:18 to "kill myself" with nothing else is an unfinished one.
+Every consumer that exposes search MUST:
+
+1. **Show a crisis-resource card above results** when the query matches the
+   pastoral-crisis categories — reuse the reviewed matcher data in
+   `pipeline/telemetry/sensitive-categories.json` (same file that gates
+   telemetry; display is its second use). For US users: 988 Suicide & Crisis
+   Lifeline; 1-800-799-SAFE / text START to 88788 (domestic violence);
+   RAINN 800-656-HOPE. Locale-aware where the app knows better, and the
+   domestic-violence surface should honour quick-exit design.
+2. **Render passage context, not bare verses**, for anchor results — the
+   packs anchor ranges (1 Kings 19:4-7) precisely so "It is enough — take my
+   life" is never displayed without the angel, the food, and the sleep that
+   answer it.
+3. **Never present healing anchors as a guarantee** — James 5 is an
+   instruction to pray, not a schedule for the cure, and UI copy must not
+   flatten that distinction.
+
+These are display obligations that follow from data this repo ships; an app
+that pins the artifact but skips the card has implemented the ranking and
+skipped the point.
+
 ## 6. The concept-curation skill (ongoing enrichment)
 
 Lives in the engine repo; invocable from any project session.

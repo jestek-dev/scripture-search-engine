@@ -20,6 +20,10 @@ lexicon:
   - do not be anxious about anything
   - be anxious for nothing
   - present your requests to God with thanksgiving
+  # Deliberate single-word entry per NEEDS-JESSE §1.6d option 3, approved by
+  # Jesse 2026-07-31 with the pastoral-care packs: "anxiety" is a distinctive
+  # modern word absent from the WEB text, and the bare word IS this concept.
+  - anxiety
 anchors:
   - ref: Philippians 4:6-7
     sources: [editorial]

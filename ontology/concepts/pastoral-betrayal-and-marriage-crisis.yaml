@@ -1,0 +1,63 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# The wound register. Psalm 55 is not about adultery specifically, but
+# nothing else in scripture names betrayal by an intimate this
+# precisely. Isaiah 54 is covenant imagery about Zion, used pastorally
+# — not a promise that God replaces a spouse. Hosea is deliberately
+# absent: "take back your unfaithful spouse" was a directive to one
+# prophet, and served raw it reads as pressure to reconcile
+# regardless of safety.
+id: betrayal-and-marriage-crisis
+label: Betrayed by a companion
+lexicon:
+  - husband cheated
+  - wife cheated
+  - spouse cheated
+  - my husband had an affair
+  - my wife had an affair
+  - betrayed by my spouse
+  - betrayed by my husband
+  - betrayed by my wife
+  - unfaithful husband
+  - unfaithful wife
+  - my spouse left me
+  - marriage falling apart
+anchors:
+  - ref: Psalms 55:12-14
+    sources: [editorial]
+    weight: 1
+  - ref: Psalms 55:20-22
+    sources: [editorial]
+    weight: 0.95
+  - ref: Psalms 34:18
+    sources: [editorial]
+    weight: 0.9
+  - ref: Isaiah 54:5-6
+    sources: [editorial]
+    weight: 0.85
+  - ref: Isaiah 54:10
+    sources: [editorial]
+    weight: 0.8
+  - ref: James 1:5
+    sources: [editorial]
+    weight: 0.75
+  - ref: 1 Corinthians 7:15
+    sources: [editorial]
+    weight: 0.7
+  - ref: Psalms 147:3
+    sources: [editorial]
+    weight: 0.7
+related:
+  - near-to-the-brokenhearted
