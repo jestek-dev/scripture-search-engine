@@ -1,0 +1,21 @@
+{
+  "discrepancies": 11,
+  "discrepancyKinds": {
+    "ccel-ref-unparsed": 2,
+    "point-only-in-ccel": 1,
+    "point-only-in-jsonl": 2,
+    "ref-mismatch": 6
+  },
+  "millerHeadings": 313,
+  "millerHeadingsMatched": 311,
+  "millerHeadingsUnmatched": [
+    "TRINITY, THE",
+    "TRUST"
+  ],
+  "pointsTotal": 12628,
+  "refsFlaggedToReviewQueue": 24,
+  "refsTotal": 21026,
+  "refsValid": 21002,
+  "reviewQueueItems": 27,
+  "torreyTopicsInDataset": 311
+}
