@@ -1,0 +1,39 @@
+id: second-coming
+label: Jesus is coming back
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): SECOND COMING OF CHRIST, THE. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - the second coming
+  - jesus is coming back
+  - the return of christ
+  - like a thief in the night
+  - every eye will see him
+  - maranatha
+anchors:
+  - ref: Acts 1:11
+    sources: [editorial]
+    weight: 1.0
+  - ref: 1 Thessalonians 4:16-17
+    sources: [editorial]
+    weight: 0.95
+  - ref: Revelation 1:7
+    sources: [torrey]
+    weight: 0.8
+  - ref: Matthew 24:30
+    sources: [torrey]
+    weight: 0.75
+  - ref: John 14:3
+    sources: [torrey]
+    weight: 0.75
+  - ref: 1 Thessalonians 5:2
+    sources: [torrey]
+    weight: 0.7
+  - ref: Titus 2:13
+    sources: [torrey]
+    weight: 0.7
+  - ref: Matthew 24:42-44
+    sources: [torrey]
+    weight: 0.65
+related:
+  - hope-in-god

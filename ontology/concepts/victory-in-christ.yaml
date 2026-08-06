@@ -1,0 +1,35 @@
+id: victory-in-christ
+label: Victory in Christ
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): WARFARE OF SAINTS. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - more than conquerors
+  - victory in jesus
+  - overcome the world
+  - the battle belongs to the lord
+  - god fights for us
+anchors:
+  - ref: Romans 8:37
+    sources: [editorial]
+    weight: 1.0
+  - ref: 1 Corinthians 15:57
+    sources: [editorial]
+    weight: 0.95
+  - ref: 1 John 5:4
+    sources: [editorial]
+    weight: 0.9
+  - ref: Exodus 14:13-14
+    sources: [editorial]
+    weight: 0.7
+  - ref: Ephesians 6:11-12
+    sources: [torrey]
+    weight: 0.75
+  - ref: 2 Corinthians 10:4-5
+    sources: [torrey]
+    weight: 0.7
+  - ref: 1 Timothy 6:12
+    sources: [torrey]
+    weight: 0.65
+related:
+  - refuge-in-trouble

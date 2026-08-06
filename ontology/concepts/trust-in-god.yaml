@@ -1,0 +1,36 @@
+id: trust-in-god
+label: Trusting God
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): WAITING UPON GOD. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - trust in the lord
+  - lean not on your own understanding
+  - trust gods plan
+  - commit your way to the lord
+anchors:
+  - ref: Proverbs 3:5-6
+    sources: [editorial]
+    weight: 1.0
+  - ref: Psalms 37:5
+    sources: [editorial]
+    weight: 0.95
+  - ref: Isaiah 40:31
+    sources: [torrey]
+    weight: 0.75
+  - ref: Psalms 27:14
+    sources: [torrey]
+    weight: 0.7
+  - ref: Psalms 62:5
+    sources: [torrey]
+    weight: 0.7
+  - ref: Lamentations 3:25-26
+    sources: [torrey]
+    weight: 0.65
+  - ref: Micah 7:7
+    sources: [torrey]
+    weight: 0.65
+related:
+  - peace-of-god
+  - fear-not
+  - gods-faithfulness

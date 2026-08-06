@@ -1,0 +1,12 @@
+{
+  "id": "nave",
+  "label": "Nave's Topical Bible",
+  "rightsClass": "public_domain",
+  "licenseRecord": "Public domain by age (Orville J. Nave, Topical Bible, 1897; Nave died 1917). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).",
+  "sourceUrl": "https://en.wikipedia.org/wiki/Nave%27s_Topical_Bible",
+  "sha256": "",
+  "bytes": 0,
+  "maxTier": "public_distribution",
+  "lineageOnly": true,
+  "attributionNote": "LINEAGE-ONLY ENTRY. No rows in the artifact cite this source directly; it exists so that Torrey's New Topical Textbook and any future Nave-derived topical source can declare a shared ancestor and therefore share one correlation budget, per docs/implementation-plan.md G7 ('Torrey overlaps Nave'). If Nave is ever imported as data in its own right, this entry must be re-admitted with a pinned artifact and checksum."
+}

@@ -1,0 +1,38 @@
+id: joy-in-the-lord
+label: Joy in the Lord
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): DELIGHTING IN GOD; JOY. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - joy of the lord
+  - rejoice in the lord always
+  - fullness of joy
+  - joy comes in the morning
+  - the joy of the lord is my strength
+anchors:
+  - ref: Nehemiah 8:10
+    sources: [editorial]
+    weight: 1.0
+  - ref: Philippians 4:4
+    sources: [editorial]
+    weight: 0.95
+  - ref: Psalms 16:11
+    sources: [torrey]
+    weight: 0.8
+  - ref: John 15:11
+    sources: [torrey]
+    weight: 0.75
+  - ref: Psalms 30:5
+    sources: [torrey]
+    weight: 0.7
+  - ref: Psalms 32:11
+    sources: [torrey]
+    weight: 0.7
+  - ref: Habakkuk 3:17-18
+    sources: [torrey]
+    weight: 0.7
+  - ref: Psalms 37:4
+    sources: [torrey]
+    weight: 0.65
+related:
+  - praise

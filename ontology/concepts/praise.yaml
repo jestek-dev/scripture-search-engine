@@ -1,0 +1,38 @@
+id: praise
+label: Praise
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): PRAISE. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - praise the lord
+  - sing praises to god
+  - make a joyful noise
+  - let everything that has breath praise him
+  - hallelujah
+  - shout for joy
+anchors:
+  - ref: Psalms 150:1-6
+    sources: [editorial]
+    weight: 1.0
+  - ref: Psalms 100:1-2
+    sources: [editorial]
+    weight: 0.95
+  - ref: Hebrews 13:15
+    sources: [torrey]
+    weight: 0.8
+  - ref: Psalms 95:1
+    sources: [torrey]
+    weight: 0.75
+  - ref: Psalms 34:3
+    sources: [torrey]
+    weight: 0.7
+  - ref: Psalms 147:1
+    sources: [torrey]
+    weight: 0.7
+  - ref: Psalms 33:1
+    sources: [torrey]
+    weight: 0.65
+related:
+  - worship
+  - thanksgiving
+  - joy-in-the-lord

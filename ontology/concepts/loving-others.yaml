@@ -1,0 +1,36 @@
+id: loving-others
+label: Loving one another
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): LOVE TO MAN. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - love one another
+  - love your neighbor
+  - love is patient love is kind
+  - greatest of these is love
+  - love your enemies
+anchors:
+  - ref: John 13:34-35
+    sources: [editorial]
+    weight: 1.0
+  - ref: 1 Corinthians 13:4-8
+    sources: [editorial]
+    weight: 0.95
+  - ref: Romans 13:8-10
+    sources: [torrey]
+    weight: 0.8
+  - ref: Matthew 22:39
+    sources: [torrey]
+    weight: 0.75
+  - ref: 1 John 4:11
+    sources: [torrey]
+    weight: 0.75
+  - ref: 1 John 3:18
+    sources: [torrey]
+    weight: 0.7
+  - ref: 1 Peter 4:8
+    sources: [torrey]
+    weight: 0.7
+related:
+  - gods-love
+  - forgiving-others

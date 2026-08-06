@@ -16,6 +16,14 @@ anchors:
   - ref: Titus 3:5
     sources: [editorial]
     weight: 0.8
+  # Torrey/Miller admission 2026-08-06 — supporting anchors from the verified
+  # outline(s): GRACE; SALVATION.
+  - ref: Romans 11:6
+    sources: [torrey]
+    weight: 0.8
+  - ref: 2 Timothy 1:9
+    sources: [torrey]
+    weight: 0.75
 openbibleTopics:
   - grace
 related:

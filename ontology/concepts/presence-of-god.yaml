@@ -1,0 +1,33 @@
+id: presence-of-god
+label: The presence of God
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): COMMUNION WITH GOD. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - the presence of god
+  - draw near to god
+  - god with us
+  - i will never leave you nor forsake you
+  - in your presence
+anchors:
+  - ref: Psalms 139:7-10
+    sources: [editorial]
+    weight: 1.0
+  - ref: James 4:8
+    sources: [editorial]
+    weight: 0.95
+  - ref: Hebrews 13:5
+    sources: [editorial]
+    weight: 0.9
+  - ref: 1 John 1:3
+    sources: [torrey]
+    weight: 0.75
+  - ref: John 14:23
+    sources: [torrey]
+    weight: 0.75
+  - ref: Revelation 3:20
+    sources: [torrey]
+    weight: 0.65
+related:
+  - worship
+  - peace-of-god

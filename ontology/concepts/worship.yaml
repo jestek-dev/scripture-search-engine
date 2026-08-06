@@ -1,0 +1,32 @@
+id: worship
+label: Worship
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): ACCESS TO GOD; GLORIFYING GOD. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - worship the lord
+  - come let us worship
+  - bow down before him
+  - worship in spirit and in truth
+  - we exalt you
+  - worthy of worship
+anchors:
+  - ref: Psalms 95:6
+    sources: [editorial]
+    weight: 1.0
+  - ref: John 4:23-24
+    sources: [editorial]
+    weight: 0.95
+  - ref: Psalms 86:9
+    sources: [torrey]
+    weight: 0.7
+  - ref: Hebrews 10:19-22
+    sources: [torrey]
+    weight: 0.7
+  - ref: Psalms 65:4
+    sources: [torrey]
+    weight: 0.65
+related:
+  - praise
+  - thanksgiving
+  - presence-of-god

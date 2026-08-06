@@ -30,6 +30,14 @@ anchors:
   - ref: John 13:17
     sources: [editorial]
     weight: 0.7
+  # Torrey/Miller admission 2026-08-06 — supporting anchors from the verified
+  # outline(s): OBEDIENCE TO GOD.
+  - ref: Luke 11:28
+    sources: [torrey]
+    weight: 0.8
+  - ref: 1 Samuel 15:22
+    sources: [torrey]
+    weight: 0.75
 openbibleTopics:
   - obedience
 related:

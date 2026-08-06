@@ -1,0 +1,40 @@
+id: prayer
+label: Prayer
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): PRAYER; PRAYER, ANSWERS TO; PRAYER, PRIVATE. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - how to pray
+  - pray without ceasing
+  - ask and it will be given to you
+  - the lords prayer
+  - pray in secret
+  - intercession
+anchors:
+  - ref: Matthew 6:9-13
+    sources: [editorial]
+    weight: 1.0
+  - ref: 1 Thessalonians 5:16-18
+    sources: [editorial]
+    weight: 0.95
+  - ref: Matthew 7:7
+    sources: [torrey]
+    weight: 0.8
+  - ref: Philippians 4:6
+    sources: [torrey]
+    weight: 0.75
+  - ref: Luke 18:1
+    sources: [torrey]
+    weight: 0.75
+  - ref: James 5:16
+    sources: [torrey]
+    weight: 0.7
+  - ref: Matthew 6:6
+    sources: [torrey]
+    weight: 0.7
+  - ref: Jeremiah 33:3
+    sources: [torrey]
+    weight: 0.65
+related:
+  - thanksgiving
+  - presence-of-god

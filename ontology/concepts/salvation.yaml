@@ -1,0 +1,37 @@
+id: salvation
+label: Salvation
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): SALVATION. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - how can i be saved
+  - jesus saves
+  - salvation in christ
+  - plan of salvation
+  - no other name under heaven
+anchors:
+  - ref: Acts 16:30-31
+    sources: [editorial]
+    weight: 1.0
+  - ref: Romans 10:9
+    sources: [editorial]
+    weight: 0.95
+  - ref: Acts 4:12
+    sources: [editorial]
+    weight: 0.9
+  - ref: Ephesians 2:8
+    sources: [torrey]
+    weight: 0.8
+  - ref: Romans 1:16
+    sources: [torrey]
+    weight: 0.75
+  - ref: Titus 2:11
+    sources: [torrey]
+    weight: 0.7
+  - ref: John 3:16
+    sources: [torrey]
+    weight: 0.7
+related:
+  - grace-not-earned
+  - the-cross
+  - repentance

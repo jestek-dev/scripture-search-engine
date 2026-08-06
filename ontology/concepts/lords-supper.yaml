@@ -1,0 +1,35 @@
+id: lords-supper
+label: "The Lord's Supper"
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): COMMUNION OF THE LORD'S SUPPER. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - the lords supper
+  - communion
+  - breaking of bread
+  - do this in remembrance of me
+  - the body and blood of christ
+anchors:
+  - ref: 1 Corinthians 11:23-26
+    sources: [editorial]
+    weight: 1.0
+  - ref: Luke 22:19-20
+    sources: [editorial]
+    weight: 0.95
+  - ref: Matthew 26:26-28
+    sources: [editorial]
+    weight: 0.9
+  - ref: 1 Corinthians 10:16
+    sources: [torrey]
+    weight: 0.75
+  - ref: Acts 2:42
+    sources: [torrey]
+    weight: 0.7
+  - ref: Acts 20:7
+    sources: [torrey]
+    weight: 0.65
+  - ref: 1 Corinthians 11:28
+    sources: [torrey]
+    weight: 0.65
+related:
+  - the-cross

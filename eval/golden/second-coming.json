@@ -1,0 +1,30 @@
+{
+  "id": "second-coming",
+  "query": "jesus is coming back",
+  "status": "active",
+  "note": [
+    "Torrey/Miller topical admission (2026-08-06): first-batch concept 'second-coming'.",
+    "Written BEFORE the concept pack, per the fixtures-first rule. Requires",
+    "concept_anchor evidence so a lexical hit cannot pass as understanding -",
+    "the right passage for the wrong reason is still a failure.",
+    "This same Jesus will come back in the same way (Acts 1:11).",
+    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 1:11",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "1 Thessalonians 4:16-17",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Revelation 1:7",
+    "Matthew 24:30",
+    "John 14:3",
+    "Titus 2:13"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "torrey",
+  "label": "Torrey, The New Topical Textbook",
+  "rightsClass": "pd_text_claimed_transcription",
+  "licenseRecord": "Underlying work public domain by age: R. A. Torrey, The New Topical Textbook, 1897. This machine-readable transcription is the audited PDF-derived JSONL dataset from github.com/j86schroeder/topical-bible-search, MIT License (LICENSE at the pinned commit), which permits redistribution including commercial use with preservation of the license notice. Pinned to commit 7eac7ebd6ce28030090cf7279aed90068e6114f5 (2026-08-05).",
+  "sourceUrl": "https://raw.githubusercontent.com/j86schroeder/topical-bible-search/7eac7ebd6ce28030090cf7279aed90068e6114f5/dist/torrey/topics.jsonl",
+  "sha256": "9c2b6177b24f6fc9df5aeca2985ee8ff8fb941c27d9032347af6f9da53dd4692",
+  "bytes": 148324,
+  "maxTier": "public_distribution",
+  "derivedFrom": ["nave"],
+  "attributionNote": "Topical anchors from Torrey's New Topical Textbook (1897, public domain), machine-readable edition by j86schroeder/topical-bible-search under the MIT License. The transcription's source PDF is reproducible-by-recipe rather than pinned upstream; this checksum pins the exact dataset we admitted. 620 topics vs CCEL's 628 remains unreconciled (merged/split headings suspected)."
+}

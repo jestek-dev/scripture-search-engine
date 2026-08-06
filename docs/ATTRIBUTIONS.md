@@ -167,6 +167,16 @@ Creative Commons Attribution 4.0. The data file's own header states: 'www.openbi
 
 Cross-reference data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info/labs/cross-references/). OpenBible states this data 'draws primarily from public-domain sources, especially the Treasury of Scripture Knowledge' - hence the declared derivedFrom, which places it in one correlation budget with TSK and with any homiletical co-citation source that also derives from TSK. Counting them as independent evidence would inflate confidence for what is substantially one body of scholarship. Rolling URL with no archival versioning; this checksum is our snapshot.
 
+### Torrey, The New Topical Textbook
+
+- **Rights:** Public-domain work, transcription carries a claim
+- **Source:** <https://raw.githubusercontent.com/j86schroeder/topical-bible-search/7eac7ebd6ce28030090cf7279aed90068e6114f5/dist/torrey/topics.jsonl>
+- **Checksum:** `9c2b6177b24f6fc9df5aeca2985ee8ff8fb941c27d9032347af6f9da53dd4692`
+
+Underlying work public domain by age: R. A. Torrey, The New Topical Textbook, 1897. This machine-readable transcription is the audited PDF-derived JSONL dataset from github.com/j86schroeder/topical-bible-search, MIT License (LICENSE at the pinned commit), which permits redistribution including commercial use with preservation of the license notice. Pinned to commit 7eac7ebd6ce28030090cf7279aed90068e6114f5 (2026-08-05).
+
+Topical anchors from Torrey's New Topical Textbook (1897, public domain), machine-readable edition by j86schroeder/topical-bible-search under the MIT License. The transcription's source PDF is reproducible-by-recipe rather than pinned upstream; this checksum pins the exact dataset we admitted. 620 topics vs CCEL's 628 remains unreconciled (merged/split headings suspected).
+
 ### World English Bible
 
 - **Rights:** Public domain
@@ -187,6 +197,7 @@ can declare that lineage, which keeps the engine from counting the same
 scholarship twice as independent evidence.
 
 - **LH editorial** — Authored for this dataset. LH holds all rights. Drafted with AI assistance offline and admitted by human review; no AI runs at query time.
+- **Nave's Topical Bible** — Public domain by age (Orville J. Nave, Topical Bible, 1897; Nave died 1917). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).
 - **Treasury of Scripture Knowledge** — Public domain by age (published 1830s). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).
 
 ---

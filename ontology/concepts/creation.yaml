@@ -1,0 +1,30 @@
+id: creation
+label: Creation
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): POWER OF GOD, THE. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - in the beginning god created
+  - the heavens declare the glory of god
+  - fearfully and wonderfully made
+  - god made the world
+  - all things were made through him
+anchors:
+  - ref: Genesis 1:1
+    sources: [editorial]
+    weight: 1.0
+  - ref: Psalms 19:1
+    sources: [editorial]
+    weight: 0.95
+  - ref: Psalms 139:13-14
+    sources: [editorial]
+    weight: 0.9
+  - ref: Colossians 1:16
+    sources: [editorial]
+    weight: 0.8
+  - ref: John 1:3
+    sources: [editorial]
+    weight: 0.75
+  - ref: Jeremiah 10:12
+    sources: [torrey]
+    weight: 0.65

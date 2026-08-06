@@ -1,0 +1,35 @@
+id: thanksgiving
+label: Giving thanks
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): THANKSGIVING. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - give thanks
+  - thank you lord
+  - gratitude
+  - thankful heart
+  - in everything give thanks
+  - count your blessings
+anchors:
+  - ref: Psalms 100:4
+    sources: [editorial]
+    weight: 1.0
+  - ref: 1 Thessalonians 5:18
+    sources: [editorial]
+    weight: 0.95
+  - ref: Philippians 4:6
+    sources: [torrey]
+    weight: 0.8
+  - ref: Psalms 92:1
+    sources: [torrey]
+    weight: 0.75
+  - ref: Colossians 3:17
+    sources: [torrey]
+    weight: 0.7
+  - ref: Ephesians 5:20
+    sources: [torrey]
+    weight: 0.7
+related:
+  - praise
+  - worship
+  - prayer

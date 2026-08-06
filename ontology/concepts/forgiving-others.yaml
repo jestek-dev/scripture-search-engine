@@ -1,0 +1,36 @@
+id: forgiving-others
+label: Forgiving others
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): FORGIVENESS OF INJURIES. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - forgive others
+  - forgive as you have been forgiven
+  - seventy times seven
+  - forgiving one another
+  - reconcile with your brother
+anchors:
+  - ref: Matthew 18:21-22
+    sources: [editorial]
+    weight: 1.0
+  - ref: Ephesians 4:32
+    sources: [editorial]
+    weight: 0.95
+  - ref: Matthew 6:14-15
+    sources: [editorial]
+    weight: 0.9
+  - ref: Colossians 3:13
+    sources: [torrey]
+    weight: 0.8
+  - ref: Mark 11:25
+    sources: [torrey]
+    weight: 0.75
+  - ref: Luke 6:37
+    sources: [torrey]
+    weight: 0.7
+  - ref: Luke 17:3-4
+    sources: [torrey]
+    weight: 0.7
+related:
+  - forgiveness-of-sins
+  - loving-others

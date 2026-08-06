@@ -24,5 +24,10 @@ anchors:
   - ref: Ephesians 5:8
     sources: [editorial]
     weight: 0.7
+  # Torrey/Miller admission 2026-08-06 — supporting anchors from the verified
+  # outline(s): CONDUCT, CHRISTIAN.
+  - ref: Colossians 1:10
+    sources: [torrey]
+    weight: 0.65
 related:
   - obedience-to-the-word
