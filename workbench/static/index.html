@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scripture workbench — viewer</title>
+<style>
+  :root {
+    --ink: #1c1c1c;
+    --muted: #6b6b6b;
+    --line: #e0ddd6;
+    --paper: #faf9f6;
+    --card: #ffffff;
+    --accent: #2f5d50;
+    --badge: #a4491f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  main { max-width: 46rem; margin: 0 auto; padding: 2rem 1rem 4rem; }
+  h1 { font-size: 1.15rem; margin: 0 0 0.25rem; }
+  #identities {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    word-break: break-all;
+    margin-bottom: 1.5rem;
+  }
+  form { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  input[type="search"] {
+    flex: 1;
+    font: inherit;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--card);
+  }
+  button {
+    font: inherit;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+  }
+  #status { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .result {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .result-head { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+  .reference { font-weight: 600; }
+  .score { font-family: ui-monospace, monospace; font-size: 0.75rem; color: var(--muted); }
+  .cap-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #fff;
+    background: var(--badge);
+    border-radius: 4px;
+    padding: 0.1rem 0.4rem;
+  }
+  .excerpt { margin: 0.35rem 0 0.5rem; font-size: 0.9rem; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .chip {
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+    background: var(--paper);
+    white-space: nowrap;
+  }
+  .chip .family { color: var(--accent); font-weight: 600; }
+  .chip .provenance { color: var(--muted); }
+  .chip s { color: var(--badge); }
+  .verse-number { color: var(--muted); font-size: 0.7rem; vertical-align: super; margin-right: 0.15rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Scripture workbench — read-only viewer</h1>
+  <div id="identities">loading identities&hellip;</div>
+  <form id="search-form">
+    <input id="q" type="search" placeholder="Search, e.g. walking in the light" autofocus>
+    <button type="submit">Search</button>
+  </form>
+  <div id="status"></div>
+  <div id="results"></div>
+</main>
+<script>
+(() => {
+  'use strict';
+
+  const el = (tag, className, text) => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text; // textContent: everything interpolated is escaped
+    return node;
+  };
+
+  const identities = document.getElementById('identities');
+  const form = document.getElementById('search-form');
+  const input = document.getElementById('q');
+  const status = document.getElementById('status');
+  const results = document.getElementById('results');
+
+  fetch('/api/meta')
+    .then((r) => r.json())
+    .then((meta) => {
+      identities.textContent = '';
+      const t = meta.translations.map((x) => x.code + ' (' + x.verseCount + ' verses)').join(', ');
+      for (const line of [
+        'engine ' + meta.engineVersion + ' · schema v' + meta.schemaVersion + ' · ' + t,
+        'corpus ' + meta.corpusFingerprint,
+        'layers ' + meta.layerFingerprint,
+      ]) {
+        identities.appendChild(el('div', null, line));
+      }
+    })
+    .catch(() => { identities.textContent = 'failed to load /api/meta'; });
+
+  const reasonChip = (reason) => {
+    const chip = el('span', 'chip');
+    chip.appendChild(el('span', 'family', reason.family));
+    chip.appendChild(document.createTextNode(' '));
+    if (reason.uncappedPoints !== undefined) {
+      chip.appendChild(el('s', null, String(reason.uncappedPoints)));
+      chip.appendChild(document.createTextNode(' '));
+    }
+    chip.appendChild(el('span', null, String(reason.points) + ' pts'));
+    if (reason.provenance && reason.provenance.label) {
+      chip.appendChild(document.createTextNode(' · '));
+      chip.appendChild(el('span', 'provenance', reason.provenance.label));
+    }
+    chip.title = reason.label;
+    return chip;
+  };
+
+  const renderDiscovery = (payload) => {
+    if (payload.results.length === 0) {
+      status.textContent = 'No results for “' + payload.query + '”.';
+      return;
+    }
+    status.textContent = payload.results.length + ' results for “' + payload.query + '”';
+    for (const result of payload.results) {
+      const card = el('article', 'result');
+      const head = el('div', 'result-head');
+      head.appendChild(el('span', 'reference', result.reference));
+      head.appendChild(el('span', 'score', result.score.toFixed(2)));
+      // The cap badge is derived client-side: uncappedPoints is present only
+      // when a cap reduced the contribution. No `capped` field exists on the
+      // public result type, and none may be added.
+      if (result.reasons.some((reason) => reason.uncappedPoints !== undefined)) {
+        head.appendChild(el('span', 'cap-badge', 'capped'));
+      }
+      card.appendChild(head);
+      card.appendChild(el('p', 'excerpt', result.excerpt));
+      const chips = el('div', 'chips');
+      for (const reason of result.reasons) chips.appendChild(reasonChip(reason));
+      card.appendChild(chips);
+      results.appendChild(card);
+    }
+  };
+
+  const renderReference = (payload) => {
+    status.textContent = 'Passage: ' + payload.passage.reference;
+    const card = el('article', 'result');
+    card.appendChild(el('div', 'reference', payload.passage.reference));
+    const body = el('p', 'excerpt');
+    for (const verse of payload.passage.verses) {
+      body.appendChild(el('span', 'verse-number', String(verse.verse)));
+      body.appendChild(document.createTextNode(verse.text + ' '));
+    }
+    card.appendChild(body);
+    results.appendChild(card);
+  };
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const query = input.value.trim();
+    if (query === '') return;
+    status.textContent = 'Searching…';
+    results.textContent = '';
+    fetch('/api/search?q=' + encodeURIComponent(query))
+      .then((r) => r.json())
+      .then((payload) => {
+        if (payload.kind === 'discovery') renderDiscovery(payload);
+        else if (payload.kind === 'reference') renderReference(payload);
+        else if (payload.kind === 'invalid-reference') {
+          status.textContent = 'Invalid reference: “' + payload.query + '”';
+        } else {
+          status.textContent = payload.error || 'Unexpected response.';
+        }
+      })
+      .catch((error) => { status.textContent = 'Request failed: ' + error; });
+  });
+})();
+</script>
+</body>
+</html>
