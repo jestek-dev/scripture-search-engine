@@ -6,6 +6,7 @@
   "description": "Dev-only curation workbench: judges the verified release artifact on localhost. Never published, never shipped to a consumer.",
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "fetch-artifact": "tsx src/fetchArtifact.ts",
     "serve": "tsx src/server.ts"
   },

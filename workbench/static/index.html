@@ -85,11 +85,49 @@
   .chip .provenance { color: var(--muted); }
   .chip s { color: var(--badge); }
   .verse-number { color: var(--muted); font-size: 0.7rem; vertical-align: super; margin-right: 0.15rem; }
+  .judge { margin-top: 0.6rem; border-top: 1px dashed var(--line); padding-top: 0.5rem; }
+  .judge-verbs { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+  .judge button {
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  .judge button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .judge-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .judge-panel label { display: flex; flex-direction: column; gap: 0.15rem; color: var(--muted); }
+  .judge-panel select, .judge-panel input, .judge-panel textarea {
+    font: inherit;
+    color: var(--ink);
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--card);
+  }
+  .judge-panel textarea { resize: vertical; min-height: 3rem; }
+  .judge-message { font-size: 0.8rem; margin-top: 0.35rem; }
+  .judge-message.error { color: var(--badge); }
+  .judge-message.done { color: var(--accent); }
+  #missing { display: none; margin-top: 1.5rem; }
+  #missing fieldset {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--card);
+    padding: 0.75rem 1rem 1rem;
+  }
+  #missing legend { font-size: 0.85rem; color: var(--muted); padding: 0 0.35rem; }
 </style>
 </head>
 <body>
 <main>
-  <h1>Scripture workbench — read-only viewer</h1>
+  <h1>Scripture workbench</h1>
   <div id="identities">loading identities&hellip;</div>
   <form id="search-form">
     <input id="q" type="search" placeholder="Search, e.g. walking in the light" autofocus>
@@ -97,6 +135,22 @@
   </form>
   <div id="status"></div>
   <div id="results"></div>
+  <!-- The missing-passage form: a judgment about what did NOT surface. -->
+  <form id="missing">
+    <fieldset>
+      <legend>Missing passage — should have surfaced but didn't</legend>
+      <div class="judge-panel">
+        <label>Reference (e.g. James 1:22-25)
+          <input id="missing-reference" type="text" autocomplete="off">
+        </label>
+        <label>Why, from the text itself (required — no bare clicks)
+          <textarea id="missing-note"></textarea>
+        </label>
+        <div><button type="submit" class="primary">Log missing passage</button></div>
+      </div>
+      <div id="missing-message" class="judge-message"></div>
+    </fieldset>
+  </form>
 </main>
 <script>
 (() => {
@@ -114,6 +168,40 @@
   const input = document.getElementById('q');
   const status = document.getElementById('status');
   const results = document.getElementById('results');
+  const missingForm = document.getElementById('missing');
+  const missingReference = document.getElementById('missing-reference');
+  const missingNote = document.getElementById('missing-note');
+  const missingMessage = document.getElementById('missing-message');
+
+  // The query the visible results (and the missing form) belong to. Captured
+  // at render time so typing a new search does not drift a judgment.
+  let judgedQuery = null;
+
+  const setMessage = (node, kind, text) => {
+    node.className = 'judge-message ' + kind;
+    node.textContent = text;
+  };
+
+  // POSTs a judgment; the server enforces the same rules and stamps
+  // reviewer + the three identities. A 400 here means the client-side
+  // checks missed something — surface the server's plain-English reason.
+  const postJudgment = (payload, messageNode, onDone) => {
+    setMessage(messageNode, '', 'Logging…');
+    fetch('/api/judgment', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json().then((body) => ({ ok: r.ok, body })))
+      .then(({ ok, body }) => {
+        if (!ok) {
+          setMessage(messageNode, 'error', body.error || 'Rejected.');
+          return;
+        }
+        onDone(body.record);
+      })
+      .catch((error) => { setMessage(messageNode, 'error', 'Request failed: ' + error); });
+  };
 
   fetch('/api/meta')
     .then((r) => r.json())
@@ -147,7 +235,129 @@
     return chip;
   };
 
+  // The three judgment verbs (plan §4): plain ✓ (log-only agreement),
+  // pinned ✓ (compiles into expectedTop), and ✗ with a cause. Client-side
+  // enforcement mirrors the server: a ✗ requires a cause, and the
+  // anchor-affecting causes (wrong-anchor, concept-misfire) require the
+  // concept id and a defend-it-from-the-text note.
+  const judgeBlock = (query, result) => {
+    const block = el('div', 'judge');
+    const verbs = el('div', 'judge-verbs');
+    const panel = el('div', 'judge-panel');
+    const message = el('div', 'judge-message');
+    panel.style.display = 'none';
+
+    const done = (record) => {
+      block.textContent = '';
+      const doneNote = el('div', 'judge-message done',
+        'logged ' + record.verdict + (record.pin ? ' (pinned)' : '') +
+        ' by ' + record.reviewer + ' at ' + record.at);
+      block.appendChild(doneNote);
+    };
+
+    const openPanel = (build) => {
+      panel.textContent = '';
+      panel.style.display = '';
+      build(panel);
+    };
+
+    const fitsButton = el('button', null, '✓ fits');
+    fitsButton.type = 'button';
+    fitsButton.addEventListener('click', () => {
+      postJudgment({ query, verdict: 'fits', targetId: result.targetId }, message, done);
+    });
+
+    const pinButton = el('button', null, '✓ pin…');
+    pinButton.type = 'button';
+    pinButton.addEventListener('click', () => openPanel((panel) => {
+      const families = [...new Set(result.reasons.map((reason) => reason.family))];
+      const label = el('label', null, 'Verified reason family (compiles into the fixture)');
+      const select = el('select');
+      select.appendChild(new Option('(none — pin the position only)', ''));
+      for (const family of families) select.appendChild(new Option(family, family));
+      label.appendChild(select);
+      panel.appendChild(label);
+      const submit = el('button', 'primary', 'Pin ✓');
+      submit.type = 'button';
+      submit.addEventListener('click', () => {
+        const payload = { query, verdict: 'fits', targetId: result.targetId, pin: true };
+        if (select.value !== '') payload.reasonFamily = select.value;
+        postJudgment(payload, message, done);
+      });
+      panel.appendChild(el('div')).appendChild(submit);
+    }));
+
+    const rejectButton = el('button', null, '✗ doesn’t fit…');
+    rejectButton.type = 'button';
+    rejectButton.addEventListener('click', () => openPanel((panel) => {
+      const causeLabel = el('label', null, 'Cause (required)');
+      const cause = el('select');
+      cause.appendChild(new Option('choose…', ''));
+      cause.appendChild(new Option('wrong-anchor', 'wrong-anchor'));
+      cause.appendChild(new Option('concept-misfire', 'concept-misfire'));
+      cause.appendChild(new Option('lexical-noise', 'lexical-noise'));
+      causeLabel.appendChild(cause);
+
+      const conceptLabel = el('label', null, 'Concept id that produced the bad evidence (required)');
+      const concept = el('input');
+      concept.type = 'text';
+      conceptLabel.appendChild(concept);
+
+      const noteLabel = el('label', null, 'Why, from the text itself (required — no bare clicks)');
+      const note = el('textarea');
+      noteLabel.appendChild(note);
+
+      const anchorAffecting = () => cause.value === 'wrong-anchor' || cause.value === 'concept-misfire';
+      const toggle = () => {
+        const on = anchorAffecting();
+        conceptLabel.style.display = on ? '' : 'none';
+        noteLabel.firstChild.textContent = on
+          ? 'Why, from the text itself (required — no bare clicks)'
+          : 'Why, from the text itself (optional for lexical-noise)';
+      };
+      cause.addEventListener('change', toggle);
+      toggle();
+
+      const submit = el('button', 'primary', 'Log ✗');
+      submit.type = 'button';
+      submit.addEventListener('click', () => {
+        if (cause.value === '') {
+          setMessage(message, 'error', 'A ✗ needs a cause.');
+          return;
+        }
+        if (anchorAffecting() && concept.value.trim() === '') {
+          setMessage(message, 'error', 'A ' + cause.value + ' judgment must name the concept.');
+          return;
+        }
+        if (anchorAffecting() && note.value.trim() === '') {
+          setMessage(message, 'error', 'A ' + cause.value + ' judgment needs a note defending it from the text.');
+          return;
+        }
+        const payload = { query, verdict: 'doesnt-fit', targetId: result.targetId, cause: cause.value };
+        if (anchorAffecting()) payload.conceptId = concept.value.trim();
+        if (note.value.trim() !== '') payload.note = note.value.trim();
+        postJudgment(payload, message, done);
+      });
+
+      panel.appendChild(causeLabel);
+      panel.appendChild(conceptLabel);
+      panel.appendChild(noteLabel);
+      panel.appendChild(el('div')).appendChild(submit);
+    }));
+
+    verbs.appendChild(fitsButton);
+    verbs.appendChild(pinButton);
+    verbs.appendChild(rejectButton);
+    block.appendChild(verbs);
+    block.appendChild(panel);
+    block.appendChild(message);
+    return block;
+  };
+
   const renderDiscovery = (payload) => {
+    judgedQuery = payload.query;
+    missingForm.style.display = 'block';
+    missingMessage.textContent = '';
     if (payload.results.length === 0) {
       status.textContent = 'No results for “' + payload.query + '”.';
       return;
@@ -169,6 +379,7 @@
       const chips = el('div', 'chips');
       for (const reason of result.reasons) chips.appendChild(reasonChip(reason));
       card.appendChild(chips);
+      card.appendChild(judgeBlock(payload.query, result));
       results.appendChild(card);
     }
   };
@@ -186,12 +397,35 @@
     results.appendChild(card);
   };
 
+  missingForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (judgedQuery === null) return;
+    const reference = missingReference.value.trim();
+    const note = missingNote.value.trim();
+    if (reference === '') {
+      setMessage(missingMessage, 'error', 'A missing judgment needs the reference that should have surfaced.');
+      return;
+    }
+    if (note === '') {
+      setMessage(missingMessage, 'error', 'A missing judgment needs a note defending it from the text.');
+      return;
+    }
+    postJudgment({ query: judgedQuery, verdict: 'missing', reference, note }, missingMessage, (record) => {
+      missingReference.value = '';
+      missingNote.value = '';
+      setMessage(missingMessage, 'done',
+        'logged missing ' + record.reference + ' by ' + record.reviewer + ' at ' + record.at);
+    });
+  });
+
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const query = input.value.trim();
     if (query === '') return;
     status.textContent = 'Searching…';
     results.textContent = '';
+    judgedQuery = null;
+    missingForm.style.display = 'none';
     fetch('/api/search?q=' + encodeURIComponent(query))
       .then((r) => r.json())
       .then((payload) => {

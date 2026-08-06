@@ -10,5 +10,5 @@
       "@jestek-dev/scripture-engine": ["../engine/src/index.ts"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "test"]
 }

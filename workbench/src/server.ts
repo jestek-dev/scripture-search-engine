@@ -1,5 +1,5 @@
 /**
- * Stage 1 — the read-only viewer.
+ * Stages 1 and 2 — the viewer and the judgment log.
  *
  * Node's built-in `http`, bound to 127.0.0.1, zero dependencies beyond the
  * engine. `/api/search` returns the awaited `engine.research()` result
@@ -7,6 +7,9 @@
  * because `ResearchResult` is `ResearchOutcome & ResultIdentity`, and no
  * reshaping happens here: what the API returns is byte-for-byte what any
  * consumer would compute.
+ *
+ * The only write anywhere is `POST /api/judgment`, which appends one line to
+ * `workbench/judgments.jsonl` (plan §4). The artifact stays read-only.
  *
  * Startup re-verifies the artifact's sha256 against the committed descriptor
  * every time. The workbench judges the reviewed artifact or nothing.
@@ -20,10 +23,40 @@ import path from 'node:path';
 import { createEngine, type ContentQueryPort } from '@jestek-dev/scripture-engine';
 
 import { databasePath, readDescriptor, repoRoot, sha256OfFile, type ArtifactDescriptor } from './descriptor.js';
+import { createJudgmentLog } from './judgments.js';
 import { openCorpus } from './nodeSqlitePort.js';
 
 const PORT = Number(process.env.WORKBENCH_PORT ?? 8787);
 const STATIC_PAGE = path.join(repoRoot, 'workbench', 'static', 'index.html');
+const JUDGMENTS_PATH = path.join(repoRoot, 'workbench', 'judgments.jsonl');
+
+/** Judgment posts are small; anything bigger than this is not a judgment. */
+const MAX_BODY_BYTES = 64 * 1024;
+
+function readJsonBody(request: http.IncomingMessage): Promise<unknown> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    let bytes = 0;
+    request
+      .on('data', (chunk: Buffer) => {
+        bytes += chunk.length;
+        if (bytes > MAX_BODY_BYTES) {
+          reject(new Error('Request body too large.'));
+          request.destroy();
+          return;
+        }
+        chunks.push(chunk);
+      })
+      .on('error', reject)
+      .on('end', () => {
+        try {
+          resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
+        } catch {
+          reject(new Error('Request body is not valid JSON.'));
+        }
+      });
+  });
+}
 
 function sendJson(response: http.ServerResponse, status: number, body: string): void {
   response.writeHead(status, { 'content-type': 'application/json; charset=utf-8' });
@@ -90,6 +123,23 @@ async function main(): Promise<void> {
   console.log(`corpusFingerprint: ${engine.corpusFingerprint}`);
   console.log(`layerFingerprint:  ${engine.layerFingerprint}`);
 
+  // Reviewer is a static string (plan decision 5); identities are stamped
+  // from the running engine, never taken from the client. A `missing`
+  // reference is validated through `engine.passage()`, whose typed result
+  // makes an invalid reference a value rather than an exception.
+  const reviewer = process.env.WORKBENCH_REVIEWER ?? 'jesse';
+  console.log(`reviewer:          ${reviewer}`);
+  const judgments = createJudgmentLog({
+    logPath: JUDGMENTS_PATH,
+    reviewer,
+    identity: {
+      engineVersion: engine.engineVersion,
+      corpusFingerprint: engine.corpusFingerprint,
+      layerFingerprint: engine.layerFingerprint,
+    },
+    isValidReference: async (reference) => (await engine.passage(reference)).kind === 'passage',
+  });
+
   const meta = {
     engineVersion: engine.engineVersion,
     corpusFingerprint: engine.corpusFingerprint,
@@ -102,8 +152,25 @@ async function main(): Promise<void> {
     void (async () => {
       const url = new URL(request.url ?? '/', `http://127.0.0.1:${PORT}`);
 
+      if (request.method === 'POST' && url.pathname === '/api/judgment') {
+        let body: unknown;
+        try {
+          body = await readJsonBody(request);
+        } catch (error) {
+          sendError(response, 400, error instanceof Error ? error.message : 'Bad request body.');
+          return;
+        }
+        const result = await judgments.submit(body);
+        if (!result.ok) {
+          sendError(response, 400, result.reason);
+          return;
+        }
+        sendJson(response, 201, JSON.stringify({ ok: true, record: result.record }));
+        return;
+      }
+
       if (request.method !== 'GET') {
-        sendError(response, 405, 'Stage 1 is read-only: GET only.');
+        sendError(response, 405, 'The only write is POST /api/judgment; everything else is GET.');
         return;
       }
 
