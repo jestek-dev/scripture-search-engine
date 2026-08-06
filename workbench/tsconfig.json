@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    // No rootDir/outDir: this package never emits — it runs via tsx and
+    // typechecks against the engine's SOURCE, same as eval.
+    "noEmit": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@jestek-dev/scripture-engine": ["../engine/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

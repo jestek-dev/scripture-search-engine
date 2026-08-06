@@ -1,0 +1,21 @@
+{
+  "name": "@jestek-dev/scripture-workbench",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only curation workbench: judges the verified release artifact on localhost. Never published, never shipped to a consumer.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "fetch-artifact": "tsx src/fetchArtifact.ts",
+    "serve": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "@jestek-dev/scripture-engine": "*"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}
