@@ -1,0 +1,37 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+id: god-sees-my-suffering
+label: The God who sees
+lexicon:
+  - God sees my suffering
+  - the God who sees me
+  - does God see me
+  - God hears my cry
+  - God sees my tears
+anchors:
+  - ref: Genesis 16:13
+    sources: [editorial]
+    weight: 1
+  - ref: Exodus 3:7
+    sources: [editorial]
+    weight: 0.9
+  - ref: Psalms 56:8
+    sources: [editorial]
+    weight: 0.9
+  - ref: Psalms 27:10
+    sources: [editorial]
+    weight: 0.75
+related:
+  - refuge-and-justice-for-the-oppressed

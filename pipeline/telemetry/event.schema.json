@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jestek-dev/scripture-search-engine/pipeline/telemetry/event.schema.json",
+  "title": "Telemetry event (on-device only)",
+  "$comment": "One event per completed search interaction, written to the app's LOCAL log and never transmitted. Only the distillate (distillate.schema.json) ever leaves a device. Sessions and dates exist here solely so retention and on-device pair mining can work; the distillation step strips both. Design: docs/telemetry-and-gap-mining.md §5.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["v", "app", "date", "session", "engineVersion", "corpusFingerprint", "layerFingerprint", "query", "outcome"],
+  "properties": {
+    "v": { "const": 1 },
+    "app": { "enum": ["maskil", "setlist", "versed"] },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "$comment": "Date only, never a timestamp — a time of day is an identity clue in a congregation."
+    },
+    "session": {
+      "type": "string",
+      "minLength": 1,
+      "$comment": "Ephemeral, rotates per app launch, maps to nothing. Exists only so a reformulation chain can be reassembled on-device. Never exported."
+    },
+    "engineVersion": { "type": "string", "minLength": 1 },
+    "corpusFingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "layerFingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "query": { "type": "string", "minLength": 1 },
+    "outcome": {
+      "enum": ["converted", "abandoned", "empty", "reference"],
+      "$comment": "converted = a result was USED (inserted, attached, added — the app's own conversion action), not merely clicked. reference = the query parsed as a direct scripture reference; logged for counts only."
+    },
+    "target": {
+      "type": ["string", "null"],
+      "$comment": "targetId of the used result, e.g. 'WEB:24029011'. Null unless outcome is 'converted'."
+    },
+    "rank": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "$comment": "1-based displayed position of the used result. Null unless converted. Doubles as an integrity check: the miner replays the query and flags events whose logged rank disagrees with the deterministic replay."
+    }
+  }
+}

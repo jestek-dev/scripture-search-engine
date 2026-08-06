@@ -3,17 +3,17 @@
   "distributionTier": "public_distribution",
   "schemaVersion": "5",
   "tokenizerVersion": "1.0.0",
-  "engineVersion": "0.7.1",
+  "engineVersion": "0.8.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
-  "layerFingerprint": "316fba74372ca6bb12a0e082ac98d44213c96f78f757f431fefe6eff7c6f2c27",
+  "layerFingerprint": "2b0cb2907f83196e59b2300ef23a7ce6f59bb98827f2df8ba97716c14c3e7a53",
   "manifestFingerprint": "94b733e5e39c50443d84ef449e6f18691e2548a563a2695cda2b7dfb8034d904",
-  "databaseSha256": "403d0fb9cba69cac13bc075325fbcfc2bcad1d209ef015841186fd6eca1dd237",
-  "databaseBytes": 123310080,
+  "databaseSha256": "131e4443d955283fc0ae355c52c2a6933de83989262225fbdde071f7f9920582",
+  "databaseBytes": 123351040,
   "perTableBytes": {
     "book_aliases": 12288,
     "books": 4096,
-    "concept_anchors": 20480,
-    "concept_lexicon": 8192,
+    "concept_anchors": 36864,
+    "concept_lexicon": 32768,
     "concept_related": 8192,
     "concepts": 8192,
     "cross_references": 18636800,
@@ -29,7 +29,7 @@
     "verses_fts_docsize": 303104,
     "verses_fts_idx": 12288
   },
-  "builtAt": "2026-07-30T00:00:00.000Z",
+  "builtAt": "2026-07-31T00:00:00.000Z",
   "translations": [
     {
       "code": "WEB",
@@ -48,9 +48,9 @@
   "counts": {
     "verses": 31098,
     "distinctTokens": 9570,
-    "concepts": 8,
-    "lexiconEntries": 41,
-    "editorialAnchors": 28,
+    "concepts": 33,
+    "lexiconEntries": 205,
+    "editorialAnchors": 129,
     "topicAnchors": 63,
     "crossReferences": 341096,
     "verseTerms": 877300

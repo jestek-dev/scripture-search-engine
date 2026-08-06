@@ -1,0 +1,28 @@
+{
+  "id": "pastoral-cancer",
+  "query": "diagnosed with cancer",
+  "status": "active",
+  "note": [
+    "PASTORAL-CARE FIXTURE. The mustNotRank list is the point: these queries",
+    "have dangerous lexical near-misses in the canon, every one of which is now",
+    "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
+    "against an absent verse passes vacuously — protection that is decoration."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 23:4",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "2 Corinthians 4:16-18",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Psalms 116:15",
+      "why": "Globally excluded from illness and grief queries."
+    }
+  ]
+}

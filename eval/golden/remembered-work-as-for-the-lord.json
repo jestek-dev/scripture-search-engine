@@ -1,0 +1,42 @@
+{
+  "id": "remembered-work-as-for-the-lord",
+  "query": "whatever you do work at it with all your heart",
+  "status": "active",
+  "note": [
+    "REMEMBERED PHRASING. Measured against the full artifact on 2026-07-31,",
+    "this query did not reach Colossians 3:23 by any lexical rung — the wording",
+    "searchers remember is NIV/ESV and the corpus is the WEB.",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose. Token overlap could",
+    "drift into the right answer on a corpus change and the fixture would",
+    "report success for a reason that is not the one we built. The assertion",
+    "is that a CURATED anchor put it there and can say who says so.",
+    "",
+    "THE QUERY CARRIES 'whatever you do' ON PURPOSE. The bare form — 'work at",
+    "it with all your heart' — is NOT fixed by this pack and the fixture must",
+    "not pretend otherwise. Measured on the full 31,098-verse artifact:",
+    "",
+    "  whatever you do work at it with all your heart -> Colossians 3:23 at #1",
+    "  working for the Lord and not for men           -> Colossians 3:23 at #1",
+    "  work at it with all your heart                 -> Colossians 3:23 at #23",
+    "",
+    "The bare form normalises to just {work, heart}, and the WEB renders 'with",
+    "all your heart' verbatim in some twenty places that legitimately answer",
+    "those words. Asserting it here would have passed on the 1,417-verse",
+    "fixture and stayed broken in production — a fixture reporting a success",
+    "the real system does not deliver, which is worse than no fixture.",
+    "",
+    "Its top result is currently Ephesians 2:9, via grace-not-earned's lexicon",
+    "entry 'not by works' — which normalises to the single token 'work' and so",
+    "anchors Ephesians 2:8-9 into ANY query containing that word. That is a",
+    "pre-existing precision bug in reviewed ontology data, not something this",
+    "pack introduced or should paper over. Recorded in NEEDS-JESSE §1.6d."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Colossians 3:23",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10
+}

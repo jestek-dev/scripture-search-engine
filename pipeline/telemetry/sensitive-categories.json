@@ -1,0 +1,116 @@
+{
+  "v": 1,
+  "$comment": [
+    "Pastoral-crisis categories whose queries are NEVER recorded — dropped by",
+    "the logging shim before writing, and again by the miner defensively.",
+    "Consent does not override this list: consent at install cannot reach the",
+    "2 a.m. moment someone searches about suicide. Design rationale:",
+    "docs/telemetry-and-gap-mining.md §4.5.",
+    "",
+    "This list is REVIEWED DATA and a pastoral judgment. Drafted and",
+    "APPROVED BY JESSE 2026-07-31, including the flagged judgment calls",
+    "below. Two entry kinds, because the tokenizer folds",
+    "pronouns away ('kill myself' tokenizes to just 'kill', which must NOT",
+    "match 'thou shalt not kill'):",
+    "  - tokens: every listed token must appear in the query's normalized",
+    "    token stream. For distinctive vocabulary (suicide, incest).",
+    "  - phrase: matched as a substring of the lowercased raw query. For",
+    "    pronoun phrases the tokenizer would gut ('kill myself').",
+    "Stem variants are listed explicitly (divorce/divorc) because the",
+    "tokenizer's light stemming is not a full stemmer and the two forms",
+    "normalize differently.",
+    "",
+    "JUDGMENT CALLS FLAGGED FOR REVIEW — deliberately NOT included:",
+    "  - 'anxiety'/'anxious': among the most-searched devotional topics",
+    "    ('do not be anxious'); excluding it would blind the miner to a top",
+    "    legitimate area, and the word is not by itself identity-revealing.",
+    "  - 'death'/'dying'/'sick'/'illness' as bare words: core theological",
+    "    vocabulary; only the personally-revealing specifics are listed",
+    "    (cancer, terminal illness, miscarriage, overdose).",
+    "  - 'adultery': catechetical vocabulary (the commandments) as often as",
+    "    personal crisis; 'affair' IS included as the personal register.",
+    "Widen or narrow any of these — the matcher takes whatever this file says."
+  ],
+  "categories": [
+    {
+      "id": "suicide-self-harm",
+      "entries": [
+        { "tokens": ["suicide"] },
+        { "tokens": ["suicidal"] },
+        { "tokens": ["self", "harm"] },
+        { "phrase": "kill myself" },
+        { "phrase": "killing myself" },
+        { "phrase": "end my life" },
+        { "phrase": "ending my life" },
+        { "phrase": "end it all" },
+        { "phrase": "want to die" },
+        { "phrase": "wanted to die" },
+        { "phrase": "hurt myself" },
+        { "phrase": "hurting myself" },
+        { "phrase": "cutting myself" },
+        { "phrase": "cut myself" },
+        { "phrase": "not want to live" },
+        { "phrase": "don't want to live" },
+        { "phrase": "dont want to live" }
+      ]
+    },
+    {
+      "id": "abuse",
+      "entries": [
+        { "tokens": ["abuse"] },
+        { "tokens": ["abus"] },
+        { "tokens": ["abusive"] },
+        { "tokens": ["molest"] },
+        { "tokens": ["molestation"] },
+        { "tokens": ["rape"] },
+        { "tokens": ["raped"] },
+        { "tokens": ["incest"] },
+        { "phrase": "hitting me" },
+        { "phrase": "hurting me" }
+      ]
+    },
+    {
+      "id": "marriage-crisis",
+      "entries": [
+        { "tokens": ["divorce"] },
+        { "tokens": ["divorc"] },
+        { "tokens": ["affair"] },
+        { "phrase": "cheating on me" },
+        { "phrase": "cheated on me" },
+        { "phrase": "leaving my husband" },
+        { "phrase": "leaving my wife" }
+      ]
+    },
+    {
+      "id": "addiction",
+      "entries": [
+        { "tokens": ["addiction"] },
+        { "tokens": ["addict"] },
+        { "tokens": ["alcoholic"] },
+        { "tokens": ["alcoholism"] },
+        { "tokens": ["overdose"] },
+        { "tokens": ["porn"] },
+        { "tokens": ["pornography"] },
+        { "phrase": "relapse" }
+      ]
+    },
+    {
+      "id": "illness-loss",
+      "entries": [
+        { "tokens": ["cancer"] },
+        { "tokens": ["miscarriage"] },
+        { "tokens": ["terminal", "illness"] },
+        { "tokens": ["grief"] },
+        { "tokens": ["griev"] },
+        { "tokens": ["depression"] },
+        { "tokens": ["depress"] },
+        { "phrase": "lost my baby" },
+        { "phrase": "lost my child" },
+        { "phrase": "lost my husband" },
+        { "phrase": "lost my wife" },
+        { "phrase": "lost my mom" },
+        { "phrase": "lost my dad" }
+      ]
+    }
+  ]
+}

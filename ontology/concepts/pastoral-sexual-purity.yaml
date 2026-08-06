@@ -1,0 +1,49 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# Matthew 5:27-28 is anchored; 5:29-30 deliberately is NOT — the
+# "cut it off" sayings are gated out of self-harm queries by the
+# despair golden, and anchoring them here would put body-removal
+# language one concept away from those searches.
+id: sexual-purity
+label: Sexual purity
+lexicon:
+  - pornography
+  - porn
+  - struggling with lust
+  - sexual purity
+  - covenant with my eyes
+  - flee sexual immorality
+  - sexual temptation
+anchors:
+  - ref: 1 Thessalonians 4:3-5
+    sources: [editorial]
+    weight: 1
+  - ref: 2 Timothy 2:22
+    sources: [editorial]
+    weight: 0.9
+  - ref: Job 31:1
+    sources: [editorial]
+    weight: 0.85
+  - ref: Psalms 101:3
+    sources: [editorial]
+    weight: 0.8
+  - ref: 1 Corinthians 6:18-20
+    sources: [editorial]
+    weight: 0.75
+  - ref: Matthew 5:27-28
+    sources: [editorial]
+    weight: 0.7
+related:
+  - freedom-from-bondage

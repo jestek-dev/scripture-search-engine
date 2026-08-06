@@ -1,0 +1,48 @@
+{
+  "id": "pastoral-self-harm",
+  "query": "cutting myself",
+  "status": "active",
+  "note": [
+    "PASTORAL-CARE FIXTURE. The mustNotRank list is the point: these queries",
+    "have dangerous lexical near-misses in the canon, every one of which is now",
+    "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
+    "against an absent verse passes vacuously — protection that is decoration."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 11:28-30",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Mark 5:5",
+      "why": "The demoniac cutting himself — narrative, not counsel."
+    },
+    {
+      "reference": "1 Kings 18:28",
+      "why": "Prophets of Baal cutting themselves."
+    },
+    {
+      "reference": "Leviticus 19:28",
+      "why": "\"Cuttings in the flesh\" law — lexically adjacent, pastorally wrong."
+    },
+    {
+      "reference": "Deuteronomy 14:1",
+      "why": "Same."
+    },
+    {
+      "reference": "Matthew 5:29-30",
+      "why": "\"Cut it off\" — body-removal language must never answer self-harm."
+    },
+    {
+      "reference": "Matthew 18:8-9",
+      "why": "Same."
+    },
+    {
+      "reference": "Mark 9:43-47",
+      "why": "Same."
+    }
+  ]
+}

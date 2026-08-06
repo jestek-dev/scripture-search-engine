@@ -1,0 +1,41 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# TEACHING register only — "is divorce a sin" is a study question and
+# gets the teaching passages. Wound phrasings ("cheated on me") route
+# to betrayal-and-marriage-crisis instead; the lexicons are disjoint
+# on purpose, and that split IS the intent routing. Malachi 2 enters
+# at 0.6: the WEB follows the contested modern reading ("one who
+# hates and divorces"), so it must not be the defining anchor.
+id: marriage-divorce-teaching
+label: Marriage and divorce
+lexicon:
+  - what does God say about divorce
+  - what does the bible say about divorce
+  - is divorce a sin
+  - biblical grounds for divorce
+  - what God has joined together
+anchors:
+  - ref: Matthew 19:3-9
+    sources: [editorial]
+    weight: 1
+  - ref: 1 Corinthians 7:10-16
+    sources: [editorial]
+    weight: 0.9
+  - ref: Genesis 2:24
+    sources: [editorial]
+    weight: 0.8
+  - ref: Malachi 2:13-16
+    sources: [editorial]
+    weight: 0.6

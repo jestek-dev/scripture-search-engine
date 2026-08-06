@@ -1,0 +1,22 @@
+{
+  "id": "pastoral-god-sees",
+  "query": "God sees my suffering",
+  "status": "active",
+  "note": [
+    "PASTORAL-CARE FIXTURE. The mustNotRank list is the point: these queries",
+    "have dangerous lexical near-misses in the canon, every one of which is now",
+    "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
+    "against an absent verse passes vacuously — protection that is decoration."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 16:13",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "Exodus 3:7",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10
+}

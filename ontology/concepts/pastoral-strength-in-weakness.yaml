@@ -1,0 +1,32 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+id: strength-in-weakness
+label: Strength in weakness
+lexicon:
+  - strength in weakness
+  - my grace is sufficient
+  - power made perfect in weakness
+  - strength when I am weak
+  - too weak to keep going
+anchors:
+  - ref: 2 Corinthians 12:9-10
+    sources: [editorial]
+    weight: 1
+  - ref: Isaiah 40:29-31
+    sources: [editorial]
+    weight: 0.9
+  - ref: Psalms 73:26
+    sources: [editorial]
+    weight: 0.8

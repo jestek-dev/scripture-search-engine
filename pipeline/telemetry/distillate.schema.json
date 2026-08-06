@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jestek-dev/scripture-search-engine/pipeline/telemetry/distillate.schema.json",
+  "title": "Telemetry distillate (the only format that leaves a device)",
+  "$comment": "Per-device, per-audit-period aggregate. Deliberately CANNOT express a history: no dates finer than the period, no sessions, no event ordering, no durable device identity. The AOL release proved a pseudonymous per-user query history is itself re-identifying; this format is the structural answer — the history never exists off-device. Design: docs/telemetry-and-gap-mining.md §5a.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["v", "app", "period", "token", "queries", "pairs"],
+  "properties": {
+    "v": { "const": 1 },
+    "app": { "enum": ["maskil", "setlist", "versed"] },
+    "period": {
+      "type": "string",
+      "pattern": "^\\d{4}-Q[1-4]$",
+      "$comment": "The audit period. The finest time granularity that survives export."
+    },
+    "token": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 64,
+      "$comment": "Random, regenerated EVERY period. Lets the miner count distinct installs (the k-threshold) and blunt poisoning, without ever becoming a durable pseudonym. A stable value here would recreate AOL's user numbers; rotation is the safety property."
+    },
+    "queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["query", "identity", "outcomes", "conversions"],
+        "properties": {
+          "query": { "type": "string", "minLength": 1 },
+          "identity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["engineVersion", "corpusFingerprint", "layerFingerprint"],
+            "properties": {
+              "engineVersion": { "type": "string", "minLength": 1 },
+              "corpusFingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              "layerFingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            }
+          },
+          "outcomes": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["empty", "abandoned", "converted"],
+            "properties": {
+              "empty": { "type": "integer", "minimum": 0 },
+              "abandoned": { "type": "integer", "minimum": 0 },
+              "converted": { "type": "integer", "minimum": 0 }
+            }
+          },
+          "conversions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["target", "rank", "count"],
+              "properties": {
+                "target": { "type": "string", "minLength": 1 },
+                "rank": { "type": "integer", "minimum": 1 },
+                "count": { "type": "integer", "minimum": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "pairs": {
+      "type": "array",
+      "$comment": "Reformulation pairs mined ON the device, where sessions live. The chain that produced a pair dies with on-device retention.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "count"],
+        "properties": {
+          "from": { "type": "string", "minLength": 1 },
+          "to": { "type": "string", "minLength": 1 },
+          "count": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  }
+}
