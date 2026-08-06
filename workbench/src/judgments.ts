@@ -42,8 +42,21 @@ export interface JudgmentRecord {
   readonly pin?: true;
   readonly reasonFamily?: string;
   readonly cause?: Cause;
+  /**
+   * True when the workbench classified the cause instead of the reviewer:
+   * a ✗ on a result with no concept evidence is lexical-noise by
+   * construction, and the UI records it in one click. Transparency only —
+   * the compile step routes inferred and hand-judged causes identically.
+   */
+  readonly causeInferred?: true;
   readonly conceptId?: string;
   readonly note?: string;
+  /**
+   * Server-attached passage text for a `missing` judgment. This is what lets
+   * the note be optional: the defend-it-from-the-text rule is satisfied by
+   * the text itself, which the server fetched while validating the reference.
+   */
+  readonly excerpt?: string;
   readonly engineVersion: string;
   readonly corpusFingerprint: string;
   readonly layerFingerprint: string;
@@ -58,6 +71,7 @@ const CLIENT_FIELDS = new Set([
   'pin',
   'reasonFamily',
   'cause',
+  'causeInferred',
   'conceptId',
   'note',
 ]);
@@ -69,11 +83,13 @@ export interface JudgmentLogOptions {
   /** Stamped by the server from the running engine, never from the client. */
   readonly identity: JudgmentIdentity;
   /**
-   * Resolves a human-typed reference for a `missing` judgment. The server
-   * backs this with `engine.passage()`, whose typed result makes an invalid
-   * reference a value, not an exception.
+   * Resolves a human-typed reference for a `missing` judgment to the passage
+   * text (an excerpt), or null when the reference does not resolve. The
+   * server backs this with `engine.passage()`, whose typed result makes an
+   * invalid reference a value, not an exception. The excerpt is what lets a
+   * `missing` note be optional: the text defends the judgment by itself.
    */
-  readonly isValidReference: (reference: string) => Promise<boolean>;
+  readonly resolveReference: (reference: string) => Promise<string | null>;
   /** Injectable clock, for tests. Defaults to the real one. */
   readonly now?: () => Date;
 }
@@ -117,7 +133,7 @@ export async function validateJudgment(
 
   for (const key of Object.keys(body)) {
     if (!CLIENT_FIELDS.has(key)) {
-      const stamped = ['at', 'reviewer', 'engineVersion', 'corpusFingerprint', 'layerFingerprint'];
+      const stamped = ['at', 'reviewer', 'excerpt', 'engineVersion', 'corpusFingerprint', 'layerFingerprint'];
       return {
         ok: false,
         reason: stamped.includes(key)
@@ -140,10 +156,12 @@ export async function validateJudgment(
   }
 
   // Per-verdict field rules, straight from the plan's schema table (§4).
+  let attachedExcerpt: string | undefined;
   if (verdict === 'missing') {
     for (const [field, hint] of [
       ['targetId', 'a "missing" judgment names a reference, not a result'],
       ['cause', 'causes belong to "doesnt-fit" judgments'],
+      ['causeInferred', 'causeInferred belongs to "doesnt-fit" judgments'],
       ['conceptId', 'conceptId belongs to "doesnt-fit" judgments'],
       ['pin', 'pin belongs to "fits" judgments'],
       ['reasonFamily', 'reasonFamily belongs to pinned "fits" judgments'],
@@ -158,18 +176,26 @@ export async function validateJudgment(
         reason: 'A "missing" judgment needs the reference that should have surfaced.',
       };
     }
-    if (!nonEmptyString(body.note)) {
-      return {
-        ok: false,
-        reason:
-          'A "missing" judgment needs a note defending it from the text — no bare clicks.',
-      };
-    }
-    if (!(await options.isValidReference(body.reference))) {
+    const excerpt = await options.resolveReference(body.reference);
+    if (excerpt === null) {
       return {
         ok: false,
         reason: `"${body.reference}" is not a reference the engine can resolve.`,
       };
+    }
+    // The defend-it-from-the-text rule (§4). A note still satisfies it, but
+    // so does the text itself: when the server can attach the passage
+    // excerpt, that IS the defense, and no hand-written note is required.
+    if (!nonEmptyString(body.note)) {
+      if (!nonEmptyString(excerpt)) {
+        return {
+          ok: false,
+          reason:
+            'A "missing" judgment needs a note defending it from the text — the passage ' +
+            'text could not be attached, so no bare clicks.',
+        };
+      }
+      attachedExcerpt = excerpt.trim();
     }
   } else {
     // fits / doesnt-fit: judged against a result the engine actually returned.
@@ -190,6 +216,7 @@ export async function validateJudgment(
   if (verdict === 'fits') {
     for (const [field, hint] of [
       ['cause', 'causes belong to "doesnt-fit" judgments'],
+      ['causeInferred', 'causeInferred belongs to "doesnt-fit" judgments'],
       ['conceptId', 'conceptId belongs to "doesnt-fit" judgments'],
     ] as const) {
       if (body[field] !== undefined) {
@@ -231,6 +258,14 @@ export async function validateJudgment(
         reason: 'A ✗ needs a cause: "wrong-anchor", "concept-misfire", or "lexical-noise".',
       };
     }
+    if (body.causeInferred !== undefined && body.causeInferred !== true) {
+      return {
+        ok: false,
+        reason:
+          'Omit "causeInferred" for a reviewer-judged cause; send causeInferred: true only ' +
+          'when the workbench classified it.',
+      };
+    }
     if (ANCHOR_AFFECTING_CAUSES.includes(cause as Cause)) {
       if (!nonEmptyString(body.conceptId)) {
         return {
@@ -265,8 +300,10 @@ export async function validateJudgment(
     ...(body.pin === true ? { pin: true as const } : {}),
     ...(body.reasonFamily !== undefined ? { reasonFamily: body.reasonFamily as string } : {}),
     ...(body.cause !== undefined ? { cause: body.cause as Cause } : {}),
+    ...(body.causeInferred === true ? { causeInferred: true as const } : {}),
     ...(body.conceptId !== undefined ? { conceptId: body.conceptId as string } : {}),
     ...(body.note !== undefined ? { note: (body.note as string).trim() } : {}),
+    ...(attachedExcerpt !== undefined ? { excerpt: attachedExcerpt } : {}),
     engineVersion: options.identity.engineVersion,
     corpusFingerprint: options.identity.corpusFingerprint,
     layerFingerprint: options.identity.layerFingerprint,

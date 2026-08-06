@@ -19,13 +19,15 @@ const IDENTITY = {
   layerFingerprint: 'layer-test-fingerprint',
 };
 
+const JAMES_EXCERPT = 'But be doers of the word, and not only hearers, deluding your own selves.';
+
 function options(overrides: Partial<JudgmentLogOptions> = {}): JudgmentLogOptions {
   return {
     logPath: '/dev/null',
     reviewer: 'test-reviewer',
     identity: IDENTITY,
-    // The fake engine.passage(): only James resolves.
-    isValidReference: async (reference) => reference.startsWith('James'),
+    // The fake engine.passage(): only James resolves, to a fixed excerpt.
+    resolveReference: async (reference) => (reference.startsWith('James') ? JAMES_EXCERPT : null),
     now: () => new Date('2026-08-06T12:00:00.000Z'),
     ...overrides,
   };
@@ -59,7 +61,7 @@ describe('judgment validation — record-level rules (§4)', () => {
   });
 
   it('rejects client attempts to supply server-stamped fields', async () => {
-    for (const field of ['at', 'reviewer', 'engineVersion', 'corpusFingerprint', 'layerFingerprint']) {
+    for (const field of ['at', 'reviewer', 'excerpt', 'engineVersion', 'corpusFingerprint', 'layerFingerprint']) {
       await expectRejected(
         { query: 'q', verdict: 'fits', targetId: 'WEB:59001022', [field]: 'spoofed' },
         /stamped by the server/,
@@ -199,6 +201,49 @@ describe('judgment validation — doesnt-fit', () => {
     );
   });
 
+  it('accepts causeInferred: true on any cause — transparency for the auto-classified ✗', async () => {
+    const record = await expectAccepted({
+      query: 'q',
+      verdict: 'doesnt-fit',
+      targetId: 'WEB:1005001',
+      cause: 'lexical-noise',
+      causeInferred: true,
+    });
+    expect(record.causeInferred).toBe(true);
+    const answered = await expectAccepted({
+      query: 'q',
+      verdict: 'doesnt-fit',
+      targetId: 'WEB:1005001',
+      cause: 'wrong-anchor',
+      conceptId: 'obedience',
+      note: 'The anchor names a genealogy.',
+      causeInferred: true,
+    });
+    expect(answered.causeInferred).toBe(true);
+  });
+
+  it('rejects causeInferred values other than true, and causeInferred without a cause', async () => {
+    await expectRejected(
+      { query: 'q', verdict: 'doesnt-fit', targetId: 'WEB:1005001', cause: 'lexical-noise', causeInferred: false },
+      /causeInferred: true only/,
+    );
+    await expectRejected(
+      { query: 'q', verdict: 'doesnt-fit', targetId: 'WEB:1005001', causeInferred: true },
+      /needs a cause/,
+    );
+  });
+
+  it('rejects causeInferred on the other verdicts', async () => {
+    await expectRejected(
+      { query: 'q', verdict: 'fits', targetId: 'WEB:59001022', causeInferred: true },
+      /does not belong on a "fits" judgment/,
+    );
+    await expectRejected(
+      { query: 'q', verdict: 'missing', reference: 'James 1:22', causeInferred: true },
+      /does not belong on a "missing" judgment/,
+    );
+  });
+
   it('rejects pin and reasonFamily on a ✗', async () => {
     await expectRejected(
       { query: 'q', verdict: 'doesnt-fit', targetId: 'WEB:59001022', cause: 'lexical-noise', pin: true },
@@ -212,7 +257,7 @@ describe('judgment validation — doesnt-fit', () => {
 });
 
 describe('judgment validation — missing', () => {
-  it('accepts a validated reference with a note', async () => {
+  it('accepts a validated reference with a note, and attaches no excerpt then', async () => {
     const record = await expectAccepted({
       query: 'faith without works',
       verdict: 'missing',
@@ -220,17 +265,31 @@ describe('judgment validation — missing', () => {
       note: 'The whole passage argues faith apart from works is dead.',
     });
     expect(record.reference).toBe('James 2:14-26');
+    expect(record.excerpt).toBeUndefined();
+  });
+
+  it('accepts a validated reference WITHOUT a note, attaching the passage excerpt (§4 v1.1)', async () => {
+    const record = await expectAccepted({
+      query: 'hearing and doing',
+      verdict: 'missing',
+      reference: 'James 1:22',
+    });
+    expect(record.note).toBeUndefined();
+    // The defend-it-from-the-text rule is satisfied by the text itself.
+    expect(record.excerpt).toBe(JAMES_EXCERPT);
   });
 
   it('requires a reference', async () => {
     await expectRejected({ query: 'q', verdict: 'missing', note: 'why' }, /reference/);
   });
 
-  it('requires a note — no bare clicks', async () => {
-    await expectRejected(
+  it('still requires a note when no passage text can be attached', async () => {
+    const result = await validateJudgment(
       { query: 'q', verdict: 'missing', reference: 'James 1:22' },
-      /no bare clicks/,
+      options({ resolveReference: async () => '   ' }),
     );
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toMatch(/no bare clicks/);
   });
 
   it('rejects a reference the engine cannot resolve', async () => {
@@ -244,6 +303,7 @@ describe('judgment validation — missing', () => {
     for (const extra of [
       { targetId: 'WEB:59001022' },
       { cause: 'lexical-noise' },
+      { causeInferred: true },
       { conceptId: 'obedience' },
       { pin: true },
       { reasonFamily: 'concept_anchor' },

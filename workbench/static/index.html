@@ -143,7 +143,8 @@
         <label>Reference (e.g. James 1:22-25)
           <input id="missing-reference" type="text" autocomplete="off">
         </label>
-        <label>Why, from the text itself (required — no bare clicks)
+        <div id="missing-verse" class="judge-message"></div>
+        <label>Why (pre-fills from the verse itself — edit it or leave it)
           <textarea id="missing-note"></textarea>
         </label>
         <div><button type="submit" class="primary">Log missing passage</button></div>
@@ -170,6 +171,7 @@
   const results = document.getElementById('results');
   const missingForm = document.getElementById('missing');
   const missingReference = document.getElementById('missing-reference');
+  const missingVerse = document.getElementById('missing-verse');
   const missingNote = document.getElementById('missing-note');
   const missingMessage = document.getElementById('missing-message');
 
@@ -218,6 +220,31 @@
     })
     .catch(() => { identities.textContent = 'failed to load /api/meta'; });
 
+  // Concept label -> id, from the artifact's own concept table. This is what
+  // lets a ✗ name the concept from the result's evidence instead of asking
+  // the reviewer to know internal ids.
+  const conceptIdsByLabel = new Map();
+  fetch('/api/concepts')
+    .then((r) => r.json())
+    .then((list) => { for (const concept of list) conceptIdsByLabel.set(concept.label, concept.id); })
+    .catch(() => {});
+
+  // The distinct concepts a result's evidence actually names: one entry per
+  // concept behind a concept_anchor ("Theme: X") or concept_lexicon
+  // ("Related theme: X") reason.
+  const conceptEvidence = (result) => {
+    const seen = new Set();
+    const concepts = [];
+    for (const reason of result.reasons) {
+      if (reason.family !== 'concept_anchor' && reason.family !== 'concept_lexicon') continue;
+      const label = reason.label.replace(/^Related theme: /, '').replace(/^Theme: /, '');
+      if (seen.has(label)) continue;
+      seen.add(label);
+      concepts.push({ label, id: conceptIdsByLabel.get(label) ?? null });
+    }
+    return concepts;
+  };
+
   const reasonChip = (reason) => {
     const chip = el('span', 'chip');
     chip.appendChild(el('span', 'family', reason.family));
@@ -235,11 +262,15 @@
     return chip;
   };
 
-  // The three judgment verbs (plan §4): plain ✓ (log-only agreement),
-  // pinned ✓ (compiles into expectedTop), and ✗ with a cause. Client-side
-  // enforcement mirrors the server: a ✗ requires a cause, and the
-  // anchor-affecting causes (wrong-anchor, concept-misfire) require the
-  // concept id and a defend-it-from-the-text note.
+  // The three judgment verbs (plan §4, simplified in v1.1): plain ✓
+  // (log-only agreement), pinned ✓ (compiles into expectedTop), and
+  // ✗ "shouldn't be up here" (compiles into mustNotRank — demote for this
+  // query, never delete). The ✗ cause is never picked from a jargon list:
+  // with no concept evidence it is lexical-noise by construction (one
+  // click, recorded with causeInferred); with concept evidence, plain
+  // yes/no questions about the result's own evidence decide between
+  // wrong-anchor and concept-misfire, and the concept id is wired from the
+  // evidence rather than asked for.
   const judgeBlock = (query, result) => {
     const block = el('div', 'judge');
     const verbs = el('div', 'judge-verbs');
@@ -247,11 +278,12 @@
     const message = el('div', 'judge-message');
     panel.style.display = 'none';
 
-    const done = (record) => {
+    const done = (record, explanation) => {
       block.textContent = '';
       const doneNote = el('div', 'judge-message done',
         'logged ' + record.verdict + (record.pin ? ' (pinned)' : '') +
-        ' by ' + record.reviewer + ' at ' + record.at);
+        ' by ' + record.reviewer + ' at ' + record.at +
+        (explanation ? ' — ' + explanation : ''));
       block.appendChild(doneNote);
     };
 
@@ -287,63 +319,109 @@
       panel.appendChild(el('div')).appendChild(submit);
     }));
 
-    const rejectButton = el('button', null, '✗ doesn’t fit…');
-    rejectButton.type = 'button';
-    rejectButton.addEventListener('click', () => openPanel((panel) => {
-      const causeLabel = el('label', null, 'Cause (required)');
-      const cause = el('select');
-      cause.appendChild(new Option('choose…', ''));
-      cause.appendChild(new Option('wrong-anchor', 'wrong-anchor'));
-      cause.appendChild(new Option('concept-misfire', 'concept-misfire'));
-      cause.appendChild(new Option('lexical-noise', 'lexical-noise'));
-      causeLabel.appendChild(cause);
+    // ✗ compiles to "must not appear in the top results for THIS query" —
+    // the verse keeps its place in the corpus and every other search.
+    const demoteExplanation =
+      'it will be pinned out of the top results for this query; the verse stays in the corpus and every other search.';
 
-      const conceptLabel = el('label', null, 'Concept id that produced the bad evidence (required)');
-      const concept = el('input');
-      concept.type = 'text';
-      conceptLabel.appendChild(concept);
+    const logNoise = () => {
+      postJudgment(
+        { query, verdict: 'doesnt-fit', targetId: result.targetId, cause: 'lexical-noise', causeInferred: true },
+        message,
+        (record) => done(record, 'matched words, not meaning — ' + demoteExplanation),
+      );
+    };
 
-      const noteLabel = el('label', null, 'Why, from the text itself (required — no bare clicks)');
+    // The required note for a question-answered ✗: these judgments change
+    // reviewed theme files, and six months later "why did we remove that
+    // anchor" must have an answer.
+    const noteStep = (panel, cause, concept, explanation) => {
+      panel.textContent = '';
+      panel.appendChild(el('div', null, explanation));
+      let conceptInput = null;
+      if (concept.id === null) {
+        const conceptLabel = el('label', null,
+          'Concept id (the workbench could not match “' + concept.label + '” to an id)');
+        conceptInput = el('input');
+        conceptInput.type = 'text';
+        conceptLabel.appendChild(conceptInput);
+        panel.appendChild(conceptLabel);
+      }
+      const noteLabel = el('label', null,
+        'Why, from the verse itself (required — this queues a change to reviewed theme files)');
       const note = el('textarea');
       noteLabel.appendChild(note);
-
-      const anchorAffecting = () => cause.value === 'wrong-anchor' || cause.value === 'concept-misfire';
-      const toggle = () => {
-        const on = anchorAffecting();
-        conceptLabel.style.display = on ? '' : 'none';
-        noteLabel.firstChild.textContent = on
-          ? 'Why, from the text itself (required — no bare clicks)'
-          : 'Why, from the text itself (optional for lexical-noise)';
-      };
-      cause.addEventListener('change', toggle);
-      toggle();
-
+      panel.appendChild(noteLabel);
       const submit = el('button', 'primary', 'Log ✗');
       submit.type = 'button';
       submit.addEventListener('click', () => {
-        if (cause.value === '') {
-          setMessage(message, 'error', 'A ✗ needs a cause.');
+        const conceptId = concept.id !== null ? concept.id : conceptInput.value.trim();
+        if (conceptId === '') {
+          setMessage(message, 'error', 'This judgment must name the concept.');
           return;
         }
-        if (anchorAffecting() && concept.value.trim() === '') {
-          setMessage(message, 'error', 'A ' + cause.value + ' judgment must name the concept.');
+        if (note.value.trim() === '') {
+          setMessage(message, 'error',
+            'This judgment queues a change to reviewed theme files — say why, from the verse itself.');
           return;
         }
-        if (anchorAffecting() && note.value.trim() === '') {
-          setMessage(message, 'error', 'A ' + cause.value + ' judgment needs a note defending it from the text.');
-          return;
-        }
-        const payload = { query, verdict: 'doesnt-fit', targetId: result.targetId, cause: cause.value };
-        if (anchorAffecting()) payload.conceptId = concept.value.trim();
-        if (note.value.trim() !== '') payload.note = note.value.trim();
-        postJudgment(payload, message, done);
+        postJudgment(
+          { query, verdict: 'doesnt-fit', targetId: result.targetId, cause, conceptId, note: note.value.trim() },
+          message,
+          (record) => done(record, demoteExplanation),
+        );
       });
-
-      panel.appendChild(causeLabel);
-      panel.appendChild(conceptLabel);
-      panel.appendChild(noteLabel);
       panel.appendChild(el('div')).appendChild(submit);
-    }));
+    };
+
+    // Plain yes/no questions built from the result's own concept evidence.
+    const askAboutConcept = (panel, concepts, index) => {
+      const concept = concepts[index];
+      const step = (question, onYes, onNo) => {
+        panel.textContent = '';
+        panel.appendChild(el('div', null, question));
+        const row = el('div', 'judge-verbs');
+        for (const [text, handler] of [['Yes', onYes], ['No', onNo]]) {
+          const button = el('button', null, text);
+          button.type = 'button';
+          button.addEventListener('click', handler);
+          row.appendChild(button);
+        }
+        panel.appendChild(row);
+      };
+      step(
+        'Does “' + concept.label + '” fit this verse?',
+        () => step(
+          'Should “' + query + '” have brought up “' + concept.label + '” at all?',
+          () => {
+            // This concept checks out on both counts; ask about the next
+            // one, or conclude the pull was word overlap after all.
+            if (index + 1 < concepts.length) askAboutConcept(panel, concepts, index + 1);
+            else logNoise();
+          },
+          () => noteStep(panel, 'concept-misfire', concept,
+            '“' + query + '” shouldn’t pull in “' + concept.label +
+            '” — that trigger will be queued for review in the theme files.'),
+        ),
+        () => noteStep(panel, 'wrong-anchor', concept,
+          '“' + concept.label + '” doesn’t belong on this verse — that anchor will be queued ' +
+          'for review in the theme files.'),
+      );
+    };
+
+    const rejectButton = el('button', null, '✗ shouldn’t be up here');
+    rejectButton.type = 'button';
+    rejectButton.addEventListener('click', () => {
+      const concepts = conceptEvidence(result);
+      // No concept evidence means no theme was involved: the only thing
+      // that put this verse up here was word overlap, so one click is the
+      // whole judgment. causeInferred marks the auto-classification.
+      if (concepts.length === 0) {
+        logNoise();
+        return;
+      }
+      openPanel((panel) => askAboutConcept(panel, concepts, 0));
+    });
 
     verbs.appendChild(fitsButton);
     verbs.appendChild(pinButton);
@@ -397,6 +475,42 @@
     results.appendChild(card);
   };
 
+  // The "why" pre-fills from the verse itself: as the reference resolves,
+  // the passage text becomes the note (editable; a hand-typed note is never
+  // overwritten). If the note ends up empty, the server attaches the
+  // passage excerpt to the record — the text is the defense either way.
+  let missingAutoNote = null;
+  const prefillFromReference = () => {
+    const reference = missingReference.value.trim();
+    if (reference === '') {
+      missingVerse.textContent = '';
+      return;
+    }
+    fetch('/api/passage?ref=' + encodeURIComponent(reference))
+      .then((r) => r.json())
+      .then((payload) => {
+        if (reference !== missingReference.value.trim()) return; // stale response
+        if (payload.kind !== 'passage') {
+          missingVerse.textContent = '“' + reference + '” isn’t a reference the engine can resolve yet.';
+          return;
+        }
+        const text = payload.passage.verses.map((verse) => verse.text.trim()).join(' ');
+        const shortText = text.length > 200 ? text.slice(0, 199).trimEnd() + '…' : text;
+        missingVerse.textContent = payload.passage.reference + ' — “' + shortText + '”';
+        const auto = 'text: "' + shortText + '"';
+        if (missingNote.value.trim() === '' || missingNote.value === missingAutoNote) {
+          missingNote.value = auto;
+          missingAutoNote = auto;
+        }
+      })
+      .catch(() => {});
+  };
+  let missingTimer = null;
+  missingReference.addEventListener('input', () => {
+    if (missingTimer !== null) clearTimeout(missingTimer);
+    missingTimer = setTimeout(prefillFromReference, 350);
+  });
+
   missingForm.addEventListener('submit', (event) => {
     event.preventDefault();
     if (judgedQuery === null) return;
@@ -406,13 +520,13 @@
       setMessage(missingMessage, 'error', 'A missing judgment needs the reference that should have surfaced.');
       return;
     }
-    if (note === '') {
-      setMessage(missingMessage, 'error', 'A missing judgment needs a note defending it from the text.');
-      return;
-    }
-    postJudgment({ query: judgedQuery, verdict: 'missing', reference, note }, missingMessage, (record) => {
+    const payload = { query: judgedQuery, verdict: 'missing', reference };
+    if (note !== '') payload.note = note;
+    postJudgment(payload, missingMessage, (record) => {
       missingReference.value = '';
       missingNote.value = '';
+      missingAutoNote = null;
+      missingVerse.textContent = '';
       setMessage(missingMessage, 'done',
         'logged missing ' + record.reference + ' by ' + record.reviewer + ' at ' + record.at);
     });

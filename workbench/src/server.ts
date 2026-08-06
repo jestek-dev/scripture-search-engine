@@ -67,6 +67,19 @@ function sendError(response: http.ServerResponse, status: number, message: strin
   sendJson(response, status, JSON.stringify({ error: message }));
 }
 
+/**
+ * The stored excerpt for a `missing` judgment: the passage's own words,
+ * bounded so a whole-chapter reference cannot bloat a log line. 280
+ * characters holds any single verse and enough of a longer passage to defend
+ * the judgment.
+ */
+const EXCERPT_MAX_CHARS = 280;
+
+function passageExcerpt(verses: readonly { text: string }[]): string {
+  const text = verses.map((verse) => verse.text.trim()).join(' ');
+  return text.length <= EXCERPT_MAX_CHARS ? text : `${text.slice(0, EXCERPT_MAX_CHARS - 1).trimEnd()}…`;
+}
+
 async function conceptList(port: ContentQueryPort): Promise<unknown> {
   const { rows } = await port.execute('SELECT id, label FROM concepts ORDER BY id');
   return rows;
@@ -126,7 +139,9 @@ async function main(): Promise<void> {
   // Reviewer is a static string (plan decision 5); identities are stamped
   // from the running engine, never taken from the client. A `missing`
   // reference is validated through `engine.passage()`, whose typed result
-  // makes an invalid reference a value rather than an exception.
+  // makes an invalid reference a value rather than an exception — and the
+  // resolved passage text rides back as the excerpt, so the text itself can
+  // stand in for a hand-written note (§4, v1.1).
   const reviewer = process.env.WORKBENCH_REVIEWER ?? 'jesse';
   console.log(`reviewer:          ${reviewer}`);
   const judgments = createJudgmentLog({
@@ -137,7 +152,10 @@ async function main(): Promise<void> {
       corpusFingerprint: engine.corpusFingerprint,
       layerFingerprint: engine.layerFingerprint,
     },
-    isValidReference: async (reference) => (await engine.passage(reference)).kind === 'passage',
+    resolveReference: async (reference) => {
+      const outcome = await engine.passage(reference);
+      return outcome.kind === 'passage' ? passageExcerpt(outcome.passage.verses) : null;
+    },
   });
 
   const meta = {
@@ -189,6 +207,19 @@ async function main(): Promise<void> {
         }
         // Verbatim: no reshaping, no augmentation.
         sendJson(response, 200, JSON.stringify(await engine.research(query)));
+        return;
+      }
+
+      if (url.pathname === '/api/passage') {
+        const reference = url.searchParams.get('ref');
+        if (reference === null || reference.trim() === '') {
+          sendError(response, 400, 'Missing reference: /api/passage?ref=...');
+          return;
+        }
+        // Verbatim `engine.passage()` result, same discipline as /api/search.
+        // The UI uses this to validate a missing-passage reference as it is
+        // typed and to pre-fill the note with the verse's own words.
+        sendJson(response, 200, JSON.stringify(await engine.passage(reference)));
         return;
       }
 
