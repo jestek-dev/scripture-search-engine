@@ -48,6 +48,13 @@ jobs:
       - name: Fetch pinned sources
         run: npm run fetch:sources --workspace pipeline
 
+      # The build below OVERWRITES artifacts/content-artifact.json with a
+      # descriptor of whatever it just built. Capture the committed, reviewed
+      # descriptor first — it is the yardstick, and comparing the build against
+      # its own output would verify nothing.
+      - name: Capture the committed descriptor
+        run: cp artifacts/content-artifact.json "$RUNNER_TEMP/reviewed-content-artifact.json"
+
       # Rebuild AT THE REVIEWED BUILD TIME. built_at lands in the database's
       # meta table and therefore in its checksum, so without pinning it every
       # rebuild differs and the verification below could never mean anything.
@@ -59,12 +66,16 @@ jobs:
 
       # The descriptor is committed, so this catches a build that no longer
       # reproduces the reviewed artifact — a source drifting under us, or a
-      # pipeline change nobody re-descriptored.
+      # pipeline change nobody re-descriptored. Compare against the CAPTURED
+      # committed descriptor, not the file the build just rewrote, then restore
+      # the committed one so the release uploads what was reviewed.
       - name: Verify the built artifact matches the reviewed descriptor
         run: |
           node -e "
             const fs = require('node:fs'), crypto = require('node:crypto');
-            const d = JSON.parse(fs.readFileSync('artifacts/content-artifact.json', 'utf8'));
+            const path = require('node:path');
+            const d = JSON.parse(fs.readFileSync(
+              path.join(process.env.RUNNER_TEMP, 'reviewed-content-artifact.json'), 'utf8'));
             const bytes = fs.readFileSync('pipeline/output/content.db');
             const sha = crypto.createHash('sha256').update(bytes).digest('hex');
             const ok = sha === d.databaseSha256;
@@ -81,6 +92,7 @@ jobs:
               process.exit(1);
             }
           "
+          git checkout -- artifacts/content-artifact.json
 
       # A tarball, not a registry publish. An npm scope has to be a registered
       # npm account, which is separate from the GitHub owner and may not exist

@@ -10,7 +10,8 @@
   "workspaces": [
     "engine",
     "pipeline",
-    "eval"
+    "eval",
+    "workbench"
   ],
   "scripts": {
     "typecheck": "npm run typecheck --workspaces --if-present",
