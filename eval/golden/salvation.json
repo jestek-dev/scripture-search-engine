@@ -1,0 +1,29 @@
+{
+  "id": "salvation",
+  "query": "how can i be saved",
+  "status": "pending",
+  "note": [
+    "Torrey/Miller topical admission (2026-08-06): first-batch concept 'salvation'.",
+    "Written BEFORE the concept pack, per the fixtures-first rule. Requires",
+    "concept_anchor evidence so a lexical hit cannot pass as understanding -",
+    "the right passage for the wrong reason is still a failure.",
+    "The jailer's literal question and its literal answer (Acts 16:30-31)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 16:30-31",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "Romans 10:9",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 4:12",
+    "Romans 1:16",
+    "Titus 2:11",
+    "John 3:16"
+  ]
+}

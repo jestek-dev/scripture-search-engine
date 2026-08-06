@@ -1,0 +1,28 @@
+{
+  "id": "peace-of-god",
+  "query": "peace that passes understanding",
+  "status": "pending",
+  "note": [
+    "Torrey/Miller topical admission (2026-08-06): first-batch concept 'peace-of-god'.",
+    "Written BEFORE the concept pack, per the fixtures-first rule. Requires",
+    "concept_anchor evidence so a lexical hit cannot pass as understanding -",
+    "the right passage for the wrong reason is still a failure.",
+    "The peace of God that surpasses all understanding; peace I leave with you."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 4:6-7",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "John 14:27",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 26:3",
+    "John 16:33",
+    "1 Peter 5:7"
+  ]
+}

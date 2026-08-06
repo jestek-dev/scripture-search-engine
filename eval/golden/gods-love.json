@@ -1,0 +1,29 @@
+{
+  "id": "gods-love",
+  "query": "god loves us",
+  "status": "pending",
+  "note": [
+    "Torrey/Miller topical admission (2026-08-06): first-batch concept 'gods-love'.",
+    "Written BEFORE the concept pack, per the fixtures-first rule. Requires",
+    "concept_anchor evidence so a lexical hit cannot pass as understanding -",
+    "the right passage for the wrong reason is still a failure.",
+    "God so loved the world; nothing can separate us from the love of God."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 3:16",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "Romans 8:38-39",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 5:8",
+    "1 John 4:9-10",
+    "Jeremiah 31:3",
+    "1 John 3:1"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "joy-in-the-lord",
+  "query": "joy of the lord",
+  "status": "pending",
+  "note": [
+    "Torrey/Miller topical admission (2026-08-06): first-batch concept 'joy-in-the-lord'.",
+    "Written BEFORE the concept pack, per the fixtures-first rule. Requires",
+    "concept_anchor evidence so a lexical hit cannot pass as understanding -",
+    "the right passage for the wrong reason is still a failure.",
+    "The joy of the LORD is your strength (Nehemiah 8:10)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Nehemiah 8:10",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Philippians 4:4",
+    "Psalms 16:11",
+    "Psalms 30:5",
+    "John 15:11"
+  ]
+}

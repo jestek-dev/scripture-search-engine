@@ -1,0 +1,26 @@
+{
+  "id": "loving-others",
+  "query": "love one another",
+  "status": "pending",
+  "note": [
+    "Torrey/Miller topical admission (2026-08-06): first-batch concept 'loving-others'.",
+    "Written BEFORE the concept pack, per the fixtures-first rule. Requires",
+    "concept_anchor evidence so a lexical hit cannot pass as understanding -",
+    "the right passage for the wrong reason is still a failure.",
+    "The new commandment (John 13:34-35); love described (1 Corinthians 13)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 13:34-35",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 13:4-8",
+    "Romans 13:8-10",
+    "1 John 4:11",
+    "1 John 3:18",
+    "1 Peter 4:8"
+  ]
+}

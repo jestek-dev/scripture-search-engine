@@ -1,0 +1,25 @@
+{
+  "id": "trust-in-god",
+  "query": "trust in the lord",
+  "status": "pending",
+  "note": [
+    "Torrey/Miller topical admission (2026-08-06): first-batch concept 'trust-in-god'.",
+    "Written BEFORE the concept pack, per the fixtures-first rule. Requires",
+    "concept_anchor evidence so a lexical hit cannot pass as understanding -",
+    "the right passage for the wrong reason is still a failure.",
+    "Trust in the LORD with all your heart (Proverbs 3:5-6). Miller's TRUST heading is unverified against Torrey; Torrey support here comes from the verified WAITING UPON GOD outline instead."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Proverbs 3:5-6",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 37:5",
+    "Isaiah 40:31",
+    "Psalms 27:14",
+    "Psalms 62:5"
+  ]
+}
