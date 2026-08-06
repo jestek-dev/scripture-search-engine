@@ -16,6 +16,17 @@ anchors:
   - ref: 1 John 4:18
     sources: [editorial]
     weight: 0.8
+  # Torrey/Miller admission 2026-08-06 — supporting anchors from the verified
+  # outline(s): BOLDNESS, HOLY; FEAR, UNHOLY; PROTECTION.
+  - ref: Isaiah 41:10
+    sources: [torrey]
+    weight: 0.8
+  - ref: Psalms 27:1
+    sources: [torrey]
+    weight: 0.75
+  - ref: Hebrews 13:6
+    sources: [torrey]
+    weight: 0.7
 openbibleTopics:
   - fear
 related:

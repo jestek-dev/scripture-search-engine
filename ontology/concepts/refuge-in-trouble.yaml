@@ -19,6 +19,20 @@ anchors:
   - ref: Psalms 121:1-8
     sources: [editorial]
     weight: 0.7
+  # Torrey/Miller admission 2026-08-06 — supporting anchors from the verified
+  # outline(s): AFFLICTED, SAINTS; PROTECTION.
+  - ref: Nahum 1:7
+    sources: [torrey]
+    weight: 0.8
+  - ref: Psalms 9:9
+    sources: [torrey]
+    weight: 0.75
+  - ref: Psalms 34:19
+    sources: [torrey]
+    weight: 0.7
+  - ref: Deuteronomy 33:27
+    sources: [torrey]
+    weight: 0.7
 openbibleTopics:
   - refuge
 related:

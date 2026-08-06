@@ -1,0 +1,36 @@
+id: peace-of-god
+label: Peace of God
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): CARE, OVERMUCH; PEACE, SPIRITUAL. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - peace of god
+  - peace that passes understanding
+  - perfect peace
+  - do not be anxious
+  - peace i leave with you
+anchors:
+  - ref: Philippians 4:6-7
+    sources: [editorial]
+    weight: 1.0
+  - ref: John 14:27
+    sources: [editorial]
+    weight: 0.95
+  - ref: Isaiah 26:3
+    sources: [editorial]
+    weight: 0.9
+  - ref: John 16:33
+    sources: [torrey]
+    weight: 0.8
+  - ref: 1 Peter 5:7
+    sources: [torrey]
+    weight: 0.75
+  - ref: Matthew 6:25-27
+    sources: [torrey]
+    weight: 0.7
+  - ref: Romans 5:1
+    sources: [torrey]
+    weight: 0.6
+related:
+  - trust-in-god
+  - fear-not

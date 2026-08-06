@@ -1,0 +1,32 @@
+id: surrender-to-god
+label: Surrender
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): DEVOTEDNESS TO GOD; RESIGNATION; SELF-DENIAL. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - surrender to god
+  - all to jesus i surrender
+  - take up your cross
+  - living sacrifice
+  - deny yourself
+anchors:
+  - ref: Romans 12:1
+    sources: [editorial]
+    weight: 1.0
+  - ref: Luke 9:23
+    sources: [editorial]
+    weight: 0.95
+  - ref: Luke 22:42
+    sources: [editorial]
+    weight: 0.9
+  - ref: Matthew 16:24
+    sources: [torrey]
+    weight: 0.8
+  - ref: 1 Corinthians 6:19-20
+    sources: [torrey]
+    weight: 0.75
+  - ref: Job 1:21
+    sources: [torrey]
+    weight: 0.6
+related:
+  - obedience-to-the-word

@@ -1,0 +1,36 @@
+id: repentance
+label: Repentance
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): CONFESSION OF SIN; REPENTANCE. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - repent and turn to god
+  - turn from sin
+  - godly sorrow
+  - return to the lord
+  - change your heart
+anchors:
+  - ref: Acts 3:19
+    sources: [editorial]
+    weight: 1.0
+  - ref: 1 John 1:9
+    sources: [editorial]
+    weight: 0.95
+  - ref: Acts 17:30
+    sources: [torrey]
+    weight: 0.8
+  - ref: Luke 15:7
+    sources: [torrey]
+    weight: 0.75
+  - ref: 2 Corinthians 7:10
+    sources: [torrey]
+    weight: 0.75
+  - ref: Proverbs 28:13
+    sources: [torrey]
+    weight: 0.7
+  - ref: Ezekiel 18:30-32
+    sources: [torrey]
+    weight: 0.65
+related:
+  - forgiveness-of-sins
+  - salvation

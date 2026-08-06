@@ -1,0 +1,32 @@
+id: holiness
+label: Called to be holy
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): HOLINESS; SANCTIFICATION. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - be holy
+  - set apart
+  - pursue holiness
+  - sanctified
+  - clean hands and a pure heart
+anchors:
+  - ref: 1 Peter 1:15-16
+    sources: [editorial]
+    weight: 1.0
+  - ref: Hebrews 12:14
+    sources: [editorial]
+    weight: 0.95
+  - ref: Psalms 24:3-4
+    sources: [editorial]
+    weight: 0.9
+  - ref: 2 Corinthians 7:1
+    sources: [torrey]
+    weight: 0.75
+  - ref: 1 Thessalonians 4:7
+    sources: [torrey]
+    weight: 0.75
+  - ref: 1 Thessalonians 5:23
+    sources: [torrey]
+    weight: 0.7
+related:
+  - walking-in-the-light

@@ -1,0 +1,39 @@
+id: forgiveness-of-sins
+label: "God's forgiveness"
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): PARDON. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - god forgives
+  - forgiveness of sins
+  - washed clean
+  - as far as the east is from the west
+  - white as snow
+anchors:
+  - ref: Psalms 103:12
+    sources: [editorial]
+    weight: 1.0
+  - ref: Isaiah 1:18
+    sources: [editorial]
+    weight: 0.95
+  - ref: 1 John 1:9
+    sources: [editorial]
+    weight: 0.9
+  - ref: Isaiah 43:25
+    sources: [torrey]
+    weight: 0.8
+  - ref: Isaiah 55:7
+    sources: [torrey]
+    weight: 0.75
+  - ref: Micah 7:18
+    sources: [torrey]
+    weight: 0.75
+  - ref: Ephesians 1:7
+    sources: [torrey]
+    weight: 0.7
+  - ref: Acts 13:38-39
+    sources: [torrey]
+    weight: 0.65
+related:
+  - repentance
+  - forgiving-others

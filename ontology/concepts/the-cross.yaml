@@ -1,0 +1,44 @@
+id: the-cross
+label: The cross and atonement
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): ATONEMENT, THE; REDEMPTION. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - jesus died for our sins
+  - the blood of jesus
+  - the lamb of god
+  - by his wounds we are healed
+  - christ died for us
+  - atonement
+anchors:
+  - ref: Isaiah 53:5
+    sources: [editorial]
+    weight: 1.0
+  - ref: 1 Peter 2:24
+    sources: [editorial]
+    weight: 0.95
+  - ref: Romans 5:8
+    sources: [editorial]
+    weight: 0.9
+  - ref: 1 Corinthians 15:3
+    sources: [editorial]
+    weight: 0.85
+  - ref: John 1:29
+    sources: [torrey]
+    weight: 0.8
+  - ref: 1 John 2:2
+    sources: [torrey]
+    weight: 0.75
+  - ref: 2 Corinthians 5:21
+    sources: [torrey]
+    weight: 0.75
+  - ref: Galatians 3:13
+    sources: [torrey]
+    weight: 0.7
+  - ref: 1 Peter 1:18-19
+    sources: [torrey]
+    weight: 0.7
+related:
+  - salvation
+  - resurrection
+  - gods-love

@@ -1,0 +1,32 @@
+id: resurrection
+label: He is risen
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): RESURRECTION OF CHRIST, THE. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - he is risen
+  - the resurrection of jesus
+  - the empty tomb
+  - raised from the dead
+  - i am the resurrection and the life
+anchors:
+  - ref: Luke 24:5-6
+    sources: [editorial]
+    weight: 1.0
+  - ref: Matthew 28:5-6
+    sources: [editorial]
+    weight: 0.95
+  - ref: 1 Corinthians 15:4
+    sources: [torrey]
+    weight: 0.8
+  - ref: 1 Corinthians 15:20
+    sources: [torrey]
+    weight: 0.75
+  - ref: Acts 2:24
+    sources: [torrey]
+    weight: 0.7
+  - ref: Romans 1:4
+    sources: [torrey]
+    weight: 0.7
+related:
+  - the-cross

@@ -1,0 +1,39 @@
+id: gods-love
+label: The love of God
+# Torrey/Miller admission 2026-08-06. Torrey anchors drawn from the verified
+# outline(s): LOVE OF CHRIST, THE; LOVE OF GOD, THE. Lexicon is modern
+# editorial phrasing; Torrey headings are provenance, not query language.
+lexicon:
+  - god loves you
+  - god so loved the world
+  - unfailing love
+  - steadfast love of the lord
+  - nothing can separate us from the love of god
+anchors:
+  - ref: John 3:16
+    sources: [editorial]
+    weight: 1.0
+  - ref: Romans 8:38-39
+    sources: [editorial]
+    weight: 0.95
+  - ref: Romans 5:8
+    sources: [editorial]
+    weight: 0.9
+  - ref: 1 John 4:9-10
+    sources: [torrey]
+    weight: 0.8
+  - ref: Jeremiah 31:3
+    sources: [torrey]
+    weight: 0.75
+  - ref: 1 John 3:1
+    sources: [torrey]
+    weight: 0.75
+  - ref: John 15:13
+    sources: [torrey]
+    weight: 0.7
+  - ref: Ephesians 3:19
+    sources: [torrey]
+    weight: 0.65
+related:
+  - loving-others
+  - the-cross

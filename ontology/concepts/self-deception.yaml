@@ -15,5 +15,13 @@ anchors:
   - ref: 1 John 1:8
     sources: [editorial]
     weight: 0.8
+  # Torrey/Miller admission 2026-08-06 — supporting anchors from the verified
+  # outline(s): SELF-DELUSION.
+  - ref: Revelation 3:17
+    sources: [torrey]
+    weight: 0.8
+  - ref: Luke 18:11
+    sources: [torrey]
+    weight: 0.7
 related:
   - obedience-to-the-word
