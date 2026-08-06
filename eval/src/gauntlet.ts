@@ -144,6 +144,12 @@ const SOURCE_FAMILY: Readonly<Record<string, string>> = {
   'openbible-xrefs': 'cross_reference',
   tsk: 'cross_reference',
   'sermon-co-citations': 'co_citation',
+  // Topical anchors land in the concept_anchor family. Mapping both members
+  // of the nave+torrey lineage group means G7 actually inspects that group's
+  // family membership instead of skipping it as unmapped — an unmapped source
+  // in a lineage group is a vacuous pass wearing a green checkmark.
+  torrey: 'concept_anchor',
+  nave: 'concept_anchor',
 };
 
 function correlationGate(): GateResult {
