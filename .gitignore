@@ -24,3 +24,6 @@ eval/.runs/
 pipeline/sources/vpl/
 pipeline/sources/clarke/
 pipeline/sources/kjv/
+
+# macOS Finder metadata
+.DS_Store
