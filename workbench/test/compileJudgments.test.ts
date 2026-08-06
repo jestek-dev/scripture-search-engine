@@ -42,7 +42,8 @@ function judgment(partial: Partial<JudgmentRecord> & Pick<JudgmentRecord, 'at' |
 
 // A synthetic log covering every routing-table row (§5): superseded ✗, plain
 // ✓ (log-only), anchor-affecting ✗, lexical-noise ✗ without note, missing,
-// pinned ✓ with reasonFamily — plus a second query judged under stale layers.
+// pinned ✓ with reasonFamily — plus a second query judged under stale layers
+// and a note-less missing defended by its server-attached excerpt (§4 v1.1).
 const LOG: JudgmentRecord[] = [
   judgment({
     at: '2026-08-01T10:00:00.000Z',
@@ -97,6 +98,13 @@ const LOG: JudgmentRecord[] = [
     conceptId: 'refuge-in-trouble',
     note: 'Not about refuge; the concept lexicon over-matches here.',
     layerFingerprint: 'layer-old', // judged under layers that no longer exist
+  }),
+  judgment({
+    at: '2026-08-02T09:01:00.000Z',
+    query: 'shelter in the storm',
+    verdict: 'missing',
+    reference: 'Psalms 46:1', // no note: the server-attached excerpt defends it
+    excerpt: 'God is our refuge and strength, a very present help in trouble.',
   }),
 ];
 
@@ -158,16 +166,18 @@ describe('compile-judgments — routing (§5)', () => {
       { reference: 'James 1:22', requiredReasonFamily: 'concept_anchor' },
       { reference: 'James 2:14-26' },
     ]);
-    // ✗ routes to mustNotRank; why is the note, or the cause when a
-    // lexical-noise ✗ carries no note. The superseded ✗ on James 1:22 is gone.
+    // ✗ routes to mustNotRank; why is the note, or the plain-language
+    // fallback when a lexical-noise ✗ carries no note (never the jargon
+    // token). The superseded ✗ on James 1:22 is gone.
     expect(fixture.mustNotRank).toEqual([
       { reference: 'Genesis 5:1', why: 'Genealogy; no thematic relation to hearing or doing.' },
-      { reference: 'Psalms 46:1', why: 'lexical-noise' },
+      { reference: 'Psalms 46:1', why: 'matched words, not meaning; judged not a fit for this query' },
     ]);
 
     const shelter = await readGolden('shelter-in-the-storm');
     expect(shelter.status).toBe('pending');
-    expect(shelter.expectedTop).toEqual([]);
+    // The excerpt-backed missing judgment pins the reference like any other.
+    expect(shelter.expectedTop).toEqual([{ reference: 'Psalms 46:1' }]);
     expect(shelter.mustNotRank).toEqual([
       { reference: 'John 3:16', why: 'Not about refuge; the concept lexicon over-matches here.' },
     ]);
@@ -213,6 +223,9 @@ describe('compile-judgments — routing (§5)', () => {
         'is dead — the doing of the word.',
       '[ ] concept-misfire: concept refuge-in-trouble produced bad evidence on John 3:16 ' +
         'for "shelter in the storm" — Not about refuge; the concept lexicon over-matches here.',
+      // A note-less missing judgment defends itself with the attached text.
+      '[ ] missing: "shelter in the storm" should surface Psalms 46:1 — ' +
+        'text: "God is our refuge and strength, a very present help in trouble."',
     ]);
     expect(outcome.report).toContain('concept-curation');
     // The standing closer: the compiler's job ends at the working tree.

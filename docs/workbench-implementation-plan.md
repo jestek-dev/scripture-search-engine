@@ -193,9 +193,11 @@ Record schema, field by field:
 | `reference` | `missing` | Human-typed reference for the passage that should have surfaced. Validated server-side via `engine.passage(reference)`, which types invalid references rather than throwing (`PassageResult`, `engine/src/types.ts:96-98`); a `kind: 'invalid-reference'` result rejects the judgment. |
 | `pin` | optional, `fits` only | `true` marks this ✓ for compilation into `expectedTop` (see §5). Plain ✓ without `pin` stays log-only. |
 | `reasonFamily` | optional, with `pin` | The reason family the reviewer verified (e.g. `concept_anchor`); compiled into `requiredReasonFamily` so the fixture asserts the *evidence*, not just the position. |
-| `cause` | `doesnt-fit` | `wrong-anchor` \| `concept-misfire` \| `lexical-noise`. |
-| `conceptId` | `cause` is `wrong-anchor` or `concept-misfire` | Which concept produced the bad evidence. |
-| `note` | `missing`, and every anchor-affecting ✗ (`wrong-anchor`, `concept-misfire`) | The defend-it-from-the-text rule: a judgment that implies ontology work must say *why* from the text itself. No bare clicks. |
+| `cause` | `doesnt-fit` | `wrong-anchor` \| `concept-misfire` \| `lexical-noise`. Since v1.1 these terms never appear in the UI (see §4.1); the value is still always one of the three. |
+| `causeInferred` | optional, `doesnt-fit` only | `true` when the workbench classified the cause instead of the reviewer (v1.1). Transparency only — the compiler routes inferred and hand-judged causes identically. |
+| `conceptId` | `cause` is `wrong-anchor` or `concept-misfire` | Which concept produced the bad evidence. Since v1.1 the UI wires this from the result's own concept evidence rather than asking the reviewer for an id. |
+| `note` | every anchor-affecting ✗ (`wrong-anchor`, `concept-misfire`); `missing` only when no excerpt can attach | The defend-it-from-the-text rule: a judgment that changes reviewed theology files must say *why* from the text itself — six months later "why did we remove that anchor" must have an answer. For `missing`, the passage's own text satisfies the rule (see `excerpt`), so a hand-written note is optional. |
+| `excerpt` | server-attached, `missing` without `note` | The passage text, fetched by the server while validating the reference (v1.1). This is the defense when no note was written; the compiler's checklist falls back to it. |
 | `engineVersion`, `corpusFingerprint`, `layerFingerprint` | always | Stamped by the **server** from the running engine, never from the client. A judgment is only meaningful against the identities it was made under. |
 
 The server rejects malformed records with 400 and an explanation; the UI
@@ -207,6 +209,36 @@ The log is append-only. Corrections are new lines (a later judgment on the
 same `query` + target supersedes an earlier one at compile time, by `at`
 order); editing or deleting lines is off-limits — history is part of the
 record.
+
+### 4.1 v1.1 — plain-language judgments (2026-08-06)
+
+The first real judging session showed two things: the required "why" on
+`missing` entries was capturing nothing ("it fits the theme", typed over and
+over), and the three cause terms are engine vocabulary a reviewer cannot be
+asked to choose between. v1.1 changes the *interview*, not the schema — the
+same three causes land in the log, and the compiler's routing is unchanged.
+
+- **✗ is worded as what it does.** The button reads "✗ shouldn't be up
+  here", because that is exactly what it compiles to: a `mustNotRank` entry —
+  demoted out of the top results *for this query*. The verse stays in the
+  corpus and every other search. There is deliberately **no** per-result
+  downweight or "weak link" knob: that would be a second, hidden ranking
+  system outside the fingerprinted layers (§0; CLAUDE.md non-negotiables 2
+  and 6).
+- **The cause is detected, not picked.** A result with no concept evidence
+  (no `concept_anchor` / `concept_lexicon` reason) can only be word-match
+  noise, so one click records `lexical-noise` with `causeInferred: true` and
+  no questions. When concept evidence exists, the UI asks plain yes/no
+  questions built from the result's own evidence — "Does '[concept]' fit
+  this verse?" (No → `wrong-anchor`), then "Should '[query]' have brought up
+  '[concept]' at all?" (No → `concept-misfire`) — and wires the `conceptId`
+  from the evidence. Both anchor-affecting causes still require the note:
+  those judgments change reviewed theology files.
+- **The missing "why" pre-fills from the verse itself.** The server resolves
+  the reference through `engine.passage()` anyway; now it returns the text
+  (`GET /api/passage?ref=`), the UI pre-fills the note with it, and if the
+  note is left empty the server stores the passage `excerpt` on the record.
+  The defend-it-from-the-text rule is satisfied by the text.
 
 ## 5. Stage 3 — fixture compiler (`npm run compile-judgments --workspace workbench`)
 
