@@ -255,6 +255,31 @@ recommendation: give it to `gods-love` (John 3:16, Rom 8:38-39 are what a
 one-word query almost always wants) and leave `loving-others` reachable by
 "love one another" and "love your neighbor".
 
+### 2.11 Corroboration is tighter than feared — measured, not assumed
+
+The audit worried that span projection dilutes corroboration: a term from
+Matthew Henry's six-verse essay "corroborates" Clarke's verse-specific note
+anywhere inside that essay's range, so "two authors agree about this verse"
+could mean "two authors wrote overlapping essays containing the same word".
+
+`npm run report:span-softness` measures the distribution rather than guessing.
+On the fixture distillate (32,684 admitted terms):
+
+| | share |
+|---|---|
+| attested by at least one **one-verse** note | **71.7%** |
+| resting **only** on sections wider than 12 verses | **1.5%** |
+
+So the concern is real but small. The soft spots are specific and explainable:
+**Genesis** (12.7% diffuse, mean span 4.0) and **Ezekiel** (median span 7) are
+books commentators treat in long units; Isaiah, Galatians and Matthew are
+essentially all verse-tight.
+
+**No admission rule changed on this number**, deliberately — measure first. If
+you ever want to tighten (e.g. require at least one attesting span under ~12
+verses), this report is the baseline to argue from, and it says the cost would
+be about 1.5% of terms.
+
 ### 1.8 The OpenBible snapshots have no durable copy — mechanism is in, the upload is yours
 
 §2.5 recorded that `a.openbible.info` rolls its files weekly with no archive,
