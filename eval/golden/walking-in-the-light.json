@@ -1,0 +1,30 @@
+{
+  "id": "walking-in-the-light",
+  "query": "walking in the light",
+  "status": "active",
+  "coversConcepts": [
+    "walking-in-the-light"
+  ],
+  "note": [
+    "Founding concept 'walking-in-the-light'.",
+    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own — the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
+    "Scoped to the ETHICAL sense per Jesse's 2026-07-29 correction, which removed the cosmological John 1:4-9 anchor. mustNotRank encodes that decision so a future edit cannot quietly re-broaden the concept without a red gate."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 John 1:5-7",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ephesians 5:8",
+    "1 John 2:6"
+  ],
+  "mustNotRank": [
+    {
+      "reference": "John 1:4-9",
+      "why": "The cosmological light of the prologue is a different idea wearing the same vocabulary. Jesse removed this anchor deliberately on 2026-07-29; if it ranks again the concept has re-broadened."
+    }
+  ]
+}

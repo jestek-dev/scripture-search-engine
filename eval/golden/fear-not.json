@@ -1,0 +1,27 @@
+{
+  "id": "fear-not",
+  "query": "do not be afraid",
+  "status": "active",
+  "coversConcepts": [
+    "fear-not"
+  ],
+  "note": [
+    "Founding concept 'fear-not'.",
+    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own — the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
+    "Also probed by G8 as 'medium-fear-not'; the probe watches for churn, this fixture asserts the passages and their reason family. The two are complementary, not redundant."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 43:1-3",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Joshua 1:9",
+    "1 John 4:18",
+    "Isaiah 41:10",
+    "Psalms 27:1",
+    "Hebrews 13:6"
+  ]
+}

@@ -22,7 +22,11 @@ import { createEngine } from '@jestek-dev/scripture-engine';
 
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import { collisionGate, type ConceptRecord } from './gates/collision.js';
-import { corpusGoldenGate, type CorpusFixture } from './gates/corpusGolden.js';
+import {
+  conceptCoverageGate,
+  corpusGoldenGate,
+  type CorpusFixture,
+} from './gates/corpusGolden.js';
 import {
   distinctivenessGate,
   saturationGate,
@@ -514,6 +518,10 @@ async function main(): Promise<void> {
     determinismGate(fixtures),
     goldenGate(fixtures),
     probeGates[2]!,
+    conceptCoverageGate(
+      concepts.map((concept) => concept.id),
+      fixtures as unknown as CorpusFixture[],
+    ),
     fileCount === 0
       ? notApplicable(
           'G4-collision',

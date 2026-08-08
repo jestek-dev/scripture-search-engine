@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { collisionGate, type ConceptRecord } from '../src/gates/collision.js';
+import { conceptCoverageGate, type CorpusFixture } from '../src/gates/corpusGolden.js';
 import { determinismGate, goldenGate, type GoldenFixture } from '../src/gates/golden.js';
 import { buildReport, decideVerdict } from '../src/report.js';
 import { fail, pass, notApplicable } from '../src/gates/types.js';
@@ -160,5 +161,58 @@ describe('Admission Report', () => {
     });
     expect(report.markdown).toContain('Not yet running');
     expect(report.markdown).toContain('G8-noise-probes');
+  });
+});
+
+describe('G3 concept fixture coverage', () => {
+  const fixture = (
+    id: string,
+    overrides: Partial<CorpusFixture> = {},
+  ): CorpusFixture => ({ id, status: 'active', query: `query for ${id}`, ...overrides });
+
+  it('fails when a concept has no fixture at all', () => {
+    const result = conceptCoverageGate(['worship', 'praise'], [fixture('worship')]);
+    expect(result.status).toBe('fail');
+    expect(result.findings?.[0]?.subjects).toEqual(['praise']);
+  });
+
+  it('names every uncovered concept at once rather than the first', () => {
+    const result = conceptCoverageGate(['a', 'b', 'c'], [fixture('b')]);
+    expect(result.status).toBe('fail');
+    expect(result.findings?.map((finding) => finding.subjects?.[0])).toEqual(['a', 'c']);
+  });
+
+  it('accepts coverage declared through coversConcepts under a different name', () => {
+    const result = conceptCoverageGate(
+      ['obedience-to-the-word'],
+      [fixture('hearing-and-doing', { coversConcepts: ['obedience-to-the-word'] })],
+    );
+    expect(result.status).toBe('pass');
+  });
+
+  it('does not count a PENDING fixture as coverage', () => {
+    // A pending fixture cannot fail, so treating it as coverage would let a
+    // concept ship measured by a test that never grades it.
+    const result = conceptCoverageGate(['worship'], [fixture('worship', { status: 'pending' })]);
+    expect(result.status).toBe('fail');
+  });
+
+  it('does not count a fixture with no query as coverage', () => {
+    const result = conceptCoverageGate(['worship'], [fixture('worship', { query: undefined })]);
+    expect(result.status).toBe('fail');
+  });
+
+  it('reports a fixture claiming a concept that no longer exists', () => {
+    const result = conceptCoverageGate(
+      ['worship'],
+      [fixture('worship'), fixture('old', { coversConcepts: ['renamed-away'] })],
+    );
+    expect(result.status).toBe('fail');
+    expect(result.summary).toContain('do not exist');
+  });
+
+  it('is not-applicable rather than passing when no concepts exist', () => {
+    // An unrun check must never look like a passing one.
+    expect(conceptCoverageGate([], []).status).toBe('not-applicable');
   });
 });

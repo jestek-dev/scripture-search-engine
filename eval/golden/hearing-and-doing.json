@@ -2,6 +2,7 @@
   "id": "hearing-and-doing",
   "query": "hearing and doing",
   "status": "active",
+  "coversConcepts": ["obedience-to-the-word"],
   "note": [
     "FIXTURE #1 — the case that motivated this engine. On the prior system this",
     "query matched only the literal words and could not deduce that the theme",

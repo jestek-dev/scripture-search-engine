@@ -52,6 +52,18 @@ sources: [nave, torrey, openbible-topics]   # every source cited above
 4. **New concepts ship with golden fixtures** (G3). A pack with no fixtures is
    rejected structurally — otherwise nothing measures whether it helped.
 
+   Enforced since 2026-08-08, having been prose-only until then (eight founding
+   concepts had shipped without one). A concept is covered when an **active**
+   fixture is named after it, or names it in `coversConcepts`:
+
+   ```json
+   { "id": "hearing-and-doing", "coversConcepts": ["obedience-to-the-word"] }
+   ```
+
+   Pending fixtures do not count. A pending fixture states an intention and
+   cannot fail, so counting it would let a concept ship measured by a test that
+   never grades it.
+
 ## Provenance classes and the theology line
 
 `sources: [editorial]` marks an entry as **LH's own theological judgment**
