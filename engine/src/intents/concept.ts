@@ -153,10 +153,30 @@ function sourceLabel(sourceId: string): string {
       return 'OpenBible topical votes (CC BY)';
     case 'openbible-xrefs':
       return 'OpenBible cross-references (CC BY)';
+    case 'tsk':
+      return 'Treasury of Scripture Knowledge (public domain)';
+    case 'web':
+      return 'World English Bible (public domain)';
+    case 'torrey':
+      return 'Torrey, New Topical Textbook (public domain)';
+    case 'nave':
+      return "Nave's Topical Bible (public domain)";
     case 'maclaren-psalms':
+    case 'maclaren-mark':
       return 'Maclaren, Expositions (public domain)';
+    case 'clarke':
+      return 'Adam Clarke, Commentary (public domain)';
+    case 'mhc':
+      return 'Matthew Henry, Commentary (public domain)';
+    case 'kd':
+      return 'Keil & Delitzsch, OT Commentary (public domain)';
+    case 'barnes':
+      return 'Barnes, Notes on the New Testament (public domain)';
+    case 'jfb':
+      return 'Jamieson-Fausset-Brown, Commentary (public domain)';
     case 'treasury-of-david-01':
     case 'treasury-of-david-02':
+    case 'treasury-of-david-03':
     case 'treasury-of-david-04':
     case 'treasury-of-david-06':
       return 'Spurgeon, Treasury of David (public domain)';

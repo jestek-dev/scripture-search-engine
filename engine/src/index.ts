@@ -30,6 +30,8 @@ export {
   tokenEvidence,
 } from './intents/lexical.js';
 
+export { sourceLabel } from './intents/concept.js';
+
 export {
   normalizeToken,
   significantWords,
