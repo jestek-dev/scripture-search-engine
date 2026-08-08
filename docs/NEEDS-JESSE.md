@@ -280,6 +280,41 @@ you ever want to tighten (e.g. require at least one attesting span under ~12
 verses), this report is the baseline to argue from, and it says the cost would
 be about 1.5% of terms.
 
+### 1.11 Two audit items are BLOCKED on source access, not on effort
+
+Both need the exposition corpora, which are gitignored downloads, and this
+environment cannot reach the source hosts (the agent proxy returns 403 for
+`a.openbible.info` and `gutenberg.org`). Each is built as far as it can be and
+then stops honestly rather than producing a plausible number.
+
+**a) The `minPmi` sweep (§2.3's "still a guess").** The tool is written and
+wired: `npm run sweep:minpmi --workspace pipeline [-- --values 1.5,2,2.5]`. It
+rebuilds the distillate at each floor and prints, per value, how many terms are
+admitted and — more usefully — *the weakest terms each floor lets in*, because
+counts cannot tell you whether the marginal terms are theology or noise.
+
+It deliberately **refuses to fall back to the committed distillate.** That
+subset was already filtered at 2.0, so sweeping it would grade the threshold
+using data the threshold itself created, and every candidate value would look
+equally fine — a measurement that cannot fail is not a measurement.
+
+To run: `npm run fetch:sources --workspace pipeline` then the sweep. It is a
+few minutes of compute and it closes an open item that has been flagged as
+unvalidated since Phase 3.
+
+**b) Maclaren on St. Mark (closing the last coverage gap).** Mark sits at 86%,
+the worst-covered book, because commentators habitually treat it by referring
+back to Matthew. Maclaren's *Expositions* volume on St. Mark is on Project
+Gutenberg (ebook 8071), it is proofread, and both the `citation-suffix` parser
+and his `authorId` already exist — so admitting it is a manifest plus one
+registry line, no new code. The author bitmask is at 7 of 31, so there is room.
+
+I could not download it to measure the effect, and this repo does not admit
+sources on the argument that they *ought* to help. Per its own rule, run the
+gauntlet: merge on a measured improvement, and if the Admission Report says
+`NO MEASURABLE EFFECT`, do not. Fallback candidate if Maclaren disappoints:
+Ryle's *Expository Thoughts on the Gospels* (public domain).
+
 ### 1.8 The OpenBible snapshots have no durable copy — mechanism is in, the upload is yours
 
 §2.5 recorded that `a.openbible.info` rolls its files weekly with no archive,
