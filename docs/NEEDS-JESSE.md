@@ -12,8 +12,8 @@ started.
 
 ## 0. What I need from you, shortest path first
 
-Five things. The first two are decisions only you can make; the rest are
-reviews of numbers I had to pick to keep moving.
+Seven things. The first is a review; the rest are errands and numbers I had
+to pick to keep moving. The "love" decision is closed — see §1.12.
 
 1. **Review the `remembered-phrasings` pack — and note the plan changed.** §1.6a,
    and the measurement in `docs/research/2026-08-08-remembered-phrasings.md`.
@@ -59,10 +59,10 @@ reviews of numbers I had to pick to keep moving.
    list.
 
 6. **Rebuild the release descriptor.** §1.9. It still describes an 8-concept
-   ontology; the tree now has 32, so `layerFingerprint` no longer identifies
+   ontology; the tree now has 34, so `layerFingerprint` no longer identifies
    what this code builds. One command on a machine that can reach the sources.
 
-8. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
+7. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
 Everything else in this document is context, not a request.
