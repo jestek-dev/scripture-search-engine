@@ -37,7 +37,7 @@ in the descriptor before opening it.
 
 | Layer | What it is | Ships? |
 |---|---|---|
-| **A — Concept ontology** | Curated concepts: modern labels, lexicons, scripture anchors, provenance. Seeded from Nave, Torrey, OpenBible topics. | Yes, ~MBs |
+| **A — Concept ontology** | Curated concepts: modern labels, lexicons, scripture anchors, provenance. Seeded from Torrey and OpenBible topics; Nave is declared lineage-only so shared 1897-era scholarship is never counted twice. | Yes, ~MBs |
 | **B — Homiletical evidence** | Per-**verse** distinctive term profiles, distilled offline from PD commentaries. A term is admitted only when 2+ independent expositors covering that verse used it — corroboration is what separates theology from one author's habits. | Distillate only — **source prose never ships and is never read at query time** |
 | **C — Runtime** | Intent ladder → candidates → deterministic ranking → typed reasons. Pure TS, zero I/O. | Yes, the published package |
 
@@ -131,15 +131,15 @@ Maskil, Setlist and Versed) is deliberately not started.
 | Layer | State |
 |---|---|
 | Lexical ladder | reference, verbatim phrase + longest-fragment fallback, IDF tokens with proximity, archaic/inflection folding |
-| Concept spine | 8 curated concepts, OpenBible topical votes, cross-reference expansion. Nave/Torrey researched, not yet imported |
-| Homiletical | Maclaren's *Expositions* + Spurgeon's *Treasury of David* (4 of 6 vols, 5,525 expositions) → verse-level corroborated term profiles. **15 verses have profiles** — the mechanism is proven, the coverage is small |
-| Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow, not yet run on a real gap |
-| Runtime API | `research()` only. `themes()` / `forSong()` are typed but unbuilt |
+| Concept spine | 32 curated concepts, OpenBible topical votes, cross-reference expansion. Torrey admitted 2026-08-06 (verified against three witnesses); Nave declared lineage-only so Torrey-derived evidence is never double-counted |
+| Homiletical | Seven expositors (Clarke, Henry, Keil & Delitzsch, Barnes, JFB whole-testament; Maclaren + Spurgeon on Psalms) → 877k verse-level corroborated terms covering 99.0% of the Bible |
+| Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow — plus the judgment workbench (`workbench/`). Neither yet run against a real coverage gap |
+| Runtime API | All five methods ship: `research()`, `themes()`, `passage()`, `related()`, `forSong()`, with consumer contract tests |
 
-**Golden fixture #1 is active and passing.** "hearing and doing" returns
-James 1:22, Matthew 7:24 and Luke 6:47 carrying `concept_anchor` evidence
-attributed to LH editorial — the right passages *for the right reason*, which
-is what the fixture actually asserts.
+**26 golden fixtures are active and passing.** The founding case still holds:
+"hearing and doing" returns James 1:22, Matthew 7:24 and Luke 6:47 carrying
+`concept_anchor` evidence attributed to LH editorial — the right passages
+*for the right reason*, which is what the fixture actually asserts.
 
 **The full artifact builds**: 31,098 verses, **117.60 MiB** against a 160 MiB
 budget, 341k cross-references, 877k corroborated terms, queries under 10 ms.
