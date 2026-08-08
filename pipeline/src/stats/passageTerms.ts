@@ -34,6 +34,8 @@
 
 import { significantWords, tokenStream } from '@jestek-dev/scripture-engine';
 
+import { isBlockedTerm } from './ocrBlocklist.js';
+
 export interface ExpositionDocument {
   /** The author's OWN span — never normalized to anyone else's chunking. */
   readonly startVerseId: number;
@@ -247,6 +249,10 @@ export function buildTermProfiles(
     const verseTerms = byVerse.get(verseId)!;
     const admitted: VerseTerm[] = [];
     for (const [term, accumulator] of verseTerms) {
+      // Reviewed scanning artifacts never enter a profile. Checked here rather
+      // than in the tokenizer because the tokenizer is shared with the runtime
+      // and must stay byte-identical on both sides; this is an ADMISSION rule.
+      if (isBlockedTerm(term)) continue;
       if (accumulator.count < options.minCount) continue;
       // Corroboration is measured in AUTHORS, not volumes or editions.
       if (popcount(accumulator.authorMask) < options.minSources) continue;

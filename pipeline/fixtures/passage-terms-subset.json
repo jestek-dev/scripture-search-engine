@@ -96,10 +96,11 @@
     "documents": 65468,
     "termsConsidered": 5806463,
     "termsAdmitted": 877490,
-    "termsInFixtureCorpus": 32684,
+    "termsInFixtureCorpus": 32632,
     "minSourcesRequired": 2,
     "multiSourceAttestedTerms": 877490,
-    "halfCorpusProfileDelta": 0.283283
+    "halfCorpusProfileDelta": 0.283283,
+    "ocrBlocklistRemoved": 52
   },
   "terms": [
     {
@@ -1634,7 +1635,7 @@
     },
     {
       "verseId": 1001006,
-      "term": "רקע",
+      "term": "\u05e8\u05e7\u05e2",
       "pmi": 14.193736,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -1644,7 +1645,7 @@
     },
     {
       "verseId": 1001006,
-      "term": "רקיע",
+      "term": "\u05e8\u05e7\u05d9\u05e2",
       "pmi": 13.193736,
       "count": 3,
       "sourceIds": "clarke+kd",
@@ -4494,7 +4495,7 @@
     },
     {
       "verseId": 1001014,
-      "term": "מועדים",
+      "term": "\u05de\u05d5\u05e2\u05d3\u05d9\u05dd",
       "pmi": 10.897459,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -7854,7 +7855,7 @@
     },
     {
       "verseId": 1001024,
-      "term": "רמש",
+      "term": "\u05e8\u05de\u05e9",
       "pmi": 11.969655,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -7884,7 +7885,7 @@
     },
     {
       "verseId": 1001024,
-      "term": "חיתו",
+      "term": "\u05d7\u05d9\u05ea\u05d5",
       "pmi": 11.043655,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -8574,7 +8575,7 @@
     },
     {
       "verseId": 1001026,
-      "term": "רמש",
+      "term": "\u05e8\u05de\u05e9",
       "pmi": 11.414527,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -8584,7 +8585,7 @@
     },
     {
       "verseId": 1001026,
-      "term": "חיתו",
+      "term": "\u05d7\u05d9\u05ea\u05d5",
       "pmi": 10.488528,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -8694,7 +8695,7 @@
     },
     {
       "verseId": 1001026,
-      "term": "אדם",
+      "term": "\u05d0\u05d3\u05dd",
       "pmi": 7.260722,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -10644,7 +10645,7 @@
     },
     {
       "verseId": 1002001,
-      "term": "צבא",
+      "term": "\u05e6\u05d1\u05d0",
       "pmi": 10.465369,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -11874,7 +11875,7 @@
     },
     {
       "verseId": 1002004,
-      "term": "יהוה",
+      "term": "\u05d9\u05d4\u05d5\u05d4",
       "pmi": 7.576474,
       "count": 13,
       "sourceIds": "clarke+kd",
@@ -12934,7 +12935,7 @@
     },
     {
       "verseId": 1002007,
-      "term": "עפר",
+      "term": "\u05e2\u05e4\u05e8",
       "pmi": 11.910154,
       "count": 3,
       "sourceIds": "clarke+kd",
@@ -12944,7 +12945,7 @@
     },
     {
       "verseId": 1002007,
-      "term": "חיים",
+      "term": "\u05d7\u05d9\u05d9\u05dd",
       "pmi": 11.758151,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -13344,7 +13345,7 @@
     },
     {
       "verseId": 1002008,
-      "term": "עדן",
+      "term": "\u05e2\u05d3\u05df",
       "pmi": 12.545628,
       "count": 3,
       "sourceIds": "clarke+kd",
@@ -16934,7 +16935,7 @@
     },
     {
       "verseId": 1002018,
-      "term": "כנגדו",
+      "term": "\u05db\u05e0\u05d2\u05d3\u05d5",
       "pmi": 15.915019,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -16944,7 +16945,7 @@
     },
     {
       "verseId": 1002018,
-      "term": "עזר",
+      "term": "\u05e2\u05d6\u05e8",
       "pmi": 12.593091,
       "count": 3,
       "sourceIds": "clarke+kd",
@@ -18104,7 +18105,7 @@
     },
     {
       "verseId": 1002021,
-      "term": "צלע",
+      "term": "\u05e6\u05dc\u05e2",
       "pmi": 13.732155,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -37714,7 +37715,7 @@
     },
     {
       "verseId": 1005029,
-      "term": "נוח",
+      "term": "\u05e0\u05d5\u05d7",
       "pmi": 13.867085,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -37724,7 +37725,7 @@
     },
     {
       "verseId": 1005029,
-      "term": "נחם",
+      "term": "\u05e0\u05d7\u05dd",
       "pmi": 12.715082,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -39714,7 +39715,7 @@
     },
     {
       "verseId": 2020003,
-      "term": "אחרים",
+      "term": "\u05d0\u05d7\u05e8\u05d9\u05dd",
       "pmi": 14.498764,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -39864,7 +39865,7 @@
     },
     {
       "verseId": 2020004,
-      "term": "פסל",
+      "term": "\u05e4\u05e1\u05dc",
       "pmi": 13.881299,
       "count": 4,
       "sourceIds": "clarke+kd",
@@ -51084,7 +51085,7 @@
     },
     {
       "verseId": 3019016,
-      "term": "רכיל",
+      "term": "\u05e8\u05db\u05d9\u05dc",
       "pmi": 15.278983,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -51734,7 +51735,7 @@
     },
     {
       "verseId": 3019019,
-      "term": "שעטנז",
+      "term": "\u05e9\u05e2\u05d8\u05e0\u05d6",
       "pmi": 14.547044,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -57074,7 +57075,7 @@
     },
     {
       "verseId": 4006002,
-      "term": "נזר",
+      "term": "\u05e0\u05d6\u05e8",
       "pmi": 12.067835,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -97694,7 +97695,7 @@
     },
     {
       "verseId": 19001001,
-      "term": "תהלים",
+      "term": "\u05ea\u05d4\u05dc\u05d9\u05dd",
       "pmi": 10.383638,
       "count": 5,
       "sourceIds": "clarke+kd",
@@ -97774,7 +97775,7 @@
     },
     {
       "verseId": 19001001,
-      "term": "לצים",
+      "term": "\u05dc\u05e6\u05d9\u05dd",
       "pmi": 9.535641,
       "count": 4,
       "sourceIds": "clarke+kd",
@@ -97874,7 +97875,7 @@
     },
     {
       "verseId": 19001001,
-      "term": "זמר",
+      "term": "\u05d6\u05de\u05e8",
       "pmi": 8.798676,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -98744,7 +98745,7 @@
     },
     {
       "verseId": 19001003,
-      "term": "מים",
+      "term": "\u05de\u05d9\u05dd",
       "pmi": 7.556517,
       "count": 3,
       "sourceIds": "clarke+kd",
@@ -99051,16 +99052,6 @@
       "authorCount": 2,
       "minSpanVerses": 3,
       "locator": "19.1.4-1.6"
-    },
-    {
-      "verseId": 19001004,
-      "term": "wick",
-      "pmi": 5.206128,
-      "count": 9,
-      "sourceIds": "mhc+treasury-of-david-01",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "PSALM 1:4"
     },
     {
       "verseId": 19001004,
@@ -99484,16 +99475,6 @@
     },
     {
       "verseId": 19001005,
-      "term": "wick",
-      "pmi": 4.84808,
-      "count": 9,
-      "sourceIds": "mhc+treasury-of-david-01",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "PSALM 1:5"
-    },
-    {
-      "verseId": 19001005,
       "term": "separat",
       "pmi": 4.835201,
       "count": 3,
@@ -99584,7 +99565,7 @@
     },
     {
       "verseId": 19001006,
-      "term": "צדיקים",
+      "term": "\u05e6\u05d3\u05d9\u05e7\u05d9\u05dd",
       "pmi": 11.423166,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -99604,7 +99585,7 @@
     },
     {
       "verseId": 19001006,
-      "term": "יודע",
+      "term": "\u05d9\u05d5\u05d3\u05e2",
       "pmi": 10.745094,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -99711,16 +99692,6 @@
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "PSALM 1:6"
-    },
-    {
-      "verseId": 19001006,
-      "term": "wick",
-      "pmi": 6.54852,
-      "count": 13,
-      "sourceIds": "clarke+jfb+mhc",
-      "authorCount": 3,
-      "minSpanVerses": 1,
-      "locator": "19.1.6"
     },
     {
       "verseId": 19001006,
@@ -100214,16 +100185,6 @@
     },
     {
       "verseId": 19023001,
-      "term": "guid",
-      "pmi": 8.1837,
-      "count": 8,
-      "sourceIds": "clarke+maclaren-psalms+mhc+treasury-of-david-01",
-      "authorCount": 4,
-      "minSpanVerses": 1,
-      "locator": "19.23.1"
-    },
-    {
-      "verseId": 19023001,
       "term": "sheep",
       "pmi": 8.154861,
       "count": 55,
@@ -100634,16 +100595,6 @@
     },
     {
       "verseId": 19023002,
-      "term": "guid",
-      "pmi": 7.896819,
-      "count": 6,
-      "sourceIds": "maclaren-psalms+mhc+treasury-of-david-01",
-      "authorCount": 3,
-      "minSpanVerses": 1,
-      "locator": "PSALM 23:2"
-    },
-    {
-      "verseId": 19023002,
       "term": "eaten",
       "pmi": 7.877732,
       "count": 2,
@@ -100834,7 +100785,7 @@
     },
     {
       "verseId": 19023003,
-      "term": "צדק",
+      "term": "\u05e6\u05d3\u05e7",
       "pmi": 9.843847,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -101059,16 +101010,6 @@
       "count": 3,
       "sourceIds": "kd+maclaren-psalms",
       "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "19.23.3"
-    },
-    {
-      "verseId": 19023003,
-      "term": "guid",
-      "pmi": 7.392928,
-      "count": 6,
-      "sourceIds": "kd+maclaren-psalms+mhc",
-      "authorCount": 3,
       "minSpanVerses": 1,
       "locator": "19.23.3"
     },
@@ -101371,16 +101312,6 @@
       "authorCount": 2,
       "minSpanVerses": 6,
       "locator": "19.23.1-23.6"
-    },
-    {
-      "verseId": 19023004,
-      "term": "guid",
-      "pmi": 8.435239,
-      "count": 6,
-      "sourceIds": "jfb+maclaren-psalms+mhc+treasury-of-david-01",
-      "authorCount": 4,
-      "minSpanVerses": 1,
-      "locator": "19.23.4"
     },
     {
       "verseId": 19023004,
@@ -101984,7 +101915,7 @@
     },
     {
       "verseId": 19023006,
-      "term": "לארך",
+      "term": "\u05dc\u05d0\u05e8\u05da",
       "pmi": 15.217582,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -102004,7 +101935,7 @@
     },
     {
       "verseId": 19023006,
-      "term": "ימים",
+      "term": "\u05d9\u05de\u05d9\u05dd",
       "pmi": 10.63262,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -102434,7 +102365,7 @@
     },
     {
       "verseId": 19046001,
-      "term": "נמצא",
+      "term": "\u05e0\u05de\u05e6\u05d0",
       "pmi": 13.180493,
       "count": 3,
       "sourceIds": "clarke+kd",
@@ -102474,7 +102405,7 @@
     },
     {
       "verseId": 19046001,
-      "term": "מאד",
+      "term": "\u05de\u05d0\u05d3",
       "pmi": 11.144869,
       "count": 3,
       "sourceIds": "clarke+kd",
@@ -106294,16 +106225,6 @@
     },
     {
       "verseId": 19046011,
-      "term": "guid",
-      "pmi": 7.969576,
-      "count": 2,
-      "sourceIds": "maclaren-psalms+treasury-of-david-02",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "PSALM 46:11"
-    },
-    {
-      "verseId": 19046011,
       "term": "refuge",
       "pmi": 7.910154,
       "count": 18,
@@ -107344,16 +107265,6 @@
     },
     {
       "verseId": 19091003,
-      "term": "peste",
-      "pmi": 15.473421,
-      "count": 3,
-      "sourceIds": "kd+treasury-of-david-04",
-      "authorCount": 2,
-      "minSpanVerses": 4,
-      "locator": "PSALM 91:3-6"
-    },
-    {
-      "verseId": 19091003,
       "term": "noisome",
       "pmi": 13.495116,
       "count": 7,
@@ -107744,16 +107655,6 @@
     },
     {
       "verseId": 19091004,
-      "term": "peste",
-      "pmi": 15.473421,
-      "count": 3,
-      "sourceIds": "kd+treasury-of-david-04",
-      "authorCount": 2,
-      "minSpanVerses": 4,
-      "locator": "PSALM 91:3-6"
-    },
-    {
-      "verseId": 19091004,
       "term": "buckler",
       "pmi": 13.446753,
       "count": 6,
@@ -107761,16 +107662,6 @@
       "authorCount": 5,
       "minSpanVerses": 1,
       "locator": "19.91.4"
-    },
-    {
-      "verseId": 19091004,
-      "term": "kite",
-      "pmi": 12.602872,
-      "count": 2,
-      "sourceIds": "maclaren-psalms+treasury-of-david-04",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "PSALM 91:4"
     },
     {
       "verseId": 19091004,
@@ -108141,16 +108032,6 @@
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "19.91.4"
-    },
-    {
-      "verseId": 19091005,
-      "term": "peste",
-      "pmi": 15.473421,
-      "count": 3,
-      "sourceIds": "kd+treasury-of-david-04",
-      "authorCount": 2,
-      "minSpanVerses": 4,
-      "locator": "PSALM 91:3-6"
     },
     {
       "verseId": 19091005,
@@ -108541,16 +108422,6 @@
       "authorCount": 2,
       "minSpanVerses": 8,
       "locator": "19.91.1-91.8"
-    },
-    {
-      "verseId": 19091006,
-      "term": "peste",
-      "pmi": 15.473421,
-      "count": 3,
-      "sourceIds": "kd+treasury-of-david-04",
-      "authorCount": 2,
-      "minSpanVerses": 4,
-      "locator": "PSALM 91:3-6"
     },
     {
       "verseId": 19091006,
@@ -109124,16 +108995,6 @@
     },
     {
       "verseId": 19091007,
-      "term": "wick",
-      "pmi": 6.54852,
-      "count": 5,
-      "sourceIds": "jfb+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 2,
-      "locator": "19.91.7-91.8"
-    },
-    {
-      "verseId": 19091007,
       "term": "fall",
       "pmi": 6.339242,
       "count": 13,
@@ -109451,16 +109312,6 @@
       "authorCount": 2,
       "minSpanVerses": 2,
       "locator": "19.91.7-91.8"
-    },
-    {
-      "verseId": 19091008,
-      "term": "wick",
-      "pmi": 7.18595,
-      "count": 8,
-      "sourceIds": "clarke+jfb+mhc+treasury-of-david-04",
-      "authorCount": 4,
-      "minSpanVerses": 1,
-      "locator": "19.91.8"
     },
     {
       "verseId": 19091008,
@@ -112914,16 +112765,6 @@
     },
     {
       "verseId": 19121001,
-      "term": "phantom",
-      "pmi": 11.275068,
-      "count": 2,
-      "sourceIds": "maclaren-psalms+treasury-of-david-06",
-      "authorCount": 2,
-      "minSpanVerses": 2,
-      "locator": "PSALM 121:1-2"
-    },
-    {
-      "verseId": 19121001,
       "term": "guardian",
       "pmi": 10.782398,
       "count": 3,
@@ -113291,16 +113132,6 @@
       "authorCount": 3,
       "minSpanVerses": 1,
       "locator": "19.121.1"
-    },
-    {
-      "verseId": 19121002,
-      "term": "phantom",
-      "pmi": 11.275068,
-      "count": 2,
-      "sourceIds": "maclaren-psalms+treasury-of-david-06",
-      "authorCount": 2,
-      "minSpanVerses": 2,
-      "locator": "PSALM 121:1-2"
     },
     {
       "verseId": 19121002,
@@ -116244,16 +116075,6 @@
     },
     {
       "verseId": 20003001,
-      "term": "wick",
-      "pmi": 5.68345,
-      "count": 3,
-      "sourceIds": "clarke+jfb",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "20.3.1"
-    },
-    {
-      "verseId": 20003001,
       "term": "aside",
       "pmi": 5.580233,
       "count": 2,
@@ -119154,7 +118975,7 @@
     },
     {
       "verseId": 20003014,
-      "term": "סחר",
+      "term": "\u05e1\u05d7\u05e8",
       "pmi": 14.63262,
       "count": 6,
       "sourceIds": "clarke+kd",
@@ -121834,16 +121655,6 @@
     },
     {
       "verseId": 20003024,
-      "term": "wick",
-      "pmi": 4.070473,
-      "count": 6,
-      "sourceIds": "clarke+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "20.3.24"
-    },
-    {
-      "verseId": 20003024,
       "term": "hold",
       "pmi": 3.903126,
       "count": 4,
@@ -122294,7 +122105,7 @@
     },
     {
       "verseId": 20003027,
-      "term": "מבעליו",
+      "term": "\u05de\u05d1\u05e2\u05dc\u05d9\u05d5",
       "pmi": 16.317118,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -123358,16 +123169,6 @@
       "pmi": 4.410751,
       "count": 3,
       "sourceIds": "clarke+kd",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "20.3.33"
-    },
-    {
-      "verseId": 20003033,
-      "term": "wick",
-      "pmi": 3.600987,
-      "count": 5,
-      "sourceIds": "kd+mhc",
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "20.3.33"
@@ -126394,7 +126195,7 @@
     },
     {
       "verseId": 21003014,
-      "term": "לעולם",
+      "term": "\u05dc\u05e2\u05d5\u05dc\u05dd",
       "pmi": 11.161216,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -127134,16 +126935,6 @@
     },
     {
       "verseId": 21003016,
-      "term": "wick",
-      "pmi": 6.107947,
-      "count": 4,
-      "sourceIds": "jfb+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "21.3.16"
-    },
-    {
-      "verseId": 21003016,
       "term": "place",
       "pmi": 5.622255,
       "count": 7,
@@ -127418,16 +127209,6 @@
       "pmi": 3.299085,
       "count": 5,
       "sourceIds": "jfb+kd",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "21.3.17"
-    },
-    {
-      "verseId": 21003017,
-      "term": "wick",
-      "pmi": 3.079751,
-      "count": 5,
-      "sourceIds": "kd+mhc",
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "21.3.17"
@@ -128264,7 +128045,7 @@
     },
     {
       "verseId": 21003021,
-      "term": "רוח",
+      "term": "\u05e8\u05d5\u05d7",
       "pmi": 11.144333,
       "count": 5,
       "sourceIds": "clarke+kd",
@@ -128274,7 +128055,7 @@
     },
     {
       "verseId": 21003021,
-      "term": "למעלה",
+      "term": "\u05dc\u05de\u05e2\u05dc\u05d4",
       "pmi": 11.073944,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -128324,7 +128105,7 @@
     },
     {
       "verseId": 21003021,
-      "term": "היא",
+      "term": "\u05d4\u05d9\u05d0",
       "pmi": 9.256808,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -130934,7 +130715,7 @@
     },
     {
       "verseId": 23053006,
-      "term": "עון",
+      "term": "\u05e2\u05d5\u05df",
       "pmi": 11.588226,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -131984,7 +131765,7 @@
     },
     {
       "verseId": 23053009,
-      "term": "קברו",
+      "term": "\u05e7\u05d1\u05e8\u05d5",
       "pmi": 13.536695,
       "count": 3,
       "sourceIds": "clarke+kd",
@@ -131994,7 +131775,7 @@
     },
     {
       "verseId": 23053009,
-      "term": "במה",
+      "term": "\u05d1\u05de\u05d4",
       "pmi": 13.314303,
       "count": 5,
       "sourceIds": "clarke+kd",
@@ -132004,7 +131785,7 @@
     },
     {
       "verseId": 23053009,
-      "term": "מתיו",
+      "term": "\u05de\u05ea\u05d9\u05d5",
       "pmi": 13.121658,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -132014,7 +131795,7 @@
     },
     {
       "verseId": 23053009,
-      "term": "ויתן",
+      "term": "\u05d5\u05d9\u05ea\u05df",
       "pmi": 12.536695,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -132104,7 +131885,7 @@
     },
     {
       "verseId": 23053009,
-      "term": "ואת",
+      "term": "\u05d5\u05d0\u05ea",
       "pmi": 7.353474,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -132384,7 +132165,7 @@
     },
     {
       "verseId": 23053010,
-      "term": "החלי",
+      "term": "\u05d4\u05d7\u05dc\u05d9",
       "pmi": 13.52456,
       "count": 8,
       "sourceIds": "clarke+kd",
@@ -136914,7 +136695,7 @@
     },
     {
       "verseId": 24029010,
-      "term": "מלאת",
+      "term": "\u05de\u05dc\u05d0\u05ea",
       "pmi": 14.839071,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -136924,7 +136705,7 @@
     },
     {
       "verseId": 24029010,
-      "term": "לפי",
+      "term": "\u05dc\u05e4\u05d9",
       "pmi": 13.254108,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -148324,16 +148105,6 @@
     },
     {
       "verseId": 26033010,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033010,
       "term": "ways",
       "pmi": 4.017507,
       "count": 8,
@@ -148501,16 +148272,6 @@
       "authorCount": 2,
       "minSpanVerses": 11,
       "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033011,
-      "term": "wick",
-      "pmi": 6.355875,
-      "count": 17,
-      "sourceIds": "clarke+kd+mhc",
-      "authorCount": 3,
-      "minSpanVerses": 1,
-      "locator": "26.33.11"
     },
     {
       "verseId": 26033011,
@@ -149094,16 +148855,6 @@
     },
     {
       "verseId": 26033012,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033012,
       "term": "ways",
       "pmi": 4.017507,
       "count": 8,
@@ -149514,16 +149265,6 @@
     },
     {
       "verseId": 26033013,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033013,
       "term": "ways",
       "pmi": 4.017507,
       "count": 8,
@@ -149867,16 +149608,6 @@
       "term": "remember",
       "pmi": 4.066209,
       "count": 4,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033014,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
       "sourceIds": "kd+mhc",
       "authorCount": 2,
       "minSpanVerses": 11,
@@ -150284,16 +150015,6 @@
     },
     {
       "verseId": 26033015,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033015,
       "term": "ways",
       "pmi": 4.017507,
       "count": 8,
@@ -150657,16 +150378,6 @@
       "term": "remember",
       "pmi": 4.066209,
       "count": 4,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033016,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
       "sourceIds": "kd+mhc",
       "authorCount": 2,
       "minSpanVerses": 11,
@@ -151084,16 +150795,6 @@
     },
     {
       "verseId": 26033017,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033017,
       "term": "ways",
       "pmi": 4.017507,
       "count": 8,
@@ -151447,16 +151148,6 @@
       "term": "remember",
       "pmi": 4.066209,
       "count": 4,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033018,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
       "sourceIds": "kd+mhc",
       "authorCount": 2,
       "minSpanVerses": 11,
@@ -151894,16 +151585,6 @@
     },
     {
       "verseId": 26033019,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033019,
       "term": "ways",
       "pmi": 4.017507,
       "count": 8,
@@ -152237,16 +151918,6 @@
       "term": "remember",
       "pmi": 4.066209,
       "count": 4,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 11,
-      "locator": "26.33.10-33.20"
-    },
-    {
-      "verseId": 26033020,
-      "term": "wick",
-      "pmi": 4.036525,
-      "count": 16,
       "sourceIds": "kd+mhc",
       "authorCount": 2,
       "minSpanVerses": 11,
@@ -160624,7 +160295,7 @@
     },
     {
       "verseId": 33006009,
-      "term": "יראה",
+      "term": "\u05d9\u05e8\u05d0\u05d4",
       "pmi": 12.025563,
       "count": 5,
       "sourceIds": "clarke+kd",
@@ -160714,7 +160385,7 @@
     },
     {
       "verseId": 33006009,
-      "term": "יהוה",
+      "term": "\u05d9\u05d4\u05d5\u05d4",
       "pmi": 6.788524,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -161481,16 +161152,6 @@
       "authorCount": 2,
       "minSpanVerses": 3,
       "locator": "33.6.10-6.12"
-    },
-    {
-      "verseId": 33006011,
-      "term": "wick",
-      "pmi": 5.92961,
-      "count": 6,
-      "sourceIds": "jfb+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "33.6.11"
     },
     {
       "verseId": 33006011,
@@ -163184,16 +162845,6 @@
     },
     {
       "verseId": 33006016,
-      "term": "wick",
-      "pmi": 4.127056,
-      "count": 6,
-      "sourceIds": "clarke+jfb+mhc",
-      "authorCount": 3,
-      "minSpanVerses": 1,
-      "locator": "33.6.16"
-    },
-    {
-      "verseId": 33006016,
       "term": "keep",
       "pmi": 3.287977,
       "count": 7,
@@ -163274,7 +162925,7 @@
     },
     {
       "verseId": 39003001,
-      "term": "מלאכי",
+      "term": "\u05de\u05dc\u05d0\u05db\u05d9",
       "pmi": 12.261836,
       "count": 2,
       "sourceIds": "clarke+kd",
@@ -167614,16 +167265,6 @@
     },
     {
       "verseId": 39003013,
-      "term": "wick",
-      "pmi": 3.866555,
-      "count": 20,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 3,
-      "locator": "39.3.13-3.15"
-    },
-    {
-      "verseId": 39003013,
       "term": "bad",
       "pmi": 3.628628,
       "count": 6,
@@ -168014,16 +167655,6 @@
     },
     {
       "verseId": 39003014,
-      "term": "wick",
-      "pmi": 3.866555,
-      "count": 20,
-      "sourceIds": "kd+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 3,
-      "locator": "39.3.13-3.15"
-    },
-    {
-      "verseId": 39003014,
       "term": "against",
       "pmi": 3.817339,
       "count": 31,
@@ -168267,16 +167898,6 @@
       "term": "deliver",
       "pmi": 5.13294,
       "count": 8,
-      "sourceIds": "clarke+kd+mhc",
-      "authorCount": 3,
-      "minSpanVerses": 1,
-      "locator": "39.3.15"
-    },
-    {
-      "verseId": 39003015,
-      "term": "wick",
-      "pmi": 4.963558,
-      "count": 21,
       "sourceIds": "clarke+kd+mhc",
       "authorCount": 3,
       "minSpanVerses": 1,
@@ -169094,16 +168715,6 @@
     },
     {
       "verseId": 39003017,
-      "term": "wick",
-      "pmi": 5.574515,
-      "count": 24,
-      "sourceIds": "clarke+kd+mhc",
-      "authorCount": 3,
-      "minSpanVerses": 1,
-      "locator": "39.3.17"
-    },
-    {
-      "verseId": 39003017,
       "term": "righteou",
       "pmi": 5.309751,
       "count": 22,
@@ -169579,16 +169190,6 @@
       "count": 2,
       "sourceIds": "clarke+kd",
       "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "39.3.18"
-    },
-    {
-      "verseId": 39003018,
-      "term": "wick",
-      "pmi": 4.473232,
-      "count": 23,
-      "sourceIds": "clarke+kd+mhc",
-      "authorCount": 3,
       "minSpanVerses": 1,
       "locator": "39.3.18"
     },
@@ -174858,16 +174459,6 @@
       "pmi": 4.852764,
       "count": 2,
       "sourceIds": "clarke+jfb",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "40.5.15"
-    },
-    {
-      "verseId": 40005015,
-      "term": "wick",
-      "pmi": 4.68345,
-      "count": 4,
-      "sourceIds": "barnes+mhc",
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "40.5.15"
@@ -185388,16 +184979,6 @@
       "pmi": 5.00073,
       "count": 2,
       "sourceIds": "clarke+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "40.5.47"
-    },
-    {
-      "verseId": 40005047,
-      "term": "wick",
-      "pmi": 4.998323,
-      "count": 4,
-      "sourceIds": "barnes+mhc",
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "40.5.47"
@@ -232944,7 +232525,7 @@
     },
     {
       "verseId": 45002004,
-      "term": "αγνοων",
+      "term": "\u03b1\u03b3\u03bd\u03bf\u03c9\u03bd",
       "pmi": 16.124473,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -238024,16 +237605,6 @@
     },
     {
       "verseId": 45002019,
-      "term": "guid",
-      "pmi": 9.740094,
-      "count": 2,
-      "sourceIds": "clarke+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "45.2.19"
-    },
-    {
-      "verseId": 45002019,
       "term": "confident",
       "pmi": 9.730948,
       "count": 4,
@@ -238278,16 +237849,6 @@
       "pmi": 6.399,
       "count": 3,
       "sourceIds": "barnes+jfb",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "45.2.20"
-    },
-    {
-      "verseId": 45002020,
-      "term": "guid",
-      "pmi": 6.351823,
-      "count": 2,
-      "sourceIds": "barnes+mhc",
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "45.2.20"
@@ -241474,16 +241035,6 @@
     },
     {
       "verseId": 45008002,
-      "term": "guid",
-      "pmi": 6.647648,
-      "count": 2,
-      "sourceIds": "jfb+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "45.8.2"
-    },
-    {
-      "verseId": 45008002,
       "term": "reconcil",
       "pmi": 6.538337,
       "count": 2,
@@ -243789,16 +243340,6 @@
       "count": 18,
       "sourceIds": "barnes+clarke+jfb+mhc",
       "authorCount": 4,
-      "minSpanVerses": 1,
-      "locator": "45.8.9"
-    },
-    {
-      "verseId": 45008009,
-      "term": "guid",
-      "pmi": 5.783163,
-      "count": 2,
-      "sourceIds": "barnes+mhc",
-      "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "45.8.9"
     },
@@ -246904,7 +246445,7 @@
     },
     {
       "verseId": 45008019,
-      "term": "αποκαραδοκια",
+      "term": "\u03b1\u03c0\u03bf\u03ba\u03b1\u03c1\u03b1\u03b4\u03bf\u03ba\u03b9\u03b1",
       "pmi": 14.074624,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -250294,7 +249835,7 @@
     },
     {
       "verseId": 45008028,
-      "term": "κλητοις",
+      "term": "\u03ba\u03bb\u03b7\u03c4\u03bf\u03b9\u03c2",
       "pmi": 12.588226,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -252784,7 +252325,7 @@
     },
     {
       "verseId": 45008035,
-      "term": "θλιψις",
+      "term": "\u03b8\u03bb\u03b9\u03c8\u03b9\u03c2",
       "pmi": 13.396552,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -252794,7 +252335,7 @@
     },
     {
       "verseId": 45008035,
-      "term": "στενοχωρια",
+      "term": "\u03c3\u03c4\u03b5\u03bd\u03bf\u03c7\u03c9\u03c1\u03b9\u03b1",
       "pmi": 13.396552,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -259984,7 +259525,7 @@
     },
     {
       "verseId": 48001018,
-      "term": "ιστορησαι",
+      "term": "\u03b9\u03c3\u03c4\u03bf\u03c1\u03b7\u03c3\u03b1\u03b9",
       "pmi": 15.876545,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -262744,7 +262285,7 @@
     },
     {
       "verseId": 49002002,
-      "term": "αιων",
+      "term": "\u03b1\u03b9\u03c9\u03bd",
       "pmi": 11.056366,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -263133,18 +262674,8 @@
       "locator": "49.2.2"
     },
     {
-      "verseId": 49002002,
-      "term": "wick",
-      "pmi": 4.120659,
-      "count": 12,
-      "sourceIds": "barnes+clarke+jfb+mhc",
-      "authorCount": 4,
-      "minSpanVerses": 1,
-      "locator": "49.2.2"
-    },
-    {
       "verseId": 49002003,
-      "term": "φυσει",
+      "term": "\u03c6\u03c5\u03c3\u03b5\u03b9",
       "pmi": 12.169186,
       "count": 3,
       "sourceIds": "barnes+clarke",
@@ -264914,7 +264445,7 @@
     },
     {
       "verseId": 49002008,
-      "term": "πιστις",
+      "term": "\u03c0\u03b9\u03c3\u03c4\u03b9\u03c2",
       "pmi": 12.568925,
       "count": 3,
       "sourceIds": "barnes+clarke",
@@ -264924,7 +264455,7 @@
     },
     {
       "verseId": 49002008,
-      "term": "τουτο",
+      "term": "\u03c4\u03bf\u03c5\u03c4\u03bf",
       "pmi": 11.42939,
       "count": 5,
       "sourceIds": "barnes+clarke",
@@ -266608,16 +266139,6 @@
       "pmi": 3.923191,
       "count": 2,
       "sourceIds": "barnes+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "49.2.13"
-    },
-    {
-      "verseId": 49002013,
-      "term": "wick",
-      "pmi": 3.655435,
-      "count": 2,
-      "sourceIds": "barnes+clarke",
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "49.2.13"
@@ -268344,7 +267865,7 @@
     },
     {
       "verseId": 49002019,
-      "term": "ξενοι",
+      "term": "\u03be\u03b5\u03bd\u03bf\u03b9",
       "pmi": 14.517143,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -268354,7 +267875,7 @@
     },
     {
       "verseId": 49002019,
-      "term": "παροικοι",
+      "term": "\u03c0\u03b1\u03c1\u03bf\u03b9\u03ba\u03bf\u03b9",
       "pmi": 14.517143,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -271234,7 +270755,7 @@
     },
     {
       "verseId": 58010005,
-      "term": "σωμα",
+      "term": "\u03c3\u03c9\u03bc\u03b1",
       "pmi": 11.134014,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -275444,7 +274965,7 @@
     },
     {
       "verseId": 58010020,
-      "term": "προσφατον",
+      "term": "\u03c0\u03c1\u03bf\u03c3\u03c6\u03b1\u03c4\u03bf\u03bd",
       "pmi": 14.176106,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -277194,7 +276715,7 @@
     },
     {
       "verseId": 58010025,
-      "term": "επισυναγωγην",
+      "term": "\u03b5\u03c0\u03b9\u03c3\u03c5\u03bd\u03b1\u03b3\u03c9\u03b3\u03b7\u03bd",
       "pmi": 15.193736,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -279804,7 +279325,7 @@
     },
     {
       "verseId": 58010033,
-      "term": "θεατριζομενοι",
+      "term": "\u03b8\u03b5\u03b1\u03c4\u03c1\u03b9\u03b6\u03bf\u03bc\u03b5\u03bd\u03bf\u03b9",
       "pmi": 16.452048,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -282194,7 +281715,7 @@
     },
     {
       "verseId": 58011001,
-      "term": "ελεγχος",
+      "term": "\u03b5\u03bb\u03b5\u03b3\u03c7\u03bf\u03c2",
       "pmi": 14.226627,
       "count": 5,
       "sourceIds": "barnes+clarke",
@@ -284594,7 +284115,7 @@
     },
     {
       "verseId": 58011007,
-      "term": "ευλαβηθεις",
+      "term": "\u03b5\u03c5\u03bb\u03b1\u03b2\u03b7\u03b8\u03b5\u03b9\u03c2",
       "pmi": 15.480617,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -293954,7 +293475,7 @@
     },
     {
       "verseId": 58011035,
-      "term": "τυμπανιζω",
+      "term": "\u03c4\u03c5\u03bc\u03c0\u03b1\u03bd\u03b9\u03b6\u03c9",
       "pmi": 15.648739,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -293964,7 +293485,7 @@
     },
     {
       "verseId": 58011035,
-      "term": "τυμπανον",
+      "term": "\u03c4\u03c5\u03bc\u03c0\u03b1\u03bd\u03bf\u03bd",
       "pmi": 15.063777,
       "count": 3,
       "sourceIds": "barnes+clarke",
@@ -298104,7 +297625,7 @@
     },
     {
       "verseId": 59001008,
-      "term": "διψυχος",
+      "term": "\u03b4\u03b9\u03c8\u03c5\u03c7\u03bf\u03c2",
       "pmi": 15.715082,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -302444,16 +301965,6 @@
     },
     {
       "verseId": 59001019,
-      "term": "wick",
-      "pmi": 4.84808,
-      "count": 3,
-      "sourceIds": "barnes+clarke",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "59.1.19"
-    },
-    {
-      "verseId": 59001019,
       "term": "little",
       "pmi": 4.683356,
       "count": 4,
@@ -303734,7 +303245,7 @@
     },
     {
       "verseId": 59001025,
-      "term": "παρακυψας",
+      "term": "\u03c0\u03b1\u03c1\u03b1\u03ba\u03c5\u03c8\u03b1\u03c2",
       "pmi": 14.857686,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -304544,7 +304055,7 @@
     },
     {
       "verseId": 59001027,
-      "term": "θρησκεια",
+      "term": "\u03b8\u03c1\u03b7\u03c3\u03ba\u03b5\u03b9\u03b1",
       "pmi": 12.79692,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -305334,7 +304845,7 @@
     },
     {
       "verseId": 59002002,
-      "term": "συναγωγην",
+      "term": "\u03c3\u03c5\u03bd\u03b1\u03b3\u03c9\u03b3\u03b7\u03bd",
       "pmi": 15.229655,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -313964,16 +313475,6 @@
     },
     {
       "verseId": 62001001,
-      "term": "phantom",
-      "pmi": 7.130296,
-      "count": 2,
-      "sourceIds": "barnes+clarke",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "62.1.1"
-    },
-    {
-      "verseId": 62001001,
       "term": "circular",
       "pmi": 6.948689,
       "count": 3,
@@ -320084,7 +319585,7 @@
     },
     {
       "verseId": 62002010,
-      "term": "σκανδαλον",
+      "term": "\u03c3\u03ba\u03b1\u03bd\u03b4\u03b1\u03bb\u03bf\u03bd",
       "pmi": 14.23573,
       "count": 2,
       "sourceIds": "barnes+clarke",
@@ -320804,7 +320305,7 @@
     },
     {
       "verseId": 62002012,
-      "term": "τεκνια",
+      "term": "\u03c4\u03b5\u03ba\u03bd\u03b9\u03b1",
       "pmi": 13.959566,
       "count": 3,
       "sourceIds": "barnes+clarke",
@@ -321204,7 +320705,7 @@
     },
     {
       "verseId": 62002013,
-      "term": "νεανισκοι",
+      "term": "\u03bd\u03b5\u03b1\u03bd\u03b9\u03c3\u03ba\u03bf\u03b9",
       "pmi": 13.436223,
       "count": 4,
       "sourceIds": "barnes+clarke",
@@ -321954,16 +321455,6 @@
     },
     {
       "verseId": 62002014,
-      "term": "wick",
-      "pmi": 3.202745,
-      "count": 7,
-      "sourceIds": "barnes+mhc",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "62.2.14"
-    },
-    {
-      "verseId": 62002014,
       "term": "sins",
       "pmi": 2.934176,
       "count": 5,
@@ -322328,16 +321819,6 @@
       "pmi": 4.029895,
       "count": 2,
       "sourceIds": "barnes+jfb",
-      "authorCount": 2,
-      "minSpanVerses": 1,
-      "locator": "62.2.15"
-    },
-    {
-      "verseId": 62002015,
-      "term": "wick",
-      "pmi": 3.946484,
-      "count": 7,
-      "sourceIds": "jfb+mhc",
       "authorCount": 2,
       "minSpanVerses": 1,
       "locator": "62.2.15"
@@ -323814,7 +323295,7 @@
     },
     {
       "verseId": 62002020,
-      "term": "χρισμα",
+      "term": "\u03c7\u03c1\u03b9\u03c3\u03bc\u03b1",
       "pmi": 14.662993,
       "count": 3,
       "sourceIds": "barnes+clarke",
