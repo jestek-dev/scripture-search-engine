@@ -32,7 +32,15 @@ import {
   passageTermEvidence,
   relatedConceptEvidence,
 } from './intents/concept.js';
-import { rank, type RankOptions } from './ranking/rank.js';
+import { DEFAULT_LIMIT, rank, type RankOptions } from './ranking/rank.js';
+
+/**
+ * Extra candidates ranked beyond the caller's limit so that collapsing a run
+ * of anchor verses does not shrink the page. Bounded rather than unlimited:
+ * ranking is cheap but not free, and a curated anchor spanning more than this
+ * many verses is a passage, not a page of results.
+ */
+const COLLAPSE_HEADROOM = 25;
 import type { Reason } from './reasons/types.js';
 import type {
   ConceptMatch,
@@ -257,7 +265,15 @@ export async function createEngine(
       }
     }
 
-    const ranked = rank(mergeCandidates(contributions), options.rankOptions);
+    // Rank with headroom, collapse, THEN cut to the limit. Collapsing after the
+    // cut would hand back fewer results than asked for: a four-verse anchor run
+    // inside the top 25 becomes one row, and the three freed slots stay empty
+    // while genuinely different passages sit just outside the window.
+    const limit = options.rankOptions?.limit ?? DEFAULT_LIMIT;
+    const ranked = rank(mergeCandidates(contributions), {
+      ...options.rankOptions,
+      limit: limit + COLLAPSE_HEADROOM,
+    });
     return collapseAnchorRuns(
       ranked.map((result) => {
         const verse = verses.get(result.targetId)!;
@@ -271,7 +287,7 @@ export async function createEngine(
       }),
       verses,
       anchorSpans,
-    );
+    ).slice(0, limit);
   }
 
   async function relatedFor(reference: string): Promise<RelatedResult> {
@@ -496,7 +512,7 @@ export async function createEngine(
  * merging across a gap would move a result up the list, which is a ranking
  * decision and not this function's business.
  */
-function collapseAnchorRuns(
+export function collapseAnchorRuns(
   results: readonly DiscoveryResult[],
   verses: ReadonlyMap<string, ScriptureVerse>,
   anchorSpans: ReadonlyMap<string, ReadonlySet<string>>,
@@ -562,7 +578,15 @@ function collapseAnchorRuns(
       reference:
         first.verseId === final.verseId
           ? head.reference
-          : `${referenceLabel(first)}-${final.verse}`,
+          : first.chapter === final.chapter
+            ? `${referenceLabel(first)}-${final.verse}`
+            : // Cannot happen while verse ids are bbcccvvv (the last verse of a
+              // chapter and the first of the next are not consecutive integers,
+              // so the contiguity test below already breaks the run). Written
+              // correctly anyway: the id encoding is not this function's
+              // invariant to rely on, and "Psalms 22:31-1" is the kind of wrong
+              // that survives review because nobody can produce it on demand.
+              `${referenceLabel(first)}-${final.chapter}:${final.verse}`,
       excerpt: run.map((item) => item.excerpt).join(' '),
       score: Math.max(...run.map((item) => item.score)),
       reasons,

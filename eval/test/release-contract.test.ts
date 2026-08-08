@@ -17,6 +17,12 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
+/**
+ * How long a descriptor may declare itself stale before the build fails.
+ * Long enough to be a deliberate hand-off, short enough to be a deadline.
+ */
+const STALE_DESCRIPTOR_GRACE_DAYS = 90;
+
 import { ENGINE_VERSION } from '@jestek-dev/scripture-engine';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -126,11 +132,22 @@ describe('release descriptor satisfies the consumer contract', () => {
     // That keeps the guardrail (nothing ships against a descriptor that does
     // not describe it) without forcing a fabricated number to keep CI green.
     const stale = descriptor['stale'] as
-      | { reason?: string; blocksRelease?: boolean }
+      | { reason?: string; blocksRelease?: boolean; since?: string }
       | undefined;
     if (stale) {
       expect(stale.reason, 'a stale descriptor must say why').toBeTruthy();
       expect(stale.blocksRelease, 'a stale descriptor must block release').toBe(true);
+      // And it must EXPIRE. Without this the escape hatch is permanent: verify
+      // stays green forever and nothing ever forces the rebuild. A declared
+      // gap with no deadline is how a known problem becomes a fixture of the
+      // landscape.
+      expect(stale.since, 'a stale descriptor must be dated').toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      const ageDays = (Date.now() - Date.parse(stale.since!)) / 86_400_000;
+      expect(
+        ageDays,
+        `descriptor has been stale for ${Math.floor(ageDays)} days. Rebuild it ` +
+          '(npm run fetch:sources && npm run build:artifact) and drop the stale block.',
+      ).toBeLessThan(STALE_DESCRIPTOR_GRACE_DAYS);
       return;
     }
     expect(descriptor['engineVersion']).toBe(ENGINE_VERSION);
