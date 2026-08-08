@@ -62,11 +62,6 @@ reviews of numbers I had to pick to keep moving.
    ontology; the tree now has 32, so `layerFingerprint` no longer identifies
    what this code builds. One command on a machine that can reach the sources.
 
-7. **Decide the bare word "love".** §1.10. Single-token queries now reach the
-   concept layer (that was the biggest product gap), but `love` was left out:
-   it is contested between `gods-love` and `loving-others` and is the most-typed
-   word in the product. My recommendation is `gods-love`; the call is yours.
-
 8. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
@@ -314,6 +309,35 @@ sources on the argument that they *ought* to help. Per its own rule, run the
 gauntlet: merge on a measured improvement, and if the Admission Report says
 `NO MEASURABLE EFFECT`, do not. Fallback candidate if Maclaren disappoints:
 Ryle's *Expository Thoughts on the Gospels* (public domain).
+
+### 1.12 "love" — DECIDED (2026-08-08), and it exposed a scoring flaw worth knowing
+
+Your call: default to God's love, show both senses. Implemented, and the
+results do exactly that — `love` returns Romans 5:8, Romans 8:38-39 and
+John 3:16 as **Theme: The love of God**, with John 13:34-35, Matthew 22:39 and
+1 Corinthians 13 following as **Related theme: Loving one another**. The two
+concepts were already linked, so no second lexicon entry was needed: adding
+`love` to both would have had the commonest word in the product firing two
+concepts equally, which is how anchors dilute.
+
+**What it exposed.** Adding the bare word broke Micah 6:8. The query *"do
+justly love mercy walk humbly"* returned God's-love passages at the top and
+pushed Micah out of the results entirely — G8 caught it and rejected the build.
+
+The cause is a real flaw that bare words made visible: a concept's strength was
+scaled by how much of ITS OWN phrase matched, never by how much of the QUERY it
+explained. So "love" as the whole query and "love" as one word of six spoke
+with the same voice.
+
+Anchors are now also scaled by query coverage (square-rooted, so a concept
+explaining half a query still counts for a lot). Micah 6:8 is back at #1 and
+every other fixture holds. **ENGINE_VERSION 0.9.0** — this changes ordering.
+
+This is the same concern I raised as open item 3 (single-token matches carrying
+authoritative weight), and it is now substantially addressed by construction
+rather than by discount. The remaining part of that question — whether a
+one-token match should sit in the weak family entirely — is still open, but it
+is much less pressing now.
 
 ### 1.8 The OpenBible snapshots have no durable copy — mechanism is in, the upload is yours
 

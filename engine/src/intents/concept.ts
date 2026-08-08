@@ -30,12 +30,29 @@ import type { Evidence } from '../reasons/types.js';
 export function conceptAnchorEvidence(
   anchor: ConceptAnchorRow,
   matchedTokenCount: number,
+  queryTokenCount: number = matchedTokenCount,
 ): Evidence {
   const specificity = Math.min(1, 0.55 + 0.15 * Math.max(0, matchedTokenCount - 1));
+  /**
+   * How much of the QUERY this concept explains.
+   *
+   * Specificity alone asks "how much of the concept's phrase matched"; it
+   * cannot tell "love" (the whole query) from "love" inside "do justly love
+   * mercy walk humbly". Once bare words entered the lexicons those became very
+   * different claims, and without this the second one buried Micah 6:8 under
+   * God's-love passages — a concept explaining one word of six speaking as
+   * loudly as one explaining all of it.
+   *
+   * Square-rooted rather than linear: a concept that explains half a query is
+   * still saying something substantial, and a linear penalty would mute
+   * legitimate multi-word matches to chase a single-word failure.
+   */
+  const coverage =
+    queryTokenCount > 0 ? Math.sqrt(Math.min(1, matchedTokenCount / queryTokenCount)) : 1;
   return {
     family: 'concept_anchor',
     label: `Theme: ${anchor.conceptLabel}`,
-    strength: Math.max(0, Math.min(1, anchor.weight)) * specificity,
+    strength: Math.max(0, Math.min(1, anchor.weight)) * specificity * coverage,
     provenance: {
       sourceId: anchor.sourceId,
       label: sourceLabel(anchor.sourceId),

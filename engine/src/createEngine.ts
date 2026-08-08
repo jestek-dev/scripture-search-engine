@@ -227,7 +227,11 @@ export async function createEngine(
           contributions.push({
             verse: anchor,
             evidence: [
-              conceptAnchorEvidence(anchor, specificity.get(anchor.conceptId) ?? 1),
+              conceptAnchorEvidence(
+                anchor,
+                specificity.get(anchor.conceptId) ?? 1,
+                tokens.length,
+              ),
             ],
           });
         }
