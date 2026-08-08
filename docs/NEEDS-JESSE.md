@@ -15,7 +15,16 @@ started.
 Five things. The first two are decisions only you can make; the rest are
 reviews of numbers I had to pick to keep moving.
 
-1. **Approve (or reject) a `remembered-phrasings` concept pack.** §1.6a.
+1. **Review the `remembered-phrasings` pack — and note the plan changed.** §1.6a,
+   and the measurement in `docs/research/2026-08-08-remembered-phrasings.md`.
+   I tested 60 remembered wordings before writing anything: **52 already work.**
+   The lexical ladder recovers far more than the ten-phrase sample suggested, so
+   the proposed ~50-entry pack would have been mostly NO MEASURABLE EFFECT. What
+   shipped is the measured remainder — 6 entries plus 2 new concepts. Two items
+   want your judgment: the new concepts' anchors, and James 1:2 (joy *in trials*)
+   landing under `joy-in-the-lord`. Original framing below.
+
+   ~~Approve (or reject) a `remembered-phrasings` concept pack.~~ §1.6a.
    Searching *"plans to prosper you"* returns nothing, because that is NIV
    wording and the corpus is WEB. I tested adding KJV: it fixes **zero** of the
    ten phrasings I checked, because the wordings people remember are from

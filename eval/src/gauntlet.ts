@@ -21,7 +21,11 @@ import { fileURLToPath } from 'node:url';
 import { createEngine } from '@jestek-dev/scripture-engine';
 
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
-import { collisionGate, type ConceptRecord } from './gates/collision.js';
+import {
+  collisionGate,
+  singleTokenCollapses,
+  type ConceptRecord,
+} from './gates/collision.js';
 import {
   conceptCoverageGate,
   corpusGoldenGate,
@@ -583,7 +587,28 @@ async function main(): Promise<void> {
             'ontology failed to compile',
             ontologyErrors.map((message) => ({ message })),
           )
-        : collisionGate(concepts, budgets.collision),
+        : (() => {
+            const result = collisionGate(concepts, budgets.collision);
+            if (result.status !== 'pass') return result;
+            // Collapses are reported ON the passing gate rather than as their
+            // own row: they are a curation diagnostic, not an admission
+            // decision, and they must be visible without ever blocking.
+            const collapses = singleTokenCollapses(concepts);
+            if (collapses.length === 0) return result;
+            return {
+              ...result,
+              summary:
+                `${result.summary}; ${collapses.length} lexicon phrase(s) collapse to a ` +
+                'single token and therefore act as bare-word triggers',
+              findings: collapses.map((entry) => ({
+                message:
+                  `${entry.conceptId}: "${entry.phrase}" normalizes to the single token ` +
+                  `"${entry.token}", so the bare query "${entry.token}" fires this concept. ` +
+                  'Intended for most; check it is intended for this one.',
+                subjects: [entry.conceptId],
+              })),
+            };
+          })(),
     distinctivenessGate(distillate, budgets.distinctiveness),
     pass(
       'G6-signal-budgets',

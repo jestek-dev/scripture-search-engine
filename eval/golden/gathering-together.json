@@ -1,0 +1,28 @@
+{
+  "id": "gathering-together",
+  "query": "let us not give up meeting together",
+  "status": "active",
+  "coversConcepts": [
+    "gathering-together"
+  ],
+  "note": [
+    "Added with the remembered-phrasings pack. The WEB reads \"not forsaking our own assembling together\", so the remembered NIV wording reached nothing. Directly useful to the consuming apps, which plan gatherings.",
+    "Requires requiredReasonLabel so a neighbouring concept anchoring the same verse cannot satisfy this fixture."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hebrews 10:24-25",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Gathering together"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "additionalQueries": [
+    "meeting together",
+    "where two or three gather"
+  ],
+  "alsoAcceptable": [
+    "Matthew 18:20",
+    "Acts 2:42"
+  ]
+}

@@ -1,0 +1,30 @@
+id: abiding-in-christ
+label: Abiding in Christ
+# Added 2026-08-08 from the remembered-phrasing measurement. "abide in me"
+# returned nothing: the WEB reads "Remain in me", so the phrasing people
+# actually search with reached no verse at all.
+#
+# Given its own concept rather than folded into a neighbour. `presence-of-god`
+# is about God drawing near to us; `walking-in-the-light` is scoped to ethical
+# conduct by Jesse's 2026-07-29 ruling. Abiding is a third thing — remaining in
+# union with Christ — and putting it inside either would blur a distinction the
+# texts themselves keep.
+lexicon:
+  - abide in me
+  - abide in christ
+  - remain in me
+  - apart from me you can do nothing
+  - the vine and the branches
+anchors:
+  - ref: John 15:4
+    sources: [editorial]
+    weight: 1.0
+  - ref: John 15:5
+    sources: [editorial]
+    weight: 0.95
+  - ref: John 15:7
+    sources: [editorial]
+    weight: 0.8
+related:
+  - presence-of-god
+  - obedience-to-the-word

@@ -9,7 +9,8 @@
     "the right passage for the wrong reason is still a failure.",
     "The jailer's literal question and its literal answer (Acts 16:30-31).",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "2026-08-08 single-token audit: the bare query \"salvation\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
+    "2026-08-08 single-token audit: the bare query \"salvation\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
+    "2026-08-08 remembered-phrasings: the NIV/ESV wordings above are asserted here. Each was a MEASURED gap — it returned the target verse nowhere in the top 10 before this pack."
   ],
   "expectedTop": [
     {
@@ -31,6 +32,7 @@
     "John 3:16"
   ],
   "additionalQueries": [
-    "salvation"
+    "salvation",
+    "you must be born again"
   ]
 }

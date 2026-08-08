@@ -8,7 +8,9 @@
     "concept_anchor evidence so a lexical hit cannot pass as understanding -",
     "the right passage for the wrong reason is still a failure.",
     "The new commandment (John 13:34-35); love described (1 Corinthians 13).",
-    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending."
+    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
+    "2026-08-08 remembered-phrasings: the NIV/ESV wordings above are asserted here. Each was a MEASURED gap — it returned the target verse nowhere in the top 10 before this pack.",
+    "The Golden Rule as usually quoted (\"do to others as you would have them do to you\") is entirely stopwords and can never match; \"the golden rule\" is asserted instead. See docs/research/2026-08-08-remembered-phrasings.md."
   ],
   "expectedTop": [
     {
@@ -24,5 +26,9 @@
     "1 John 4:11",
     "1 John 3:18",
     "1 Peter 4:8"
+  ],
+  "additionalQueries": [
+    "the golden rule",
+    "treat others the way you want to be treated"
   ]
 }

@@ -13,6 +13,10 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - salvation
+  # Remembered-phrasing entry, 2026-08-08. The wording people search with is
+  # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
+  # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
+  - you must be born again
 anchors:
   - ref: Acts 16:30-31
     sources: [editorial]
@@ -35,6 +39,11 @@ anchors:
   - ref: John 3:16
     sources: [torrey]
     weight: 0.7
+  # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
+  # wording renders).
+  - ref: John 3:3
+    sources: [editorial]
+    weight: 0.9
 related:
   - grace-not-earned
   - the-cross

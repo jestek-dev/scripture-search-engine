@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { collisionGate, type ConceptRecord } from '../src/gates/collision.js';
+import {
+  collisionGate,
+  singleTokenCollapses,
+  type ConceptRecord,
+} from '../src/gates/collision.js';
 import {
   conceptCoverageGate,
   runCorpusFixture,
@@ -261,5 +265,41 @@ describe('G3 fixtures must measure their OWN concept', () => {
     const problems = await runCorpusFixture(engineWith('Theme: Salvation'), fixture);
     expect(problems).toHaveLength(1);
     expect(problems[0]).toContain('measuring a different concept');
+  });
+});
+
+describe('single-token collapse detection', () => {
+  it('finds a multi-word phrase whose real width is one token', () => {
+    // The exact case that hid for weeks: four words, three of them stopwords.
+    const found = singleTokenCollapses([
+      { id: 'presence-of-god', label: 'Presence', lexicon: ['god with us'] },
+    ]);
+    expect(found).toEqual([
+      { conceptId: 'presence-of-god', phrase: 'god with us', token: 'god' },
+    ]);
+  });
+
+  it('does not report a deliberate one-word entry', () => {
+    // "communion" is one word AND one token — the curator can see its width.
+    expect(
+      singleTokenCollapses([{ id: 'lords-supper', label: 'Supper', lexicon: ['communion'] }]),
+    ).toEqual([]);
+  });
+
+  it('does not report a phrase that keeps two or more tokens', () => {
+    expect(
+      singleTokenCollapses([{ id: 'worship', label: 'Worship', lexicon: ['worship the lord'] }]),
+    ).toEqual([]);
+  });
+
+  it('is deterministic in ordering', () => {
+    const input = [
+      { id: 'b-concept', label: 'B', lexicon: ['be holy', 'a rock of refuge here'] },
+      { id: 'a-concept', label: 'A', lexicon: ['fear not'] },
+    ];
+    expect(singleTokenCollapses(input).map((entry) => entry.conceptId)).toEqual([
+      'a-concept',
+      'b-concept',
+    ]);
   });
 });

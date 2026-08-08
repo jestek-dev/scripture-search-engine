@@ -1,0 +1,28 @@
+{
+  "id": "abiding-in-christ",
+  "query": "abide in me",
+  "status": "active",
+  "coversConcepts": [
+    "abiding-in-christ"
+  ],
+  "note": [
+    "Added with the remembered-phrasings pack. \"abide in me\" returned NOTHING before: the WEB reads \"Remain in me\", so the searched wording matched no verse. Given its own concept rather than folded into presence-of-god (God drawing near to us) or walking-in-the-light (scoped to ethical conduct by Jesse 2026-07-29).",
+    "Requires requiredReasonLabel so a neighbouring concept anchoring the same verse cannot satisfy this fixture."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 15:4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Abiding in Christ"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "additionalQueries": [
+    "remain in me",
+    "the vine and the branches"
+  ],
+  "alsoAcceptable": [
+    "John 15:5",
+    "John 15:7"
+  ]
+}

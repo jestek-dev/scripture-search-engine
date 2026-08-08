@@ -95,8 +95,72 @@ Twenty concepts gained a bare token. Twelve deliberately did not.
 | `walking-in-the-light` | light | Jesse's 2026-07-29 ruling scoped this concept to the ethical sense precisely because `light` spans both senses. Admitting the bare token would undo that decision. |
 | `building-on-the-rock` | rock | Spans metaphor and terrain; "firm foundation" already carries the concept. |
 | `faith-and-works` | faith / works | `faith` belongs to no single concept here, and `works` was the accidental token just removed from `grace-not-earned`. |
-| `fear-not`, `forgiving-others`, `holiness`, `lords-supper`, `prayer`, `second-coming`, `self-deception` | — | Already had a deliberate single-token entry (`fear`, `forgive`, `holy`, `communion`, `pray`, `maranatha`, `deceiv`). No change needed. |
-| `presence-of-god` | presence | Already present as its own entry; only the accidental `god` was removed. |
+| `presence-of-god` | presence | Already an entry in its own right; only the accidental `god` was removed. |
+
+### Correction (2026-08-08, after adversarial review)
+
+An earlier draft claimed `fear-not`, `forgiving-others`, `holiness`, `prayer`
+and `self-deception` "already had a deliberate single-token entry". **That was
+wrong, and wrong in the same way §3 describes.** Those tokens (`fear`,
+`forgive`, `holy`, `pray`, `deceiv`) are *accidental* collapses of multi-word
+phrases, not entries anyone wrote as single words. Only `communion` and
+`maranatha` were literal one-word entries.
+
+Worse, §2 claimed to have tokenized every lexicon to find exactly this, and had
+not done so exhaustively — it found `god` and `work` and stopped. Run properly
+across the whole ontology, **twenty** phrases collapse to one token:
+
+| Collapses to | Concept | From |
+|---|---|---|
+| `afraid`, `fear`, `dismay` | `fear-not` | "do not be afraid", "fear not", "be not dismayed" |
+| `forgive` | `forgiving-others` | "forgive others" |
+| `holy` | `holiness` | "be holy" |
+| `pray` | `prayer` | "how to pray" |
+| `deceiv` | `self-deception` | "deceiving yourselves" |
+| `remembrance` | `lords-supper` | "do this in remembrance of me" |
+| `anxiou` | `peace-of-god` | "do not be anxious" |
+| `presence` | `presence-of-god` | "in your presence" |
+| `risen` | `resurrection` | "he is risen" |
+| `saved`, `born` | `salvation` | "how can i be saved", "you must be born again" |
+| `deny` | `surrender-to-god` | "deny yourself" |
+| `conqueror` | `victory-in-christ` | "more than conquerors" |
+| `bow`, `exalt` | `worship` | "bow down before him", "we exalt you" |
+| `abide`, `remain` | `abiding-in-christ` | "abide in me", "remain in me" |
+| `cross` | `the-cross` | "the cross" |
+
+Most are benign or actively good — `risen`, `deceiv`, `anxiou` and `conqueror`
+are exactly the bare words someone would type, and they were working by accident
+all along. The point is not that they are harmful; it is that **nobody knew they
+existed**, which is how `god` and `work` survived. The gauntlet now reports
+every collapse at build time so the class cannot be invisible again.
+
+Two deserve a second look: `born` (from "you must be born again", added in this
+pass) is broad enough to fire on "jesus was born in bethlehem", and `deny` is
+broad generally. Recorded rather than silently kept.
+
+## 4b. Off-topic triggering — a measured tradeoff, stated plainly
+
+Adversarial review confirmed every bare token fires on queries using the word in
+a non-theological sense: "grace kelly the actress", "salvation army donation",
+"the cross street intersection", "trust the government". In a scripture search
+box those are largely out of domain, and returning Ephesians 2:8 for a query
+containing "grace" is defensible for this product.
+
+The case that genuinely matters is the **in-domain** false positive: *"israel
+makes peace with the philistines"* now surfaces Peace-of-God anchors where the
+query is about a treaty. That is real, and it is the cost of the change.
+
+Why it is bounded: a one-token match enters at `strength x 0.55`, so a bare hit
+scores ~22 of a possible 40 against `exact_phrase`'s 60. It cannot outrank a
+verbatim match. But it *is* filed in the authoritative `concept_anchor` family
+and therefore sits outside the weak-aggregate cap, so the thinnest form of
+concept evidence carries the strongest family's framing.
+
+**Recommended follow-up (Jesse's call):** consider filing single-token concept
+matches under the weak `concept_lexicon` family instead. That expresses their
+thinness structurally rather than by discount alone. It changes ordering, so it
+needs an ENGINE_VERSION bump and fixture updates — a deliberate change, not a
+drive-by one.
 
 ## 5. Measured effect
 

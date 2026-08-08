@@ -9,6 +9,13 @@ lexicon:
   - love is patient love is kind
   - greatest of these is love
   - love your enemies
+  # Remembered-phrasing entries, 2026-08-08. The Golden Rule as people quote it
+  # ("do to others as you would have them do to you") is ENTIRELY stopwords and
+  # normalizes to nothing, so no lexicon entry can ever match that sentence —
+  # a structural limit of token matching, recorded in the research note rather
+  # than papered over. These are the matchable ways people name the same idea.
+  - the golden rule
+  - treat others the way you want to be treated
 anchors:
   - ref: John 13:34-35
     sources: [editorial]
@@ -31,6 +38,11 @@ anchors:
   - ref: 1 Peter 4:8
     sources: [torrey]
     weight: 0.7
+  # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
+  # wording renders).
+  - ref: Matthew 7:12
+    sources: [editorial]
+    weight: 0.9
 related:
   - gods-love
   - forgiving-others
