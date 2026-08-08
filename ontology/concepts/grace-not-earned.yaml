@@ -2,10 +2,18 @@ id: grace-not-earned
 label: Grace, not earned
 lexicon:
   - saved by grace
-  - not by works
+  # "not by works" reduced to the single token "work" (not/by are stopwords),
+  # so the bare query "work" fired this concept. Removed 2026-08-08; the
+  # not-by-works sense is carried by the fuller phrase below and by
+  # "saved by grace".
+  - saved not by works
   - gift of god
   - nothing to boast about
   - unmerited favor
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - grace
 anchors:
   - ref: Ephesians 2:8-9
     sources: [editorial]

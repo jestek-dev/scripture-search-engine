@@ -9,6 +9,10 @@ lexicon:
   - washed clean
   - as far as the east is from the west
   - white as snow
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - forgiveness
 anchors:
   - ref: Psalms 103:12
     sources: [editorial]

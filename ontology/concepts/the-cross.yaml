@@ -10,6 +10,10 @@ lexicon:
   - by his wounds we are healed
   - christ died for us
   - atonement
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - the cross
 anchors:
   - ref: Isaiah 53:5
     sources: [editorial]

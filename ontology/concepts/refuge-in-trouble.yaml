@@ -6,6 +6,10 @@ lexicon:
   - god is our refuge
   - hiding place
   - stronghold in distress
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - refuge
 anchors:
   - ref: Psalms 46:1-3
     sources: [editorial]

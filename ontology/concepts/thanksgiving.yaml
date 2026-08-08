@@ -10,6 +10,10 @@ lexicon:
   - thankful heart
   - in everything give thanks
   - count your blessings
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - thanksgiving
 anchors:
   - ref: Psalms 100:4
     sources: [editorial]

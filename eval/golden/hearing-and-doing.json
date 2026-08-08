@@ -29,7 +29,8 @@
     "supplies concept_anchor evidence for all three anchors, so the engine can",
     "say WHY these passages belong together and cite who says so. The gauntlet",
     "detected this itself - it runs pending fixtures precisely so a target that",
-    "starts passing cannot go unnoticed."
+    "starts passing cannot go unnoticed.",
+    "2026-08-08 single-token audit: the bare query \"obedience\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
   ],
   "expectedTop": [
     {
@@ -59,5 +60,8 @@
       "reference": "Genesis 5:1",
       "why": "Contains no thematic relation; would indicate raw token noise ranking above concept evidence."
     }
+  ],
+  "additionalQueries": [
+    "obedience"
   ]
 }

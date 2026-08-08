@@ -9,6 +9,10 @@ lexicon:
   - salvation in christ
   - plan of salvation
   - no other name under heaven
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - salvation
 anchors:
   - ref: Acts 16:30-31
     sources: [editorial]

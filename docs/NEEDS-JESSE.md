@@ -53,7 +53,12 @@ reviews of numbers I had to pick to keep moving.
    ontology; the tree now has 32, so `layerFingerprint` no longer identifies
    what this code builds. One command on a machine that can reach the sources.
 
-7. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
+7. **Decide the bare word "love".** §1.10. Single-token queries now reach the
+   concept layer (that was the biggest product gap), but `love` was left out:
+   it is contested between `gods-love` and `loving-others` and is the most-typed
+   word in the product. My recommendation is `gods-love`; the call is yours.
+
+8. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
 Everything else in this document is context, not a request.
@@ -215,6 +220,31 @@ machine with the corpora, review the regenerated descriptor, and commit it. I
 could not: `a.openbible.info` is unreachable from this environment (the agent
 proxy returns 403), so a full build is impossible here and fabricating the
 numbers would be worse than reporting the gap.
+
+### 1.10 Bare-word queries now reach the concept layer — one word left undecided
+
+The biggest product gap the audit found: concept matching requires every token
+of a lexicon phrase to be present, and the Torrey-wave lexicons were almost all
+multi-word — so **"worship" did not fire the `worship` concept**, and the same
+held for most themes. One-word queries are the commonest thing a worship leader
+types, and they were exactly the class that bypassed the curated data.
+
+Twenty concepts gained a deliberate bare token; twelve deliberately did not.
+Full decision table and measurements:
+`docs/research/2026-08-08-single-token-lexicon-audit.md`.
+
+**Two accidental single tokens were also removed**, and this is the part worth
+your attention: "god with us" and "not by works" each collapsed to ONE
+significant token after stopword removal (`god`, `work`), so the bare queries
+"god" and "work" were firing curated concepts nobody intended. A phrase's real
+width is its significant-token count, not its word count.
+
+**What I need:** the bare word **`love`** is not admitted. It is contested
+between `gods-love` and `loving-others`, and it is the most-typed word in the
+product, so it wanted an explicit decision rather than my default. My
+recommendation: give it to `gods-love` (John 3:16, Rom 8:38-39 are what a
+one-word query almost always wants) and leave `loving-others` reachable by
+"love one another" and "love your neighbor".
 
 ### 1.8 The OpenBible snapshots have no durable copy — mechanism is in, the upload is yours
 

@@ -9,7 +9,8 @@
     "the right passage for the wrong reason is still a failure.",
     "Psalm 150 is the summa of biblical praise; Psalm 100:1-2 the classic call to it.",
     "Psalm 100:1-2 was demoted from expectedTop to alsoAcceptable (2026-08-06): the extended corpus contains many verses that verbatim say 'Praise the LORD' - all correct answers - and requiring a non-verbatim psalm inside that top 10 would assert a preference the query does not express. The fixture still requires concept_anchor evidence on Psalm 150.",
-    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending."
+    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
+    "2026-08-08 single-token audit: the bare query \"praise\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
   ],
   "expectedTop": [
     {
@@ -25,5 +26,8 @@
     "Psalms 95:1",
     "Psalms 34:3",
     "Hebrews 13:15"
+  ],
+  "additionalQueries": [
+    "praise"
   ]
 }

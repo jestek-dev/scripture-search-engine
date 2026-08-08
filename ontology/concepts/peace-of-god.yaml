@@ -9,6 +9,10 @@ lexicon:
   - perfect peace
   - do not be anxious
   - peace i leave with you
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - peace
 anchors:
   - ref: Philippians 4:6-7
     sources: [editorial]

@@ -23,20 +23,20 @@
     {
       "id": "broad-grace",
       "top": [
+        "WEB:49002008",
+        "WEB:49002009",
+        "WEB:45011006",
+        "WEB:55001009",
+        "WEB:56003005",
+        "WEB:49002010",
         "WEB:43001016",
         "WEB:58013025",
         "WEB:20003022",
-        "WEB:49002008",
-        "WEB:20003034",
-        "WEB:48001003",
-        "WEB:43001017",
-        "WEB:48001015",
-        "WEB:49002005",
-        "WEB:49002007"
+        "WEB:20003034"
       ],
       "resultCount": 25,
-      "weakReasonShare": 1,
-      "meanTopScore": 6.617331
+      "weakReasonShare": 0.435885,
+      "meanTopScore": 17.744619
     },
     {
       "id": "broad-faith",
@@ -371,19 +371,19 @@
       "id": "ot-prophets-plans",
       "top": [
         "WEB:24029011",
-        "WEB:59002004",
-        "WEB:19034014",
-        "WEB:40006034",
         "WEB:50004007",
-        "WEB:59002019",
-        "WEB:19121007",
-        "WEB:21003008",
-        "WEB:49002017",
-        "WEB:03019005"
+        "WEB:50004006",
+        "WEB:43014027",
+        "WEB:23026003",
+        "WEB:40006027",
+        "WEB:43016033",
+        "WEB:40006025",
+        "WEB:60005007",
+        "WEB:40006026"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.513017,
-      "meanTopScore": 12.320748
+      "weakReasonShare": 0.099212,
+      "meanTopScore": 24.978121
     },
     {
       "id": "ot-prophets-justly",

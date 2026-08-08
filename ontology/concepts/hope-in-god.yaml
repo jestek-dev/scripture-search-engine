@@ -9,6 +9,10 @@ lexicon:
   - anchor for the soul
   - hope does not disappoint
   - a future and a hope
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - hope
 anchors:
   - ref: Jeremiah 29:11
     sources: [editorial]

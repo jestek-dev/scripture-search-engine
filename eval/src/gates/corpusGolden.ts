@@ -36,6 +36,17 @@ export interface CorpusFixture {
     requiredReasonLabel?: string;
   }[];
   readonly expectedWithinTop?: number;
+  /**
+   * Further queries that must satisfy the SAME expectations.
+   *
+   * One claim, asked the way different users type it. A worship leader types
+   * "worship" far more often than "come let us worship", and the concept layer
+   * matched only the latter because every curated phrase was multi-word — so
+   * the most common query class in the product bypassed the curated data
+   * entirely. Asserting both phrasings against one expectation is what keeps
+   * that from silently regressing.
+   */
+  readonly additionalQueries?: readonly string[];
   readonly mustNotRank?: readonly { reference: string; why?: string }[];
   /**
    * Concept ids this fixture measures, for the coverage check below.
@@ -147,7 +158,19 @@ export async function runCorpusFixture(
   if (!fixture.query) return [];
   const problems: string[] = [];
 
-  const result = await engine.research(fixture.query);
+  for (const query of [fixture.query, ...(fixture.additionalQueries ?? [])]) {
+    problems.push(...(await runOneQuery(engine, fixture, query)));
+  }
+  return problems;
+}
+
+async function runOneQuery(
+  engine: ScriptureEngine,
+  fixture: CorpusFixture,
+  query: string,
+): Promise<string[]> {
+  const problems: string[] = [];
+  const result = await engine.research(query);
   const results = result.kind === 'discovery' ? result.results : [];
   const withinTop = fixture.expectedWithinTop ?? 10;
   const top = results.slice(0, withinTop);
@@ -167,7 +190,7 @@ export async function runCorpusFixture(
     if (hits.length === 0) {
       problems.push(
         `${fixture.id}: expected ${expectation.reference} within the top ${withinTop} for ` +
-          `"${fixture.query}", but it is absent`,
+          `"${query}", but it is absent`,
       );
       continue;
     }
@@ -180,7 +203,7 @@ export async function runCorpusFixture(
       // Two concepts may legitimately anchor one verse; without this the
       // fixture measures whichever of them happens to survive.
       problems.push(
-        `${fixture.id}: ${expectation.reference} ranks for "${fixture.query}" but carries no ` +
+        `${fixture.id}: ${expectation.reference} ranks for "${query}" but carries no ` +
           `reason labelled '${expectation.requiredReasonLabel}' (has: ` +
           `${[...new Set(hits.flatMap((hit) => hit.reasons.map((r) => r.label)))].join(' | ')}). ` +
           'The fixture is measuring a different concept than the one it covers.',
@@ -195,7 +218,7 @@ export async function runCorpusFixture(
     ) {
       // The Phase 1 trap, made explicit: right verse, wrong evidence.
       problems.push(
-        `${fixture.id}: ${expectation.reference} ranks for "${fixture.query}" but carries no ` +
+        `${fixture.id}: ${expectation.reference} ranks for "${query}" but carries no ` +
           `'${expectation.requiredReasonFamily}' reason (has: ` +
           `${[...new Set(hits.flatMap((hit) => hit.reasons.map((r) => r.family)))].join(', ')}). ` +
           'The right passage for the wrong reason is still a failure.',
@@ -212,7 +235,7 @@ export async function runCorpusFixture(
     });
     if (offender) {
       problems.push(
-        `${fixture.id}: ${forbidden.reference} must not rank for "${fixture.query}" but appears ` +
+        `${fixture.id}: ${forbidden.reference} must not rank for "${query}" but appears ` +
           `at position ${top.indexOf(offender) + 1}. ${forbidden.why ?? ''}`.trim(),
       );
     }
