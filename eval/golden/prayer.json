@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Matthew 6:9-13",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Prayer"
     }
   ],
   "expectedWithinTop": 10,

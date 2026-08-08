@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Ephesians 2:8-9",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Grace, not earned"
     }
   ],
   "expectedWithinTop": 10,

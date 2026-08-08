@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "John 13:34-35",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Loving one another"
     }
   ],
   "expectedWithinTop": 10,

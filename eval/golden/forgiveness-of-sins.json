@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Psalms 103:12",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's forgiveness"
     },
     {
       "reference": "1 John 1:9",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's forgiveness"
     }
   ],
   "expectedWithinTop": 10,

@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Matthew 7:24-27",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Building on the rock"
     }
   ],
   "expectedWithinTop": 10,

@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Nehemiah 8:10",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Joy in the Lord"
     }
   ],
   "expectedWithinTop": 10,

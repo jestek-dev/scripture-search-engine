@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Acts 16:30-31",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Salvation"
     },
     {
       "reference": "Romans 10:9",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Salvation"
     }
   ],
   "expectedWithinTop": 10,

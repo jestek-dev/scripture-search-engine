@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Psalms 100:4",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving thanks"
     },
     {
       "reference": "1 Thessalonians 5:18",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving thanks"
     }
   ],
   "expectedWithinTop": 10,

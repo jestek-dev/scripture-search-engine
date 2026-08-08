@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Jeremiah 29:11",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hope"
     }
   ],
   "expectedWithinTop": 10,

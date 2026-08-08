@@ -2,7 +2,9 @@
   "id": "hearing-and-doing",
   "query": "hearing and doing",
   "status": "active",
-  "coversConcepts": ["obedience-to-the-word"],
+  "coversConcepts": [
+    "obedience-to-the-word"
+  ],
   "note": [
     "FIXTURE #1 — the case that motivated this engine. On the prior system this",
     "query matched only the literal words and could not deduce that the theme",
@@ -30,12 +32,28 @@
     "starts passing cannot go unnoticed."
   ],
   "expectedTop": [
-    { "reference": "James 1:22-25", "requiredReasonFamily": "concept_anchor" },
-    { "reference": "Matthew 7:24-27", "requiredReasonFamily": "concept_anchor" },
-    { "reference": "Luke 6:46-49", "requiredReasonFamily": "concept_anchor" }
+    {
+      "reference": "James 1:22-25",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hearing and doing"
+    },
+    {
+      "reference": "Matthew 7:24-27",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hearing and doing"
+    },
+    {
+      "reference": "Luke 6:46-49",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hearing and doing"
+    }
   ],
   "expectedWithinTop": 10,
-  "alsoAcceptable": ["Ezekiel 33:31-32", "Romans 2:13", "John 13:17"],
+  "alsoAcceptable": [
+    "Ezekiel 33:31-32",
+    "Romans 2:13",
+    "John 13:17"
+  ],
   "mustNotRank": [
     {
       "reference": "Genesis 5:1",

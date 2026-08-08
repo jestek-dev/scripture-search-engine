@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "1 John 1:5-7",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Walking in the light"
     }
   ],
   "expectedWithinTop": 10,

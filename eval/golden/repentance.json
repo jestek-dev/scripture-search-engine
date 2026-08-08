@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Acts 3:19",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Repentance"
     },
     {
       "reference": "1 John 1:9",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Repentance"
     }
   ],
   "expectedWithinTop": 10,

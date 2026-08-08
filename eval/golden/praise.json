@@ -14,7 +14,8 @@
   "expectedTop": [
     {
       "reference": "Psalms 150:1-6",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Praise"
     }
   ],
   "expectedWithinTop": 10,

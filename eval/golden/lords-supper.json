@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "1 Corinthians 11:23-26",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Lord's Supper"
     },
     {
       "reference": "Luke 22:19-20",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Lord's Supper"
     }
   ],
   "expectedWithinTop": 10,

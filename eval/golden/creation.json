@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Genesis 1:1",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Creation"
     }
   ],
   "expectedWithinTop": 10,

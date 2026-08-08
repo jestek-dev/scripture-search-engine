@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Romans 5:8",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The cross and atonement"
     },
     {
       "reference": "1 Corinthians 15:3",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The cross and atonement"
     }
   ],
   "expectedWithinTop": 10,

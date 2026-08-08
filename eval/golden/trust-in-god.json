@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Proverbs 3:5-6",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Trusting God"
     }
   ],
   "expectedWithinTop": 10,

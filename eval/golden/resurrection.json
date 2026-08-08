@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Luke 24:5-6",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: He is risen"
     },
     {
       "reference": "Matthew 28:5-6",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: He is risen"
     }
   ],
   "expectedWithinTop": 10,

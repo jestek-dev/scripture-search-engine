@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Psalms 95:6",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Worship"
     }
   ],
   "expectedWithinTop": 10,

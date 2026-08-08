@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Isaiah 43:1-3",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Do not be afraid"
     }
   ],
   "expectedWithinTop": 10,

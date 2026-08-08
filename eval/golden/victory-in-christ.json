@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Romans 8:37",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Victory in Christ"
     }
   ],
   "expectedWithinTop": 10,

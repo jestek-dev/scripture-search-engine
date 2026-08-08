@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Psalms 46:1-3",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Refuge in trouble"
     }
   ],
   "expectedWithinTop": 10,

@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "John 3:16",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The love of God"
     },
     {
       "reference": "Romans 8:38-39",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The love of God"
     }
   ],
   "expectedWithinTop": 10,

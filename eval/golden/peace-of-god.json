@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Philippians 4:6-7",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Peace of God"
     },
     {
       "reference": "John 14:27",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Peace of God"
     }
   ],
   "expectedWithinTop": 10,

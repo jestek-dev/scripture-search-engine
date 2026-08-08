@@ -19,7 +19,22 @@ export interface CorpusFixture {
   readonly id: string;
   readonly status: 'active' | 'pending';
   readonly query?: string;
-  readonly expectedTop?: readonly { reference: string; requiredReasonFamily?: string }[];
+  readonly expectedTop?: readonly {
+    reference: string;
+    requiredReasonFamily?: string;
+    /**
+     * Exact reason label that must appear on the matched verse, e.g.
+     * "Theme: Grace, not earned".
+     *
+     * requiredReasonFamily alone proves only that SOME concept anchors this
+     * passage. Where two concepts legitimately anchor the same verse —
+     * `grace-not-earned` and `salvation` both name Ephesians 2:8 — the
+     * fixture would keep passing with its own concept deleted, measuring the
+     * neighbour instead. Naming the label is what makes a concept fixture
+     * actually test its own concept.
+     */
+    requiredReasonLabel?: string;
+  }[];
   readonly expectedWithinTop?: number;
   readonly mustNotRank?: readonly { reference: string; why?: string }[];
   /**
@@ -156,6 +171,22 @@ export async function runCorpusFixture(
       );
       continue;
     }
+    if (
+      expectation.requiredReasonLabel &&
+      !hits.some((hit) =>
+        hit.reasons.some((reason) => reason.label === expectation.requiredReasonLabel),
+      )
+    ) {
+      // Two concepts may legitimately anchor one verse; without this the
+      // fixture measures whichever of them happens to survive.
+      problems.push(
+        `${fixture.id}: ${expectation.reference} ranks for "${fixture.query}" but carries no ` +
+          `reason labelled '${expectation.requiredReasonLabel}' (has: ` +
+          `${[...new Set(hits.flatMap((hit) => hit.reasons.map((r) => r.label)))].join(' | ')}). ` +
+          'The fixture is measuring a different concept than the one it covers.',
+      );
+    }
+
     if (
       expectation.requiredReasonFamily &&
       !hits.some((hit) =>

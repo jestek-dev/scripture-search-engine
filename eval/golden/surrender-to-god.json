@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Romans 12:1",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Surrender"
     }
   ],
   "expectedWithinTop": 10,
