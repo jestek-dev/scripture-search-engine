@@ -4,6 +4,7 @@
   "rightsClass": "cc_by",
   "licenseRecord": "Creative Commons Attribution 4.0. The data file's own header states: 'CC-BY License: www.openbible.info/topics'. Attribution required in shipped output.",
   "sourceUrl": "https://a.openbible.info/data/topic-scores.zip",
+  "rollingSourceUrl": true,
   "sha256": "2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60",
   "bytes": 417866,
   "maxTier": "public_distribution",

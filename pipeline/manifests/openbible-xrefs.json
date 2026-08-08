@@ -4,9 +4,12 @@
   "rightsClass": "cc_by",
   "licenseRecord": "Creative Commons Attribution 4.0. The data file's own header states: 'www.openbible.info CC-BY 2026-07-27'. Attribution required in shipped output.",
   "sourceUrl": "https://a.openbible.info/data/cross-references.zip",
+  "rollingSourceUrl": true,
   "sha256": "36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829",
   "bytes": 1981973,
   "maxTier": "public_distribution",
-  "derivedFrom": ["tsk"],
+  "derivedFrom": [
+    "tsk"
+  ],
   "attributionNote": "Cross-reference data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info/labs/cross-references/). OpenBible states this data 'draws primarily from public-domain sources, especially the Treasury of Scripture Knowledge' - hence the declared derivedFrom, which places it in one correlation budget with TSK and with any homiletical co-citation source that also derives from TSK. Counting them as independent evidence would inflate confidence for what is substantially one body of scholarship. Rolling URL with no archival versioning; this checksum is our snapshot."
 }

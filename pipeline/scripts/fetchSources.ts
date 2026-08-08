@@ -25,7 +25,7 @@ import { fileURLToPath } from 'node:url';
 
 import { EXPOSITION_SOURCES } from '../src/expositionSources.js';
 import { fingerprintDirectory } from '../src/provenance/contentFingerprint.js';
-import type { SourceManifest } from '../src/provenance/manifest.js';
+import { retrievalUrls, type SourceManifest } from '../src/provenance/manifest.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -138,14 +138,48 @@ async function main(): Promise<void> {
     }
 
     process.stdout.write(`  ${manifest.id.padEnd(24)} fetching…`);
-    const response = await fetch(manifest.sourceUrl, { redirect: 'follow' });
-    if (!response.ok) {
-      process.stdout.write(` HTTP ${response.status}\n`);
-      failures.push(`${manifest.id}: HTTP ${response.status} from ${manifest.sourceUrl}`);
+
+    // Try the authoritative URL first, then the declared archive. A rolling
+    // source's primary URL is EXPECTED to eventually serve different bytes —
+    // that is not an error to stop on while an archive of the pinned snapshot
+    // exists. Only a candidate whose bytes match the manifest wins; a
+    // mismatch is recorded and the next candidate tried.
+    let bytes: Buffer | null = null;
+    let sha256 = '';
+    const attempts: string[] = [];
+    for (const url of retrievalUrls(manifest)) {
+      let response: Response;
+      try {
+        response = await fetch(url, { redirect: 'follow' });
+      } catch (error) {
+        attempts.push(`${url}: ${error instanceof Error ? error.message : 'network error'}`);
+        continue;
+      }
+      if (!response.ok) {
+        attempts.push(`${url}: HTTP ${response.status}`);
+        continue;
+      }
+      const candidate = Buffer.from(await response.arrayBuffer());
+      const candidateSha = createHash('sha256').update(candidate).digest('hex');
+      // A content-fingerprinted archive may legitimately repack (checked
+      // below); anything else must match the pinned checksum exactly.
+      if (candidateSha !== manifest.sha256 && !manifest.contentSha256) {
+        attempts.push(`${url}: checksum ${candidateSha} does not match the manifest`);
+        continue;
+      }
+      bytes = candidate;
+      sha256 = candidateSha;
+      if (attempts.length > 0) process.stdout.write(' (from archive)');
+      break;
+    }
+    if (!bytes) {
+      process.stdout.write(' FAILED\n');
+      failures.push(
+        `${manifest.id}: no retrieval candidate produced the pinned bytes — ` +
+          attempts.join('; '),
+      );
       continue;
     }
-    const bytes = Buffer.from(await response.arrayBuffer());
-    const sha256 = createHash('sha256').update(bytes).digest('hex');
 
     writeFileSync(path, bytes);
     unpack(manifest, path);

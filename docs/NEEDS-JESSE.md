@@ -40,7 +40,14 @@ reviews of numbers I had to pick to keep moving.
    re-baseline. §1.6c. Deciding in the moment is how a gate becomes decoration.
    There is time: the last two admissions moved it +0.014 against a 0.15 budget.
 
-5. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
+5. **Upload the OpenBible snapshot archive.** §1.7. Two-minute errand, and
+   nobody else can do it: G1 now warns that `openbible-topics` and
+   `openbible-xrefs` pin bytes that exist only on machines which already
+   downloaded them. Upload the two files from `pipeline/sources/` as a
+   Release asset and paste the URLs into the manifests as `archiveUrl`.
+   The warning clears itself the moment those fields are filled.
+
+6. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
 Everything else in this document is context, not a request.
@@ -96,6 +103,31 @@ revert visibility.
 registered npm account or org. If it is not, publishing fails and the options
 are to register it or publish via GitHub Packages. I could not check this
 without your npm credentials.
+
+### 1.7 The OpenBible snapshots have no durable copy — mechanism is in, the upload is yours
+
+§2.5 recorded that `a.openbible.info` rolls its files weekly with no archive,
+so our checksums *are* the snapshot. That was filed as "worth keeping a copy
+somewhere durable". It is now enforced rather than remembered:
+
+- Manifests declare `rollingSourceUrl: true` and may record an `archiveUrl`.
+- **G1 warns** (never fails) when a rolling source has no archive, naming the
+  file and the destination. It warns rather than blocks because closing it
+  needs a Release upload, which no build script can perform, and blocking
+  unrelated PRs on a human errand is how a gate gets routed around.
+- `fetchSources` tries the authoritative URL first and falls back to the
+  archive, accepting only bytes that match the pinned checksum. So the day
+  upstream republishes, the build keeps working instead of failing closed.
+
+**What is deliberately NOT done:** no `archiveUrl` is written yet. Pointing a
+manifest at a Release asset that does not exist would recreate precisely the
+hole G1 was extended to close in §2.6b — a URL that reads as provenance and
+resolves to nothing. The field goes in when the bytes are actually there.
+
+To close it: upload `pipeline/sources/topic-scores.zip` and
+`cross-references.zip` to a Release (CC BY permits redistribution with
+attribution; the manifests already carry the attribution text), then add
+`"archiveUrl": "<asset url>"` to each manifest. G1 flips to pass.
 
 ### 1.3 When does Maskil adopt this? — still open, and now also blocked technically
 

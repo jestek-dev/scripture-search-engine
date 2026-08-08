@@ -49,6 +49,21 @@ export interface SourceManifest {
   readonly licenseRecord: string;
   /** Authoritative retrieval location. */
   readonly sourceUrl: string;
+  /**
+   * True when sourceUrl is a rolling "latest" path that upstream overwrites,
+   * so the pinned checksum identifies a snapshot the URL will eventually stop
+   * serving. Declaring it is what lets G1 demand an archiveUrl: a rolling
+   * source without an archive is a corpus that silently becomes
+   * unreproducible the week upstream republishes.
+   */
+  readonly rollingSourceUrl?: boolean;
+  /**
+   * Durable fallback for the exact pinned bytes, tried when sourceUrl fails
+   * or serves different content. For rolling sources this is REQUIRED (G1):
+   * our checksummed copy is the only one that can rebuild the artifact, and
+   * it must live somewhere that does not roll.
+   */
+  readonly archiveUrl?: string;
   /** SHA-256 of the exact acquired artifact. */
   readonly sha256: string;
   /**
@@ -172,6 +187,32 @@ export function checkProvenance(options: {
     }
   }
   return failures;
+}
+
+/**
+ * G1: rolling sources must carry an archive of the pinned bytes.
+ *
+ * Returns the ids of manifests that declare a rolling sourceUrl but no
+ * archiveUrl. For those sources the checksum names bytes that only exist in
+ * our own copies — if the copy is lost before an archive exists, the build
+ * can never again be reproduced from scratch.
+ */
+export function rollingSourcesWithoutArchive(manifests: ManifestSet): readonly string[] {
+  return manifests.sources
+    .filter((source) => source.rollingSourceUrl && !source.archiveUrl?.trim())
+    .map((source) => source.id)
+    .sort();
+}
+
+/**
+ * Retrieval candidates in the order fetchers should try them: the
+ * authoritative URL first, then the archive. One list so the fetch script and
+ * any future mirror logic cannot disagree about precedence.
+ */
+export function retrievalUrls(source: SourceManifest): readonly string[] {
+  const urls = [source.sourceUrl];
+  if (source.archiveUrl?.trim()) urls.push(source.archiveUrl);
+  return urls;
 }
 
 /**

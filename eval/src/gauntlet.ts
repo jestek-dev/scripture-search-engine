@@ -31,6 +31,7 @@ import {
 import { compileOntology } from '../../pipeline/src/importers/ontologyImporter.js';
 import {
   correlationGroups,
+  rollingSourcesWithoutArchive,
   type ManifestSet,
   type SourceManifest,
 } from '../../pipeline/src/provenance/manifest.js';
@@ -346,10 +347,38 @@ function provenanceGate(): GateResult {
     );
   }
 
+  // A rolling source's URL is overwritten upstream on a schedule, so the
+  // pinned checksum describes bytes that will stop being served. Without a
+  // durable archive our own working copy is the only one in existence and the
+  // build becomes unreproducible the moment it is lost.
+  //
+  // Warned rather than failed: closing it requires uploading a release asset,
+  // which no build script can do, and blocking every unrelated PR on a human
+  // errand is how a gate becomes something people route around. The warning
+  // names the exact file and destination so it stays actionable.
+  const unarchived = rollingSourcesWithoutArchive(loadManifestSet());
+  if (unarchived.length > 0) {
+    return warn(
+      'G1-provenance',
+      'Provenance',
+      `${files.length} manifest(s) structurally sound; ${unarchived.length} rolling ` +
+        'source(s) have no durable archive of the pinned bytes',
+      unarchived.map((id) => ({
+        message:
+          `${id}: sourceUrl is declared rolling, so upstream will overwrite the pinned ` +
+          'bytes. Upload the checksummed copy from pipeline/sources/ as a Release asset ' +
+          'and record it as `archiveUrl` in the manifest — until then this snapshot ' +
+          'exists only on machines that already downloaded it.',
+        subjects: [id],
+      })),
+    );
+  }
+
   return pass(
     'G1-provenance',
     'Provenance',
-    `${files.length} source manifest(s); every checksum names a retrievable file`,
+    `${files.length} source manifest(s); every checksum names a retrievable file, ` +
+      'and every rolling source has a durable archive',
     { manifests: files.length },
   );
 }
