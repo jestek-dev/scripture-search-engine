@@ -1,8 +1,13 @@
 # Audit hardening plan — strengthening the engine on its own terms
 
 **Date:** 2026-08-08
-**Status:** Proposed. Wave 1 is executable without decisions; items marked
-**[JESSE]** are decisions only Jesse can make and are collected in §6.
+**Status:** **IMPLEMENTED** — all four waves executed on
+`claude/system-audit-feedback-uzqymz`, each PR adversarially reviewed and the
+findings fixed. Two items (PR 8's sweep run, PR 11) are blocked on source
+access, not effort: see NEEDS-JESSE §1.11. Outcomes that DIVERGED from this
+plan are recorded in §7 — read that before the plan body, because two of the
+plan's own premises turned out to be wrong when measured.
+Items marked **[JESSE]** remain decisions only Jesse can make (§6).
 **Provenance:** Produced from an end-to-end audit of this repository
 (architecture, pipeline, ontology, gates, and live query behavior against a
 freshly built fixture artifact). The audit ran the full verify suite —
@@ -301,3 +306,49 @@ gate gets interpreted in the moment:
 3. **Passage vs. verse results** (from PR 7): whether the engine returns
    collapsed anchor-range passages or per-verse results grouped by
    consumers.
+
+---
+
+## 7. What actually happened — where this plan was wrong
+
+Recorded because a plan that is quietly not followed is worse than one that
+says where it broke.
+
+**PR 6 was over-scoped by a factor of six, and the plan's premise was wrong.**
+It proposed a ~50-entry remembered-phrasings pack. Measuring 60 phrasings first
+showed **52 already work** — the lexical ladder recovers most NIV/ESV wordings
+because content words usually survive translation. The pack shipped as 6
+entries plus 2 new concepts. Most of the proposed pack would have been
+`NO MEASURABLE EFFECT`. See `docs/research/2026-08-08-remembered-phrasings.md`.
+
+**PR 5 found a second, worse problem the plan never anticipated.** The plan
+framed single tokens as something to *add*. Twenty lexicon phrases already
+collapsed to one significant token by accident — `"god with us"` → `god`,
+`"not by works"` → `work` — so two very broad bare queries were firing curated
+concepts nobody intended. A phrase's real width is its significant-token count,
+not its word count. The gauntlet now reports every collapse so the class cannot
+hide again.
+
+**PR 3's first implementation was wrong and was rewritten after review.** It
+made G1 warn forever, which would have made the documented merge criterion
+(verdict ADMIT) permanently unreachable and trained readers to skim the one
+gate that matters most. Replaced with a dated acknowledgement in
+`eval/budgets.json`: known gaps pass, a *new* rolling source without an archive
+fails closed.
+
+**PR 4's first implementation measured the wrong thing.** Adversarial review
+showed `grace-not-earned`'s fixture still passed with its concept deleted,
+because `salvation` anchors the same verse. Fixtures now name their own concept
+via `requiredReasonLabel`.
+
+**PR 7 exposed a real release hazard.** Bumping `ENGINE_VERSION` made the
+release-contract test fail — correctly: the committed descriptor describes a
+0.7.1 build of an 8-concept ontology. Rather than edit its version field to
+claim a build nobody ran, the descriptor now declares itself stale and the
+release workflow refuses to publish against it.
+
+**The plan's Wave-4 items were partly unbuildable here.** The `minPmi` sweep
+and Maclaren-on-Mark both need the gitignored corpora, and this environment
+cannot reach the source hosts. The sweep tool is written and refuses to run
+against the pre-filtered subset; both are recorded in NEEDS-JESSE §1.11 with
+exactly what to run.
