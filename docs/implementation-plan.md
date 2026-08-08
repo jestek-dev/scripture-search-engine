@@ -354,9 +354,9 @@ actually bought before you commit to it.
 |---|---|---|
 | 0 · Bootstrap | ✅ complete | G1/G2/G3/G4/G10 live from the first commit |
 | 1 · Lexical ladder | ✅ complete | probe baselines recorded; G8/G11 live |
-| 2 · Concept layer | ⚠️ complete *with a caveat* | fixture #1 green. But `themes()`/`forSong()` were listed in this phase's gate and **were not built** (§5). Nave/Torrey **not imported** — the spine is 8 editorial concepts + OpenBible votes |
+| 2 · Concept layer | ⚠️ complete *with a caveat* | fixture #1 green. ~~`themes()`/`forSong()` were listed in this phase's gate and were not built; Nave/Torrey not imported.~~ **Superseded:** all five API methods ship at 0.7.1 with contract tests; Torrey admitted 2026-08-06 (Nave declared lineage-only); the spine is 32 curated concepts + OpenBible votes.
 | 3 · Evidence graph | ✅ **complete, and far past the pilot** | Seven expositors: Clarke, Matthew Henry, Keil & Delitzsch, Barnes, JFB (whole-Bible or testament-wide) plus Spurgeon and Maclaren on Psalms. **99.0% of verses carry corroborated evidence**; 877,300 terms |
-| 3½ · Full-corpus build | ✅ **complete** | 31,098 verses, **40.91 MiB** (budget 160 MiB), 341k cross-references, 2.6–42 ms queries. First reviewed descriptor in `artifacts/`. `npm run build:artifact --workspace pipeline` |
+| 3½ · Full-corpus build | ✅ **complete** | 31,098 verses, **117.60 MiB** as of the current descriptor (budget 160 MiB; the 40.91 MiB first measurement predates four expositors), 341k cross-references, 2.6–42 ms queries. First reviewed descriptor in `artifacts/`. `npm run build:artifact --workspace pipeline` |
 | 4 · Curation skill | ✅ complete | skill ships; **not yet run end-to-end on a real gap**, so its own gate is unmet |
 | 5 · Consumer adoption | ⏳ **unblocked, not started** | The API blocker is gone: all five methods ship at 0.7.1 on npm, with contract tests. What remains is per-app work in each consumer's repo, plus Jesse's sequencing call — see `NEEDS-JESSE.md` §1.3 |
 

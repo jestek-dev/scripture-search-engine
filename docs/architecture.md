@@ -66,16 +66,20 @@ sources: [nave, torrey, openbible-topics, editorial]
 
 Seeded mechanically from **Nave's Topical Bible** and **Torrey's New Topical
 Textbook** (both public domain per CrossWire) merged with **OpenBible topic votes**
-(CC BY, attributed), then **human-reviewed**
-> **⚠️ Superseded in part (2026-08-06).** The seed source that actually landed
-> is Torrey, via a three-witness-verified transcription; Nave is admitted as a
-> *lineage-only* manifest (never cited by a row) so Torrey/Nave's shared
-> 1897-era scholarship is budgeted once, not twice. See
-> `docs/research/2026-08-06-torrey-miller-topical-concordance.md`. — labels modernized, historic
+(CC BY, attributed), then **human-reviewed** — labels modernized, historic
 editorial theology filtered, every merged concept inspectable. This is the
 "deterministic theologian's" doctrinal spine: small (a few MB), fully reviewable,
 and the layer where LH's own theological voice can eventually be encoded
 deliberately rather than statistically.
+
+> **⚠️ Superseded in part (2026-08-06).** The seed source that actually landed
+> is Torrey, via a three-witness-verified transcription; Nave is admitted as a
+> *lineage-only* manifest — declared so lineage can be expressed, never cited by
+> a shipped row — so Torrey/Nave's shared 1897-era scholarship is budgeted once,
+> not twice. The YAML sample above predates that decision and still shows `nave`
+> in `sources:`; a concept written today would cite `torrey`,
+> `openbible-topics` or `editorial`. See
+> `docs/research/2026-08-06-torrey-miller-topical-concordance.md`.
 
 ### Layer B — Homiletical evidence graph (the flesh)
 

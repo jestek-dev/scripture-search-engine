@@ -6,6 +6,29 @@
     "records real baselines on real data \u2014 a guessed threshold that never",
     "fires is worse than an absent one, because it reads as protection."
   ],
+  "provenance": {
+    "$comment": [
+      "G1. Rolling sources whose pinned bytes have no durable archive yet.",
+      "",
+      "This list is an ACKNOWLEDGEMENT, not a permission slip. A source named",
+      "here is one we know is unarchived and have accepted the risk on, dated",
+      "and reviewed. A rolling source NOT named here fails the build closed, so",
+      "the gap can never grow silently — which is the guardrail. Emptying this",
+      "list is the goal; adding to it is a reviewed decision.",
+      "",
+      "Why acknowledge rather than warn: a warning that appears on every PR,",
+      "that its author cannot clear, and that is unrelated to their change,",
+      "becomes decoration by exactly the mechanism CLAUDE.md's gate discipline",
+      "forbids — and it would make the documented merge criterion (verdict",
+      "ADMIT) permanently unreachable.",
+      "",
+      "2026-08-08: openbible-topics and openbible-xrefs. a.openbible.info rolls",
+      "its files weekly with no upstream archive, so our checksummed copies are",
+      "the only ones in existence. Closing this needs a Release upload, which no",
+      "build script can perform — see docs/NEEDS-JESSE.md §1.8."
+    ],
+    "acknowledgedUnarchivedRollingSources": ["openbible-topics", "openbible-xrefs"]
+  },
   "size": {
     "totalArtifactBytes": 167772160,
     "$comment_total": "160 MiB. Base scripture corpus is ~122 MiB; Layers A+B are budgeted ~30 MiB with headroom.",

@@ -107,6 +107,67 @@ function unpack(manifest: SourceManifest, archivePath: string): void {
   execFileSync('unzip', ['-o', '-q', '-j', archivePath, 'modules/comments/*', '-d', target]);
 }
 
+export interface CandidateSelection {
+  /** Bytes matching the manifest, or null when no candidate produced them. */
+  readonly bytes: Buffer | null;
+  readonly sha256: string;
+  /** True when the authoritative URL failed and a later candidate succeeded. */
+  readonly usedFallback: boolean;
+  /** One line per candidate tried, in order, naming exactly what went wrong. */
+  readonly attempts: readonly string[];
+}
+
+/**
+ * Picks the first retrieval candidate that produces the manifest's bytes.
+ *
+ * Split out from main() and given an injectable fetcher because this is the
+ * only branching logic in the script and it is where the interesting failures
+ * live — a candidate loop that silently accepts wrong bytes is exactly the
+ * class of bug that makes a checksum decorative.
+ *
+ * A source declaring `contentSha256` is verified on its unpacked CONTENT
+ * later, because publishers repack archives without changing the payload; for
+ * those, byte equality is not the admission test and the first HTTP success
+ * wins here.
+ */
+export async function selectCandidate(
+  manifest: SourceManifest,
+  fetcher: typeof fetch = fetch,
+): Promise<CandidateSelection> {
+  const attempts: string[] = [];
+  const urls = retrievalUrls(manifest);
+
+  for (const [index, url] of urls.entries()) {
+    let response: Response;
+    try {
+      response = await fetcher(url, { redirect: 'follow' });
+    } catch (error) {
+      attempts.push(
+        `${url}: unreachable (${error instanceof Error ? error.message : 'network error'})`,
+      );
+      continue;
+    }
+    if (!response.ok) {
+      attempts.push(`${url}: HTTP ${response.status}`);
+      continue;
+    }
+    const candidate = Buffer.from(await response.arrayBuffer());
+    const candidateSha = createHash('sha256').update(candidate).digest('hex');
+    if (candidateSha !== manifest.sha256 && !manifest.contentSha256) {
+      // Both halves of the comparison, so the operator can act without
+      // opening the manifest.
+      attempts.push(
+        `${url}: checksum mismatch — expected ${manifest.sha256}, got ${candidateSha}`,
+      );
+      continue;
+    }
+    attempts.push(`${url}: ok`);
+    return { bytes: candidate, sha256: candidateSha, usedFallback: index > 0, attempts };
+  }
+
+  return { bytes: null, sha256: '', usedFallback: false, attempts };
+}
+
 async function main(): Promise<void> {
   const force = process.argv.includes('--force');
   mkdirSync(SOURCES, { recursive: true });
@@ -122,6 +183,10 @@ async function main(): Promise<void> {
   let fetched = 0;
   let cached = 0;
   const failures: string[] = [];
+  // Sources whose authoritative URL stopped serving the pinned bytes but whose
+  // archive supplied them. Not a failure, but never silent: an unrecorded
+  // fallback turns a loud break into a slow drift nobody notices.
+  const drift: string[] = [];
 
   for (const manifest of manifests) {
     const path = join(SOURCES, fileNameFor(manifest));
@@ -139,46 +204,28 @@ async function main(): Promise<void> {
 
     process.stdout.write(`  ${manifest.id.padEnd(24)} fetching…`);
 
-    // Try the authoritative URL first, then the declared archive. A rolling
-    // source's primary URL is EXPECTED to eventually serve different bytes —
-    // that is not an error to stop on while an archive of the pinned snapshot
-    // exists. Only a candidate whose bytes match the manifest wins; a
-    // mismatch is recorded and the next candidate tried.
-    let bytes: Buffer | null = null;
-    let sha256 = '';
-    const attempts: string[] = [];
-    for (const url of retrievalUrls(manifest)) {
-      let response: Response;
-      try {
-        response = await fetch(url, { redirect: 'follow' });
-      } catch (error) {
-        attempts.push(`${url}: ${error instanceof Error ? error.message : 'network error'}`);
-        continue;
-      }
-      if (!response.ok) {
-        attempts.push(`${url}: HTTP ${response.status}`);
-        continue;
-      }
-      const candidate = Buffer.from(await response.arrayBuffer());
-      const candidateSha = createHash('sha256').update(candidate).digest('hex');
-      // A content-fingerprinted archive may legitimately repack (checked
-      // below); anything else must match the pinned checksum exactly.
-      if (candidateSha !== manifest.sha256 && !manifest.contentSha256) {
-        attempts.push(`${url}: checksum ${candidateSha} does not match the manifest`);
-        continue;
-      }
-      bytes = candidate;
-      sha256 = candidateSha;
-      if (attempts.length > 0) process.stdout.write(' (from archive)');
-      break;
-    }
-    if (!bytes) {
+    const selection = await selectCandidate(manifest);
+    if (!selection.bytes) {
       process.stdout.write(' FAILED\n');
       failures.push(
-        `${manifest.id}: no retrieval candidate produced the pinned bytes — ` +
-          attempts.join('; '),
+        `${manifest.id}: no retrieval candidate produced the pinned bytes.\n` +
+          selection.attempts.map((line) => `      ${line}`).join('\n') +
+          '\n      If the source legitimately changed, re-admit it as a reviewed change ' +
+          '(new checksum + a note in the manifest saying what moved).',
       );
       continue;
+    }
+    const { bytes, sha256 } = selection;
+    // A fallback that WORKED still means the authoritative URL no longer
+    // serves the pinned bytes. Recorded rather than shrugged off: this is the
+    // slow failure G1b exists to catch, and swallowing it would trade a loud
+    // break for a silent drift.
+    if (selection.usedFallback) {
+      process.stdout.write(' (from archive)');
+      drift.push(
+        `${manifest.id}: authoritative URL no longer serves the pinned bytes; the archive did. ` +
+          selection.attempts.join('; '),
+      );
     }
 
     writeFileSync(path, bytes);
@@ -207,20 +254,23 @@ async function main(): Promise<void> {
       continue;
     }
 
-    if (sha256 !== manifest.sha256) {
-      process.stdout.write(' CHECKSUM MISMATCH\n');
-      failures.push(
-        `${manifest.id}: expected ${manifest.sha256}, got ${sha256}. The file at this URL is ` +
-          'not the one the rights record describes. Re-admit it as a reviewed change.',
-      );
-      continue;
-    }
-
+    // No trailing checksum compare: selectCandidate only returns bytes that
+    // already matched the manifest (or that are content-fingerprinted above),
+    // so a check here could never fire and would read as protection.
     fetched += 1;
     process.stdout.write(` ok (${(bytes.length / 1048576).toFixed(1)} MiB)\n`);
   }
 
   process.stdout.write(`\n${fetched} fetched, ${cached} already present\n`);
+
+  if (drift.length > 0) {
+    process.stdout.write(
+      `\n${drift.length} source(s) came from their ARCHIVE, not their authoritative URL:\n  ` +
+        `${drift.join('\n  ')}\n` +
+        'The build is reproducible, but upstream has moved. Re-admitting the current ' +
+        'upstream file is a reviewed decision worth making deliberately.\n',
+    );
+  }
 
   if (failures.length > 0) {
     process.stderr.write(`\n${failures.length} source(s) failed:\n  ${failures.join('\n  ')}\n`);

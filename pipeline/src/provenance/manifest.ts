@@ -210,9 +210,31 @@ export function rollingSourcesWithoutArchive(manifests: ManifestSet): readonly s
  * any future mirror logic cannot disagree about precedence.
  */
 export function retrievalUrls(source: SourceManifest): readonly string[] {
-  const urls = [source.sourceUrl];
-  if (source.archiveUrl?.trim()) urls.push(source.archiveUrl);
+  const urls = [source.sourceUrl.trim()];
+  const archive = source.archiveUrl?.trim();
+  // Trimmed on the way OUT, not just in the guard: a padded URL that passes
+  // the presence check and then fails to fetch would report "durable" to G1
+  // while being unfetchable, which is worse than having no archive at all.
+  if (archive) urls.push(archive);
   return urls;
+}
+
+/**
+ * Structural test for a URL that must identify retrievable BYTES.
+ *
+ * A directory or bare origin cannot: the page it serves changes, and the file
+ * a checksum describes is one of many things linked from it. Applied to
+ * archiveUrl for the same reason G1 already applies it to sourceUrl — an
+ * archive that reads as provenance and resolves to a listing is the precise
+ * hole this whole mechanism exists to close.
+ */
+export function isFileUrl(url: string): boolean {
+  const trimmed = url.trim();
+  if (!/^https?:\/\//.test(trimmed)) return false;
+  if (/\/$/.test(trimmed)) return false;
+  // Must have a path beyond the origin.
+  const withoutScheme = trimmed.replace(/^https?:\/\//, '');
+  return withoutScheme.includes('/');
 }
 
 /**

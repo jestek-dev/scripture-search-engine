@@ -40,14 +40,20 @@ reviews of numbers I had to pick to keep moving.
    re-baseline. §1.6c. Deciding in the moment is how a gate becomes decoration.
    There is time: the last two admissions moved it +0.014 against a 0.15 budget.
 
-5. **Upload the OpenBible snapshot archive.** §1.7. Two-minute errand, and
-   nobody else can do it: G1 now warns that `openbible-topics` and
-   `openbible-xrefs` pin bytes that exist only on machines which already
-   downloaded them. Upload the two files from `pipeline/sources/` as a
-   Release asset and paste the URLs into the manifests as `archiveUrl`.
-   The warning clears itself the moment those fields are filled.
+5. **Upload the OpenBible snapshot archive.** §1.8. Two-minute errand, and
+   nobody else can do it: `openbible-topics` and `openbible-xrefs` pin bytes
+   that exist only on machines which already downloaded them. G1 now fails
+   closed on any rolling source without a durable archive; these two are
+   carried as a dated acknowledgement in `eval/budgets.json` so the known gap
+   cannot grow silently. Verify the checksums, upload both files as a Release
+   asset, record them as `archiveUrl`, and drop them from the acknowledgement
+   list.
 
-6. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
+6. **Rebuild the release descriptor.** §1.9. It still describes an 8-concept
+   ontology; the tree now has 32, so `layerFingerprint` no longer identifies
+   what this code builds. One command on a machine that can reach the sources.
+
+7. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
 Everything else in this document is context, not a request.
@@ -104,41 +110,17 @@ registered npm account or org. If it is not, publishing fails and the options
 are to register it or publish via GitHub Packages. I could not check this
 without your npm credentials.
 
-### 1.7 The OpenBible snapshots have no durable copy — mechanism is in, the upload is yours
-
-§2.5 recorded that `a.openbible.info` rolls its files weekly with no archive,
-so our checksums *are* the snapshot. That was filed as "worth keeping a copy
-somewhere durable". It is now enforced rather than remembered:
-
-- Manifests declare `rollingSourceUrl: true` and may record an `archiveUrl`.
-- **G1 warns** (never fails) when a rolling source has no archive, naming the
-  file and the destination. It warns rather than blocks because closing it
-  needs a Release upload, which no build script can perform, and blocking
-  unrelated PRs on a human errand is how a gate gets routed around.
-- `fetchSources` tries the authoritative URL first and falls back to the
-  archive, accepting only bytes that match the pinned checksum. So the day
-  upstream republishes, the build keeps working instead of failing closed.
-
-**What is deliberately NOT done:** no `archiveUrl` is written yet. Pointing a
-manifest at a Release asset that does not exist would recreate precisely the
-hole G1 was extended to close in §2.6b — a URL that reads as provenance and
-resolves to nothing. The field goes in when the bytes are actually there.
-
-To close it: upload `pipeline/sources/topic-scores.zip` and
-`cross-references.zip` to a Release (CC BY permits redistribution with
-attribution; the manifests already carry the attribution text), then add
-`"archiveUrl": "<asset url>"` to each manifest. G1 flips to pass.
-
 ### 1.3 When does Maskil adopt this? — still open, and now also blocked technically
 
 Phase 5 is written but not started, per your instruction. Maskil's own July
 audit deliberately sequenced the broad research engine *after* the
 collaboration pilot.
 
-New since I last wrote this: adoption is no longer *only* a sequencing call.
-The engine ships `research()` and nothing else. Setlist and Maskil both need
-`forSong()`, which is typed but unbuilt. So Phase 5 has real work in front of
-it regardless of when you want it (implementation plan §5).
+~~New since I last wrote this: the engine ships `research()` and nothing else.~~
+**Superseded 2026-07-31:** all five API methods — `research()`, `themes()`,
+`passage()`, `related()`, `forSong()` — ship at 0.7.1 with consumer contract
+tests, so Phase 5 is no longer blocked technically. What remains is inside
+Maskil, Setlist and Versed, and the sequencing call is still yours.
 
 ### 1.4a Treasury vol. 3 is in; vol. 5 is deliberately NOT — ✅ resolved
 
@@ -208,6 +190,66 @@ The lesson is about when a budget can be judged, not about the number: I was
 measuring headroom against a corpus that was one-sixth built. Current position
 is 97.48 of 160 MiB, so roughly one more whole-Bible commentator fits. That is
 now a real constraint worth watching rather than a formality.
+
+### 1.9 The release descriptor is STALE — it describes an 8-concept ontology
+
+`artifacts/content-artifact.json` was built 2026-07-30 and records
+`counts.concepts: 8` with `layerFingerprint 316fba74…`. The ontology has since
+grown to **32** concepts (Torrey wave, 2026-08-06) and gained single-token
+lexicon work after that, so the committed descriptor no longer describes what a
+build of this tree produces.
+
+Why this is more than a stale number: `layerFingerprint` is one of the three
+identities the reproducibility contract is built on. A consumer pinning that
+descriptor and running today's engine gets different rankings with the same
+declared identity, which is precisely the failure the fingerprint was
+introduced to prevent (README, "The reproducibility contract").
+
+Nothing shipped is *wrong* — the descriptor honestly describes the artifact it
+was generated from, and the 117.60 MiB / 877k / 341k figures quoted in the
+README come from that same build and remain accurate for it. The gap is that no
+build has been run since the ontology tripled.
+
+**To close it:** run `npm run fetch:sources && npm run build:artifact` on a
+machine with the corpora, review the regenerated descriptor, and commit it. I
+could not: `a.openbible.info` is unreachable from this environment (the agent
+proxy returns 403), so a full build is impossible here and fabricating the
+numbers would be worse than reporting the gap.
+
+### 1.8 The OpenBible snapshots have no durable copy — mechanism is in, the upload is yours
+
+§2.5 recorded that `a.openbible.info` rolls its files weekly with no archive,
+so our checksums *are* the snapshot. That was filed as "worth keeping a copy
+somewhere durable". It is now enforced rather than remembered:
+
+- Manifests declare `rollingSourceUrl: true` and may record an `archiveUrl`.
+- **G1 fails closed** when a rolling source has no archive — UNLESS the id is
+  carried in `provenance.acknowledgedUnarchivedRollingSources` in
+  `eval/budgets.json`, which is reviewed data like every other threshold. The
+  two known sources are acknowledged there; a *new* rolling source without an
+  archive fails the build. That way the standing gap is recorded once and
+  reviewed, rather than nagging on every unrelated PR — a warning its author
+  cannot clear is decoration by CLAUDE.md's own definition — while the gap
+  itself can never grow unnoticed.
+- `archiveUrl` is checked structurally (it must name a file, not a landing
+  page) and by `--check-sources`, so an archive that reads as provenance and
+  resolves to nothing is caught the same way a bad `sourceUrl` is.
+- `fetchSources` tries the authoritative URL first and falls back to the
+  archive, accepting only bytes that match the pinned checksum. So the day
+  upstream republishes, the build keeps working instead of failing closed.
+
+**What is deliberately NOT done:** no `archiveUrl` is written yet. Pointing a
+manifest at a Release asset that does not exist would recreate precisely the
+hole G1 was extended to close in §2.6b — a URL that reads as provenance and
+resolves to nothing. The field goes in when the bytes are actually there.
+
+To close it, **verify before uploading**: `sha256sum pipeline/sources/topic-scores.zip`
+must equal the `sha256` in `pipeline/manifests/openbible-topics.json`, and likewise
+for `cross-references.zip`. If it does not, your copy is a later week's download
+and uploading it produces a durable archive of the WRONG bytes — the fetcher will
+reject it at build time. With the checksums confirmed, upload both to a Release (CC BY permits redistribution with
+attribution; the manifests already carry the attribution text), then add
+`"archiveUrl": "<asset url>"` to each manifest. G1 flips to pass.
 
 ---
 

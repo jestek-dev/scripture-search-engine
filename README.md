@@ -87,7 +87,7 @@ diminishing returns.
 
 | Gate | Protects against |
 |---|---|
-| G1 provenance | Unattributed or wrongly-licensed rows (fails closed) |
+| G1 provenance | Unattributed or wrongly-licensed rows, and rolling sources with no durable archive (fails closed; known gaps are acknowledged as reviewed data in `eval/budgets.json`) |
 | G2 determinism | Ordering that drifts between runs or platforms |
 | G3 golden regression | Lost ordering **or** a right answer for the wrong reason |
 | G4 collision | Near-duplicate concepts diluting each other's anchors |
@@ -132,11 +132,13 @@ Maskil, Setlist and Versed) is deliberately not started.
 |---|---|
 | Lexical ladder | reference, verbatim phrase + longest-fragment fallback, IDF tokens with proximity, archaic/inflection folding |
 | Concept spine | 32 curated concepts, OpenBible topical votes, cross-reference expansion. Torrey admitted 2026-08-06 (verified against three witnesses); Nave declared lineage-only so Torrey-derived evidence is never double-counted |
-| Homiletical | Seven expositors (Clarke, Henry, Keil & Delitzsch, Barnes, JFB whole-testament; Maclaren + Spurgeon on Psalms) → 877k verse-level corroborated terms covering 99.0% of the Bible |
+| Homiletical | Seven expositors — Clarke, Henry and JFB whole-Bible; Keil & Delitzsch OT; Barnes NT; Maclaren + Spurgeon on Psalms → in the full artifact, 877k verse-level corroborated terms covering 99.0% of the Bible (the CI fixture is a deliberately small subset and reports its own, much smaller, numbers) |
 | Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow — plus the judgment workbench (`workbench/`). Neither yet run against a real coverage gap |
 | Runtime API | All five methods ship: `research()`, `themes()`, `passage()`, `related()`, `forSong()`, with consumer contract tests |
 
-**26 golden fixtures are active and passing.** The founding case still holds:
+**Every concept is measured.** 32 concept fixtures plus the ranking-invariants
+suite are active and passing, and G3 now fails the build if any concept lacks a
+covering fixture. The founding case still holds:
 "hearing and doing" returns James 1:22, Matthew 7:24 and Luke 6:47 carrying
 `concept_anchor` evidence attributed to LH editorial — the right passages
 *for the right reason*, which is what the fixture actually asserts.
