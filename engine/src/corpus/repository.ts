@@ -377,6 +377,18 @@ export interface ConceptAnchorRow extends ScriptureVerse {
   readonly sourceId: string;
   readonly weight: number;
   readonly locator: string | null;
+  /**
+   * The curated anchor's OWN span, carried through so results can be presented
+   * as the passage a human named rather than as N separate verses.
+   *
+   * A ranged anchor emits one candidate per verse, and authoritative results
+   * are exempt from group diversification by design — so `communion` returned
+   * 1 Cor 11:23, :24, :25 and :26 as four identical-scoring results occupying
+   * the whole top of the list. The span is the natural unit here because a
+   * human chose it; nothing has to be inferred.
+   */
+  readonly anchorStartVerseId: number;
+  readonly anchorEndVerseId: number;
 }
 
 /** A verse reached by a curated cross-reference edge. */
@@ -448,7 +460,8 @@ export class ConceptRepository {
               v.book_id AS bookId, b.name AS bookName,
               v.chapter AS chapter, v.verse AS verse, v.text AS text,
               a.concept_id AS conceptId, c.label AS conceptLabel,
-              a.source_id AS sourceId, a.weight AS weight, a.locator AS locator
+              a.source_id AS sourceId, a.weight AS weight, a.locator AS locator,
+              a.start_verse_id AS anchorStartVerseId, a.end_verse_id AS anchorEndVerseId
        FROM concept_anchors a
        JOIN concepts c ON c.id = a.concept_id
        JOIN verses v ON v.verse_id BETWEEN a.start_verse_id AND a.end_verse_id
@@ -465,6 +478,8 @@ export class ConceptRepository {
       sourceId: str(row, 'sourceId'),
       weight: num(row, 'weight'),
       locator: typeof row['locator'] === 'string' ? row['locator'] : null,
+      anchorStartVerseId: num(row, 'anchorStartVerseId'),
+      anchorEndVerseId: num(row, 'anchorEndVerseId'),
     }));
   }
 

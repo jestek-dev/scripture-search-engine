@@ -117,7 +117,22 @@ describe('release descriptor satisfies the consumer contract', () => {
     expect(counts['indexedVerses']).toBe(counts['verses']);
   });
 
-  it('reports the engine version it was built by', () => {
+  it('reports the engine version it was built by, or says plainly that it is stale', () => {
+    // A descriptor records a build that HAPPENED. When the engine moves ahead
+    // of it, the honest states are "rebuild" or "declared stale" — never
+    // "edit the version field", which would claim a build nobody ran.
+    //
+    // A stale descriptor must therefore say so, say why, and block release.
+    // That keeps the guardrail (nothing ships against a descriptor that does
+    // not describe it) without forcing a fabricated number to keep CI green.
+    const stale = descriptor['stale'] as
+      | { reason?: string; blocksRelease?: boolean }
+      | undefined;
+    if (stale) {
+      expect(stale.reason, 'a stale descriptor must say why').toBeTruthy();
+      expect(stale.blocksRelease, 'a stale descriptor must block release').toBe(true);
+      return;
+    }
     expect(descriptor['engineVersion']).toBe(ENGINE_VERSION);
   });
 

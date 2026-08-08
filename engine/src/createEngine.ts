@@ -33,6 +33,7 @@ import {
   relatedConceptEvidence,
 } from './intents/concept.js';
 import { rank, type RankOptions } from './ranking/rank.js';
+import type { Reason } from './reasons/types.js';
 import type {
   ConceptMatch,
   ContentQueryPort,
@@ -139,6 +140,8 @@ export async function createEngine(
 
   async function discover(query: string): Promise<readonly DiscoveryResult[]> {
     const verses = new Map<string, ScriptureVerse>();
+    // targetId -> the curated anchor spans that produced it.
+    const anchorSpans = new Map<string, Set<string>>();
     const contributions: { verse: ScriptureVerse; evidence: ReturnType<typeof tokenEvidence> }[] =
       [];
 
@@ -206,6 +209,13 @@ export async function createEngine(
         const anchors = await concepts.anchorVerses(matched.map((match) => match.conceptId));
         for (const anchor of anchors) {
           verses.set(targetIdFor(anchor), anchor);
+          // Remember which curated span this verse came from, so contiguous
+          // verses of ONE anchor can be presented as the passage a human named.
+          const spans = anchorSpans.get(targetIdFor(anchor)) ?? new Set<string>();
+          spans.add(
+            `${anchor.conceptId}:${anchor.anchorStartVerseId}-${anchor.anchorEndVerseId}`,
+          );
+          anchorSpans.set(targetIdFor(anchor), spans);
           contributions.push({
             verse: anchor,
             evidence: [
@@ -248,16 +258,20 @@ export async function createEngine(
     }
 
     const ranked = rank(mergeCandidates(contributions), options.rankOptions);
-    return ranked.map((result) => {
-      const verse = verses.get(result.targetId)!;
-      return {
-        targetId: result.targetId,
-        reference: referenceLabel(verse),
-        excerpt: verse.text,
-        score: result.score,
-        reasons: result.reasons,
-      };
-    });
+    return collapseAnchorRuns(
+      ranked.map((result) => {
+        const verse = verses.get(result.targetId)!;
+        return {
+          targetId: result.targetId,
+          reference: referenceLabel(verse),
+          excerpt: verse.text,
+          score: result.score,
+          reasons: result.reasons,
+        };
+      }),
+      verses,
+      anchorSpans,
+    );
   }
 
   async function relatedFor(reference: string): Promise<RelatedResult> {
@@ -458,4 +472,103 @@ export async function createEngine(
       await repository.close();
     },
   };
+}
+
+/**
+ * Collapse a run of consecutive results that are all verses of ONE curated
+ * anchor into the single passage that anchor names.
+ *
+ * Why this exists: a ranged anchor emits one candidate per verse, and results
+ * carrying authoritative evidence are deliberately exempt from group
+ * diversification — a genuine multi-verse hit must never be thinned for the
+ * sake of variety. Correct for exact-phrase matches; wrong for a curated span,
+ * where the four results ARE one passage. `communion` returned 1 Corinthians
+ * 11:23, :24, :25 and :26 at identical scores, spending the whole top of the
+ * list on a passage a human had already grouped.
+ *
+ * The curated span is the unit because a person chose it. Nothing is inferred,
+ * and the collapse is a pure function of data already in the artifact, so it
+ * cannot introduce non-determinism: the input order is the ranker's total
+ * order, and equal inputs collapse identically on every platform.
+ *
+ * Only CONSECUTIVE results collapse. A verse of the same anchor that ranks far
+ * below (because other evidence separated it) stays where the ranker put it —
+ * merging across a gap would move a result up the list, which is a ranking
+ * decision and not this function's business.
+ */
+function collapseAnchorRuns(
+  results: readonly DiscoveryResult[],
+  verses: ReadonlyMap<string, ScriptureVerse>,
+  anchorSpans: ReadonlyMap<string, ReadonlySet<string>>,
+): readonly DiscoveryResult[] {
+  const output: DiscoveryResult[] = [];
+  let index = 0;
+
+  while (index < results.length) {
+    const head = results[index]!;
+    const headSpans = anchorSpans.get(head.targetId);
+    if (!headSpans || headSpans.size === 0) {
+      output.push(head);
+      index += 1;
+      continue;
+    }
+
+    // Extend while the next result shares an anchor span AND is the next verse.
+    let last = index;
+    let shared: string | null = null;
+    for (const span of [...headSpans].sort()) {
+      let cursor = index;
+      while (cursor + 1 < results.length) {
+        const next = results[cursor + 1]!;
+        const nextVerse = verses.get(next.targetId);
+        const cursorVerse = verses.get(results[cursor]!.targetId);
+        if (!nextVerse || !cursorVerse) break;
+        if (nextVerse.verseId !== cursorVerse.verseId + 1) break;
+        if (!anchorSpans.get(next.targetId)?.has(span)) break;
+        cursor += 1;
+      }
+      if (cursor > last) {
+        last = cursor;
+        shared = span;
+      }
+    }
+
+    if (shared === null || last === index) {
+      output.push(head);
+      index += 1;
+      continue;
+    }
+
+    const run = results.slice(index, last + 1);
+    const first = verses.get(head.targetId)!;
+    const final = verses.get(results[last]!.targetId)!;
+    // Reasons merged by label, strongest kept, so the chip still explains the
+    // passage rather than an arbitrary one of its verses.
+    const byLabel = new Map<string, Reason>();
+    for (const item of run) {
+      for (const reason of item.reasons) {
+        const existing = byLabel.get(reason.label);
+        if (!existing || reason.points > existing.points) byLabel.set(reason.label, reason);
+      }
+    }
+    const reasons = [...byLabel.values()].sort((a, b) =>
+      b.points !== a.points ? b.points - a.points : a.label < b.label ? -1 : 1,
+    );
+
+    output.push({
+      // The run's own head id, so a consumer can still address the passage and
+      // fixture range-matching keeps working unchanged.
+      targetId: head.targetId,
+      reference:
+        first.verseId === final.verseId
+          ? head.reference
+          : `${referenceLabel(first)}-${final.verse}`,
+      excerpt: run.map((item) => item.excerpt).join(' '),
+      score: Math.max(...run.map((item) => item.score)),
+      reasons,
+    });
+    index = last + 1;
+  }
+
+  return output;
 }
