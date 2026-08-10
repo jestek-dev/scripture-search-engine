@@ -166,6 +166,15 @@ async function main(): Promise<void> {
     translations: descriptor.translations,
   };
 
+  // The page is read ONCE, here, not per request. The page and the judgment
+  // validator must come from the same checkout: when the page was re-read
+  // from disk on every GET, a `git pull` under a running server silently
+  // swapped in a newer page whose payloads the older in-memory validator
+  // rejected (v1.1's causeInferred came back `Unknown field` that way, and
+  // every ✗ was refused until the process restarted). One snapshot per
+  // process keeps UI and validation in lockstep; restart to pick up changes.
+  const staticPage = await readFile(STATIC_PAGE, 'utf8');
+
   const server = http.createServer((request, response) => {
     void (async () => {
       const url = new URL(request.url ?? '/', `http://127.0.0.1:${PORT}`);
@@ -193,9 +202,8 @@ async function main(): Promise<void> {
       }
 
       if (url.pathname === '/') {
-        const page = await readFile(STATIC_PAGE, 'utf8');
         response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
-        response.end(page);
+        response.end(staticPage);
         return;
       }
 
