@@ -141,3 +141,43 @@ export function collisionGate(
     { concepts: concepts.length },
   );
 }
+
+/**
+ * Lexicon phrases whose real width is one token.
+ *
+ * A phrase's matching width is its SIGNIFICANT-token count, not its word
+ * count: "god with us" is four words and one token, because `with` and `us`
+ * are stopwords. Such an entry behaves as a bare-word trigger for the whole
+ * concept, which is a legitimate thing to want and a terrible thing to have by
+ * accident — the query "god" fired `presence-of-god` for weeks because nobody
+ * could see that "god with us" had collapsed.
+ *
+ * Reported, never blocking. Most collapses are benign and several are actively
+ * useful (`risen`, `anxiou`, `conqueror`). The failure this prevents is not
+ * "a collapse exists" but "a collapse exists and nobody knows", so the right
+ * output is a visible list a curator can scan, not a build stop.
+ */
+export function singleTokenCollapses(
+  concepts: readonly ConceptRecord[],
+): readonly { conceptId: string; phrase: string; token: string }[] {
+  const found: { conceptId: string; phrase: string; token: string }[] = [];
+  for (const concept of concepts) {
+    for (const phrase of concept.lexicon) {
+      const tokens = significantWords(phrase);
+      // One token from several words: the width the curator sees is not the
+      // width the matcher uses.
+      if (tokens.length === 1 && phrase.trim().split(/\s+/).length > 1) {
+        found.push({ conceptId: concept.id, phrase, token: tokens[0]! });
+      }
+    }
+  }
+  return found.sort((a, b) =>
+    a.conceptId !== b.conceptId
+      ? a.conceptId < b.conceptId
+        ? -1
+        : 1
+      : a.phrase < b.phrase
+        ? -1
+        : 1,
+  );
+}

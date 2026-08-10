@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "1 Peter 1:15-16",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Called to be holy"
     }
   ],
   "expectedWithinTop": 10,

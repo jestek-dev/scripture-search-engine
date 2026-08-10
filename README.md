@@ -37,7 +37,7 @@ in the descriptor before opening it.
 
 | Layer | What it is | Ships? |
 |---|---|---|
-| **A — Concept ontology** | Curated concepts: modern labels, lexicons, scripture anchors, provenance. Seeded from Nave, Torrey, OpenBible topics. | Yes, ~MBs |
+| **A — Concept ontology** | Curated concepts: modern labels, lexicons, scripture anchors, provenance. Seeded from Torrey and OpenBible topics; Nave is declared lineage-only so shared 1897-era scholarship is never counted twice. | Yes, ~MBs |
 | **B — Homiletical evidence** | Per-**verse** distinctive term profiles, distilled offline from PD commentaries. A term is admitted only when 2+ independent expositors covering that verse used it — corroboration is what separates theology from one author's habits. | Distillate only — **source prose never ships and is never read at query time** |
 | **C — Runtime** | Intent ladder → candidates → deterministic ranking → typed reasons. Pure TS, zero I/O. | Yes, the published package |
 
@@ -87,7 +87,7 @@ diminishing returns.
 
 | Gate | Protects against |
 |---|---|
-| G1 provenance | Unattributed or wrongly-licensed rows (fails closed) |
+| G1 provenance | Unattributed or wrongly-licensed rows, and rolling sources with no durable archive (fails closed; known gaps are acknowledged as reviewed data in `eval/budgets.json`) |
 | G2 determinism | Ordering that drifts between runs or platforms |
 | G3 golden regression | Lost ordering **or** a right answer for the wrong reason |
 | G4 collision | Near-duplicate concepts diluting each other's anchors |
@@ -136,10 +136,12 @@ Maskil, Setlist and Versed) is deliberately not started.
 | Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow, not yet run on a real gap |
 | Runtime API | all five methods ship — `research()`, `themes()`, `passage()`, `related()`, `forSong()` — with contract tests |
 
-**Golden fixture #1 is active and passing.** "hearing and doing" returns
-James 1:22, Matthew 7:24 and Luke 6:47 carrying `concept_anchor` evidence
-attributed to LH editorial — the right passages *for the right reason*, which
-is what the fixture actually asserts.
+**Every concept is measured.** 32 concept fixtures plus the ranking-invariants
+suite are active and passing, and G3 now fails the build if any concept lacks a
+covering fixture. The founding case still holds:
+"hearing and doing" returns James 1:22, Matthew 7:24 and Luke 6:47 carrying
+`concept_anchor` evidence attributed to LH editorial — the right passages
+*for the right reason*, which is what the fixture actually asserts.
 
 **The full artifact builds**: 31,098 verses, **117.60 MiB** against a 160 MiB
 budget, 341k cross-references, 877k corroborated terms, queries under 10 ms.

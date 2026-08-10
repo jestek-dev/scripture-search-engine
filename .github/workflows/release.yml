@@ -42,6 +42,19 @@ jobs:
       # The gauntlet gates the CODE against the committed fixture. It runs here
       # too: a release built from code that cannot pass admission is not a
       # release, it is an accident with a version number on it.
+      - name: Refuse to release against a stale descriptor
+        # `stale.blocksRelease` in the reviewed descriptor is enforced here, or
+        # it is decoration. A descriptor that no longer describes what this tree
+        # builds must be regenerated before anything ships against it.
+        run: |
+          if node -e "process.exit(JSON.parse(require('fs').readFileSync('artifacts/content-artifact.json','utf8')).stale?.blocksRelease ? 1 : 0)"; then
+            echo "Descriptor is current."
+          else
+            echo "::error::artifacts/content-artifact.json is marked stale and blocks release."
+            node -e "console.error(JSON.parse(require('fs').readFileSync('artifacts/content-artifact.json','utf8')).stale.reason)"
+            exit 1
+          fi
+
       - name: Admission gauntlet
         run: npm run verify
 

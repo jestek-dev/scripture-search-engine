@@ -10,6 +10,10 @@ lexicon:
   - the lords prayer
   - pray in secret
   - intercession
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - prayer
 anchors:
   - ref: Matthew 6:9-13
     sources: [editorial]

@@ -142,5 +142,10 @@
       "rightsClass": "public_domain",
       "maxTier": "public_distribution"
     }
-  ]
+  ],
+  "stale": {
+    "since": "2026-08-08",
+    "reason": "Built 2026-07-30 against an 8-concept ontology at ENGINE_VERSION 0.7.1. The ontology is now 34 concepts and the engine is 0.8.0 (anchor-range result grouping changes ordering), so neither layerFingerprint nor engineVersion describes what this tree builds. Regenerate with `npm run fetch:sources && npm run build:artifact` on a machine that can reach the source hosts, then remove this block. See NEEDS-JESSE.md 1.9.",
+    "blocksRelease": true
+  }
 }

@@ -1,0 +1,26 @@
+{
+  "id": "self-deception",
+  "query": "deceiving yourselves",
+  "status": "active",
+  "coversConcepts": [
+    "self-deception"
+  ],
+  "note": [
+    "Founding concept 'self-deception'.",
+    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own — the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
+    "James 1:22-24 is deliberately shared with 'obedience-to-the-word' (Jesse's 2026-07-29 review approved the overlap): the same passage names both the command and the self-deception of ignoring it. This fixture asserts the self-deception reading reaches it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 1:22-24",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Deceiving yourself"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 John 1:8",
+    "Galatians 6:3",
+    "Revelation 3:17"
+  ]
+}

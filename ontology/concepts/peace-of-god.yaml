@@ -9,6 +9,14 @@ lexicon:
   - perfect peace
   - do not be anxious
   - peace i leave with you
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - peace
+  # Remembered-phrasing entry, 2026-08-08. The wording people search with is
+  # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
+  # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
+  - cast all your anxiety on him
 anchors:
   - ref: Philippians 4:6-7
     sources: [editorial]
@@ -31,6 +39,11 @@ anchors:
   - ref: Romans 5:1
     sources: [torrey]
     weight: 0.6
+  # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
+  # wording renders).
+  - ref: 1 Peter 5:7
+    sources: [editorial]
+    weight: 0.85
 related:
   - trust-in-god
   - fear-not

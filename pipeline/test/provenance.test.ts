@@ -4,6 +4,8 @@ import {
   checkProvenance,
   correlationGroups,
   permitsTier,
+  retrievalUrls,
+  rollingSourcesWithoutArchive,
   type ManifestSet,
   type SourceManifest,
 } from '../src/provenance/manifest.js';
@@ -120,5 +122,55 @@ describe('correlation groups (G7 input)', () => {
       sources: [source({ id: 'nave' }), source({ id: 'web-bible' })],
     };
     expect(correlationGroups(manifests)).toEqual([]);
+  });
+});
+
+describe('rolling sources and durable archives (G1)', () => {
+  it('names a rolling source that has no archive of the pinned bytes', () => {
+    const manifests: ManifestSet = {
+      sources: [
+        source({ id: 'rolling-no-archive', rollingSourceUrl: true }),
+        source({ id: 'stable' }),
+      ],
+    };
+    expect(rollingSourcesWithoutArchive(manifests)).toEqual(['rolling-no-archive']);
+  });
+
+  it('accepts a rolling source once an archive is recorded', () => {
+    const manifests: ManifestSet = {
+      sources: [
+        source({
+          id: 'rolling',
+          rollingSourceUrl: true,
+          archiveUrl: 'https://example.invalid/releases/snapshot.zip',
+        }),
+      ],
+    };
+    expect(rollingSourcesWithoutArchive(manifests)).toEqual([]);
+  });
+
+  it('treats a blank archiveUrl as absent rather than as a record', () => {
+    const manifests: ManifestSet = {
+      sources: [source({ id: 'rolling', rollingSourceUrl: true, archiveUrl: '   ' })],
+    };
+    expect(rollingSourcesWithoutArchive(manifests)).toEqual(['rolling']);
+  });
+
+  it('leaves a non-rolling source alone even without an archive', () => {
+    const manifests: ManifestSet = { sources: [source({ id: 'stable' })] };
+    expect(rollingSourcesWithoutArchive(manifests)).toEqual([]);
+  });
+
+  it('tries the authoritative URL before the archive', () => {
+    const withArchive = source({
+      id: 'rolling',
+      sourceUrl: 'https://example.invalid/latest.zip',
+      archiveUrl: 'https://example.invalid/pinned.zip',
+    });
+    expect(retrievalUrls(withArchive)).toEqual([
+      'https://example.invalid/latest.zip',
+      'https://example.invalid/pinned.zip',
+    ]);
+    expect(retrievalUrls(source({ id: 'plain' }))).toEqual(['https://example.invalid/artifact']);
   });
 });

@@ -9,6 +9,13 @@ lexicon:
   - unfailing love
   - steadfast love of the lord
   - nothing can separate us from the love of god
+  # The bare word "love", Jesse's call 2026-08-08: it defaults HERE, and the
+  # results still show both senses. `loving-others` is already listed under
+  # related:, so a query for "love" surfaces God's love as the primary
+  # theme and one-another love as a related theme, labelled as such.
+  # Deliberately not added to `loving-others` as well: two concepts firing
+  # equally on the commonest word in the product is how anchors dilute.
+  - love
 anchors:
   - ref: John 3:16
     sources: [editorial]

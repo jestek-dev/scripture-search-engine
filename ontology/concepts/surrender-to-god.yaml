@@ -9,6 +9,10 @@ lexicon:
   - take up your cross
   - living sacrifice
   - deny yourself
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - surrender
 anchors:
   - ref: Romans 12:1
     sources: [editorial]

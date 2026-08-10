@@ -9,6 +9,10 @@ lexicon:
   - godly sorrow
   - return to the lord
   - change your heart
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - repentance
 anchors:
   - ref: Acts 3:19
     sources: [editorial]

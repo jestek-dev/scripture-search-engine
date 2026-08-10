@@ -6,7 +6,11 @@ label: The presence of God
 lexicon:
   - the presence of god
   - draw near to god
-  - god with us
+  # "god with us" was removed 2026-08-08: after stopword removal it reduced to
+  # the single token "god", so the bare query "god" fired this concept and
+  # dragged Immanuel anchors into every query mentioning God. The Immanuel
+  # sense is kept by the fuller phrase below.
+  - immanuel god with us
   - i will never leave you nor forsake you
   - in your presence
 anchors:

@@ -9,6 +9,10 @@ lexicon:
   - overcome the world
   - the battle belongs to the lord
   - god fights for us
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - victory
 anchors:
   - ref: Romans 8:37
     sources: [editorial]

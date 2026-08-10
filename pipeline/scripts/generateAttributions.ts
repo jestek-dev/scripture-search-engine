@@ -101,6 +101,22 @@ The verse-level evidence layer. A term is admitted only when **two or more of
 these authors, independently, used it about the same verse** — which is what
 separates the passage's theology from any one writer's habits of speech.
 
+**The bound on that independence, stated plainly:** every expositor below is
+Protestant, writing between the early 18th and the early 20th century (Matthew
+Henry's commentary appeared 1706-1721; Maclaren's *Expositions* in the 1900s).
+Corroboration establishes independence of *authorship* — Spurgeon cannot
+corroborate Spurgeon — but not independence of *interpretive tradition*:
+authors who share a school of reading will agree for reasons the corroboration
+rule cannot see. There is real internal spread here (Clarke is Wesleyan, Spurgeon
+Reformed Baptist, Delitzsch Lutheran, and the set mixes philological commentary
+with preaching), but it is spread *within* anglophone-dominated Protestant
+exposition of that period. The engine reports the evidence as what it is — what
+these expositors reached for — rather than as a neutral property of the text.
+The concept layer, where provenance is per-anchor and editorial judgment is
+labeled as editorial, is where a different or broader voice **could** enter
+deliberately; today its own sources (Torrey, OpenBible votes, LH editorial) sit
+inside the same broad tradition.
+
 ${expositors.map(section).join('\n\n')}
 
 ---

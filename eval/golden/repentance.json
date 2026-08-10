@@ -8,16 +8,19 @@
     "concept_anchor evidence so a lexical hit cannot pass as understanding -",
     "the right passage for the wrong reason is still a failure.",
     "Repent and turn again (Acts 3:19); confession met by faithful forgiveness (1 John 1:9).",
-    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending."
+    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
+    "2026-08-08 single-token audit: the bare query \"repentance\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
   ],
   "expectedTop": [
     {
       "reference": "Acts 3:19",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Repentance"
     },
     {
       "reference": "1 John 1:9",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Repentance"
     }
   ],
   "expectedWithinTop": 10,
@@ -26,5 +29,8 @@
     "2 Corinthians 7:10",
     "Proverbs 28:13",
     "Ezekiel 18:30-32"
+  ],
+  "additionalQueries": [
+    "repentance"
   ]
 }

@@ -21,8 +21,16 @@ import { fileURLToPath } from 'node:url';
 import { createEngine } from '@jestek-dev/scripture-engine';
 
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
-import { collisionGate, type ConceptRecord } from './gates/collision.js';
-import { corpusGoldenGate, type CorpusFixture } from './gates/corpusGolden.js';
+import {
+  collisionGate,
+  singleTokenCollapses,
+  type ConceptRecord,
+} from './gates/collision.js';
+import {
+  conceptCoverageGate,
+  corpusGoldenGate,
+  type CorpusFixture,
+} from './gates/corpusGolden.js';
 import {
   distinctivenessGate,
   saturationGate,
@@ -31,6 +39,9 @@ import {
 import { compileOntology } from '../../pipeline/src/importers/ontologyImporter.js';
 import {
   correlationGroups,
+  isFileUrl,
+  retrievalUrls,
+  rollingSourcesWithoutArchive,
   type ManifestSet,
   type SourceManifest,
 } from '../../pipeline/src/provenance/manifest.js';
@@ -52,6 +63,9 @@ const EVAL_ROOT = join(HERE, '..');
 const REPO_ROOT = join(EVAL_ROOT, '..');
 
 interface Budgets {
+  readonly provenance?: {
+    readonly acknowledgedUnarchivedRollingSources?: readonly string[];
+  };
   readonly latency: { readonly p95Ms: number };
   readonly noise: {
     readonly maxTop10ChurnRatio: number;
@@ -302,7 +316,7 @@ function sizeGate(budgets: Budgets, builtPath: string): GateResult {
  * Whether the URL still RESOLVES is a separate, network-dependent question;
  * see reachabilityGate, which reports rather than blocks.
  */
-function provenanceGate(): GateResult {
+function provenanceGate(budgets: Budgets): GateResult {
   const files = listJson(join(REPO_ROOT, 'pipeline', 'manifests'));
   if (files.length === 0) {
     return notApplicable(
@@ -335,6 +349,15 @@ function provenanceGate(): GateResult {
           'the checksum cannot be re-verified from it',
       );
     }
+    // archiveUrl must clear the SAME bar. An archive that reads as provenance
+    // and resolves to a directory listing is the exact hole this mechanism
+    // exists to close, and a presence-only check cannot tell the two apart.
+    if (manifest.archiveUrl !== undefined && !isFileUrl(manifest.archiveUrl)) {
+      findings.push(
+        `${manifest.id}: archiveUrl "${manifest.archiveUrl}" does not identify a retrievable ` +
+          'file (needs an http(s) URL with a path, not a landing page or bare origin)',
+      );
+    }
   }
 
   if (findings.length > 0) {
@@ -346,11 +369,67 @@ function provenanceGate(): GateResult {
     );
   }
 
+  // A rolling source's URL is overwritten upstream on a schedule, so the pinned
+  // checksum describes bytes that will stop being served. Without a durable
+  // archive our own working copy is the only one in existence, and the build
+  // becomes unreproducible the moment it is lost.
+  //
+  // Acknowledged sources (eval/budgets.json, reviewed data) pass; anything else
+  // FAILS CLOSED. That is the guardrail: the known gap cannot grow silently,
+  // and the verdict stays ADMIT so the documented merge criterion remains
+  // reachable. A permanent warning nobody can clear is decoration by the same
+  // mechanism CLAUDE.md's gate discipline forbids.
+  const manifestSet = loadManifestSet();
+  const unarchived = rollingSourcesWithoutArchive(manifestSet);
+  const acknowledged = budgets.provenance?.acknowledgedUnarchivedRollingSources ?? [];
+  const unacknowledged = unarchived.filter((id) => !acknowledged.includes(id));
+  if (unacknowledged.length > 0) {
+    return fail(
+      'G1-provenance',
+      'Provenance',
+      `${unacknowledged.length} rolling source(s) pin bytes with no durable archive`,
+      unacknowledged.map((id) => ({
+        message:
+          `${id}: sourceUrl is declared rolling, so upstream will overwrite the pinned bytes ` +
+          'and this snapshot will exist only on machines that already downloaded it. Upload ' +
+          'the checksummed copy as a Release asset and record it as `archiveUrl` (verify the ' +
+          "local file's sha256 matches the manifest FIRST — a later week's download will " +
+          'produce a durable archive of the wrong bytes). If the risk is being accepted ' +
+          'deliberately instead, add the id to provenance.acknowledgedUnarchivedRollingSources ' +
+          'in eval/budgets.json, which is a reviewed change.',
+        subjects: [id],
+      })),
+    );
+  }
+
+  // A stale acknowledgement is reported rather than ignored: once a source is
+  // archived, leaving it listed silently re-opens the gate for it.
+  const stale = acknowledged.filter((id) => !unarchived.includes(id));
+  if (stale.length > 0) {
+    return fail(
+      'G1-provenance',
+      'Provenance',
+      `${stale.length} acknowledged unarchived source(s) no longer need the acknowledgement`,
+      stale.map((id) => ({
+        message:
+          `${id}: listed in provenance.acknowledgedUnarchivedRollingSources but it is no longer ` +
+          'a rolling source without an archive. Remove it — a standing exemption that no longer ' +
+          'describes anything is an exemption waiting to cover something else.',
+        subjects: [id],
+      })),
+    );
+  }
+
+  const debt =
+    acknowledged.length > 0
+      ? `; ${acknowledged.length} acknowledged unarchived rolling source(s): ` +
+        `${acknowledged.join(', ')} (NEEDS-JESSE §1.8)`
+      : '';
   return pass(
     'G1-provenance',
     'Provenance',
-    `${files.length} source manifest(s); every checksum names a retrievable file`,
-    { manifests: files.length },
+    `${files.length} source manifest(s); every checksum names a retrievable file${debt}`,
+    { manifests: files.length, acknowledgedUnarchived: acknowledged.length },
   );
 }
 
@@ -383,19 +462,25 @@ async function reachabilityGate(): Promise<GateResult> {
   for (const file of files) {
     const manifest = JSON.parse(readFileSync(file, 'utf8')) as SourceManifest;
     if (!manifest.sha256 || !manifest.sourceUrl) continue;
-    checked += 1;
-    try {
-      const response = await fetch(manifest.sourceUrl, {
-        method: 'HEAD',
-        signal: AbortSignal.timeout(15_000),
-      });
-      if (!response.ok) {
-        findings.push(`${manifest.id}: HTTP ${response.status} for ${manifest.sourceUrl}`);
+    // Every retrieval candidate, not just the primary. An archive that has
+    // quietly 404'd is worth exactly as much as no archive, and the whole
+    // point of declaring one is that it is there when the primary is not.
+    for (const url of retrievalUrls(manifest)) {
+      checked += 1;
+      try {
+        const response = await fetch(url, {
+          method: 'HEAD',
+          signal: AbortSignal.timeout(15_000),
+        });
+        if (!response.ok) {
+          findings.push(`${manifest.id}: HTTP ${response.status} for ${url}`);
+        }
+      } catch (error) {
+        findings.push(
+          `${manifest.id}: ${url} unreachable ` +
+            `(${error instanceof Error ? error.message : 'error'})`,
+        );
       }
-    } catch (error) {
-      findings.push(
-        `${manifest.id}: unreachable (${error instanceof Error ? error.message : 'error'})`,
-      );
     }
   }
 
@@ -480,11 +565,15 @@ async function main(): Promise<void> {
   const distillate = loadDistillate();
   const probeGates = await runProbeGates(budgets);
   const gates: GateResult[] = [
-    provenanceGate(),
+    provenanceGate(budgets),
     await reachabilityGate(),
     determinismGate(fixtures),
     goldenGate(fixtures),
     probeGates[2]!,
+    conceptCoverageGate(
+      concepts.map((concept) => concept.id),
+      fixtures as unknown as CorpusFixture[],
+    ),
     fileCount === 0
       ? notApplicable(
           'G4-collision',
@@ -498,7 +587,28 @@ async function main(): Promise<void> {
             'ontology failed to compile',
             ontologyErrors.map((message) => ({ message })),
           )
-        : collisionGate(concepts, budgets.collision),
+        : (() => {
+            const result = collisionGate(concepts, budgets.collision);
+            if (result.status !== 'pass') return result;
+            // Collapses are reported ON the passing gate rather than as their
+            // own row: they are a curation diagnostic, not an admission
+            // decision, and they must be visible without ever blocking.
+            const collapses = singleTokenCollapses(concepts);
+            if (collapses.length === 0) return result;
+            return {
+              ...result,
+              summary:
+                `${result.summary}; ${collapses.length} lexicon phrase(s) collapse to a ` +
+                'single token and therefore act as bare-word triggers',
+              findings: collapses.map((entry) => ({
+                message:
+                  `${entry.conceptId}: "${entry.phrase}" normalizes to the single token ` +
+                  `"${entry.token}", so the bare query "${entry.token}" fires this concept. ` +
+                  'Intended for most; check it is intended for this one.',
+                subjects: [entry.conceptId],
+              })),
+            };
+          })(),
     distinctivenessGate(distillate, budgets.distinctiveness),
     pass(
       'G6-signal-budgets',

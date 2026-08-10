@@ -13,15 +13,134 @@
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 
 import { parseAnchorRef } from '../../../pipeline/src/importers/ontologyImporter.js';
-import { fail, pass, type GateFinding, type GateResult } from './types.js';
+import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
 
 export interface CorpusFixture {
   readonly id: string;
   readonly status: 'active' | 'pending';
   readonly query?: string;
-  readonly expectedTop?: readonly { reference: string; requiredReasonFamily?: string }[];
+  readonly expectedTop?: readonly {
+    reference: string;
+    requiredReasonFamily?: string;
+    /**
+     * Exact reason label that must appear on the matched verse, e.g.
+     * "Theme: Grace, not earned".
+     *
+     * requiredReasonFamily alone proves only that SOME concept anchors this
+     * passage. Where two concepts legitimately anchor the same verse —
+     * `grace-not-earned` and `salvation` both name Ephesians 2:8 — the
+     * fixture would keep passing with its own concept deleted, measuring the
+     * neighbour instead. Naming the label is what makes a concept fixture
+     * actually test its own concept.
+     */
+    requiredReasonLabel?: string;
+  }[];
   readonly expectedWithinTop?: number;
+  /**
+   * Further queries that must satisfy the SAME expectations.
+   *
+   * One claim, asked the way different users type it. A worship leader types
+   * "worship" far more often than "come let us worship", and the concept layer
+   * matched only the latter because every curated phrase was multi-word — so
+   * the most common query class in the product bypassed the curated data
+   * entirely. Asserting both phrasings against one expectation is what keeps
+   * that from silently regressing.
+   */
+  readonly additionalQueries?: readonly string[];
   readonly mustNotRank?: readonly { reference: string; why?: string }[];
+  /**
+   * Concept ids this fixture measures, for the coverage check below.
+   *
+   * Defaults to the fixture's own id, which is the common case (a fixture
+   * named `worship` measures the `worship` concept). Declared explicitly when
+   * the names diverge — `hearing-and-doing` measures `obedience-to-the-word` —
+   * or when one query genuinely covers several tightly-related concepts.
+   */
+  readonly coversConcepts?: readonly string[];
+}
+
+/**
+ * G3, structural half: every concept must be measured by some fixture.
+ *
+ * `ontology/README.md` and CLAUDE.md both state that a concept pack shipping
+ * without fixtures "is rejected structurally". It was not: the rule lived only
+ * in prose, and eight founding concepts had no fixture at all. A rule nobody
+ * enforces is the same shape as a gate that always reports pass — this repo's
+ * own words for the thing it refuses to ship.
+ *
+ * Coverage is deliberately cheap to satisfy and impossible to satisfy
+ * accidentally: name the fixture after the concept, or say which concepts it
+ * covers. What it buys is that no future pack can be admitted with nothing
+ * measuring whether it helped.
+ */
+export function conceptCoverageGate(
+  conceptIds: readonly string[],
+  fixtures: readonly CorpusFixture[],
+): GateResult {
+  if (conceptIds.length === 0) {
+    return notApplicable(
+      'G3-golden',
+      'Concept fixture coverage',
+      'no concepts in ontology/concepts yet; the coverage check is implemented and unit-tested',
+    );
+  }
+
+  // Only fixtures that actually RUN can measure anything. A pending fixture
+  // states an intention; it cannot fail, so counting it as coverage would let
+  // a concept ship measured by a test that never grades it.
+  const covered = new Set<string>();
+  for (const fixture of fixtures) {
+    if (fixture.status !== 'active' || !fixture.query) continue;
+    for (const id of fixture.coversConcepts ?? [fixture.id]) covered.add(id);
+  }
+
+  const orphans = conceptIds.filter((id) => !covered.has(id));
+  if (orphans.length > 0) {
+    return fail(
+      'G3-golden',
+      'Concept fixture coverage',
+      `${orphans.length} concept(s) have no active golden fixture measuring them`,
+      orphans.map((id) => ({
+        message:
+          `${id}: no active fixture covers this concept. Add eval/golden/${id}.json, or add ` +
+          `"${id}" to an existing fixture's coversConcepts. A concept with nothing measuring ` +
+          'it cannot be shown to help, which is what the fixtures-first rule exists to prevent.',
+        subjects: [id],
+      })),
+    );
+  }
+
+  // Fixtures naming a concept that does not exist are reported too: it means
+  // a concept was renamed or removed and its fixture now grades nothing.
+  const known = new Set(conceptIds);
+  const dangling = [
+    ...new Set(
+      fixtures
+        .filter((fixture) => fixture.coversConcepts)
+        .flatMap((fixture) => fixture.coversConcepts ?? [])
+        .filter((id) => !known.has(id)),
+    ),
+  ].sort();
+  if (dangling.length > 0) {
+    return fail(
+      'G3-golden',
+      'Concept fixture coverage',
+      `${dangling.length} fixture(s) claim to cover concepts that do not exist`,
+      dangling.map((id) => ({
+        message:
+          `no concept "${id}" exists, but a fixture declares it in coversConcepts. The concept ` +
+          'was renamed or removed and the fixture now measures nothing under that name.',
+        subjects: [id],
+      })),
+    );
+  }
+
+  return pass(
+    'G3-golden',
+    'Concept fixture coverage',
+    `all ${conceptIds.length} concept(s) are measured by an active fixture`,
+    { concepts: conceptIds.length },
+  );
 }
 
 /** Verse id encoded in a target id like "WEB:59001022". */
@@ -39,7 +158,19 @@ export async function runCorpusFixture(
   if (!fixture.query) return [];
   const problems: string[] = [];
 
-  const result = await engine.research(fixture.query);
+  for (const query of [fixture.query, ...(fixture.additionalQueries ?? [])]) {
+    problems.push(...(await runOneQuery(engine, fixture, query)));
+  }
+  return problems;
+}
+
+async function runOneQuery(
+  engine: ScriptureEngine,
+  fixture: CorpusFixture,
+  query: string,
+): Promise<string[]> {
+  const problems: string[] = [];
+  const result = await engine.research(query);
   const results = result.kind === 'discovery' ? result.results : [];
   const withinTop = fixture.expectedWithinTop ?? 10;
   const top = results.slice(0, withinTop);
@@ -59,10 +190,26 @@ export async function runCorpusFixture(
     if (hits.length === 0) {
       problems.push(
         `${fixture.id}: expected ${expectation.reference} within the top ${withinTop} for ` +
-          `"${fixture.query}", but it is absent`,
+          `"${query}", but it is absent`,
       );
       continue;
     }
+    if (
+      expectation.requiredReasonLabel &&
+      !hits.some((hit) =>
+        hit.reasons.some((reason) => reason.label === expectation.requiredReasonLabel),
+      )
+    ) {
+      // Two concepts may legitimately anchor one verse; without this the
+      // fixture measures whichever of them happens to survive.
+      problems.push(
+        `${fixture.id}: ${expectation.reference} ranks for "${query}" but carries no ` +
+          `reason labelled '${expectation.requiredReasonLabel}' (has: ` +
+          `${[...new Set(hits.flatMap((hit) => hit.reasons.map((r) => r.label)))].join(' | ')}). ` +
+          'The fixture is measuring a different concept than the one it covers.',
+      );
+    }
+
     if (
       expectation.requiredReasonFamily &&
       !hits.some((hit) =>
@@ -71,7 +218,7 @@ export async function runCorpusFixture(
     ) {
       // The Phase 1 trap, made explicit: right verse, wrong evidence.
       problems.push(
-        `${fixture.id}: ${expectation.reference} ranks for "${fixture.query}" but carries no ` +
+        `${fixture.id}: ${expectation.reference} ranks for "${query}" but carries no ` +
           `'${expectation.requiredReasonFamily}' reason (has: ` +
           `${[...new Set(hits.flatMap((hit) => hit.reasons.map((r) => r.family)))].join(', ')}). ` +
           'The right passage for the wrong reason is still a failure.',
@@ -88,7 +235,7 @@ export async function runCorpusFixture(
     });
     if (offender) {
       problems.push(
-        `${fixture.id}: ${forbidden.reference} must not rank for "${fixture.query}" but appears ` +
+        `${fixture.id}: ${forbidden.reference} must not rank for "${query}" but appears ` +
           `at position ${top.indexOf(offender) + 1}. ${forbidden.why ?? ''}`.trim(),
       );
     }

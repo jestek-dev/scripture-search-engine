@@ -8,12 +8,14 @@
     "concept_anchor evidence so a lexical hit cannot pass as understanding -",
     "the right passage for the wrong reason is still a failure.",
     "Miller's 313 topics have no CREATION heading - a real gap in the selection - so this concept is editorial-led, with one verified anchor from POWER OF GOD, THE ('Exhibited in Creation').",
-    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending."
+    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
+    "2026-08-08 single-token audit: the bare query \"creation\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
   ],
   "expectedTop": [
     {
       "reference": "Genesis 1:1",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Creation"
     }
   ],
   "expectedWithinTop": 10,
@@ -22,5 +24,8 @@
     "Psalms 139:13-14",
     "Colossians 1:16",
     "John 1:3"
+  ],
+  "additionalQueries": [
+    "creation"
   ]
 }

@@ -1,0 +1,33 @@
+{
+  "id": "refuge-in-trouble",
+  "query": "god is our refuge",
+  "status": "active",
+  "coversConcepts": [
+    "refuge-in-trouble"
+  ],
+  "note": [
+    "Founding concept 'refuge-in-trouble'.",
+    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own — the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
+    "Psalm 46:1 is also the target of the G8 phrase probe 'phrase-present-help'; this fixture asserts the CONCEPT path reaches it, which the phrase probe cannot distinguish.",
+    "2026-08-08 single-token audit: the bare query \"refuge\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 46:1-3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Refuge in trouble"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 91:1-2",
+    "Psalms 121:1-8",
+    "Nahum 1:7",
+    "Psalms 9:9",
+    "Psalms 34:19",
+    "Deuteronomy 33:27"
+  ],
+  "additionalQueries": [
+    "refuge"
+  ]
+}

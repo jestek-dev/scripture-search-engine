@@ -12,10 +12,19 @@ started.
 
 ## 0. What I need from you, shortest path first
 
-Five things. The first two are decisions only you can make; the rest are
-reviews of numbers I had to pick to keep moving.
+Seven things. The first is a review; the rest are errands and numbers I had
+to pick to keep moving. The "love" decision is closed — see §1.12.
 
-1. **Approve (or reject) a `remembered-phrasings` concept pack.** §1.6a.
+1. **Review the `remembered-phrasings` pack — and note the plan changed.** §1.6a,
+   and the measurement in `docs/research/2026-08-08-remembered-phrasings.md`.
+   I tested 60 remembered wordings before writing anything: **52 already work.**
+   The lexical ladder recovers far more than the ten-phrase sample suggested, so
+   the proposed ~50-entry pack would have been mostly NO MEASURABLE EFFECT. What
+   shipped is the measured remainder — 6 entries plus 2 new concepts. Two items
+   want your judgment: the new concepts' anchors, and James 1:2 (joy *in trials*)
+   landing under `joy-in-the-lord`. Original framing below.
+
+   ~~Approve (or reject) a `remembered-phrasings` concept pack.~~ §1.6a.
    Searching *"plans to prosper you"* returns nothing, because that is NIV
    wording and the corpus is WEB. I tested adding KJV: it fixes **zero** of the
    ten phrasings I checked, because the wordings people remember are from
@@ -40,7 +49,20 @@ reviews of numbers I had to pick to keep moving.
    re-baseline. §1.6c. Deciding in the moment is how a gate becomes decoration.
    There is time: the last two admissions moved it +0.014 against a 0.15 budget.
 
-5. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
+5. **Upload the OpenBible snapshot archive.** §1.8. Two-minute errand, and
+   nobody else can do it: `openbible-topics` and `openbible-xrefs` pin bytes
+   that exist only on machines which already downloaded them. G1 now fails
+   closed on any rolling source without a durable archive; these two are
+   carried as a dated acknowledgement in `eval/budgets.json` so the known gap
+   cannot grow silently. Verify the checksums, upload both files as a Release
+   asset, record them as `archiveUrl`, and drop them from the acknowledgement
+   list.
+
+6. **Rebuild the release descriptor.** §1.9. It still describes an 8-concept
+   ontology; the tree now has 34, so `layerFingerprint` no longer identifies
+   what this code builds. One command on a machine that can reach the sources.
+
+7. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
 6. ~~**Telemetry: two sign-offs remain.**~~ ✅ BOTH SIGNED (2026-07-31):
@@ -178,10 +200,11 @@ Phase 5 is written but not started, per your instruction. Maskil's own July
 audit deliberately sequenced the broad research engine *after* the
 collaboration pilot.
 
-New since I last wrote this: adoption is no longer *only* a sequencing call.
-The engine ships `research()` and nothing else. Setlist and Maskil both need
-`forSong()`, which is typed but unbuilt. So Phase 5 has real work in front of
-it regardless of when you want it (implementation plan §5).
+~~New since I last wrote this: the engine ships `research()` and nothing else.~~
+**Superseded 2026-07-31:** all five API methods — `research()`, `themes()`,
+`passage()`, `related()`, `forSong()` — ship at 0.7.1 with consumer contract
+tests, so Phase 5 is no longer blocked technically. What remains is inside
+Maskil, Setlist and Versed, and the sequencing call is still yours.
 
 ### 1.4a Treasury vol. 3 is in; vol. 5 is deliberately NOT — ✅ resolved
 
@@ -251,6 +274,180 @@ The lesson is about when a budget can be judged, not about the number: I was
 measuring headroom against a corpus that was one-sixth built. Current position
 is 97.48 of 160 MiB, so roughly one more whole-Bible commentator fits. That is
 now a real constraint worth watching rather than a formality.
+
+### 1.9 The release descriptor is STALE — it describes an 8-concept ontology
+
+`artifacts/content-artifact.json` was built 2026-07-30 and records
+`counts.concepts: 8` with `layerFingerprint 316fba74…`. The ontology has since
+grown to **32** concepts (Torrey wave, 2026-08-06) and gained single-token
+lexicon work after that, so the committed descriptor no longer describes what a
+build of this tree produces.
+
+Why this is more than a stale number: `layerFingerprint` is one of the three
+identities the reproducibility contract is built on. A consumer pinning that
+descriptor and running today's engine gets different rankings with the same
+declared identity, which is precisely the failure the fingerprint was
+introduced to prevent (README, "The reproducibility contract").
+
+Nothing shipped is *wrong* — the descriptor honestly describes the artifact it
+was generated from, and the 117.60 MiB / 877k / 341k figures quoted in the
+README come from that same build and remain accurate for it. The gap is that no
+build has been run since the ontology tripled.
+
+**To close it:** run `npm run fetch:sources && npm run build:artifact` on a
+machine with the corpora, review the regenerated descriptor, and commit it. I
+could not: `a.openbible.info` is unreachable from this environment (the agent
+proxy returns 403), so a full build is impossible here and fabricating the
+numbers would be worse than reporting the gap.
+
+### 1.10 Bare-word queries now reach the concept layer — one word left undecided
+
+The biggest product gap the audit found: concept matching requires every token
+of a lexicon phrase to be present, and the Torrey-wave lexicons were almost all
+multi-word — so **"worship" did not fire the `worship` concept**, and the same
+held for most themes. One-word queries are the commonest thing a worship leader
+types, and they were exactly the class that bypassed the curated data.
+
+Twenty concepts gained a deliberate bare token; twelve deliberately did not.
+Full decision table and measurements:
+`docs/research/2026-08-08-single-token-lexicon-audit.md`.
+
+**Two accidental single tokens were also removed**, and this is the part worth
+your attention: "god with us" and "not by works" each collapsed to ONE
+significant token after stopword removal (`god`, `work`), so the bare queries
+"god" and "work" were firing curated concepts nobody intended. A phrase's real
+width is its significant-token count, not its word count.
+
+**What I need:** the bare word **`love`** is not admitted. It is contested
+between `gods-love` and `loving-others`, and it is the most-typed word in the
+product, so it wanted an explicit decision rather than my default. My
+recommendation: give it to `gods-love` (John 3:16, Rom 8:38-39 are what a
+one-word query almost always wants) and leave `loving-others` reachable by
+"love one another" and "love your neighbor".
+
+### 2.11 Corroboration is tighter than feared — measured, not assumed
+
+The audit worried that span projection dilutes corroboration: a term from
+Matthew Henry's six-verse essay "corroborates" Clarke's verse-specific note
+anywhere inside that essay's range, so "two authors agree about this verse"
+could mean "two authors wrote overlapping essays containing the same word".
+
+`npm run report:span-softness` measures the distribution rather than guessing.
+On the fixture distillate (32,684 admitted terms):
+
+| | share |
+|---|---|
+| attested by at least one **one-verse** note | **71.7%** |
+| resting **only** on sections wider than 12 verses | **1.5%** |
+
+So the concern is real but small. The soft spots are specific and explainable:
+**Genesis** (12.7% diffuse, mean span 4.0) and **Ezekiel** (median span 7) are
+books commentators treat in long units; Isaiah, Galatians and Matthew are
+essentially all verse-tight.
+
+**No admission rule changed on this number**, deliberately — measure first. If
+you ever want to tighten (e.g. require at least one attesting span under ~12
+verses), this report is the baseline to argue from, and it says the cost would
+be about 1.5% of terms.
+
+### 1.11 Two audit items are BLOCKED on source access, not on effort
+
+Both need the exposition corpora, which are gitignored downloads, and this
+environment cannot reach the source hosts (the agent proxy returns 403 for
+`a.openbible.info` and `gutenberg.org`). Each is built as far as it can be and
+then stops honestly rather than producing a plausible number.
+
+**a) The `minPmi` sweep (§2.3's "still a guess").** The tool is written and
+wired: `npm run sweep:minpmi --workspace pipeline [-- --values 1.5,2,2.5]`. It
+rebuilds the distillate at each floor and prints, per value, how many terms are
+admitted and — more usefully — *the weakest terms each floor lets in*, because
+counts cannot tell you whether the marginal terms are theology or noise.
+
+It deliberately **refuses to fall back to the committed distillate.** That
+subset was already filtered at 2.0, so sweeping it would grade the threshold
+using data the threshold itself created, and every candidate value would look
+equally fine — a measurement that cannot fail is not a measurement.
+
+To run: `npm run fetch:sources --workspace pipeline` then the sweep. It is a
+few minutes of compute and it closes an open item that has been flagged as
+unvalidated since Phase 3.
+
+**b) Maclaren on St. Mark (closing the last coverage gap).** Mark sits at 86%,
+the worst-covered book, because commentators habitually treat it by referring
+back to Matthew. Maclaren's *Expositions* volume on St. Mark is on Project
+Gutenberg (ebook 8071), it is proofread, and both the `citation-suffix` parser
+and his `authorId` already exist — so admitting it is a manifest plus one
+registry line, no new code. The author bitmask is at 7 of 31, so there is room.
+
+I could not download it to measure the effect, and this repo does not admit
+sources on the argument that they *ought* to help. Per its own rule, run the
+gauntlet: merge on a measured improvement, and if the Admission Report says
+`NO MEASURABLE EFFECT`, do not. Fallback candidate if Maclaren disappoints:
+Ryle's *Expository Thoughts on the Gospels* (public domain).
+
+### 1.12 "love" — DECIDED (2026-08-08), and it exposed a scoring flaw worth knowing
+
+Your call: default to God's love, show both senses. Implemented, and the
+results do exactly that — `love` returns Romans 5:8, Romans 8:38-39 and
+John 3:16 as **Theme: The love of God**, with John 13:34-35, Matthew 22:39 and
+1 Corinthians 13 following as **Related theme: Loving one another**. The two
+concepts were already linked, so no second lexicon entry was needed: adding
+`love` to both would have had the commonest word in the product firing two
+concepts equally, which is how anchors dilute.
+
+**What it exposed.** Adding the bare word broke Micah 6:8. The query *"do
+justly love mercy walk humbly"* returned God's-love passages at the top and
+pushed Micah out of the results entirely — G8 caught it and rejected the build.
+
+The cause is a real flaw that bare words made visible: a concept's strength was
+scaled by how much of ITS OWN phrase matched, never by how much of the QUERY it
+explained. So "love" as the whole query and "love" as one word of six spoke
+with the same voice.
+
+Anchors are now also scaled by query coverage (square-rooted, so a concept
+explaining half a query still counts for a lot). Micah 6:8 is back at #1 and
+every other fixture holds. **ENGINE_VERSION 0.9.0** — this changes ordering.
+
+This is the same concern I raised as open item 3 (single-token matches carrying
+authoritative weight), and it is now substantially addressed by construction
+rather than by discount. The remaining part of that question — whether a
+one-token match should sit in the weak family entirely — is still open, but it
+is much less pressing now.
+
+### 1.8 The OpenBible snapshots have no durable copy — mechanism is in, the upload is yours
+
+§2.5 recorded that `a.openbible.info` rolls its files weekly with no archive,
+so our checksums *are* the snapshot. That was filed as "worth keeping a copy
+somewhere durable". It is now enforced rather than remembered:
+
+- Manifests declare `rollingSourceUrl: true` and may record an `archiveUrl`.
+- **G1 fails closed** when a rolling source has no archive — UNLESS the id is
+  carried in `provenance.acknowledgedUnarchivedRollingSources` in
+  `eval/budgets.json`, which is reviewed data like every other threshold. The
+  two known sources are acknowledged there; a *new* rolling source without an
+  archive fails the build. That way the standing gap is recorded once and
+  reviewed, rather than nagging on every unrelated PR — a warning its author
+  cannot clear is decoration by CLAUDE.md's own definition — while the gap
+  itself can never grow unnoticed.
+- `archiveUrl` is checked structurally (it must name a file, not a landing
+  page) and by `--check-sources`, so an archive that reads as provenance and
+  resolves to nothing is caught the same way a bad `sourceUrl` is.
+- `fetchSources` tries the authoritative URL first and falls back to the
+  archive, accepting only bytes that match the pinned checksum. So the day
+  upstream republishes, the build keeps working instead of failing closed.
+
+**What is deliberately NOT done:** no `archiveUrl` is written yet. Pointing a
+manifest at a Release asset that does not exist would recreate precisely the
+hole G1 was extended to close in §2.6b — a URL that reads as provenance and
+resolves to nothing. The field goes in when the bytes are actually there.
+
+To close it, **verify before uploading**: `sha256sum pipeline/sources/topic-scores.zip`
+must equal the `sha256` in `pipeline/manifests/openbible-topics.json`, and likewise
+for `cross-references.zip`. If it does not, your copy is a later week's download
+and uploading it produces a durable archive of the WRONG bytes — the fetcher will
+reject it at build time. With the checksums confirmed, upload both to a Release (CC BY permits redistribution with
+attribution; the manifests already carry the attribution text), then add
+`"archiveUrl": "<asset url>"` to each manifest. G1 flips to pass.
 
 ---
 

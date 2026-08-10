@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import { collisionGate, type ConceptRecord } from '../src/gates/collision.js';
+import {
+  collisionGate,
+  singleTokenCollapses,
+  type ConceptRecord,
+} from '../src/gates/collision.js';
+import {
+  conceptCoverageGate,
+  runCorpusFixture,
+  type CorpusFixture,
+} from '../src/gates/corpusGolden.js';
 import { determinismGate, goldenGate, type GoldenFixture } from '../src/gates/golden.js';
 import { buildReport, decideVerdict } from '../src/report.js';
 import { fail, pass, notApplicable } from '../src/gates/types.js';
@@ -160,5 +169,137 @@ describe('Admission Report', () => {
     });
     expect(report.markdown).toContain('Not yet running');
     expect(report.markdown).toContain('G8-noise-probes');
+  });
+});
+
+describe('G3 concept fixture coverage', () => {
+  const fixture = (
+    id: string,
+    overrides: Partial<CorpusFixture> = {},
+  ): CorpusFixture => ({ id, status: 'active', query: `query for ${id}`, ...overrides });
+
+  it('fails when a concept has no fixture at all', () => {
+    const result = conceptCoverageGate(['worship', 'praise'], [fixture('worship')]);
+    expect(result.status).toBe('fail');
+    expect(result.findings?.[0]?.subjects).toEqual(['praise']);
+  });
+
+  it('names every uncovered concept at once rather than the first', () => {
+    const result = conceptCoverageGate(['a', 'b', 'c'], [fixture('b')]);
+    expect(result.status).toBe('fail');
+    expect(result.findings?.map((finding) => finding.subjects?.[0])).toEqual(['a', 'c']);
+  });
+
+  it('accepts coverage declared through coversConcepts under a different name', () => {
+    const result = conceptCoverageGate(
+      ['obedience-to-the-word'],
+      [fixture('hearing-and-doing', { coversConcepts: ['obedience-to-the-word'] })],
+    );
+    expect(result.status).toBe('pass');
+  });
+
+  it('does not count a PENDING fixture as coverage', () => {
+    // A pending fixture cannot fail, so treating it as coverage would let a
+    // concept ship measured by a test that never grades it.
+    const result = conceptCoverageGate(['worship'], [fixture('worship', { status: 'pending' })]);
+    expect(result.status).toBe('fail');
+  });
+
+  it('does not count a fixture with no query as coverage', () => {
+    const result = conceptCoverageGate(['worship'], [fixture('worship', { query: undefined })]);
+    expect(result.status).toBe('fail');
+  });
+
+  it('reports a fixture claiming a concept that no longer exists', () => {
+    const result = conceptCoverageGate(
+      ['worship'],
+      [fixture('worship'), fixture('old', { coversConcepts: ['renamed-away'] })],
+    );
+    expect(result.status).toBe('fail');
+    expect(result.summary).toContain('do not exist');
+  });
+
+  it('is not-applicable rather than passing when no concepts exist', () => {
+    // An unrun check must never look like a passing one.
+    expect(conceptCoverageGate([], []).status).toBe('not-applicable');
+  });
+});
+
+describe('G3 fixtures must measure their OWN concept', () => {
+  /** Minimal engine stub: one result carrying a neighbour concept's anchor. */
+  const engineWith = (label: string) =>
+    ({
+      research: async () => ({
+        kind: 'discovery' as const,
+        results: [
+          {
+            targetId: 'WEB:49002008',
+            reference: 'Ephesians 2:8',
+            reasons: [{ family: 'concept_anchor', label, points: 22 }],
+          },
+        ],
+      }),
+    }) as never;
+
+  const fixture = {
+    id: 'grace-not-earned',
+    status: 'active' as const,
+    query: 'saved by grace not by works',
+    expectedTop: [
+      {
+        reference: 'Ephesians 2:8',
+        requiredReasonFamily: 'concept_anchor',
+        requiredReasonLabel: 'Theme: Grace, not earned',
+      },
+    ],
+  };
+
+  it('passes when the covered concept supplies the anchor', async () => {
+    const problems = await runCorpusFixture(engineWith('Theme: Grace, not earned'), fixture);
+    expect(problems).toEqual([]);
+  });
+
+  it('FAILS when a neighbouring concept supplies the anchor instead', async () => {
+    // The real hole this closed: `salvation` also anchors Ephesians 2:8, so
+    // requiredReasonFamily alone kept passing with grace-not-earned deleted.
+    const problems = await runCorpusFixture(engineWith('Theme: Salvation'), fixture);
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain('measuring a different concept');
+  });
+});
+
+describe('single-token collapse detection', () => {
+  it('finds a multi-word phrase whose real width is one token', () => {
+    // The exact case that hid for weeks: four words, three of them stopwords.
+    const found = singleTokenCollapses([
+      { id: 'presence-of-god', label: 'Presence', lexicon: ['god with us'] },
+    ]);
+    expect(found).toEqual([
+      { conceptId: 'presence-of-god', phrase: 'god with us', token: 'god' },
+    ]);
+  });
+
+  it('does not report a deliberate one-word entry', () => {
+    // "communion" is one word AND one token — the curator can see its width.
+    expect(
+      singleTokenCollapses([{ id: 'lords-supper', label: 'Supper', lexicon: ['communion'] }]),
+    ).toEqual([]);
+  });
+
+  it('does not report a phrase that keeps two or more tokens', () => {
+    expect(
+      singleTokenCollapses([{ id: 'worship', label: 'Worship', lexicon: ['worship the lord'] }]),
+    ).toEqual([]);
+  });
+
+  it('is deterministic in ordering', () => {
+    const input = [
+      { id: 'b-concept', label: 'B', lexicon: ['be holy', 'a rock of refuge here'] },
+      { id: 'a-concept', label: 'A', lexicon: ['fear not'] },
+    ];
+    expect(singleTokenCollapses(input).map((entry) => entry.conceptId)).toEqual([
+      'a-concept',
+      'b-concept',
+    ]);
   });
 });

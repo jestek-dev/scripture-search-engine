@@ -8,6 +8,10 @@ lexicon:
   - great is your faithfulness
   - his mercies are new every morning
   - god keeps his promises
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - faithfulness
 anchors:
   - ref: Lamentations 3:22-23
     sources: [editorial]

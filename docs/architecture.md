@@ -72,6 +72,15 @@ editorial theology filtered, every merged concept inspectable. This is the
 and the layer where LH's own theological voice can eventually be encoded
 deliberately rather than statistically.
 
+> **⚠️ Superseded in part (2026-08-06).** The seed source that actually landed
+> is Torrey, via a three-witness-verified transcription; Nave is admitted as a
+> *lineage-only* manifest — declared so lineage can be expressed, never cited by
+> a shipped row — so Torrey/Nave's shared 1897-era scholarship is budgeted once,
+> not twice. The YAML sample above predates that decision and still shows `nave`
+> in `sources:`; a concept written today would cite `torrey`,
+> `openbible-topics` or `editorial`. See
+> `docs/research/2026-08-06-torrey-miller-topical-concordance.md`.
+
 ### Layer B — Homiletical evidence graph (the flesh)
 
 Built offline from PD sermons and commentaries. The sermons themselves **never

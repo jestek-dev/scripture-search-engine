@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Acts 1:11",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Jesus is coming back"
     },
     {
       "reference": "1 Thessalonians 4:16-17",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Jesus is coming back"
     }
   ],
   "expectedWithinTop": 10,

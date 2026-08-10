@@ -13,7 +13,8 @@
   "expectedTop": [
     {
       "reference": "Psalms 139:7-10",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The presence of God"
     }
   ],
   "expectedWithinTop": 10,

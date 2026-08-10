@@ -9,6 +9,18 @@ lexicon:
   - anchor for the soul
   - hope does not disappoint
   - a future and a hope
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - hope
+  # Remembered-phrasing entry, 2026-08-08. The wording people search with is
+  # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
+  # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
+  - plans to prosper you
+  # Remembered-phrasing entry, 2026-08-08. The wording people search with is
+  # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
+  # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
+  - confidence in what we hope for
 anchors:
   - ref: Jeremiah 29:11
     sources: [editorial]
@@ -31,6 +43,16 @@ anchors:
   - ref: Psalms 146:5
     sources: [torrey]
     weight: 0.65
+  # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
+  # wording renders).
+  - ref: Jeremiah 29:11
+    sources: [editorial]
+    weight: 0.9
+  # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
+  # wording renders).
+  - ref: Hebrews 11:1
+    sources: [editorial]
+    weight: 0.85
 related:
   - gods-faithfulness
   - second-coming

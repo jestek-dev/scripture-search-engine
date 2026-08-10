@@ -9,6 +9,10 @@ lexicon:
   - the empty tomb
   - raised from the dead
   - i am the resurrection and the life
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - resurrection
 anchors:
   - ref: Luke 24:5-6
     sources: [editorial]

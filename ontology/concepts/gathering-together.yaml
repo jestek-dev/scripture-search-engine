@@ -1,0 +1,29 @@
+id: gathering-together
+label: Gathering together
+# Added 2026-08-08 from the remembered-phrasing measurement. "let us not give
+# up meeting together" returned nothing: the WEB reads "not forsaking our own
+# assembling together".
+#
+# Its own concept because no existing one fits: `walking-in-the-light` carries
+# "fellowship with one another" but is scoped to ethical conduct, and the
+# assembling of believers is a distinct and directly useful theme for the
+# consuming apps, which plan gatherings for a living.
+lexicon:
+  - meeting together
+  - let us not give up meeting together
+  - gathering with believers
+  - where two or three gather
+  - devoted to fellowship
+anchors:
+  - ref: Hebrews 10:24-25
+    sources: [editorial]
+    weight: 1.0
+  - ref: Matthew 18:20
+    sources: [editorial]
+    weight: 0.9
+  - ref: Acts 2:42
+    sources: [editorial]
+    weight: 0.85
+related:
+  - loving-others
+  - worship

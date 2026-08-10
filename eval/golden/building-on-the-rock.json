@@ -1,0 +1,25 @@
+{
+  "id": "building-on-the-rock",
+  "query": "wise and foolish builders",
+  "status": "active",
+  "coversConcepts": [
+    "building-on-the-rock"
+  ],
+  "note": [
+    "Founding concept 'building-on-the-rock'.",
+    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own — the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
+    "Query is a lexicon phrase that shares NO vocabulary with the anchor text — Matthew 7 never says 'wise and foolish builders' as a unit — so a pass here can only come from the curated concept, not from token overlap."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 7:24-27",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Building on the rock"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 6:46-49",
+    "1 Corinthians 3:10-15"
+  ]
+}

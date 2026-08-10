@@ -9,7 +9,12 @@
 
 export { ENGINE_VERSION, TOKENIZER_VERSION } from './config/engineVersion.js';
 
-export { createEngine, type EngineOptions, type ScriptureEngine } from './createEngine.js';
+export {
+  collapseAnchorRuns,
+  createEngine,
+  type EngineOptions,
+  type ScriptureEngine,
+} from './createEngine.js';
 
 export {
   CorpusRepository,
@@ -29,6 +34,8 @@ export {
   targetIdFor,
   tokenEvidence,
 } from './intents/lexical.js';
+
+export { sourceLabel } from './intents/concept.js';
 
 export {
   normalizeToken,

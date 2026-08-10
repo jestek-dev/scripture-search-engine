@@ -13,11 +13,13 @@
   "expectedTop": [
     {
       "reference": "Matthew 18:21-22",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Forgiving others"
     },
     {
       "reference": "Ephesians 4:32",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Forgiving others"
     }
   ],
   "expectedWithinTop": 10,

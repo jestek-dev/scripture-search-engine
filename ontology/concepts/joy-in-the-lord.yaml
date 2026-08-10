@@ -9,6 +9,14 @@ lexicon:
   - fullness of joy
   - joy comes in the morning
   - the joy of the lord is my strength
+  # Single-token entry, added 2026-08-08. Bare words are what people actually
+  # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
+  # keeps the claim humble relative to a multi-word match.
+  - joy
+  # Remembered-phrasing entry, 2026-08-08. The wording people search with is
+  # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
+  # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
+  - consider it pure joy
 anchors:
   - ref: Nehemiah 8:10
     sources: [editorial]
@@ -34,5 +42,10 @@ anchors:
   - ref: Psalms 37:4
     sources: [torrey]
     weight: 0.65
+  # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
+  # wording renders).
+  - ref: James 1:2
+    sources: [editorial]
+    weight: 0.8
 related:
   - praise
