@@ -230,6 +230,8 @@ function sourceLabel(sourceId: string): string {
       return 'Torrey, New Topical Textbook (public domain)';
     case 'nave':
       return "Nave's Topical Bible (public domain)";
+    case 'translation-variants':
+      return 'Cross-translation vocabulary index';
     case 'maclaren-psalms':
     case 'maclaren-mark':
       return 'Maclaren, Expositions (public domain)';

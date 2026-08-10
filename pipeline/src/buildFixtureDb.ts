@@ -60,6 +60,15 @@ interface FixtureFile extends VerseArraySource {
   readonly generatedFrom: { readonly sourceSha256: string };
 }
 
+function uniqueVersesById(verses: readonly TranslationImport['verses'][number][]) {
+  const seen = new Set<number>();
+  return verses.filter((verse) => {
+    if (seen.has(verse.verseId)) return false;
+    seen.add(verse.verseId);
+    return true;
+  });
+}
+
 export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
   readonly path: string;
   readonly verseCount: number;
@@ -96,7 +105,7 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
       manifest.attributionNote ? ` ${manifest.attributionNote}` : ''
     }`,
     sha256: manifest.sha256,
-    verses: importVerseArray(fixture),
+    verses: uniqueVersesById(importVerseArray(fixture)),
   };
 
   mkdirSync(dirname(targetPath), { recursive: true });
