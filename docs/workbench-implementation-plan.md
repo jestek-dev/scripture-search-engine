@@ -138,7 +138,12 @@ Server startup (`serve`):
 
 Server routes (Node built-in `http`, bound to `127.0.0.1`):
 
-- `GET /` — serves the single static HTML page from `workbench/static/`.
+- `GET /` — serves the single static HTML page from `workbench/static/`,
+  snapshotted at startup so the page and the judgment validator always come
+  from the same checkout. (Before the snapshot, a `git pull` under a running
+  server served the new page against the old in-memory validator; v1.1's
+  `causeInferred` was rejected as `Unknown field` that way until the process
+  restarted. Restart the server after pulling to pick up changes.)
 - `GET /api/search?q=` — returns the awaited `engine.research(q)` result,
   JSON-serialized **verbatim**. `ResearchResult` is
   `ResearchOutcome & ResultIdentity` (`engine/src/types.ts:84`), so the
