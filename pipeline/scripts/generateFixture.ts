@@ -169,6 +169,12 @@ function main(): void {
     ? createHash('sha256').update(readFileSync(join(HERE, '..', 'sources', 'engwebp_vpl.zip'))).digest('hex')
     : createHash('sha256').update(raw).digest('hex');
 
+  // Chapters MERGE across selection entries. A book may legitimately appear
+  // more than once — the reason a chapter is in the fixture is worth
+  // recording per passage, not flattened into one row per book — and an
+  // assigning `set` here would silently drop the earlier entry's chapters.
+  // Adding "Matthew 17 — mustard seed" would have deleted Matthew 5-7 and
+  // with them golden fixture #1's anchor, with nothing reporting a loss.
   const wanted = new Map<number, Set<number>>();
   for (const entry of SELECTION) {
     const book = findBook(entry.book);

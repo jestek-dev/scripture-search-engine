@@ -163,12 +163,24 @@ export async function createEngine(
       } else {
         const fragment = await searchLongestFragment(repository, query);
         if (fragment) {
+          // Fragment authority is measured in SIGNIFICANT words (0.8.0).
+          // "is close to" is three raw words but one unit of meaning, and
+          // scoring it 3/6 of a full match let stopword runs outrank curated
+          // anchors. A query of nothing but function words falls back to raw
+          // counts rather than dividing by zero.
+          const querySignificant = significantWords(query).length;
+          const fragmentSignificant = significantWords(fragment.fragment).length;
+          const useSignificant = querySignificant > 0;
           for (const match of fragment.matches) {
             verses.set(targetIdFor(match), match);
             contributions.push({
               verse: match,
               evidence: [
-                phraseEvidence(fragment.fragment, fragment.fragmentWords, fragment.queryWords),
+                phraseEvidence(
+                  fragment.fragment,
+                  useSignificant ? fragmentSignificant : fragment.fragmentWords,
+                  useSignificant ? querySignificant : fragment.queryWords,
+                ),
               ],
             });
           }

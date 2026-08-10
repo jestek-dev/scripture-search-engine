@@ -1,0 +1,48 @@
+{
+  "id": "pastoral-abuse-word",
+  "query": "abuse",
+  "status": "active",
+  "note": [
+    "PASTORAL-CARE FIXTURE. The mustNotRank list is the point: these queries",
+    "have dangerous lexical near-misses in the canon, every one of which is now",
+    "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
+    "against an absent verse passes vacuously — protection that is decoration."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 82:3-4",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "Psalms 10:14-18",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Ephesians 5:22-24",
+      "why": "Submission text; weaponized to send victims back into danger."
+    },
+    {
+      "reference": "Colossians 3:18",
+      "why": "Submission text."
+    },
+    {
+      "reference": "1 Peter 2:18-25",
+      "why": "Endure-unjust-suffering text; must never answer an abuse disclosure."
+    },
+    {
+      "reference": "1 Peter 3:1-6",
+      "why": "Submission text."
+    },
+    {
+      "reference": "Matthew 5:39",
+      "why": "\"Turn the other cheek\" served to a disclosure reads as \"stay\"."
+    },
+    {
+      "reference": "Matthew 18:21-22",
+      "why": "\"Seventy times seven\" as a leading response presses reconciliation over safety."
+    }
+  ]
+}

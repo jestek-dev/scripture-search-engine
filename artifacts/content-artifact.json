@@ -12,8 +12,8 @@
   "perTableBytes": {
     "book_aliases": 12288,
     "books": 4096,
-    "concept_anchors": 20480,
-    "concept_lexicon": 8192,
+    "concept_anchors": 36864,
+    "concept_lexicon": 32768,
     "concept_related": 8192,
     "concepts": 8192,
     "cross_references": 18636800,
@@ -49,9 +49,9 @@
   "counts": {
     "verses": 31098,
     "distinctTokens": 9570,
-    "concepts": 8,
-    "lexiconEntries": 41,
-    "editorialAnchors": 28,
+    "concepts": 33,
+    "lexiconEntries": 205,
+    "editorialAnchors": 129,
     "topicAnchors": 63,
     "crossReferences": 341096,
     "verseTerms": 877300,

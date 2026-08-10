@@ -1,0 +1,52 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# 2 Samuel 12:23 enters at 0.5 with a caution the weight encodes:
+# "I will go to him" has comforted grieving parents for three
+# thousand years, but it is David's statement of his own death, not
+# an doctrinal proof about the eternal state of every infant. Used
+# tenderly, never as the defining answer.
+id: pregnancy-and-child-loss
+label: Losing a child
+lexicon:
+  - miscarriage
+  - stillbirth
+  - lost my baby
+  - lost the pregnancy
+  - infant loss
+  - lost my child
+anchors:
+  - ref: Psalms 34:18
+    sources: [editorial]
+    weight: 1
+  - ref: Romans 8:26
+    sources: [editorial]
+    weight: 0.9
+  - ref: John 11:35
+    sources: [editorial]
+    weight: 0.85
+  - ref: Psalms 139:13-14
+    sources: [editorial]
+    weight: 0.88
+  - ref: Revelation 21:4
+    sources: [editorial]
+    weight: 0.85
+  - ref: Matthew 19:14
+    sources: [editorial]
+    weight: 0.6
+  - ref: 2 Samuel 12:22-23
+    sources: [editorial]
+    weight: 0.5
+related:
+  - grief-and-loss

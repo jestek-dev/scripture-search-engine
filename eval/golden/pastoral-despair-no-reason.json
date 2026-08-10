@@ -1,0 +1,52 @@
+{
+  "id": "pastoral-despair-no-reason",
+  "query": "no reason to live",
+  "status": "active",
+  "note": [
+    "PASTORAL-CARE FIXTURE. The mustNotRank list is the point: these queries",
+    "have dangerous lexical near-misses in the canon, every one of which is now",
+    "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
+    "against an absent verse passes vacuously — protection that is decoration."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Kings 19:4-8",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "Matthew 11:28-30",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Matthew 27:5",
+      "why": "Judas hangs himself — a suicide narrative must never answer a suicidal search."
+    },
+    {
+      "reference": "2 Samuel 17:23",
+      "why": "Ahithophel hangs himself."
+    },
+    {
+      "reference": "1 Samuel 31:4-5",
+      "why": "Saul falls on his sword."
+    },
+    {
+      "reference": "Judges 16:30",
+      "why": "Samson pulls the house down on himself."
+    },
+    {
+      "reference": "1 Kings 16:18",
+      "why": "Zimri burns the house over himself."
+    },
+    {
+      "reference": "Philippians 1:21-23",
+      "why": "\"Desire to depart\" — true at a deathbed, catastrophic served to \"want to die\"."
+    },
+    {
+      "reference": "Psalms 116:15",
+      "why": "\"Precious… is the death of his saints\" — globally excluded from despair queries."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# The safety-and-justice register for abuse queries, distinct from the
+# comfort register of god-sees-my-suffering: the person needs to hear
+# that God sees, that the violence is evil, that He defends the
+# oppressed — and that seeking safety is not a failure of faith
+# (Proverbs 27:12). The golden gates out the submission passages,
+# which are the most weaponized texts in this domain.
+id: refuge-and-justice-for-the-oppressed
+label: Justice for the oppressed
+lexicon:
+  - abuse
+  - abused
+  - domestic violence
+  - sexual assault
+  - child abuse
+  - verbal abuse
+  - emotional abuse
+  - rape
+  - raped
+  - incest
+  - molestation
+  - not safe at home
+  - scared of my husband
+  - scared of my wife
+  - husband hits me
+  - wife hits me
+  - parent hits me
+  - touched me sexually
+  - defend the oppressed
+  - justice for the oppressed
+anchors:
+  - ref: Psalms 82:3-4
+    sources: [editorial]
+    weight: 1
+  - ref: Psalms 10:17-18
+    sources: [editorial]
+    weight: 0.95
+  - ref: Psalms 11:5
+    sources: [editorial]
+    weight: 0.9
+  - ref: Proverbs 27:12
+    sources: [editorial]
+    weight: 0.9
+  - ref: Psalms 10:14
+    sources: [editorial]
+    weight: 0.88
+  - ref: Psalms 9:9-10
+    sources: [editorial]
+    weight: 0.85
+  - ref: Ephesians 5:11-13
+    sources: [editorial]
+    weight: 0.8
+  - ref: Psalms 27:10
+    sources: [editorial]
+    weight: 0.75
+  - ref: Isaiah 1:17
+    sources: [editorial]
+    weight: 0.75
+  - ref: Psalms 34:18
+    sources: [editorial]
+    weight: 0.7
+related:
+  - god-sees-my-suffering
+  - refuge-in-trouble

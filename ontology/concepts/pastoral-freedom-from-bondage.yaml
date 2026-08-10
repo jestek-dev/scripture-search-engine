@@ -1,0 +1,66 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# Anchored on grace and a new master, not willpower: 1 Cor 6:12 leads
+# ("I will not be brought under the power of anything"). Romans 7 and
+# Micah 7:8 enter low per review: pastorally apt for relapse, but the
+# speaker of Romans 7 is debated and Micah's context is broader
+# adversity — weights say so. Proverbs 24:16 was REJECTED: "falls
+# seven times" is calamity, not repeated sin, and citing it as a
+# relapse text would overstate what the verse says.
+id: freedom-from-bondage
+label: Freedom from bondage
+lexicon:
+  - addiction
+  - addicted
+  - alcoholism
+  - overdose
+  - freedom from addiction
+  - recovery from addiction
+  - breaking chains
+  - slave to sin
+  - set free from sin
+  - free indeed
+  - overcoming temptation
+  - cant stop drinking
+  - cant stop using
+  - struggling to stay sober
+anchors:
+  - ref: 1 Corinthians 6:12
+    sources: [editorial]
+    weight: 1
+  - ref: John 8:36
+    sources: [editorial]
+    weight: 0.95
+  - ref: Romans 6:17-18
+    sources: [editorial]
+    weight: 0.9
+  - ref: Galatians 5:1
+    sources: [editorial]
+    weight: 0.9
+  - ref: Hebrews 4:15-16
+    sources: [editorial]
+    weight: 0.85
+  - ref: Titus 2:11-12
+    sources: [editorial]
+    weight: 0.85
+  - ref: 1 Corinthians 10:13
+    sources: [editorial]
+    weight: 0.8
+  - ref: Romans 7:24-25
+    sources: [editorial]
+    weight: 0.6
+related:
+  - sexual-purity
+  - relapse-and-restoration

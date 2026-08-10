@@ -1,0 +1,41 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# James 5 leads as the instruction passage. Nothing here may be
+# presented as a guarantee of physical healing in this life — that is
+# a consumer-display concern the anchors are chosen to support, not
+# undermine: Psalm 103 praises the healer without scheduling the cure.
+id: prayer-for-healing
+label: Prayer for healing
+lexicon:
+  - prayer for healing
+  - healing for the sick
+  - heal me Lord
+  - heals all my diseases
+  - verses about healing
+anchors:
+  - ref: James 5:13-16
+    sources: [editorial]
+    weight: 1
+  - ref: Jeremiah 17:14
+    sources: [editorial]
+    weight: 0.8
+  - ref: Psalms 103:2-3
+    sources: [editorial]
+    weight: 0.75
+  - ref: Mark 1:40-42
+    sources: [editorial]
+    weight: 0.75
+related:
+  - serious-illness-and-dying

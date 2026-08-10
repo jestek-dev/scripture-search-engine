@@ -1,0 +1,40 @@
+# PASTORAL-CARE PACK — approved by Jesse 2026-07-31 after two external
+# reviews (see NEEDS-JESSE §1.8 for what was adopted, demoted, and why).
+#
+# These anchors speak in LH's voice on the heaviest queries the engine
+# receives. Every anchor was verified against the WEB text before admission,
+# and the companion golden fixture asserts not only that the right passages
+# surface but that the canon's dangerous near-misses (suicide narratives,
+# "cut it off" sayings, submission passages) NEVER rank for these queries.
+#
+# Single-word lexicon entries below are DELIBERATE exceptions per
+# NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the WEB
+# text ("suicide", "cancer"), where the word IS the concept. Generic-token
+# entries remain forbidden.
+
+# "Close to the brokenhearted" is NIV wording; the WEB reads "near to
+# those who have a broken heart", so before this pack the remembered
+# phrasing surfaced Zechariah 13:7 ("strike the shepherd") — the
+# measured worst result in the pastoral audit. The golden gates it out.
+id: near-to-the-brokenhearted
+label: Near to the brokenhearted
+lexicon:
+  - close to the brokenhearted
+  - near to the brokenhearted
+  - heals the brokenhearted
+  - broken heart
+  - crushed spirit
+  - binds up their wounds
+anchors:
+  - ref: Psalms 34:18
+    sources: [editorial]
+    weight: 1
+  - ref: Psalms 147:3
+    sources: [editorial]
+    weight: 0.9
+  - ref: Isaiah 61:1-3
+    sources: [editorial]
+    weight: 0.8
+  - ref: Matthew 5:4
+    sources: [editorial]
+    weight: 0.8

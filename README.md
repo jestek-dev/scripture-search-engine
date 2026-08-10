@@ -131,10 +131,10 @@ Maskil, Setlist and Versed) is deliberately not started.
 | Layer | State |
 |---|---|
 | Lexical ladder | reference, verbatim phrase + longest-fragment fallback, IDF tokens with proximity, archaic/inflection folding |
-| Concept spine | 8 curated concepts, OpenBible topical votes, cross-reference expansion. Nave/Torrey researched, not yet imported |
+| Concept spine | 33 curated concepts (8 thematic + 11 remembered-phrasing + 14 pastoral-care packs), OpenBible topical votes, cross-reference expansion. Nave/Torrey researched, not yet imported |
 | Homiletical | Maclaren's *Expositions* + Spurgeon's *Treasury of David* (4 of 6 vols, 5,525 expositions) → verse-level corroborated term profiles. **15 verses have profiles** — the mechanism is proven, the coverage is small |
 | Curation | `.claude/skills/concept-curation` — fixtures-first enrichment workflow, not yet run on a real gap |
-| Runtime API | `research()` only. `themes()` / `forSong()` are typed but unbuilt |
+| Runtime API | all five methods ship — `research()`, `themes()`, `passage()`, `related()`, `forSong()` — with contract tests |
 
 **Golden fixture #1 is active and passing.** "hearing and doing" returns
 James 1:22, Matthew 7:24 and Luke 6:47 carrying `concept_anchor` evidence
@@ -169,11 +169,32 @@ import { createEngine } from '@jestek-dev/scripture-engine';
 
 const engine = await createEngine(port);          // port: your ContentQueryPort
 const result = await engine.research('hearing and doing');
-const themes = await engine.themes('a sermon on obedience');
+const themes = await engine.themes('a sermon on hearing and doing');
 const passage = await engine.passage('James 1:22-25');
 const related = await engine.related('Psalm 46:1');
 const forSong = await engine.forSong({ themes: ['refuge'], title: 'Our Shelter' });
 ```
+
+`themes()` resolves **curated lexicon phrases**, deliberately: it answers
+"which concepts does this text *name*", so `'hearing and doing'` matches and a
+loose synonym does not. Looser matching belongs to `research()`, which folds
+inflection and archaic forms and falls through the whole ladder.
+
+`ContentQueryPort` is five lines against any SQLite binding. In Node:
+
+```ts
+import { DatabaseSync } from 'node:sqlite';
+
+const db = new DatabaseSync('content.db', { readOnly: true });
+const port = {
+  async execute(sql, params = []) { return { rows: db.prepare(sql).all(...params) }; },
+  async close() { db.close(); },
+};
+```
+
+(On device, back the same two methods with OP-SQLite or expo-sqlite instead —
+the engine neither knows nor cares. The eval harness's own port is
+[eval/src/nodeSqlitePort.ts](eval/src/nodeSqlitePort.ts).)
 
 Every result carries `engineVersion`, `corpusFingerprint` and
 `layerFingerprint`. Store them with anything you cache: they are what let you

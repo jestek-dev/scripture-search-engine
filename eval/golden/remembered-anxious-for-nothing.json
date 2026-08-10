@@ -1,0 +1,22 @@
+{
+  "id": "remembered-anxious-for-nothing",
+  "query": "do not be anxious about anything",
+  "status": "active",
+  "note": [
+    "REMEMBERED PHRASING. Measured against the full artifact on 2026-07-31,",
+    "this query did not reach Philippians 4:6-7 by any lexical rung — the wording",
+    "searchers remember is NIV/ESV and the corpus is the WEB.",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose. Token overlap could",
+    "drift into the right answer on a corpus change and the fixture would",
+    "report success for a reason that is not the one we built. The assertion",
+    "is that a CURATED anchor put it there and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 4:6-7",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 5
+}

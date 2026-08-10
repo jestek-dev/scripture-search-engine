@@ -6,6 +6,14 @@ lexicon:
   - god is our refuge
   - hiding place
   - stronghold in distress
+  # Remembered phrasings for Psalm 91:1, added 2026-07-31. They belong HERE
+  # rather than in a `remembered-*` pack of their own: this concept already
+  # anchors Psalms 91:1-2, and minting a second concept over the same verse
+  # is precisely the anchor dilution G4 exists to prevent. A remembered
+  # phrasing needs its own pack only when no existing concept names the
+  # passage. Measured before the change: the query ranked Psalm 91:1 eleventh.
+  - dwells in the shelter of the most high
+  - secret place of the most high
 anchors:
   - ref: Psalms 46:1-3
     sources: [editorial]

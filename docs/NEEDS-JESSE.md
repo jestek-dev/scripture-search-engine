@@ -43,6 +43,12 @@ reviews of numbers I had to pick to keep moving.
 5. **Phase 5 sequencing.** §1.3. The engine is ready — all five API methods
    ship with contract tests. What remains is inside Maskil, Setlist and Versed.
 
+6. ~~**Telemetry: two sign-offs remain.**~~ ✅ BOTH SIGNED (2026-07-31):
+   consent copy approved (amended to state the why — improving results)
+   and the sensitive-category list approved as drafted, judgment calls
+   included. §1.7. T0 is now fully gated-through; collection may begin
+   whenever a consumer app ships its shim (Phase 5).
+
 Everything else in this document is context, not a request.
 
 ---
@@ -96,6 +102,75 @@ revert visibility.
 registered npm account or org. If it is not, publishing fails and the options
 are to register it or publish via GitHub Packages. I could not check this
 without your npm credentials.
+
+### 1.7 Telemetry and gap mining — ✅ MODEL APPROVED (2026-07-31); two sign-offs remain
+
+`docs/telemetry-and-gap-mining.md` designs the loop that replaces guessed
+gap lists (which is what remembered-phrasings had to run on) with evidence:
+consumers log query + outcome locally, per-device distillates upload to
+each app's private store, a pipeline miner turns them into a Gap Report,
+humans curate through the existing gauntlet. The engine never reads
+telemetry — there is no code path by which an event can alter a ranking,
+so the "could this hurt results" answer is structural.
+
+**Your decisions, recorded:** opt-in consent at install; automatic
+collection after consent (no per-export ceremony); all query *wording*
+kept forever in a committed master analyzed record; the audit dump deleted
+after every audit and raw on-device events after 90 days; crisis-category
+exclusion upheld — those searches are never recorded, consent
+notwithstanding; per-app private stores, never a shared public document.
+
+**The repo half is built**: schemas, the sensitive-category list, the
+reference distillation (the spec shims must match), the miner with replay
+and rank cross-checks, and the thresholds in `eval/budgets.json`. What
+remains before any collection starts: your sign-off on the consent copy
+(design doc §4.1) and your review of
+`pipeline/telemetry/sensitive-categories.json`. The shims themselves land
+with Phase 5, since they live in the consumer apps.
+
+The evidence base (click bias, the AOL re-identification, feedback-loop
+failures, reformulation mining as established practice) is in
+`docs/research/2026-07-31-search-telemetry-mining.md`.
+
+### 1.8 Pastoral-care packs — ✅ BUILT (2026-07-31), with an engine change the work forced
+
+Fourteen packs covering the crisis topics telemetry deliberately cannot see
+(§4.5 of the telemetry design): despair/depression/suicide (one merged
+concept, not three — near-duplicates dilute), brokenhearted, the God who
+sees, justice for the oppressed, freedom from bondage, relapse (split out:
+"am I finished?" is a different question than "can I be free?"), sexual
+purity, marriage teaching vs. betrayal (split registers), healing, serious
+illness, grief, child loss, strength in weakness. Both external reviews'
+content was adopted where verified; their rejections are recorded in the
+pack comments (Prov 24:16 misapplied to relapse; 2 Sam 12:23 overstated;
+Mal 2:16 textually contested → 0.6; Hosea excluded from the crisis pack).
+
+**Measured on the full artifact, engine 0.8.0**: 20/20 crisis queries reach
+an intended passage in the top 10 (was 2/20), and **0 surface a forbidden
+verse** (was 4 — including Mark 6:25 for "hopeless and want to give up" and
+Eph 5:22 as the top answer to "my husband hits me"). Probe churn from the
+packs: 0% on all 25 probes; weak-share delta 0.0000 (decomposed
+corpus-growth-vs-packs, same method as the remembered-phrasing admission).
+
+**ENGINE_VERSION 0.7.1 → 0.8.0.** The audit exposed a scoring defect:
+fragment authority was measured in RAW words, so "God is close to the
+brokenhearted" gave Zechariah 13:7 ("the man who **is close to** me —
+strike the shepherd") half of full phrase authority for a three-stopword
+run. Fragments are now measured in significant words, and a fragment
+covering a minority of the query's meaning files as weak token_overlap
+rather than authoritative exact_phrase — G6's own definition, applied.
+Whole-query matches are untouched.
+
+**The lesson worth keeping**: mustNotRank against a verse absent from the
+fixture corpus passes vacuously. The fixture grew 1,417 → 3,305 verses
+specifically so the canon's suicide narratives, "cut it off" sayings, and
+submission passages are IN the gated corpus and the safety assertions can
+fail. Never add a harm gate without adding its target chapter.
+
+**Before the next tagged release**: the committed descriptor's
+`databaseSha256` is from a local build — run the release workflow manually
+and commit the CI-built descriptor per §1.6e. Everything else in the
+descriptor (fingerprints, counts) is deterministic and already correct.
 
 ### 1.3 When does Maskil adopt this? — still open, and now also blocked technically
 
@@ -338,16 +413,149 @@ to prosper you" and whose anchor is Jeremiah 29:11 solves it exactly — that is
 what the curated ontology is *for*, and it is the one layer where LH's own
 voice is allowed to be explicit.
 
-I did not do it, deliberately: the curation flow puts fixtures first, and
-confirming the fixtures is the product judgment reserved for you. It is also
-theologically load-bearing in a way term statistics are not — deciding that
-"plans to prosper you" should surface Jeremiah 29:11 is a claim about meaning.
+> **CORRECTION, 2026-07-31 — the table above measures the wrong thing, and the
+> gap is about a quarter the size it implies.**
+>
+> Those ✓/✗ marks record whether the phrase occurs *verbatim in the text*.
+> That is the right test for "would admitting KJV help" — the answer is still
+> no — but it is not the question a user asks, which is "does the engine
+> return the verse". The ladder's longest-fragment fallback plus IDF tokens
+> with proximity already recover most paraphrases.
+>
+> Re-measured by running 65 commonly-searched phrasings through `research()`
+> against the **full artifact** rather than checking the text: **48 of 65
+> already returned the intended verse at #1**, including three the table
+> marks ✗ — "lean not on your own understanding" (Proverbs 3:5), "soar on
+> wings like eagles" (Isaiah 40:31) and "seek first the kingdom"
+> (Matthew 6:33).
+>
+> So the pack needed to be **13 concepts, not ~50**. The lesson generalises:
+> a claim about the corpus is not a claim about the engine, and this document
+> stated one while measuring the other.
 
-**What I would ask you to approve:** a `remembered-phrasings` concept pack
-covering the top ~50 most-searched verses in their NIV/ESV wording, anchored to
-the WEB verses they refer to, tagged `editorial`. It is mechanical once you
-approve the list, and it converts the single most user-visible failure in the
-system into a solved case.
+**RESOLVED 2026-07-31 — the packs are written, gated and measured.** Twelve
+`remembered-*` packs plus two lexicon entries added to `refuge-in-trouble`
+(Psalm 91:1 already had an anchor there; minting a second concept over the
+same verse is the dilution G4 exists to prevent). Fourteen golden fixtures,
+each asserting `concept_anchor` rather than mere position, so a corpus change
+that drifts into the right answer for the wrong reason still fails.
+
+Measured on the full 31,098-verse artifact, before → after:
+
+| query | before | after |
+|---|---|---|
+| plans to prosper you | absent | **1** |
+| I know the plans I have for you | 3 | **1** |
+| confidence in what we hope for | absent | **2** |
+| consider it pure joy | absent | **1** |
+| fixing our eyes on Jesus | absent | **1** |
+| do not be anxious about anything | 8 | **1** |
+| tempted beyond what you can bear | 7 | **1** |
+| faith as small as a mustard seed | 2 | **1** |
+| do not conform to the pattern of this world | 4 | **1** |
+| put on the full armor of God | 2 | **1** |
+| fruit of the spirit | 2 | **1** |
+| dwells in the shelter of the most high | 11 | **2** |
+
+All carry `concept_anchor` provenance attributed to LH editorial. Probe churn
+attributable to the packs is **0% on all 25 probes**, and weak-reason share
+moved **0.0000** — measured by building the fixture twice, once with the
+corpus growth alone and once with the packs on top, so the two causes could
+not be confused. An editorial anchor pack should change the queries it names
+and nothing else; this one does.
+
+**Two candidates were REJECTED on evidence**, which is the part worth reading:
+
+- **Acts 1:8 / "you will be my witnesses"** — dropped. The phrase normalises
+  to the single token `witness`, so a lexicon entry short enough to match the
+  query would fire on every query containing that word. In the gated fixture
+  the verse already ranks #1 on `exact_phrase`, so the pack was
+  `NO MEASURABLE EFFECT` there and could not have earned its way in.
+- **The bare "work at it with all your heart"** — the Colossians 3:23 pack
+  ships, but its fixture asserts the fuller remembered form. The bare form
+  normalises to `{work, heart}` and the WEB renders "with all your heart"
+  verbatim in some twenty places; on the full artifact the anchor only lifts
+  it from absent to #23. Asserting the bare form would have passed on the
+  1,417-verse fixture while production stayed broken.
+
+**Still yours to decide:** the candidate list was mine, drawn from general
+knowledge of commonly-searched verses rather than LH's own query logs. If
+Maskil or the website can export real queries, re-running the same probe
+against them would replace my judgment with your evidence — and would likely
+name misses I did not think to test. The anchors themselves are claims about
+meaning; they are reviewable as data in `ontology/concepts/remembered-*.yaml`,
+one file per claim.
+
+**Rights note, for the manifest rather than for assumption:** these packs put
+NIV/ESV-shaped wording into `content.db` as search keys. Each is a short
+fragment used as an index term, which is a different act from reproducing a
+translation — but this repo records that class of judgment in a
+`licenseRecord` rather than leaving it implied, exactly as §1.4b did for
+CCEL. The `editorial` manifest should say so in your words before the next
+release.
+
+### 1.6d Five lexicon entries normalise to ONE token — and one of them is doing damage
+
+Found while tracing why "work at it with all your heart" returns Ephesians 2:9
+first. Concept matching requires every token of a lexicon phrase to be present
+in the query, so a phrase that normalises to a single token fires on **any**
+query containing that word — and fires `concept_anchor`, which is an
+*authoritative* family, uncapped in aggregate by G6.
+
+| concept | entry | normalises to |
+|---|---|---|
+| `grace-not-earned` | "not by works" | `work` |
+| `fear-not` | "do not be afraid" | `afraid` |
+| `fear-not` | "fear not" | `fear` |
+| `fear-not` | "be not dismayed" | `dismay` |
+| `self-deception` | "deceiving yourselves" | `deceiv` |
+
+`grace-not-earned` is the harmful one: every query containing "work" — "work
+at it with all your heart", "the work of ministry", "good works" — receives
+Ephesians 2:8-9 as authoritative curated evidence. The other four are closer
+to defensible, since "fear"/"afraid" genuinely are the concept, but they are
+the same mechanism and worth deciding on together.
+
+**I have not changed them.** These are reviewed theological data you approved
+in §1.1, the fix changes existing ranking behaviour, and it wants its own
+fixtures — precisely the process this repo asks for. Three ways to go:
+
+1. Require a minimum token count per entry, enforced in G4 the way
+   `minLexiconEntries` already is. Clean and structural, but it fails the
+   build on data already shipped until the entries are rewritten.
+2. Rewrite just the entries, leaving the gate alone — "not by works but by
+   grace", "do not be afraid I am with you". Cheapest, but nothing stops the
+   next one.
+3. Decide single-token entries are legitimate for concepts whose *name* is
+   that word, and gate only the ones that are not.
+
+My recommendation is (1) with the rewrites in the same PR, because a rule the
+gate does not know is a rule that decays. But which entries survive the
+rewrite is a judgment about meaning, so it is yours.
+
+### 1.6e The reviewed descriptor is now STALE, and only CI can refresh it
+
+The ontology changed, so `artifacts/content-artifact.json` no longer describes
+what the pipeline builds — its `layerFingerprint` and `databaseSha256` are
+both from before the packs. **The next tagged release will fail** at the
+verify step, which is the new behaviour working as intended rather than a
+regression: before §2.11 it would have sailed through and shipped a mismatch.
+
+It cannot be refreshed from a laptop. SQLite's byte layout depends on the
+SQLite compiled into Node, so a locally-built checksum will not match what CI
+builds, and committing one would just move the failure. The workflow now
+uploads the descriptor it builds as a run artifact on **every** run, including
+the tagless `workflow_dispatch` one, so the refresh is:
+
+1. Run the "Release artifact" workflow manually from the Actions tab.
+2. Download the `content-artifact-descriptor` artifact.
+3. Review the diff — `layerFingerprint` and `databaseSha256` should move,
+   `corpusFingerprint` and `manifestFingerprint` should not, since neither the
+   scripture text nor the sources changed.
+4. Commit it, then tag.
+
+Worth doing before the next release regardless of the packs, since the
+committed descriptor's checksum was independently wrong until today (§2.11).
 
 **c) Weak-reason share, and a probe set that no longer covers the corpus.**
 Matthew Henry raised weak-evidence share by 0.120 against a 0.15 budget on
@@ -395,7 +603,7 @@ The gate also reports any *unbudgeted* table over 1 MiB rather than passing it,
 which justified itself immediately by failing the first run on an FTS shadow
 table nobody had considered.
 
-### 2.10 Whole-Bible coverage: 95.3%, and what still limits it
+### 2.10 Whole-Bible coverage: 99.0%, and what still limits it
 
 Measured on the real artifact, not the fixture:
 
@@ -563,16 +771,39 @@ credentials: enabling 2FA (npm now offers only security keys — Touch ID counts
 and the first `npm publish`, which needs a fingerprint prompt. Everything after
 this is automatic.
 
-### One gap this surfaced: the package has no licence
+### ~~One gap this surfaced: the package has no licence~~ — ✅ RESOLVED (2026-07-31)
 
-npm displays it as **Proprietary**, because `engine/package.json` declares no
-`license` field and the repository has no LICENSE file. The repo is public,
-which means as it stands nobody has permission to use the code — the default
-for published-but-unlicensed work is all rights reserved.
+MIT was chosen: `LICENSE` is committed at the repo root and
+`engine/package.json` declares `"license": "MIT"`. `engine/LICENSE` and
+`engine/README.md` are also committed so the npm **tarball** carries the
+licence text and the registry page shows a readme — npm auto-includes those
+files only from the package directory, not the repo root, which is why 0.7.1
+shipped with neither. The distinction the LICENSE section of the README draws
+still stands: MIT covers the code, not the corpora it is built from.
 
-For Maskil, Setlist and Versed that changes nothing; you own them. It matters
-if anyone else ever finds it, and it is a two-line fix. I have not chosen one:
-a licence is a rights decision, not a technical one. MIT if you want it freely
-usable, Apache-2.0 if you want an explicit patent grant, or leave it
-proprietary deliberately — but deliberately rather than by omission.
+### 2.11 The release verify step was a tautology — fixed, and the descriptor was wrong
+
+The release workflow's "verify the built artifact matches the reviewed
+descriptor" step read `artifacts/content-artifact.json` **after** the build —
+but the build writes that same file, so the step compared the build to itself
+and could never fail. It didn't fail on v0.7.1, when it should have: the
+committed descriptor said `databaseSha256: 403d0fb9…` while the `content.db`
+actually attached to the release is `b57d3676…`. A consumer following the
+README's instruction to verify against the reviewed descriptor would have
+rejected a good database.
+
+Every *other* field of the two descriptors was byte-identical — corpus and
+layer fingerprints, per-table bytes, all counts — so this was SQLite byte
+layout differing between build environments (the committed descriptor came
+from a local build on a different Node/SQLite than CI's Node 24), not data
+drift. The ranking contract held; the checksum claim didn't.
+
+Fixed three ways: the workflow snapshots the reviewed descriptor before the
+build and verifies against the snapshot (plus a full-descriptor diff); the
+committed descriptor now carries the CI-built sha `b57d3676…`, matching what
+consumers actually download; and the workflow records that the canonical
+build environment is CI. Consequence worth knowing: a local
+`npm run build:artifact` may now produce a *different* `databaseSha256` and
+overwrite the descriptor with it. That diff is expected — review it, don't
+commit it. Only a CI build produces the sha a release will verify against.
 
