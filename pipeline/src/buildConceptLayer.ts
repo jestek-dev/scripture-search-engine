@@ -22,6 +22,11 @@ export interface ConceptLayerInput {
   readonly manifests: ManifestSet;
   /** Verse ids present in this artifact; anything outside is dropped. */
   readonly presentVerseIds: ReadonlySet<number>;
+  /**
+   * Cross-translation vocabulary, verse-keyed. Stems only — see schema.ts.
+   * Empty when the derived index has not been generated.
+   */
+  readonly translationTokens?: ReadonlyMap<number, readonly string[]>;
   /** Layer B distillate, verse-keyed. Empty until expositions are ingested. */
   readonly verseTerms?: readonly {
     verseId: number;
@@ -42,6 +47,7 @@ export interface ConceptLayerResult {
   readonly topicAnchors: number;
   readonly crossReferences: number;
   readonly verseTerms: number;
+  readonly translationTokens: number;
   readonly droppedOutOfCorpus: number;
   /**
    * Identifies everything in the curated layers that can change a result.
@@ -106,6 +112,9 @@ export function buildConceptLayer(
   const insertRelated = database.prepare(
     'INSERT INTO concept_related(concept_id, related_id) VALUES (?, ?)',
   );
+  const insertTranslationToken = database.prepare(
+    'INSERT INTO verse_translation_tokens(verse_id, token) VALUES (?, ?)',
+  );
   const insertVerseTerm = database.prepare(
     `INSERT INTO verse_terms(verse_id, term, pmi, count, source_ids, author_count,
                              min_span_verses, locator)
@@ -120,6 +129,7 @@ export function buildConceptLayer(
   let topicAnchors = 0;
   let crossReferences = 0;
   let verseTerms = 0;
+  let translationTokens = 0;
   let dropped = 0;
 
   database.exec('BEGIN');
@@ -214,6 +224,16 @@ export function buildConceptLayer(
       );
       verseTerms += 1;
     }
+    for (const [verseId, tokens] of input.translationTokens ?? new Map()) {
+      if (!input.presentVerseIds.has(verseId)) {
+        dropped += 1;
+        continue;
+      }
+      for (const token of tokens) {
+        insertTranslationToken.run(verseId, token);
+        translationTokens += 1;
+      }
+    }
     database.exec('COMMIT');
   } catch (error) {
     database.exec('ROLLBACK');
@@ -258,7 +278,10 @@ export function buildConceptLayer(
   )) {
     feed(['r', edge.conceptId, edge.relatedId]);
   }
-  feed(['counts', topicAnchors, crossReferences, verseTerms]);
+  // translationTokens joins the fingerprint because it changes RESULTS:
+  // admitting another translation's vocabulary makes verses reachable that
+  // were not before, and a consumer must be able to tell that happened.
+  feed(['counts', topicAnchors, crossReferences, verseTerms, translationTokens]);
   const layerFingerprint = hash.digest('hex');
 
   // Written with REPLACE because the corpus build already populated meta.
@@ -274,6 +297,7 @@ export function buildConceptLayer(
     topicAnchors,
     crossReferences,
     verseTerms,
+    translationTokens,
     droppedOutOfCorpus: dropped,
   };
 }

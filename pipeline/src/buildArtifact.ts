@@ -398,6 +398,20 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       process.stdout.write('layer B  : skipped (--no-layer-b)\n');
     }
 
+    // Cross-translation vocabulary. Committed as a derived index, so the
+    // licensed prose it came from is needed once, on one machine, ever.
+    const translationTokens = new Map<number, readonly string[]>();
+    const tokensPath = join(ROOT, 'fixtures', 'translation-tokens.json');
+    if (existsSync(tokensPath)) {
+      const file = JSON.parse(readFileSync(tokensPath, 'utf8')) as {
+        tokens: Record<string, string>;
+      };
+      for (const [verseId, tokens] of Object.entries(file.tokens)) {
+        translationTokens.set(Number(verseId), tokens.split(' ').filter(Boolean));
+      }
+      process.stdout.write(`cross-tr : ${translationTokens.size} verses carry alternate wording\n`);
+    }
+
     const layer = buildConceptLayer(database as unknown as SqliteDatabase, {
       ontology,
       topicRows: topics.rows,
@@ -405,6 +419,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       manifests,
       presentVerseIds: new Set(verses.map((verse) => verse.verseId)),
       verseTerms,
+      translationTokens,
     });
     process.stdout.write(
       `layer    : ${layer.concepts} concepts, ${layer.editorialAnchors} editorial anchors, ` +
@@ -480,6 +495,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
         topicAnchors: layer.topicAnchors,
         crossReferences: layer.crossReferences,
         verseTerms: layer.verseTerms,
+        translationTokens: layer.translationTokens,
       },
       sources: manifests.sources
         .filter((source) => source.sha256)

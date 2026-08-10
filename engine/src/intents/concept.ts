@@ -103,6 +103,58 @@ export function crossReferenceEvidence(
  * honest about what it is — a hint that people preaching this passage reach
  * for these words, nothing stronger.
  */
+/**
+ * The verse reads this way in another English translation.
+ *
+ * Distinct from token_overlap, which matches the SHIPPED wording, and from
+ * passage_terms, which is what expositors said ABOUT a verse. This is the
+ * verse itself, worded differently — the case where somebody learned Jeremiah
+ * 29:11 as "plans to prosper you" and the shipped text says "thoughts of
+ * peace".
+ *
+ * Strength saturates on how many query stems the verse accounts for. Matching
+ * one stem is weak (many verses contain `plan`); matching several is a strong
+ * signal that this is the verse being remembered.
+ *
+ * The label deliberately does not name a translation. The stored stems are
+ * merged across sources, so which translation contributed a given one is not
+ * recoverable — and claiming otherwise would be inventing provenance we do
+ * not have.
+ */
+export function translationVariantEvidence(
+  match: { matchedTokens: readonly string[] },
+  queryIdfTotal: number,
+  documentFrequencies: ReadonlyMap<string, number>,
+  documentCount: number,
+): Evidence | null {
+  // A SINGLE stem is not evidence. Nearly every verse has some alternate
+  // rendering of some common word, so one match says only "this verse exists".
+  // Requiring two is what separates "somebody is quoting this verse from
+  // another translation" from coincidence — and skipping the first version of
+  // this check is what displaced 90% of the top ten on unrelated probes.
+  if (match.matchedTokens.length < 2) return null;
+
+  // Weighted by rarity, exactly as token_overlap is. Matching `prosper` says
+  // far more than matching `help`, and an unweighted count cannot tell them
+  // apart.
+  const idfSum = match.matchedTokens.reduce((sum, token) => {
+    const df = documentFrequencies.get(token) ?? 0;
+    return sum + Math.log(1 + documentCount / Math.max(1, df));
+  }, 0);
+  const coverage = queryIdfTotal > 0 ? Math.min(1, idfSum / queryIdfTotal) : 0;
+  if (coverage <= 0) return null;
+
+  return {
+    family: 'translation_variant',
+    label: `Worded this way in another translation: ${match.matchedTokens.slice(0, 3).join(', ')}`,
+    strength: Math.max(0, Math.min(1, coverage)),
+    provenance: {
+      sourceId: 'translation-variants',
+      label: 'Cross-translation vocabulary',
+    },
+  };
+}
+
 export function passageTermEvidence(match: {
   matchedTerms: readonly string[];
   pmiSum: number;

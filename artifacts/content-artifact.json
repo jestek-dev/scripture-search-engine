@@ -1,14 +1,14 @@
 {
   "formatVersion": 1,
   "distributionTier": "public_distribution",
-  "schemaVersion": "5",
+  "schemaVersion": "6",
   "tokenizerVersion": "1.0.0",
-  "engineVersion": "0.7.1",
+  "engineVersion": "0.8.0",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
-  "layerFingerprint": "316fba74372ca6bb12a0e082ac98d44213c96f78f757f431fefe6eff7c6f2c27",
-  "manifestFingerprint": "94b733e5e39c50443d84ef449e6f18691e2548a563a2695cda2b7dfb8034d904",
-  "databaseSha256": "b57d367682ec8e0c63ebcb66ac2ce5114dc2ab91bab360e0021f6391828658ce",
-  "databaseBytes": 123310080,
+  "layerFingerprint": "8ae179a644a1ec48db118936c102ddaec9794a7b6543d7376be35bb6e744bb6f",
+  "manifestFingerprint": "0a801f843c20ea2ac61dc7ca415c7a76ad61bedcac08d275353401b21834ac55",
+  "databaseSha256": "35b7a6f3f81126b909dd3a5bf5f9bf65812e832a18a0fab6bf102f1428edf186",
+  "databaseBytes": 137412608,
   "perTableBytes": {
     "book_aliases": 12288,
     "books": 4096,
@@ -23,13 +23,14 @@
     "translations": 8192,
     "verse_terms": 80736256,
     "verse_tokens": 14766080,
+    "verse_translation_tokens": 14102528,
     "verses": 6152192,
     "verses_fts_config": 4096,
     "verses_fts_data": 2289664,
     "verses_fts_docsize": 303104,
     "verses_fts_idx": 12288
   },
-  "builtAt": "2026-07-30T00:00:00.000Z",
+  "builtAt": "2026-07-31T14:00:43.785Z",
   "translations": [
     {
       "code": "WEB",
@@ -53,7 +54,8 @@
     "editorialAnchors": 28,
     "topicAnchors": 63,
     "crossReferences": 341096,
-    "verseTerms": 877300
+    "verseTerms": 877300,
+    "translationTokens": 307923
   },
   "sources": [
     {
