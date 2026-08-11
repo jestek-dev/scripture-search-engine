@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
@@ -128,7 +128,9 @@ async function treeForChanges(remote: string, changes: readonly { readonly path:
 }
 
 async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<TestRepository> {
-  const container = await mkdtemp(path.join(os.tmpdir(), 'publish-preparation-'));
+  // realpath canonicalizes the sandbox root (8.3 short names on Windows runners,
+  // symlinked temp on macOS) so path-identity guards compare canonical paths.
+  const container = await realpath(await mkdtemp(path.join(os.tmpdir(), 'publish-preparation-')));
   temporary.push(container);
   const remote = path.join(container, 'remote.git');
   const root = path.join(container, 'primary');

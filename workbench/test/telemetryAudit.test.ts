@@ -1,4 +1,4 @@
-import { lstat, mkdtemp, mkdir, readFile, readdir, rename, rm, symlink, unlink, writeFile } from 'node:fs/promises';
+import { lstat, mkdtemp, mkdir, readFile, readdir, realpath, rename, rm, symlink, unlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -77,7 +77,9 @@ function engine(): ScriptureEngine {
 }
 
 async function fixture(): Promise<{ repo: string; source: string; selected: string[] }> {
-  const parent = await mkdtemp(path.join(os.tmpdir(), 'telemetry-audit-test-'));
+  // realpath canonicalizes the sandbox root (8.3 short names on Windows runners,
+  // symlinked temp on macOS) so path-identity guards compare canonical paths.
+  const parent = await realpath(await mkdtemp(path.join(os.tmpdir(), 'telemetry-audit-test-')));
   roots.push(parent);
   const repo = path.join(parent, 'repo');
   const source = path.join(parent, 'selected');

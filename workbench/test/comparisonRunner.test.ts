@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { lstat, mkdtemp, mkdir, readFile, readdir, rename, rm, symlink, unlink, writeFile } from 'node:fs/promises';
+import { lstat, mkdtemp, mkdir, readFile, readdir, realpath, rename, rm, symlink, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
@@ -54,7 +54,9 @@ async function makeCandidate(identity = CANDIDATE_IDENTITY, cacheKey = 'a'.repea
   result: CandidateCliResult;
   descriptorSha256: string;
 }> {
-  const root = await mkdtemp(path.join(tmpdir(), 'scripture-comparison-'));
+  // realpath canonicalizes the sandbox root (8.3 short names on Windows runners,
+  // symlinked temp on macOS) so path-identity guards compare canonical paths.
+  const root = await realpath(await mkdtemp(path.join(tmpdir(), 'scripture-comparison-')));
   temporary.push(root);
   const directory = path.join(root, cacheKey);
   await mkdir(directory);
