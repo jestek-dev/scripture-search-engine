@@ -1,0 +1,26 @@
+{
+  "id": "hearing-and-doing",
+  "generatedBy": "workbench",
+  "status": "pending",
+  "query": "hearing and doing",
+  "expectedTop": [
+    {
+      "reference": "James 1:22",
+      "requiredReasonFamily": "concept_anchor"
+    },
+    {
+      "reference": "James 2:14-26"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Genesis 5:1",
+      "why": "Genealogy; no thematic relation to hearing or doing."
+    },
+    {
+      "reference": "Psalms 46:1",
+      "why": "matched words, not meaning; judged not a fit for this query"
+    }
+  ]
+}

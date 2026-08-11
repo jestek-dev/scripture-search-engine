@@ -56,7 +56,7 @@ jobs:
           fi
 
       - name: Admission gauntlet
-        run: npm run verify
+        run: npm run verify -- --require-admit
 
       - name: Fetch pinned sources
         run: npm run fetch:sources --workspace pipeline
@@ -73,7 +73,7 @@ jobs:
       # rebuild differs and the verification below could never mean anything.
       - name: Build artifact, reproducing the reviewed one
         run: |
-          BUILT_AT=$(node -p "JSON.parse(require('node:fs').readFileSync(process.env.RUNNER_TEMP + '/reviewed-descriptor.json', 'utf8')).builtAt")
+          BUILT_AT=$(node -p "JSON.parse(require('node:fs').readFileSync(process.env.RUNNER_TEMP + '/reviewed-content-artifact.json', 'utf8')).builtAt")
           echo "reproducing build stamped $BUILT_AT"
           npm run build:artifact --workspace pipeline -- --built-at "$BUILT_AT"
 
@@ -85,7 +85,7 @@ jobs:
       - name: Verify the built artifact matches the reviewed descriptor
         run: |
           echo "descriptor drift (empty means none):"
-          diff "$RUNNER_TEMP/reviewed-descriptor.json" artifacts/content-artifact.json
+          diff "$RUNNER_TEMP/reviewed-content-artifact.json" artifacts/content-artifact.json
           node -e "
             const fs = require('node:fs'), crypto = require('node:crypto');
             const path = require('node:path');

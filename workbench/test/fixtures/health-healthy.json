@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "status": "healthy",
+  "descriptor": {
+    "identity": {
+      "engineVersion": "0.8.0",
+      "corpusFingerprint": "corpus-a",
+      "layerFingerprint": "layer-a"
+    },
+    "alignment": "aligned",
+    "mismatchFields": [],
+    "stale": null
+  },
+  "artifact": {
+    "identity": {
+      "engineVersion": "0.8.0",
+      "corpusFingerprint": "corpus-a",
+      "layerFingerprint": "layer-a"
+    },
+    "matchesDescriptor": true
+  },
+  "golden": {
+    "total": 3,
+    "active": 3,
+    "pending": 0,
+    "generated": 2,
+    "generatedBy": {
+      "curated": 1,
+      "workbench": 1
+    }
+  },
+  "coverage": {
+    "total": 4,
+    "active": 4,
+    "pending": 0,
+    "uncovered": 0,
+    "stale": 0
+  },
+  "judgments": {
+    "total": 2,
+    "effective": 2,
+    "stale": 0
+  },
+  "gauntlet": {
+    "status": "healthy",
+    "verdict": "ADMIT",
+    "summary": "all gates passed",
+    "reason": null,
+    "reportPath": "eval/.runs/gauntlet-report.json"
+  },
+  "git": {
+    "branch": "main",
+    "state": "main",
+    "dirty": false,
+    "aheadBy": 0,
+    "behindBy": 0
+  },
+  "startup": {
+    "degraded": false,
+    "diagnostics": []
+  },
+  "signals": []
+}

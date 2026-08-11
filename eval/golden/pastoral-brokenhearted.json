@@ -2,23 +2,27 @@
   "id": "pastoral-brokenhearted",
   "query": "God is close to the brokenhearted",
   "status": "active",
+  "coversConcepts": [
+    "near-to-the-brokenhearted"
+  ],
   "note": [
     "PASTORAL-CARE FIXTURE. The mustNotRank list is the point: these queries",
     "have dangerous lexical near-misses in the canon, every one of which is now",
     "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
-    "against an absent verse passes vacuously — protection that is decoration."
+    "against an absent verse passes vacuously â€” protection that is decoration."
   ],
   "expectedTop": [
     {
       "reference": "Psalms 34:18",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Near to the brokenhearted"
     }
   ],
   "expectedWithinTop": 10,
   "mustNotRank": [
     {
       "reference": "Zechariah 13:7",
-      "why": "\"Strike the shepherd\" — the measured pre-pack top result for this query."
+      "why": "\"Strike the shepherd\" â€” the measured pre-pack top result for this query."
     }
   ]
 }

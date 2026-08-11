@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { EXPOSITION_SOURCES } from '../src/expositionSources.js';
-import { fileNameFor, UNPACK } from '../scripts/fetchSources.js';
+import { fileNameFor, SWORD_ARCHIVE_GLOB, UNPACK } from '../scripts/fetchSources.js';
 import type { SourceManifest } from '../src/provenance/manifest.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -79,5 +79,9 @@ describe('source registry and manifests agree', () => {
         expect(spec.file, `${spec.id} should name a file`).toMatch(/\.\w+$/);
       }
     }
+  });
+
+  it('extracts the nested SWORD driver and module layout', () => {
+    expect(SWORD_ARCHIVE_GLOB).toBe('modules/comments/*/*/*');
   });
 });

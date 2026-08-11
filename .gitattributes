@@ -1,0 +1,22 @@
+* text=auto eol=lf
+
+# Repository text is checked out with LF so cross-platform identity hashes agree.
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+*.db3 binary
+*.zip binary
+*.gz binary
+*.bz2 binary
+*.xz binary
+*.tgz binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary

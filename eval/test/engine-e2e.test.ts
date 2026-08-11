@@ -6,6 +6,7 @@
  * scripture text rather than synthetic evidence.
  */
 
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -17,14 +18,17 @@ import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import { openCorpus } from '../src/nodeSqlitePort.js';
 
 let engine: ScriptureEngine;
+let fixtureDirectory: string;
 
 beforeAll(async () => {
-  const built = buildFixtureDatabase();
+  fixtureDirectory = mkdtempSync(join(tmpdir(), 'scripture-engine-e2e-'));
+  const built = buildFixtureDatabase(join(fixtureDirectory, `fixture-${process.pid}.db`));
   engine = await createEngine(openCorpus(built.path));
 });
 
 afterAll(async () => {
   await engine?.close();
+  rmSync(fixtureDirectory, { force: true, recursive: true, maxRetries: 3, retryDelay: 100 });
 });
 
 async function discover(query: string) {
@@ -120,9 +124,8 @@ describe('determinism end to end', () => {
     // tie-break rule rather than fighting a different rule that also applies.
     // Built to its own path: the shared fixture database is still open by the
     // suite-level engine, and Windows will not let us unlink an open file.
-    const separate = buildFixtureDatabase(
-      join(tmpdir(), 'scripture-engine-undiversified.db'),
-    );
+    const separateDirectory = mkdtempSync(join(tmpdir(), 'scripture-engine-undiversified-'));
+    const separate = buildFixtureDatabase(join(separateDirectory, `fixture-${process.pid}.db`));
     const undiversified = await createEngine(openCorpus(separate.path), {
       rankOptions: { maxPerGroup: Number.MAX_SAFE_INTEGER },
     });
@@ -140,6 +143,7 @@ describe('determinism end to end', () => {
       }
     } finally {
       await undiversified.close();
+      rmSync(separateDirectory, { force: true, recursive: true, maxRetries: 3, retryDelay: 100 });
     }
   });
 });

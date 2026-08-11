@@ -9,7 +9,7 @@
     "the right passage for the wrong reason is still a failure.",
     "While we were yet sinners, Christ died for us; by his wounds we are healed.",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "2026-08-08 single-token audit: the bare query \"the cross\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
+    "2026-08-08 single-token audit: the bare query \"the cross\" is measured separately in the-cross-bare.json because its exact-text competitors make its honest expectations different from this remembered phrasing."
   ],
   "expectedTop": [
     {
@@ -28,8 +28,5 @@
     "Isaiah 53:5",
     "1 Peter 2:24",
     "John 1:29"
-  ],
-  "additionalQueries": [
-    "the cross"
   ]
 }

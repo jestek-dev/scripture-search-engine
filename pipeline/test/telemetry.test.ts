@@ -290,7 +290,7 @@ describe('mine', () => {
     const { report } = await mine(dumps, [engine], BUDGETS, sensitive);
     expect(report.flagged.rankMismatch).toBe(3);
     const cluster = report.clusters.find((entry) => entry.signature === clusterSignature('fruit of the spirit'));
-    expect(cluster?.conversions).toEqual([]); // excluded from evidence, not half-trusted
+    expect(cluster).toBeUndefined(); // the contradictory row contributes no evidence at all
   });
 
   it('counts conversions with an unreplayable identity instead of guessing', async () => {

@@ -37,22 +37,43 @@ export type GateStatus =
    */
   | 'not-applicable';
 
+/**
+ * Whether an unavailable gate prevents an exact admission. Optional advisory
+ * gates are visible evidence, but their absence cannot turn a healthy run
+ * into a false failure because they do not grade repository content.
+ */
+export type GateApplicability = 'required' | 'optional-advisory';
+
+/** The sole opt-in network check is advisory; every other gate is required. */
+export function gateApplicability(gate: GateId): GateApplicability {
+  return gate === 'G1b-reachability' ? 'optional-advisory' : 'required';
+}
+
 export interface GateFinding {
   /** One line, specific enough to act on without opening the dataset. */
   readonly message: string;
   /** Rows, concept ids, or probe names implicated. */
   readonly subjects?: readonly string[];
+  /** A stable semantic category. Omit only for legacy callers; the report supplies a gate-scoped fallback. */
+  readonly categoryCode?: string;
+  /** Structured, additive context for automation. */
+  readonly params?: Readonly<Record<string, string | number | boolean | readonly string[]>>;
+  /** Numeric context for trend and threshold consumers. */
+  readonly metrics?: Readonly<Record<string, number>>;
 }
 
 export interface GateResult {
   readonly gate: GateId;
   readonly title: string;
   readonly status: GateStatus;
+  readonly applicability: GateApplicability;
   /** One-line summary shown even when the gate passes. */
   readonly summary: string;
   readonly findings?: readonly GateFinding[];
   /** Numbers worth trending across builds (counts, ratios, bytes, ms). */
   readonly metrics?: Readonly<Record<string, number>>;
+  /** Pending fixture ids proven passing by this exact gate run. */
+  readonly promotionCandidates?: readonly string[];
 }
 
 export function pass(
@@ -61,7 +82,14 @@ export function pass(
   summary: string,
   metrics?: Readonly<Record<string, number>>,
 ): GateResult {
-  return { gate, title, status: 'pass', summary, ...(metrics ? { metrics } : {}) };
+  return {
+    gate,
+    title,
+    status: 'pass',
+    applicability: gateApplicability(gate),
+    summary,
+    ...(metrics ? { metrics } : {}),
+  };
 }
 
 export function fail(
@@ -69,12 +97,27 @@ export function fail(
   title: string,
   summary: string,
   findings: readonly GateFinding[],
+  metrics?: Readonly<Record<string, number>>,
 ): GateResult {
-  return { gate, title, status: 'fail', summary, findings };
+  return {
+    gate,
+    title,
+    status: 'fail',
+    applicability: gateApplicability(gate),
+    summary,
+    findings,
+    ...(metrics ? { metrics } : {}),
+  };
 }
 
 export function notApplicable(gate: GateId, title: string, reason: string): GateResult {
-  return { gate, title, status: 'not-applicable', summary: reason };
+  return {
+    gate,
+    title,
+    status: 'not-applicable',
+    applicability: gateApplicability(gate),
+    summary: reason,
+  };
 }
 
 /**
@@ -90,5 +133,5 @@ export function warn(
   summary: string,
   findings: readonly GateFinding[],
 ): GateResult {
-  return { gate, title, status: 'warn', summary, findings };
+  return { gate, title, status: 'warn', applicability: gateApplicability(gate), summary, findings };
 }

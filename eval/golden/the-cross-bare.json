@@ -1,0 +1,25 @@
+{
+  "id": "the-cross-bare",
+  "query": "the cross",
+  "status": "active",
+  "note": [
+    "Bare-query companion to the-cross.json.",
+    "The corpus contains many passages that say 'the cross' exactly, so this",
+    "query should preserve those strong lexical results while still surfacing",
+    "a central curated atonement anchor for the right, named reason."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 5:8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The cross and atonement"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 53:5",
+    "1 Peter 2:24",
+    "1 Corinthians 15:3",
+    "John 1:29"
+  ]
+}

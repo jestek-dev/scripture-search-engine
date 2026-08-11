@@ -1,6 +1,8 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -8,15 +10,26 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 // the exact shape G3 parses. Erased at runtime, so no eval code executes.
 import type { CorpusFixture } from '../../eval/src/gates/corpusGolden.js';
 
-import { compileJudgments } from '../src/compileJudgments.js';
-import type { JudgmentRecord } from '../src/judgments.js';
+import {
+  applyJudgmentCompilationPlan,
+  compileJudgments,
+  planJudgmentCompilation,
+} from '../src/compileJudgments.js';
+import type { JudgmentRecord, JudgmentRecordV2 } from '../src/judgments.js';
 
 // The compiler is a pure function of the log with an injectable repo root, so
 // every test runs against a temp copy of the tree and the real working tree
 // is never touched.
 let root: string;
 
+const SNAPSHOT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures');
+
 const CURRENT_LAYER = 'layer-current';
+
+function stableUuid(label: string): string {
+  const hex = createHash('sha256').update(label).digest('hex');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-8${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
+}
 
 const SUBSET = {
   $schema: 'verse-array-subset/1',
@@ -38,6 +51,64 @@ function judgment(partial: Partial<JudgmentRecord> & Pick<JudgmentRecord, 'at' |
     layerFingerprint: CURRENT_LAYER,
     ...partial,
   } as JudgmentRecord;
+}
+
+function v2Judgment(
+  partial: Partial<JudgmentRecordV2> & Pick<JudgmentRecordV2, 'judgmentId' | 'query' | 'action'>,
+): JudgmentRecordV2 {
+  return {
+    schemaVersion: 2,
+    at: '2026-08-03T10:00:00.000Z',
+    reviewer: 'test-reviewer',
+    observedWindow: 10,
+    resultSetDigest: 'a'.repeat(64),
+    displayedWindowDigest: 'b'.repeat(64),
+    source: 'manual',
+    engineVersion: '0.7.1-test',
+    corpusFingerprint: 'corpus-test',
+    layerFingerprint: CURRENT_LAYER,
+    ...partial,
+    judgmentId: stableUuid(partial.judgmentId),
+    caseId: stableUuid(`case:${partial.query}`),
+    ...(partial.supersedes === undefined ? {} : { supersedes: stableUuid(partial.supersedes) }),
+    observedRank: partial.action === 'missing' ? null : 1,
+  } as JudgmentRecordV2;
+}
+
+async function writeV2History(
+  records: readonly JudgmentRecordV2[],
+  legacy: readonly JudgmentRecord[] = [],
+): Promise<void> {
+  const baseTime = Date.parse('2026-08-03T10:00:00.000Z');
+  const chronological = records.map((record, index) => ({
+    ...record,
+    at: new Date(baseTime + index * 1_000).toISOString(),
+  }));
+  await writeFile(
+    path.join(root, 'workbench', 'judgments.jsonl'),
+    [...legacy, ...chronological].map((record) => `${JSON.stringify(record)}\n`).join(''),
+  );
+  const byCase = new Map(chronological.map((record) => [record.caseId, record]));
+  const events = [...byCase.values()].map((record) => ({
+    schemaVersion: 2,
+    eventId: stableUuid(`event:${record.caseId}`),
+    caseId: record.caseId,
+    at: new Date(baseTime - 1_000).toISOString(),
+    reviewer: record.reviewer,
+    sequence: 1,
+    kind: 'case-created',
+    query: record.query,
+    source: record.source,
+    artifact: {
+      engineVersion: record.engineVersion,
+      corpusFingerprint: record.corpusFingerprint,
+      layerFingerprint: record.layerFingerprint,
+    },
+  }));
+  await writeFile(
+    path.join(root, 'workbench', 'cases.jsonl'),
+    events.map((event) => `${JSON.stringify(event)}\n`).join(''),
+  );
 }
 
 // A synthetic log covering every routing-table row (§5): superseded ✗, plain
@@ -235,6 +306,71 @@ describe('compile-judgments — routing (§5)', () => {
 });
 
 describe('compile-judgments — determinism and ownership', () => {
+  it('keeps the legacy v1 fixture bytes exactly compatible', async () => {
+    await compileJudgments(root);
+    for (const slug of ['hearing-and-doing', 'shelter-in-the-storm']) {
+      const [actual, expected] = await Promise.all([
+        readFile(goldenPath(slug)),
+        readFile(path.join(SNAPSHOT_DIR, `legacy-${slug}.json`)),
+      ]);
+      expect(actual.equals(expected), `${slug} must remain byte-for-byte compatible`).toBe(true);
+    }
+  });
+
+  it('compiles active v2 windows, irrelevant, and preferred order', async () => {
+    const v2 = [
+      v2Judgment({ judgmentId: 'old', query: 'v2 ranking', action: 'irrelevant', targetId: 'WEB:59001022', diagnosis: 'lexical-noise' }),
+      v2Judgment({ judgmentId: 'new', query: 'v2 ranking', action: 'helpful', targetId: 'WEB:59001022', supersedes: 'old' }),
+      v2Judgment({ judgmentId: 'essential', query: 'v2 ranking', action: 'essential', targetId: 'WEB:59001022', withinTop: 1 }),
+      v2Judgment({
+        judgmentId: 'missing',
+        query: 'v2 ranking',
+        action: 'missing',
+        reference: 'James 2:14-26',
+        withinTop: 10,
+        note: 'Faith expressed through action belongs in these results.',
+      }),
+      v2Judgment({ judgmentId: 'irrelevant', query: 'v2 ranking', action: 'irrelevant', targetId: 'WEB:1005001', diagnosis: 'lexical-noise' }),
+      v2Judgment({ judgmentId: 'prefer', query: 'v2 ranking', action: 'prefer', preferredTargetId: 'WEB:59001022', otherTargetId: 'WEB:45003016' }),
+    ];
+    await writeV2History(v2, LOG);
+    await compileJudgments(root);
+    const fixture = await readGolden('v2-ranking') as CorpusFixture & {
+      expectedTop: { ref?: string; reference?: string; withinTop?: number }[];
+      preferredOrder?: { above: string; below: string; withinTop: number }[];
+    };
+    expect(fixture.expectedTop).toEqual([
+      { ref: 'James 1:22', withinTop: 1 },
+      { ref: 'James 2:14-26', withinTop: 10 },
+    ]);
+    expect(fixture.expectedWithinTop).toBeUndefined();
+    expect(fixture.mustNotRank).toEqual([{ ref: 'Genesis 5:1', why: 'matched words, not meaning; judged not a fit for this query' }]);
+    expect(fixture.preferredOrder).toEqual([{ above: 'James 1:22', below: 'Romans 3:16', withinTop: 10 }]);
+    const before = await readFile(goldenPath('v2-ranking'), 'utf8');
+    await compileJudgments(root);
+    expect(await readFile(goldenPath('v2-ranking'), 'utf8')).toBe(before);
+  });
+
+  it('rejects contradictory and malformed v2 histories', async () => {
+    const base = v2Judgment({ judgmentId: 'one', query: 'conflict', action: 'essential', targetId: 'WEB:59001022', withinTop: 1 });
+    const opposite = v2Judgment({ judgmentId: 'two', query: 'conflict', action: 'irrelevant', targetId: 'WEB:59001022', diagnosis: 'lexical-noise' });
+    await writeV2History([base, opposite]);
+    await expect(compileJudgments(root)).rejects.toThrow(/both expects and forbids/);
+    await writeV2History([
+      { ...base, judgmentId: stableUuid('bad'), supersedes: stableUuid('absent') },
+    ]);
+    await expect(compileJudgments(root)).rejects.toThrow(/unknown judgment/);
+
+    const prior = v2Judgment({ judgmentId: 'time-prior', query: 'backdated correction', action: 'helpful', targetId: 'WEB:59001022' });
+    const correction = v2Judgment({ judgmentId: 'time-correction', query: 'backdated correction', action: 'helpful', targetId: 'WEB:59001022', supersedes: 'time-prior' });
+    await writeV2History([prior, correction]);
+    const judgmentsPath = path.join(root, 'workbench', 'judgments.jsonl');
+    const rows = (await readFile(judgmentsPath, 'utf8')).trim().split('\n').map((line) => JSON.parse(line) as Record<string, unknown>);
+    rows[1]!.at = '2026-08-03T09:59:59.000Z';
+    await writeFile(judgmentsPath, `${rows.map((row) => JSON.stringify(row)).join('\n')}\n`);
+    await expect(compileJudgments(root)).rejects.toThrow(/timestamped after/);
+  });
+
   it('re-runs byte-identically on the same log', async () => {
     await compileJudgments(root);
     const files = [
@@ -257,6 +393,98 @@ describe('compile-judgments — determinism and ownership', () => {
     );
     await compileJudgments(root);
     expect((await readGolden('hearing-and-doing')).status).toBe('active');
+  });
+
+  it('demotes an active generated fixture when its assertions materially change', async () => {
+    const original = v2Judgment({
+      judgmentId: 'original-window',
+      query: 'changing assertion',
+      action: 'essential',
+      targetId: 'WEB:59001022',
+      withinTop: 1,
+    });
+    await writeV2History([original]);
+    await compileJudgments(root);
+    const active = { ...(await readGolden('changing-assertion')), status: 'active' };
+    await writeFile(goldenPath('changing-assertion'), `${JSON.stringify(active, null, 2)}\n`);
+
+    const correction = v2Judgment({
+      judgmentId: 'corrected-window',
+      query: 'changing assertion',
+      action: 'essential',
+      targetId: 'WEB:59001022',
+      withinTop: 3,
+      supersedes: 'original-window',
+    });
+    await writeV2History([original, correction]);
+    await compileJudgments(root);
+    expect((await readGolden('changing-assertion')).status).toBe('pending');
+  });
+
+  it('removes an obsolete workbench fixture when corrections leave no assertions', async () => {
+    const irrelevant = v2Judgment({
+      judgmentId: 'remove-old',
+      query: 'remove obsolete fixture',
+      action: 'irrelevant',
+      targetId: 'WEB:59001022',
+      diagnosis: 'lexical-noise',
+    });
+    await writeV2History([irrelevant]);
+    await compileJudgments(root);
+    const helpful = v2Judgment({
+      judgmentId: 'remove-new',
+      query: 'remove obsolete fixture',
+      action: 'helpful',
+      targetId: 'WEB:59001022',
+      supersedes: 'remove-old',
+    });
+    await writeV2History([irrelevant, helpful]);
+    const outcome = await compileJudgments(root);
+    expect(outcome.fixturesRemoved).toEqual([path.join('eval', 'golden', 'remove-obsolete-fixture.json')]);
+    await expect(readFile(goldenPath('remove-obsolete-fixture'))).rejects.toThrow();
+  });
+
+  it('accepts an explicit reverse-pair correction and emits only the surviving direction', async () => {
+    const first = v2Judgment({
+      judgmentId: 'pair-first',
+      query: 'reverse pair',
+      action: 'prefer',
+      preferredTargetId: 'WEB:59001022',
+      otherTargetId: 'WEB:45003016',
+    });
+    const reverse = v2Judgment({
+      judgmentId: 'pair-reverse',
+      query: 'reverse pair',
+      action: 'prefer',
+      preferredTargetId: 'WEB:45003016',
+      otherTargetId: 'WEB:59001022',
+      supersedes: 'pair-first',
+    });
+    await writeV2History([first, reverse]);
+    await compileJudgments(root);
+    expect((await readGolden('reverse-pair')).preferredOrder).toEqual([
+      { above: 'Romans 3:16', below: 'James 1:22', withinTop: 10 },
+    ]);
+  });
+
+  it('rejects conflicting windows, overlapping ranges, and case/query mismatches', async () => {
+    const tight = v2Judgment({ judgmentId: 'tight', query: 'window conflict', action: 'missing', reference: 'James 2:14-26', withinTop: 1, note: 'Expected.' });
+    const broad = v2Judgment({ judgmentId: 'broad', query: 'window conflict', action: 'missing', reference: 'James 2:14-26', withinTop: 3, note: 'Expected.' });
+    await writeV2History([tight, broad]);
+    await expect(compileJudgments(root)).rejects.toThrow(/conflicting rank windows/);
+
+    const expected = v2Judgment({ judgmentId: 'range', query: 'range conflict', action: 'missing', reference: 'James 2:14-26', withinTop: 10, note: 'Expected.' });
+    const forbidden = v2Judgment({ judgmentId: 'verse', query: 'range conflict', action: 'irrelevant', targetId: 'WEB:59002020', diagnosis: 'lexical-noise' });
+    await writeV2History([expected, forbidden]);
+    await expect(compileJudgments(root)).rejects.toThrow(/both expects and forbids overlapping/);
+
+    const mismatch = v2Judgment({ judgmentId: 'mismatch', query: 'judgment query', action: 'helpful', targetId: 'WEB:59001022' });
+    await writeV2History([mismatch]);
+    const casesPath = path.join(root, 'workbench', 'cases.jsonl');
+    const event = JSON.parse(await readFile(casesPath, 'utf8')) as Record<string, unknown>;
+    event.query = 'different case query';
+    await writeFile(casesPath, `${JSON.stringify(event)}\n`);
+    await expect(compileJudgments(root)).rejects.toThrow(/query does not match case/);
   });
 
   it('refuses to touch a fixture without the workbench marker, naming the file', async () => {
@@ -282,5 +510,57 @@ describe('compile-judgments — determinism and ownership', () => {
   it('fails loudly on a log line that is not valid JSON', async () => {
     await writeFile(path.join(root, 'workbench', 'judgments.jsonl'), '{"broken\n');
     await expect(compileJudgments(root)).rejects.toThrow(/line 1/);
+  });
+});
+
+describe('compile-judgments preview/apply', () => {
+  it('previews exact mutations without touching the repository', async () => {
+    const subsetBefore = await readFile(path.join(root, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8');
+    const plan = await planJudgmentCompilation(root);
+
+    expect(plan.schemaVersion).toBe(1);
+    expect(plan.digest).toMatch(/^[a-f0-9]{64}$/);
+    expect(plan.operations.length).toBeGreaterThan(0);
+    await expect(readFile(goldenPath('hearing-and-doing'), 'utf8')).rejects.toThrow();
+    expect(await readFile(path.join(root, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8')).toBe(subsetBefore);
+
+    await applyJudgmentCompilationPlan(root, plan, plan.digest);
+    expect(await readFile(goldenPath('hearing-and-doing'), 'utf8')).toBe(
+      plan.operations.find((operation) => operation.path.endsWith('hearing-and-doing.json'))!.afterText,
+    );
+  });
+
+  it('rejects stale inputs before writing any operation', async () => {
+    const plan = await planJudgmentCompilation(root);
+    await writeFile(path.join(root, 'workbench', 'judgments.jsonl'), '');
+
+    await expect(applyJudgmentCompilationPlan(root, plan, plan.digest)).rejects.toThrow(/stale/);
+    await expect(readFile(goldenPath('hearing-and-doing'), 'utf8')).rejects.toThrow();
+  });
+
+  it('revalidates judgment inputs inside the same journal transaction before applying', async () => {
+    const plan = await planJudgmentCompilation(root);
+    const judgmentsPath = path.join(root, 'workbench', 'judgments.jsonl');
+    await expect(applyJudgmentCompilationPlan(root, plan, plan.digest, {
+      apply: {
+        onPhase: async (phase) => {
+          if (phase === 'validated') await writeFile(judgmentsPath, '');
+        },
+      },
+    })).rejects.toThrow(/stale.*waiting for the repository lock/i);
+    await expect(readFile(goldenPath('hearing-and-doing'), 'utf8')).rejects.toThrow();
+  });
+
+  it('rejects a tampered operation even when the caller reuses the preview digest', async () => {
+    const plan = await planJudgmentCompilation(root);
+    const tampered = {
+      ...plan,
+      operations: plan.operations.map((operation, index) =>
+        index === 0 ? { ...operation, afterText: '{"tampered":true}\n' } : operation,
+      ),
+    };
+
+    await expect(applyJudgmentCompilationPlan(root, tampered, plan.digest)).rejects.toThrow(/digest/);
+    await expect(readFile(goldenPath('hearing-and-doing'), 'utf8')).rejects.toThrow();
   });
 });

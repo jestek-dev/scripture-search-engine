@@ -17,6 +17,8 @@ lexicon:
   # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
   # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
   - plans to prosper you
+  - I know the plans I have for you
+  - plans to give you hope and a future
   # Remembered-phrasing entry, 2026-08-08. The wording people search with is
   # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
   # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
@@ -45,9 +47,6 @@ anchors:
     weight: 0.65
   # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
   # wording renders).
-  - ref: Jeremiah 29:11
-    sources: [editorial]
-    weight: 0.9
   # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
   # wording renders).
   - ref: Hebrews 11:1

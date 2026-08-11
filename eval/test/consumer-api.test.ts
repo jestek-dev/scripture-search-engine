@@ -9,6 +9,7 @@
  * result, and `related()` returns curated links rather than similarity.
  */
 
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -20,17 +21,17 @@ import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import { openCorpus } from '../src/nodeSqlitePort.js';
 
 let engine: ScriptureEngine;
+let fixtureDirectory: string;
 
 beforeAll(async () => {
-  // Its OWN database file. Vitest runs test files in parallel and
-  // buildFixtureDatabase() deletes its target before rebuilding, so sharing
-  // the default path means one file truncates the database another is reading.
-  const built = buildFixtureDatabase(join(tmpdir(), 'sse-consumer-api.db'));
+  fixtureDirectory = mkdtempSync(join(tmpdir(), 'sse-consumer-api-'));
+  const built = buildFixtureDatabase(join(fixtureDirectory, `fixture-${process.pid}.db`));
   engine = await createEngine(openCorpus(built.path));
 });
 
 afterAll(async () => {
   await engine?.close();
+  rmSync(fixtureDirectory, { force: true, recursive: true, maxRetries: 3, retryDelay: 100 });
 });
 
 describe('themes()', () => {

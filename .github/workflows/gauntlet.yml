@@ -38,15 +38,100 @@ jobs:
       - name: Unit tests
         run: npm test
 
-      - name: Admission gauntlet
+      - name: Workbench browser workflow
+        run: npm run test:browser --workspace workbench
+
+      - name: Admission gauntlet and baseline approval
         # Writes the Admission Report to the job summary and exits non-zero on
         # REJECT, so a failed gate blocks the merge rather than being a note
         # someone has to notice in the log.
-        run: npm run gauntlet
+        run: npm run gauntlet -- --require-admit --json eval/.runs/gauntlet-report.json
+
+      - name: Upload machine report
+        uses: actions/upload-artifact@v4
+        with:
+          name: gauntlet-machine-report-${{ runner.os }}
+          path: eval/.runs/gauntlet-report.json
+          if-no-files-found: error
 
   cross-platform-ordering:
     name: cross-platform ordering (G2)
     needs: verify
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Both platforms produced passing, identical gate results."
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: gauntlet-machine-report-Linux
+          path: reports/linux
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: gauntlet-machine-report-Windows
+          path: reports/windows
+
+      - name: Compare normalized machine reports
+        run: |
+          node <<'EOF'
+          const { readFileSync } = require('node:fs');
+          const { join } = require('node:path');
+
+          const LATENCY_GATE = 'G11-latency';
+          const STABLE_GATE_FIELDS = ['gate', 'code', 'title', 'status', 'applicability', 'verdict'];
+
+          function readReport(platform) {
+            return JSON.parse(
+              readFileSync(join(process.cwd(), 'reports', platform, 'gauntlet-report.json'), 'utf8'),
+            );
+          }
+
+          function canonicalJson(value) {
+            if (value === null) return 'null';
+            if (typeof value !== 'object') return JSON.stringify(value);
+            if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+            return `{${Object.keys(value)
+              .sort()
+              .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+              .join(',')}}`;
+          }
+
+          function normalizeGate(gate) {
+            const stable = Object.fromEntries(STABLE_GATE_FIELDS.map((field) => [field, gate[field]]));
+            if (gate.gate === LATENCY_GATE) return stable;
+            return {
+              ...stable,
+              summary: gate.summary,
+              findings: gate.findings,
+              metrics: gate.metrics,
+            };
+          }
+
+          function normalizeReport(report) {
+            return {
+              schema: report.schema,
+              identity: report.identity,
+              verdict: report.payload.verdict,
+              headline: report.payload.headline,
+              gates: report.payload.gates.map(normalizeGate),
+            };
+          }
+
+          function assertEqual(label, left, right) {
+            const a = canonicalJson(left);
+            const b = canonicalJson(right);
+            if (a !== b) {
+              throw new Error(`${label} mismatch\nlinux=${a}\nwindows=${b}`);
+            }
+          }
+
+          const linux = readReport('linux');
+          const windows = readReport('windows');
+
+          // JSON parsing and canonical serialization make this comparison EOL-stable.
+          // Only report timestamps/digests and G11 timing-derived fields are omitted;
+          // all identity and non-latency gate evidence remains comparable.
+          assertEqual('normalized machine report', normalizeReport(linux), normalizeReport(windows));
+          EOF

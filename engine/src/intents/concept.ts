@@ -14,6 +14,44 @@
 import type { ConceptAnchorRow, CrossReferenceRow } from '../corpus/repository.js';
 import type { Evidence } from '../reasons/types.js';
 
+function conceptSpecificity(matchedTokenCount: number): number {
+  return Math.min(1, 0.55 + 0.15 * Math.max(0, matchedTokenCount - 1));
+}
+
+/**
+ * How much of the QUERY this concept explains.
+ *
+ * Specificity alone asks "how much of the concept's phrase matched"; it
+ * cannot tell "love" (the whole query) from "love" inside "do justly love
+ * mercy walk humbly". Once bare words entered the lexicons those became very
+ * different claims, and without this the second one buried Micah 6:8 under
+ * God's-love passages — a concept explaining one word of six speaking as
+ * loudly as one explaining all of it.
+ *
+ * Square-rooted rather than linear: a concept that explains half a query is
+ * still saying something substantial, and a linear penalty would mute
+ * legitimate multi-word matches to chase a single-word failure.
+ */
+function conceptCoverage(matchedTokenCount: number, queryTokenCount: number): number {
+  return queryTokenCount > 0 ? Math.sqrt(Math.min(1, matchedTokenCount / queryTokenCount)) : 1;
+}
+
+function conceptMatchStrength(
+  anchorWeight: number,
+  matchedTokenCount: number,
+  queryTokenCount: number,
+): number {
+  return (
+    Math.max(0, Math.min(1, anchorWeight)) *
+    conceptSpecificity(matchedTokenCount) *
+    conceptCoverage(matchedTokenCount, queryTokenCount)
+  );
+}
+
+// A bare-word cue that explains less than this share of the query's meaning
+// is too thin to activate a concept's full anchor set authoritatively.
+export const MIN_AUTHORITATIVE_BARE_CUE_IDF_SHARE = 0.2;
+
 /**
  * Anchor evidence.
  *
@@ -32,27 +70,10 @@ export function conceptAnchorEvidence(
   matchedTokenCount: number,
   queryTokenCount: number = matchedTokenCount,
 ): Evidence {
-  const specificity = Math.min(1, 0.55 + 0.15 * Math.max(0, matchedTokenCount - 1));
-  /**
-   * How much of the QUERY this concept explains.
-   *
-   * Specificity alone asks "how much of the concept's phrase matched"; it
-   * cannot tell "love" (the whole query) from "love" inside "do justly love
-   * mercy walk humbly". Once bare words entered the lexicons those became very
-   * different claims, and without this the second one buried Micah 6:8 under
-   * God's-love passages — a concept explaining one word of six speaking as
-   * loudly as one explaining all of it.
-   *
-   * Square-rooted rather than linear: a concept that explains half a query is
-   * still saying something substantial, and a linear penalty would mute
-   * legitimate multi-word matches to chase a single-word failure.
-   */
-  const coverage =
-    queryTokenCount > 0 ? Math.sqrt(Math.min(1, matchedTokenCount / queryTokenCount)) : 1;
   return {
     family: 'concept_anchor',
     label: `Theme: ${anchor.conceptLabel}`,
-    strength: Math.max(0, Math.min(1, anchor.weight)) * specificity * coverage,
+    strength: conceptMatchStrength(anchor.weight, matchedTokenCount, queryTokenCount),
     provenance: {
       sourceId: anchor.sourceId,
       label: sourceLabel(anchor.sourceId),
@@ -60,6 +81,60 @@ export function conceptAnchorEvidence(
       weight: anchor.weight,
     },
   };
+}
+
+/**
+ * A direct concept cue that is too thin to claim its anchors authoritatively.
+ *
+ * Bare single-word lexicon entries are good defaults for broad queries. Inside
+ * a longer query they are only a hint, so they stay visible but spend from the
+ * weak concept_lexicon budget rather than the authoritative concept_anchor one.
+ */
+export function conceptCueEvidence(
+  anchor: ConceptAnchorRow,
+  matchedTokenCount: number,
+  queryTokenCount: number = matchedTokenCount,
+): Evidence {
+  return {
+    family: 'concept_lexicon',
+    label: `Theme cue: ${anchor.conceptLabel}`,
+    strength: conceptMatchStrength(anchor.weight, matchedTokenCount, queryTokenCount),
+    provenance: {
+      sourceId: anchor.sourceId,
+      label: sourceLabel(anchor.sourceId),
+      ...(anchor.locator ? { locator: anchor.locator } : {}),
+      weight: anchor.weight,
+    },
+  };
+}
+
+/**
+ * Raw one-word lexicon entries are broad-query defaults.
+ *
+ * They remain authoritative when the whole query is that word. Inside a longer
+ * query they should act as theme cues. Multi-word remembered phrasings like
+ * "do not be afraid" are intentionally excluded even if normalization reduces
+ * them to one token.
+ */
+export function isBareWordConceptCue(matchedPhrase: string, queryTokenCount: number): boolean {
+  return (
+    queryTokenCount > 1 &&
+    matchedPhrase
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean).length === 1
+  );
+}
+
+export function isThinBareWordConceptCue(
+  matchedPhrase: string,
+  queryTokenCount: number,
+  queryIdfShare: number,
+): boolean {
+  return (
+    isBareWordConceptCue(matchedPhrase, queryTokenCount) &&
+    queryIdfShare < MIN_AUTHORITATIVE_BARE_CUE_IDF_SHARE
+  );
 }
 
 /**

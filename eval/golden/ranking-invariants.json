@@ -4,7 +4,7 @@
   "note": [
     "Corpus-free fixtures over the pure ranker. These encode the ranking rules",
     "from the 2026-07-20 plan as executable expectations, so they run in CI",
-    "from Phase 0 — before any corpus exists — and keep running unchanged as",
+    "from Phase 0 â€” before any corpus exists â€” and keep running unchanged as",
     "the corpus grows. Each case is (candidates with evidence) -> expected",
     "target order plus the reason family each result must actually carry."
   ],

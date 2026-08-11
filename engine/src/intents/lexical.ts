@@ -77,6 +77,15 @@ export function phraseEvidence(
   };
 }
 
+/** A fallback phrase must carry at least two meaningful words. */
+export function isMeaningfulPhraseFragment(fragment: string, query: string): boolean {
+  const querySignificant = significantWords(query);
+  if (querySignificant.length === 0) {
+    return fragment.trim().split(/\s+/).filter(Boolean).length >= 2;
+  }
+  return significantWords(fragment).length >= 2;
+}
+
 const PROXIMITY_WINDOW = 20;
 
 /**

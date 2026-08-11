@@ -6,7 +6,7 @@
     "PASTORAL-CARE FIXTURE. The mustNotRank list is the point: these queries",
     "have dangerous lexical near-misses in the canon, every one of which is now",
     "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
-    "against an absent verse passes vacuously — protection that is decoration."
+    "against an absent verse passes vacuously â€” protection that is decoration."
   ],
   "expectedTop": [
     {
@@ -18,7 +18,7 @@
   "mustNotRank": [
     {
       "reference": "Matthew 27:5",
-      "why": "Judas hangs himself — a suicide narrative must never answer a suicidal search."
+      "why": "Judas hangs himself â€” a suicide narrative must never answer a suicidal search."
     },
     {
       "reference": "2 Samuel 17:23",
@@ -38,11 +38,11 @@
     },
     {
       "reference": "Philippians 1:21-23",
-      "why": "\"Desire to depart\" — true at a deathbed, catastrophic served to \"want to die\"."
+      "why": "\"Desire to depart\" â€” true at a deathbed, catastrophic served to \"want to die\"."
     },
     {
       "reference": "Psalms 116:15",
-      "why": "\"Precious… is the death of his saints\" — globally excluded from despair queries."
+      "why": "\"Preciousâ€¦ is the death of his saints\" â€” globally excluded from despair queries."
     }
   ]
 }

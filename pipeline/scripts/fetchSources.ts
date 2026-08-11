@@ -56,6 +56,8 @@ const UNPACK: Readonly<Record<string, Unpack>> = {
   ),
 };
 
+export const SWORD_ARCHIVE_GLOB = 'modules/comments/*/*/*';
+
 /**
  * Filename to save the download as.
  *
@@ -104,7 +106,15 @@ function unpack(manifest: SourceManifest, archivePath: string): void {
   // SWORD modules nest their data under modules/comments/<driver>/<name>/.
   // Flattened with -j so the loader finds ot.* and nt.* directly, which keeps
   // the loader ignorant of a layout that varies between modules.
-  execFileSync('unzip', ['-o', '-q', '-j', archivePath, 'modules/comments/*', '-d', target]);
+  execFileSync('unzip', [
+    '-o',
+    '-q',
+    '-j',
+    archivePath,
+    SWORD_ARCHIVE_GLOB,
+    '-d',
+    target,
+  ]);
 }
 
 export interface CandidateSelection {

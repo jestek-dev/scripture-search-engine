@@ -7,7 +7,7 @@
   ],
   "note": [
     "Founding concept 'faith-and-works'.",
-    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own — the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
+    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own â€” the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
     "James 2:14-26 is the locus classicus; Ephesians 2:8-10 is deliberately anchored alongside it (Jesse's 2026-07-29 review accepted the pairing) so the concept holds both halves rather than adjudicating between them."
   ],
   "expectedTop": [

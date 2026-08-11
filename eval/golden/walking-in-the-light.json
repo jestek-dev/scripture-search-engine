@@ -7,7 +7,7 @@
   ],
   "note": [
     "Founding concept 'walking-in-the-light'.",
-    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own — the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
+    "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own â€” the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
     "Scoped to the ETHICAL sense per Jesse's 2026-07-29 correction, which removed the cosmological John 1:4-9 anchor. mustNotRank encodes that decision so a future edit cannot quietly re-broaden the concept without a red gate."
   ],
   "expectedTop": [

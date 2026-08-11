@@ -10,11 +10,14 @@
 import {
   appendFileSync,
   existsSync,
+  mkdtempSync,
   readdirSync,
   readFileSync,
+  rmSync,
   statSync,
   writeFileSync,
 } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -49,14 +52,39 @@ import {
   latencyGate,
   noiseGate,
   observeProbes,
+  canonicalJsonSha256,
+  validateProbeBaselineApproval,
   type Probe,
   type ProbeBaseline,
 } from './gates/probes.js';
 import { openCorpus } from './nodeSqlitePort.js';
 import { determinismGate, goldenGate, type GoldenFixture } from './gates/golden.js';
-import { notApplicable, pass, fail, warn, type GateResult } from './gates/types.js';
+import {
+  notApplicable,
+  pass,
+  fail,
+  warn,
+  type GateResult,
+} from './gates/types.js';
+import { mergeGateResults } from './gates/merge.js';
 import { DEFAULT_BUDGETS } from '@jestek-dev/scripture-engine';
 import { buildReport } from './report.js';
+import {
+  buildMachineReport,
+  captureRepositoryIdentity,
+  captureRunIdentity,
+  gauntletExitCode,
+  parseGauntletOptions,
+  repositoryIdentitiesMatch,
+  resolveGauntletTarget,
+  resolveMachineReportPath,
+  removeGauntletRunMarker,
+  writeGauntletRunMarker,
+  writeMachineReportAtomically,
+  type EngineIdentity,
+  type GauntletOptions,
+  type ResolvedGauntletTarget,
+} from './gauntletMachineReport.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EVAL_ROOT = join(HERE, '..');
@@ -214,21 +242,17 @@ function correlationGate(): GateResult {
  * the reviewed descriptors. Measuring the live build rather than trusting a
  * committed number is the point — a descriptor can go stale, a build cannot.
  */
-function sizeGate(budgets: Budgets, builtPath: string): GateResult {
+function sizeGate(budgets: Budgets, builtArtifactBytes: number): GateResult {
   const findings = [];
-  let largest = 0;
+  let largest = builtArtifactBytes;
 
-  if (existsSync(builtPath)) {
-    const bytes = statSync(builtPath).size;
-    largest = bytes;
-    if (bytes > budgets.size.totalArtifactBytes) {
-      findings.push({
-        message:
-          `Built artifact is ${(bytes / 1024 / 1024).toFixed(1)} MiB, over the ` +
-          `${(budgets.size.totalArtifactBytes / 1024 / 1024).toFixed(0)} MiB budget. Tighten a ` +
-          'pruning threshold in eval/budgets.json or reduce admitted rows.',
-      });
-    }
+  if (builtArtifactBytes > budgets.size.totalArtifactBytes) {
+    findings.push({
+      message:
+        `Built artifact is ${(builtArtifactBytes / 1024 / 1024).toFixed(1)} MiB, over the ` +
+        `${(budgets.size.totalArtifactBytes / 1024 / 1024).toFixed(0)} MiB budget. Tighten a ` +
+        'pruning threshold in eval/budgets.json or reduce admitted rows.',
+    });
   }
 
   const descriptors = listJson(join(REPO_ROOT, 'artifacts'));
@@ -445,8 +469,8 @@ function provenanceGate(budgets: Budgets): GateResult {
  * Skipped entirely offline and in CI unless explicitly requested, so the
  * gauntlet stays hermetic by default.
  */
-async function reachabilityGate(): Promise<GateResult> {
-  if (!process.argv.includes('--check-sources')) {
+async function reachabilityGate(options: GauntletOptions): Promise<GateResult> {
+  if (!options.checkSources) {
     return notApplicable(
       'G1b-reachability',
       'Source reachability',
@@ -501,6 +525,7 @@ async function reachabilityGate(): Promise<GateResult> {
 }
 
 const BASELINE_PATH = join(EVAL_ROOT, 'baselines', 'probes.json');
+const BASELINE_APPROVAL_PATH = join(EVAL_ROOT, 'baselines', 'probes.approval.json');
 const DISTILLATE_PATH = join(REPO_ROOT, 'pipeline', 'fixtures', 'passage-terms-subset.json');
 
 function loadDistillate(): DistillateFile | null {
@@ -514,128 +539,225 @@ function loadDistillate(): DistillateFile | null {
  * gates must measure the code and data in THIS commit, and a stale binary
  * would let a broken build pass on yesterday's evidence.
  */
-async function runProbeGates(budgets: Budgets): Promise<GateResult[]> {
+async function runProbeGates(
+  budgets: Budgets,
+  options: GauntletOptions,
+  target: ResolvedGauntletTarget | null,
+): Promise<{
+  readonly gates: readonly GateResult[];
+  readonly identity: EngineIdentity;
+  readonly builtArtifactBytes: number;
+}> {
   const probeFile = JSON.parse(readFileSync(join(EVAL_ROOT, 'probes', 'probes.json'), 'utf8')) as {
     probes: Probe[];
   };
-  const built = buildFixtureDatabase();
-  const engine = await createEngine(openCorpus(built.path));
+  const runDirectory = target === null ? mkdtempSync(join(tmpdir(), 'sse-gauntlet-')) : null;
   try {
-    const { observations, latenciesMs } = await observeProbes(engine, probeFile.probes);
-    const baseline: ProbeBaseline | null = existsSync(BASELINE_PATH)
-      ? (JSON.parse(readFileSync(BASELINE_PATH, 'utf8')) as ProbeBaseline)
-      : null;
-
-    const noise = noiseGate({
-      probes: probeFile.probes,
-      observations,
-      baseline,
-      thresholds: budgets.noise,
-    });
-
-    // --update-baseline rewrites the committed baseline. Deliberately opt-in:
-    // if the gate could refresh its own reference automatically, a slow drift
-    // would never be caught, because every build would redefine "normal".
-    if (process.argv.includes('--update-baseline')) {
-      const next: ProbeBaseline = {
-        corpusFingerprint: engine.corpusFingerprint,
+    const databasePath = target?.databasePath
+      ?? buildFixtureDatabase(join(runDirectory!, `fixture-${process.pid}.db`)).path;
+    const builtArtifactBytes = statSync(databasePath).size;
+    const engine = await createEngine(openCorpus(databasePath));
+    try {
+      const evaluatedIdentity = {
         engineVersion: engine.engineVersion,
-        observations,
+        corpusFingerprint: engine.corpusFingerprint,
+        layerFingerprint: engine.layerFingerprint,
       };
-      writeFileSync(BASELINE_PATH, `${JSON.stringify(next, null, 2)}
+      if (target !== null && JSON.stringify(evaluatedIdentity) !== JSON.stringify(target.identity.engine)) {
+        throw new Error('Selected gauntlet target database engine identity does not match its verified descriptor.');
+      }
+      const { observations, latenciesMs } = await observeProbes(engine, probeFile.probes);
+      const baseline: ProbeBaseline | null = existsSync(BASELINE_PATH)
+        ? (JSON.parse(readFileSync(BASELINE_PATH, 'utf8')) as ProbeBaseline)
+        : null;
+      const approval = existsSync(BASELINE_APPROVAL_PATH)
+        ? JSON.parse(readFileSync(BASELINE_APPROVAL_PATH, 'utf8')) as unknown
+        : null;
+      const approvalFindings = baseline === null
+        ? []
+        : validateProbeBaselineApproval({
+          baseline,
+          approval,
+          baselineSha256: canonicalJsonSha256(baseline),
+          probesSha256: canonicalJsonSha256(probeFile),
+          // Approval authenticates the baseline's own engine identity. An
+          // explicit candidate/release target is expected to differ; G8 then
+          // measures that exact target against the independently approved baseline.
+          engine: {
+            engineVersion: baseline.engineVersion,
+            corpusFingerprint: baseline.corpusFingerprint,
+            layerFingerprint: baseline.layerFingerprint,
+          },
+        });
+      const measuredNoise = noiseGate({
+        probes: probeFile.probes,
+        observations,
+        baseline,
+        thresholds: budgets.noise,
+      });
+      const noise = approvalFindings.length === 0
+        ? measuredNoise
+        : {
+          ...measuredNoise,
+          status: 'fail' as const,
+          summary: `${measuredNoise.summary}; ${approvalFindings.length} baseline approval issue(s)`,
+          findings: [...(measuredNoise.findings ?? []), ...approvalFindings],
+        };
+
+      // This writes only the candidate baseline. It never writes the approval,
+      // and --json/--require-admit are rejected with --update-baseline, so an
+      // observed run cannot attest to the baseline it just generated.
+      if (options.updateBaseline) {
+        const next: ProbeBaseline = {
+          corpusFingerprint: engine.corpusFingerprint,
+          layerFingerprint: engine.layerFingerprint,
+          engineVersion: engine.engineVersion,
+          observations,
+        };
+        writeFileSync(BASELINE_PATH, `${JSON.stringify(next, null, 2)}
 `, 'utf8');
-      process.stderr.write(`Baseline updated: ${BASELINE_PATH}
-`);
+        process.stderr.write(
+          `Baseline updated: ${BASELINE_PATH}. Independent review must update ${BASELINE_APPROVAL_PATH}.\n`,
+        );
+      }
+
+      const corpusFixtures = loadFixtures() as unknown as CorpusFixture[];
+      const corpusGolden = await corpusGoldenGate(engine, corpusFixtures);
+
+      return {
+        gates: [noise, latencyGate(latenciesMs, budgets.latency.p95Ms), corpusGolden],
+        identity: evaluatedIdentity,
+        builtArtifactBytes,
+      };
+    } finally {
+      await engine.close();
     }
-
-    const corpusFixtures = loadFixtures() as unknown as CorpusFixture[];
-    const corpusGolden = await corpusGoldenGate(engine, corpusFixtures);
-
-    return [noise, latencyGate(latenciesMs, budgets.latency.p95Ms), corpusGolden];
   } finally {
-    await engine.close();
+    if (runDirectory !== null) {
+      rmSync(runDirectory, { force: true, recursive: true, maxRetries: 3, retryDelay: 100 });
+    }
   }
 }
 
 async function main(): Promise<void> {
-  const budgets = readJson<Budgets>(join(EVAL_ROOT, 'budgets.json'));
-  const fixtures = loadFixtures();
-  const { concepts, fileCount, errors: ontologyErrors } = loadConcepts();
+  const options = parseGauntletOptions(process.argv.slice(2));
+  const target = resolveGauntletTarget(REPO_ROOT, options);
+  const startedAt = new Date().toISOString();
+  const startIdentity = captureRepositoryIdentity(REPO_ROOT, options);
+  const markerPath = writeGauntletRunMarker(REPO_ROOT, startedAt, startIdentity);
+  try {
+    const budgets = readJson<Budgets>(join(EVAL_ROOT, 'budgets.json'));
+    const fixtures = loadFixtures();
+    const { concepts, fileCount, errors: ontologyErrors } = loadConcepts();
 
-  const distillate = loadDistillate();
-  const probeGates = await runProbeGates(budgets);
-  const gates: GateResult[] = [
-    provenanceGate(budgets),
-    await reachabilityGate(),
-    determinismGate(fixtures),
-    goldenGate(fixtures),
-    probeGates[2]!,
-    conceptCoverageGate(
-      concepts.map((concept) => concept.id),
-      fixtures as unknown as CorpusFixture[],
-    ),
-    fileCount === 0
-      ? notApplicable(
-          'G4-collision',
-          'Concept collision',
-          'no concepts in ontology/concepts yet; gate is implemented and unit-tested',
-        )
-      : ontologyErrors.length > 0
-        ? fail(
+    const distillate = loadDistillate();
+    const probeRun = await runProbeGates(budgets, options, target);
+    const probeGates = probeRun.gates;
+    const g3 = mergeGateResults('Golden regression', [
+      goldenGate(fixtures),
+      probeGates[2]!,
+      conceptCoverageGate(
+        concepts.map(({ id, label }) => ({ id, label })),
+        fixtures as unknown as CorpusFixture[],
+      ),
+    ]);
+    const gates: GateResult[] = [
+      provenanceGate(budgets),
+      await reachabilityGate(options),
+      determinismGate(fixtures),
+      g3,
+      fileCount === 0
+        ? notApplicable(
             'G4-collision',
             'Concept collision',
-            'ontology failed to compile',
-            ontologyErrors.map((message) => ({ message })),
+            'no concepts in ontology/concepts yet; gate is implemented and unit-tested',
           )
-        : (() => {
-            const result = collisionGate(concepts, budgets.collision);
-            if (result.status !== 'pass') return result;
-            // Collapses are reported ON the passing gate rather than as their
-            // own row: they are a curation diagnostic, not an admission
-            // decision, and they must be visible without ever blocking.
-            const collapses = singleTokenCollapses(concepts);
-            if (collapses.length === 0) return result;
-            return {
-              ...result,
-              summary:
-                `${result.summary}; ${collapses.length} lexicon phrase(s) collapse to a ` +
-                'single token and therefore act as bare-word triggers',
-              findings: collapses.map((entry) => ({
-                message:
-                  `${entry.conceptId}: "${entry.phrase}" normalizes to the single token ` +
-                  `"${entry.token}", so the bare query "${entry.token}" fires this concept. ` +
-                  'Intended for most; check it is intended for this one.',
-                subjects: [entry.conceptId],
-              })),
-            };
-          })(),
-    distinctivenessGate(distillate, budgets.distinctiveness),
-    pass(
-      'G6-signal-budgets',
-      'Signal budgets',
-      'enforced structurally inside the scoring core; verified by engine unit tests',
-    ),
-    correlationGate(),
-    probeGates[0]!,
-    saturationGate(distillate, budgets.saturation),
-    sizeGate(budgets, join(REPO_ROOT, 'pipeline', 'output', 'fixture.db')),
-    probeGates[1]!,
-  ];
+        : ontologyErrors.length > 0
+          ? fail(
+              'G4-collision',
+              'Concept collision',
+              'ontology failed to compile',
+              ontologyErrors.map((message) => ({ message })),
+            )
+          : (() => {
+              const result = collisionGate(concepts, budgets.collision);
+              if (result.status !== 'pass') return result;
+              // Collapses are reported ON the passing gate rather than as their
+              // own row: they are a curation diagnostic, not an admission
+              // decision, and they must be visible without ever blocking.
+              const collapses = singleTokenCollapses(concepts);
+              if (collapses.length === 0) return result;
+              return {
+                ...result,
+                summary:
+                  `${result.summary}; ${collapses.length} lexicon phrase(s) collapse to a ` +
+                  'single token and therefore act as bare-word triggers',
+                findings: collapses.map((entry) => ({
+                  message:
+                    `${entry.conceptId}: "${entry.phrase}" normalizes to the single token ` +
+                    `"${entry.token}", so the bare query "${entry.token}" fires this concept. ` +
+                    'Intended for most; check it is intended for this one.',
+                  subjects: [entry.conceptId],
+                })),
+              };
+            })(),
+      distinctivenessGate(distillate, budgets.distinctiveness),
+      pass(
+        'G6-signal-budgets',
+        'Signal budgets',
+        'enforced structurally inside the scoring core; verified by engine unit tests',
+      ),
+      correlationGate(),
+      probeGates[0]!,
+      saturationGate(distillate, budgets.saturation),
+      sizeGate(budgets, probeRun.builtArtifactBytes),
+      probeGates[1]!,
+    ];
 
-  const report = buildReport({ gates });
-  process.stdout.write(`${report.markdown}\n`);
-
-  const summaryPath = process.env['GITHUB_STEP_SUMMARY'];
-  if (summaryPath) {
-    try {
-      // Append so multiple jobs can contribute to one PR summary.
-      appendFileSync(summaryPath, `\n${report.markdown}\n`);
-    } catch {
-      // A summary-write failure must never mask the gate verdict.
+    const finishedAt = new Date().toISOString();
+    const endIdentity = captureRepositoryIdentity(REPO_ROOT, options);
+    if (!repositoryIdentitiesMatch(startIdentity, endIdentity)) {
+      process.stderr.write(
+        'Gauntlet repository identity changed while gates were running; refusing report and success exit.\n',
+      );
+      process.exitCode = 1;
+      return;
     }
-  }
 
-  if (report.verdict === 'REJECT') process.exit(1);
+    const report = buildReport({ gates });
+    process.stdout.write(`${report.markdown}\n`);
+
+    if (options.jsonPath) {
+      const identity = captureRunIdentity(REPO_ROOT, options, probeRun.identity, startIdentity, target?.identity);
+      writeMachineReportAtomically(
+        resolveMachineReportPath(REPO_ROOT, options.jsonPath),
+        buildMachineReport({ startedAt, finishedAt, identity, report }),
+      );
+    }
+
+    const summaryPath = process.env['GITHUB_STEP_SUMMARY'];
+    if (summaryPath) {
+      try {
+        // Append so multiple jobs can contribute to one PR summary.
+        appendFileSync(summaryPath, `\n${report.markdown}\n`);
+      } catch {
+        // A summary-write failure must never mask the gate verdict.
+      }
+    }
+
+    process.exitCode = gauntletExitCode(report.verdict, options.requireAdmit);
+  } finally {
+    removeGauntletRunMarker(markerPath);
+  }
 }
 
-await main();
+try {
+  await main();
+} catch (error) {
+  if (error instanceof Error && /(?:Unknown gauntlet argument|Duplicate --|requires (?:a path|both)|mutually exclusive|--update-baseline cannot)/.test(error.message)) {
+    process.stderr.write(`${error.message}\n`);
+    process.exitCode = 2;
+  } else {
+    throw error;
+  }
+}

@@ -2,9 +2,12 @@
   "id": "remembered-full-armor",
   "query": "put on the full armor of God",
   "status": "active",
+  "coversConcepts": [
+    "remembered-full-armor-of-god"
+  ],
   "note": [
     "REMEMBERED PHRASING. Measured against the full artifact on 2026-07-31,",
-    "this query did not reach Ephesians 6:11 by any lexical rung — the wording",
+    "this query did not reach Ephesians 6:11 by any lexical rung â€” the wording",
     "searchers remember is NIV/ESV and the corpus is the WEB.",
     "",
     "requiredReasonFamily is concept_anchor on purpose. Token overlap could",
@@ -15,7 +18,8 @@
   "expectedTop": [
     {
       "reference": "Ephesians 6:11",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The full armor of God"
     }
   ],
   "expectedWithinTop": 5

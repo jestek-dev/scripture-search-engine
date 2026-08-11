@@ -23,6 +23,8 @@ eval/.runs/
 # Workbench's downloaded artifact (the *.db rule above catches the database;
 # this keeps partial downloads and any metadata out too)
 workbench/.artifact/
+workbench/.state/
+workbench/test-results/
 
 # Extracted source texts (the zips beside them carry the checksums)
 pipeline/sources/vpl/

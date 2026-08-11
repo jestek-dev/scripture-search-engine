@@ -11,8 +11,13 @@ export default defineConfig({
   //
   // A test that fails on one platform for timing reasons is the same problem
   // as a gate that fires at random: people learn to re-run rather than read.
-  testTimeout: 60_000,
-  hookTimeout: 60_000,
+  // Several suites rebuild pipeline/output/fixture.db. Keep them serialized so
+  // a gauntlet process never reads another test's half-built fixture artifact.
+  test: {
+    testTimeout: 60_000,
+    hookTimeout: 60_000,
+    fileParallelism: false,
+  },
   resolve: {
     alias: {
       '@jestek-dev/scripture-engine': fileURLToPath(new URL('../engine/src/index.ts', import.meta.url)),

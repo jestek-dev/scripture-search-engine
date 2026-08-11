@@ -3,7 +3,7 @@
   "distributionTier": "public_distribution",
   "schemaVersion": "6",
   "tokenizerVersion": "1.0.0",
-  "engineVersion": "0.8.0",
+  "engineVersion": "0.7.1",
   "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
   "layerFingerprint": "8ae179a644a1ec48db118936c102ddaec9794a7b6543d7376be35bb6e744bb6f",
   "manifestFingerprint": "0a801f843c20ea2ac61dc7ca415c7a76ad61bedcac08d275353401b21834ac55",
@@ -145,7 +145,7 @@
   ],
   "stale": {
     "since": "2026-08-08",
-    "reason": "Built 2026-07-30 against an 8-concept ontology at ENGINE_VERSION 0.7.1. The ontology is now 34 concepts and the engine is 0.8.0 (anchor-range result grouping changes ordering), so neither layerFingerprint nor engineVersion describes what this tree builds. Regenerate with `npm run fetch:sources && npm run build:artifact` on a machine that can reach the source hosts, then remove this block. See NEEDS-JESSE.md 1.9.",
+    "reason": "Built 2026-07-30 against an 8-concept ontology at ENGINE_VERSION 0.7.1. The ontology and engine have advanced through 0.9.0, so this historical descriptor no longer describes what the current tree builds. Regenerate with `npm run fetch:sources && npm run build:artifact` on a machine that can reach the reviewed source bytes, then remove this block. See NEEDS-JESSE.md 1.9.",
     "blocksRelease": true
   }
 }

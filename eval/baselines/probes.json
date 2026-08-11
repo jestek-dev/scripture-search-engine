@@ -1,24 +1,25 @@
 {
-  "corpusFingerprint": "d4835d2052b6923f253fce337e77952571f6618a1799911f17c1548ee80c12c8",
-  "engineVersion": "0.7.1",
+  "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+  "engineVersion": "0.9.0",
+  "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a",
   "observations": [
     {
       "id": "broad-love",
       "top": [
-        "WEB:43014015",
-        "WEB:42006032",
-        "WEB:05006005",
-        "WEB:20027005",
-        "WEB:40019019",
-        "WEB:50001009",
-        "WEB:51003014",
-        "WEB:19116001",
-        "WEB:40005043",
-        "WEB:40005046"
+        "WEB:45005008",
+        "WEB:45008039",
+        "WEB:43003016",
+        "WEB:45008038",
+        "WEB:62004010",
+        "WEB:62004009",
+        "WEB:43015013",
+        "WEB:24031003",
+        "WEB:62003001",
+        "WEB:49003019"
       ],
       "resultCount": 25,
-      "weakReasonShare": 1,
-      "meanTopScore": 7.217515
+      "weakReasonShare": 0.132931,
+      "meanTopScore": 20.932599
     },
     {
       "id": "broad-grace",
@@ -31,35 +32,30 @@
         "WEB:43001016",
         "WEB:45006014",
         "WEB:45006015",
-        "WEB:45006001",
-        "WEB:46015010",
-        "WEB:49002008",
-        "WEB:20003034",
-        "WEB:55002001",
-        "WEB:56002011",
-        "WEB:47001002"
+        "WEB:58013025",
+        "WEB:45006001"
       ],
       "resultCount": 25,
-      "weakReasonShare": 1,
-      "meanTopScore": 7.193705
+      "weakReasonShare": 0.502782,
+      "meanTopScore": 15.193203
     },
     {
       "id": "broad-faith",
       "top": [
         "WEB:59002017",
         "WEB:59002022",
+        "WEB:45001012",
         "WEB:46015014",
         "WEB:49002008",
         "WEB:59002024",
         "WEB:50001025",
         "WEB:58011001",
         "WEB:58011030",
-        "WEB:47001024",
-        "WEB:47004013"
+        "WEB:47005007"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 6.777038
+      "meanTopScore": 6.957107
     },
     {
       "id": "broad-word",
@@ -68,16 +64,16 @@
         "WEB:48006006",
         "WEB:43001001",
         "WEB:23040008",
+        "WEB:44016032",
         "WEB:26033030",
+        "WEB:43015003",
+        "WEB:45010017",
         "WEB:49005026",
-        "WEB:46015002",
-        "WEB:49006017",
-        "WEB:43014024",
-        "WEB:59001018"
+        "WEB:24010001"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.07132,
-      "meanTopScore": 64.607802
+      "weakReasonShare": 0.077963,
+      "meanTopScore": 65.073278
     },
     {
       "id": "medium-refuge-trouble",
@@ -86,34 +82,34 @@
         "WEB:19091002",
         "WEB:19091001",
         "WEB:19046002",
-        "WEB:19046003",
+        "WEB:34001007",
+        "WEB:19009009",
         "WEB:19121005",
         "WEB:23025004",
         "WEB:19121007",
-        "WEB:19121006",
-        "WEB:19121001"
+        "WEB:19034019"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.188247,
-      "meanTopScore": 29.94014
+      "weakReasonShare": 0.224862,
+      "meanTopScore": 30.724089
     },
     {
       "id": "medium-fear-not",
       "top": [
-        "WEB:20003024",
-        "WEB:19091005",
-        "WEB:19056004",
-        "WEB:19056011",
-        "WEB:23054014",
         "WEB:23043001",
         "WEB:06001009",
+        "WEB:19027001",
         "WEB:23043002",
-        "WEB:23043003",
-        "WEB:19046002"
+        "WEB:23041010",
+        "WEB:62004018",
+        "WEB:58013006",
+        "WEB:19046002",
+        "WEB:19046001",
+        "WEB:19046003"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.105437,
-      "meanTopScore": 43.323948
+      "weakReasonShare": 0.25894,
+      "meanTopScore": 17.901378
     },
     {
       "id": "medium-light-darkness",
@@ -123,15 +119,15 @@
         "WEB:62001005",
         "WEB:49005008",
         "WEB:62002006",
-        "WEB:11016019",
-        "WEB:01003008",
+        "WEB:51001010",
         "WEB:66021024",
         "WEB:25003002",
-        "WEB:19056013"
+        "WEB:19056013",
+        "WEB:43011010"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.317635,
-      "meanTopScore": 27.87364
+      "weakReasonShare": 0.4012,
+      "meanTopScore": 24.782901
     },
     {
       "id": "narrow-hearing-doing",
@@ -140,16 +136,16 @@
         "WEB:59001022",
         "WEB:42006047",
         "WEB:40007026",
-        "WEB:42006049",
         "WEB:59001023",
+        "WEB:42006049",
         "WEB:40007025",
         "WEB:40007027",
         "WEB:42006046",
         "WEB:59001025"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.364378,
-      "meanTopScore": 42.597656
+      "weakReasonShare": 0.363091,
+      "meanTopScore": 42.511541
     },
     {
       "id": "narrow-doers-word",
@@ -157,19 +153,17 @@
         "WEB:59001022",
         "WEB:40007026",
         "WEB:42006049",
-        "WEB:40007024",
         "WEB:42006047",
         "WEB:40007024",
         "WEB:59001023",
-        "WEB:42006049",
         "WEB:40007025",
         "WEB:40007027",
         "WEB:59001024",
         "WEB:42006046"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.368557,
-      "meanTopScore": 48.818315
+      "weakReasonShare": 0.39931,
+      "meanTopScore": 43.462427
     },
     {
       "id": "narrow-house-rock",
@@ -186,26 +180,26 @@
         "WEB:59001023"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.318586,
-      "meanTopScore": 46.726377
+      "weakReasonShare": 0.318661,
+      "meanTopScore": 46.731497
     },
     {
       "id": "phrase-present-help",
       "top": [
         "WEB:19046001",
+        "WEB:50004014",
+        "WEB:42011007",
+        "WEB:19056012",
         "WEB:19009009",
         "WEB:19040017",
         "WEB:19010014",
         "WEB:11018020",
         "WEB:19034001",
-        "WEB:46007028",
-        "WEB:47001004",
-        "WEB:47001008",
-        "WEB:50004019"
+        "WEB:46007028"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.49205,
-      "meanTopScore": 11.812193
+      "weakReasonShare": 0.547191,
+      "meanTopScore": 13.250623
     },
     {
       "id": "adversarial-nonsense",
@@ -227,35 +221,35 @@
         "WEB:02020017",
         "WEB:45007007",
         "WEB:45013009",
+        "WEB:05007025",
         "WEB:45007008",
+        "WEB:44020033",
         "WEB:02020001",
         "WEB:18031007",
         "WEB:40006019",
-        "WEB:45007012",
-        "WEB:45012006",
-        "WEB:50004023"
+        "WEB:45007012"
       ],
-      "resultCount": 14,
-      "weakReasonShare": 0.174403,
-      "meanTopScore": 21.802405
+      "resultCount": 17,
+      "weakReasonShare": 0.138582,
+      "meanTopScore": 27.861045
     },
     {
       "id": "ot-law-neighbour",
       "top": [
-        "WEB:48005014",
-        "WEB:40019019",
-        "WEB:59002008",
         "WEB:45013009",
+        "WEB:40022039",
+        "WEB:59002008",
+        "WEB:48005014",
         "WEB:03019018",
-        "WEB:40005043",
+        "WEB:40019019",
         "WEB:45013010",
         "WEB:45013008",
-        "WEB:62002010",
-        "WEB:43014015"
+        "WEB:43013035",
+        "WEB:43013034"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.27453,
-      "meanTopScore": 41.352515
+      "weakReasonShare": 0.183727,
+      "meanTopScore": 61.768522
     },
     {
       "id": "ot-blessing",
@@ -263,18 +257,17 @@
         "WEB:04006024",
         "WEB:19121007",
         "WEB:05006017",
+        "WEB:19034020",
         "WEB:19121008",
         "WEB:23061009",
         "WEB:03019003",
-        "WEB:03019030",
         "WEB:05006024",
-        "WEB:01003024",
-        "WEB:39003012",
-        "WEB:20003033"
+        "WEB:03019030",
+        "WEB:45014022"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.6437,
-      "meanTopScore": 16.839735
+      "weakReasonShare": 0.654596,
+      "meanTopScore": 17.370956
     },
     {
       "id": "ot-narrative-ruth",
@@ -300,8 +293,8 @@
         "WEB:19046010"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.468064,
-      "meanTopScore": 11.279549
+      "weakReasonShare": 0.467122,
+      "meanTopScore": 11.259603
     },
     {
       "id": "ot-histories-humble",
@@ -310,58 +303,52 @@
         "WEB:23043007",
         "WEB:01016015",
         "WEB:23043001",
+        "WEB:10012025",
         "WEB:59002007",
-        "WEB:01005002",
-        "WEB:01005003",
-        "WEB:01005029",
-        "WEB:24029025",
-        "WEB:20003004",
-        "WEB:04006027",
-        "WEB:33006009",
-        "WEB:01003020"
+        "WEB:01016013",
+        "WEB:10012024",
+        "WEB:23040026",
+        "WEB:25003055"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.581223,
-      "meanTopScore": 11.722455
+      "weakReasonShare": 0.709903,
+      "meanTopScore": 15.51205
     },
     {
       "id": "ot-wisdom-trust",
       "top": [
         "WEB:20003005",
+        "WEB:19037005",
+        "WEB:20003006",
+        "WEB:19027014",
+        "WEB:23040031",
+        "WEB:19062005",
+        "WEB:25003025",
+        "WEB:33007007",
         "WEB:59005008",
-        "WEB:19013005",
-        "WEB:19009010",
-        "WEB:19091002",
-        "WEB:05006005",
-        "WEB:19091014",
-        "WEB:58010035",
-        "WEB:20003001",
-        "WEB:58010016",
-        "WEB:14007010",
-        "WEB:16008010",
-        "WEB:05006006"
+        "WEB:19013005"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.571847,
-      "meanTopScore": 14.013668
+      "weakReasonShare": 0.228817,
+      "meanTopScore": 26.753219
     },
     {
       "id": "ot-wisdom-time",
       "top": [
         "WEB:21003001",
+        "WEB:47001017",
         "WEB:21003017",
+        "WEB:55001009",
         "WEB:49006022",
         "WEB:49005016",
         "WEB:21003002",
         "WEB:45008028",
         "WEB:40018022",
-        "WEB:46007029",
-        "WEB:44001007",
-        "WEB:41001015"
+        "WEB:46007029"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.514739,
-      "meanTopScore": 12.364473
+      "weakReasonShare": 0.566035,
+      "meanTopScore": 13.825988
     },
     {
       "id": "ot-prophets-servant",
@@ -378,26 +365,26 @@
         "WEB:01003007"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.440997,
-      "meanTopScore": 10.733391
+      "weakReasonShare": 0.440919,
+      "meanTopScore": 10.731888
     },
     {
       "id": "ot-prophets-plans",
       "top": [
         "WEB:24029011",
-        "WEB:59002004",
-        "WEB:19034014",
-        "WEB:60003011",
         "WEB:50004007",
-        "WEB:19056005",
-        "WEB:19034013",
-        "WEB:40006034",
-        "WEB:45014017",
-        "WEB:19139017"
+        "WEB:60005007",
+        "WEB:43014027",
+        "WEB:59002004",
+        "WEB:50004006",
+        "WEB:23026003",
+        "WEB:40006027",
+        "WEB:19034014",
+        "WEB:60003011"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.588327,
-      "meanTopScore": 14.574683
+      "weakReasonShare": 0.320926,
+      "meanTopScore": 20.338802
     },
     {
       "id": "ot-prophets-justly",
@@ -405,36 +392,35 @@
         "WEB:33006008",
         "WEB:51003014",
         "WEB:49002004",
-        "WEB:20003003",
-        "WEB:62002006",
-        "WEB:62002010",
-        "WEB:02020006",
-        "WEB:62002005",
-        "WEB:14007003",
-        "WEB:14007006",
-        "WEB:19023006"
+        "WEB:49005002",
+        "WEB:48006016",
+        "WEB:19101001",
+        "WEB:51003012",
+        "WEB:19116001",
+        "WEB:45014015",
+        "WEB:02020006"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 6.914312
+      "meanTopScore": 9.723678
     },
     {
       "id": "ot-adversarial-census",
       "top": [
-        "WEB:04006008",
-        "WEB:01005023",
-        "WEB:01005027",
-        "WEB:01005031",
-        "WEB:06001005",
-        "WEB:04006004",
-        "WEB:19023006",
-        "WEB:05006002",
-        "WEB:19027004",
-        "WEB:01003014"
+        "WEB:01005008",
+        "WEB:01005004",
+        "WEB:01005005",
+        "WEB:02020009",
+        "WEB:20003002",
+        "WEB:20003016",
+        "WEB:33007015",
+        "WEB:43011006",
+        "WEB:43011017",
+        "WEB:58011030"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.0343,
-      "meanTopScore": 31.065544
+      "weakReasonShare": 1,
+      "meanTopScore": 5.485492
     }
   ]
 }

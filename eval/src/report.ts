@@ -5,19 +5,14 @@
  * adding is harmful." A PR author reads a verdict and a short table; they
  * never have to inspect the dataset to know whether it helped.
  *
- * The four verdicts are deliberate. NO_MEASURABLE_EFFECT exists because
- * "nothing broke" is not a reason to merge: an addition that changes no
- * fixture outcome and moves no metric is weight without value, and merging it
- * is how a corpus silently bloats past the point of diminishing returns.
+ * A report only makes claims that the gauntlet actually measures. Whether a
+ * change has product value needs an explicit comparison policy; until that
+ * policy exists, admission is determined by the gates below.
  */
 
 import type { GateResult } from './gates/types.js';
 
-export type Verdict =
-  | 'ADMIT'
-  | 'ADMIT_WITH_WARNINGS'
-  | 'REJECT'
-  | 'NO_MEASURABLE_EFFECT';
+export type Verdict = 'ADMIT' | 'ADMIT_WITH_WARNINGS' | 'REJECT';
 
 export interface AdmissionReport {
   readonly verdict: Verdict;
@@ -27,40 +22,37 @@ export interface AdmissionReport {
 }
 
 const STATUS_ICON: Readonly<Record<GateResult['status'], string>> = {
-  pass: '✅',
-  fail: '❌',
-  warn: '⚠️',
-  'not-applicable': '⊘',
+  pass: 'PASS',
+  fail: 'FAIL',
+  warn: 'WARN',
+  'not-applicable': 'N/A',
 };
 
 export interface ReportInput {
   readonly gates: readonly GateResult[];
-  /**
-   * True when this run changed at least one measurable outcome versus the
-   * committed baseline. Phase 0 has no baseline to compare against, so the
-   * caller passes undefined and the verdict simply omits the
-   * NO_MEASURABLE_EFFECT branch rather than guessing.
-   */
-  readonly changedOutcomes?: boolean;
 }
 
 export function decideVerdict(input: ReportInput): Verdict {
-  if (input.gates.some((gate) => gate.status === 'fail')) return 'REJECT';
-  if (input.changedOutcomes === false) return 'NO_MEASURABLE_EFFECT';
+  if (
+    input.gates.some(
+      (gate) => gate.status === 'fail' || (gate.status === 'not-applicable' && gate.applicability === 'required'),
+    )
+  ) return 'REJECT';
   if (input.gates.some((gate) => gate.status === 'warn')) return 'ADMIT_WITH_WARNINGS';
   return 'ADMIT';
 }
 
-function headlineFor(verdict: Verdict, gates: readonly GateResult[]): string {
+/** The machine report recomputes this instead of trusting serialized text. */
+export function headlineFor(verdict: Verdict, gates: readonly GateResult[]): string {
   const failed = gates.filter((gate) => gate.status === 'fail');
+  const unavailable = gates.filter(
+    (gate) => gate.status === 'not-applicable' && gate.applicability === 'required',
+  );
   switch (verdict) {
     case 'REJECT':
-      return `Rejected by ${failed.length} gate(s): ${failed
+      return `Rejected by ${failed.length + unavailable.length} required gate(s): ${[...failed, ...unavailable]
         .map((gate) => gate.gate)
         .join(', ')}`;
-    case 'NO_MEASURABLE_EFFECT':
-      return 'Every gate passed, but no fixture outcome or metric changed — this ' +
-        'addition carries weight without measurable value. Merging is not recommended.';
     case 'ADMIT_WITH_WARNINGS':
       return 'Admissible. Warnings below are worth reading before merge.';
     case 'ADMIT':
@@ -83,7 +75,7 @@ export function buildReport(input: ReportInput): AdmissionReport {
   lines.push('|---|---|---|');
   for (const gate of input.gates) {
     lines.push(
-      `| ${gate.gate} — ${gate.title} | ${STATUS_ICON[gate.status]} ${gate.status} | ${gate.summary} |`,
+      `| ${gate.gate} - ${gate.title} | ${STATUS_ICON[gate.status]} ${gate.status} | ${gate.summary} |`,
     );
   }
 
@@ -93,7 +85,7 @@ export function buildReport(input: ReportInput): AdmissionReport {
     lines.push('## Findings');
     for (const gate of withFindings) {
       lines.push('');
-      lines.push(`### ${gate.gate} — ${gate.title}`);
+      lines.push(`### ${gate.gate} - ${gate.title}`);
       for (const finding of gate.findings ?? []) {
         const subjects = finding.subjects?.length
           ? ` _(${finding.subjects.join(', ')})_`
@@ -106,14 +98,14 @@ export function buildReport(input: ReportInput): AdmissionReport {
   const skipped = input.gates.filter((gate) => gate.status === 'not-applicable');
   if (skipped.length > 0) {
     lines.push('');
-    lines.push('## Not yet running');
+    lines.push('## Unavailable gates');
     lines.push('');
     lines.push(
-      'These gates have no inputs yet. They are listed so an absent check is ' +
-        'never mistaken for a passing one.',
+      'Required gates make the run reject; optional advisory gates are explicitly allowed ' +
+        'to be unavailable and never count as a pass.',
     );
     for (const gate of skipped) {
-      lines.push(`- **${gate.gate}** — ${gate.summary}`);
+      lines.push(`- **${gate.gate}** - ${gate.summary}`);
     }
   }
 

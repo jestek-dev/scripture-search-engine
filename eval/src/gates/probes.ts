@@ -21,6 +21,8 @@
  *    system that has stopped discriminating.
  */
 
+import { createHash } from 'node:crypto';
+
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 import { isAuthoritative } from '@jestek-dev/scripture-engine';
 
@@ -44,8 +46,152 @@ export interface ProbeObservation {
 
 export interface ProbeBaseline {
   readonly corpusFingerprint: string;
+  readonly layerFingerprint: string;
   readonly engineVersion: string;
   readonly observations: readonly ProbeObservation[];
+}
+
+export const PROBE_BASELINE_APPROVAL_SCHEMA = 'scripture-search-engine/probe-baseline-approval/v1';
+
+export interface ProbeEngineIdentity {
+  readonly engineVersion: string;
+  readonly corpusFingerprint: string;
+  readonly layerFingerprint: string;
+}
+
+/** A separate review record: baseline generation never writes this file. */
+export interface ProbeBaselineApproval {
+  readonly schema: typeof PROBE_BASELINE_APPROVAL_SCHEMA;
+  readonly baselineSha256: string;
+  readonly probesSha256: string;
+  readonly engine: ProbeEngineIdentity;
+  readonly reviewer: string;
+  readonly reviewedAt: string;
+  readonly rationale: string;
+  readonly priorProvenance: {
+    readonly baselineGitBlobSha1: string;
+    readonly engine: {
+      readonly engineVersion: string;
+      readonly corpusFingerprint: string;
+      readonly layerFingerprint: string | null;
+    };
+  };
+}
+
+function canonicalJson(value: unknown): string {
+  if (value === null) return 'null';
+  if (typeof value !== 'object') {
+    const serialized = JSON.stringify(value);
+    if (serialized === undefined) throw new TypeError('Canonical JSON does not support undefined values.');
+    return serialized;
+  }
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+  const record = value as Record<string, unknown>;
+  return `{${Object.keys(record)
+    .sort()
+    .map((key) => `${JSON.stringify(key)}:${canonicalJson(record[key])}`)
+    .join(',')}}`;
+}
+
+/** JSON documents are EOL-stable before their review digest is calculated. */
+export function canonicalJsonSha256(value: unknown): string {
+  return createHash('sha256').update(canonicalJson(value)).digest('hex');
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function exactKeys(record: Record<string, unknown>, keys: readonly string[]): boolean {
+  const actual = Object.keys(record).sort();
+  return actual.length === keys.length && actual.every((key, index) => key === [...keys].sort()[index]);
+}
+
+function isSha256(value: unknown): value is string {
+  return typeof value === 'string' && /^[0-9a-f]{64}$/.test(value);
+}
+
+function isEngineIdentity(value: unknown): value is ProbeEngineIdentity {
+  return isRecord(value) && exactKeys(value, ['engineVersion', 'corpusFingerprint', 'layerFingerprint']) &&
+    typeof value['engineVersion'] === 'string' && value['engineVersion'].length > 0 &&
+    isSha256(value['corpusFingerprint']) && isSha256(value['layerFingerprint']);
+}
+
+function isReviewDate(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  return new Date(`${value}T00:00:00.000Z`).toISOString().slice(0, 10) === value;
+}
+
+function approvalFinding(category: string, message: string): GateFinding {
+  return {
+    categoryCode: `sse.gauntlet.v1.finding.g8-noise-probes.${category}`,
+    message,
+    subjects: ['probe-baseline-approval'],
+  };
+}
+
+/**
+ * Checks the independent approval for a committed G8 baseline. Its hashes
+ * bind the exact logical JSON documents, so a checkout's CRLF/LF policy does
+ * not change what a reviewer approved.
+ */
+export function validateProbeBaselineApproval(input: {
+  readonly baseline: ProbeBaseline;
+  readonly approval: unknown;
+  readonly baselineSha256: string;
+  readonly probesSha256: string;
+  readonly engine: ProbeEngineIdentity;
+}): readonly GateFinding[] {
+  if (!isRecord(input.approval)) {
+    return [approvalFinding('baseline-approval-missing', 'Probe baseline has no machine-readable independent approval.')];
+  }
+
+  const approval = input.approval;
+  const prior = approval['priorProvenance'];
+  const priorEngine = isRecord(prior) ? prior['engine'] : undefined;
+  const validPrior = isRecord(prior) && exactKeys(prior, ['baselineGitBlobSha1', 'engine']) &&
+    typeof prior['baselineGitBlobSha1'] === 'string' && /^[0-9a-f]{40}$/.test(prior['baselineGitBlobSha1']) &&
+    isRecord(priorEngine) && exactKeys(priorEngine, ['engineVersion', 'corpusFingerprint', 'layerFingerprint']) &&
+    typeof priorEngine['engineVersion'] === 'string' && priorEngine['engineVersion'].length > 0 &&
+    isSha256(priorEngine['corpusFingerprint']) &&
+    (priorEngine['layerFingerprint'] === null || isSha256(priorEngine['layerFingerprint']));
+  const validShape = exactKeys(approval, [
+    'schema',
+    'baselineSha256',
+    'probesSha256',
+    'engine',
+    'reviewer',
+    'reviewedAt',
+    'rationale',
+    'priorProvenance',
+  ]) && approval['schema'] === PROBE_BASELINE_APPROVAL_SCHEMA && isSha256(approval['baselineSha256']) &&
+    isSha256(approval['probesSha256']) && isEngineIdentity(approval['engine']) &&
+    typeof approval['reviewer'] === 'string' && approval['reviewer'].trim().length > 0 &&
+    isReviewDate(approval['reviewedAt']) && typeof approval['rationale'] === 'string' &&
+    approval['rationale'].trim().length > 0 && validPrior;
+  if (!validShape) {
+    return [approvalFinding('baseline-approval-malformed', 'Probe baseline approval is malformed or incomplete.')];
+  }
+
+  const findings: GateFinding[] = [];
+  if (approval['baselineSha256'] !== input.baselineSha256) {
+    findings.push(approvalFinding('baseline-approval-baseline-mismatch', 'Probe baseline bytes differ from the independently approved baseline digest.'));
+  }
+  if (approval['probesSha256'] !== input.probesSha256) {
+    findings.push(approvalFinding('baseline-approval-probes-mismatch', 'Probe definitions differ from the independently approved probe digest.'));
+  }
+  const approvalEngine = approval['engine'] as ProbeEngineIdentity;
+  const triples: readonly [keyof ProbeEngineIdentity, string, string][] = [
+    ['engineVersion', approvalEngine.engineVersion, input.engine.engineVersion],
+    ['corpusFingerprint', approvalEngine.corpusFingerprint, input.engine.corpusFingerprint],
+    ['layerFingerprint', approvalEngine.layerFingerprint, input.engine.layerFingerprint],
+  ];
+  for (const [field, approved, observed] of triples) {
+    if (approved !== observed || (input.baseline as ProbeEngineIdentity)[field] !== observed) {
+      findings.push(approvalFinding('baseline-approval-engine-mismatch', `Probe baseline ${field} does not match the independently approved engine identity.`));
+    }
+  }
+  return findings;
 }
 
 export interface NoiseThresholds {
@@ -132,6 +278,7 @@ export function noiseGate(options: {
     if (!observation) continue;
     if (probe.expectNoResults && observation.resultCount > 0) {
       findings.push({
+        categoryCode: 'sse.gauntlet.v1.finding.g8-noise-probes.adversarial-results',
         message:
           `${probe.id} ("${probe.query}") returned ${observation.resultCount} result(s) but must ` +
           `return none. ${probe.why ?? ''}`.trim(),
@@ -167,6 +314,7 @@ export function noiseGate(options: {
     const weakRise = observation.weakReasonShare - before.weakReasonShare;
     if (weakRise > options.thresholds.maxWeakReasonShareIncrease) {
       findings.push({
+        categoryCode: 'sse.gauntlet.v1.finding.g8-noise-probes.weak-signal-rise',
         message:
           `${observation.id}: weak-signal share of the top-${TOP_N} rose from ` +
           `${(before.weakReasonShare * 100).toFixed(0)}% to ` +
@@ -180,6 +328,7 @@ export function noiseGate(options: {
     if (ratio > options.thresholds.maxTop10ChurnRatio) {
       const now = new Set(observation.top);
       findings.push({
+        categoryCode: 'sse.gauntlet.v1.finding.g8-noise-probes.top-results-churn',
         message:
           `${observation.id}: ${(ratio * 100).toFixed(0)}% of the top-${TOP_N} was displaced ` +
           `(limit ${(options.thresholds.maxTop10ChurnRatio * 100).toFixed(0)}%). Dropped: ` +

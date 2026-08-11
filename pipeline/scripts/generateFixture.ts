@@ -20,7 +20,7 @@
 
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { BOOKS, findBook } from '../src/books.js';
@@ -34,7 +34,7 @@ const OUTPUT = join(HERE, '..', 'fixtures', 'web-subset.json');
  * Passage selection, with the reason each is present. A fixture whose
  * contents nobody can justify becomes impossible to prune later.
  */
-const SELECTION: readonly { book: string; chapters: readonly number[]; why: string }[] = [
+export const SELECTION: readonly { book: string; chapters: readonly number[]; why: string }[] = [
   { book: 'James', chapters: [1, 2], why: 'golden fixture #1 anchor: hearers and doers' },
   { book: 'Matthew', chapters: [5, 6, 7], why: 'fixture #1 anchor (7:24-27) + dense teaching text' },
   { book: 'Luke', chapters: [6], why: 'fixture #1 anchor (6:46-49)' },
@@ -113,6 +113,60 @@ const SELECTION: readonly { book: string; chapters: readonly number[]; why: stri
   { book: '1 Peter', chapters: [1, 2, 4, 5], why: 'holiness classic (1:15-16); hope (1:3); the-cross (1:18-19, 2:24); loving-others (4:8); peace (5:7)' },
   { book: '1 John', chapters: [3, 4, 5], why: 'gods-love (3:1, 4:9-10); loving-others (3:18, 4:11); victory (5:4); makes the existing 4:18 fear-not anchor live' },
   { book: 'Revelation', chapters: [1, 3], why: 'second-coming (1:7); self-deception torrey anchor (3:17); presence (3:20)' },
+
+  // --- Remembered-phrasing targets, added 2026-07-31 ---
+  // These chapters make the remembered-wording fixtures capable of proving
+  // that their curated anchors work against the WEB corpus.
+  { book: 'Hebrews', chapters: [12], why: 'remembered: "fixing our eyes on Jesus" (12:2)' },
+  { book: 'Colossians', chapters: [3], why: 'remembered: "work at it with all your heart" (3:23)' },
+  { book: 'Acts', chapters: [1], why: 'remembered: "you will be my witnesses" (1:8)' },
+  { book: 'Philippians', chapters: [4], why: 'remembered: "do not be anxious about anything" (4:6-7)' },
+  { book: '1 Corinthians', chapters: [10], why: 'remembered: "tempted beyond what you can bear" (10:13)' },
+  { book: 'Matthew', chapters: [17], why: 'remembered: "faith as small as a mustard seed" (17:20)' },
+  { book: 'Romans', chapters: [12], why: 'remembered: "do not conform to the pattern of this world" (12:2)' },
+  { book: 'Ephesians', chapters: [6], why: 'remembered: "put on the full armor of God" (6:11)' },
+  { book: 'Galatians', chapters: [5], why: 'remembered: "fruit of the spirit" (5:22-23)' },
+  { book: 'Ephesians', chapters: [5], why: 'remembered competitor: Ephesians 5:9 for fruit-of-the-spirit searches' },
+  { book: 'Romans', chapters: [13], why: 'remembered competitor: Romans 13:12 for armor searches' },
+
+  // --- Pastoral-care packs, added 2026-07-31 ---
+  // Anchor chapters and dangerous near-misses arrive together. A mustNotRank
+  // assertion for a verse outside the fixture corpus is vacuous protection.
+  { book: 'Psalms', chapters: [9, 10, 11, 13, 27, 34, 40, 42, 51, 55, 56, 73, 82, 88, 101, 103, 139, 147], why: 'pastoral anchors: justice, lament, grief, betrayal, restoration, weakness, purity, healing, and child loss' },
+  { book: 'Genesis', chapters: [16], why: 'pastoral anchor: Hagar names the God who sees (16:13)' },
+  { book: 'Exodus', chapters: [3], why: 'pastoral anchor: I have surely seen the affliction (3:7)' },
+  { book: '2 Samuel', chapters: [12], why: 'pastoral anchor: David after his infant death (12:22-23)' },
+  { book: 'Job', chapters: [31], why: 'pastoral anchor: covenant with my eyes (31:1)' },
+  { book: 'Proverbs', chapters: [27], why: 'pastoral anchor: the prudent sees danger and takes refuge (27:12)' },
+  { book: 'Isaiah', chapters: [1, 25, 54, 61], why: 'pastoral anchors: justice, death defeated, abandonment, and the brokenhearted' },
+  { book: 'Jeremiah', chapters: [17], why: 'pastoral anchor: heal me and I will be healed (17:14)' },
+  { book: 'Lamentations', chapters: [3], why: 'pastoral anchor: hope lost, then mercies new every morning (3:17-26)' },
+  { book: 'Micah', chapters: [7], why: 'pastoral anchor: when I fall, I will arise (7:8)' },
+  { book: 'Malachi', chapters: [2], why: 'pastoral anchor: divorce teaching, textually contested and weighted low (2:13-16)' },
+  { book: 'Matthew', chapters: [11, 19], why: 'pastoral anchors: rest for the burdened, divorce teaching, and child loss' },
+  { book: 'Mark', chapters: [1], why: 'pastoral anchor: Jesus is willing to heal the leper (1:40-42)' },
+  { book: 'John', chapters: [8, 11, 14], why: 'pastoral anchors: free indeed, grief and resurrection, and many rooms' },
+  { book: 'Romans', chapters: [6, 7, 14], why: 'pastoral anchors: freedom from sin, the war within, and belonging in life and death' },
+  { book: '1 Corinthians', chapters: [6, 7, 15], why: 'pastoral anchors: freedom from bondage, marriage, and resurrection victory' },
+  { book: '2 Corinthians', chapters: [1, 4, 12], why: 'pastoral anchors: despair, inward renewal, and sufficient grace' },
+  { book: 'Galatians', chapters: [6], why: 'pastoral anchor: restore gently and bear burdens (6:1-2)' },
+  { book: 'Philippians', chapters: [1], why: 'pastoral anchor and harm gate: good work begun; desire to depart must not answer despair' },
+  { book: '1 Thessalonians', chapters: [4], why: 'pastoral anchors: sanctification and grief with hope' },
+  { book: '2 Timothy', chapters: [2], why: 'pastoral anchor: flee youthful lusts (2:22)' },
+  { book: 'Titus', chapters: [2], why: 'pastoral anchor: grace trains us to renounce sin (2:11-14)' },
+  { book: 'Hebrews', chapters: [4], why: 'pastoral anchor: a high priest touched by our weakness (4:15-16)' },
+  { book: 'James', chapters: [5], why: 'pastoral anchor: prayer for the sick (5:13-16)' },
+  { book: 'Revelation', chapters: [21], why: 'pastoral anchor: every tear wiped away (21:3-5)' },
+  { book: 'Matthew', chapters: [18, 27], why: 'pastoral harm gates: cut-it-off sayings, forgiveness, and Judas death' },
+  { book: 'Mark', chapters: [5, 6, 9], why: 'pastoral harm gates: self-injury and cut-it-off passages' },
+  { book: '1 Samuel', chapters: [31], why: 'pastoral harm gate: Saul falls on his sword (31:4-5)' },
+  { book: '2 Samuel', chapters: [13, 17], why: 'pastoral harm gates: sexual violence and Ahithophel death' },
+  { book: 'Judges', chapters: [16], why: 'pastoral harm gate: Samson pulls down the house (16:30)' },
+  { book: '1 Kings', chapters: [16, 18], why: 'pastoral harm gates: Zimri death and prophets cutting themselves' },
+  { book: 'Deuteronomy', chapters: [14, 22], why: 'pastoral harm gates: cuttings for the dead and sexual-violence case law' },
+  { book: 'Zechariah', chapters: [13], why: 'pastoral harm gate: strike the shepherd (13:7)' },
+  { book: 'Psalms', chapters: [116], why: 'pastoral harm gate: death of the saints must not answer despair or grief' },
+  { book: '1 Peter', chapters: [2, 3], why: 'pastoral harm gates: submission passages must not answer abuse disclosures' },
 ];
 
 /**
@@ -223,4 +277,6 @@ function main(): void {
   );
 }
 
-main();
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main();
+}

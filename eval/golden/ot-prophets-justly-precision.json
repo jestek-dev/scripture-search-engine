@@ -1,0 +1,32 @@
+{
+  "id": "ot-prophets-justly-precision",
+  "status": "active",
+  "query": "do justly love mercy walk humbly",
+  "note": [
+    "PRECISION REGRESSION FIXTURE. The bare lexicon entry \"love\" in `gods-love`",
+    "must not let divine-love anchors ride into the Micah 6:8 query window just",
+    "because one token overlaps. The query can still surface mercy-and-love",
+    "lexical neighbors; what must stay out is the generic God-love anchor set."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Micah 6:8"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "John 3:16",
+      "why": "A bare `love` cue inside a longer justice query must not activate generic God-love anchors."
+    },
+    {
+      "reference": "Romans 5:8",
+      "why": "The direct God-love anchor and its related-theme hop were the main precision leak here."
+    },
+    {
+      "reference": "Romans 8:38-39",
+      "why": "Generic divine-love anchors must stay out of this Micah-style query window."
+    }
+  ],
+  "coversConcepts": []
+}

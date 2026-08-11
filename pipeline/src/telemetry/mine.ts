@@ -13,8 +13,8 @@
  * rank-verified rather than trusted, and a logged rank that disagrees with
  * replay flags the row instead of polluting the evidence. An identity no
  * provided artifact can reproduce (different engine version, different
- * fingerprints) is counted unreplayable and its conversions are never
- * treated as verified: "cannot check" and "checked" stay different numbers.
+ * fingerprints) is counted unreplayable and its entire row is excluded:
+ * "cannot check" and "checked" stay different evidence sets.
  */
 
 import { significantWords, type ScriptureEngine } from '@jestek-dev/scripture-engine';
@@ -22,6 +22,7 @@ import { significantWords, type ScriptureEngine } from '@jestek-dev/scripture-en
 import type { SensitiveMatcher } from './categories.js';
 import type {
   Distillate,
+  DistillateIdentity,
   GapCluster,
   GapReport,
   GapVerdict,
@@ -56,20 +57,31 @@ async function replay(engines: readonly ScriptureEngine[], identity: { engineVer
   );
   if (!engine) return { ranks: new Map(), references: new Map(), replayable: false };
 
-  const result = await engine.research(query);
-  if (result.kind !== 'discovery') {
-    // The query resolves as a reference (or typed-invalid) on this artifact.
-    // Distillates exclude reference outcomes, so this is an oddity worth
-    // flagging rather than a list worth ranking.
+  try {
+    const result = await engine.research(query);
+    if (
+      result.kind !== 'discovery' ||
+      result.query !== query ||
+      result.engineVersion !== identity.engineVersion ||
+      result.corpusFingerprint !== identity.corpusFingerprint ||
+      result.layerFingerprint !== identity.layerFingerprint
+    ) {
+      return { ranks: new Map(), references: new Map(), replayable: false };
+    }
+    const ranks = new Map<string, number>();
+    const references = new Map<string, string>();
+    for (const [index, row] of result.results.entries()) {
+      if (typeof row.targetId !== 'string' || row.targetId.length === 0 || typeof row.reference !== 'string' || row.reference.length === 0) {
+        return { ranks: new Map(), references: new Map(), replayable: false };
+      }
+      if (ranks.has(row.targetId)) return { ranks: new Map(), references: new Map(), replayable: false };
+      ranks.set(row.targetId, index + 1);
+      references.set(row.targetId, row.reference);
+    }
+    return { ranks, references, replayable: true };
+  } catch {
     return { ranks: new Map(), references: new Map(), replayable: false };
   }
-  const ranks = new Map<string, number>();
-  const references = new Map<string, string>();
-  result.results.forEach((row, index) => {
-    ranks.set(row.targetId, index + 1);
-    references.set(row.targetId, row.reference);
-  });
-  return { ranks, references, replayable: true };
 }
 
 const VERDICT_ORDER: readonly GapVerdict[] = ['MISS', 'RENAMED', 'WEAK', 'SATISFIED'];
@@ -77,6 +89,7 @@ const VERDICT_ORDER: readonly GapVerdict[] = ['MISS', 'RENAMED', 'WEAK', 'SATISF
 export interface MineResult {
   readonly report: GapReport;
   readonly markdown: string;
+  readonly evidenceArtifacts: readonly { readonly query: string; readonly identity: DistillateIdentity }[];
 }
 
 export async function mine(
@@ -102,12 +115,16 @@ export async function mine(
   let rankMismatch = 0;
   let unreplayable = 0;
 
-  interface ClusterAccumulator {
-    signature: string;
-    forms: Map<string, { devices: Set<string>; events: number }>;
+  interface FormAccumulator {
     devices: Set<string>;
+    events: number;
     outcomes: { empty: number; abandoned: number; converted: number };
     conversions: Map<string, { target: string; reference: string; rank: number; count: number }>;
+    artifacts: Map<string, DistillateIdentity>;
+  }
+  interface ClusterAccumulator {
+    signature: string;
+    forms: Map<string, FormAccumulator>;
     pairs: Map<string, { from: string; to: string; devices: Set<string>; count: number }>;
   }
   const clusters = new Map<string, ClusterAccumulator>();
@@ -117,9 +134,6 @@ export async function mine(
       cluster = {
         signature,
         forms: new Map(),
-        devices: new Set(),
-        outcomes: { empty: 0, abandoned: 0, converted: 0 },
-        conversions: new Map(),
         pairs: new Map(),
       };
       clusters.set(signature, cluster);
@@ -133,34 +147,40 @@ export async function mine(
         sensitiveDropped += 1;
         continue;
       }
-      const cluster = clusterOf(clusterSignature(row.query));
-      cluster.devices.add(distillate.token);
-      const form = cluster.forms.get(row.query) ?? { devices: new Set<string>(), events: 0 };
-      form.devices.add(distillate.token);
-      form.events += queryEventCount(row);
-      cluster.forms.set(row.query, form);
-      cluster.outcomes.empty += row.outcomes.empty;
-      cluster.outcomes.abandoned += row.outcomes.abandoned;
-      cluster.outcomes.converted += row.outcomes.converted;
-
       // Replay once per row; verify every claimed conversion against it.
       const replayed = await replay(engines, row.identity, row.query);
+      if (!replayed.replayable) {
+        unreplayable += 1;
+        continue;
+      }
+      if (row.conversions.some((conversion) => replayed.ranks.get(conversion.target) !== conversion.rank)) {
+        rankMismatch += 1;
+        continue;
+      }
+
+      const cluster = clusterOf(clusterSignature(row.query));
+      const form = cluster.forms.get(row.query) ?? {
+        devices: new Set<string>(),
+        events: 0,
+        outcomes: { empty: 0, abandoned: 0, converted: 0 },
+        conversions: new Map<string, { target: string; reference: string; rank: number; count: number }>(),
+        artifacts: new Map<string, DistillateIdentity>(),
+      };
+      form.devices.add(distillate.token);
+      form.events += queryEventCount(row);
+      form.outcomes.empty += row.outcomes.empty;
+      form.outcomes.abandoned += row.outcomes.abandoned;
+      form.outcomes.converted += row.outcomes.converted;
+      form.artifacts.set(
+        `${row.identity.engineVersion}\u0000${row.identity.corpusFingerprint}\u0000${row.identity.layerFingerprint}`,
+        { ...row.identity },
+      );
       for (const conversion of row.conversions) {
-        if (!replayed.replayable) {
-          unreplayable += conversion.count;
-          continue;
-        }
-        const replayedRank = replayed.ranks.get(conversion.target);
-        if (replayedRank !== conversion.rank) {
-          // Consumer bug or identity mismatch — either way, not evidence.
-          rankMismatch += conversion.count;
-          continue;
-        }
         const key = `${conversion.target} ${conversion.rank}`;
-        const existing = cluster.conversions.get(key);
+        const existing = form.conversions.get(key);
         if (existing) existing.count += conversion.count;
         else {
-          cluster.conversions.set(key, {
+          form.conversions.set(key, {
             target: conversion.target,
             reference: replayed.references.get(conversion.target) ?? conversion.target,
             rank: conversion.rank,
@@ -168,6 +188,7 @@ export async function mine(
           });
         }
       }
+      cluster.forms.set(row.query, form);
     }
 
     for (const pair of distillate.pairs) {
@@ -191,21 +212,54 @@ export async function mine(
 
   // ---- threshold, verdict, order ---------------------------------------
   const admitted: GapCluster[] = [];
+  const evidenceArtifacts: { query: string; identity: DistillateIdentity }[] = [];
   let belowThreshold = 0;
+  const admittedFormsByCluster = new Map<ClusterAccumulator, Array<[string, FormAccumulator]>>();
+  const admittedSurfaceForms = new Set<string>();
   for (const cluster of clusters.values()) {
-    if (cluster.devices.size < budgets.minDistinctDevices) {
+    const forms = [...cluster.forms.entries()].filter(([, form]) => {
+      if (form.devices.size >= budgets.minDistinctDevices) return true;
       belowThreshold += 1;
-      continue;
+      return false;
+    });
+    if (forms.length > 0) {
+      admittedFormsByCluster.set(cluster, forms);
+      for (const [query, form] of forms) {
+        admittedSurfaceForms.add(query);
+        const identity = [...form.artifacts.entries()].sort(([left], [right]) => left.localeCompare(right))[0]?.[1];
+        if (identity !== undefined) evidenceArtifacts.push({ query, identity });
+      }
     }
+  }
+  for (const cluster of clusters.values()) {
+    const admittedForms = admittedFormsByCluster.get(cluster);
+    if (admittedForms === undefined) continue;
     // Pairs are held to the SAME device threshold as query strings: a pair
     // names two query strings, and the suppression rule ("no below-threshold
     // string is ever emitted") would be fiction if a pair could smuggle one.
     const pairs = [...cluster.pairs.values()]
-      .filter((pair) => pair.devices.size >= budgets.minDistinctDevices)
+      .filter((pair) =>
+        pair.devices.size >= budgets.minDistinctDevices &&
+        admittedSurfaceForms.has(pair.from) &&
+        admittedSurfaceForms.has(pair.to))
       .map((pair) => ({ from: pair.from, to: pair.to, devices: pair.devices.size, count: pair.count }))
       .sort((a, b) => (a.from !== b.from ? (a.from < b.from ? -1 : 1) : a.to < b.to ? -1 : 1));
 
-    const conversions = [...cluster.conversions.values()].sort((a, b) => a.rank - b.rank || (a.target < b.target ? -1 : 1));
+    const devices = new Set<string>();
+    const outcomes = { empty: 0, abandoned: 0, converted: 0 };
+    const conversionMap = new Map<string, { target: string; reference: string; rank: number; count: number }>();
+    for (const [, form] of admittedForms) {
+      for (const token of form.devices) devices.add(token);
+      outcomes.empty += form.outcomes.empty;
+      outcomes.abandoned += form.outcomes.abandoned;
+      outcomes.converted += form.outcomes.converted;
+      for (const [key, conversion] of form.conversions) {
+        const existing = conversionMap.get(key);
+        if (existing) existing.count += conversion.count;
+        else conversionMap.set(key, { ...conversion });
+      }
+    }
+    const conversions = [...conversionMap.values()].sort((a, b) => a.rank - b.rank || (a.target < b.target ? -1 : 1));
     const bestRank = conversions[0]?.rank;
     const verdict: GapVerdict =
       conversions.length > 0
@@ -219,11 +273,11 @@ export async function mine(
     admitted.push({
       verdict,
       signature: cluster.signature,
-      forms: [...cluster.forms.entries()]
+      forms: admittedForms
         .map(([query, form]) => ({ query, devices: form.devices.size, events: form.events }))
         .sort((a, b) => b.devices - a.devices || (a.query < b.query ? -1 : 1)),
-      devices: cluster.devices.size,
-      outcomes: { ...cluster.outcomes },
+      devices: devices.size,
+      outcomes,
       conversions,
       pairs,
     });
@@ -249,7 +303,11 @@ export async function mine(
     zeroConversionRate: admitted.length > 0 ? zeroConversion / admitted.length : 0,
   };
 
-  return { report, markdown: renderMarkdown(report, budgets) };
+  return {
+    report,
+    markdown: renderMarkdown(report, budgets),
+    evidenceArtifacts: evidenceArtifacts.sort((left, right) => left.query.localeCompare(right.query)),
+  };
 }
 
 const SUGGESTED_MOVE: Record<GapVerdict, string> = {
@@ -293,8 +351,8 @@ function renderMarkdown(report: GapReport, budgets: TelemetryBudgets): string {
       `${report.suppressed.sensitiveDropped} sensitive-category row(s) dropped defensively. Neither is named, by design.`,
   );
   lines.push(
-    `Flagged and excluded from evidence: ${report.flagged.rankMismatch} conversion(s) whose logged rank disagreed with replay; ` +
-      `${report.flagged.unreplayable} conversion(s) whose artifact identity no provided artifact reproduces.`,
+    `Flagged and excluded from evidence: ${report.flagged.rankMismatch} row(s) with a logged rank that disagreed with replay; ` +
+      `${report.flagged.unreplayable} row(s) that could not be reproduced exactly.`,
   );
   lines.push('');
   lines.push('## Metrics');
@@ -333,13 +391,14 @@ export function updateMasterRecord(previous: MasterRecord | null, report: GapRep
     );
   }
 
-  const clusters: Record<string, {
+  type MutableMasterCluster = {
     forms: Record<string, { devices: number; events: number }>;
     outcomes: { empty: number; abandoned: number; converted: number };
     conversions: { target: string; reference: string; rank: number; count: number }[];
     pairs: { from: string; to: string; count: number }[];
     verdicts: Record<string, GapVerdict>;
-  }> = {};
+  };
+  const clusters = Object.create(null) as Record<string, MutableMasterCluster>;
   for (const [signature, cluster] of Object.entries(base.clusters)) {
     clusters[signature] = {
       forms: { ...cluster.forms },

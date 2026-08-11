@@ -1,0 +1,18 @@
+{
+  "id": "shelter-in-the-storm",
+  "generatedBy": "workbench",
+  "status": "pending",
+  "query": "shelter in the storm",
+  "expectedTop": [
+    {
+      "reference": "Psalms 46:1"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "John 3:16",
+      "why": "Not about refuge; the concept lexicon over-matches here."
+    }
+  ]
+}

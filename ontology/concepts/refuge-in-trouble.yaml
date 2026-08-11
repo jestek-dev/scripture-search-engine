@@ -14,6 +14,9 @@ lexicon:
   # passage. Measured before the change: the query ranked Psalm 91:1 eleventh.
   - dwells in the shelter of the most high
   - secret place of the most high
+  # Bare words are how people commonly search. The one-token specificity
+  # discount keeps this trigger weaker than a multi-word concept match.
+  - refuge
 anchors:
   - ref: Psalms 46:1-3
     sources: [editorial]

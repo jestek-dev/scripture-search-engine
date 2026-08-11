@@ -15,48 +15,417 @@ import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 import { parseAnchorRef } from '../../../pipeline/src/importers/ontologyImporter.js';
 import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
 
+export const WITHIN_TOP_VALUES = [1, 3, 5, 10] as const;
+export type WithinTop = (typeof WITHIN_TOP_VALUES)[number];
+
+export interface CorpusExpectation {
+  /** Canonical Milestone 2 spelling. */
+  readonly ref?: string;
+  /** Legacy spelling retained for hand-written and generated v1 fixtures. */
+  readonly reference?: string;
+  readonly withinTop?: WithinTop;
+  readonly requiredReasonFamily?: string;
+  readonly requiredReasonLabel?: string;
+}
+
+export interface PreferredOrder {
+  readonly above: string;
+  readonly below: string;
+  readonly withinTop?: WithinTop;
+}
+
 export interface CorpusFixture {
   readonly id: string;
   readonly status: 'active' | 'pending';
   readonly query?: string;
-  readonly expectedTop?: readonly {
-    reference: string;
-    requiredReasonFamily?: string;
-    /**
-     * Exact reason label that must appear on the matched verse, e.g.
-     * "Theme: Grace, not earned".
-     *
-     * requiredReasonFamily alone proves only that SOME concept anchors this
-     * passage. Where two concepts legitimately anchor the same verse —
-     * `grace-not-earned` and `salvation` both name Ephesians 2:8 — the
-     * fixture would keep passing with its own concept deleted, measuring the
-     * neighbour instead. Naming the label is what makes a concept fixture
-     * actually test its own concept.
-     */
-    requiredReasonLabel?: string;
-  }[];
-  readonly expectedWithinTop?: number;
   /**
-   * Further queries that must satisfy the SAME expectations.
-   *
-   * One claim, asked the way different users type it. A worship leader types
-   * "worship" far more often than "come let us worship", and the concept layer
-   * matched only the latter because every curated phrase was multi-word — so
-   * the most common query class in the product bypassed the curated data
-   * entirely. Asserting both phrasings against one expectation is what keeps
-   * that from silently regressing.
+   * Each assertion may choose its own measurement window. `reference` plus
+   * fixture-level `expectedWithinTop` remains valid for legacy fixtures.
    */
+  readonly expectedTop?: readonly CorpusExpectation[];
+  readonly expectedWithinTop?: WithinTop;
+  readonly preferredOrder?: readonly PreferredOrder[];
   readonly additionalQueries?: readonly string[];
-  readonly mustNotRank?: readonly { reference: string; why?: string }[];
-  /**
-   * Concept ids this fixture measures, for the coverage check below.
-   *
-   * Defaults to the fixture's own id, which is the common case (a fixture
-   * named `worship` measures the `worship` concept). Declared explicitly when
-   * the names diverge — `hearing-and-doing` measures `obedience-to-the-word` —
-   * or when one query genuinely covers several tightly-related concepts.
-   */
+  readonly mustNotRank?: readonly { reference?: string; ref?: string; why?: string }[];
   readonly coversConcepts?: readonly string[];
+  /** Informational fields accepted by the existing hand-written fixtures. */
+  readonly note?: readonly string[];
+  readonly alsoAcceptable?: readonly string[];
+  /** Ownership marker emitted by the workbench fixture compiler. */
+  readonly generatedBy?: 'workbench';
+}
+
+interface NormalizedExpectation {
+  readonly ref: string;
+  readonly withinTop: WithinTop;
+  readonly range: { start: number; end: number };
+  readonly requiredReasonFamily?: string;
+  readonly requiredReasonLabel?: string;
+}
+
+interface NormalizedPreferredOrder {
+  readonly above: string;
+  readonly below: string;
+  readonly withinTop: WithinTop;
+  readonly aboveRange: { start: number; end: number };
+  readonly belowRange: { start: number; end: number };
+}
+
+interface NormalizedCorpusFixture {
+  readonly id: string;
+  readonly status: 'active' | 'pending';
+  readonly query?: string;
+  readonly expectedTop: readonly NormalizedExpectation[];
+  readonly expectedWithinTop: WithinTop;
+  readonly preferredOrder: readonly NormalizedPreferredOrder[];
+  readonly additionalQueries: readonly string[];
+  readonly mustNotRank: readonly { ref: string; why?: string; range: { start: number; end: number } }[];
+  readonly coversConcepts?: readonly string[];
+}
+
+interface FixtureValidation {
+  readonly fixture?: NormalizedCorpusFixture;
+  readonly findings: readonly GateFinding[];
+}
+
+const FIXTURE_FIELDS = new Set([
+  'id',
+  'status',
+  'query',
+  'expectedTop',
+  'expectedWithinTop',
+  'preferredOrder',
+  'additionalQueries',
+  'mustNotRank',
+  'coversConcepts',
+  'note',
+  'alsoAcceptable',
+  'generatedBy',
+]);
+const EXPECTATION_FIELDS = new Set([
+  'ref',
+  'reference',
+  'withinTop',
+  'requiredReasonFamily',
+  'requiredReasonLabel',
+]);
+const PREFERRED_ORDER_FIELDS = new Set(['above', 'below', 'withinTop']);
+const MUST_NOT_RANK_FIELDS = new Set(['ref', 'reference', 'why']);
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isWithinTop(value: unknown): value is WithinTop {
+  return typeof value === 'number' && (WITHIN_TOP_VALUES as readonly number[]).includes(value);
+}
+
+function rangesOverlap(
+  left: { readonly start: number; readonly end: number },
+  right: { readonly start: number; readonly end: number },
+): boolean {
+  return left.start <= right.end && right.start <= left.end;
+}
+
+function fixtureFinding(
+  fixtureId: string,
+  categoryCode: string,
+  message: string,
+  params?: Readonly<Record<string, string | number | boolean | readonly string[]>>,
+): GateFinding {
+  return { message: `${fixtureId}: ${message}`, subjects: [fixtureId], categoryCode, params };
+}
+
+function unknownFieldFindings(
+  fixtureId: string,
+  value: Record<string, unknown>,
+  allowed: ReadonlySet<string>,
+  location: string,
+): GateFinding[] {
+  return Object.keys(value)
+    .filter((field) => !allowed.has(field))
+    .sort()
+    .map((field) =>
+      fixtureFinding(
+        fixtureId,
+        'G3_FIXTURE_UNKNOWN_FIELD',
+        `${location} has unknown field "${field}"`,
+        { field, location },
+      ),
+    );
+}
+
+function parsedRef(
+  fixtureId: string,
+  value: unknown,
+  location: string,
+  findings: GateFinding[],
+): { ref: string; range: { start: number; end: number } } | undefined {
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    findings.push(
+      fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must be a non-empty reference string`),
+    );
+    return undefined;
+  }
+  const ref = value.trim();
+  const range = parseAnchorRef(ref);
+  if (!range) {
+    findings.push(
+      fixtureFinding(
+        fixtureId,
+        'G3_FIXTURE_INVALID_REFERENCE',
+        `${location} "${ref}" is not a canonical scripture range`,
+        { location, ref },
+      ),
+    );
+    return undefined;
+  }
+  return { ref, range };
+}
+
+function normaliseCorpusFixture(input: unknown): FixtureValidation {
+  if (!isRecord(input)) {
+    return {
+      findings: [
+        fixtureFinding('<unknown>', 'G3_FIXTURE_MALFORMED', 'fixture must be an object'),
+      ],
+    };
+  }
+
+  // Ranking-only fixtures share the golden directory but are not corpus fixtures.
+  const isCorpusFixture =
+    'query' in input ||
+    'expectedTop' in input ||
+    'expectedWithinTop' in input ||
+    'preferredOrder' in input ||
+    'mustNotRank' in input ||
+    'additionalQueries' in input;
+  if (!isCorpusFixture) return { findings: [] };
+
+  const fixtureId = typeof input.id === 'string' && input.id.trim() ? input.id.trim() : '<unknown>';
+  const findings = unknownFieldFindings(fixtureId, input, FIXTURE_FIELDS, 'fixture');
+  if (fixtureId === '<unknown>') {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'fixture id must be a non-empty string'));
+  }
+  if (input.status !== 'active' && input.status !== 'pending') {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'fixture status must be "active" or "pending"'));
+  }
+  if (input.query !== undefined && (typeof input.query !== 'string' || input.query.trim().length === 0)) {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'fixture query must be a non-empty string'));
+  }
+  if (input.expectedWithinTop !== undefined && !isWithinTop(input.expectedWithinTop)) {
+    findings.push(
+      fixtureFinding(
+        fixtureId,
+        'G3_FIXTURE_INVALID_WINDOW',
+        'expectedWithinTop must be one of 1, 3, 5, or 10',
+      ),
+    );
+  }
+  if (input.additionalQueries !== undefined &&
+    (!Array.isArray(input.additionalQueries) || input.additionalQueries.some((query) => typeof query !== 'string' || query.trim().length === 0))) {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'additionalQueries must contain non-empty strings'));
+  }
+
+  const expectedWithinTop = isWithinTop(input.expectedWithinTop) ? input.expectedWithinTop : 10;
+  const expectedTop: NormalizedExpectation[] = [];
+  const expectedRanges = new Set<string>();
+  if (input.expectedTop !== undefined && !Array.isArray(input.expectedTop)) {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'expectedTop must be an array'));
+  } else {
+    for (const [index, expectation] of (input.expectedTop ?? []).entries()) {
+      const location = `expectedTop[${index}]`;
+      if (!isRecord(expectation)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must be an object`));
+        continue;
+      }
+      findings.push(...unknownFieldFindings(fixtureId, expectation, EXPECTATION_FIELDS, location));
+      const hasRef = expectation.ref !== undefined;
+      const hasReference = expectation.reference !== undefined;
+      if (hasRef === hasReference) {
+        findings.push(
+          fixtureFinding(
+            fixtureId,
+            'G3_FIXTURE_MALFORMED',
+            `${location} must contain exactly one of "ref" or legacy "reference"`,
+          ),
+        );
+        continue;
+      }
+      const parsed = parsedRef(fixtureId, hasRef ? expectation.ref : expectation.reference, location, findings);
+      if (!parsed) continue;
+      if (expectation.withinTop !== undefined && !isWithinTop(expectation.withinTop)) {
+        findings.push(
+          fixtureFinding(fixtureId, 'G3_FIXTURE_INVALID_WINDOW', `${location}.withinTop must be one of 1, 3, 5, or 10`),
+        );
+        continue;
+      }
+      for (const field of ['requiredReasonFamily', 'requiredReasonLabel'] as const) {
+        if (expectation[field] !== undefined && (typeof expectation[field] !== 'string' || !expectation[field].trim())) {
+          findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.${field} must be a non-empty string`));
+        }
+      }
+      const rangeKey = `${parsed.range.start}:${parsed.range.end}`;
+      if (expectedRanges.has(rangeKey)) {
+        findings.push(
+          fixtureFinding(fixtureId, 'G3_FIXTURE_DUPLICATE_EXPECTATION', `${location} duplicates an expectedTop reference range`, { ref: parsed.ref }),
+        );
+        continue;
+      }
+      const overlapping = expectedTop.find((entry) => rangesOverlap(entry.range, parsed.range));
+      if (overlapping !== undefined) {
+        findings.push(
+          fixtureFinding(
+            fixtureId,
+            'G3_FIXTURE_OVERLAPPING_EXPECTATION',
+            `${location} overlaps expectedTop reference "${overlapping.ref}"`,
+            { ref: parsed.ref, overlaps: overlapping.ref },
+          ),
+        );
+        continue;
+      }
+      expectedRanges.add(rangeKey);
+      expectedTop.push({
+        ref: parsed.ref,
+        range: parsed.range,
+        withinTop: isWithinTop(expectation.withinTop) ? expectation.withinTop : expectedWithinTop,
+        ...(typeof expectation.requiredReasonFamily === 'string'
+          ? { requiredReasonFamily: expectation.requiredReasonFamily }
+          : {}),
+        ...(typeof expectation.requiredReasonLabel === 'string'
+          ? { requiredReasonLabel: expectation.requiredReasonLabel }
+          : {}),
+      });
+    }
+  }
+
+  const preferredOrder: NormalizedPreferredOrder[] = [];
+  const pairKeys = new Set<string>();
+  const defaultPairWindow = expectedTop.reduce(
+    (largest, expectation) => Math.max(largest, expectation.withinTop) as WithinTop,
+    expectedWithinTop,
+  );
+  if (input.preferredOrder !== undefined && !Array.isArray(input.preferredOrder)) {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'preferredOrder must be an array'));
+  } else {
+    for (const [index, pair] of (input.preferredOrder ?? []).entries()) {
+      const location = `preferredOrder[${index}]`;
+      if (!isRecord(pair)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must be an object`));
+        continue;
+      }
+      findings.push(...unknownFieldFindings(fixtureId, pair, PREFERRED_ORDER_FIELDS, location));
+      const above = parsedRef(fixtureId, pair.above, `${location}.above`, findings);
+      const below = parsedRef(fixtureId, pair.below, `${location}.below`, findings);
+      if (!above || !below) continue;
+      if (pair.withinTop !== undefined && !isWithinTop(pair.withinTop)) {
+        findings.push(
+          fixtureFinding(
+            fixtureId,
+            'G3_FIXTURE_INVALID_WINDOW',
+            `${location}.withinTop must be one of 1, 3, 5, or 10`,
+          ),
+        );
+        continue;
+      }
+      const aboveKey = `${above.range.start}:${above.range.end}`;
+      const belowKey = `${below.range.start}:${below.range.end}`;
+      if (rangesOverlap(above.range, below.range)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_SELF_PAIR', `${location} compares overlapping reference ranges`, { ref: above.ref }));
+        continue;
+      }
+      const pairKey = [aboveKey, belowKey].sort().join('|');
+      if (pairKeys.has(pairKey)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_DUPLICATE_PAIR', `${location} duplicates or reverses an existing preferredOrder pair`));
+        continue;
+      }
+      pairKeys.add(pairKey);
+      preferredOrder.push({
+        above: above.ref,
+        below: below.ref,
+        withinTop: isWithinTop(pair.withinTop) ? pair.withinTop : defaultPairWindow,
+        aboveRange: above.range,
+        belowRange: below.range,
+      });
+    }
+  }
+
+  const mustNotRank: NormalizedCorpusFixture['mustNotRank'][number][] = [];
+  const forbiddenRanges = new Set<string>();
+  if (input.mustNotRank !== undefined && !Array.isArray(input.mustNotRank)) {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'mustNotRank must be an array'));
+  } else {
+    for (const [index, forbidden] of (input.mustNotRank ?? []).entries()) {
+      const location = `mustNotRank[${index}]`;
+      if (!isRecord(forbidden)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must be an object`));
+        continue;
+      }
+      findings.push(...unknownFieldFindings(fixtureId, forbidden, MUST_NOT_RANK_FIELDS, location));
+      const hasRef = forbidden.ref !== undefined;
+      const hasReference = forbidden.reference !== undefined;
+      if (hasRef === hasReference) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must contain exactly one of "ref" or legacy "reference"`));
+        continue;
+      }
+      const parsed = parsedRef(fixtureId, hasRef ? forbidden.ref : forbidden.reference, location, findings);
+      if (!parsed) continue;
+      if (forbidden.why !== undefined && (typeof forbidden.why !== 'string' || !forbidden.why.trim())) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.why must be a non-empty string`));
+      }
+      const rangeKey = `${parsed.range.start}:${parsed.range.end}`;
+      if (forbiddenRanges.has(rangeKey)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_DUPLICATE_EXPECTATION', `${location} duplicates a mustNotRank reference range`, { ref: parsed.ref }));
+        continue;
+      }
+      forbiddenRanges.add(rangeKey);
+      mustNotRank.push({
+        ref: parsed.ref,
+        range: parsed.range,
+        ...(typeof forbidden.why === 'string' ? { why: forbidden.why } : {}),
+      });
+    }
+  }
+
+  if (findings.length > 0 || fixtureId === '<unknown>' || (input.status !== 'active' && input.status !== 'pending')) {
+    return { findings };
+  }
+  return {
+    findings,
+    fixture: {
+      id: fixtureId,
+      status: input.status,
+      ...(typeof input.query === 'string' ? { query: input.query } : {}),
+      expectedTop,
+      expectedWithinTop,
+      preferredOrder,
+      additionalQueries: (input.additionalQueries as readonly string[] | undefined) ?? [],
+      mustNotRank,
+      ...(Array.isArray(input.coversConcepts) ? { coversConcepts: input.coversConcepts as readonly string[] } : {}),
+    },
+  };
+}
+
+/** Authoritative fixture-schema validation shared with workbench promotion. */
+export function validateCorpusFixture(input: unknown): readonly GateFinding[] {
+  return normaliseCorpusFixture(input).findings;
+}
+
+function measuredWindow(fixture: NormalizedCorpusFixture): WithinTop {
+  return fixture.expectedTop.reduce(
+    (largest, expectation) => Math.max(largest, expectation.withinTop) as WithinTop,
+    fixture.expectedWithinTop,
+  );
+}
+
+function hitInRange(entry: { targetId: string }, range: { start: number; end: number }): boolean {
+  const verseId = verseIdOf(entry.targetId);
+  return verseId !== null && verseId >= range.start && verseId <= range.end;
+}
+
+export interface CoverageConcept {
+  readonly id: string;
+  readonly label: string;
 }
 
 /**
@@ -74,10 +443,10 @@ export interface CorpusFixture {
  * measuring whether it helped.
  */
 export function conceptCoverageGate(
-  conceptIds: readonly string[],
+  concepts: readonly CoverageConcept[],
   fixtures: readonly CorpusFixture[],
 ): GateResult {
-  if (conceptIds.length === 0) {
+  if (concepts.length === 0) {
     return notApplicable(
       'G3-golden',
       'Concept fixture coverage',
@@ -85,61 +454,82 @@ export function conceptCoverageGate(
     );
   }
 
-  // Only fixtures that actually RUN can measure anything. A pending fixture
-  // states an intention; it cannot fail, so counting it as coverage would let
-  // a concept ship measured by a test that never grades it.
+  const known = new Map(concepts.map((concept) => [concept.id, concept]));
+  const dangling = new Set<string>();
+  const unproven = new Map<string, string[]>();
   const covered = new Set<string>();
+
+  // A declaration alone is not evidence. A covered concept must be exercised
+  // by an active query and name its own anchor family and exact Theme label.
+  // This makes deleting that concept fail its supposed coverage fixture even
+  // when a neighbouring concept happens to anchor the same passage.
   for (const fixture of fixtures) {
-    if (fixture.status !== 'active' || !fixture.query) continue;
-    for (const id of fixture.coversConcepts ?? [fixture.id]) covered.add(id);
+    const explicitlyClaimed = fixture.coversConcepts !== undefined;
+    const claimed = fixture.coversConcepts ?? (known.has(fixture.id) ? [fixture.id] : []);
+    for (const id of claimed) {
+      const concept = known.get(id);
+      if (!concept) {
+        if (explicitlyClaimed) dangling.add(id);
+        continue;
+      }
+      const expectedLabel = `Theme: ${concept.label}`;
+      const demonstrates =
+        fixture.status === 'active' &&
+        typeof fixture.query === 'string' &&
+        fixture.query.trim().length > 0 &&
+        (fixture.expectedTop ?? []).some(
+          (expectation) =>
+            expectation.requiredReasonFamily === 'concept_anchor' &&
+            expectation.requiredReasonLabel === expectedLabel,
+        );
+      if (demonstrates) {
+        covered.add(id);
+      } else {
+        const fixtureIds = unproven.get(id) ?? [];
+        fixtureIds.push(fixture.id);
+        unproven.set(id, fixtureIds);
+      }
+    }
   }
 
-  const orphans = conceptIds.filter((id) => !covered.has(id));
-  if (orphans.length > 0) {
+  const findings: GateFinding[] = [];
+  for (const id of [...dangling].sort()) {
+    findings.push({
+      message:
+        `no concept "${id}" exists, but a fixture declares it in coversConcepts. The concept ` +
+        'was renamed or removed and the fixture now measures nothing under that name.',
+      subjects: [id],
+    });
+  }
+
+  for (const concept of concepts) {
+    if (covered.has(concept.id)) continue;
+    const claimers = unproven.get(concept.id) ?? [];
+    findings.push({
+      message:
+        `${concept.id}: no active fixture demonstrates this concept with an expectedTop assertion ` +
+        `requiring concept_anchor and the exact label "Theme: ${concept.label}". ` +
+        (claimers.length > 0
+          ? `Declared by ${claimers.join(', ')}, but the assertion is incomplete.`
+          : `Add eval/golden/${concept.id}.json or a complete coversConcepts assertion.`),
+      subjects: [concept.id],
+    });
+  }
+
+  if (findings.length > 0) {
     return fail(
       'G3-golden',
       'Concept fixture coverage',
-      `${orphans.length} concept(s) have no active golden fixture measuring them`,
-      orphans.map((id) => ({
-        message:
-          `${id}: no active fixture covers this concept. Add eval/golden/${id}.json, or add ` +
-          `"${id}" to an existing fixture's coversConcepts. A concept with nothing measuring ` +
-          'it cannot be shown to help, which is what the fixtures-first rule exists to prevent.',
-        subjects: [id],
-      })),
-    );
-  }
-
-  // Fixtures naming a concept that does not exist are reported too: it means
-  // a concept was renamed or removed and its fixture now grades nothing.
-  const known = new Set(conceptIds);
-  const dangling = [
-    ...new Set(
-      fixtures
-        .filter((fixture) => fixture.coversConcepts)
-        .flatMap((fixture) => fixture.coversConcepts ?? [])
-        .filter((id) => !known.has(id)),
-    ),
-  ].sort();
-  if (dangling.length > 0) {
-    return fail(
-      'G3-golden',
-      'Concept fixture coverage',
-      `${dangling.length} fixture(s) claim to cover concepts that do not exist`,
-      dangling.map((id) => ({
-        message:
-          `no concept "${id}" exists, but a fixture declares it in coversConcepts. The concept ` +
-          'was renamed or removed and the fixture now measures nothing under that name.',
-        subjects: [id],
-      })),
+      `${findings.length} concept coverage claim(s) are missing, dangling, or unproven`,
+      findings,
     );
   }
 
   return pass(
     'G3-golden',
     'Concept fixture coverage',
-    `all ${conceptIds.length} concept(s) are measured by an active fixture`,
-    { concepts: conceptIds.length },
+    `all ${concepts.length} concept(s) are demonstrated by an active anchor assertion`,
+    { concepts: concepts.length },
   );
 }
 
@@ -155,42 +545,43 @@ export async function runCorpusFixture(
   engine: ScriptureEngine,
   fixture: CorpusFixture,
 ): Promise<string[]> {
-  if (!fixture.query) return [];
-  const problems: string[] = [];
+  const validated = normaliseCorpusFixture(fixture);
+  if (!validated.fixture) return validated.findings.map((finding) => finding.message);
+  if (!validated.fixture.query) return [];
+  return (await runNormalisedFixture(engine, validated.fixture)).map((finding) => finding.message);
+}
 
-  for (const query of [fixture.query, ...(fixture.additionalQueries ?? [])]) {
-    problems.push(...(await runOneQuery(engine, fixture, query)));
+async function runNormalisedFixture(
+  engine: ScriptureEngine,
+  fixture: NormalizedCorpusFixture,
+): Promise<GateFinding[]> {
+  const findings: GateFinding[] = [];
+  for (const query of [fixture.query!, ...fixture.additionalQueries]) {
+    findings.push(...(await runOneQuery(engine, fixture, query)));
   }
-  return problems;
+  return findings;
 }
 
 async function runOneQuery(
   engine: ScriptureEngine,
-  fixture: CorpusFixture,
+  fixture: NormalizedCorpusFixture,
   query: string,
-): Promise<string[]> {
-  const problems: string[] = [];
+): Promise<GateFinding[]> {
+  const findings: GateFinding[] = [];
   const result = await engine.research(query);
   const results = result.kind === 'discovery' ? result.results : [];
-  const withinTop = fixture.expectedWithinTop ?? 10;
-  const top = results.slice(0, withinTop);
 
-  for (const expectation of fixture.expectedTop ?? []) {
-    const range = parseAnchorRef(expectation.reference);
-    if (!range) {
-      problems.push(
-        `${fixture.id}: fixture references "${expectation.reference}" which cannot be parsed`,
-      );
-      continue;
-    }
-    const hits = top.filter((entry) => {
-      const verseId = verseIdOf(entry.targetId);
-      return verseId !== null && verseId >= range.start && verseId <= range.end;
-    });
+  for (const expectation of fixture.expectedTop) {
+    const top = results.slice(0, expectation.withinTop);
+    const hits = top.filter((entry) => hitInRange(entry, expectation.range));
     if (hits.length === 0) {
-      problems.push(
-        `${fixture.id}: expected ${expectation.reference} within the top ${withinTop} for ` +
-          `"${query}", but it is absent`,
+      findings.push(
+        fixtureFinding(
+          fixture.id,
+          'G3_EXPECTED_TOP_ABSENT',
+          `expected ${expectation.ref} within the top ${expectation.withinTop} for "${query}", but it is absent`,
+          { query, ref: expectation.ref, withinTop: expectation.withinTop },
+        ),
       );
       continue;
     }
@@ -202,11 +593,16 @@ async function runOneQuery(
     ) {
       // Two concepts may legitimately anchor one verse; without this the
       // fixture measures whichever of them happens to survive.
-      problems.push(
-        `${fixture.id}: ${expectation.reference} ranks for "${query}" but carries no ` +
-          `reason labelled '${expectation.requiredReasonLabel}' (has: ` +
-          `${[...new Set(hits.flatMap((hit) => hit.reasons.map((r) => r.label)))].join(' | ')}). ` +
-          'The fixture is measuring a different concept than the one it covers.',
+      findings.push(
+        fixtureFinding(
+          fixture.id,
+          'G3_EXPECTED_TOP_REASON_LABEL',
+          `${expectation.ref} ranks for "${query}" but carries no reason labelled ` +
+            `'${expectation.requiredReasonLabel}' (has: ` +
+            `${[...new Set(hits.flatMap((hit) => hit.reasons.map((reason) => reason.label)))].join(' | ')}). ` +
+            'The fixture is measuring a different concept than the one it covers.',
+          { query, ref: expectation.ref, withinTop: expectation.withinTop },
+        ),
       );
     }
 
@@ -217,44 +613,83 @@ async function runOneQuery(
       )
     ) {
       // The Phase 1 trap, made explicit: right verse, wrong evidence.
-      problems.push(
-        `${fixture.id}: ${expectation.reference} ranks for "${query}" but carries no ` +
-          `'${expectation.requiredReasonFamily}' reason (has: ` +
-          `${[...new Set(hits.flatMap((hit) => hit.reasons.map((r) => r.family)))].join(', ')}). ` +
-          'The right passage for the wrong reason is still a failure.',
+      findings.push(
+        fixtureFinding(
+          fixture.id,
+          'G3_EXPECTED_TOP_REASON_FAMILY',
+          `${expectation.ref} ranks for "${query}" but carries no ` +
+            `'${expectation.requiredReasonFamily}' reason (has: ` +
+            `${[...new Set(hits.flatMap((hit) => hit.reasons.map((reason) => reason.family)))].join(', ')}). ` +
+            'The right passage for the wrong reason is still a failure.',
+          { query, ref: expectation.ref, withinTop: expectation.withinTop },
+        ),
       );
     }
   }
 
-  for (const forbidden of fixture.mustNotRank ?? []) {
-    const range = parseAnchorRef(forbidden.reference);
-    if (!range) continue;
-    const offender = top.find((entry) => {
-      const verseId = verseIdOf(entry.targetId);
-      return verseId !== null && verseId >= range.start && verseId <= range.end;
-    });
+  const withinTop = measuredWindow(fixture);
+  const top = results.slice(0, withinTop);
+  for (const forbidden of fixture.mustNotRank) {
+    const offender = top.find((entry) => hitInRange(entry, forbidden.range));
     if (offender) {
-      problems.push(
-        `${fixture.id}: ${forbidden.reference} must not rank for "${query}" but appears ` +
-          `at position ${top.indexOf(offender) + 1}. ${forbidden.why ?? ''}`.trim(),
+      findings.push(
+        fixtureFinding(
+          fixture.id,
+          'G3_MUST_NOT_RANK',
+          `${forbidden.ref} must not rank for "${query}" but appears at position ` +
+            `${top.indexOf(offender) + 1}. ${forbidden.why ?? ''}`.trim(),
+          { query, ref: forbidden.ref, withinTop },
+        ),
       );
     }
   }
 
-  return problems;
+  for (const preference of fixture.preferredOrder) {
+    const pairWindow = results.slice(0, preference.withinTop);
+    const above = pairWindow.find((entry) => hitInRange(entry, preference.aboveRange));
+    const below = pairWindow.find((entry) => hitInRange(entry, preference.belowRange));
+    // Absence is intentionally not a pairwise failure. expectedTop owns that assertion.
+    if (above && below && pairWindow.indexOf(above) >= pairWindow.indexOf(below)) {
+      findings.push(
+        fixtureFinding(
+          fixture.id,
+          'G3_PREFERRED_ORDER',
+          `expected ${preference.above} above ${preference.below} within the top ${preference.withinTop} ` +
+            `for "${query}", but found them at positions ${pairWindow.indexOf(above) + 1} and ` +
+            `${pairWindow.indexOf(below) + 1}`,
+          {
+            query,
+            above: preference.above,
+            below: preference.below,
+            withinTop: preference.withinTop,
+          },
+        ),
+      );
+    }
+  }
+
+  return findings;
 }
 
 export async function corpusGoldenGate(
   engine: ScriptureEngine,
   fixtures: readonly CorpusFixture[],
 ): Promise<GateResult> {
-  const active = fixtures.filter((fixture) => fixture.status === 'active' && fixture.query);
-  const pending = fixtures.filter((fixture) => fixture.status === 'pending' && fixture.query);
+  const validated = fixtures.map(normaliseCorpusFixture);
+  const runnable = validated.flatMap((result) => result.fixture ? [result.fixture] : []);
+  const active = runnable.filter((fixture) => fixture.status === 'active' && fixture.query);
+  const pending = runnable.filter((fixture) => fixture.status === 'pending' && fixture.query);
+  const metrics = {
+    activeCorpusFixtures: active.length,
+    pendingCorpusFixtures: pending.length,
+    expectedTopAssertions: runnable.reduce((count, fixture) => count + fixture.expectedTop.length, 0),
+    preferredOrderAssertions: runnable.reduce((count, fixture) => count + fixture.preferredOrder.length, 0),
+    fixtureValidationFailures: validated.reduce((count, result) => count + result.findings.length, 0),
+  };
 
-  const findings: GateFinding[] = [];
+  const findings: GateFinding[] = validated.flatMap((result) => result.findings);
   for (const fixture of active) {
-    const problems = await runCorpusFixture(engine, fixture);
-    for (const problem of problems) findings.push({ message: problem, subjects: [fixture.id] });
+    findings.push(...(await runNormalisedFixture(engine, fixture)));
   }
 
   if (findings.length > 0) {
@@ -263,6 +698,7 @@ export async function corpusGoldenGate(
       'Golden regression (corpus)',
       `${findings.length} corpus fixture expectation(s) failed`,
       findings,
+      metrics,
     );
   }
 
@@ -271,18 +707,21 @@ export async function corpusGoldenGate(
   // should be promoted — and nobody would notice if it were never executed.
   const nowPassing: string[] = [];
   for (const fixture of pending) {
-    const problems = await runCorpusFixture(engine, fixture);
-    if (problems.length === 0) nowPassing.push(fixture.id);
+    const pendingFindings = await runNormalisedFixture(engine, fixture);
+    if (pendingFindings.length === 0) nowPassing.push(fixture.id);
   }
 
   const promote =
     nowPassing.length > 0
       ? ` — PENDING FIXTURES NOW PASSING, promote to active: ${nowPassing.join(', ')}`
       : '';
-  return pass(
+  return {
+    ...pass(
     'G3-golden',
     'Golden regression (corpus)',
     `${active.length} corpus fixture(s) hold; ${pending.length} pending${promote}`,
-    { activeCorpusFixtures: active.length, pendingCorpusFixtures: pending.length },
-  );
+    metrics,
+    ),
+    promotionCandidates: nowPassing,
+  };
 }

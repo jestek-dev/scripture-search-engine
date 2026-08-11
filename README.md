@@ -123,6 +123,55 @@ npm run verify      # typecheck + unit tests + gauntlet
 
 Individual steps: `npm run typecheck`, `npm test`, `npm run gauntlet`.
 
+## Workbench v1.5
+
+The private `workbench` workspace is a localhost-only review tool for the
+verified release artifact. It records human judgments and can compile them
+into pending G3 fixtures. It never changes the reviewed SQLite artifact.
+
+Use this sequence for a complete local review. Keep the server terminal open;
+run the report and final verification commands from another terminal when the
+steps below say to do so.
+
+```bash
+npm ci
+npm run fetch-artifact --workspace workbench
+npm run serve --workspace workbench
+
+# Open http://127.0.0.1:8787/?view=health. For a direct spot check:
+curl "http://127.0.0.1:8787/api/search?q=hearing%20and%20doing"
+curl "http://127.0.0.1:8787/api/passage?ref=James%201%3A22-25"
+
+# In the browser, create a review case, select Start review, and record an
+# Essential, Helpful, Not relevant, Missing, or pairwise judgment; then select
+# Changes.
+# Choose Preview fixture changes, inspect the exact diff and checklist, enter
+# the full preview digest, and choose Apply fixture changes.
+
+# In another terminal, after the UI apply succeeds:
+npm run gauntlet:report
+
+# Back in the browser, refresh Health/Changes. Only when the fresh report has
+# a passing G3-golden result that names the pending fixture, choose Preview
+# promotion, inspect the status-only diff and evidence, enter its full digest,
+# and choose Promote fixture.
+
+# After promotion, from the repository root, require exact ADMIT:
+npm run verify -- --require-admit
+```
+
+`npm run gauntlet:report` writes the identity-bound machine evidence at
+`eval/.runs/gauntlet-report.json`; promotion refuses stale, malformed, or
+non-matching G3 evidence. Helpful-only judgments remain review history and do
+not create a fixture expectation. The UI applies generated fixture and
+fixture-subset changes only after an explicit digest confirmation, and it
+never changes ontology, budgets, engine source, commits, or remotes in v1.5.
+
+For interrupted operations, stale locks, malformed local logs, degraded
+startup, and safe diagnostics, see
+[docs/workbench-recovery.md](docs/workbench-recovery.md). The broader product
+roadmap is [docs/workbench-refinement-studio-plan.md](docs/workbench-refinement-studio-plan.md).
+
 ## Status
 
 **Phases 0–4 complete. All eleven gates live, verdict ADMIT.** Phase 5 (wiring

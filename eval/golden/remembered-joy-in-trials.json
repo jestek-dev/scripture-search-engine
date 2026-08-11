@@ -4,7 +4,7 @@
   "status": "active",
   "note": [
     "REMEMBERED PHRASING. Measured against the full artifact on 2026-07-31,",
-    "this query did not reach James 1:2 by any lexical rung — the wording",
+    "this query did not reach James 1:2 by any lexical rung â€” the wording",
     "searchers remember is NIV/ESV and the corpus is the WEB.",
     "",
     "requiredReasonFamily is concept_anchor on purpose. Token overlap could",
@@ -15,7 +15,8 @@
   "expectedTop": [
     {
       "reference": "James 1:2",
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Joy in trials"
     }
   ],
   "expectedWithinTop": 5

@@ -7,14 +7,17 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:browser": "playwright test",
     "fetch-artifact": "tsx src/fetchArtifact.ts",
     "serve": "tsx src/server.ts",
     "compile-judgments": "tsx src/compileJudgments.ts"
   },
   "dependencies": {
-    "@jestek-dev/scripture-engine": "*"
+    "@jestek-dev/scripture-engine": "*",
+    "yaml": "2.8.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@types/node": "24.10.1",
     "tsx": "4.23.1",
     "typescript": "5.9.3",

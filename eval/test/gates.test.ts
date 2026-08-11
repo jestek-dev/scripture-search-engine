@@ -154,46 +154,63 @@ describe('Admission Report', () => {
     ).toBe('REJECT');
   });
 
-  it('flags an addition that changed nothing measurable', () => {
+  it('does not infer product impact that the gauntlet does not measure', () => {
     expect(
       decideVerdict({
         gates: [pass('G2-determinism', 'D', 'ok')],
-        changedOutcomes: false,
       }),
-    ).toBe('NO_MEASURABLE_EFFECT');
+    ).toBe('ADMIT');
   });
 
   it('lists not-applicable gates so an unrun check is never mistaken for a pass', () => {
     const report = buildReport({
       gates: [notApplicable('G8-noise-probes', 'Noise probes', 'no artifact yet')],
     });
-    expect(report.markdown).toContain('Not yet running');
+    expect(report.markdown).toContain('Unavailable gates');
     expect(report.markdown).toContain('G8-noise-probes');
   });
 });
 
 describe('G3 concept fixture coverage', () => {
+  const coveredConcept = (id: string, label = id) => ({ id, label });
   const fixture = (
     id: string,
     overrides: Partial<CorpusFixture> = {},
-  ): CorpusFixture => ({ id, status: 'active', query: `query for ${id}`, ...overrides });
+  ): CorpusFixture => ({
+    id,
+    status: 'active',
+    query: `query for ${id}`,
+    expectedTop: [{
+      reference: 'John 3:16',
+      requiredReasonFamily: 'concept_anchor',
+      requiredReasonLabel: `Theme: ${id}`,
+    }],
+    ...overrides,
+  });
 
   it('fails when a concept has no fixture at all', () => {
-    const result = conceptCoverageGate(['worship', 'praise'], [fixture('worship')]);
+    const result = conceptCoverageGate([coveredConcept('worship'), coveredConcept('praise')], [fixture('worship')]);
     expect(result.status).toBe('fail');
     expect(result.findings?.[0]?.subjects).toEqual(['praise']);
   });
 
   it('names every uncovered concept at once rather than the first', () => {
-    const result = conceptCoverageGate(['a', 'b', 'c'], [fixture('b')]);
+    const result = conceptCoverageGate([coveredConcept('a'), coveredConcept('b'), coveredConcept('c')], [fixture('b')]);
     expect(result.status).toBe('fail');
     expect(result.findings?.map((finding) => finding.subjects?.[0])).toEqual(['a', 'c']);
   });
 
   it('accepts coverage declared through coversConcepts under a different name', () => {
     const result = conceptCoverageGate(
-      ['obedience-to-the-word'],
-      [fixture('hearing-and-doing', { coversConcepts: ['obedience-to-the-word'] })],
+      [coveredConcept('obedience-to-the-word', 'Hearing and doing')],
+      [fixture('hearing-and-doing', {
+        coversConcepts: ['obedience-to-the-word'],
+        expectedTop: [{
+          reference: 'James 1:22',
+          requiredReasonFamily: 'concept_anchor',
+          requiredReasonLabel: 'Theme: Hearing and doing',
+        }],
+      })],
     );
     expect(result.status).toBe('pass');
   });
@@ -201,27 +218,50 @@ describe('G3 concept fixture coverage', () => {
   it('does not count a PENDING fixture as coverage', () => {
     // A pending fixture cannot fail, so treating it as coverage would let a
     // concept ship measured by a test that never grades it.
-    const result = conceptCoverageGate(['worship'], [fixture('worship', { status: 'pending' })]);
+    const result = conceptCoverageGate([coveredConcept('worship')], [fixture('worship', { status: 'pending' })]);
     expect(result.status).toBe('fail');
   });
 
   it('does not count a fixture with no query as coverage', () => {
-    const result = conceptCoverageGate(['worship'], [fixture('worship', { query: undefined })]);
+    const result = conceptCoverageGate([coveredConcept('worship')], [fixture('worship', { query: undefined })]);
     expect(result.status).toBe('fail');
   });
 
   it('reports a fixture claiming a concept that no longer exists', () => {
     const result = conceptCoverageGate(
-      ['worship'],
+      [coveredConcept('worship')],
       [fixture('worship'), fixture('old', { coversConcepts: ['renamed-away'] })],
     );
     expect(result.status).toBe('fail');
-    expect(result.summary).toContain('do not exist');
+    expect(result.findings?.[0]?.message).toContain('no concept "renamed-away" exists');
+  });
+
+  it('ignores unrelated fixture ids unless coversConcepts explicitly claims them', () => {
+    const result = conceptCoverageGate(
+      [coveredConcept('worship')],
+      [fixture('worship'), fixture('ranking-invariants')],
+    );
+    expect(result.status).toBe('pass');
   });
 
   it('is not-applicable rather than passing when no concepts exist', () => {
     // An unrun check must never look like a passing one.
     expect(conceptCoverageGate([], []).status).toBe('not-applicable');
+  });
+
+  it('rejects a declaration without the exact covered concept anchor label', () => {
+    const result = conceptCoverageGate(
+      [coveredConcept('grace-not-earned', 'Grace, not earned')],
+      [fixture('grace-not-earned', {
+        expectedTop: [{
+          reference: 'Ephesians 2:8',
+          requiredReasonFamily: 'concept_anchor',
+          requiredReasonLabel: 'Theme: Salvation',
+        }],
+      })],
+    );
+    expect(result.status).toBe('fail');
+    expect(result.findings?.[0]?.message).toContain('exact label');
   });
 });
 

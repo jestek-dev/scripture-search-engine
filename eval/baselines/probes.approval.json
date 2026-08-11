@@ -1,0 +1,21 @@
+{
+  "schema": "scripture-search-engine/probe-baseline-approval/v1",
+  "baselineSha256": "6f3c6c0c5ef11daad7d88ead586160db151eb017ee23ee60f314137794d36fda",
+  "probesSha256": "3d437b030362d5e717a048cf2b163129b7a530a49fc0f2921c0de37e8aaf8d50",
+  "engine": {
+    "engineVersion": "0.9.0",
+    "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+    "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a"
+  },
+  "reviewer": "independent admission baseline reviewer",
+  "reviewedAt": "2026-08-10",
+  "rationale": "The reviewed probe movement sharpens canonical anchors, reduces weak-signal dominance where applicable, and preserves adversarial suppression without a silent product regression.",
+  "priorProvenance": {
+    "baselineGitBlobSha1": "1fc76aa59d987877849a96642604981b0d858145",
+    "engine": {
+      "engineVersion": "0.7.1",
+      "corpusFingerprint": "d4835d2052b6923f253fce337e77952571f6618a1799911f17c1548ee80c12c8",
+      "layerFingerprint": null
+    }
+  }
+}

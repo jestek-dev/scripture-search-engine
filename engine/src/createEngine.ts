@@ -19,6 +19,7 @@ import {
 import { ENGINE_VERSION, TOKENIZER_VERSION } from './config/engineVersion.js';
 import {
   mergeCandidates,
+  isMeaningfulPhraseFragment,
   phraseEvidence,
   queryIdfTotal,
   referenceLabel,
@@ -28,7 +29,9 @@ import {
 } from './intents/lexical.js';
 import {
   conceptAnchorEvidence,
+  conceptCueEvidence,
   crossReferenceEvidence,
+  isThinBareWordConceptCue,
   passageTermEvidence,
   relatedConceptEvidence,
   translationVariantEvidence,
@@ -182,18 +185,25 @@ export async function createEngine(
           const querySignificant = significantWords(query).length;
           const fragmentSignificant = significantWords(fragment.fragment).length;
           const useSignificant = querySignificant > 0;
-          for (const match of fragment.matches) {
-            verses.set(targetIdFor(match), match);
-            contributions.push({
-              verse: match,
-              evidence: [
-                phraseEvidence(
-                  fragment.fragment,
-                  useSignificant ? fragmentSignificant : fragment.fragmentWords,
-                  useSignificant ? querySignificant : fragment.queryWords,
-                ),
-              ],
-            });
+          // A fallback containing only one significant word is token overlap,
+          // not phrase evidence. Adding both would count the same thin match
+          // twice and can lift an irrelevant stopword-heavy fragment into the
+          // ranked window ("is close to" was the motivating case).
+          const fragmentIsPhrase = isMeaningfulPhraseFragment(fragment.fragment, query);
+          if (fragmentIsPhrase) {
+            for (const match of fragment.matches) {
+              verses.set(targetIdFor(match), match);
+              contributions.push({
+                verse: match,
+                evidence: [
+                  phraseEvidence(
+                    fragment.fragment,
+                    useSignificant ? fragmentSignificant : fragment.fragmentWords,
+                    useSignificant ? querySignificant : fragment.queryWords,
+                  ),
+                ],
+              });
+            }
           }
         }
       }
@@ -202,12 +212,14 @@ export async function createEngine(
     // Steps 3-4 — tokens with proximity. Normalization is inherent: the
     // shared tokenizer folds inflection and archaic forms on both sides.
     const tokens = significantWords(query);
+    let tokenFrequencies: ReadonlyMap<string, number> = new Map();
+    let tokenIdfTotal = 0;
     if (tokens.length > 0) {
-      const frequencies = await repository.tokenDocumentCounts(tokens);
-      const idfTotal = queryIdfTotal(tokens, frequencies, documentCount);
+      tokenFrequencies = await repository.tokenDocumentCounts(tokens);
+      tokenIdfTotal = queryIdfTotal(tokens, tokenFrequencies, documentCount);
       for (const match of await repository.searchTokens(tokens, documentCount)) {
         verses.set(targetIdFor(match), match);
-        contributions.push({ verse: match, evidence: tokenEvidence(match, idfTotal) });
+        contributions.push({ verse: match, evidence: tokenEvidence(match, tokenIdfTotal) });
       }
     }
 
@@ -245,11 +257,36 @@ export async function createEngine(
     if (concepts && tokens.length > 0) {
       const matched = await concepts.matchConcepts(tokens);
       if (matched.length > 0) {
-        const specificity = new Map(
-          matched.map((match) => [match.conceptId, match.matchedTokenCount]),
-        );
+        const bareCueIdfShare = (phrase: string): number => {
+          if (tokenIdfTotal <= 0) return 1;
+          const phraseToken = significantWords(phrase)[0];
+          if (!phraseToken) return 1;
+          const df = tokenFrequencies.get(phraseToken) ?? 0;
+          return Math.log(1 + documentCount / Math.max(1, df)) / tokenIdfTotal;
+        };
+        const matchedByConcept = new Map(matched.map((match) => [match.conceptId, match]));
+        const authoritativeConceptIds = matched
+          .filter(
+            (match) =>
+              !isThinBareWordConceptCue(
+                match.matchedPhrase,
+                tokens.length,
+                bareCueIdfShare(match.matchedPhrase),
+              ),
+          )
+          .map((match) => match.conceptId);
+        const authoritativeConceptSet = new Set(authoritativeConceptIds);
         const anchors = await concepts.anchorVerses(matched.map((match) => match.conceptId));
         for (const anchor of anchors) {
+          const match = matchedByConcept.get(anchor.conceptId);
+          const matchedTokenCount = match?.matchedTokenCount ?? 1;
+          const weakCue =
+            match !== undefined &&
+            isThinBareWordConceptCue(
+              match.matchedPhrase,
+              tokens.length,
+              bareCueIdfShare(match.matchedPhrase),
+            );
           verses.set(targetIdFor(anchor), anchor);
           // Remember which curated span this verse came from, so contiguous
           // verses of ONE anchor can be presented as the passage a human named.
@@ -261,44 +298,48 @@ export async function createEngine(
           contributions.push({
             verse: anchor,
             evidence: [
-              conceptAnchorEvidence(
-                anchor,
-                specificity.get(anchor.conceptId) ?? 1,
-                tokens.length,
-              ),
+              weakCue
+                ? conceptCueEvidence(anchor, matchedTokenCount, tokens.length)
+                : conceptAnchorEvidence(anchor, matchedTokenCount, tokens.length),
             ],
           });
         }
 
-        // One hop through the curated graph, filed as weak evidence.
-        const relatedIds = await concepts.relatedConcepts(
-          matched.map((match) => match.conceptId),
-        );
-        for (const anchor of await concepts.anchorVerses(relatedIds)) {
-          verses.set(targetIdFor(anchor), anchor);
-          contributions.push({ verse: anchor, evidence: [relatedConceptEvidence(anchor)] });
-        }
+        if (authoritativeConceptIds.length > 0) {
+          // One hop through the curated graph, filed as weak evidence.
+          const relatedIds = await concepts.relatedConcepts(authoritativeConceptIds);
+          for (const anchor of await concepts.anchorVerses(relatedIds)) {
+            verses.set(targetIdFor(anchor), anchor);
+            contributions.push({ verse: anchor, evidence: [relatedConceptEvidence(anchor)] });
+          }
 
-        // Cross-reference expansion seeded ONLY from concept anchors, never
-        // from arbitrary lexical hits. Seeding from weak matches is how a
-        // curated graph turns into a random walk.
-        const seeds = [...new Set(anchors.map((anchor) => anchor.verseId))].sort(
-          (a, b) => a - b,
-        );
-        const seedLabels = new Map(anchors.map((anchor) => [anchor.verseId, referenceLabel(anchor)]));
-        const maxVotes = await concepts.maxCrossReferenceVotes();
-        for (const edge of await concepts.expandCrossReferences(seeds)) {
-          verses.set(targetIdFor(edge), edge);
-          contributions.push({
-            verse: edge,
-            evidence: [
-              crossReferenceEvidence(
-                edge,
-                maxVotes,
-                seedLabels.get(edge.fromVerseId) ?? 'a matched passage',
-              ),
-            ],
-          });
+          // Cross-reference expansion seeded ONLY from authoritative concept
+          // anchors, never from arbitrary lexical hits or bare-word theme cues.
+          // Seeding from weak matches is how a curated graph turns into a
+          // random walk.
+          const authoritativeAnchors = anchors.filter((anchor) =>
+            authoritativeConceptSet.has(anchor.conceptId),
+          );
+          const seeds = [...new Set(authoritativeAnchors.map((anchor) => anchor.verseId))].sort(
+            (a, b) => a - b,
+          );
+          const seedLabels = new Map(
+            authoritativeAnchors.map((anchor) => [anchor.verseId, referenceLabel(anchor)]),
+          );
+          const maxVotes = await concepts.maxCrossReferenceVotes();
+          for (const edge of await concepts.expandCrossReferences(seeds)) {
+            verses.set(targetIdFor(edge), edge);
+            contributions.push({
+              verse: edge,
+              evidence: [
+                crossReferenceEvidence(
+                  edge,
+                  maxVotes,
+                  seedLabels.get(edge.fromVerseId) ?? 'a matched passage',
+                ),
+              ],
+            });
+          }
         }
       }
     }
