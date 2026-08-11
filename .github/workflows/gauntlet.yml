@@ -32,6 +32,13 @@ jobs:
 
       - run: npm ci
 
+      - name: Build engine
+        # `npm ci` never runs the engine's prepack build, so a fresh checkout
+        # has no engine/dist. In-process tests alias the engine SOURCE, but the
+        # pipeline and eval suites spawn subprocesses that resolve the package
+        # by its `main` — they need the built output present.
+        run: npm run build --workspace engine
+
       - name: Typecheck
         run: npm run typecheck
 

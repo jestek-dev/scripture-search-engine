@@ -189,6 +189,17 @@ const WINDOWS_DEVICE_NAME = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i;
 const LOCK_FILE_NAME = 'mutation-apply.lock';
 const RECLAIM_GUARD_NAME = 'mutation-apply.reclaim-guard';
 const LOCK_STALE_AFTER_MS = 5 * 60 * 1000;
+
+/**
+ * Owner ids of repository locks currently held by this module instance. A lock
+ * record on disk that names this process's pid but is absent here is provably
+ * abandoned — for example a transaction that aborted after its root was
+ * replaced by a junction, leaving release unable to reach the lock file by
+ * path. Liveness of another process's lock is still judged by its pid; this
+ * registry only lets a live process reclaim its own orphaned record instead of
+ * treating it as an active owner forever.
+ */
+const heldLockOwnerIds = new Set<string>();
 const TEST_SYNC_FAILURE_ENV = 'SCRIPTURE_APPLY_JOURNAL_TEST_SYNC_FAILURE';
 const TEST_RECLAIM_PAUSE_DIR_ENV = 'SCRIPTURE_APPLY_JOURNAL_TEST_RECLAIM_PAUSE_DIR';
 const TEST_GUARD_RACE_PAUSE_DIR_ENV = 'SCRIPTURE_APPLY_JOURNAL_TEST_GUARD_RACE_PAUSE_DIR';
@@ -1153,8 +1164,17 @@ function pidIsAlive(pid: number): boolean {
   }
 }
 
+function lockOwnerIsActive(owner: LockOwner): boolean {
+  // Our own pid is always alive, so pid liveness cannot distinguish a lock we
+  // hold from one this process abandoned (e.g. after a transaction-root
+  // replacement made the lock path unreachable during release). The held-owner
+  // registry is authoritative for our own records; other pids keep the
+  // conservative liveness probe.
+  return owner.pid === process.pid ? heldLockOwnerIds.has(owner.ownerId) : pidIsAlive(owner.pid);
+}
+
 async function reclaimStaleLock(layout: JournalLayout, owner: LockOwner): Promise<boolean> {
-  if (pidIsAlive(owner.pid)) return false;
+  if (lockOwnerIsActive(owner)) return false;
   const claim = path.join(layout.lockDirectory, `${LOCK_FILE_NAME}.${owner.ownerId}.${randomUUID()}.reclaim`);
   try {
     await rename(layout.lockFile, claim);
@@ -1482,6 +1502,7 @@ async function acquireRepositoryLock(layout: JournalLayout): Promise<HeldLock> {
         fail('lock_busy', 'Mutation lock reclamation won the acquisition race.');
       }
       await syncDirectory(layout.lockDirectory);
+      heldLockOwnerIds.add(owner.ownerId);
       return { file: layout.lockFile, owner, handle };
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
@@ -1502,6 +1523,7 @@ async function acquireRepositoryLock(layout: JournalLayout): Promise<HeldLock> {
 }
 
 async function releaseRepositoryLock(lock: HeldLock): Promise<void> {
+  heldLockOwnerIds.delete(lock.owner.ownerId);
   await lock.handle.close();
   try {
     const current = JSON.parse(await readFile(lock.file, 'utf8')) as unknown;
