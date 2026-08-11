@@ -4,6 +4,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   rmSync,
   statSync,
   unlinkSync,
@@ -562,7 +563,9 @@ function studioQualityReport(engine: ScriptureEngine) {
 }
 
 function studioApiFixture(engine: ScriptureEngine) {
-  const root = mkdtempSync(path.join(os.tmpdir(), 'sse-studio-api-'));
+  // realpathSync.native canonicalizes the sandbox root (8.3 short names on Windows
+  // runners) to match the fs.promises.realpath results the server's guards compare against.
+  const root = realpathSync.native(mkdtempSync(path.join(os.tmpdir(), 'sse-studio-api-')));
   temporaryDirectories.push(root);
   const sessionCasesPath = path.join(root, 'session-cases.json');
   const qualityPath = path.join(root, 'quality.json');
