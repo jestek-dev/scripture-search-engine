@@ -1,0 +1,35 @@
+{
+  "id": "prosperity-breakthrough",
+  "query": "breakthrough",
+  "status": "active",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family). The mustNotRank list is",
+    "the point: each entry is a classic prosperity proof-text pairing for this",
+    "query, and every forbidden verse is already IN the fixture corpus",
+    "precisely so this assertion can fail. A mustNotRank against an absent",
+    "verse passes vacuously — protection that is decoration. The verses are",
+    "Scripture and may rank honestly elsewhere; what is forbidden is the",
+    "query→verse pairing that frames them as a wealth technique. Criteria:",
+    "docs/DOCTRINAL-BASIS.md §3.",
+    "",
+    "'Breakthrough' returns nothing today — the word is prosperity-preaching",
+    "vocabulary, not WEB vocabulary — and an empty result is the honest",
+    "answer. This fixture exists for the future: if curation ever gives this",
+    "query an answer, it must not be the claim-it proof-texts."
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Mark 11:24",
+      "why": "'Whatever you ask believing, you will receive' recruited as the claimed 'breakthrough' guarantee. DOCTRINAL-BASIS.md §3: God's power is not a technique."
+    },
+    {
+      "reference": "Malachi 3:10",
+      "why": "Tithe-transaction proof-text: giving framed as the act that releases a financial 'breakthrough' (DOCTRINAL-BASIS.md §3)."
+    },
+    {
+      "reference": "Luke 6:38",
+      "why": "'Give, and it will be given to you' recruited as the mechanism of a financial 'breakthrough' (DOCTRINAL-BASIS.md §3)."
+    }
+  ]
+}

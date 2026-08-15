@@ -1,0 +1,36 @@
+{
+  "id": "prosperity-sow-a-seed",
+  "query": "sow a seed",
+  "status": "active",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family). The mustNotRank list is",
+    "the point: each entry is a classic prosperity proof-text pairing for this",
+    "query, and every forbidden verse is already IN the fixture corpus",
+    "precisely so this assertion can fail. A mustNotRank against an absent",
+    "verse passes vacuously — protection that is decoration. The verses are",
+    "Scripture and may rank honestly elsewhere; what is forbidden is the",
+    "query→verse pairing that frames them as a wealth technique. Criteria:",
+    "docs/DOCTRINAL-BASIS.md §3.",
+    "",
+    "'Sow a seed' is seed-faith teaching's own vocabulary (the Akropong",
+    "statement quotes it in its definition), which makes this the family's",
+    "sharpest query: today it honestly returns agricultural and resurrection",
+    "passages, and this fixture holds that no future data addition may teach",
+    "it the giving-as-investment answer instead."
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Luke 6:38",
+      "why": "'Give, and it will be given to you' recruited as the return on a planted 'seed' — the seed-faith pump verse (DOCTRINAL-BASIS.md §3). It ranks honestly for giving queries, including the exact-phrase search of its own words."
+    },
+    {
+      "reference": "Malachi 3:10",
+      "why": "Tithe-transaction proof-text: the offering framed as a seed that obligates a blessing in return — the mechanism the Akropong statement names (DOCTRINAL-BASIS.md §3)."
+    },
+    {
+      "reference": "Mark 11:24",
+      "why": "'Whatever you ask believing, you will receive' recruited as the harvest guaranteed to the sown seed. DOCTRINAL-BASIS.md §3: God's power is not a technique."
+    }
+  ]
+}
