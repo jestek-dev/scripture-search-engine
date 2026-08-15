@@ -155,6 +155,8 @@ export interface AdmissionPreviewInput {
   readonly gauntlet: AdmissionGauntletReference;
   /** Trusted test/integration boundary. Production callers omit this and use the verified disk loader. */
   readonly trustedGauntletLoader?: TrustedGauntletLoader;
+  /** Trusted test/integration clock. Production callers omit this so freshness is judged on the real clock. */
+  readonly now?: () => Date;
   readonly reviewedComparisonQueries: readonly string[];
   readonly fixturePromotions?: readonly FixturePromotionPlan[];
   readonly probeBaseline?: ProbeBaselineInput;
@@ -555,7 +557,7 @@ function parseGauntletBytes(
   reportPath: string,
   expectation: AdmissionGauntletExpectation | ReleaseGauntletExpectation,
   targetKind: 'candidate' | 'release' = 'candidate',
-  now = new Date(),
+  now: Date,
 ): { readonly parsed: GauntletMachineReport; readonly verified: VerifiedAdmissionGauntlet | VerifiedReleaseGauntlet } {
   let parsedValue: unknown;
   try { parsedValue = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytesValue)); }
@@ -734,7 +736,7 @@ async function loadVerifiedGauntlet(
   const loaded = input.trustedGauntletLoader === undefined
     ? await defaultGauntletLoader(input.repoRoot, reportPath)
     : await input.trustedGauntletLoader(input.repoRoot, reportPath, expectation);
-  return parseGauntletBytes(loaded, reportPath, expectation).verified as VerifiedAdmissionGauntlet;
+  return parseGauntletBytes(loaded, reportPath, expectation, 'candidate', input.now?.() ?? new Date()).verified as VerifiedAdmissionGauntlet;
 }
 
 async function validateCandidateEvidence(repoRoot: string, candidate: AdmissionCandidateBinding): Promise<void> {
@@ -1342,6 +1344,7 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
     proposal: input.proposal, candidate: input.candidate, comparison: input.comparison,
     comparisonBinding: input.comparisonBinding, gauntlet: input.gauntlet,
     trustedGauntletLoader: input.trustedGauntletLoader,
+    now: dependencies.now ?? input.now,
     reviewedComparisonQueries: input.reviewedComparisonQueries, fixturePromotions: input.fixturePromotions,
     probeBaseline: input.probeBaseline,
   };
@@ -1423,7 +1426,7 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
     await dependencies.onPhase?.('before-manifest', { worktree, manifestPath });
     commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git));
 
-    const admittedAt = (dependencies.now ?? (() => new Date()))().toISOString();
+    const admittedAt = (dependencies.now?.() ?? new Date()).toISOString();
     const body = manifestWithoutDigest({
       schemaVersion: 1, kind: 'scripture-search-admission', admissionKey: key, admittedAt,
       previewDigest: preview.digest, proposalDigest: preview.proposalDigest, linkedCaseIds, provenance,
