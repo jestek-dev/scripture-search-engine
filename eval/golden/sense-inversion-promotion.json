@@ -1,0 +1,33 @@
+{
+  "id": "sense-inversion-promotion",
+  "query": "promotion",
+  "status": "pending",
+  "note": [
+    "SENSE-INVERSION FIXTURE (sense-inversion family) — PENDING on purpose.",
+    "The 2026-08-15 doctrinal audit found \"promotion\" answered by exactly one",
+    "verse: Proverbs 3:35, where the query word appears only in irony —",
+    "promotion is what fools get, and it is shame. An empty result is honest:",
+    "it says the canon does not speak this vocabulary. An ironic SOLE result",
+    "is not: with nothing above or beside it, the ironic frame reads as the",
+    "canon's word to a promotion-seeker. The verse is Scripture and ranks",
+    "honestly for wisdom, folly, and shame queries, and for the exact-phrase",
+    "search of its own words; what is forbidden is this query→verse pairing.",
+    "The forbidden verse is verified IN the fixture corpus, so the assertion",
+    "cannot pass vacuously — a mustNotRank against an absent verse is",
+    "protection that is decoration.",
+    "",
+    "Pending because the pairing is live at HEAD (Proverbs 3:35 is the sole",
+    "result, at #1): fixtures-first, exactly like prosperity-contentment.json.",
+    "The honest fix is not suppression alone — it is teaching the engine what",
+    "a promotion-seeker should find (e.g. Psalm 75:6-7, exaltation comes from",
+    "God, once that passage's chapter joins the corpus). When that lands, the",
+    "Admission Report names this fixture for promotion to active."
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Proverbs 3:35",
+      "why": "'Shame will be the promotion of fools' — the query word appears only in an ironic frame, and as the sole answer it reads as the canon's word on promotion. An empty result is honest; an ironic sole result is not. The verse ranks honestly for folly and shame queries and for the exact-phrase search of its own words."
+    }
+  ]
+}

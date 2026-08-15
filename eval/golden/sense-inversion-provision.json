@@ -1,0 +1,35 @@
+{
+  "id": "sense-inversion-provision",
+  "query": "provision",
+  "status": "pending",
+  "note": [
+    "SENSE-INVERSION FIXTURE (sense-inversion family) — PENDING on purpose.",
+    "The 2026-08-15 doctrinal audit found \"provision\" answered FIRST by",
+    "Romans 13:14 — 'make no provision for the flesh' — the query word in its",
+    "opposite frame: a seeker of God's provision receives the word as a",
+    "prohibition. Romans 13:14 is Scripture and ranks honestly on its own",
+    "words; the deviation is that the inverted sense LEADS. The assertion",
+    "follows the repo's shape for this problem: the inverted sense must",
+    "simply not lead, so Matthew 6:11 (daily bread — provision asked of the",
+    "Father) is preferred above Romans 13:14. Both references are verified IN",
+    "the fixture corpus, so the pair cannot pass vacuously by absence.",
+    "",
+    "Pending because the inversion is live at HEAD (Romans 13:14 at #1,",
+    "Matthew 6:11 at #9): fixtures-first, exactly like",
+    "prosperity-contentment.json. When curation teaches the honest provision",
+    "frame, the Admission Report names this fixture for promotion to active.",
+    "",
+    "Philippians 4:19 ('my God will supply every need') was probed and does",
+    "NOT rank for this query at HEAD — its words carry no 'provision' token —",
+    "so no expectedTop is asserted for it here: an assertion that cannot",
+    "fail is decoration. It is the natural expectedTop candidate when a",
+    "provision concept pack lands; add it then, with its anchor reason."
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Matthew 6:11",
+      "below": "Romans 13:14"
+    }
+  ]
+}
