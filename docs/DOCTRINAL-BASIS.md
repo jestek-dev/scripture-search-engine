@@ -193,11 +193,19 @@ the way every admission has always landed — through the gauntlet and his PR
 merge. Nothing in this document creates an automatic pass; at most it creates
 a citable reason for a refusal.
 
-**Planned follow-up:** a per-source doctrinal review record — one row per
-source: who reviewed, when, verdict, which criterion of this document applied
-— extending the existing manifest precedent. The gauntlet would check that
-the record *exists* for every source, exactly as it presence-checks other
-human decisions; it would never score whether the theology is "correct,"
-which would violate CLAUDE.md #6. The record template can be drafted at any
-time; the per-source rulings are Jesse's, and backfill for the existing
-manifests awaits them.
+**The wired mechanism (2026-08-15):** two reviewed data files carry this
+standard into the gauntlet. `ontology/doctrinal-reviews.yaml` holds one human
+review record per source manifest (who reviewed, when, a closed-vocabulary
+verdict, which criterion applied — merging the PR that adds or edits a row is
+the review act), and `ontology/flagged-pairings.yaml` lists the §3 proof-texts
+with their known material-return recruitments plus the material-frame
+vocabulary that scopes the scan. A deterministic sub-check (merged into gates
+G1 and G4) presence-checks the records against the manifests and scans curated
+anchors for watchlist pairings; anything it finds is a **red flag** — a loud
+`DOCTRINAL RED FLAG` line in the Admission Report — and a missing or
+unreadable data file is itself flagged rather than skipped. A flag never flips
+the verdict: like G1b-reachability it warns and never blocks, because the flag
+is information for the human merge, and the check never scores whether
+theology is "correct" (CLAUDE.md #6) — it only reports that a recorded human
+decision is missing, orphaned, or contradicted by a pairing a human said to
+watch for.
