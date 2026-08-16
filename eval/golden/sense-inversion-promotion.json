@@ -1,0 +1,37 @@
+{
+  "id": "sense-inversion-promotion",
+  "query": "promotion",
+  "status": "pending",
+  "note": [
+    "SENSE-INVERSION FIXTURE (sense-inversion family) — PENDING on purpose.",
+    "The 2026-08-15 doctrinal audit found \"promotion\" answered by exactly one",
+    "verse: Proverbs 3:35, where the query word appears only in irony —",
+    "promotion is what fools get, and it is shame.",
+    "",
+    "RULING (Jesse, 2026-08-15, audit follow-up): KEEP this result — the",
+    "query's word is genuinely in the passage, and honest lexical retrieval",
+    "is fine. It is demoted, never forbidden: Proverbs 3:35 may appear, just",
+    "at low priority, never leading. The assertion encodes exactly that:",
+    "expectedWithinTop is 1, so the mustNotRank forbids only the LEADING",
+    "position. The verse remains free to rank anywhere below #1, and ranks",
+    "honestly for wisdom, folly, and shame queries and for the exact-phrase",
+    "search of its own words. The verse is verified IN the fixture corpus, so",
+    "the assertion cannot pass vacuously by absence.",
+    "",
+    "Pending because the pairing is live at HEAD (Proverbs 3:35 is the sole",
+    "result, so it leads at #1): fixtures-first, exactly like",
+    "prosperity-contentment.json. The honest fix is not suppression — it is",
+    "teaching the engine what a promotion-seeker should find (e.g. Psalm",
+    "75:6-7, exaltation comes from God, once that passage's chapter joins the",
+    "corpus; or a future contentment/work concept). Any such result ranking",
+    "above Proverbs 3:35 satisfies this fixture; when that lands, the",
+    "Admission Report names this fixture for promotion to active."
+  ],
+  "expectedWithinTop": 1,
+  "mustNotRank": [
+    {
+      "reference": "Proverbs 3:35",
+      "why": "'Shame will be the promotion of fools' — the query word appears only in an ironic frame, and as the LEADING answer it reads as the canon's word to a promotion-seeker. Per Jesse's 2026-08-15 ruling the verse is kept, demoted: it may rank anywhere below #1, and it ranks honestly for folly and shame queries and for the exact-phrase search of its own words."
+    }
+  ]
+}

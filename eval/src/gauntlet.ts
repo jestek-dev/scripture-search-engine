@@ -39,7 +39,13 @@ import {
   saturationGate,
   type DistillateFile,
 } from './gates/layerB.js';
-import { compileOntology } from '../../pipeline/src/importers/ontologyImporter.js';
+import { compileOntology, type CompiledAnchor } from '../../pipeline/src/importers/ontologyImporter.js';
+import {
+  doctrinalReviewRecordsCheck,
+  flaggedPairingsCheck,
+  DOCTRINAL_REVIEWS_PATH,
+  FLAGGED_PAIRINGS_PATH,
+} from './gates/doctrinalGuardrail.js';
 import {
   correlationGroups,
   isFileUrl,
@@ -139,13 +145,18 @@ function loadFixtures(): GoldenFixture[] {
 }
 
 /** Compiles the curated ontology so G4 runs against the real concept set. */
-function loadConcepts(): { concepts: ConceptRecord[]; fileCount: number; errors: string[] } {
+function loadConcepts(): {
+  concepts: ConceptRecord[];
+  anchors: readonly CompiledAnchor[];
+  fileCount: number;
+  errors: string[];
+} {
   const directory = join(REPO_ROOT, 'ontology', 'concepts');
   let names: string[] = [];
   try {
     names = readdirSync(directory).filter((name) => name.endsWith('.yaml')).sort();
   } catch {
-    return { concepts: [], fileCount: 0, errors: [] };
+    return { concepts: [], anchors: [], fileCount: 0, errors: [] };
   }
   const files = names.map((name) => ({
     name,
@@ -164,6 +175,7 @@ function loadConcepts(): { concepts: ConceptRecord[]; fileCount: number; errors:
       label: concept.label,
       lexicon: lexiconByConcept.get(concept.id) ?? [],
     })),
+    anchors: ontology.anchors,
     fileCount: names.length,
     errors: [...errors],
   };
@@ -648,7 +660,15 @@ async function main(): Promise<void> {
   try {
     const budgets = readJson<Budgets>(join(EVAL_ROOT, 'budgets.json'));
     const fixtures = loadFixtures();
-    const { concepts, fileCount, errors: ontologyErrors } = loadConcepts();
+    const { concepts, anchors, fileCount, errors: ontologyErrors } = loadConcepts();
+
+    // Doctrinal-guardrail data files (docs/DOCTRINAL-BASIS.md §5). Read as
+    // contents-or-null so the checks themselves can report a missing file as
+    // a loud flag instead of this loader throwing or silently passing.
+    const reviewsPath = join(REPO_ROOT, ...DOCTRINAL_REVIEWS_PATH.split('/'));
+    const watchlistPath = join(REPO_ROOT, ...FLAGGED_PAIRINGS_PATH.split('/'));
+    const doctrinalReviewsContents = existsSync(reviewsPath) ? readFileSync(reviewsPath, 'utf8') : null;
+    const flaggedPairingsContents = existsSync(watchlistPath) ? readFileSync(watchlistPath, 'utf8') : null;
 
     const distillate = loadDistillate();
     const probeRun = await runProbeGates(budgets, options, target);
@@ -661,11 +681,7 @@ async function main(): Promise<void> {
         fixtures as unknown as CorpusFixture[],
       ),
     ]);
-    const gates: GateResult[] = [
-      provenanceGate(budgets),
-      await reachabilityGate(options),
-      determinismGate(fixtures),
-      g3,
+    const g4Base =
       fileCount === 0
         ? notApplicable(
             'G4-collision',
@@ -700,7 +716,39 @@ async function main(): Promise<void> {
                   subjects: [entry.conceptId],
                 })),
               };
-            })(),
+            })();
+    // Doctrinal-guardrail sub-checks (docs/DOCTRINAL-BASIS.md §5), merged the
+    // way concept-coverage merged into G3: review records ride G1 (they are
+    // provenance for the human admission decision), the pairing watchlist
+    // rides G4 (it grades the compiled ontology). Both warn like
+    // G1b-reachability — loud flags, never a verdict flip. With no concepts
+    // at all G4 stays a bare not-applicable: an empty ontology has no
+    // pairings to scan, and merging a pass into an N/A would disguise it.
+    const g1 = mergeGateResults('Provenance', [
+      provenanceGate(budgets),
+      doctrinalReviewRecordsCheck(
+        loadManifestSet().sources.map((manifest) => manifest.id),
+        doctrinalReviewsContents,
+      ),
+    ]);
+    const g4 =
+      fileCount === 0
+        ? g4Base
+        : mergeGateResults('Concept collision', [
+            g4Base,
+            flaggedPairingsCheck({
+              concepts,
+              anchors,
+              ontologyCompiled: ontologyErrors.length === 0,
+              watchlistFileContents: flaggedPairingsContents,
+            }),
+          ]);
+    const gates: GateResult[] = [
+      g1,
+      await reachabilityGate(options),
+      determinismGate(fixtures),
+      g3,
+      g4,
       distinctivenessGate(distillate, budgets.distinctiveness),
       pass(
         'G6-signal-budgets',

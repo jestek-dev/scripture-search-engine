@@ -1,0 +1,39 @@
+{
+  "id": "prosperity-financial-blessing",
+  "query": "financial blessing",
+  "status": "active",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family). The mustNotRank list is",
+    "the point: each entry is a classic prosperity proof-text pairing for this",
+    "query, and every forbidden verse is already IN the fixture corpus",
+    "precisely so this assertion can fail. A mustNotRank against an absent",
+    "verse passes vacuously — protection that is decoration. The verses are",
+    "Scripture and may rank honestly elsewhere; what is forbidden is the",
+    "query→verse pairing that frames them as a wealth technique. Criteria:",
+    "docs/DOCTRINAL-BASIS.md §3.",
+    "",
+    "This is the query where the tithe-transaction pairing would look most",
+    "plausible — Malachi 3:10 really does say 'blessing' — which is exactly",
+    "why it is pinned: a searcher asking for financial blessing must not be",
+    "handed a giving-obligates-God mechanism as the answer."
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Malachi 3:10",
+      "why": "Tithe-transaction proof-text: 'bring the whole tithe … I will pour out a blessing' recruited as a return-on-giving mechanism (DOCTRINAL-BASIS.md §3). The verse ranks honestly for tithing queries."
+    },
+    {
+      "reference": "Luke 6:38",
+      "why": "'Give, and it will be given to you' recruited as an investment-return promise (DOCTRINAL-BASIS.md §3). It ranks honestly for giving queries, including the exact-phrase search of its own words."
+    },
+    {
+      "reference": "Mark 11:24",
+      "why": "'Whatever you ask believing, you will receive' recruited as a claim-it guarantee of financial return. DOCTRINAL-BASIS.md §3: God's power is not a technique."
+    },
+    {
+      "reference": "Philippians 4:19",
+      "why": "'My God will supply every need of yours' — written to a church that had just given sacrificially to Paul's mission — recruited as an unconditional wealth guarantee (DOCTRINAL-BASIS.md §3)."
+    }
+  ]
+}

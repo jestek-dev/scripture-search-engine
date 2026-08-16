@@ -1,0 +1,38 @@
+{
+  "id": "prosperity-wealth",
+  "query": "wealth",
+  "status": "active",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family). The mustNotRank list is",
+    "the point: each entry is a classic prosperity proof-text pairing for this",
+    "query, and every forbidden verse is already IN the fixture corpus",
+    "precisely so this assertion can fail. A mustNotRank against an absent",
+    "verse passes vacuously — protection that is decoration. The verses are",
+    "Scripture and may rank honestly elsewhere; what is forbidden is the",
+    "query→verse pairing that frames them as a wealth technique. Criteria:",
+    "docs/DOCTRINAL-BASIS.md §3.",
+    "",
+    "Job 36:11, Proverbs 18:16 and 3 John 1:2 — the other classic",
+    "wealth-entitlement proof-texts — are NOT in the fixture corpus, so",
+    "forbidding them here would pass vacuously. They are named in",
+    "DOCTRINAL-BASIS.md §3 instead; add them to this list only together with",
+    "their chapters in pipeline/fixtures/web-subset.json, which changes the",
+    "corpus fingerprint and requires independent re-approval of the G8 probe",
+    "baseline."
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Malachi 3:10",
+      "why": "Tithe-transaction proof-text: 'bring the whole tithe … I will pour out a blessing' recruited as a return-on-giving mechanism for a wealth query — the seed-faith frame DOCTRINAL-BASIS.md §3 excludes. The verse ranks honestly for tithing queries."
+    },
+    {
+      "reference": "Mark 11:24",
+      "why": "'Whatever you ask believing, you will receive' recruited as a claim-it guarantee of wealth. DOCTRINAL-BASIS.md §3: God's power is not a technique."
+    },
+    {
+      "reference": "Philippians 4:19",
+      "why": "'My God will supply every need of yours' — written to a church that had just given sacrificially to Paul's mission — recruited as an unconditional wealth guarantee (DOCTRINAL-BASIS.md §3)."
+    }
+  ]
+}

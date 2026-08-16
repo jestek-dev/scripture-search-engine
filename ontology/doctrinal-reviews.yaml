@@ -1,0 +1,213 @@
+# Per-source doctrinal review records — reviewed data, one row per source
+# manifest in pipeline/manifests/.
+#
+# These rows are HUMAN review records, not machine judgments. Merging the PR
+# that adds or edits a row is the review act (repo precedent: "Merging the PR
+# is Jesse's review act"). The gauntlet presence-checks that a row EXISTS for
+# every source manifest and that no row is orphaned — exactly as it
+# presence-checks other human decisions. It never scores whether the theology
+# is "correct": that would be the adjudication CLAUDE.md #6 forbids.
+#
+# Standard applied: docs/DOCTRINAL-BASIS.md — §2 shared core, §3
+# prosperity/seed-faith exclusion (Akropong/TGC §6), §4 non-criteria.
+# Source verdicts below transcribe the 2026-08-15 audit's Part 1 table
+# (guardrail-audit-2026-08-15).
+#
+# verdict is a closed mechanical vocabulary — never a theology score:
+#   compatible                        source framing is compatible with the basis
+#   not-applicable-lineage-only       zero data rows; exists for lineage/budgeting (G7);
+#                                     re-review required before any import
+#   not-applicable-scripture-text     the Scripture text itself or its bare vocabulary;
+#                                     the basis judges framings OF it, and it carries none
+#   admissible-with-bound             admitted only inside the stated bound; the bound is
+#                                     part of the verdict and reviewed with it
+
+reviews:
+  - source: barnes
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      Albert Barnes, mainstream expository NT notes (1832-51); no prosperity
+      vector. Manifest prose is licensing/coverage only.
+
+  - source: clarke
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3", "DOCTRINAL-BASIS.md §4"]
+    notes: >-
+      Adam Clarke, Methodist (Arminian) — Arminianism is an explicit §4
+      non-criterion. Honesty note carried from the audit: Clarke held an
+      idiosyncratic view on the eternal Sonship of Christ while robustly
+      affirming Christ's full deity; his passage-framing does not contradict
+      core points 2-3.
+
+  - source: editorial
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §1", "DOCTRINAL-BASIS.md §5"]
+    notes: >-
+      LH's own voice, compatible by construction — the attribution pattern §1
+      blesses (judgment human, named, cited as a source, never a hidden
+      weight). §5 applies: each editorial pairing is signed off by PR merge;
+      the audit's Part 1 §C inventories all 148 editorial anchors.
+
+  - source: jfb
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      Jamieson, Fausset & Brown (1871), Presbyterian/Anglican evangelical
+      commentary; no prosperity vector.
+
+  - source: kd
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      Keil & Delitzsch, confessional Lutheran OT critical-grammatical
+      commentary (1864+); no prosperity vector.
+
+  - source: maclaren-psalms
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      Alexander Maclaren, expository sermons on Psalms (1900s); no vector.
+
+  - source: mhc
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3", "DOCTRINAL-BASIS.md §4"]
+    notes: >-
+      Matthew Henry, Presbyterian nonconformist (1706-21). Paedobaptist — §4
+      explicitly names him as the reason baptism mode is a non-criterion.
+
+  - source: nave
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: not-applicable-lineage-only
+    criteria: ["DOCTRINAL-BASIS.md §1"]
+    notes: >-
+      Zero rows cite it; exists for G7 correlation budgeting. If ever imported
+      as data it must be re-admitted (the manifest says so itself), which
+      includes a fresh row here.
+
+  - source: openbible-topics
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: admissible-with-bound
+    criteria: ["DOCTRINAL-BASIS.md §3", "DOCTRINAL-BASIS.md §5"]
+    bound: >-
+      The one source whose pairings are crowd-authored, so §3 framings could
+      genuinely enter through it. Admitted only inside three containments:
+      (1) votes are a prior only — "never a correctness label, and never
+      treated as one by the ranker" (manifest prose); (2) concept packs must
+      OPT IN via openbibleTopics:, and every opt-in is a reviewed diff —
+      opt-ins to money/blessing/favor-shaped topics are the residual risk this
+      row exists to make checkable; (3) the prosperity-* golden fixture family
+      polices output for the money-shaped queries.
+    notes: >-
+      OpenBible.info community topic votes, CC-BY. At review time five packs
+      opt in, all on non-prosperity topics (faith and works, fear, grace,
+      obedience, refuge).
+
+  - source: openbible-xrefs
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      Verse-to-verse cross-reference links carry no topical framing at all;
+      correctly budgeted with TSK lineage.
+
+  - source: torrey
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      R. A. Torrey, The New Topical Textbook (1897). Every outline actually
+      cited by packs is a classic devotional heading; none frames verses as
+      material return. Closest call on record: Psalms 37:4 under DELIGHTING IN
+      GOD → joy-in-the-lord at weight 0.65 — a prosperity-adjacent verse under
+      a non-prosperity frame (the verse's first clause), which does not trip §3.
+
+  - source: translation-variants
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: not-applicable-scripture-text
+    criteria: ["DOCTRINAL-BASIS.md §1"]
+    notes: >-
+      Unordered vocabulary stems bridging translations of the Scripture text;
+      stems cannot carry a framing, so the basis has nothing to judge.
+
+  - source: treasury-of-david-01
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      C. H. Spurgeon, Treasury of David vol. 1 (1869-85); manifest prose is
+      OCR/licensing only. No prosperity vector.
+
+  - source: treasury-of-david-02
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      C. H. Spurgeon, Treasury of David vol. 2; same verdict and evidence as
+      volume 1.
+
+  - source: treasury-of-david-03
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      C. H. Spurgeon, Treasury of David vol. 3; same verdict and evidence as
+      volume 1.
+
+  - source: treasury-of-david-04
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      C. H. Spurgeon, Treasury of David vol. 4; same verdict and evidence as
+      volume 1.
+
+  - source: treasury-of-david-06
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §2", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      C. H. Spurgeon, Treasury of David vol. 6; same verdict and evidence as
+      volume 1.
+
+  - source: tsk
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: not-applicable-lineage-only
+    criteria: ["DOCTRINAL-BASIS.md §1"]
+    notes: >-
+      Treasury of Scripture Knowledge (1830s); no data rows — exists to
+      declare lineage with openbible-xrefs for G7. Re-review before any import.
+
+  - source: web
+    reviewedAt: "2026-08-15"
+    reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
+    verdict: not-applicable-scripture-text
+    criteria: ["DOCTRINAL-BASIS.md §1"]
+    notes: >-
+      The World English Bible text — the Scripture corpus itself. The basis
+      judges framings of it, not it.

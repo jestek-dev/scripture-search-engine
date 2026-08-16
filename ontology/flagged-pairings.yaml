@@ -1,0 +1,89 @@
+# Flagged-pairings watchlist — reviewed data for the doctrinal-guardrail
+# red-flag check merged into gate G4 (see eval/src/gates/doctrinalGuardrail.ts).
+#
+# THE VERSE IS NEVER THE PROBLEM. Every reference below is Scripture, belongs
+# in the artifact, and may rank honestly wherever its own words and faithful
+# curation put it (docs/DOCTRINAL-BASIS.md §3: "The criterion judges a
+# source's framing, never the verses themselves"). What each entry documents
+# is a known RECRUITMENT: pairing this verse with a material-return frame is
+# the §3 distortion — technique-for-blessing, the thing Akropong names and
+# shared-core point 5 (grace, a gift, not a technique) denies.
+#
+# The check is a pure data lookup: a curated concept whose id, label, or
+# lexicon speaks the material-frame vocabulary below, anchoring one of these
+# references, raises a RED FLAG in the Admission Report — information for the
+# human merge, never a verdict change, and never a theology score (CLAUDE.md
+# #6). At the time this file was added the check fires zero times: the
+# 2026-08-15 audit confirmed no such pairing exists in the layer. The file
+# protects future additions. Merging the PR that adds or edits an entry is
+# the review act.
+
+# Material-frame concept vocabulary. A concept is in scope for the pairing
+# check only when one of these words appears in its id, label, or lexicon.
+# Reviewed list — extend by PR, with the same one-word-per-line discipline.
+materialFrameKeywords:
+  - prosperity
+  - wealth
+  - success
+  - money
+  - favor
+  - increase
+  - breakthrough
+  - abundance
+  - promotion
+  - financial
+
+watchlist:
+  - ref: "John 14:12"
+    concern: >-
+      "Greater works than these will he do" recruited as a personal-achievement
+      formula (the §3 worked example's Achievement pairing); the works are
+      Christ's, not a career mechanism.
+  - ref: "Job 36:11"
+    concern: >-
+      Elihu's "spend their days in prosperity" recruited as a prosperity
+      mechanism — inside a book whose entire point is that Job's suffering was
+      NOT caused by unfaithfulness (§3 worked example).
+  - ref: "Malachi 3:10"
+    concern: >-
+      Tithe-transaction proof-text: "bring the whole tithe … I will pour out a
+      blessing" recruited as a return-on-giving mechanism. Ranks honestly for
+      tithing queries.
+  - ref: "Mark 11:24"
+    concern: >-
+      "Whatever you ask believing, you will receive" recruited as a claim-it
+      guarantee of material return; God's power is not a technique (§3).
+  - ref: "Luke 6:38"
+    concern: >-
+      "Give, and it will be given to you" recruited as an investment-return
+      promise — the seed-faith pump verse. Ranks honestly for giving queries,
+      including the exact-phrase search of its own words.
+  - ref: "Philippians 4:19"
+    concern: >-
+      "My God will supply every need of yours" — written to a church that had
+      just given sacrificially to Paul's mission — recruited as an
+      unconditional wealth guarantee.
+  - ref: "Proverbs 18:16"
+    concern: >-
+      "A man's gift makes room for him" recruited as a giving-buys-advancement
+      mechanism; the proverb observes access, it does not promise return on
+      seed.
+  - ref: "3 John 1:2"
+    concern: >-
+      An epistolary greeting ("that you may prosper … even as your soul
+      prospers") recruited as the health-and-wealth movement's charter text.
+  - ref: "John 14:13-14"
+    concern: >-
+      Ask-in-my-name recruited as the name-it-and-claim-it entitlement
+      guarantee; kept rankable on its own words per Jesse's 2026-08-15 ruling,
+      but never as the leading answer to the slogan
+      (eval/golden/prosperity-name-it-claim-it.json).
+  - ref: "Matthew 19:29"
+    concern: >-
+      "Will receive one hundred times" recruited as a hundredfold
+      return-on-giving formula; the verse is about renouncing for Christ's
+      sake, not investing for multiplication.
+  - ref: "Mark 10:29-30"
+    concern: >-
+      Parallel hundredfold passage, same recruitment — with "with
+      persecutions" characteristically dropped from the quotation.

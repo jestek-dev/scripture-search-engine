@@ -1,0 +1,35 @@
+{
+  "id": "prosperity-abundance",
+  "query": "abundance",
+  "status": "active",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family). The mustNotRank list is",
+    "the point: each entry is a classic prosperity proof-text pairing for this",
+    "query, and every forbidden verse is already IN the fixture corpus",
+    "precisely so this assertion can fail. A mustNotRank against an absent",
+    "verse passes vacuously — protection that is decoration. The verses are",
+    "Scripture and may rank honestly elsewhere; what is forbidden is the",
+    "query→verse pairing that frames them as a wealth technique. Criteria:",
+    "docs/DOCTRINAL-BASIS.md §3.",
+    "",
+    "John 10:10 ('life … abundantly'), the other classic abundance",
+    "proof-text, is not in the fixture corpus, so forbidding it here would",
+    "pass vacuously; it is left to a future corpus-selection change with its",
+    "own G8 baseline re-approval."
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Luke 6:38",
+      "why": "'Give, and it will be given to you' recruited as the route to material abundance (DOCTRINAL-BASIS.md §3). It ranks honestly for giving queries, including the exact-phrase search of its own words."
+    },
+    {
+      "reference": "Malachi 3:10",
+      "why": "Tithe-transaction proof-text: 'I will pour out a blessing' recruited as an abundance mechanism (DOCTRINAL-BASIS.md §3). The verse ranks honestly for tithing queries."
+    },
+    {
+      "reference": "Philippians 4:19",
+      "why": "'My God will supply every need of yours' — written to a church that had just given sacrificially to Paul's mission — recruited as an unconditional abundance guarantee (DOCTRINAL-BASIS.md §3)."
+    }
+  ]
+}

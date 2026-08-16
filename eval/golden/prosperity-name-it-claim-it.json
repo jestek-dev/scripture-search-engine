@@ -1,0 +1,41 @@
+{
+  "id": "prosperity-name-it-claim-it",
+  "query": "name it and claim it",
+  "status": "active",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family). 'Name it and claim it'",
+    "is word-of-faith teaching's own slogan, which makes it the same shape as",
+    "prosperity-sow-a-seed: the movement's vocabulary must never be ANSWERED",
+    "with its own entitlement proof-texts at the top. Criteria:",
+    "docs/DOCTRINAL-BASIS.md §3.",
+    "",
+    "RULING (Jesse, 2026-08-15, audit follow-up): John 14:13-14 carry the",
+    "word 'name' in their own text, so honest lexical retrieval may surface",
+    "them for this query — KEEP those results, demoted, never leading. The",
+    "assertion encodes exactly that: expectedWithinTop is 3, so the",
+    "mustNotRank forbids only the leading window — the positions a searcher",
+    "reads as the canon's answer to the slogan. The verses remain free to",
+    "rank at #4 and below, and rank honestly for queries of their own words,",
+    "such as 'in my name'. Both verses are verified IN the fixture corpus and",
+    "rank inside the top 10 for this query at HEAD (#4 and #7, 2026-08-15",
+    "live probe via the gauntlet's build path), so the assertion is exercised",
+    "against real rankings, not satisfied vacuously by absence.",
+    "",
+    "ACTIVE, not pending: the same probe shows the demoted state already",
+    "holds at HEAD — the proof-texts sit below the leading window — so the",
+    "fixture is promoted per the audit follow-up and now pins that state: any",
+    "future change that pushes either verse into the top 3 for the slogan",
+    "fails G3."
+  ],
+  "expectedWithinTop": 3,
+  "mustNotRank": [
+    {
+      "reference": "John 14:13",
+      "why": "'Whatever you will ask in my name, I will do it' served as a LEADING answer to the word-of-faith slogan itself — the slogan answered at the top with its own ask-in-my-name proof-text reads as the canon endorsing the entitlement claim. DOCTRINAL-BASIS.md §3: God's power is not a technique. Per Jesse's 2026-08-15 ruling the verse is kept below the leading window ('name' is genuinely in the passage) and ranks honestly for queries of its own words, such as 'in my name'."
+    },
+    {
+      "reference": "John 14:14",
+      "why": "'If you will ask anything in my name, I will do it' recruited as the slogan's leading claim-it guarantee — the entitlement frame DOCTRINAL-BASIS.md §3 excludes (slogan queries must not be ANSWERED with entitlement proof-texts at the top). Per Jesse's 2026-08-15 ruling the verse is kept below the leading window ('name' is genuinely in the passage) and ranks honestly for queries of its own words, such as 'in my name'."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "prosperity-contentment",
+  "query": "wealth",
+  "status": "pending",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family) — the positive half,",
+    "PENDING on purpose. The family's active fixtures say what wealth queries",
+    "must NOT surface; this one says what they should: the contentment and",
+    "stewardship teaching the canon actually gives a wealth-seeker, anchored",
+    "by a curated concept that does not exist yet. Fixtures-first: this is",
+    "the fixture written before the concept pack, exactly as the covenant",
+    "requires. It runs on every gauntlet and cannot fail the build; when a",
+    "contentment/stewardship pack lands and it starts passing, the report",
+    "will name it for promotion.",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose — the assertion is",
+    "that a CURATED, attributed anchor put the passage there (see",
+    "remembered-plans-and-future.json for the reasoning). The Theme label is",
+    "the proposed name; if the pack that lands names the concept differently,",
+    "update the label here in the same PR."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Timothy 6:6-10",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Contentment"
+    }
+  ],
+  "expectedWithinTop": 10
+}

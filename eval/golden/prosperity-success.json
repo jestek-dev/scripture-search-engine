@@ -1,0 +1,39 @@
+{
+  "id": "prosperity-success",
+  "query": "success",
+  "status": "active",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family). The mustNotRank list is",
+    "the point: each entry is a classic prosperity proof-text pairing for this",
+    "query, and every forbidden verse is already IN the fixture corpus",
+    "precisely so this assertion can fail. A mustNotRank against an absent",
+    "verse passes vacuously — protection that is decoration. The verses are",
+    "Scripture and may rank honestly elsewhere; what is forbidden is the",
+    "query→verse pairing that frames them as a wealth technique. Criteria:",
+    "docs/DOCTRINAL-BASIS.md §3.",
+    "",
+    "The expectedTop entry demonstrates the criterion's limit on purpose:",
+    "Joshua 1:8 literally says 'good success' (frame: meditating on the law),",
+    "so its lexical ranking is honest retrieval and is asserted, while the",
+    "Murdock pairing Achievement→John 14:12 is forbidden. Verses are never",
+    "the problem; pairings are."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Joshua 1:8",
+      "requiredReasonFamily": "token_overlap",
+      "withinTop": 5
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "John 14:12",
+      "why": "The worked example in DOCTRINAL-BASIS.md §3: Murdock's Achievement→John 14:12 pairing, 'greater works than these' recruited as a personal-success formula."
+    },
+    {
+      "reference": "Mark 11:24",
+      "why": "'Whatever you ask believing, you will receive' recruited as a claim-it guarantee of success. DOCTRINAL-BASIS.md §3: God's power is not a technique."
+    }
+  ]
+}
