@@ -1,18 +1,22 @@
 name: Release artifact
 
-# Consumers pin (engine semver, artifact descriptor). This is what produces the
-# second half of that pair: a content.db anyone can download and a descriptor
-# they can verify it against.
+# Consumers pin (engine semver, artifact descriptor). This workflow PROMOTES
+# that pair: it verifies the draft release at the pushed tag carries the exact
+# CI-built, attested bytes the committed descriptor was reviewed against, then
+# publishes the npm package and flips the draft public.
 #
-# The build runs from the MANIFESTS, not from anything cached on a maintainer's
-# machine. That is the point — if this workflow can build the artifact, so can
-# anyone else, and the reproducibility claim is a fact rather than a promise.
-
+# NOTHING IS REBUILT AT TAG TIME. SQLite builds do not byte-reproduce across
+# environments — the defect class that produced v0.7.1 — so the canonical
+# bytes are built once by mint-artifact.yml, attested, and parked on a draft
+# release. This workflow's job is to prove those bytes match the reviewed
+# descriptor and to ship them unchanged. A drifted asset cannot ship: the
+# sha256, byte count, and attestation checks below fail the tag instead.
 on:
   push:
     tags: ['v*']
-  # Buildable on demand so the release path can be exercised without minting a
-  # tag. A tagless run uploads nothing.
+  # Runnable on demand so the gates (stale descriptor, admission, pack) can be
+  # exercised without minting a tag. A tagless run promotes and publishes
+  # nothing.
   workflow_dispatch:
 
 permissions:
@@ -24,7 +28,7 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  promote:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -39,13 +43,10 @@ jobs:
 
       - run: npm ci
 
-      # The gauntlet gates the CODE against the committed fixture. It runs here
-      # too: a release built from code that cannot pass admission is not a
-      # release, it is an accident with a version number on it.
       - name: Refuse to release against a stale descriptor
         # `stale.blocksRelease` in the reviewed descriptor is enforced here, or
         # it is decoration. A descriptor that no longer describes what this tree
-        # builds must be regenerated before anything ships against it.
+        # builds must be re-minted before anything ships against it.
         run: |
           if node -e "process.exit(JSON.parse(require('fs').readFileSync('artifacts/content-artifact.json','utf8')).stale?.blocksRelease ? 1 : 0)"; then
             echo "Descriptor is current."
@@ -55,75 +56,76 @@ jobs:
             exit 1
           fi
 
+      # The gauntlet gates the CODE against the committed fixture. It runs here
+      # too: a release cut from code that cannot pass admission is not a
+      # release, it is an accident with a version number on it.
       - name: Admission gauntlet
         run: npm run verify -- --require-admit
 
-      - name: Fetch pinned sources
-        run: npm run fetch:sources --workspace pipeline
-
-      # The build below OVERWRITES artifacts/content-artifact.json with a
-      # descriptor of whatever it just built. Capture the committed, reviewed
-      # descriptor first — it is the yardstick, and comparing the build against
-      # its own output would verify nothing.
-      - name: Capture the committed descriptor
-        run: cp artifacts/content-artifact.json "$RUNNER_TEMP/reviewed-content-artifact.json"
-
-      # Rebuild AT THE REVIEWED BUILD TIME. built_at lands in the database's
-      # meta table and therefore in its checksum, so without pinning it every
-      # rebuild differs and the verification below could never mean anything.
-      - name: Build artifact, reproducing the reviewed one
+      - name: Assert the descriptor names this tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        # The committed descriptor is the release decision; the pushed tag
+        # merely executes it. A tag the descriptor does not name would promote
+        # bytes nobody reviewed under this identity.
         run: |
-          BUILT_AT=$(node -p "JSON.parse(require('node:fs').readFileSync(process.env.RUNNER_TEMP + '/reviewed-content-artifact.json', 'utf8')).builtAt")
-          echo "reproducing build stamped $BUILT_AT"
-          npm run build:artifact --workspace pipeline -- --built-at "$BUILT_AT"
-
-      # The descriptor is committed, so this catches a build that no longer
-      # reproduces the reviewed artifact — a source drifting under us, or a
-      # pipeline change nobody re-descriptored. Compare against the CAPTURED
-      # committed descriptor, not the file the build just rewrote, then restore
-      # the committed one so the release uploads what was reviewed.
-      - name: Verify the built artifact matches the reviewed descriptor
-        run: |
-          echo "descriptor drift (empty means none):"
-          diff "$RUNNER_TEMP/reviewed-content-artifact.json" artifacts/content-artifact.json
           node -e "
-            const fs = require('node:fs'), crypto = require('node:crypto');
-            const path = require('node:path');
-            const d = JSON.parse(fs.readFileSync(
-              path.join(process.env.RUNNER_TEMP, 'reviewed-content-artifact.json'), 'utf8'));
-            const bytes = fs.readFileSync('pipeline/output/content.db');
-            const sha = crypto.createHash('sha256').update(bytes).digest('hex');
-            const ok = sha === d.databaseSha256;
-            console.log('reviewed sha256:', d.databaseSha256);
-            console.log('built    sha256:', sha);
-            console.log('corpus  fingerprint:', d.corpusFingerprint);
-            console.log('layer   fingerprint:', d.layerFingerprint);
-            if (!ok) {
+            const descriptor = JSON.parse(require('node:fs').readFileSync('artifacts/content-artifact.json', 'utf8'));
+            const tag = process.env.GITHUB_REF_NAME;
+            if (descriptor.release?.tag !== tag) {
               console.error(
-                '\nBuilt artifact does not match the reviewed descriptor. Either a source ' +
-                'changed upstream or the pipeline changed without re-running the build; ' +
-                'either way the descriptor must be re-reviewed, not overwritten here.'
+                'The committed descriptor names release ' + JSON.stringify(descriptor.release?.tag) +
+                ' but the pushed tag is ' + JSON.stringify(tag) + '.\n' +
+                'Mint an artifact for this tag (mint-artifact.yml) and land its descriptor first.'
+              );
+              process.exit(1);
+            }
+            console.log('Descriptor names ' + tag + '.');
+          "
+
+      - name: Download the minted bytes from the draft release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download "$GITHUB_REF_NAME" --pattern content.db --dir "$RUNNER_TEMP/asset"
+          ls -l "$RUNNER_TEMP/asset/content.db"
+
+      - name: Verify the minted bytes against the reviewed descriptor
+        if: startsWith(github.ref, 'refs/tags/v')
+        # The descriptor in this tree is the reviewed identity; the draft asset
+        # must hash to it exactly or the release stops here.
+        run: |
+          node -e "
+            const fs = require('node:fs'), crypto = require('node:crypto'), path = require('node:path');
+            const descriptor = JSON.parse(fs.readFileSync('artifacts/content-artifact.json', 'utf8'));
+            const bytes = fs.readFileSync(path.join(process.env.RUNNER_TEMP, 'asset', 'content.db'));
+            const sha = crypto.createHash('sha256').update(bytes).digest('hex');
+            console.log('reviewed sha256:', descriptor.databaseSha256);
+            console.log('asset    sha256:', sha);
+            console.log('reviewed bytes :', descriptor.databaseBytes);
+            console.log('asset    bytes :', bytes.length);
+            console.log('corpus  fingerprint:', descriptor.corpusFingerprint);
+            console.log('layer   fingerprint:', descriptor.layerFingerprint);
+            if (sha !== descriptor.databaseSha256 || bytes.length !== descriptor.databaseBytes) {
+              console.error(
+                '\nThe draft asset does not match the reviewed descriptor. The draft has ' +
+                'drifted since the descriptor was reviewed — re-mint and re-review; never ' +
+                'ship bytes whose reviewed identity is someone else\'s.'
               );
               process.exit(1);
             }
           "
-          git checkout -- artifacts/content-artifact.json
 
-      # The descriptor a maintainer commits must come from HERE, because only
-      # this environment produces the byte layout the check above compares
-      # against. Uploading it on every run — including the tagless
-      # workflow_dispatch one — makes refreshing it a download rather than
-      # copying a checksum out of a log. Run this workflow manually after any
-      # change to the ontology, manifests or pipeline, and commit the result.
-      - name: Upload the built descriptor for review
-        uses: actions/upload-artifact@v4
-        with:
-          name: content-artifact-descriptor
-          path: artifacts/content-artifact.json
+      - name: Verify the minted bytes' build provenance
+        if: startsWith(github.ref, 'refs/tags/v')
+        # Proves the bytes came out of this repository's mint workflow — not a
+        # laptop, not a hand-upload to the draft.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh attestation verify "$RUNNER_TEMP/asset/content.db" --repo "$GITHUB_REPOSITORY"
 
-      # A tarball, not a registry publish. An npm scope has to be a registered
-      # npm account, which is separate from the GitHub owner and may not exist
-      # — and consumers should not be blocked on that. This installs with
+      # A tarball as well as a registry publish: this installs with
       # `npm i <url>` and needs no registry at all.
       - name: Pack the engine
         id: pack
@@ -140,7 +142,7 @@ jobs:
             exit 1
           fi
           echo "packed $TARBALL with $(tar tzf "$TARBALL" | wc -l) entries"
-          # The tag is v0.7.0; the tarball npm produces is 0.7.0. Emitting the
+          # The tag is v0.9.0; the tarball npm produces is 0.9.0. Emitting the
           # real filename rather than reconstructing it keeps the install
           # command in the release notes from 404ing.
           echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
@@ -167,26 +169,63 @@ jobs:
           fi
           npm publish --workspace engine --access public
 
-      - name: Attach to release
+      - name: Promote the draft release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
+        # The content.db already on the draft is the verified asset; only the
+        # descriptor and tarball are added here. --draft=false is the moment
+        # the release becomes visible to consumers.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARBALL: ${{ steps.pack.outputs.tarball }}
+        run: |
+          set -euo pipefail
+          VERSION=$(node -p "require('./engine/package.json').version")
+          gh release upload "$GITHUB_REF_NAME" artifacts/content-artifact.json "$TARBALL" --clobber
+          cat > "$RUNNER_TEMP/release-notes.md" <<EOF
+          Deterministic Scripture artifact — CI-built, attested bytes; nothing rebuilt at tag time.
+
+          Consumers pin **both** the engine semver and this descriptor.
+          Verify \`content.db\` against \`databaseSha256\` in
+          \`content-artifact.json\` before opening it — the engine's admission
+          check expects a database whose identity you have confirmed.
+
+          **Installing the engine:**
+
+          \`\`\`bash
+          npm i @jestek-dev/scripture-engine@$VERSION
+          # or, with no npm registry:
+          npm i https://github.com/jestek-dev/scripture-search-engine/releases/download/$GITHUB_REF_NAME/$TARBALL
+          \`\`\`
+
+          OpenBible.info data in this artifact is licensed CC BY 4.0 — the
+          attribution obligation passes through to consumer apps.
+          Sources and rights: see \`docs/ATTRIBUTIONS.md\`.
+          EOF
+          gh release edit "$GITHUB_REF_NAME" --draft=false --latest \
+            --title "$GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/release-notes.md"
+
+  smoke:
+    # The consumer path, end to end, immediately after promotion:
+    # unauthenticated download, checksum verification, a registry install, and
+    # one real query. This is the check that would have caught v0.7.1 the day
+    # it shipped.
+    needs: promote
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
         with:
-          files: |
-            pipeline/output/content.db
-            artifacts/content-artifact.json
-            jestek-dev-scripture-engine-*.tgz
-          body: |
-            Deterministic Scripture artifact.
+          node-version: '24'
 
-            Consumers pin **both** the engine semver and this descriptor.
-            Verify `content.db` against `databaseSha256` in
-            `content-artifact.json` before opening it — the engine's admission
-            check expects a database whose identity you have confirmed.
-
-            **Installing the engine** — no npm registry required:
-
-            ```bash
-            npm i https://github.com/jestek-dev/scripture-search-engine/releases/download/${{ github.ref_name }}/${{ steps.pack.outputs.tarball }}
-            ```
-
-            Sources and rights: see `docs/ATTRIBUTIONS.md`.
+      # No npm ci: the smoke test must exercise what a consumer gets, not what
+      # this repository's node_modules happens to contain.
+      - name: Smoke-test the published release
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          VERSION=$(node -p "require('./engine/package.json').version")
+          ENGINE_VERSION="$VERSION" node .github/scripts/release-smoke.mjs

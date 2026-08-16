@@ -17,6 +17,13 @@ export const descriptorPath = path.join(repoRoot, 'artifacts', 'content-artifact
 export const artifactDir = path.join(repoRoot, 'workbench', '.artifact');
 export const databasePath = path.join(artifactDir, 'content.db');
 
+/**
+ * What a release tag may look like — mirrors the pipeline's build-time rule.
+ * The tag lands in the download URL, so a malformed one is refused here
+ * rather than becoming a request path.
+ */
+const RELEASE_TAG_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._/-]*$/;
+
 /** The descriptor fields the workbench reads. The file carries more; these are the load-bearing ones. */
 export interface ArtifactDescriptor {
   readonly schemaVersion: string;
@@ -25,6 +32,14 @@ export interface ArtifactDescriptor {
   readonly layerFingerprint: string;
   readonly databaseSha256: string;
   readonly databaseBytes: number;
+  /**
+   * The GitHub Release tag the artifact's bytes are published at. Optional:
+   * descriptors minted before the field existed live at `v{engineVersion}` —
+   * `releaseTagFor` owns that fallback.
+   */
+  readonly release?: {
+    readonly tag: string;
+  };
   readonly translations: readonly {
     readonly code: string;
     readonly name: string;
@@ -100,6 +115,20 @@ export function validateArtifactDescriptor(value: unknown): ArtifactDescriptor {
     }
   }
 
+  const release = value['release'];
+  if (release !== undefined) {
+    if (!isRecord(release)) {
+      errors.push('release must be an object when present');
+    } else {
+      const tag = release['tag'];
+      if (!isNonEmptyString(tag) || !RELEASE_TAG_PATTERN.test(tag)) {
+        errors.push(
+          'release.tag must start with a letter or digit and contain only letters, digits, ".", "_", "/" and "-"',
+        );
+      }
+    }
+  }
+
   const stale = value['stale'];
   if (stale !== undefined) {
     if (!isRecord(stale)) {
@@ -125,8 +154,23 @@ export function validateArtifactDescriptor(value: unknown): ArtifactDescriptor {
     databaseSha256: databaseSha256 as string,
     databaseBytes: databaseBytes as number,
     translations: translations as ArtifactDescriptor['translations'],
+    ...(release === undefined
+      ? {}
+      : { release: { tag: (release as { tag: string }).tag } }),
     ...(stale === undefined ? {} : { stale: stale as NonNullable<ArtifactDescriptor['stale']> }),
   };
+}
+
+/**
+ * The GitHub Release tag the artifact downloads from.
+ *
+ * `release.tag` decouples artifact identity from engineVersion — an
+ * artifact-only refresh ships at its own tag with no engine bump. Descriptors
+ * minted before the field existed were always published at the engine's own
+ * version tag, so the fallback keeps every old descriptor downloadable.
+ */
+export function releaseTagFor(descriptor: ArtifactDescriptor): string {
+  return descriptor.release?.tag ?? `v${descriptor.engineVersion}`;
 }
 
 export async function readDescriptor(): Promise<ArtifactDescriptor> {

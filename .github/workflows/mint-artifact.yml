@@ -1,0 +1,167 @@
+name: Mint artifact
+
+# The ONLY place release bytes are born. SQLite builds do not byte-reproduce
+# across environments — the defect class that produced v0.7.1 — so the
+# artifact is built ONCE, here, and every later step (descriptor review,
+# release.yml's tag path, consumers) verifies these exact bytes instead of
+# trying to rebuild them.
+#
+# A mint publishes nothing: the bytes land on a DRAFT release (invisible to
+# consumers, exempt from 90-day workflow-artifact retention) and the
+# descriptor lands as a workflow artifact for a human to commit VERBATIM in a
+# reviewed PR. Promotion is release.yml's job, and only a pushed tag triggers
+# it.
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag the artifact will ship at (e.g. v0.9.0, or artifact/2026-08-14 for an artifact-only refresh)'
+        required: true
+        type: string
+
+permissions:
+  # Create the draft release and upload its assets.
+  contents: write
+  # OIDC token for the build-provenance attestation.
+  id-token: write
+  # Persist the attestation so `gh attestation verify` can find it.
+  attestations: write
+
+# Two concurrent mints against the same draft would race each other's uploads.
+concurrency:
+  group: mint-artifact
+  cancel-in-progress: false
+
+jobs:
+  mint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Validate the requested tag
+        # Same rule the build CLI enforces, applied before anything slow runs:
+        # the tag lands in URLs and gh invocations, so anything outside this
+        # set is refused up front.
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          if ! node -e "process.exit(/^[A-Za-z0-9][A-Za-z0-9._\/-]*$/.test(process.env.RELEASE_TAG) ? 0 : 1)"; then
+            echo "::error::release_tag \"$RELEASE_TAG\" must start with a letter or digit and contain only letters, digits, '.', '_', '/' and '-'"
+            exit 1
+          fi
+
+      - name: Admission gauntlet
+        # A mint from a tree that cannot pass admission is not a mint.
+        run: npm run verify -- --require-admit
+
+      - name: Fetch pinned sources
+        # Every manifest checksum must verify. A drifted source fails here,
+        # before any bytes exist to be reviewed.
+        run: npm run fetch:sources --workspace pipeline
+
+      # The build below overwrites artifacts/content-artifact.json with the
+      # minted descriptor. Capture the committed one first — it is the
+      # "before" column of the fingerprint diff table the reviewer reads.
+      - name: Capture the committed descriptor
+        run: cp artifacts/content-artifact.json "$RUNNER_TEMP/committed-content-artifact.json"
+
+      - name: Build the canonical artifact
+        # Fresh builtAt, stamped into the bytes. Nothing ever tries to
+        # reproduce this build; everything downstream verifies its checksum.
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: npm run build:artifact --workspace pipeline -- --release-tag "$RELEASE_TAG"
+
+      - name: Attest build provenance
+        # Binds the exact bytes to this workflow run and commit. release.yml
+        # refuses to promote an asset that fails `gh attestation verify`.
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: pipeline/output/content.db
+
+      - name: Upload the bytes to a draft release
+        # Create-or-reuse, drafts only. No `|| true` anywhere: an auth or
+        # upload failure must fail the mint loudly, not leave a half-minted
+        # draft that looks finished.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          set -euo pipefail
+          if IS_DRAFT=$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft 2>/dev/null); then
+            if [ "$IS_DRAFT" != "true" ]; then
+              echo "::error::release $RELEASE_TAG already exists and is published — a mint may only write drafts"
+              exit 1
+            fi
+            echo "Reusing existing draft release $RELEASE_TAG"
+          else
+            gh release create "$RELEASE_TAG" --draft --title "$RELEASE_TAG" \
+              --notes "Draft minted by mint-artifact run ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. Promoted by release.yml when the tag is pushed."
+          fi
+          gh release upload "$RELEASE_TAG" pipeline/output/content.db --clobber
+
+      # The descriptor a maintainer commits must be THIS file, verbatim — a
+      # descriptor built on a laptop describes bytes nobody can verify.
+      # Downloading it from the run is the only supported path into
+      # artifacts/content-artifact.json.
+      - name: Upload the minted descriptor for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-artifact-descriptor
+          path: artifacts/content-artifact.json
+          if-no-files-found: error
+
+      - name: Fingerprint diff table
+        # Committed vs minted, in the step summary — this table is what the
+        # descriptor PR's reviewer reads before the commit that makes the
+        # mint real.
+        run: |
+          node <<'EOF'
+          const { readFileSync, appendFileSync } = require('node:fs');
+          const { join } = require('node:path');
+
+          const committed = JSON.parse(
+            readFileSync(join(process.env.RUNNER_TEMP, 'committed-content-artifact.json'), 'utf8'),
+          );
+          const minted = JSON.parse(readFileSync('artifacts/content-artifact.json', 'utf8'));
+
+          const field = (name, pick) => {
+            const show = (d) => {
+              const value = pick(d);
+              return value === undefined ? '—' : String(value);
+            };
+            const before = show(committed);
+            const after = show(minted);
+            return `| ${name} | \`${before}\` | \`${after}\` | ${before === after ? '' : '**changed**'} |`;
+          };
+
+          const rows = [
+            '### Fingerprint diff — committed vs minted',
+            '',
+            '| field | committed | minted | |',
+            '| --- | --- | --- | --- |',
+            field('release.tag', (d) => d.release?.tag),
+            field('engineVersion', (d) => d.engineVersion),
+            field('schemaVersion', (d) => d.schemaVersion),
+            field('tokenizerVersion', (d) => d.tokenizerVersion),
+            field('corpusFingerprint', (d) => d.corpusFingerprint),
+            field('layerFingerprint', (d) => d.layerFingerprint),
+            field('manifestFingerprint', (d) => d.manifestFingerprint),
+            field('databaseSha256', (d) => d.databaseSha256),
+            field('databaseBytes', (d) => d.databaseBytes),
+            field('counts.concepts', (d) => d.counts?.concepts),
+            field('builtAt', (d) => d.builtAt),
+            field('stale', (d) => (d.stale ? `yes, since ${d.stale.since}` : 'no')),
+            '',
+          ].join('\n');
+
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, rows + '\n');
+          console.log(rows);
+          EOF

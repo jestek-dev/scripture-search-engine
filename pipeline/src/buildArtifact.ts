@@ -18,6 +18,7 @@
  * Usage:
  *   npx tsx src/buildArtifact.ts [--out <path>] [--no-layer-b]
  *   npx tsx src/buildArtifact.ts --built-at <iso8601>
+ *   npx tsx src/buildArtifact.ts --release-tag <tag>
  *
  * REPRODUCIBILITY. The build stamps `built_at` into the database's meta table,
  * so it lands in the bytes and therefore in databaseSha256 — meaning two runs
@@ -249,6 +250,22 @@ function distilLayerB(manifests: ManifestSet): ConceptLayerInput['verseTerms'] {
   return result.terms;
 }
 
+/**
+ * The one shape a release tag may take. Deliberately narrow: the tag lands in
+ * a GitHub Release URL and in `gh` invocations, so anything outside this set
+ * is refused before it can become a path or an argument.
+ */
+export const RELEASE_TAG_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._/-]*$/;
+
+export function assertValidReleaseTag(tag: string): void {
+  if (!RELEASE_TAG_PATTERN.test(tag)) {
+    throw new Error(
+      `buildArtifact: release tag "${tag}" is invalid — it must start with a letter or ` +
+        'digit and contain only letters, digits, ".", "_", "/" and "-".',
+    );
+  }
+}
+
 export interface ArtifactDescriptor {
   /**
    * Shape version of THIS FILE, distinct from the database's schemaVersion.
@@ -258,6 +275,16 @@ export interface ArtifactDescriptor {
    * needs a newer consumer, the second a different artifact.
    */
   readonly formatVersion: 1;
+  /**
+   * The GitHub Release tag whose assets carry these exact bytes.
+   *
+   * Decouples artifact identity from engineVersion: an artifact-only refresh
+   * ships at its own tag (e.g. `artifact/2026-08-14`) with no engine bump.
+   * Absent on descriptors minted before the field existed — consumers fall
+   * back to `v{engineVersion}`, which is where every older artifact lives.
+   * Additive and optional, so formatVersion stays 1.
+   */
+  readonly release?: { readonly tag: string };
   /**
    * Ceiling of the most restrictive source admitted. A consumer refuses an
    * artifact whose tier exceeds what it is entitled to ship, which is how the
@@ -317,12 +344,15 @@ export interface BuildArtifactOptions {
   readonly outPath?: string;
   readonly includeLayerB?: boolean;
   readonly builtAt?: string;
+  readonly releaseTag?: string;
 }
 
 export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescriptor {
   const outPath = options.outPath ?? join(ROOT, 'output', 'content.db');
   const includeLayerB = options.includeLayerB ?? true;
   const builtAt = options.builtAt ?? new Date().toISOString();
+  const releaseTag = options.releaseTag;
+  if (releaseTag !== undefined) assertValidReleaseTag(releaseTag);
 
   const manifests = loadManifests();
 
@@ -462,6 +492,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
 
     descriptor = {
       formatVersion: 1,
+      ...(releaseTag === undefined ? {} : { release: { tag: releaseTag } }),
       distributionTier: tier,
       schemaVersion: corpus.schemaVersion,
       tokenizerVersion: corpus.tokenizerVersion,
@@ -528,12 +559,36 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
   return descriptor;
 }
 
+/**
+ * Parses the CLI's argv (everything after the script path) into build options.
+ * Exported so the mint workflow's contract — which flags exist and what they
+ * refuse — is testable without running a build.
+ */
+export function parseBuildArtifactArgv(argv: readonly string[]): BuildArtifactOptions {
+  const valueOf = (flag: string): string | undefined => {
+    const index = argv.indexOf(flag);
+    if (index === -1) return undefined;
+    const value = argv[index + 1];
+    // A flag whose value was swallowed (missing, or another flag) must fail
+    // loudly: `--built-at` silently defaulting to "now" would mint an
+    // artifact nobody asked for.
+    if (value === undefined || value.startsWith('--')) {
+      throw new Error(`buildArtifact: ${flag} requires a value`);
+    }
+    return value;
+  };
+
+  const releaseTag = valueOf('--release-tag');
+  if (releaseTag !== undefined) assertValidReleaseTag(releaseTag);
+
+  return {
+    outPath: valueOf('--out'),
+    includeLayerB: !argv.includes('--no-layer-b'),
+    builtAt: valueOf('--built-at'),
+    releaseTag,
+  };
+}
+
 if (process.argv[1] && process.argv[1].endsWith('buildArtifact.ts')) {
-  const outIndex = process.argv.indexOf('--out');
-  const builtAtIndex = process.argv.indexOf('--built-at');
-  buildArtifact({
-    outPath: outIndex > -1 ? process.argv[outIndex + 1] : undefined,
-    includeLayerB: !process.argv.includes('--no-layer-b'),
-    builtAt: builtAtIndex > -1 ? process.argv[builtAtIndex + 1] : undefined,
-  });
+  buildArtifact(parseBuildArtifactArgv(process.argv.slice(2)));
 }

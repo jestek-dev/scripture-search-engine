@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { validateArtifactDescriptor } from '../src/descriptor.js';
+import { releaseTagFor, validateArtifactDescriptor } from '../src/descriptor.js';
 
 const DESCRIPTOR = {
   schemaVersion: '6',
@@ -23,5 +23,31 @@ describe('artifact descriptor validation', () => {
 
   it('preserves only validated fields the workbench consumes', () => {
     expect(validateArtifactDescriptor({ ...DESCRIPTOR, ignoredReleaseMetadata: { future: true } })).toEqual(DESCRIPTOR);
+  });
+
+  it('accepts a well-formed release block and keeps only its tag', () => {
+    expect(
+      validateArtifactDescriptor({ ...DESCRIPTOR, release: { tag: 'artifact/2026-08-14', mintedBy: 'run-7' } }),
+    ).toEqual({ ...DESCRIPTOR, release: { tag: 'artifact/2026-08-14' } });
+  });
+
+  it('rejects malformed release blocks — the tag becomes a download URL', () => {
+    expect(() => validateArtifactDescriptor({ ...DESCRIPTOR, release: [] })).toThrow('release must be an object');
+    expect(() => validateArtifactDescriptor({ ...DESCRIPTOR, release: {} })).toThrow('release.tag');
+    expect(() => validateArtifactDescriptor({ ...DESCRIPTOR, release: { tag: '' } })).toThrow('release.tag');
+    expect(() => validateArtifactDescriptor({ ...DESCRIPTOR, release: { tag: '-v0.9.0' } })).toThrow('release.tag');
+    expect(() => validateArtifactDescriptor({ ...DESCRIPTOR, release: { tag: 'v0.9.0 beta' } })).toThrow('release.tag');
+  });
+});
+
+describe('releaseTagFor', () => {
+  it('uses the descriptor release tag when present', () => {
+    expect(releaseTagFor(validateArtifactDescriptor({ ...DESCRIPTOR, release: { tag: 'artifact/2026-08-14' } }))).toBe(
+      'artifact/2026-08-14',
+    );
+  });
+
+  it('falls back to v{engineVersion} for descriptors minted before the field existed', () => {
+    expect(releaseTagFor(validateArtifactDescriptor(DESCRIPTOR))).toBe('v0.9.0');
   });
 });
