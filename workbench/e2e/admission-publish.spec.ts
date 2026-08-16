@@ -71,6 +71,9 @@ test('admission and isolated publish preparation remain explicit and responsive'
     const request = route.request();
     const pathname = new URL(request.url()).pathname;
     if (pathname === '/api/v2/health') return route.fulfill(ok({ status: 'healthy', startup: { degraded: false }, descriptor: {}, artifact: {}, golden: {}, coverage: {}, judgments: {}, gauntlet: {}, git: {}, signals: [] }));
+    // The page loads the concept label map once at boot; the real server
+    // serves this as a bare rows array, not a v2 envelope.
+    if (pathname === '/api/concepts') return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([{ id: 'hope', label: 'Hope' }]) });
     if (pathname === '/api/v2/cases') return route.fulfill(ok({ cases: [] }));
     if (pathname === '/api/v2/inbox') return route.fulfill(ok({ items: [] }));
     if (pathname === '/api/v2/candidates') return route.fulfill(ok({ reviews: [], readOnly: false }));
