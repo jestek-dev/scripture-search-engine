@@ -12,6 +12,7 @@
     "build:candidate": "node --max-old-space-size=8192 ../node_modules/tsx/dist/cli.mjs src/buildCandidate.ts",
     "build:distillate": "node --max-old-space-size=8192 ../node_modules/.bin/tsx scripts/generateExpositionSubset.ts",
     "fetch:sources": "tsx scripts/fetchSources.ts",
+    "check:drift": "tsx scripts/checkSourceDrift.ts",
     "mine:telemetry": "tsx scripts/mineSearchLog.ts"
   },
   "devDependencies": {

@@ -40,3 +40,28 @@ jobs:
             echo "::error::One or more pinned sources are unreachable — see the Admission Report above"
             exit 1
           fi
+
+  # Byte-level drift, on the same schedule — reachability is not identity.
+  #
+  # The check above asks "does the URL answer?"; this job asks "does it answer
+  # with OUR bytes?". Those diverge in exactly the way that hurt in 2026-08:
+  # upstream republished under the same URLs, every download served HTTP 200
+  # with the wrong bytes, and the reachability run stayed green for weeks
+  # while the pinned snapshots quietly stopped existing anywhere reachable.
+  #
+  # Schedule/dispatch only, NEVER on push or PR: a third party republishing
+  # must not block unrelated work. The red scheduled run IS the alarm; the
+  # script's failure output names both hashes and the one action a red run
+  # authorizes (a reviewed re-pin PR — never an in-place checksum edit).
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+
+      - name: Compare upstream bytes against every manifest pin
+        run: npm run check:drift --workspace pipeline

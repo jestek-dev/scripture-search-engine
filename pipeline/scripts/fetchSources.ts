@@ -178,6 +178,30 @@ export async function selectCandidate(
   return { bytes: null, sha256: '', usedFallback: false, attempts };
 }
 
+/**
+ * Whether an on-disk copy is the manifest's source, so the fetch can be
+ * skipped.
+ *
+ * A byte-identical file always is. A content-pinned source gets one more
+ * chance — publishers repack archives without changing the payload — but the
+ * payload must actually be fingerprinted and match. The earlier version of
+ * this check took `contentSha256`'s mere PRESENCE as a pass, so a cached file
+ * of any bytes at all reported `cached`: exactly how the drifted 2026-08
+ * downloads replaced the pinned July snapshots on disk without a word.
+ *
+ * The fingerprint is a thunk because computing it means unpacking the
+ * archive; it runs only when the byte identity has already failed.
+ */
+export function cachedCopyIsCurrent(
+  manifest: SourceManifest,
+  sha256: string,
+  contentFingerprint: () => string,
+): boolean {
+  if (sha256 === manifest.sha256) return true;
+  if (!manifest.contentSha256) return false;
+  return contentFingerprint() === manifest.contentSha256;
+}
+
 async function main(): Promise<void> {
   const force = process.argv.includes('--force');
   mkdirSync(SOURCES, { recursive: true });
@@ -203,10 +227,20 @@ async function main(): Promise<void> {
 
     if (!force && existsSync(path)) {
       const sha256 = createHash('sha256').update(readFileSync(path)).digest('hex');
-      if (sha256 === manifest.sha256 || manifest.contentSha256) {
+      const directory = contentDirectory(manifest);
+      const current = cachedCopyIsCurrent(manifest, sha256, () => {
+        // Fingerprinting means unpacking; a mismatch falls through to the
+        // fetch path, which unpacks the verified bytes over these.
         unpack(manifest, path);
+        return directory ? fingerprintDirectory(directory) : '';
+      });
+      if (current) {
+        if (sha256 === manifest.sha256) unpack(manifest, path);
         cached += 1;
-        process.stdout.write(`  ${manifest.id.padEnd(24)} cached\n`);
+        process.stdout.write(
+          `  ${manifest.id.padEnd(24)} cached` +
+            `${sha256 === manifest.sha256 ? '' : ' (archive repacked upstream, content identical)'}\n`,
+        );
         continue;
       }
       process.stdout.write(`  ${manifest.id.padEnd(24)} on-disk copy differs, re-fetching\n`);
