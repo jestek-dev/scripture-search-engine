@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
@@ -10,6 +11,7 @@ import type {
   GoldenFixtureHealthInput,
   JudgmentHealthInput,
   GauntletHealthInput,
+  LegacyLogHealthInput,
 } from './health.js';
 import {
   GAUNTLET_RUNNING_MARKER_SCHEMA,
@@ -425,6 +427,97 @@ export async function readJudgmentHealth(
   } catch {
     return [];
   }
+}
+
+/**
+ * Reconciles the closed v1 portion of `judgments.jsonl` against the
+ * migration manifest, by line digest, at true file line numbers. A health
+ * warning surface only — it never throws and never degrades the server; the
+ * compiler stays the fail-closed guard.
+ */
+export async function readLegacyLogHealth(
+  judgmentsPath: string = process.env.WORKBENCH_JUDGMENTS_PATH ?? path.join(repoRoot, 'workbench', 'judgments.jsonl'),
+  manifestPath: string = path.join(repoRoot, 'workbench', 'legacy', 'migration-manifest.json'),
+): Promise<LegacyLogHealthInput | null> {
+  const manifestShaCounts = new Map<string, number>();
+  let manifestedLineTotal = 0;
+  try {
+    const manifest = JSON.parse(await readFile(manifestPath, 'utf8')) as {
+      cases?: readonly { entries?: readonly { lineSha256?: unknown }[] }[];
+    };
+    for (const legacyCase of manifest.cases ?? []) {
+      for (const entry of legacyCase.entries ?? []) {
+        if (typeof entry.lineSha256 !== 'string') continue;
+        manifestShaCounts.set(entry.lineSha256, (manifestShaCounts.get(entry.lineSha256) ?? 0) + 1);
+        manifestedLineTotal += 1;
+      }
+    }
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return {
+        status: 'absent',
+        strayLineNumbers: [],
+        message: 'No legacy migration manifest; there is no closed v1 log to reconcile.',
+      };
+    }
+    return null;
+  }
+
+  let raw: string;
+  try {
+    raw = await readFile(judgmentsPath, 'utf8');
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') return null;
+    raw = '';
+  }
+
+  const strayLineNumbers: number[] = [];
+  let matchedLineTotal = 0;
+  const remaining = new Map(manifestShaCounts);
+  const lines = raw.split('\n');
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index]!;
+    if (line.trim() === '') continue;
+    try {
+      if (Object.hasOwn(JSON.parse(line) as object, 'schemaVersion')) continue;
+    } catch {
+      strayLineNumbers.push(index + 1);
+      continue;
+    }
+    const digest = createHash('sha256').update(Buffer.from(line, 'utf8')).digest('hex');
+    const available = remaining.get(digest) ?? 0;
+    if (available > 0) {
+      remaining.set(digest, available - 1);
+      matchedLineTotal += 1;
+    } else {
+      strayLineNumbers.push(index + 1);
+    }
+  }
+
+  if (strayLineNumbers.length > 0) {
+    return {
+      status: 'stray-lines',
+      strayLineNumbers,
+      message:
+        `judgments.jsonl line(s) ${strayLineNumbers.join(', ')} hold legacy v1 record(s) outside the closed ` +
+        'migration manifest. Delete the stray line(s) and re-enter each judgment through the v2 workbench; ' +
+        'the manifested lines stay untouched.',
+    };
+  }
+  if (matchedLineTotal !== manifestedLineTotal) {
+    return {
+      status: 'not-canonical',
+      strayLineNumbers: [],
+      message:
+        `judgments.jsonl matches only ${matchedLineTotal} of ${manifestedLineTotal} manifested v1 line(s); ` +
+        'a closed legacy line was edited or deleted. Restore workbench/judgments.jsonl from git history.',
+    };
+  }
+  return {
+    status: 'closed-canonical',
+    strayLineNumbers: [],
+    message: `Legacy judgment log is closed and canonical (${manifestedLineTotal} manifested v1 lines).`,
+  };
 }
 
 async function git(args: readonly string[]): Promise<string> {

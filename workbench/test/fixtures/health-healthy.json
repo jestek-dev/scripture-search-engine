@@ -41,6 +41,11 @@
     "effective": 2,
     "stale": 0
   },
+  "legacyLog": {
+    "status": "closed-canonical",
+    "strayLineNumbers": [],
+    "message": "Legacy judgment log is closed and canonical (3 manifested v1 lines)."
+  },
   "gauntlet": {
     "status": "healthy",
     "verdict": "ADMIT",

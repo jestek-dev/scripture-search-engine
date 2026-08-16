@@ -592,20 +592,27 @@ export function parseLegacyJudgmentLog(raw: string | Uint8Array): readonly Legac
   }
   if (start < bytes.length) lines.push(bytes.subarray(start));
 
-  return lines.map((line, index) => {
-    if (line.length === 0) throw new CaseValidationError(`judgments.jsonl line ${index + 1} is blank.`);
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(line.toString('utf8')) as unknown;
-    } catch {
-      throw new CaseValidationError(`judgments.jsonl line ${index + 1} is not valid JSON.`);
-    }
-    return {
-      lineNumber: index + 1,
-      lineSha256: sha256(line),
-      judgment: parseLegacyJudgmentIdentity(parsed, `judgments.jsonl line ${index + 1}`),
-    };
-  });
+  return lines.map((line, index) => parseLegacyJudgmentLine(line, index + 1));
+}
+
+/**
+ * Parses one immutable v1 line under its true file line number, so callers
+ * that filter a mixed v1/v2 log can still report positions in the real file.
+ */
+export function parseLegacyJudgmentLine(line: string | Uint8Array, lineNumber: number): LegacyJudgmentLine {
+  const bytes = typeof line === 'string' ? Buffer.from(line, 'utf8') : Buffer.from(line);
+  if (bytes.length === 0) throw new CaseValidationError(`judgments.jsonl line ${lineNumber} is blank.`);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(bytes.toString('utf8')) as unknown;
+  } catch {
+    throw new CaseValidationError(`judgments.jsonl line ${lineNumber} is not valid JSON.`);
+  }
+  return {
+    lineNumber,
+    lineSha256: sha256(bytes),
+    judgment: parseLegacyJudgmentIdentity(parsed, `judgments.jsonl line ${lineNumber}`),
+  };
 }
 
 /** Safe, read-only loader for the committed v1 judgment log. */
@@ -668,10 +675,10 @@ export function validateLegacyMigrationManifest(input: unknown): LegacyMigration
   return { schemaVersion: 1, cases };
 }
 
+// No count precheck here: the manifest binds exactly CHECKED_V1_RECORD_COUNT
+// entries, each entry must consume one line, and unconsumed lines throw with
+// their line numbers — equally strict, but the error names the stray lines.
 function validateLegacyJudgmentLines(input: readonly LegacyJudgmentLine[]): readonly LegacyJudgmentLine[] {
-  if (input.length !== CHECKED_V1_RECORD_COUNT) {
-    throw new CaseValidationError(`judgments.jsonl must contain exactly ${CHECKED_V1_RECORD_COUNT} checked v1 records.`);
-  }
   const lineNumbers = new Set<number>();
   return input.map((line, index) => {
     if (!Number.isSafeInteger(line.lineNumber) || line.lineNumber < 1 || lineNumbers.has(line.lineNumber)) {
@@ -741,7 +748,14 @@ export function deriveLegacyCaseEvents(
       }
     }
   }
-  if (remaining.length !== 0) throw new CaseValidationError('A legacy judgment is not represented by the migration manifest.');
+  if (remaining.length !== 0) {
+    const strays = remaining.map((line) => line.lineNumber).sort((left, right) => left - right);
+    throw new CaseValidationError(
+      `judgments.jsonl line(s) ${strays.join(', ')} hold legacy v1 record(s) outside the closed migration manifest. ` +
+      'The v1 log is closed: delete the stray line(s) from workbench/judgments.jsonl and re-enter each judgment ' +
+      `through the v2 workbench — the ${CHECKED_V1_RECORD_COUNT} manifested lines stay untouched.`,
+    );
+  }
   return validateCaseEvents(events);
 }
 

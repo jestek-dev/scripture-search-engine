@@ -1,4 +1,4 @@
-import { unlinkSync, writeFileSync } from 'node:fs';
+import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
@@ -13,6 +13,7 @@ import {
   gauntletHealthFromParsed,
   readActiveGauntletRun,
   readGoldenAndCoverage,
+  readLegacyLogHealth,
 } from '../src/healthSources.js';
 import { repoRoot } from '../src/descriptor.js';
 
@@ -118,5 +119,63 @@ describe('health source semantics', () => {
   it('labels external reports explicitly instead of displaying relative traversal', () => {
     const external = path.join(os.tmpdir(), 'sse-external-gauntlet-report.json');
     expect(displayReportPath(external)).toBe(`external:${path.resolve(external).replaceAll('\\', '/')}`);
+  });
+});
+
+describe('legacy judgment log health', () => {
+  const realJudgmentsPath = path.join(repoRoot, 'workbench', 'judgments.jsonl');
+  const realManifestPath = path.join(repoRoot, 'workbench', 'legacy', 'migration-manifest.json');
+
+  function temporaryLog(suffix: string, content: string): string {
+    const file = path.join(os.tmpdir(), `sse-legacy-log-${process.pid}-${suffix}.jsonl`);
+    temporaryFiles.push(file);
+    writeFileSync(file, content, 'utf8');
+    return file;
+  }
+
+  it('reports the committed log as closed and canonical', async () => {
+    await expect(readLegacyLogHealth(realJudgmentsPath, realManifestPath)).resolves.toEqual({
+      status: 'closed-canonical',
+      strayLineNumbers: [],
+      message: 'Legacy judgment log is closed and canonical (3 manifested v1 lines).',
+    });
+  });
+
+  it('warns on a stray legacy append with its true file line number, never throwing', async () => {
+    const raw = readFileSync(realJudgmentsPath, 'utf8');
+    const stray = JSON.stringify({ ...JSON.parse(raw.split('\n')[0]!) as object, note: 'stray' });
+    const logPath = temporaryLog('stray', `${raw}${stray}\n`);
+    const health = await readLegacyLogHealth(logPath, realManifestPath);
+    expect(health).toMatchObject({ status: 'stray-lines', strayLineNumbers: [4] });
+    expect(health!.message).toContain('line(s) 4');
+    expect(health!.message).toContain('v2 workbench');
+  });
+
+  it('ignores v2 lines and counts stray positions in the real file', async () => {
+    const raw = readFileSync(realJudgmentsPath, 'utf8');
+    const v2Line = JSON.stringify({ schemaVersion: 2, anything: true });
+    const stray = JSON.stringify({ ...JSON.parse(raw.split('\n')[0]!) as object, note: 'stray' });
+    const logPath = temporaryLog('mixed', `${raw}${v2Line}\n${stray}\n`);
+    await expect(readLegacyLogHealth(logPath, realManifestPath)).resolves.toMatchObject({
+      status: 'stray-lines',
+      strayLineNumbers: [5],
+    });
+  });
+
+  it('flags an edited or deleted manifested line as not canonical', async () => {
+    const raw = readFileSync(realJudgmentsPath, 'utf8');
+    const [first, ...rest] = raw.split('\n');
+    void first;
+    const logPath = temporaryLog('truncated', rest.join('\n'));
+    await expect(readLegacyLogHealth(logPath, realManifestPath)).resolves.toMatchObject({
+      status: 'not-canonical',
+      strayLineNumbers: [],
+    });
+  });
+
+  it('reports an absent manifest as absent instead of failing', async () => {
+    await expect(
+      readLegacyLogHealth(realJudgmentsPath, path.join(os.tmpdir(), `sse-no-manifest-${process.pid}.json`)),
+    ).resolves.toMatchObject({ status: 'absent' });
   });
 });

@@ -235,7 +235,28 @@ describe('legacy migration manifest', () => {
     };
     tamperedManifest.cases[0]!.entries[0]!.judgment.note = 'altered manifest identity';
     expect(() => deriveLegacyCaseEvents(tamperedManifest as unknown as LegacyMigrationManifest, judgments)).toThrow(/full identity/);
-    expect(() => deriveLegacyCaseEvents(manifest, [...judgments, judgments[0]!])).toThrow(/exactly 3/);
+    expect(() => deriveLegacyCaseEvents(manifest, [...judgments, judgments[0]!])).toThrow(/duplicate line number/);
+  });
+
+  it('names stray line numbers and the remediation, and removing the stray restores validity', async () => {
+    const { rawJudgments, manifest } = await legacyInputs();
+    const strayRecord = { ...JSON.parse(rawJudgments.split('\n')[0]!) as object, note: 'a stray legacy append' };
+    const withStray = `${rawJudgments}${JSON.stringify(strayRecord)}\n`;
+
+    let failure: Error | null = null;
+    try {
+      deriveLegacyCaseEvents(manifest, parseLegacyJudgmentLog(withStray));
+    } catch (error) {
+      failure = error as Error;
+    }
+    expect(failure).not.toBeNull();
+    expect(failure!.message).toContain('line(s) 4');
+    expect(failure!.message).toContain('delete the stray line(s)');
+    expect(failure!.message).toContain('v2 workbench');
+
+    // Recoverable, not a permanent brick: the same inputs minus the stray
+    // line derive the canonical events again.
+    expect(deriveLegacyCaseEvents(manifest, parseLegacyJudgmentLog(rawJudgments)).length).toBeGreaterThan(0);
   });
 
   it('rejects a semantically valid but noncanonical cases projection', async () => {

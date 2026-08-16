@@ -59,6 +59,11 @@ const HEALTHY_INPUT: HealthInputs = {
     aheadBy: 0,
     behindBy: 0,
   },
+  legacyLog: {
+    status: 'closed-canonical',
+    strayLineNumbers: [],
+    message: 'Legacy judgment log is closed and canonical (3 manifested v1 lines).',
+  },
 };
 
 function sortById<T extends { readonly id: string }>(items: readonly T[]): readonly T[] {
@@ -117,6 +122,11 @@ describe('health aggregation', () => {
         total: 2,
         effective: 2,
         stale: 0,
+      },
+      legacyLog: {
+        status: 'closed-canonical',
+        strayLineNumbers: [],
+        message: 'Legacy judgment log is closed and canonical (3 manifested v1 lines).',
       },
       gauntlet: {
         status: 'healthy',
@@ -217,6 +227,40 @@ describe('health aggregation', () => {
       'gauntlet',
     ]);
     expect(stale.signals.map((signal) => signal.message)).toContain('descriptor is known stale');
+  });
+
+  it('warns on stray legacy lines without degrading the server past stale', () => {
+    const strays = snapshot({
+      ...HEALTHY_INPUT,
+      legacyLog: {
+        status: 'stray-lines',
+        strayLineNumbers: [4],
+        message: 'judgments.jsonl line(s) 4 hold legacy v1 record(s) outside the closed migration manifest.',
+      },
+    });
+
+    expect(strays.status).toBe('stale');
+    expect(strays.legacyLog).toEqual({
+      status: 'stray-lines',
+      strayLineNumbers: [4],
+      message: 'judgments.jsonl line(s) 4 hold legacy v1 record(s) outside the closed migration manifest.',
+    });
+    expect(strays.signals).toEqual([
+      {
+        area: 'judgment',
+        severity: 'warn',
+        message: 'judgments.jsonl line(s) 4 hold legacy v1 record(s) outside the closed migration manifest.',
+        subjects: ['4'],
+      },
+    ]);
+  });
+
+  it('reports an unchecked legacy log as unavailable without any signal', () => {
+    const { legacyLog: _ignored, ...rest } = HEALTHY_INPUT;
+    const unchecked = snapshot(rest);
+    expect(unchecked.status).toBe('healthy');
+    expect(unchecked.signals).toEqual([]);
+    expect(unchecked.legacyLog.status).toBe('unavailable');
   });
 
   it('marks a release/artifact mismatch as rejected', () => {

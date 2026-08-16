@@ -1,6 +1,6 @@
 {
   "name": "@jestek-dev/scripture-workbench",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Dev-only curation workbench: judges the verified release artifact on localhost. Never published, never shipped to a consumer.",

@@ -32,7 +32,7 @@ import { parseVerseId } from '../../pipeline/src/verseId.js';
 import { repoRoot as realRepoRoot } from './descriptor.js';
 import { applyMutationPlan, createMutationPlan, type ApplyOptions } from './applyJournal.js';
 import {
-  parseLegacyJudgmentLog,
+  parseLegacyJudgmentLine,
   readValidatedCaseEventLog,
   validateCanonicalLegacyCaseLog,
   validateLegacyMigrationManifest,
@@ -383,16 +383,18 @@ async function validateCasesBeforeCompilation(
   } catch {
     throw new Error('workbench legacy migration manifest is not valid JSON.');
   }
+  // Legacy lines keep their true file line numbers, so a stray v1 append is
+  // reported at the exact line to delete — recoverable, not a permanent brick.
   const legacyLines = rawLog
     .split('\n')
-    .filter((line) => line.trim() !== '')
-    .filter((line) => !Object.hasOwn(JSON.parse(line) as object, 'schemaVersion'));
-  const legacyLog = `${legacyLines.join('\n')}${legacyLines.length > 0 ? '\n' : ''}`;
+    .map((text, index) => ({ text, lineNumber: index + 1 }))
+    .filter(({ text }) => text.trim() !== '')
+    .filter(({ text }) => !Object.hasOwn(JSON.parse(text) as object, 'schemaVersion'));
   const canonicalCases = await readFile(casesPath, 'utf8');
   validateCanonicalLegacyCaseLog(
     canonicalCases,
     validateLegacyMigrationManifest(manifest),
-    parseLegacyJudgmentLog(legacyLog),
+    legacyLines.map(({ text, lineNumber }) => parseLegacyJudgmentLine(text, lineNumber)),
   );
 }
 
