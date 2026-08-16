@@ -34,6 +34,20 @@ import { previewFixturePromotion, type FixturePromotionPlan } from '../src/fixtu
 const execFileAsync = promisify(execFile);
 const temporary: string[] = [];
 const SIGNING_KEY = 'admission-test-signing-key-with-ample-entropy';
+const HOUR_MS = 60 * 60 * 1000;
+const DAY_MS = 24 * HOUR_MS;
+// Deliberately far-future clock: every fixture timestamp derives from it, so any
+// path that leaks back onto the real clock sees future-dated reports and fails
+// `stale_gauntlet` the same day it lands, instead of expiring silently later.
+const TEST_CLOCK = new Date('2050-06-01T12:00:00.000Z');
+
+function testNow(): Date {
+  return new Date(TEST_CLOCK);
+}
+
+function at(offsetMs: number): string {
+  return new Date(TEST_CLOCK.valueOf() + offsetMs).toISOString();
+}
 const CASE_ID = '11111111-1111-4111-8111-111111111111';
 const OPERATION_ID = '22222222-2222-4222-8222-222222222222';
 const REFERENCE: EngineIdentity = { engineVersion: 'test-engine', corpusFingerprint: 'a'.repeat(64), layerFingerprint: 'b'.repeat(64) };
@@ -151,13 +165,14 @@ async function previewInput(root: string, commit: string, sourceText: string, su
     candidate, comparison, comparisonBinding: comparisonBinding(candidate, comparison),
     gauntlet: { reportPath: 'eval/.runs/admission-report.json' },
     trustedGauntletLoader: trustedGauntletLoader(),
+    now: testNow,
     reviewedComparisonQueries: comparison.queries.filter((query) => query.top10Changed).map((query) => query.query),
   };
 }
 
 function machineReport(expectation: AdmissionGauntletExpectation, reportPath: string, blocking = false, variant = 'primary'): GauntletMachineReport {
-  const startedAt = '2026-08-11T10:00:00.000Z';
-  const finishedAt = '2026-08-11T10:00:01.000Z';
+  const startedAt = at(-2 * HOUR_MS);
+  const finishedAt = at(-2 * HOUR_MS + 1000);
   const gates = GAUNTLET_GATE_ROSTER.map((gate, index) => blocking && index === 0
     ? fail(gate.id, gate.title, 'Deliberate blocking gate.', [{ message: 'Deliberate admission blocker.', subjects: ['candidate'] }])
     : pass(gate.id, gate.title, `Complete trusted test gate passed (${variant}).`));
@@ -194,7 +209,7 @@ function releaseMachineReport(preview: AdmissionPreview, rebuilt: RebuildEvidenc
     layerFingerprint: preview.candidate.layerFingerprint,
   };
   const report = buildMachineReport({
-    startedAt: '2026-08-11T10:00:02.000Z', finishedAt: '2026-08-11T10:00:03.000Z',
+    startedAt: at(-2 * HOUR_MS + 2000), finishedAt: at(-2 * HOUR_MS + 3000),
     identity: {
       gitCommitSha: preview.admittedBaseCommit, dirtyTreeSha256: '5'.repeat(64),
       descriptor: { path: 'artifacts/content-artifact.json', sha256: rebuilt.descriptorSha256 },
@@ -261,7 +276,7 @@ function descriptor(preview: AdmissionPreview) {
 function dependencies(overrides: Partial<AdmissionDependencies> = {}): AdmissionDependencies {
   return {
     decisionSigningKey: SIGNING_KEY,
-    now: () => new Date('2026-08-11T12:00:00.000Z'),
+    now: testNow,
     async rebuild(_worktree, preview) {
       const built = descriptor(preview);
       return { status: 'REBUILT', descriptor: built, descriptorSha256: 'c'.repeat(64), databaseSha256: built.databaseSha256, command: outcome('build') };
@@ -282,15 +297,15 @@ function dependencies(overrides: Partial<AdmissionDependencies> = {}): Admission
 function decisions(preview: AdmissionPreview): AdmissionDecision[] {
   const result = [signAdmissionDecision({
     kind: 'source-proposal', subjectDigest: preview.sourceDecisionSubject, previewDigest: preview.digest, reviewer: 'Release Reviewer',
-    rationale: 'The exact structured source changes are reviewed and warranted.', decidedAt: '2026-08-11T11:00:00.000Z',
+    rationale: 'The exact structured source changes are reviewed and warranted.', decidedAt: at(-HOUR_MS),
   }, SIGNING_KEY)];
   for (const fixture of preview.fixtureDecisionSubjects) result.push(signAdmissionDecision({
     kind: 'fixture-promotion', subjectDigest: fixture.digest, previewDigest: preview.digest, reviewer: 'Fixture Reviewer',
-    rationale: `Fixture ${fixture.fixtureId} has independent passing evidence.`, decidedAt: '2026-08-11T11:01:00.000Z',
+    rationale: `Fixture ${fixture.fixtureId} has independent passing evidence.`, decidedAt: at(-HOUR_MS + 60_000),
   }, SIGNING_KEY));
   if (preview.probeDecisionSubject !== null) result.push(signAdmissionDecision({
     kind: 'probe-baseline', subjectDigest: preview.probeDecisionSubject, previewDigest: preview.digest, reviewer: 'Probe Reviewer',
-    rationale: 'Every intentional probe movement has a specific reviewed explanation.', decidedAt: '2026-08-11T11:02:00.000Z',
+    rationale: 'Every intentional probe movement has a specific reviewed explanation.', decidedAt: at(-HOUR_MS + 120_000),
     probeRationales: preview.probeMovements.map((movement) => ({ ...movement, rationale: `Reviewed movement for ${movement.probeId}.` })),
   }, SIGNING_KEY));
   return result;
@@ -436,8 +451,28 @@ describe('M10 controlled source admission', () => {
       await expect(previewAdmission({
         ...input,
         trustedGauntletLoader: trustedGauntletLoader({ mutate }),
-      })).rejects.toBeInstanceOf(AdmissionError);
+      })).rejects.toMatchObject({ code: 'gauntlet_identity_mismatch' });
     }
+  });
+
+  it('judges gauntlet freshness against the injected clock and rejects both 24h window edges', async () => {
+    const repo = await repository();
+    const input = await previewInput(repo.root, repo.commit, repo.sourceText);
+    const stamped = (startedAt: string, finishedAt: string) => trustedGauntletLoader({
+      mutate(report) { return redigestMachineReport({ ...report, startedAt, finishedAt }); },
+    });
+    // Exactly at the 24h boundary: inside the window, but only under the injected 2050 clock.
+    await expect(previewAdmission({ ...input, trustedGauntletLoader: stamped(at(-DAY_MS), at(-DAY_MS)) })).resolves.toBeDefined();
+    // The same fixtures without the injected clock are future-dated on the real clock:
+    // any real-clock leak fails loudly here instead of expiring on a calendar date.
+    const { now: _injected, ...withoutClock } = input;
+    await expect(previewAdmission(withoutClock)).rejects.toMatchObject({ code: 'stale_gauntlet' });
+    // One millisecond past the 24h window: stale.
+    await expect(previewAdmission({ ...input, trustedGauntletLoader: stamped(at(-DAY_MS - 1), at(-DAY_MS - 1)) }))
+      .rejects.toMatchObject({ code: 'stale_gauntlet' });
+    // One millisecond in the injected clock's future: rejected as future-dated.
+    await expect(previewAdmission({ ...input, trustedGauntletLoader: stamped(at(0), at(1)) }))
+      .rejects.toMatchObject({ code: 'stale_gauntlet' });
   });
 
   it('rejects a final release report not bound to the rebuilt release descriptor', async () => {
@@ -478,7 +513,7 @@ describe('M10 controlled source admission', () => {
     await git(repo.root, ['-c', 'user.name=Admission Test', '-c', 'user.email=admission@example.test', 'commit', '-m', 'review surfaces']);
     const commit = await git(repo.root, ['rev-parse', 'HEAD']);
     const promotion = await previewFixturePromotion(repo.root, 'hope-gap', { evidenceVerifier: async () => ({
-      reportPath: 'eval/.runs/report.json', reportSha256: 'a'.repeat(64), finishedAt: '2026-08-11T10:00:00.000Z', gateSummary: 'pending fixture passes',
+      reportPath: 'eval/.runs/report.json', reportSha256: 'a'.repeat(64), finishedAt: at(-2 * HOUR_MS), gateSummary: 'pending fixture passes',
     }) });
     const input = {
       ...(await previewInput(repo.root, commit, repo.sourceText)), fixturePromotions: [promotion],
@@ -496,7 +531,7 @@ describe('M10 controlled source admission', () => {
 
     const incompleteProbe = signAdmissionDecision({
       kind: 'probe-baseline', subjectDigest: preview.probeDecisionSubject!, previewDigest: preview.digest, reviewer: 'Probe Reviewer', rationale: 'Review only one movement is deliberately incomplete.',
-      decidedAt: '2026-08-11T11:02:00.000Z', probeRationales: [{ ...preview.probeMovements[0]!, rationale: 'Only one rationale is not sufficient.' }],
+      decidedAt: at(-HOUR_MS + 120_000), probeRationales: [{ ...preview.probeMovements[0]!, rationale: 'Only one rationale is not sufficient.' }],
     }, SIGNING_KEY);
     await expect(runAdmission({
       ...input, expectedPreviewDigest: preview.digest,
