@@ -182,6 +182,8 @@ provenance, caps, and the three identities are all visible in the UI.
 
 ## 4. Stage 2 — judgment log
 
+> **Retired (workbench 0.2.0):** `POST /api/judgment` now answers 410 for every method; the v1 log is closed and all judgment writes go through `POST /api/v2/judgments`.
+
 `POST /api/judgment` appends exactly one line to `workbench/judgments.jsonl`
 — an append-only JSONL file **committed to git**, so the judgment history is
 reviewable data with the same lineage discipline as everything else.

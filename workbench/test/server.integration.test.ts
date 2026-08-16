@@ -834,6 +834,32 @@ describe('legacy HTTP contracts', () => {
     expect(passage.status).toBe(200);
     expect(await passage.json()).toEqual(expectedPassage);
   }, 60_000);
+
+  it('answers 410 for the retired v1 judgment endpoint on every method and appends nothing', async () => {
+    const port = await unusedPort();
+    const nonce = `${process.pid}-${port}-${Date.now()}`;
+    const judgmentsPath = path.join(os.tmpdir(), `sse-tombstone-judgments-${nonce}.jsonl`);
+    temporaryFiles.push(judgmentsPath);
+    await startReviewedFixtureServer(port, { WORKBENCH_JUDGMENTS_PATH: judgmentsPath });
+
+    const posted = await postJson(`http://127.0.0.1:${port}/api/judgment`, {
+      query: 'hope',
+      verdict: 'fits',
+      targetId: 'WEB:19042005',
+    });
+    expect(posted.status).toBe(410);
+    expect(await responseJson(posted)).toEqual({
+      error: 'POST /api/judgment is gone; the v1 judgment log is closed. Submit judgments through POST /api/v2/judgments.',
+    });
+
+    for (const method of ['GET', 'PUT', 'DELETE'] as const) {
+      const response = await fetch(`http://127.0.0.1:${port}/api/judgment`, { method });
+      expect(response.status).toBe(410);
+    }
+
+    // The tombstone wrote nothing: the log file was never created.
+    expect(() => readFileSync(judgmentsPath)).toThrow();
+  }, 60_000);
 });
 
 describe('v2 review HTTP contracts', () => {
@@ -940,6 +966,25 @@ describe('v2 review HTTP contracts', () => {
       ok: false,
       error: { code: 'validation_failed', message: expect.stringContaining('stamped by the server') },
     });
+
+    // The second historical v1-append path: a routed v2 request whose body
+    // has no action. The closed dispatcher rejects it before any append.
+    const v1Shaped = await postJson(`http://127.0.0.1:${port}/api/v2/judgments`, {
+      caseId: created.data.case.caseId,
+      snapshotToken: created.data.review.token,
+      query: 'hope',
+      verdict: 'fits',
+      targetId,
+    });
+    expect(v1Shaped.status).toBe(400);
+    expect(await responseJson(v1Shaped)).toMatchObject({
+      ok: false,
+      error: {
+        code: 'validation_failed',
+        message: expect.stringContaining('v1 judgment log (workbench/judgments.jsonl) is closed'),
+      },
+    });
+    expect(() => readFileSync(judgmentsPath)).toThrow(); // nothing appended
 
     const acceptedResponse = await postJson(`http://127.0.0.1:${port}/api/v2/judgments`, {
       caseId: created.data.case.caseId,

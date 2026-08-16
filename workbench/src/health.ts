@@ -42,6 +42,19 @@ export interface JudgmentHealthInput extends JudgmentIdentity {
   readonly at: string;
 }
 
+export type LegacyLogStatus = 'closed-canonical' | 'stray-lines' | 'not-canonical' | 'absent';
+
+/**
+ * The closed v1 portion of `judgments.jsonl` measured against the migration
+ * manifest. A warning surface only: strays degrade compile-judgments, never
+ * the server, so this never raises health past a warn.
+ */
+export interface LegacyLogHealthInput {
+  readonly status: LegacyLogStatus;
+  readonly strayLineNumbers: readonly number[];
+  readonly message: string;
+}
+
 export interface GauntletHealthInput {
   readonly status: GauntletStatus;
   readonly verdict?: 'ADMIT' | 'ADMIT_WITH_WARNINGS' | 'REJECT' | 'NO_MEASURABLE_EFFECT';
@@ -86,6 +99,7 @@ export interface HealthInputs {
   readonly gauntlet: GauntletHealthInput | null;
   readonly git: GitBranchHealthInput | null;
   readonly startup?: StartupHealthInput;
+  readonly legacyLog?: LegacyLogHealthInput | null;
 }
 
 export interface HealthSnapshot {
@@ -119,6 +133,11 @@ export interface HealthSnapshot {
     readonly total: number;
     readonly effective: number;
     readonly stale: number;
+  };
+  readonly legacyLog: {
+    readonly status: LegacyLogStatus | 'unavailable';
+    readonly strayLineNumbers: readonly number[];
+    readonly message: string;
   };
   readonly gauntlet: {
     readonly status: GauntletStatus;
@@ -325,6 +344,20 @@ export function aggregateHealth(input: HealthInputs): HealthSnapshot {
     status = raiseStatus(status, 'stale');
   }
 
+  // Warning only, by design: the compiler is where a bad legacy log fails
+  // closed, so health reports it without ever degrading the server.
+  const legacyLog = input.legacyLog ?? null;
+  if (legacyLog !== null && legacyLog.status !== 'closed-canonical' && legacyLog.status !== 'absent') {
+    pushSignal(
+      signals,
+      'judgment',
+      'warn',
+      legacyLog.message,
+      legacyLog.strayLineNumbers.length > 0 ? legacyLog.strayLineNumbers.map(String) : undefined,
+    );
+    status = raiseStatus(status, 'stale');
+  }
+
   const judgmentCounts = summarizeJudgments(input.judgments, artifact);
   if (judgmentCounts.stale > 0) {
     pushSignal(
@@ -436,6 +469,13 @@ export function aggregateHealth(input: HealthInputs): HealthSnapshot {
       stale: coverageCounts.stale,
     },
     judgments: judgmentCounts,
+    legacyLog: legacyLog === null
+      ? { status: 'unavailable', strayLineNumbers: [], message: 'Legacy judgment log state was not checked.' }
+      : {
+          status: legacyLog.status,
+          strayLineNumbers: legacyLog.strayLineNumbers,
+          message: legacyLog.message,
+        },
     gauntlet: {
       status: input.gauntlet?.status ?? 'unavailable',
       verdict: input.gauntlet?.verdict ?? null,

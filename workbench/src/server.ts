@@ -8,8 +8,10 @@
  * reshaping happens here: what the API returns is byte-for-byte what any
  * consumer would compute.
  *
- * The only write anywhere is `POST /api/judgment`, which appends one line to
- * `workbench/judgments.jsonl` (plan §4). The artifact stays read-only.
+ * Every write goes through `/api/v2/` against a captured review snapshot.
+ * The retired v1 `POST /api/judgment` answers 410 for every method — the v1
+ * log is closed, and no route can append a v1 line to
+ * `workbench/judgments.jsonl`. The artifact stays read-only.
  *
  * Startup re-verifies the artifact's sha256 against the committed descriptor
  * every time. The workbench judges the reviewed artifact or nothing.
@@ -29,6 +31,7 @@ import {
   readGitHealth,
   readGoldenAndCoverage,
   readJudgmentHealth,
+  readLegacyLogHealth,
 } from './healthSources.js';
 import { createJudgmentLog } from './judgments.js';
 import { rankInboxCases, type InboxCaseSnapshot } from './inbox.js';
@@ -201,7 +204,6 @@ function trustedMutationRequest(request: http.IncomingMessage): boolean {
 
 function requiresTrustedJson(pathname: string): boolean {
   return (
-    pathname === '/api/judgment' ||
     pathname === '/api/v2/checks' ||
     pathname === '/api/v2/compile/preview' ||
     pathname === '/api/v2/compile/apply' ||
@@ -469,26 +471,9 @@ async function main(): Promise<void> {
   }
 
   // Reviewer is a static string (plan decision 5); identities are stamped
-  // from the running engine, never taken from the client. A `missing`
-  // reference is validated through `engine.passage()`, whose typed result
-  // makes an invalid reference a value rather than an exception — and the
-  // resolved passage text rides back as the excerpt, so the text itself can
-  // stand in for a hand-written note (§4, v1.1).
+  // from the running engine, never taken from the client.
   const reviewer = REVIEWER;
   console.log(`reviewer:          ${reviewer}`);
-  const judgments = engine === null || degradedReadOnly ? null : createJudgmentLog({
-    logPath: JUDGMENTS_PATH,
-    reviewer,
-    identity: {
-      engineVersion: engine.engineVersion,
-      corpusFingerprint: engine.corpusFingerprint,
-      layerFingerprint: engine.layerFingerprint,
-    },
-    resolveReference: async (reference) => {
-      const outcome = await engine.passage(reference);
-      return outcome.kind === 'passage' ? passageExcerpt(outcome.passage.verses) : null;
-    },
-  });
   const caseLog = engine === null || degradedReadOnly ? null : new CaseLog({
     path: CASES_PATH,
     reviewer,
@@ -672,11 +657,12 @@ async function main(): Promise<void> {
           sendV2Error(response, 405, 'method_not_allowed', 'Only GET is allowed for /api/v2/health.');
           return;
         }
-        const [{ golden, coverage }, judgmentRows, gauntlet, git] = await Promise.all([
+        const [{ golden, coverage }, judgmentRows, gauntlet, git, legacyLog] = await Promise.all([
           readGoldenAndCoverage(),
           readJudgmentHealth(),
           readGauntletHealth(),
           readGitHealth(),
+          readLegacyLogHealth(),
         ]);
         const artifactIdentity =
           engine === null
@@ -695,6 +681,7 @@ async function main(): Promise<void> {
           gauntlet,
           git,
           startup: { diagnostics: startupDiagnostics },
+          legacyLog,
         });
         sendV2Success(response, 200, {
           ...health,
@@ -1706,29 +1693,20 @@ async function main(): Promise<void> {
         return;
       }
 
-      if (request.method === 'POST' && url.pathname === '/api/judgment') {
-        if (judgments === null) {
-          sendError(response, 503, artifactFailure);
-          return;
-        }
-        let body: unknown;
-        try {
-          body = await readJsonBody(request);
-        } catch (error) {
-          sendError(response, 400, error instanceof Error ? error.message : 'Bad request body.');
-          return;
-        }
-        const result = await judgments.submit(body);
-        if (!result.ok) {
-          sendError(response, 400, result.reason);
-          return;
-        }
-        sendJson(response, 201, JSON.stringify({ ok: true, record: result.record }));
+      // Method-agnostic tombstone: one stray v1 append could brick
+      // compile-judgments forever, so the retired endpoint fails loud
+      // instead of half-working for some verbs.
+      if (url.pathname === '/api/judgment') {
+        sendError(
+          response,
+          410,
+          'POST /api/judgment is gone; the v1 judgment log is closed. Submit judgments through POST /api/v2/judgments.',
+        );
         return;
       }
 
       if (request.method !== 'GET') {
-        sendError(response, 405, 'The only write is POST /api/judgment; everything else is GET.');
+        sendError(response, 405, 'All writes go through /api/v2/; everything else is GET.');
         return;
       }
 

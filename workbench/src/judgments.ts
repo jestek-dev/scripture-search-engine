@@ -157,19 +157,6 @@ export interface JudgmentV2Context {
 }
 
 /** The fields a client may send. Everything else is stamped server-side. */
-const CLIENT_FIELDS = new Set([
-  'query',
-  'verdict',
-  'targetId',
-  'reference',
-  'pin',
-  'reasonFamily',
-  'cause',
-  'causeInferred',
-  'conceptId',
-  'note',
-]);
-
 const V2_CLIENT_FIELDS = new Set([
   'action',
   'targetId',
@@ -341,195 +328,6 @@ function isDecodableTargetId(value: string): boolean {
   const chapter = Math.floor((verseId % 1_000_000) / 1_000);
   const verse = verseId % 1_000;
   return bookId >= 1 && bookId <= 66 && chapter >= 1 && verse >= 1;
-}
-
-/** Rejects with a plain-English reason; never throws for bad input. */
-async function validateV1Judgment(
-  body: unknown,
-  options: JudgmentLogOptions,
-): Promise<SubmitResult> {
-  if (!isPlainObject(body)) {
-    return { ok: false, reason: 'A judgment must be a JSON object.' };
-  }
-
-  for (const key of Object.keys(body)) {
-    if (!CLIENT_FIELDS.has(key)) {
-      const stamped = ['at', 'reviewer', 'excerpt', 'engineVersion', 'corpusFingerprint', 'layerFingerprint'];
-      return {
-        ok: false,
-        reason: stamped.includes(key)
-          ? `"${key}" is stamped by the server, never sent by the client.`
-          : `Unknown field "${key}".`,
-      };
-    }
-  }
-
-  if (!nonEmptyString(body.query)) {
-    return { ok: false, reason: 'Every judgment needs the query as typed ("query").' };
-  }
-  const verdict = body.verdict;
-  if (typeof verdict !== 'string' || !(VERDICTS as readonly string[]).includes(verdict)) {
-    return { ok: false, reason: 'Verdict must be "fits", "doesnt-fit", or "missing".' };
-  }
-
-  if (body.note !== undefined && !nonEmptyString(body.note)) {
-    return { ok: false, reason: 'A note, when present, must be non-empty text.' };
-  }
-
-  // Per-verdict field rules, straight from the plan's schema table (§4).
-  let attachedExcerpt: string | undefined;
-  if (verdict === 'missing') {
-    for (const [field, hint] of [
-      ['targetId', 'a "missing" judgment names a reference, not a result'],
-      ['cause', 'causes belong to "doesnt-fit" judgments'],
-      ['causeInferred', 'causeInferred belongs to "doesnt-fit" judgments'],
-      ['conceptId', 'conceptId belongs to "doesnt-fit" judgments'],
-      ['pin', 'pin belongs to "fits" judgments'],
-      ['reasonFamily', 'reasonFamily belongs to pinned "fits" judgments'],
-    ] as const) {
-      if (body[field] !== undefined) {
-        return { ok: false, reason: `"${field}" does not belong on a "missing" judgment — ${hint}.` };
-      }
-    }
-    if (!nonEmptyString(body.reference)) {
-      return {
-        ok: false,
-        reason: 'A "missing" judgment needs the reference that should have surfaced.',
-      };
-    }
-    const excerpt = await options.resolveReference(body.reference);
-    if (excerpt === null) {
-      return {
-        ok: false,
-        reason: `"${body.reference}" is not a reference the engine can resolve.`,
-      };
-    }
-    // The defend-it-from-the-text rule (§4). A note still satisfies it, but
-    // so does the text itself: when the server can attach the passage
-    // excerpt, that IS the defense, and no hand-written note is required.
-    if (!nonEmptyString(body.note)) {
-      if (!nonEmptyString(excerpt)) {
-        return {
-          ok: false,
-          reason:
-            'A "missing" judgment needs a note defending it from the text — the passage ' +
-            'text could not be attached, so no bare clicks.',
-        };
-      }
-      attachedExcerpt = excerpt.trim();
-    }
-  } else {
-    // fits / doesnt-fit: judged against a result the engine actually returned.
-    if (body.reference !== undefined) {
-      return { ok: false, reason: '"reference" belongs to "missing" judgments only.' };
-    }
-    if (!nonEmptyString(body.targetId)) {
-      return { ok: false, reason: `A "${verdict}" judgment needs the result's targetId.` };
-    }
-    if (!isDecodableTargetId(body.targetId)) {
-      return {
-        ok: false,
-        reason: `"${body.targetId}" is not a target id like "WEB:59001022" (translation:verse-id).`,
-      };
-    }
-  }
-
-  if (verdict === 'fits') {
-    for (const [field, hint] of [
-      ['cause', 'causes belong to "doesnt-fit" judgments'],
-      ['causeInferred', 'causeInferred belongs to "doesnt-fit" judgments'],
-      ['conceptId', 'conceptId belongs to "doesnt-fit" judgments'],
-    ] as const) {
-      if (body[field] !== undefined) {
-        return { ok: false, reason: `"${field}" does not belong on a "fits" judgment — ${hint}.` };
-      }
-    }
-    if (body.pin !== undefined && body.pin !== true) {
-      return { ok: false, reason: 'Omit "pin" for a plain ✓; send pin: true only to pin.' };
-    }
-    if (body.reasonFamily !== undefined) {
-      if (body.pin !== true) {
-        return {
-          ok: false,
-          reason: '"reasonFamily" only makes sense on a pinned ✓ — it compiles into the fixture.',
-        };
-      }
-      if (!nonEmptyString(body.reasonFamily)) {
-        return { ok: false, reason: 'A reasonFamily, when present, must be non-empty text.' };
-      }
-    }
-  }
-
-  if (verdict === 'doesnt-fit') {
-    for (const [field, hint] of [
-      ['pin', 'pin belongs to "fits" judgments'],
-      ['reasonFamily', 'reasonFamily belongs to pinned "fits" judgments'],
-    ] as const) {
-      if (body[field] !== undefined) {
-        return {
-          ok: false,
-          reason: `"${field}" does not belong on a "doesnt-fit" judgment — ${hint}.`,
-        };
-      }
-    }
-    const cause = body.cause;
-    if (typeof cause !== 'string' || !(CAUSES as readonly string[]).includes(cause)) {
-      return {
-        ok: false,
-        reason: 'A ✗ needs a cause: "wrong-anchor", "concept-misfire", or "lexical-noise".',
-      };
-    }
-    if (body.causeInferred !== undefined && body.causeInferred !== true) {
-      return {
-        ok: false,
-        reason:
-          'Omit "causeInferred" for a reviewer-judged cause; send causeInferred: true only ' +
-          'when the workbench classified it.',
-      };
-    }
-    if (ANCHOR_AFFECTING_CAUSES.includes(cause as Cause)) {
-      if (!nonEmptyString(body.conceptId)) {
-        return {
-          ok: false,
-          reason: `A "${cause}" judgment must name the concept that produced the bad evidence.`,
-        };
-      }
-      if (!nonEmptyString(body.note)) {
-        return {
-          ok: false,
-          reason:
-            `A "${cause}" judgment implies ontology work, so it needs a note defending it ` +
-            'from the text — no bare clicks.',
-        };
-      }
-    } else if (body.conceptId !== undefined) {
-      return {
-        ok: false,
-        reason: '"conceptId" only belongs on "wrong-anchor" or "concept-misfire" judgments.',
-      };
-    }
-  }
-
-  const now = options.now ?? (() => new Date());
-  const record: JudgmentRecord = {
-    at: now().toISOString(),
-    reviewer: options.reviewer,
-    query: (body.query as string).trim(),
-    verdict: verdict as Verdict,
-    ...(body.targetId !== undefined ? { targetId: body.targetId as string } : {}),
-    ...(body.reference !== undefined ? { reference: (body.reference as string).trim() } : {}),
-    ...(body.pin === true ? { pin: true as const } : {}),
-    ...(body.reasonFamily !== undefined ? { reasonFamily: body.reasonFamily as string } : {}),
-    ...(body.cause !== undefined ? { cause: body.cause as Cause } : {}),
-    ...(body.causeInferred === true ? { causeInferred: true as const } : {}),
-    ...(body.conceptId !== undefined ? { conceptId: body.conceptId as string } : {}),
-    ...(body.note !== undefined ? { note: (body.note as string).trim() } : {}),
-    ...(attachedExcerpt !== undefined ? { excerpt: attachedExcerpt } : {}),
-    engineVersion: options.identity.engineVersion,
-    corpusFingerprint: options.identity.corpusFingerprint,
-    layerFingerprint: options.identity.layerFingerprint,
-  };
-  return { ok: true, record };
 }
 
 function isKnownSource(value: unknown): value is ReviewCaseSource {
@@ -814,10 +612,22 @@ async function validateV2Judgment(body: Record<string, unknown>, options: Judgme
   return { ok: true, record };
 }
 
-/** Validates either legacy v1 input or a v2 action, preserving v1 semantics exactly. */
+/**
+ * Validates a v2 action submission. The v1 log is closed: an action-less body
+ * is rejected outright, so no code path can append a new v1 line — persisted
+ * v1 history stays readable through `parseJudgmentRecord` forever.
+ */
 export async function validateJudgment(body: unknown, options: JudgmentLogOptions): Promise<SubmitResult> {
-  if (isPlainObject(body) && Object.hasOwn(body, 'action')) return validateV2Judgment(body, options);
-  return validateV1Judgment(body, options);
+  if (!isPlainObject(body)) return { ok: false, reason: 'A judgment must be a JSON object.' };
+  if (!Object.hasOwn(body, 'action')) {
+    return {
+      ok: false,
+      reason:
+        'The v1 judgment log (workbench/judgments.jsonl) is closed to new v1 records; ' +
+        'every judgment needs a v2 "action" and goes through POST /api/v2/judgments.',
+    };
+  }
+  return validateV2Judgment(body, options);
 }
 
 function exactPersistedKeys(

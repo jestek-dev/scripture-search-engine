@@ -1706,12 +1706,22 @@
 
     const startup = node('section', 'history-card stack');
     startup.appendChild(node('h3', '', 'Startup and git'));
+    const legacyLog = isPlainObject(health.legacyLog) ? health.legacyLog : null;
     startup.appendChild(twoColumnDefinitionList([
       ['Branch', { text: health.git.branch || 'Unavailable', className: 'mono-wrap' }],
       ['Ahead / behind', { text: `${health.git.aheadBy} / ${health.git.behindBy}`, className: '' }],
       ['Dirty tree', { text: health.git.dirty ? 'Yes' : 'No', className: '' }],
       ['Degraded startup', { text: health.startup.degraded ? 'Yes' : 'No', className: '' }],
+      ['Legacy judgment log', {
+        text: legacyLog && legacyLog.status === 'closed-canonical'
+          ? 'Closed and canonical'
+          : legacyLog ? legacyLog.status : 'Not checked',
+        className: '',
+      }],
     ]));
+    if (legacyLog && legacyLog.status !== 'closed-canonical' && legacyLog.status !== 'absent' && legacyLog.message) {
+      startup.appendChild(node('div', 'message warn', legacyLog.message));
+    }
     if (Array.isArray(health.startup.diagnostics) && health.startup.diagnostics.length > 0) {
       const list = node('div', 'stack');
       health.startup.diagnostics.forEach((item) => list.appendChild(node('div', 'message error', item)));

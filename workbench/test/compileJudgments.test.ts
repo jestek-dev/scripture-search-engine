@@ -513,6 +513,61 @@ describe('compile-judgments — determinism and ownership', () => {
   });
 });
 
+describe('compile-judgments — closed legacy log recovery', () => {
+  // The real committed legacy trio: judgments.jsonl, cases.jsonl, and the
+  // closed migration manifest, copied verbatim into the temp root.
+  async function scaffoldRealLegacy(): Promise<{ judgmentsPath: string; rawJudgments: string }> {
+    const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+    const judgmentsPath = path.join(root, 'workbench', 'judgments.jsonl');
+    const rawJudgments = await readFile(path.join(repo, 'workbench', 'judgments.jsonl'), 'utf8');
+    await mkdir(path.join(root, 'workbench', 'legacy'), { recursive: true });
+    await writeFile(judgmentsPath, rawJudgments);
+    await writeFile(
+      path.join(root, 'workbench', 'cases.jsonl'),
+      await readFile(path.join(repo, 'workbench', 'cases.jsonl'), 'utf8'),
+    );
+    await writeFile(
+      path.join(root, 'workbench', 'legacy', 'migration-manifest.json'),
+      await readFile(path.join(repo, 'workbench', 'legacy', 'migration-manifest.json'), 'utf8'),
+    );
+    return { judgmentsPath, rawJudgments };
+  }
+
+  it('fails loud on a stray legacy append — naming the file line to delete — and recovers once it is gone', async () => {
+    const { judgmentsPath, rawJudgments } = await scaffoldRealLegacy();
+    // Compilation of the intact committed history works.
+    await expect(planJudgmentCompilation(root)).resolves.toBeDefined();
+
+    const strayRecord = { ...JSON.parse(rawJudgments.split('\n')[0]!) as object, note: 'a stray legacy append' };
+    await writeFile(judgmentsPath, `${rawJudgments}${JSON.stringify(strayRecord)}\n`);
+    let failure: Error | null = null;
+    try {
+      await planJudgmentCompilation(root);
+    } catch (error) {
+      failure = error as Error;
+    }
+    expect(failure).not.toBeNull();
+    expect(failure!.message).toContain('line(s) 4');
+    expect(failure!.message).toContain('delete the stray line(s)');
+
+    // Recoverable, not a permanent brick: deleting the stray restores compilation.
+    await writeFile(judgmentsPath, rawJudgments);
+    await expect(planJudgmentCompilation(root)).resolves.toBeDefined();
+  });
+
+  it('reports the true file line number when the stray sits after v2 lines', async () => {
+    const { judgmentsPath, rawJudgments } = await scaffoldRealLegacy();
+    const v2 = v2Judgment({ judgmentId: 'stray-suffix', query: 'Who is like the Lord?', action: 'helpful', targetId: 'WEB:2015011' });
+    const caseIdMatch = /"caseId":"([0-9a-f-]+)"/.exec(await readFile(path.join(root, 'workbench', 'cases.jsonl'), 'utf8'));
+    const stray = { ...JSON.parse(rawJudgments.split('\n')[0]!) as object, note: 'a stray after v2 history' };
+    await writeFile(
+      judgmentsPath,
+      `${rawJudgments}${JSON.stringify({ ...v2, caseId: caseIdMatch![1]! })}\n${JSON.stringify(stray)}\n`,
+    );
+    await expect(planJudgmentCompilation(root)).rejects.toThrow(/line\(s\) 5/);
+  });
+});
+
 describe('compile-judgments preview/apply', () => {
   it('previews exact mutations without touching the repository', async () => {
     const subsetBefore = await readFile(path.join(root, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8');
