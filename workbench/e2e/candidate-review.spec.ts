@@ -172,6 +172,9 @@ test('blind comparison stays anonymous, resumes, reveals immutably, and remains 
     }
     if (url.pathname === '/api/v2/cases' && request.method() === 'GET') { await route.fulfill(ok({ cases: [] })); return; }
     if (url.pathname === '/api/v2/inbox') { await route.fulfill(ok({ items: [] })); return; }
+    // The page loads the concept label map once at boot; the real server
+    // serves this as a bare rows array, not a v2 envelope.
+    if (url.pathname === '/api/concepts') { await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([{ id: 'hope', label: 'Hope' }]) }); return; }
     await route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ ok: false, error: { code: 'not_found', message: url.pathname } }) });
   });
 

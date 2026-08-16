@@ -84,6 +84,9 @@ test('Sessions, Quality, and Audits are operational, private, responsive, and re
     const request = route.request();
     const url = new URL(request.url());
     if (url.pathname === '/api/v2/health') { await route.fulfill(ok({ status: 'healthy', startup: { degraded: false }, descriptor: {}, artifact: {}, golden: {}, coverage: {}, judgments: {}, gauntlet: {}, git: {}, signals: [] })); return; }
+    // The page loads the concept label map once at boot; the real server
+    // serves this as a bare rows array, not a v2 envelope.
+    if (url.pathname === '/api/concepts') { await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([{ id: 'hope', label: 'Hope' }]) }); return; }
     if (url.pathname === '/api/v2/cases' && request.method() === 'GET') { await route.fulfill(ok({ cases: [] })); return; }
     if (url.pathname === '/api/v2/inbox') { await route.fulfill(ok({ items: [] })); return; }
     if (url.pathname === '/api/v2/candidates') { await route.fulfill(ok({ reviews: [], readOnly: false })); return; }

@@ -1426,8 +1426,7 @@
     if (!state.drafts.results[targetId]) {
       state.drafts.results[targetId] = {
         withinTop: nearestWindow(rank || 10),
-        diagnosis: '',
-        conceptId: '',
+        interview: null,
         note: '',
       };
     }
@@ -1918,6 +1917,52 @@
     return label;
   }
 
+  // Concept label -> id from the artifact's own concept table, fetched once.
+  // This is what lets "Not relevant" name the concept from the result's
+  // evidence instead of asking the reviewer to know internal ids. A failed
+  // fetch degrades to the hand-typed fallback inside the note step — never a
+  // blocked judgment and never a guessed id.
+  const conceptIdsByLabel = new Map();
+
+  async function loadConceptLabels() {
+    try {
+      const list = await requestJson('/api/concepts');
+      safeArray(list).forEach((concept) => {
+        if (isPlainObject(concept) && typeof concept.id === 'string' && typeof concept.label === 'string') {
+          conceptIdsByLabel.set(concept.label, concept.id);
+        }
+      });
+    } catch {
+      // Degraded mode: conceptEvidence returns null ids and the note step
+      // asks for the concept id by hand.
+    }
+  }
+
+  // The distinct concepts a result's evidence actually names: one entry per
+  // concept behind a concept_anchor or concept_lexicon reason. All three
+  // current label prefixes ('Theme: ', 'Theme cue: ', 'Related theme: ') are
+  // stripped; a future prefix this misses leaves the label unmatched, which
+  // degrades to the hand-typed fallback rather than wiring a wrong id.
+  function conceptEvidence(result) {
+    const seen = new Set();
+    const concepts = [];
+    safeArray(result.reasons).forEach((reason) => {
+      if (!isPlainObject(reason) || typeof reason.label !== 'string') return;
+      if (reason.family !== 'concept_anchor' && reason.family !== 'concept_lexicon') return;
+      const label = reason.label
+        .replace(/^Theme cue: /, '')
+        .replace(/^Related theme: /, '')
+        .replace(/^Theme: /, '');
+      if (seen.has(label)) return;
+      seen.add(label);
+      concepts.push({ label, id: conceptIdsByLabel.has(label) ? conceptIdsByLabel.get(label) : null });
+    });
+    return concepts;
+  }
+
+  // Honest-demotion copy: what an irrelevant judgment actually compiles to.
+  const DEMOTION_EXPLANATION = 'It is demoted out of the top results for this query only — the verse stays in the corpus and every other search.';
+
   function renderMachineReasons(result) {
     const reasons = node('div', 'reason-list');
     safeArray(result.reasons).forEach((reason) => {
@@ -2006,6 +2051,159 @@
     return details;
   }
 
+  // Plain yes/no questions built from the result's own concept evidence
+  // decide between wrong-anchor and concept-misfire — the diagnosis is never
+  // picked from a jargon list, and the concept id is wired from the evidence
+  // rather than asked for. A hand-written sentence stays required only here,
+  // because these two causes queue changes to reviewed theme files.
+  function renderNotRelevantInterview(result, review, record, draft) {
+    const interview = draft.interview;
+    const concept = interview.concepts[interview.index];
+    const reference = result.reference || result.targetId;
+    const panel = node('div', 'stack');
+
+    const cancelButton = () => {
+      const cancel = node('button', 'btn btn-subtle', 'Never mind');
+      cancel.type = 'button';
+      cancel.addEventListener('click', () => {
+        draft.interview = null;
+        render();
+      });
+      return cancel;
+    };
+
+    // The interview draft (including the required hand-typed note) must
+    // survive a rejected submit — stale snapshot token, CSRF, network — so
+    // the reviewer can retry without retyping. submitJudgment clears it in
+    // its success branch, alongside the missing/prefer draft clears.
+    const submitIrrelevant = (details, successMessage) => {
+      void submitJudgment(Object.assign({
+        caseId: review.caseId,
+        snapshotToken: review.token,
+        action: 'irrelevant',
+        targetId: result.targetId,
+        supersedes: record && record.judgmentId ? record.judgmentId : undefined,
+      }, details), successMessage);
+    };
+
+    // Every named theme checked out on both counts: the pull was word
+    // overlap after all, recorded with the diagnosisInferred marker.
+    const logNoise = () => submitIrrelevant(
+      { diagnosis: 'lexical-noise', diagnosisInferred: true, note: draft.note.trim() || undefined },
+      `Marked ${reference} not relevant — matched words, not meaning. ${DEMOTION_EXPLANATION}`,
+    );
+
+    const question = (text, onYes, onNo) => {
+      panel.appendChild(node('div', '', text));
+      const row = node('div', 'action-row');
+      [['Yes', onYes], ['No', onNo]].forEach(([label, handler]) => {
+        const button = node('button', 'btn', label);
+        button.type = 'button';
+        button.addEventListener('click', handler);
+        row.appendChild(button);
+      });
+      row.appendChild(cancelButton());
+      panel.appendChild(row);
+    };
+
+    if (interview.step === 'fit') {
+      question(
+        `Does “${concept.label}” fit this verse?`,
+        () => {
+          interview.step = 'trigger';
+          render();
+        },
+        () => {
+          interview.step = 'note';
+          interview.cause = 'wrong-anchor';
+          render();
+        },
+      );
+      return panel;
+    }
+
+    if (interview.step === 'trigger') {
+      question(
+        `Should “${review.query}” have brought up “${concept.label}” at all?`,
+        () => {
+          if (interview.index + 1 < interview.concepts.length) {
+            interview.index += 1;
+            interview.step = 'fit';
+            render();
+          } else {
+            logNoise();
+          }
+        },
+        () => {
+          interview.step = 'note';
+          interview.cause = 'concept-misfire';
+          render();
+        },
+      );
+      return panel;
+    }
+
+    const explanation = interview.cause === 'wrong-anchor'
+      ? `“${concept.label}” doesn’t belong on this verse — that anchor will be queued for review in the theme files.`
+      : `“${review.query}” shouldn’t pull in “${concept.label}” — that trigger will be queued for review in the theme files.`;
+    panel.appendChild(node('div', '', explanation));
+
+    let conceptInput = null;
+    if (concept.id === null) {
+      const conceptField = node('div', 'field');
+      const conceptLabel = node('label', '', `Concept id (the workbench could not match “${concept.label}” to an id)`);
+      conceptLabel.htmlFor = technicalDetailsId(result.targetId, 'interview-concept');
+      conceptInput = document.createElement('input');
+      conceptInput.type = 'text';
+      conceptInput.id = technicalDetailsId(result.targetId, 'interview-concept');
+      conceptInput.value = interview.conceptId;
+      conceptInput.placeholder = 'for example, obedience';
+      conceptInput.addEventListener('input', () => {
+        interview.conceptId = conceptInput.value;
+      });
+      conceptField.appendChild(conceptLabel);
+      conceptField.appendChild(conceptInput);
+      panel.appendChild(conceptField);
+    }
+
+    const noteField = node('div', 'field');
+    const noteLabel = node('label', '', 'Why, from the verse itself (required — this queues a change to reviewed theme files)');
+    noteLabel.htmlFor = technicalDetailsId(result.targetId, 'interview-note');
+    const noteInput = document.createElement('textarea');
+    noteInput.id = technicalDetailsId(result.targetId, 'interview-note');
+    noteInput.value = interview.note;
+    noteInput.placeholder = 'What you saw in the passage.';
+    noteInput.addEventListener('input', () => {
+      interview.note = noteInput.value;
+    });
+    noteField.appendChild(noteLabel);
+    noteField.appendChild(noteInput);
+    panel.appendChild(noteField);
+
+    const submitRow = node('div', 'action-row');
+    const submit = node('button', 'btn btn-danger', 'Log not relevant');
+    submit.type = 'button';
+    submit.addEventListener('click', () => {
+      const conceptId = concept.id !== null ? concept.id : interview.conceptId.trim();
+      if (!conceptId) {
+        setGlobalMessage('warn', 'This judgment must name the concept.');
+        return;
+      }
+      if (!interview.note.trim()) {
+        setGlobalMessage('warn', 'This judgment queues a change to reviewed theme files — say why, from the verse itself.');
+        return;
+      }
+      submitIrrelevant(
+        { diagnosis: interview.cause, conceptId, note: interview.note.trim() },
+        `Marked ${reference} not relevant — “${concept.label}” is queued for review in the theme files. ${DEMOTION_EXPLANATION}`,
+      );
+    });
+    submitRow.appendChild(submit);
+    submitRow.appendChild(cancelButton());
+    panel.appendChild(submitRow);
+    return panel;
+  }
+
   function renderResultCard(result, review, activeByKey) {
     const record = currentJudgmentForTarget(result.targetId);
     const draft = ensureResultDraft(result.targetId, result.rank || 10);
@@ -2076,28 +2274,25 @@
     const irrelevantButton = node('button', 'btn btn-danger', 'Not relevant');
     irrelevantButton.type = 'button';
     irrelevantButton.addEventListener('click', () => {
-      const payload = {
-        caseId: review.caseId,
-        snapshotToken: review.token,
-        action: 'irrelevant',
-        targetId: result.targetId,
-        diagnosis: draft.diagnosis,
-        conceptId: draft.conceptId.trim() || undefined,
-        note: draft.note.trim() || undefined,
-        supersedes: record && record.judgmentId ? record.judgmentId : undefined,
-      };
-      if (!draft.diagnosis) {
-        technical.open = true;
-        diagnosisSelect.focus();
-        setGlobalMessage('warn', 'Choose the plain-language reason this result is not relevant.');
+      const concepts = conceptEvidence(result);
+      if (concepts.length === 0) {
+        // No theme evidence on this result: word overlap is the only thing
+        // that put it up here, so one click is the whole judgment and the
+        // record carries diagnosisInferred to mark the auto-classification.
+        void submitJudgment({
+          caseId: review.caseId,
+          snapshotToken: review.token,
+          action: 'irrelevant',
+          targetId: result.targetId,
+          diagnosis: 'lexical-noise',
+          diagnosisInferred: true,
+          note: draft.note.trim() || undefined,
+          supersedes: record && record.judgmentId ? record.judgmentId : undefined,
+        }, `Marked ${result.reference || result.targetId} not relevant — matched words, not meaning. ${DEMOTION_EXPLANATION}`);
         return;
       }
-      if ((draft.diagnosis === 'wrong-anchor' || draft.diagnosis === 'concept-misfire') &&
-        (!draft.conceptId.trim() || !draft.note.trim())) {
-        setGlobalMessage('warn', 'That technical diagnosis needs both a concept id and a note.');
-        return;
-      }
-      void submitJudgment(payload, `Marked ${result.reference || result.targetId} not relevant.`);
+      draft.interview = { concepts, index: 0, step: 'fit', cause: '', conceptId: '', note: '' };
+      render();
     });
     buttonRow.appendChild(irrelevantButton);
 
@@ -2139,63 +2334,18 @@
     actions.appendChild(buttonRow);
     card.appendChild(actions);
 
+    if (draft.interview) card.appendChild(renderNotRelevantInterview(result, review, record, draft));
+
     card.appendChild(renderPassageContextDisclosure(result));
 
     const technical = node('details', 'disclosure');
     const summary = node('summary', '', 'Why this result misses or notes');
     technical.appendChild(summary);
     const body = node('div', 'disclosure-body');
-    body.appendChild(node('div', 'tiny muted', 'Machine evidence and notes are optional. A plain-language reason is required only for Not relevant.'));
+    body.appendChild(node('div', 'tiny muted', 'Machine evidence and notes are optional. Not relevant asks its own plain questions when a theme is on the result.'));
     body.appendChild(renderMachineReasons(result));
 
-    const technicalFields = node('div', 'split');
-
-    const left = node('div', 'stack');
-    const diagnosisField = node('div', 'field');
-    const diagnosisLabel = node('label', '', 'Why is this result not relevant?');
-    diagnosisLabel.htmlFor = technicalDetailsId(result.targetId, 'diagnosis');
-    const diagnosisSelect = document.createElement('select');
-    diagnosisSelect.id = technicalDetailsId(result.targetId, 'diagnosis');
-    const diagnosisPlaceholder = document.createElement('option');
-    diagnosisPlaceholder.value = '';
-    diagnosisPlaceholder.textContent = 'Choose what went wrong';
-    diagnosisPlaceholder.selected = draft.diagnosis === '';
-    diagnosisSelect.appendChild(diagnosisPlaceholder);
-    [
-      ['lexical-noise', DIAGNOSIS_LABELS['lexical-noise']],
-      ['wrong-anchor', DIAGNOSIS_LABELS['wrong-anchor']],
-      ['concept-misfire', DIAGNOSIS_LABELS['concept-misfire']],
-    ].forEach(([value, label]) => {
-      const option = document.createElement('option');
-      option.value = value;
-      option.textContent = label;
-      if (draft.diagnosis === value) option.selected = true;
-      diagnosisSelect.appendChild(option);
-    });
-    diagnosisSelect.addEventListener('change', () => {
-      draft.diagnosis = diagnosisSelect.value;
-    });
-    diagnosisField.appendChild(diagnosisLabel);
-    diagnosisField.appendChild(diagnosisSelect);
-    left.appendChild(diagnosisField);
-
-    const conceptField = node('div', 'field');
-    const conceptLabel = node('label', '', 'Concept id, if you need one');
-    conceptLabel.htmlFor = technicalDetailsId(result.targetId, 'concept');
-    const conceptInput = document.createElement('input');
-    conceptInput.id = technicalDetailsId(result.targetId, 'concept');
-    conceptInput.type = 'text';
-    conceptInput.value = draft.conceptId;
-    conceptInput.placeholder = 'for example, obedience';
-    conceptInput.addEventListener('input', () => {
-      draft.conceptId = conceptInput.value;
-    });
-    conceptField.appendChild(conceptLabel);
-    conceptField.appendChild(conceptInput);
-    left.appendChild(conceptField);
-    technicalFields.appendChild(left);
-
-    const right = node('div', 'field');
+    const noteField = node('div', 'field');
     const noteLabel = node('label', '', 'Optional note');
     noteLabel.htmlFor = technicalDetailsId(result.targetId, 'note');
     const noteInput = document.createElement('textarea');
@@ -2205,11 +2355,9 @@
     noteInput.addEventListener('input', () => {
       draft.note = noteInput.value;
     });
-    right.appendChild(noteLabel);
-    right.appendChild(noteInput);
-    technicalFields.appendChild(right);
-
-    body.appendChild(technicalFields);
+    noteField.appendChild(noteLabel);
+    noteField.appendChild(noteInput);
+    body.appendChild(noteField);
     technical.appendChild(body);
     card.appendChild(technical);
 
@@ -4242,6 +4390,10 @@
         state.drafts.preferredTargetId = null;
         state.drafts.pairNote = '';
       }
+      if (clean.action === 'irrelevant' && typeof clean.targetId === 'string') {
+        const resultDraft = state.drafts.results[clean.targetId];
+        if (resultDraft) resultDraft.interview = null;
+      }
       await Promise.all([loadCases(false), loadSelectedCaseData(false)]);
     } catch (error) {
       setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Judgment could not be saved.');
@@ -4347,6 +4499,7 @@
       loadInbox(false),
       loadComparisonReviews(false),
       loadSelectedCaseData(false),
+      loadConceptLabels(),
     ]);
     if (state.view === 'sessions') await loadSessions(false);
     else if (state.view === 'quality') await loadQuality(false);

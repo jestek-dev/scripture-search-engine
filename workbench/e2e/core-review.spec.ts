@@ -105,6 +105,12 @@ test('health to inbox to review, history, and exact changes preview', async ({ p
       await route.fulfill(ok({ judgments: [] }));
       return;
     }
+    // The page loads the concept label map once at boot; the real server
+    // serves this as a bare rows array, not a v2 envelope.
+    if (url.pathname === '/api/concepts') {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([{ id: 'hope', label: 'Hope' }]) });
+      return;
+    }
     if (url.pathname === '/api/v2/compile/preview') {
       await route.fulfill(ok({ plan: { digest: 'c'.repeat(64), operations: [], warnings: [], checklist: [], pendingFixtures: [] } }));
       return;

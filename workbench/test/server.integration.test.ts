@@ -1055,6 +1055,62 @@ describe('v2 review HTTP contracts', () => {
     expect(readFileSync(judgmentsPath, 'utf8').trim().split('\n')).toHaveLength(2);
   }, 60_000);
 
+  it('round-trips an inferred not-relevant diagnosis over HTTP', async () => {
+    const port = await unusedPort();
+    const nonce = `${process.pid}-${port}-${Date.now()}`;
+    const casesPath = path.join(os.tmpdir(), `sse-inferred-cases-${nonce}.jsonl`);
+    const judgmentsPath = path.join(os.tmpdir(), `sse-inferred-judgments-${nonce}.jsonl`);
+    temporaryFiles.push(casesPath, judgmentsPath);
+    await startReviewedFixtureServer(port, {
+      WORKBENCH_CASES_PATH: casesPath,
+      WORKBENCH_JUDGMENTS_PATH: judgmentsPath,
+      WORKBENCH_REVIEWER: 'api-reviewer',
+    });
+
+    // The evidence map the UI wires concept ids from must be a plain
+    // {id, label} list — the not-relevant flow depends on this shape.
+    const concepts = await responseJson(await fetch(`http://127.0.0.1:${port}/api/concepts`)) as unknown;
+    expect(Array.isArray(concepts)).toBe(true);
+    for (const concept of concepts as Record<string, unknown>[]) {
+      expect(concept).toMatchObject({ id: expect.any(String), label: expect.any(String) });
+    }
+
+    const created = await responseJson(await postJson(`http://127.0.0.1:${port}/api/v2/cases`, {
+      query: 'hope', source: 'manual',
+    })) as { data: { case: { caseId: string }; review: { token: string; result: { results: { targetId: string }[] } } } };
+    const targetId = created.data.review.result.results[0]!.targetId;
+
+    // The one-click path: no theme evidence, so the UI submits lexical-noise
+    // with diagnosisInferred marking the auto-classification.
+    const submitted = await postJson(`http://127.0.0.1:${port}/api/v2/judgments`, {
+      caseId: created.data.case.caseId,
+      snapshotToken: created.data.review.token,
+      action: 'irrelevant',
+      targetId,
+      diagnosis: 'lexical-noise',
+      diagnosisInferred: true,
+    });
+    expect(submitted.status).toBe(201);
+    const accepted = await responseJson(submitted) as { data: { judgment: Record<string, unknown> } };
+    expect(accepted.data.judgment).toMatchObject({
+      schemaVersion: 2,
+      action: 'irrelevant',
+      targetId,
+      diagnosis: 'lexical-noise',
+      diagnosisInferred: true,
+    });
+
+    const history = await responseJson(await fetch(
+      `http://127.0.0.1:${port}/api/v2/judgments?caseId=${created.data.case.caseId}`,
+    ));
+    expect(history).toMatchObject({
+      ok: true,
+      data: { judgments: [{ judgmentId: accepted.data.judgment.judgmentId, diagnosisInferred: true }] },
+    });
+    const persisted = JSON.parse(readFileSync(judgmentsPath, 'utf8').trim()) as Record<string, unknown>;
+    expect(persisted).toMatchObject({ judgmentId: accepted.data.judgment.judgmentId, diagnosisInferred: true });
+  }, 60_000);
+
   it('requires a newly captured snapshot after restart before accepting a judgment', async () => {
     const port = await unusedPort();
     const nonce = `${process.pid}-${port}-${Date.now()}`;
