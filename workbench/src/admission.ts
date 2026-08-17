@@ -144,6 +144,12 @@ export interface ProbeBaselineInput {
   readonly after: JsonValue;
 }
 
+export interface ProbeApprovalInput {
+  readonly path: 'eval/baselines/probes.approval.json';
+  readonly beforeSha256: string;
+  readonly after: JsonValue;
+}
+
 export interface AdmissionPreviewInput {
   readonly repoRoot: string;
   readonly admittedBaseCommit: string;
@@ -160,11 +166,12 @@ export interface AdmissionPreviewInput {
   readonly reviewedComparisonQueries: readonly string[];
   readonly fixturePromotions?: readonly FixturePromotionPlan[];
   readonly probeBaseline?: ProbeBaselineInput;
+  readonly probeApproval?: ProbeApprovalInput;
 }
 
 export interface AdmissionFileDiff {
   readonly path: string;
-  readonly kind: 'yaml' | 'fixture' | 'selection' | 'fixture-promotion' | 'probe-baseline';
+  readonly kind: 'yaml' | 'fixture' | 'selection' | 'fixture-promotion' | 'probe-baseline' | 'probe-approval';
   readonly operationIds: readonly string[];
   readonly before: { readonly sha256: string; readonly base64: string; readonly text: string };
   readonly after: { readonly sha256: string; readonly base64: string; readonly text: string };
@@ -913,6 +920,72 @@ async function appendProbeDiff(repoRoot: string, diffs: AdmissionFileDiff[], inp
   return movements;
 }
 
+async function appendProbeApprovalDiff(repoRoot: string, diffs: AdmissionFileDiff[], input: ProbeApprovalInput | undefined): Promise<void> {
+  if (input === undefined) return;
+  if (input.path !== 'eval/baselines/probes.approval.json') fail('unsafe_path', 'Probe approval must use the single owned approval path.');
+  if (diffs.some((entry) => entry.path === input.path)) fail('operation_collision', 'Probe approval collides with another source edit.');
+  requireDigest(input.beforeSha256, 'probeApproval.beforeSha256');
+  const beforeText = await readConfinedSource(repoRoot, input.path);
+  if (sha256(beforeText) !== input.beforeSha256) fail('source_drift', 'Probe approval changed after review.');
+  const afterText = canonicalPrettyJson(input.after);
+  const withoutDigest = {
+    path: input.path, kind: 'probe-approval' as const, operationIds: [] as readonly string[],
+    before: bytes(beforeText), after: bytes(afterText), changed: beforeText !== afterText,
+  };
+  diffs.push({ ...withoutDigest, digest: diffDigest(withoutDigest) });
+}
+
+/**
+ * Schema-version-agnostic binding between a probe baseline document and its
+ * independent approval: only fields present in BOTH approval schema versions
+ * are consulted, so an approval-schema cutover cannot break admission or
+ * publish in either direction. Full schema validation belongs to G8.
+ */
+export function probeApprovalBindingIssues(baselineAfterText: string, approvalAfterText: string): readonly string[] {
+  let baseline: unknown;
+  let approval: unknown;
+  try { baseline = JSON.parse(baselineAfterText); } catch { return ['Probe baseline after-bytes are not valid JSON.']; }
+  try { approval = JSON.parse(approvalAfterText); } catch { return ['Probe approval after-bytes are not valid JSON.']; }
+  if (!isRecord(baseline)) return ['Probe baseline document must be an object.'];
+  if (!isRecord(approval)) return ['Probe approval document must be an object.'];
+  const issues: string[] = [];
+  if (!SHA256.test(String(approval.baselineSha256)) || approval.baselineSha256 !== digest(baseline)) {
+    issues.push('Approval baselineSha256 does not bind the admitted baseline document.');
+  }
+  if (!SHA256.test(String(approval.probesSha256))) {
+    issues.push('Approval probesSha256 is not a canonical digest.');
+  }
+  const engine = approval.engine;
+  if (!isRecord(engine) || engine.engineVersion !== baseline.engineVersion
+      || engine.corpusFingerprint !== baseline.corpusFingerprint
+      || engine.layerFingerprint !== baseline.layerFingerprint) {
+    issues.push('Approval engine identity does not match the admitted baseline identity.');
+  }
+  return issues;
+}
+
+/** A moved baseline and its re-issued approval travel together or not at all. */
+function assertProbeApprovalPairing(diffs: readonly AdmissionFileDiff[]): void {
+  const baseline = diffs.find((entry) => entry.kind === 'probe-baseline');
+  const approval = diffs.find((entry) => entry.kind === 'probe-approval');
+  // Publish rejects an unchanged approval diff, so a preview carrying one
+  // could be approved yet never published; refuse it at preview time instead.
+  if (approval !== undefined && !approval.changed) {
+    fail('probe_approval_orphaned', 'An unchanged probe approval diff is not publishable evidence.');
+  }
+  const baselineChanged = baseline !== undefined && baseline.changed;
+  const approvalChanged = approval !== undefined && approval.changed;
+  if (baselineChanged && !approvalChanged) {
+    fail('probe_approval_missing', 'A moved probe baseline requires its re-issued independent approval in the same batch.');
+  }
+  if (approvalChanged && !baselineChanged) {
+    fail('probe_approval_orphaned', 'An updated probe approval without a moved baseline has nothing it can attest to.');
+  }
+  if (!baselineChanged || !approvalChanged) return;
+  const issues = probeApprovalBindingIssues(baseline!.after.text, approval!.after.text);
+  if (issues.length > 0) fail('probe_approval_mismatch', issues.join(' '));
+}
+
 export async function previewAdmission(input: AdmissionPreviewInput): Promise<AdmissionPreview> {
   const repoRoot = await realDirectory(input.repoRoot, 'Repository root');
   const admittedBaseCommit = requireCommit(input.admittedBaseCommit, 'admittedBaseCommit');
@@ -926,11 +999,13 @@ export async function previewAdmission(input: AdmissionPreviewInput): Promise<Ad
   const diffs = await operationDiffs(repoRoot, proposal);
   await appendPromotionDiffs(repoRoot, diffs, input.fixturePromotions ?? []);
   const movements = await appendProbeDiff(repoRoot, diffs, input.probeBaseline);
+  await appendProbeApprovalDiff(repoRoot, diffs, input.probeApproval);
+  assertProbeApprovalPairing(diffs);
   diffs.sort((left, right) => left.path.localeCompare(right.path));
   const fixtureDecisionSubjects = (input.fixturePromotions ?? []).map((plan) => ({ fixtureId: plan.fixtureId, digest: plan.digest })).sort((a, b) => a.fixtureId.localeCompare(b.fixtureId));
   const probeDiff = diffs.find((entry) => entry.kind === 'probe-baseline');
   const probeDecisionSubject = probeDiff === undefined || !probeDiff.changed ? null : digest({ movements, diff: probeDiff.digest });
-  const sourceDecisionSubject = digest({ proposalDigest, diffs: diffs.filter((entry) => entry.kind !== 'fixture-promotion' && entry.kind !== 'probe-baseline').map((entry) => entry.digest) });
+  const sourceDecisionSubject = digest({ proposalDigest, diffs: diffs.filter((entry) => entry.kind !== 'fixture-promotion' && entry.kind !== 'probe-baseline' && entry.kind !== 'probe-approval').map((entry) => entry.digest) });
   const decisionSlots = [
     { kind: 'source-proposal' as const, slotId: 'source-proposal', subjectDigest: sourceDecisionSubject },
     ...fixtureDecisionSubjects.map((entry) => ({ kind: 'fixture-promotion' as const, slotId: entry.fixtureId, subjectDigest: entry.digest })),
@@ -1346,7 +1421,7 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
     trustedGauntletLoader: input.trustedGauntletLoader,
     now: dependencies.now ?? input.now,
     reviewedComparisonQueries: input.reviewedComparisonQueries, fixturePromotions: input.fixturePromotions,
-    probeBaseline: input.probeBaseline,
+    probeBaseline: input.probeBaseline, probeApproval: input.probeApproval,
   };
   const preview = await previewAdmission(previewInput);
   if (preview.digest !== requireDigest(input.expectedPreviewDigest, 'expectedPreviewDigest')) fail('stale_preview', 'Admission preview digest changed.');

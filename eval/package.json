@@ -7,7 +7,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "gauntlet": "tsx src/gauntlet.ts"
+    "gauntlet": "tsx src/gauntlet.ts",
+    "review-packet": "tsx src/baselineReviewPacket.ts"
   },
   "dependencies": {
     "@jestek-dev/scripture-engine": "*"
