@@ -4,9 +4,9 @@
 
 - Reviewer role: independent admission baseline reviewer
 - Review date: 2026-08-10
-- Scope: full 25-probe G8 baseline review against the committed probe set in [eval/probes/probes.json](/C:/Users/Jeste/OneDrive/Documents/GitHub/scripture-search-engine/eval/probes/probes.json)
-- Baseline file: [eval/baselines/probes.json](/C:/Users/Jeste/OneDrive/Documents/GitHub/scripture-search-engine/eval/baselines/probes.json)
-- Approval record: [eval/baselines/probes.approval.json](/C:/Users/Jeste/OneDrive/Documents/GitHub/scripture-search-engine/eval/baselines/probes.approval.json)
+- Scope: full 25-probe G8 baseline review against the committed probe set in `eval/probes/probes.json`
+- Baseline file: `eval/baselines/probes.json`
+- Approval record: `eval/baselines/probes.approval.json`
 
 ## Identity and digest binding
 
@@ -59,3 +59,14 @@ The review used the fixed probe definitions, the old/new baseline diff, the reco
 ## Decision
 
 Accepted. The updated baseline is a legitimate record of the new fixture/corpus/engine identity, and the observed probe movement is explainable by sharper anchors, lower weak-signal dominance, or benign tail churn rather than silent product regression.
+
+## Note added 2026-08-15
+
+The 2026-08-14 audit disputes this record's independence: the evidence links
+originally pointed at absolute paths on the repository owner's own machine,
+which is evidence the review was performed there rather than by a distinct
+reviewer. Those links have been replaced with repository-relative paths; the
+decision table above is preserved verbatim as the historical record. This
+record is superseded by the independent re-review required by approval schema
+v2 (see `docs/governance/probe-baseline-review.md`); it is retained for
+provenance, not as a valid independence attestation.

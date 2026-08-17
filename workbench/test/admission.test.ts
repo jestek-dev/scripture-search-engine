@@ -57,6 +57,18 @@ function sha256(value: string | Uint8Array): string {
   return createHash('sha256').update(value).digest('hex');
 }
 
+/** Mirrors the admission module's canonical digest for binding approvals to baselines. */
+function canonical(value: unknown): string {
+  if (value === null || typeof value === 'boolean' || typeof value === 'number' || typeof value === 'string') return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
+  const record = value as Record<string, unknown>;
+  return `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${canonical(record[key])}`).join(',')}}`;
+}
+
+function canonicalDigest(value: unknown): string {
+  return sha256(canonical(value));
+}
+
 function outcome(command = 'test'): CommandOutcome {
   return {
     command, args: ['fixed'], cwd: 'isolated', exitCode: 0,
@@ -506,9 +518,19 @@ describe('M10 controlled source admission', () => {
     await mkdir(path.join(repo.root, 'eval', 'golden'), { recursive: true });
     await writeFile(path.join(repo.root, 'eval', 'golden', 'hope-gap.json'), `${JSON.stringify(fixture, null, 2)}\n`);
     const probes = { corpusFingerprint: 'old', engineVersion: 'old', layerFingerprint: 'old', observations: [{ id: 'one', top: ['A'] }, { id: 'two', top: ['B'] }] };
+    const probesAfter = { ...probes, observations: [{ id: 'one', top: ['C'] }, { id: 'two', top: ['D'] }] };
     await mkdir(path.join(repo.root, 'eval', 'baselines'), { recursive: true });
     const probeText = `${JSON.stringify(probes, null, 2)}\n`;
     await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.json'), probeText);
+    const approval = {
+      schema: 'scripture-search-engine/probe-baseline-approval/v1',
+      baselineSha256: canonicalDigest(probes), probesSha256: '9'.repeat(64),
+      engine: { engineVersion: probes.engineVersion, corpusFingerprint: probes.corpusFingerprint, layerFingerprint: probes.layerFingerprint },
+      reviewer: 'Prior Independent Reviewer', reviewedAt: '2026-08-10',
+      rationale: 'The prior baseline was reviewed and approved.',
+    };
+    const approvalText = `${JSON.stringify(approval, null, 2)}\n`;
+    await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.approval.json'), approvalText);
     await git(repo.root, ['add', '--all']);
     await git(repo.root, ['-c', 'user.name=Admission Test', '-c', 'user.email=admission@example.test', 'commit', '-m', 'review surfaces']);
     const commit = await git(repo.root, ['rev-parse', 'HEAD']);
@@ -519,7 +541,15 @@ describe('M10 controlled source admission', () => {
       ...(await previewInput(repo.root, commit, repo.sourceText)), fixturePromotions: [promotion],
       probeBaseline: {
         path: 'eval/baselines/probes.json' as const, beforeSha256: sha256(probeText),
-        after: { ...probes, observations: [{ id: 'one', top: ['C'] }, { id: 'two', top: ['D'] }] },
+        after: probesAfter,
+      },
+      probeApproval: {
+        path: 'eval/baselines/probes.approval.json' as const, beforeSha256: sha256(approvalText),
+        after: {
+          ...approval, baselineSha256: canonicalDigest(probesAfter),
+          reviewer: 'Designated Independent Reviewer', reviewedAt: '2026-08-12',
+          rationale: 'The moved probe list was re-reviewed independently.',
+        },
       },
     };
     const preview = await previewAdmission(input);

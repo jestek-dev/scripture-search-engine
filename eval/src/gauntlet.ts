@@ -7,6 +7,7 @@
  * roster — an unrun gate must never look like a passing one.
  */
 
+import { createHash } from 'node:crypto';
 import {
   appendFileSync,
   existsSync,
@@ -55,6 +56,7 @@ import {
   type SourceManifest,
 } from '../../pipeline/src/provenance/manifest.js';
 import {
+  APPROVAL_EVIDENCE_PATH_PATTERN,
   latencyGate,
   noiseGate,
   observeProbes,
@@ -538,6 +540,26 @@ async function reachabilityGate(options: GauntletOptions): Promise<GateResult> {
 
 const BASELINE_PATH = join(EVAL_ROOT, 'baselines', 'probes.json');
 const BASELINE_APPROVAL_PATH = join(EVAL_ROOT, 'baselines', 'probes.approval.json');
+
+/**
+ * SHA-256 of the review record a v2 approval binds as evidence, or null when
+ * the declared path is absent, unreadable, or outside docs/reviews. The
+ * validator turns null into a fail-closed evidence-mismatch finding on the
+ * v2 branch; the byte-read happens here because eval does I/O and the gate
+ * stays pure. A v1 approval declares no evidence and gets null harmlessly.
+ */
+function approvalEvidenceSha256(approval: unknown): string | null {
+  if (approval === null || typeof approval !== 'object' || Array.isArray(approval)) return null;
+  const evidence = (approval as Record<string, unknown>)['evidence'];
+  if (evidence === null || typeof evidence !== 'object' || Array.isArray(evidence)) return null;
+  const evidencePath = (evidence as Record<string, unknown>)['path'];
+  if (typeof evidencePath !== 'string' || !APPROVAL_EVIDENCE_PATH_PATTERN.test(evidencePath)) return null;
+  try {
+    return createHash('sha256').update(readFileSync(join(REPO_ROOT, ...evidencePath.split('/')))).digest('hex');
+  } catch {
+    return null;
+  }
+}
 const DISTILLATE_PATH = join(REPO_ROOT, 'pipeline', 'fixtures', 'passage-terms-subset.json');
 
 function loadDistillate(): DistillateFile | null {
@@ -592,6 +614,7 @@ async function runProbeGates(
           approval,
           baselineSha256: canonicalJsonSha256(baseline),
           probesSha256: canonicalJsonSha256(probeFile),
+          evidenceSha256: approvalEvidenceSha256(approval),
           // Approval authenticates the baseline's own engine identity. An
           // explicit candidate/release target is expected to differ; G8 then
           // measures that exact target against the independently approved baseline.

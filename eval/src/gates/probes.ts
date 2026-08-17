@@ -53,10 +53,39 @@ export interface ProbeBaseline {
 
 export const PROBE_BASELINE_APPROVAL_SCHEMA = 'scripture-search-engine/probe-baseline-approval/v1';
 
+/**
+ * v2 strengthens the approval from a free-text role into an accountable
+ * record: a named reviewer with contact, an explicit independence attestation
+ * (what the reviewer did NOT author), and a byte digest binding the review
+ * record itself. Both schemas validate today because the committed approval
+ * is still the v1 record; the cutover commit that re-issues it as a signed
+ * v2 record also deletes v1 acceptance, and per
+ * docs/governance/probe-baseline-review.md that commit is never opened until
+ * the designated reviewer has signed — the repository never carries an
+ * approval its own gauntlet rejects.
+ */
+export const PROBE_BASELINE_APPROVAL_SCHEMA_V2 = 'scripture-search-engine/probe-baseline-approval/v2';
+
+/**
+ * Review-record evidence must live in the repository's review directory —
+ * never an absolute path, never outside docs/reviews. Shared with the
+ * gauntlet's byte-check so the path it reads is the path the schema allows.
+ */
+export const APPROVAL_EVIDENCE_PATH_PATTERN = /^docs\/reviews\/[A-Za-z0-9][A-Za-z0-9._-]*\.md$/;
+
 export interface ProbeEngineIdentity {
   readonly engineVersion: string;
   readonly corpusFingerprint: string;
   readonly layerFingerprint: string;
+}
+
+interface ProbeBaselinePriorProvenance {
+  readonly baselineGitBlobSha1: string;
+  readonly engine: {
+    readonly engineVersion: string;
+    readonly corpusFingerprint: string;
+    readonly layerFingerprint: string | null;
+  };
 }
 
 /** A separate review record: baseline generation never writes this file. */
@@ -68,14 +97,22 @@ export interface ProbeBaselineApproval {
   readonly reviewer: string;
   readonly reviewedAt: string;
   readonly rationale: string;
-  readonly priorProvenance: {
-    readonly baselineGitBlobSha1: string;
-    readonly engine: {
-      readonly engineVersion: string;
-      readonly corpusFingerprint: string;
-      readonly layerFingerprint: string | null;
-    };
-  };
+  readonly priorProvenance: ProbeBaselinePriorProvenance;
+}
+
+/** The v2 review record: identity, attestation, and evidence are explicit. */
+export interface ProbeBaselineApprovalV2 {
+  readonly schema: typeof PROBE_BASELINE_APPROVAL_SCHEMA_V2;
+  readonly baselineSha256: string;
+  readonly probesSha256: string;
+  readonly engine: ProbeEngineIdentity;
+  readonly reviewerName: string;
+  readonly reviewerContact: string;
+  readonly independence: string;
+  readonly evidence: { readonly path: string; readonly sha256: string };
+  readonly reviewedAt: string;
+  readonly rationale: string;
+  readonly priorProvenance: ProbeBaselinePriorProvenance;
 }
 
 function canonicalJson(value: unknown): string {
@@ -130,32 +167,20 @@ function approvalFinding(category: string, message: string): GateFinding {
   };
 }
 
-/**
- * Checks the independent approval for a committed G8 baseline. Its hashes
- * bind the exact logical JSON documents, so a checkout's CRLF/LF policy does
- * not change what a reviewer approved.
- */
-export function validateProbeBaselineApproval(input: {
-  readonly baseline: ProbeBaseline;
-  readonly approval: unknown;
-  readonly baselineSha256: string;
-  readonly probesSha256: string;
-  readonly engine: ProbeEngineIdentity;
-}): readonly GateFinding[] {
-  if (!isRecord(input.approval)) {
-    return [approvalFinding('baseline-approval-missing', 'Probe baseline has no machine-readable independent approval.')];
-  }
-
-  const approval = input.approval;
+function validPriorProvenance(approval: Record<string, unknown>): boolean {
   const prior = approval['priorProvenance'];
   const priorEngine = isRecord(prior) ? prior['engine'] : undefined;
-  const validPrior = isRecord(prior) && exactKeys(prior, ['baselineGitBlobSha1', 'engine']) &&
+  return isRecord(prior) && exactKeys(prior, ['baselineGitBlobSha1', 'engine']) &&
     typeof prior['baselineGitBlobSha1'] === 'string' && /^[0-9a-f]{40}$/.test(prior['baselineGitBlobSha1']) &&
     isRecord(priorEngine) && exactKeys(priorEngine, ['engineVersion', 'corpusFingerprint', 'layerFingerprint']) &&
     typeof priorEngine['engineVersion'] === 'string' && priorEngine['engineVersion'].length > 0 &&
     isSha256(priorEngine['corpusFingerprint']) &&
     (priorEngine['layerFingerprint'] === null || isSha256(priorEngine['layerFingerprint']));
-  const validShape = exactKeys(approval, [
+}
+
+/** v1 shape, verbatim from the original single-schema validator. */
+function validV1Shape(approval: Record<string, unknown>): boolean {
+  return exactKeys(approval, [
     'schema',
     'baselineSha256',
     'probesSha256',
@@ -164,16 +189,88 @@ export function validateProbeBaselineApproval(input: {
     'reviewedAt',
     'rationale',
     'priorProvenance',
-  ]) && approval['schema'] === PROBE_BASELINE_APPROVAL_SCHEMA && isSha256(approval['baselineSha256']) &&
+  ]) && isSha256(approval['baselineSha256']) &&
     isSha256(approval['probesSha256']) && isEngineIdentity(approval['engine']) &&
     typeof approval['reviewer'] === 'string' && approval['reviewer'].trim().length > 0 &&
     isReviewDate(approval['reviewedAt']) && typeof approval['rationale'] === 'string' &&
-    approval['rationale'].trim().length > 0 && validPrior;
-  if (!validShape) {
-    return [approvalFinding('baseline-approval-malformed', 'Probe baseline approval is malformed or incomplete.')];
+    approval['rationale'].trim().length > 0 && validPriorProvenance(approval);
+}
+
+function validV2Shape(approval: Record<string, unknown>): boolean {
+  const evidence = approval['evidence'];
+  const validEvidence = isRecord(evidence) && exactKeys(evidence, ['path', 'sha256']) &&
+    typeof evidence['path'] === 'string' && APPROVAL_EVIDENCE_PATH_PATTERN.test(evidence['path']) &&
+    isSha256(evidence['sha256']);
+  return exactKeys(approval, [
+    'schema',
+    'baselineSha256',
+    'probesSha256',
+    'engine',
+    'reviewerName',
+    'reviewerContact',
+    'independence',
+    'evidence',
+    'reviewedAt',
+    'rationale',
+    'priorProvenance',
+  ]) && isSha256(approval['baselineSha256']) &&
+    isSha256(approval['probesSha256']) && isEngineIdentity(approval['engine']) &&
+    typeof approval['reviewerName'] === 'string' && typeof approval['reviewerContact'] === 'string' &&
+    typeof approval['independence'] === 'string' && validEvidence &&
+    isReviewDate(approval['reviewedAt']) && typeof approval['rationale'] === 'string' &&
+    approval['rationale'].trim().length > 0 && validPriorProvenance(approval);
+}
+
+/**
+ * Checks the independent approval for a committed G8 baseline. Its hashes
+ * bind the exact logical JSON documents, so a checkout's CRLF/LF policy does
+ * not change what a reviewer approved.
+ *
+ * `evidenceSha256` is the SHA-256 of the bytes at `approval.evidence.path`,
+ * computed by the caller (eval does the I/O; this validator stays pure), or
+ * null when the file is missing or unreadable. v1 approvals bind no evidence
+ * record, so the value is ignored on that branch.
+ */
+export function validateProbeBaselineApproval(input: {
+  readonly baseline: ProbeBaseline;
+  readonly approval: unknown;
+  readonly baselineSha256: string;
+  readonly probesSha256: string;
+  readonly engine: ProbeEngineIdentity;
+  readonly evidenceSha256: string | null;
+}): readonly GateFinding[] {
+  if (!isRecord(input.approval)) {
+    return [approvalFinding('baseline-approval-missing', 'Probe baseline has no machine-readable independent approval.')];
   }
 
+  const approval = input.approval;
   const findings: GateFinding[] = [];
+  if (approval['schema'] === PROBE_BASELINE_APPROVAL_SCHEMA) {
+    if (!validV1Shape(approval)) {
+      return [approvalFinding('baseline-approval-malformed', 'Probe baseline approval is malformed or incomplete.')];
+    }
+  } else if (approval['schema'] === PROBE_BASELINE_APPROVAL_SCHEMA_V2) {
+    if (!validV2Shape(approval)) {
+      return [approvalFinding('baseline-approval-malformed', 'Probe baseline approval is malformed or incomplete.')];
+    }
+    // Blank identity or attestation fields are named findings rather than
+    // generic malformation: they are how a rubber stamp becomes visible.
+    if ((approval['reviewerName'] as string).trim().length === 0 || (approval['reviewerContact'] as string).trim().length === 0) {
+      findings.push(approvalFinding('baseline-approval-reviewer-unidentified', 'Probe baseline approval does not name an identifiable independent reviewer.'));
+    }
+    if ((approval['independence'] as string).trim().length === 0) {
+      findings.push(approvalFinding('baseline-approval-independence-missing', 'Probe baseline approval carries no independence attestation naming what the reviewer did not author.'));
+    }
+    const evidence = approval['evidence'] as { readonly path: string; readonly sha256: string };
+    if (input.evidenceSha256 === null) {
+      findings.push(approvalFinding('baseline-approval-evidence-mismatch', `Probe baseline approval evidence ${evidence.path} is missing or unreadable.`));
+    } else if (input.evidenceSha256 !== evidence.sha256) {
+      findings.push(approvalFinding('baseline-approval-evidence-mismatch', `Probe baseline approval evidence ${evidence.path} does not match the approved review-record digest.`));
+    }
+  } else {
+    return [approvalFinding('baseline-approval-malformed', 'Probe baseline approval does not declare a supported approval schema.')];
+  }
+
   if (approval['baselineSha256'] !== input.baselineSha256) {
     findings.push(approvalFinding('baseline-approval-baseline-mismatch', 'Probe baseline bytes differ from the independently approved baseline digest.'));
   }

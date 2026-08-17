@@ -45,6 +45,7 @@ export interface AdmissionEvidenceEntry {
   readonly reviewedComparisonQueries: readonly string[];
   readonly fixturePromotions?: AdmissionPreviewInput['fixturePromotions'];
   readonly probeBaseline?: AdmissionPreviewInput['probeBaseline'];
+  readonly probeApproval?: AdmissionPreviewInput['probeApproval'];
   readonly provenance: readonly string[];
 }
 
@@ -191,7 +192,7 @@ async function readTrustedRegistry(repoRoot: string, evidencePath: string): Prom
   }
   const entries = raw['admissions'].map((entry, index) => {
     if (!isRecord(entry)) fail('invalid_evidence', `Admission evidence ${index + 1} is invalid.`, 500);
-    const keys = ['reviewId', 'admittedBaseCommit', 'expectedMainCommit', 'proposal', 'candidate', 'comparison', 'comparisonBinding', 'gauntlet', 'reviewedComparisonQueries', 'provenance', 'fixturePromotions', 'probeBaseline'];
+    const keys = ['reviewId', 'admittedBaseCommit', 'expectedMainCommit', 'proposal', 'candidate', 'comparison', 'comparisonBinding', 'gauntlet', 'reviewedComparisonQueries', 'provenance', 'fixturePromotions', 'probeBaseline', 'probeApproval'];
     const actual = Object.keys(entry);
     if (actual.some((key) => !keys.includes(key))) fail('invalid_evidence', `Admission evidence ${index + 1} has unsupported fields.`, 500);
     if (typeof entry['reviewId'] !== 'string' || !REVIEW_ID.test(entry['reviewId'])) fail('invalid_evidence', `Admission evidence ${index + 1} has an invalid review id.`, 500);
@@ -485,6 +486,7 @@ export class AdmissionPublishOperations {
       reviewedComparisonQueries: entry.reviewedComparisonQueries,
       ...(entry.fixturePromotions === undefined ? {} : { fixturePromotions: entry.fixturePromotions }),
       ...(entry.probeBaseline === undefined ? {} : { probeBaseline: entry.probeBaseline }),
+      ...(entry.probeApproval === undefined ? {} : { probeApproval: entry.probeApproval }),
     };
   }
 

@@ -420,16 +420,43 @@ async function rewriteManifest(repo: TestRepository, mutate: (value: AdmissionMa
   return { ...repo, manifest };
 }
 
-async function withFixtureAndProbe(repo: TestRepository): Promise<TestRepository> {
+type ProbeApprovalVariant = 'paired' | 'missing' | 'mismatched' | 'orphaned';
+
+const BASELINE_BEFORE_DOC = {
+  corpusFingerprint: '7'.repeat(64), engineVersion: 'engine-1', layerFingerprint: '8'.repeat(64),
+  observations: [{ id: 'hope-probe', top: ['B'] }],
+};
+const BASELINE_AFTER_DOC = { ...BASELINE_BEFORE_DOC, observations: [{ id: 'hope-probe', top: ['A'] }] };
+
+function approvalAfterDoc(baselineSha256: string): Record<string, unknown> {
+  return {
+    schema: 'scripture-search-engine/probe-baseline-approval/v1',
+    baselineSha256, probesSha256: '9'.repeat(64),
+    engine: {
+      engineVersion: BASELINE_AFTER_DOC.engineVersion,
+      corpusFingerprint: BASELINE_AFTER_DOC.corpusFingerprint,
+      layerFingerprint: BASELINE_AFTER_DOC.layerFingerprint,
+    },
+    reviewer: 'Designated Independent Reviewer', reviewedAt: '2026-08-12',
+    rationale: 'The moved probe list keeps the anchor and sheds a stale target.',
+  };
+}
+
+async function withFixtureAndProbe(repo: TestRepository, variant: ProbeApprovalVariant = 'paired'): Promise<TestRepository> {
   const fixtureBeforeText = '{\n  "id": "hope-fixture",\n  "status": "pending"\n}\n';
   const fixtureAfterText = '{\n  "id": "hope-fixture",\n  "status": "active"\n}\n';
-  const baselineBeforeText = '{\n  "hope-probe": ["B"]\n}\n';
-  const baselineAfterText = '{\n  "hope-probe": ["A"]\n}\n';
+  const baselineBeforeText = `${JSON.stringify(BASELINE_BEFORE_DOC, null, 2)}\n`;
+  const baselineAfterText = `${JSON.stringify(BASELINE_AFTER_DOC, null, 2)}\n`;
+  const approvalBeforeText = `${JSON.stringify(approvalAfterDoc(digest(BASELINE_BEFORE_DOC)), null, 2)}\n`;
+  const approvalAfterText = `${JSON.stringify(approvalAfterDoc(
+    variant === 'mismatched' ? '0'.repeat(64) : digest(BASELINE_AFTER_DOC),
+  ), null, 2)}\n`;
   await mkdir(path.join(repo.root, 'eval', 'golden'), { recursive: true });
   await mkdir(path.join(repo.root, 'eval', 'baselines'), { recursive: true });
   await writeFile(path.join(repo.root, 'eval', 'golden', 'hope-fixture.json'), fixtureBeforeText);
   await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.json'), baselineBeforeText);
-  await git(repo.root, ['add', '--', 'eval/golden/hope-fixture.json', 'eval/baselines/probes.json']);
+  await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.approval.json'), approvalBeforeText);
+  await git(repo.root, ['add', '--', 'eval/golden/hope-fixture.json', 'eval/baselines/probes.json', 'eval/baselines/probes.approval.json']);
   await git(repo.root, ['commit', '-m', 'fixture and probe base']);
   await git(repo.root, ['push', 'origin', 'main']);
   const baseCommit = await git(repo.root, ['rev-parse', 'HEAD']);
@@ -445,10 +472,21 @@ async function withFixtureAndProbe(repo: TestRepository): Promise<TestRepository
     before: image(baselineBeforeText), after: image(baselineAfterText), changed: true,
   };
   const baseline = { ...baselineBody, digest: digest(baselineBody) };
-  const diffs = [baseline, fixture, source].sort((left, right) => left.path.localeCompare(right.path));
+  const approvalBody = {
+    path: 'eval/baselines/probes.approval.json', kind: 'probe-approval' as const, operationIds: [] as readonly string[],
+    before: image(approvalBeforeText), after: image(approvalAfterText), changed: true,
+  };
+  const approval = { ...approvalBody, digest: digest(approvalBody) };
+  const includeBaseline = variant !== 'orphaned';
+  const includeApproval = variant !== 'missing';
+  const diffs = [
+    ...(includeBaseline ? [baseline] : []),
+    ...(includeApproval ? [approval] : []),
+    fixture, source,
+  ].sort((left, right) => left.path.localeCompare(right.path));
   const movement = { probeId: 'hope-probe', beforeSha256: sha256('["B"]'), afterSha256: sha256('["A"]') };
   const fixtureSubject = 'f'.repeat(64);
-  const probeSubject = digest({ movements: [movement], diff: baseline.digest });
+  const probeSubject = includeBaseline ? digest({ movements: [movement], diff: baseline.digest }) : null;
   const sourceSubject = digest({ proposalDigest: repo.manifest.proposalDigest, diffs: [source.digest] });
   const { digest: _gauntletDigest, ...oldGauntletBody } = repo.manifest.gauntlet;
   const gauntletBody = { ...oldGauntletBody, baseCommit };
@@ -461,13 +499,13 @@ async function withFixtureAndProbe(repo: TestRepository): Promise<TestRepository
     gauntlet,
     diffs,
     fixtureDecisionSubjects: [{ fixtureId: 'hope-fixture', digest: fixtureSubject }],
-    probeMovements: [movement],
+    probeMovements: includeBaseline ? [movement] : [],
     probeDecisionSubject: probeSubject,
     sourceDecisionSubject: sourceSubject,
     decisionSlots: [
       { kind: 'source-proposal', slotId: 'source-proposal', subjectDigest: sourceSubject },
       { kind: 'fixture-promotion', slotId: 'hope-fixture', subjectDigest: fixtureSubject },
-      { kind: 'probe-baseline', slotId: 'probe-baseline', subjectDigest: probeSubject },
+      ...(probeSubject === null ? [] : [{ kind: 'probe-baseline' as const, slotId: 'probe-baseline', subjectDigest: probeSubject }]),
     ],
   };
   const { digest: _oldPreviewDigest, ...canonicalPreviewBody } = previewBody as AdmissionPreview;
@@ -481,18 +519,14 @@ async function withFixtureAndProbe(repo: TestRepository): Promise<TestRepository
       kind: 'fixture-promotion', subjectDigest: fixtureSubject, previewDigest: preview.digest, reviewer: 'Fixture Reviewer',
       rationale: 'The pending fixture promotion is independently approved.', decidedAt: '2026-08-11T10:31:00.000Z',
     }, SIGNING_KEY),
-    signAdmissionDecision({
+    ...(probeSubject === null ? [] : [signAdmissionDecision({
       kind: 'probe-baseline', subjectDigest: probeSubject, previewDigest: preview.digest, reviewer: 'Probe Reviewer',
       rationale: 'The exact probe baseline movement is independently approved.', decidedAt: '2026-08-11T10:32:00.000Z',
       probeRationales: [{ ...movement, rationale: 'The corrected hope result intentionally replaces the stale target.' }],
-    }, SIGNING_KEY),
+    }, SIGNING_KEY)]),
   ].sort((left, right) => left.kind.localeCompare(right.kind) || left.subjectDigest.localeCompare(right.subjectDigest));
   const admissionKey = digest({ previewDigest: preview.digest, decisions: decisions.map((entry) => entry.decisionDigest) });
-  const treeHash = await treeForChanges(repo.remote, [
-    { path: source.path, text: source.after.text },
-    { path: fixture.path, text: fixture.after.text },
-    { path: baseline.path, text: baseline.after.text },
-  ]);
+  const treeHash = await treeForChanges(repo.remote, diffs.map((entry) => ({ path: entry.path, text: entry.after.text })));
   const manifestBody: Omit<AdmissionManifest, 'digest'> = {
     ...repo.manifest,
     admissionKey,
@@ -503,7 +537,7 @@ async function withFixtureAndProbe(repo: TestRepository): Promise<TestRepository
     decisions,
     gauntlet,
     sourceChanges: diffs,
-    probeMovements: [movement],
+    probeMovements: includeBaseline ? [movement] : [],
     rollback: diffs.map((entry) => ({
       path: entry.path, restoreSha256: entry.before.sha256, restoreBase64: entry.before.base64, admittedSha256: entry.after.sha256,
     })),
@@ -774,6 +808,7 @@ describe('M14 isolated draft publication preparation', () => {
     expect(result.prBody).toContain('ontology/concepts/hope.yaml');
     expect(result.prBody).toContain('eval/golden/hope-fixture.json');
     expect(result.prBody).toContain('eval/baselines/probes.json');
+    expect(result.prBody).toContain('eval/baselines/probes.approval.json');
     expect(result.prBody).toContain(repo.comparison.referenceIdentity.layerFingerprint);
     expect(result.prBody).toContain(repo.manifest.gauntlet.digest);
 
@@ -787,6 +822,17 @@ describe('M14 isolated draft publication preparation', () => {
     await expect(prepareDraftPublication(input(repo, {
       evidence: { admissionPreview: repo.preview, comparisonReport: tamperedComparison },
     }))).rejects.toMatchObject({ code: 'comparison_evidence_invalid' });
+  }, 90_000);
+
+  it('fails closed when a moved baseline and its approval do not travel together with exact bindings', async () => {
+    const missing = await withFixtureAndProbe(await repository(), 'missing');
+    await expect(prepareDraftPublication(input(missing))).rejects.toMatchObject({ code: 'probe_approval_missing' });
+
+    const orphaned = await withFixtureAndProbe(await repository(), 'orphaned');
+    await expect(prepareDraftPublication(input(orphaned))).rejects.toMatchObject({ code: 'probe_approval_orphaned' });
+
+    const mismatched = await withFixtureAndProbe(await repository(), 'mismatched');
+    await expect(prepareDraftPublication(input(mismatched))).rejects.toMatchObject({ code: 'probe_approval_mismatch' });
   }, 90_000);
 
   it('keeps verified local work and returns exact safe actions when push or gh is unavailable', async () => {
