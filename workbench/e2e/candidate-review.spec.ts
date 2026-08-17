@@ -205,7 +205,10 @@ test('blind comparison stays anonymous, resumes, reveals immutably, and remains 
   const queryOrder = await page.locator('.query-step').allTextContents();
   await page.reload();
   await page.getByRole('button', { name: 'Start blind review' }).click();
-  expect(await page.locator('.query-step').allTextContents()).toEqual(queryOrder);
+  // Web-first assertion: the resumed session renders after an async POST, so a
+  // one-shot allTextContents() snapshot races the render on slow runners.
+  // toHaveText demands the exact same texts in the same order, with retries.
+  await expect(page.locator('.query-step')).toHaveText(queryOrder);
 
   await page.getByRole('button', { name: 'Record missing passage' }).click();
   await page.getByLabel('Missing passage reference').fill('Romans 8:28');
