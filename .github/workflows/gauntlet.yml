@@ -61,6 +61,24 @@ jobs:
           path: eval/.runs/gauntlet-report.json
           if-no-files-found: error
 
+      - name: Regenerate ordering snapshot on this OS
+        # A second full gauntlet run that rewrites the snapshot in place. Two
+        # things are proven at once: generation is idempotent (the first run
+        # already compared observed orderings against the committed snapshot),
+        # and this OS produces the exact committed bytes — the next step
+        # fails on any drift.
+        run: npm run gauntlet -- --update-ordering-snapshot
+
+      - name: Committed ordering snapshot matches this OS byte-for-byte
+        run: git diff --exit-code -- eval/baselines/ordering.snapshot.json
+
+      - name: Upload ordering snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: ordering-snapshot-${{ runner.os }}
+          path: eval/baselines/ordering.snapshot.json
+          if-no-files-found: error
+
   cross-platform-ordering:
     name: cross-platform ordering (G2)
     needs: verify
@@ -79,6 +97,21 @@ jobs:
         with:
           name: gauntlet-machine-report-Windows
           path: reports/windows
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: ordering-snapshot-Linux
+          path: snapshots/linux
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: ordering-snapshot-Windows
+          path: snapshots/windows
+
+      - name: Byte-compare ordering snapshots across OS legs
+        # The snapshot is the reproducibility contract in file form: both legs
+        # must regenerate the identical bytes, not merely equivalent JSON.
+        run: cmp snapshots/linux/ordering.snapshot.json snapshots/windows/ordering.snapshot.json
 
       - name: Compare normalized machine reports
         run: |
@@ -141,4 +174,110 @@ jobs:
           // Only report timestamps/digests and G11 timing-derived fields are omitted;
           // all identity and non-latency gate evidence remains comparable.
           assertEqual('normalized machine report', normalizeReport(linux), normalizeReport(windows));
+          EOF
+
+  ordering-snapshot-provenance:
+    name: ordering snapshot provenance (merge-base)
+    # The forgery backstop for the G2 ordering snapshot. The gauntlet's rule-6
+    # tripwire trusts the approval's priorProvenance the way G8 trusts its
+    # approval; this leg checks that trust against Git itself: whenever a PR
+    # changes the committed snapshot, the identity triple must have moved and
+    # priorProvenance must name the ACTUAL merge-base blob — a forged prior
+    # cannot survive the comparison.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Snapshot changes moved the identity triple and priorProvenance names the merge-base blob
+        run: |
+          node <<'EOF'
+          const { execFileSync } = require('node:child_process');
+          const { readFileSync } = require('node:fs');
+          const { createHash } = require('node:crypto');
+
+          const SNAPSHOT = 'eval/baselines/ordering.snapshot.json';
+          const APPROVAL = 'eval/baselines/ordering.snapshot.approval.json';
+
+          function git(...args) {
+            // stderr piped, not inherited: the probe for a merge-base blob that
+            // does not exist yet (the bootstrap PR) is expected to fail quietly.
+            return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+          }
+
+          function canonicalJson(value) {
+            if (value === null) return 'null';
+            if (typeof value !== 'object') return JSON.stringify(value);
+            if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
+            return `{${Object.keys(value)
+              .sort()
+              .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
+              .join(',')}}`;
+          }
+
+          function sha256(value) {
+            return createHash('sha256').update(value).digest('hex');
+          }
+
+          function triple(document) {
+            return canonicalJson({
+              engineVersion: document.engineVersion,
+              corpusFingerprint: document.corpusFingerprint,
+              layerFingerprint: document.layerFingerprint,
+            });
+          }
+
+          function assert(condition, message) {
+            if (!condition) throw new Error(message);
+          }
+
+          const mergeBase = git('merge-base', `origin/${process.env.GITHUB_BASE_REF}`, 'HEAD');
+          const headBlob = git('hash-object', SNAPSHOT);
+
+          let baseBlob = null;
+          let baseSnapshot = null;
+          try {
+            baseBlob = git('rev-parse', `${mergeBase}:${SNAPSHOT}`);
+            baseSnapshot = JSON.parse(git('show', `${mergeBase}:${SNAPSHOT}`));
+          } catch {
+            // No snapshot at the merge base: this PR bootstraps it.
+          }
+
+          if (baseBlob === headBlob) {
+            console.log(`Ordering snapshot unchanged from merge-base ${mergeBase} (blob ${headBlob}).`);
+            process.exit(0);
+          }
+
+          const snapshot = JSON.parse(readFileSync(SNAPSHOT, 'utf8'));
+          const approval = JSON.parse(readFileSync(APPROVAL, 'utf8'));
+          const prior = approval.priorProvenance;
+
+          if (baseSnapshot === null) {
+            assert(prior === null,
+              'Bootstrap snapshot (none at merge-base) must carry priorProvenance null.');
+            console.log('Bootstrap ordering snapshot: no merge-base blob, priorProvenance is null. OK.');
+            process.exit(0);
+          }
+
+          assert(triple(snapshot) !== triple(baseSnapshot),
+            'Ordering snapshot changed but its engine identity triple did not move. ' +
+            'A reordering requires an ENGINE_VERSION (or fingerprint) bump in the same commit.');
+          assert(prior !== null,
+            'A regenerated ordering snapshot must record priorProvenance for the snapshot it replaced.');
+          assert(prior.snapshotGitBlobSha1 === baseBlob,
+            `priorProvenance.snapshotGitBlobSha1 ${prior.snapshotGitBlobSha1} does not name the ` +
+            `actual merge-base blob ${baseBlob} — the approval's prior provenance is not the real prior.`);
+          assert(canonicalJson(prior.engine) === canonicalJson(JSON.parse(triple(baseSnapshot))),
+            'priorProvenance.engine does not match the merge-base snapshot identity triple.');
+          assert(prior.probeListsSha256 === sha256(canonicalJson(baseSnapshot.probes)),
+            'priorProvenance.probeListsSha256 does not match the merge-base snapshot probe lists.');
+
+          console.log(`Ordering snapshot regeneration verified against merge-base ${mergeBase}: ` +
+            'identity moved and priorProvenance names the real prior blob.');
           EOF

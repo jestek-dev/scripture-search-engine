@@ -1,0 +1,2302 @@
+{
+  "engineVersion": "0.9.0",
+  "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+  "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a",
+  "probes": [
+    {
+      "id": "broad-love",
+      "results": [
+        {
+          "targetId": "WEB:45005008",
+          "score": 28.533333
+        },
+        {
+          "targetId": "WEB:45008039",
+          "score": 23.207692
+        },
+        {
+          "targetId": "WEB:43003016",
+          "score": 22
+        },
+        {
+          "targetId": "WEB:45008038",
+          "score": 20.9
+        },
+        {
+          "targetId": "WEB:62004010",
+          "score": 20.6
+        },
+        {
+          "targetId": "WEB:62004009",
+          "score": 20.327273
+        },
+        {
+          "targetId": "WEB:43015013",
+          "score": 19.15
+        },
+        {
+          "targetId": "WEB:24031003",
+          "score": 18.807692
+        },
+        {
+          "targetId": "WEB:62003001",
+          "score": 18.5
+        },
+        {
+          "targetId": "WEB:49003019",
+          "score": 17.3
+        },
+        {
+          "targetId": "WEB:45013010",
+          "score": 10.982991
+        },
+        {
+          "targetId": "WEB:45013008",
+          "score": 10.649657
+        },
+        {
+          "targetId": "WEB:43013035",
+          "score": 10.285714
+        },
+        {
+          "targetId": "WEB:43013034",
+          "score": 9.75
+        },
+        {
+          "targetId": "WEB:40022039",
+          "score": 9.5
+        },
+        {
+          "targetId": "WEB:46013004",
+          "score": 9.033333
+        },
+        {
+          "targetId": "WEB:45008035",
+          "score": 8.949061
+        },
+        {
+          "targetId": "WEB:43014015",
+          "score": 8.849657
+        },
+        {
+          "targetId": "WEB:49002004",
+          "score": 8.602175
+        },
+        {
+          "targetId": "WEB:46013008",
+          "score": 8.2
+        },
+        {
+          "targetId": "WEB:42006032",
+          "score": 7.849657
+        },
+        {
+          "targetId": "WEB:62004011",
+          "score": 7.833333
+        },
+        {
+          "targetId": "WEB:60004008",
+          "score": 7.533333
+        },
+        {
+          "targetId": "WEB:62003018",
+          "score": 7.2
+        },
+        {
+          "targetId": "WEB:05006005",
+          "score": 7.135372
+        }
+      ]
+    },
+    {
+      "id": "broad-grace",
+      "results": [
+        {
+          "targetId": "WEB:49002008",
+          "score": 39.415173
+        },
+        {
+          "targetId": "WEB:45011006",
+          "score": 22.6
+        },
+        {
+          "targetId": "WEB:55001009",
+          "score": 18.642857
+        },
+        {
+          "targetId": "WEB:56003005",
+          "score": 17.6
+        },
+        {
+          "targetId": "WEB:49002010",
+          "score": 13.829657
+        },
+        {
+          "targetId": "WEB:43001016",
+          "score": 9.509657
+        },
+        {
+          "targetId": "WEB:45006014",
+          "score": 7.849657
+        },
+        {
+          "targetId": "WEB:45006015",
+          "score": 7.849657
+        },
+        {
+          "targetId": "WEB:58013025",
+          "score": 7.5
+        },
+        {
+          "targetId": "WEB:45006001",
+          "score": 7.135372
+        },
+        {
+          "targetId": "WEB:46015010",
+          "score": 7.135372
+        },
+        {
+          "targetId": "WEB:20003034",
+          "score": 6.599657
+        },
+        {
+          "targetId": "WEB:55002001",
+          "score": 6.599657
+        },
+        {
+          "targetId": "WEB:56002011",
+          "score": 6.599657
+        },
+        {
+          "targetId": "WEB:59002014",
+          "score": 6.24
+        },
+        {
+          "targetId": "WEB:59002015",
+          "score": 6.24
+        },
+        {
+          "targetId": "WEB:59002016",
+          "score": 6.24
+        },
+        {
+          "targetId": "WEB:47001002",
+          "score": 6.182991
+        },
+        {
+          "targetId": "WEB:48001003",
+          "score": 6.182991
+        },
+        {
+          "targetId": "WEB:50001002",
+          "score": 6.182991
+        },
+        {
+          "targetId": "WEB:43001017",
+          "score": 5.849657
+        },
+        {
+          "targetId": "WEB:48001015",
+          "score": 5.849657
+        },
+        {
+          "targetId": "WEB:48005004",
+          "score": 5.849657
+        },
+        {
+          "targetId": "WEB:47004015",
+          "score": 5.349657
+        },
+        {
+          "targetId": "WEB:20003022",
+          "score": 5
+        }
+      ]
+    },
+    {
+      "id": "broad-faith",
+      "results": [
+        {
+          "targetId": "WEB:59002017",
+          "score": 7.849657
+        },
+        {
+          "targetId": "WEB:59002022",
+          "score": 7.849657
+        },
+        {
+          "targetId": "WEB:45001012",
+          "score": 7.5
+        },
+        {
+          "targetId": "WEB:46015014",
+          "score": 7.135372
+        },
+        {
+          "targetId": "WEB:49002008",
+          "score": 7.135372
+        },
+        {
+          "targetId": "WEB:59002024",
+          "score": 7.135372
+        },
+        {
+          "targetId": "WEB:50001025",
+          "score": 6.599657
+        },
+        {
+          "targetId": "WEB:58011001",
+          "score": 6.182991
+        },
+        {
+          "targetId": "WEB:58011030",
+          "score": 6.182991
+        },
+        {
+          "targetId": "WEB:47005007",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:49004005",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:47001024",
+          "score": 5.849657
+        },
+        {
+          "targetId": "WEB:47004013",
+          "score": 5.849657
+        },
+        {
+          "targetId": "WEB:49006023",
+          "score": 5.57693
+        },
+        {
+          "targetId": "WEB:58011008",
+          "score": 5.57693
+        },
+        {
+          "targetId": "WEB:45012006",
+          "score": 5.349657
+        },
+        {
+          "targetId": "WEB:48005006",
+          "score": 5.349657
+        },
+        {
+          "targetId": "WEB:59001006",
+          "score": 5.349657
+        },
+        {
+          "targetId": "WEB:41011022",
+          "score": 5
+        },
+        {
+          "targetId": "WEB:48003009",
+          "score": 5
+        },
+        {
+          "targetId": "WEB:49003012",
+          "score": 5
+        },
+        {
+          "targetId": "WEB:40017020",
+          "score": 4.992515
+        },
+        {
+          "targetId": "WEB:58012002",
+          "score": 4.516324
+        },
+        {
+          "targetId": "WEB:42017005",
+          "score": 4.285714
+        },
+        {
+          "targetId": "WEB:42017019",
+          "score": 4.285714
+        }
+      ]
+    },
+    {
+      "id": "broad-word",
+      "results": [
+        {
+          "targetId": "WEB:59001022",
+          "score": 67.135372
+        },
+        {
+          "targetId": "WEB:48006006",
+          "score": 66.599657
+        },
+        {
+          "targetId": "WEB:43001001",
+          "score": 66
+        },
+        {
+          "targetId": "WEB:23040008",
+          "score": 65.04095
+        },
+        {
+          "targetId": "WEB:44016032",
+          "score": 65
+        },
+        {
+          "targetId": "WEB:26033030",
+          "score": 64.349657
+        },
+        {
+          "targetId": "WEB:43015003",
+          "score": 64.285714
+        },
+        {
+          "targetId": "WEB:45010017",
+          "score": 64.285714
+        },
+        {
+          "targetId": "WEB:49005026",
+          "score": 64.285714
+        },
+        {
+          "targetId": "WEB:24010001",
+          "score": 63.75
+        },
+        {
+          "targetId": "WEB:58013022",
+          "score": 63.75
+        },
+        {
+          "targetId": "WEB:42011028",
+          "score": 63.333333
+        },
+        {
+          "targetId": "WEB:44020038",
+          "score": 63.333333
+        },
+        {
+          "targetId": "WEB:46001018",
+          "score": 63.333333
+        },
+        {
+          "targetId": "WEB:46015002",
+          "score": 63.333333
+        },
+        {
+          "targetId": "WEB:49006017",
+          "score": 63.333333
+        },
+        {
+          "targetId": "WEB:60001025",
+          "score": 63.333333
+        },
+        {
+          "targetId": "WEB:43014024",
+          "score": 63
+        },
+        {
+          "targetId": "WEB:43015025",
+          "score": 63
+        },
+        {
+          "targetId": "WEB:45010008",
+          "score": 63
+        },
+        {
+          "targetId": "WEB:51001005",
+          "score": 63
+        },
+        {
+          "targetId": "WEB:59001018",
+          "score": 63
+        },
+        {
+          "targetId": "WEB:60002008",
+          "score": 63
+        },
+        {
+          "targetId": "WEB:62002007",
+          "score": 63
+        },
+        {
+          "targetId": "WEB:43015020",
+          "score": 62.727273
+        }
+      ]
+    },
+    {
+      "id": "medium-refuge-trouble",
+      "results": [
+        {
+          "targetId": "WEB:19046001",
+          "score": 46.393743
+        },
+        {
+          "targetId": "WEB:19091002",
+          "score": 38.733101
+        },
+        {
+          "targetId": "WEB:19091001",
+          "score": 36.849657
+        },
+        {
+          "targetId": "WEB:19046002",
+          "score": 32.713652
+        },
+        {
+          "targetId": "WEB:34001007",
+          "score": 30.6
+        },
+        {
+          "targetId": "WEB:19009009",
+          "score": 27.383157
+        },
+        {
+          "targetId": "WEB:19121005",
+          "score": 25.6
+        },
+        {
+          "targetId": "WEB:23025004",
+          "score": 23.341722
+        },
+        {
+          "targetId": "WEB:19121007",
+          "score": 23.176198
+        },
+        {
+          "targetId": "WEB:19034019",
+          "score": 22.449657
+        },
+        {
+          "targetId": "WEB:19121006",
+          "score": 22.207872
+        },
+        {
+          "targetId": "WEB:05033027",
+          "score": 19.6
+        },
+        {
+          "targetId": "WEB:19121001",
+          "score": 19.6
+        },
+        {
+          "targetId": "WEB:19121008",
+          "score": 19.6
+        },
+        {
+          "targetId": "WEB:19091009",
+          "score": 11.573101
+        },
+        {
+          "targetId": "WEB:19091004",
+          "score": 10.256336
+        },
+        {
+          "targetId": "WEB:19091012",
+          "score": 6.84
+        },
+        {
+          "targetId": "WEB:19091003",
+          "score": 6.6883
+        },
+        {
+          "targetId": "WEB:20003006",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:20003023",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:20003026",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:23043001",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:23043002",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:23043003",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:19023004",
+          "score": 5.884569
+        }
+      ]
+    },
+    {
+      "id": "medium-fear-not",
+      "results": [
+        {
+          "targetId": "WEB:23043001",
+          "score": 24.142857
+        },
+        {
+          "targetId": "WEB:06001009",
+          "score": 24.06
+        },
+        {
+          "targetId": "WEB:19027001",
+          "score": 22.349657
+        },
+        {
+          "targetId": "WEB:23043002",
+          "score": 22
+        },
+        {
+          "targetId": "WEB:23041010",
+          "score": 20.1
+        },
+        {
+          "targetId": "WEB:62004018",
+          "score": 17.6
+        },
+        {
+          "targetId": "WEB:58013006",
+          "score": 15.4
+        },
+        {
+          "targetId": "WEB:19046002",
+          "score": 12.938605
+        },
+        {
+          "targetId": "WEB:19046001",
+          "score": 10.211333
+        },
+        {
+          "targetId": "WEB:19046003",
+          "score": 10.211333
+        },
+        {
+          "targetId": "WEB:19056003",
+          "score": 8.849657
+        },
+        {
+          "targetId": "WEB:20003024",
+          "score": 7.849657
+        },
+        {
+          "targetId": "WEB:40017006",
+          "score": 7.135372
+        },
+        {
+          "targetId": "WEB:41009032",
+          "score": 7.135372
+        },
+        {
+          "targetId": "WEB:19091005",
+          "score": 6.779657
+        },
+        {
+          "targetId": "WEB:19056004",
+          "score": 6.182991
+        },
+        {
+          "targetId": "WEB:19091001",
+          "score": 5.88
+        },
+        {
+          "targetId": "WEB:19091002",
+          "score": 5.88
+        },
+        {
+          "targetId": "WEB:01003010",
+          "score": 5.849657
+        },
+        {
+          "targetId": "WEB:41006050",
+          "score": 5.849657
+        },
+        {
+          "targetId": "WEB:41005036",
+          "score": 5.15735
+        },
+        {
+          "targetId": "WEB:40006033",
+          "score": 5.032433
+        },
+        {
+          "targetId": "WEB:41009006",
+          "score": 5
+        },
+        {
+          "targetId": "WEB:02003006",
+          "score": 4.992515
+        },
+        {
+          "targetId": "WEB:41005015",
+          "score": 4.992515
+        }
+      ]
+    },
+    {
+      "id": "medium-light-darkness",
+      "results": [
+        {
+          "targetId": "WEB:62001007",
+          "score": 42.510423
+        },
+        {
+          "targetId": "WEB:62001006",
+          "score": 37.041113
+        },
+        {
+          "targetId": "WEB:62001005",
+          "score": 33.093886
+        },
+        {
+          "targetId": "WEB:49005008",
+          "score": 33.0166
+        },
+        {
+          "targetId": "WEB:62002006",
+          "score": 31.54112
+        },
+        {
+          "targetId": "WEB:51001010",
+          "score": 19.245731
+        },
+        {
+          "targetId": "WEB:66021024",
+          "score": 13.9166
+        },
+        {
+          "targetId": "WEB:25003002",
+          "score": 13.063943
+        },
+        {
+          "targetId": "WEB:19056013",
+          "score": 12.649934
+        },
+        {
+          "targetId": "WEB:43011010",
+          "score": 11.749657
+        },
+        {
+          "targetId": "WEB:43011009",
+          "score": 10.0166
+        },
+        {
+          "targetId": "WEB:62002010",
+          "score": 9.803734
+        },
+        {
+          "targetId": "WEB:43008012",
+          "score": 8.749934
+        },
+        {
+          "targetId": "WEB:59001017",
+          "score": 7.396342
+        },
+        {
+          "targetId": "WEB:11016031",
+          "score": 6.8
+        },
+        {
+          "targetId": "WEB:51003007",
+          "score": 6.509717
+        },
+        {
+          "targetId": "WEB:43001004",
+          "score": 6.467864
+        },
+        {
+          "targetId": "WEB:59001022",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:59001023",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:62002004",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:01001003",
+          "score": 5.92161
+        },
+        {
+          "targetId": "WEB:42006046",
+          "score": 5.82
+        },
+        {
+          "targetId": "WEB:40007024",
+          "score": 5.7
+        },
+        {
+          "targetId": "WEB:40007025",
+          "score": 5.7
+        },
+        {
+          "targetId": "WEB:40007026",
+          "score": 5.7
+        }
+      ]
+    },
+    {
+      "id": "narrow-hearing-doing",
+      "results": [
+        {
+          "targetId": "WEB:40007024",
+          "score": 48.538436
+        },
+        {
+          "targetId": "WEB:59001022",
+          "score": 48.430886
+        },
+        {
+          "targetId": "WEB:42006047",
+          "score": 47.544444
+        },
+        {
+          "targetId": "WEB:40007026",
+          "score": 44.40232
+        },
+        {
+          "targetId": "WEB:59001023",
+          "score": 41.533333
+        },
+        {
+          "targetId": "WEB:42006049",
+          "score": 40.849657
+        },
+        {
+          "targetId": "WEB:40007025",
+          "score": 38.6
+        },
+        {
+          "targetId": "WEB:40007027",
+          "score": 38.6
+        },
+        {
+          "targetId": "WEB:42006046",
+          "score": 38.339407
+        },
+        {
+          "targetId": "WEB:59001025",
+          "score": 38.276923
+        },
+        {
+          "targetId": "WEB:42006048",
+          "score": 38
+        },
+        {
+          "targetId": "WEB:45002013",
+          "score": 37.4666
+        },
+        {
+          "targetId": "WEB:59001024",
+          "score": 36.849657
+        },
+        {
+          "targetId": "WEB:09015022",
+          "score": 35
+        },
+        {
+          "targetId": "WEB:26033031",
+          "score": 25.629432
+        },
+        {
+          "targetId": "WEB:43013017",
+          "score": 25.6
+        },
+        {
+          "targetId": "WEB:26033032",
+          "score": 23.770632
+        },
+        {
+          "targetId": "WEB:42011028",
+          "score": 22.4
+        },
+        {
+          "targetId": "WEB:24017024",
+          "score": 16.849657
+        },
+        {
+          "targetId": "WEB:06001018",
+          "score": 14
+        },
+        {
+          "targetId": "WEB:10012018",
+          "score": 14
+        },
+        {
+          "targetId": "WEB:23055002",
+          "score": 14
+        },
+        {
+          "targetId": "WEB:40018016",
+          "score": 14
+        },
+        {
+          "targetId": "WEB:42024018",
+          "score": 14
+        },
+        {
+          "targetId": "WEB:43008038",
+          "score": 14
+        }
+      ]
+    },
+    {
+      "id": "narrow-doers-word",
+      "results": [
+        {
+          "targetId": "WEB:59001022",
+          "score": 86.204076
+        },
+        {
+          "targetId": "WEB:40007026",
+          "score": 46.210716
+        },
+        {
+          "targetId": "WEB:42006049",
+          "score": 44.558151
+        },
+        {
+          "targetId": "WEB:42006047",
+          "score": 44.074365
+        },
+        {
+          "targetId": "WEB:40007024",
+          "score": 41.876818
+        },
+        {
+          "targetId": "WEB:59001023",
+          "score": 37.528571
+        },
+        {
+          "targetId": "WEB:40007025",
+          "score": 33.718809
+        },
+        {
+          "targetId": "WEB:40007027",
+          "score": 33.718809
+        },
+        {
+          "targetId": "WEB:59001024",
+          "score": 33.378505
+        },
+        {
+          "targetId": "WEB:42006046",
+          "score": 33.355454
+        },
+        {
+          "targetId": "WEB:42006048",
+          "score": 33.118809
+        },
+        {
+          "targetId": "WEB:59001025",
+          "score": 32.072643
+        },
+        {
+          "targetId": "WEB:45002013",
+          "score": 31.816079
+        },
+        {
+          "targetId": "WEB:26033032",
+          "score": 29.874619
+        },
+        {
+          "targetId": "WEB:26033031",
+          "score": 28.524434
+        },
+        {
+          "targetId": "WEB:42011028",
+          "score": 27.023265
+        },
+        {
+          "targetId": "WEB:09015022",
+          "score": 25.512057
+        },
+        {
+          "targetId": "WEB:43013017",
+          "score": 22.003333
+        },
+        {
+          "targetId": "WEB:59002014",
+          "score": 12.24
+        },
+        {
+          "targetId": "WEB:59002015",
+          "score": 12.24
+        },
+        {
+          "targetId": "WEB:59002016",
+          "score": 12.24
+        },
+        {
+          "targetId": "WEB:43008043",
+          "score": 11.962617
+        },
+        {
+          "targetId": "WEB:43008047",
+          "score": 11.717126
+        },
+        {
+          "targetId": "WEB:40011002",
+          "score": 11.439342
+        },
+        {
+          "targetId": "WEB:26033030",
+          "score": 11.281784
+        }
+      ]
+    },
+    {
+      "id": "narrow-house-rock",
+      "results": [
+        {
+          "targetId": "WEB:40007024",
+          "score": 117.74138
+        },
+        {
+          "targetId": "WEB:40007026",
+          "score": 57.917635
+        },
+        {
+          "targetId": "WEB:40007025",
+          "score": 55.244006
+        },
+        {
+          "targetId": "WEB:42006048",
+          "score": 46.350641
+        },
+        {
+          "targetId": "WEB:40007027",
+          "score": 43.802868
+        },
+        {
+          "targetId": "WEB:42006049",
+          "score": 43.634023
+        },
+        {
+          "targetId": "WEB:42006047",
+          "score": 40.869405
+        },
+        {
+          "targetId": "WEB:42006046",
+          "score": 37.755012
+        },
+        {
+          "targetId": "WEB:59001022",
+          "score": 12
+        },
+        {
+          "targetId": "WEB:59001023",
+          "score": 12
+        },
+        {
+          "targetId": "WEB:59001024",
+          "score": 12
+        },
+        {
+          "targetId": "WEB:43013017",
+          "score": 10.2
+        },
+        {
+          "targetId": "WEB:60002005",
+          "score": 9.250485
+        },
+        {
+          "targetId": "WEB:40016018",
+          "score": 8.093755
+        },
+        {
+          "targetId": "WEB:23054002",
+          "score": 7.939811
+        },
+        {
+          "targetId": "WEB:11016032",
+          "score": 7.501552
+        },
+        {
+          "targetId": "WEB:26033031",
+          "score": 6.315944
+        },
+        {
+          "targetId": "WEB:05022008",
+          "score": 6.231773
+        },
+        {
+          "targetId": "WEB:49002020",
+          "score": 6.090343
+        },
+        {
+          "targetId": "WEB:59002020",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:19046002",
+          "score": 5.574572
+        },
+        {
+          "targetId": "WEB:19027005",
+          "score": 5.438961
+        },
+        {
+          "targetId": "WEB:62002003",
+          "score": 5.236911
+        },
+        {
+          "targetId": "WEB:55002020",
+          "score": 5.164644
+        },
+        {
+          "targetId": "WEB:07016029",
+          "score": 5.072066
+        }
+      ]
+    },
+    {
+      "id": "phrase-present-help",
+      "results": [
+        {
+          "targetId": "WEB:19046001",
+          "score": 74.970744
+        },
+        {
+          "targetId": "WEB:50004014",
+          "score": 9.786002
+        },
+        {
+          "targetId": "WEB:42011007",
+          "score": 9.143375
+        },
+        {
+          "targetId": "WEB:19056012",
+          "score": 9.070624
+        },
+        {
+          "targetId": "WEB:19009009",
+          "score": 5.826727
+        },
+        {
+          "targetId": "WEB:19040017",
+          "score": 5.361714
+        },
+        {
+          "targetId": "WEB:19010014",
+          "score": 4.797244
+        },
+        {
+          "targetId": "WEB:11018020",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:19034001",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:46007028",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:47001004",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:47001008",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:50004019",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:19091015",
+          "score": 4.346945
+        },
+        {
+          "targetId": "WEB:19040013",
+          "score": 4.177693
+        },
+        {
+          "targetId": "WEB:19010001",
+          "score": 4.159784
+        },
+        {
+          "targetId": "WEB:19121002",
+          "score": 4.011689
+        },
+        {
+          "targetId": "WEB:48001007",
+          "score": 3.897759
+        },
+        {
+          "targetId": "WEB:19121001",
+          "score": 3.779282
+        },
+        {
+          "targetId": "WEB:41009022",
+          "score": 3.779282
+        },
+        {
+          "targetId": "WEB:05022004",
+          "score": 3.694771
+        },
+        {
+          "targetId": "WEB:19027005",
+          "score": 3.655889
+        },
+        {
+          "targetId": "WEB:47001011",
+          "score": 3.624345
+        },
+        {
+          "targetId": "WEB:19042005",
+          "score": 3.564754
+        },
+        {
+          "targetId": "WEB:14007004",
+          "score": 2.849657
+        }
+      ]
+    },
+    {
+      "id": "adversarial-nonsense",
+      "results": []
+    },
+    {
+      "id": "adversarial-common-only",
+      "results": []
+    },
+    {
+      "id": "ot-law-decalogue",
+      "results": [
+        {
+          "targetId": "WEB:02020017",
+          "score": 65.57693
+        },
+        {
+          "targetId": "WEB:45007007",
+          "score": 65.57693
+        },
+        {
+          "targetId": "WEB:45013009",
+          "score": 64.992515
+        },
+        {
+          "targetId": "WEB:05007025",
+          "score": 62
+        },
+        {
+          "targetId": "WEB:45007008",
+          "score": 4.779726
+        },
+        {
+          "targetId": "WEB:44020033",
+          "score": 4.285714
+        },
+        {
+          "targetId": "WEB:02020001",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:18031007",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:40006019",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:45007012",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:45012006",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:50004023",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:59004002",
+          "score": 2.5
+        },
+        {
+          "targetId": "WEB:02020013",
+          "score": 1.803031
+        },
+        {
+          "targetId": "WEB:02020014",
+          "score": 1.803031
+        },
+        {
+          "targetId": "WEB:02020015",
+          "score": 1.803031
+        },
+        {
+          "targetId": "WEB:02020016",
+          "score": 1.803031
+        }
+      ]
+    },
+    {
+      "id": "ot-law-neighbour",
+      "results": [
+        {
+          "targetId": "WEB:45013009",
+          "score": 95.473743
+        },
+        {
+          "targetId": "WEB:40022039",
+          "score": 93.366667
+        },
+        {
+          "targetId": "WEB:59002008",
+          "score": 77.303919
+        },
+        {
+          "targetId": "WEB:48005014",
+          "score": 75.2166
+        },
+        {
+          "targetId": "WEB:03019018",
+          "score": 75.033333
+        },
+        {
+          "targetId": "WEB:40019019",
+          "score": 74.263943
+        },
+        {
+          "targetId": "WEB:45013010",
+          "score": 34.494102
+        },
+        {
+          "targetId": "WEB:45013008",
+          "score": 33.149657
+        },
+        {
+          "targetId": "WEB:43013035",
+          "score": 29.804405
+        },
+        {
+          "targetId": "WEB:43013034",
+          "score": 29.578854
+        },
+        {
+          "targetId": "WEB:46013004",
+          "score": 28.003426
+        },
+        {
+          "targetId": "WEB:46013008",
+          "score": 27.652569
+        },
+        {
+          "targetId": "WEB:46013005",
+          "score": 26.6
+        },
+        {
+          "targetId": "WEB:40007012",
+          "score": 25.2
+        },
+        {
+          "targetId": "WEB:62004011",
+          "score": 22.403426
+        },
+        {
+          "targetId": "WEB:60004008",
+          "score": 21.003426
+        },
+        {
+          "targetId": "WEB:62003018",
+          "score": 20.863083
+        },
+        {
+          "targetId": "WEB:45005008",
+          "score": 20.80414
+        },
+        {
+          "targetId": "WEB:45008039",
+          "score": 15.750134
+        },
+        {
+          "targetId": "WEB:43003016",
+          "score": 15.556349
+        },
+        {
+          "targetId": "WEB:45008038",
+          "score": 14.778532
+        },
+        {
+          "targetId": "WEB:62004010",
+          "score": 13.708163
+        },
+        {
+          "targetId": "WEB:62004009",
+          "score": 13.593337
+        },
+        {
+          "targetId": "WEB:40005043",
+          "score": 13.549657
+        },
+        {
+          "targetId": "WEB:24031003",
+          "score": 12.638864
+        }
+      ]
+    },
+    {
+      "id": "ot-blessing",
+      "results": [
+        {
+          "targetId": "WEB:04006024",
+          "score": 78.249657
+        },
+        {
+          "targetId": "WEB:19121007",
+          "score": 12.076436
+        },
+        {
+          "targetId": "WEB:05006017",
+          "score": 11.692502
+        },
+        {
+          "targetId": "WEB:19034020",
+          "score": 11.434247
+        },
+        {
+          "targetId": "WEB:19121008",
+          "score": 11.189548
+        },
+        {
+          "targetId": "WEB:23061009",
+          "score": 10.719831
+        },
+        {
+          "targetId": "WEB:03019003",
+          "score": 9.989548
+        },
+        {
+          "targetId": "WEB:05006024",
+          "score": 9.64546
+        },
+        {
+          "targetId": "WEB:03019030",
+          "score": 9.543802
+        },
+        {
+          "targetId": "WEB:45014022",
+          "score": 9.168527
+        },
+        {
+          "targetId": "WEB:19040004",
+          "score": 8.885958
+        },
+        {
+          "targetId": "WEB:01003024",
+          "score": 8.584589
+        },
+        {
+          "targetId": "WEB:44020007",
+          "score": 8.584589
+        },
+        {
+          "targetId": "WEB:45015031",
+          "score": 8.584589
+        },
+        {
+          "targetId": "WEB:49006018",
+          "score": 8.584589
+        },
+        {
+          "targetId": "WEB:51001026",
+          "score": 8.584589
+        },
+        {
+          "targetId": "WEB:39003012",
+          "score": 8.536849
+        },
+        {
+          "targetId": "WEB:19024005",
+          "score": 8.383989
+        },
+        {
+          "targetId": "WEB:19016007",
+          "score": 8.087191
+        },
+        {
+          "targetId": "WEB:05033023",
+          "score": 7.989326
+        },
+        {
+          "targetId": "WEB:05033011",
+          "score": 7.836301
+        },
+        {
+          "targetId": "WEB:19034008",
+          "score": 7.787191
+        },
+        {
+          "targetId": "WEB:19037034",
+          "score": 7.679918
+        },
+        {
+          "targetId": "WEB:20003026",
+          "score": 7.594145
+        },
+        {
+          "targetId": "WEB:40024046",
+          "score": 7.483989
+        }
+      ]
+    },
+    {
+      "id": "ot-narrative-ruth",
+      "results": [
+        {
+          "targetId": "WEB:08001016",
+          "score": 60
+        }
+      ]
+    },
+    {
+      "id": "ot-histories-elijah",
+      "results": [
+        {
+          "targetId": "WEB:11019012",
+          "score": 71.555556
+        },
+        {
+          "targetId": "WEB:40017005",
+          "score": 7.673433
+        },
+        {
+          "targetId": "WEB:19046006",
+          "score": 5.348816
+        },
+        {
+          "targetId": "WEB:23054007",
+          "score": 4.456848
+        },
+        {
+          "targetId": "WEB:19139018",
+          "score": 4.109703
+        },
+        {
+          "targetId": "WEB:46015017",
+          "score": 3.952197
+        },
+        {
+          "targetId": "WEB:19027007",
+          "score": 3.889927
+        },
+        {
+          "targetId": "WEB:40027050",
+          "score": 3.889927
+        },
+        {
+          "targetId": "WEB:43011043",
+          "score": 3.889927
+        },
+        {
+          "targetId": "WEB:19046010",
+          "score": 3.829693
+        },
+        {
+          "targetId": "WEB:41001026",
+          "score": 3.774341
+        },
+        {
+          "targetId": "WEB:58012019",
+          "score": 3.774341
+        },
+        {
+          "targetId": "WEB:58012026",
+          "score": 3.681873
+        },
+        {
+          "targetId": "WEB:23040006",
+          "score": 3.606217
+        },
+        {
+          "targetId": "WEB:41001003",
+          "score": 3.606217
+        },
+        {
+          "targetId": "WEB:66021003",
+          "score": 3.606217
+        },
+        {
+          "targetId": "WEB:19055003",
+          "score": 3.54317
+        },
+        {
+          "targetId": "WEB:26033032",
+          "score": 3.54317
+        },
+        {
+          "targetId": "WEB:33006009",
+          "score": 3.54317
+        },
+        {
+          "targetId": "WEB:43001023",
+          "score": 3.54317
+        },
+        {
+          "targetId": "WEB:11018044",
+          "score": 3.526369
+        },
+        {
+          "targetId": "WEB:23040003",
+          "score": 3.489823
+        },
+        {
+          "targetId": "WEB:52004016",
+          "score": 3.444097
+        },
+        {
+          "targetId": "WEB:58004007",
+          "score": 3.369792
+        },
+        {
+          "targetId": "WEB:01003008",
+          "score": 3.339196
+        }
+      ]
+    },
+    {
+      "id": "ot-histories-humble",
+      "results": [
+        {
+          "targetId": "WEB:14007014",
+          "score": 52.833333
+        },
+        {
+          "targetId": "WEB:23043007",
+          "score": 13.007357
+        },
+        {
+          "targetId": "WEB:01016015",
+          "score": 12.124642
+        },
+        {
+          "targetId": "WEB:23043001",
+          "score": 12.025913
+        },
+        {
+          "targetId": "WEB:10012025",
+          "score": 11.917412
+        },
+        {
+          "targetId": "WEB:59002007",
+          "score": 11.769797
+        },
+        {
+          "targetId": "WEB:01016013",
+          "score": 11.537552
+        },
+        {
+          "targetId": "WEB:10012024",
+          "score": 11.361425
+        },
+        {
+          "targetId": "WEB:23040026",
+          "score": 10.689874
+        },
+        {
+          "targetId": "WEB:25003055",
+          "score": 7.853197
+        },
+        {
+          "targetId": "WEB:44002021",
+          "score": 7.853197
+        },
+        {
+          "targetId": "WEB:45010013",
+          "score": 7.853197
+        },
+        {
+          "targetId": "WEB:01005002",
+          "score": 7.400811
+        },
+        {
+          "targetId": "WEB:01005003",
+          "score": 7.400811
+        },
+        {
+          "targetId": "WEB:01005029",
+          "score": 7.400811
+        },
+        {
+          "targetId": "WEB:25003061",
+          "score": 7.400811
+        },
+        {
+          "targetId": "WEB:60004016",
+          "score": 7.400811
+        },
+        {
+          "targetId": "WEB:19147004",
+          "score": 7.253197
+        },
+        {
+          "targetId": "WEB:19116004",
+          "score": 7.246547
+        },
+        {
+          "targetId": "WEB:19116013",
+          "score": 7.246547
+        },
+        {
+          "targetId": "WEB:19116017",
+          "score": 7.246547
+        },
+        {
+          "targetId": "WEB:01016011",
+          "score": 7.020952
+        },
+        {
+          "targetId": "WEB:23041025",
+          "score": 6.626598
+        },
+        {
+          "targetId": "WEB:11018025",
+          "score": 6.473274
+        },
+        {
+          "targetId": "WEB:24010025",
+          "score": 6.473274
+        }
+      ]
+    },
+    {
+      "id": "ot-wisdom-trust",
+      "results": [
+        {
+          "targetId": "WEB:20003005",
+          "score": 98.128505
+        },
+        {
+          "targetId": "WEB:19037005",
+          "score": 32.190261
+        },
+        {
+          "targetId": "WEB:20003006",
+          "score": 25.872971
+        },
+        {
+          "targetId": "WEB:19027014",
+          "score": 25.457546
+        },
+        {
+          "targetId": "WEB:23040031",
+          "score": 17.146428
+        },
+        {
+          "targetId": "WEB:19062005",
+          "score": 16.003333
+        },
+        {
+          "targetId": "WEB:25003025",
+          "score": 14.860238
+        },
+        {
+          "targetId": "WEB:33007007",
+          "score": 14.860238
+        },
+        {
+          "targetId": "WEB:59005008",
+          "score": 11.554213
+        },
+        {
+          "targetId": "WEB:19013005",
+          "score": 11.458456
+        },
+        {
+          "targetId": "WEB:19009010",
+          "score": 10.630626
+        },
+        {
+          "targetId": "WEB:19091002",
+          "score": 10.270189
+        },
+        {
+          "targetId": "WEB:24017010",
+          "score": 10.166665
+        },
+        {
+          "targetId": "WEB:19040003",
+          "score": 10.165994
+        },
+        {
+          "targetId": "WEB:24017007",
+          "score": 9.982331
+        },
+        {
+          "targetId": "WEB:60005007",
+          "score": 9.6
+        },
+        {
+          "targetId": "WEB:23026008",
+          "score": 9.396063
+        },
+        {
+          "targetId": "WEB:39002015",
+          "score": 9.380111
+        },
+        {
+          "targetId": "WEB:19091014",
+          "score": 9.223826
+        },
+        {
+          "targetId": "WEB:19116010",
+          "score": 9.223826
+        },
+        {
+          "targetId": "WEB:58010035",
+          "score": 9.223826
+        },
+        {
+          "targetId": "WEB:19033021",
+          "score": 8.895769
+        },
+        {
+          "targetId": "WEB:20028025",
+          "score": 8.753589
+        },
+        {
+          "targetId": "WEB:19037003",
+          "score": 8.082871
+        },
+        {
+          "targetId": "WEB:40024048",
+          "score": 7.955656
+        }
+      ]
+    },
+    {
+      "id": "ot-wisdom-time",
+      "results": [
+        {
+          "targetId": "WEB:21003001",
+          "score": 75.630886
+        },
+        {
+          "targetId": "WEB:47001017",
+          "score": 16.849657
+        },
+        {
+          "targetId": "WEB:21003017",
+          "score": 13.252964
+        },
+        {
+          "targetId": "WEB:55001009",
+          "score": 5.557143
+        },
+        {
+          "targetId": "WEB:49006022",
+          "score": 5.200019
+        },
+        {
+          "targetId": "WEB:49005016",
+          "score": 4.715843
+        },
+        {
+          "targetId": "WEB:21003002",
+          "score": 4.449245
+        },
+        {
+          "targetId": "WEB:45008028",
+          "score": 4.416565
+        },
+        {
+          "targetId": "WEB:40018022",
+          "score": 4.093781
+        },
+        {
+          "targetId": "WEB:46007029",
+          "score": 4.093781
+        },
+        {
+          "targetId": "WEB:44001007",
+          "score": 3.867577
+        },
+        {
+          "targetId": "WEB:41001015",
+          "score": 3.78275
+        },
+        {
+          "targetId": "WEB:16008004",
+          "score": 3.572846
+        },
+        {
+          "targetId": "WEB:58004007",
+          "score": 3.549477
+        },
+        {
+          "targetId": "WEB:10013013",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:19027002",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:19027010",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:19046005",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:19073016",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:19101003",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:23001011",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:24029010",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:40019005",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:40027007",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:41006008",
+          "score": 2.849657
+        }
+      ]
+    },
+    {
+      "id": "ot-prophets-servant",
+      "results": [
+        {
+          "targetId": "WEB:23053005",
+          "score": 71.886021
+        },
+        {
+          "targetId": "WEB:19051003",
+          "score": 5.088072
+        },
+        {
+          "targetId": "WEB:49002001",
+          "score": 4.768298
+        },
+        {
+          "targetId": "WEB:23043025",
+          "score": 4.528468
+        },
+        {
+          "targetId": "WEB:18031033",
+          "score": 4.341934
+        },
+        {
+          "targetId": "WEB:26033010",
+          "score": 3.882772
+        },
+        {
+          "targetId": "WEB:58004012",
+          "score": 3.602817
+        },
+        {
+          "targetId": "WEB:19051001",
+          "score": 3.521182
+        },
+        {
+          "targetId": "WEB:01003006",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:01003007",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:01003010",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:19051004",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:19088006",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:23053006",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:23053008",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:33006007",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:33007018",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:33007020",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:38013001",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:40027049",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:45002002",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:45002005",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:45002012",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:45006001",
+          "score": 2.849657
+        },
+        {
+          "targetId": "WEB:45006014",
+          "score": 2.849657
+        }
+      ]
+    },
+    {
+      "id": "ot-prophets-plans",
+      "results": [
+        {
+          "targetId": "WEB:24029011",
+          "score": 70.462754
+        },
+        {
+          "targetId": "WEB:50004007",
+          "score": 22.205084
+        },
+        {
+          "targetId": "WEB:60005007",
+          "score": 20.322729
+        },
+        {
+          "targetId": "WEB:43014027",
+          "score": 15.776418
+        },
+        {
+          "targetId": "WEB:59002004",
+          "score": 13.255062
+        },
+        {
+          "targetId": "WEB:50004006",
+          "score": 12.701706
+        },
+        {
+          "targetId": "WEB:23026003",
+          "score": 12.482817
+        },
+        {
+          "targetId": "WEB:40006027",
+          "score": 12.443613
+        },
+        {
+          "targetId": "WEB:19034014",
+          "score": 12.336703
+        },
+        {
+          "targetId": "WEB:60003011",
+          "score": 11.401136
+        },
+        {
+          "targetId": "WEB:43016033",
+          "score": 11.212646
+        },
+        {
+          "targetId": "WEB:40006025",
+          "score": 8.891194
+        },
+        {
+          "targetId": "WEB:45005001",
+          "score": 8.567177
+        },
+        {
+          "targetId": "WEB:19056005",
+          "score": 7.842736
+        },
+        {
+          "targetId": "WEB:20003005",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:20003006",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:23043001",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:23043002",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:23043003",
+          "score": 6
+        },
+        {
+          "targetId": "WEB:06001009",
+          "score": 5.88
+        },
+        {
+          "targetId": "WEB:19037005",
+          "score": 5.7
+        },
+        {
+          "targetId": "WEB:19034013",
+          "score": 5.598986
+        },
+        {
+          "targetId": "WEB:45014017",
+          "score": 5.37674
+        },
+        {
+          "targetId": "WEB:23041010",
+          "score": 4.8
+        },
+        {
+          "targetId": "WEB:62004018",
+          "score": 4.8
+        }
+      ]
+    },
+    {
+      "id": "ot-prophets-justly",
+      "results": [
+        {
+          "targetId": "WEB:33006008",
+          "score": 16.383366
+        },
+        {
+          "targetId": "WEB:51003014",
+          "score": 11.70366
+        },
+        {
+          "targetId": "WEB:49002004",
+          "score": 11.020417
+        },
+        {
+          "targetId": "WEB:49005002",
+          "score": 10.96013
+        },
+        {
+          "targetId": "WEB:48006016",
+          "score": 10.345002
+        },
+        {
+          "targetId": "WEB:19101001",
+          "score": 8.808111
+        },
+        {
+          "targetId": "WEB:51003012",
+          "score": 8.808111
+        },
+        {
+          "targetId": "WEB:19116001",
+          "score": 8.320417
+        },
+        {
+          "targetId": "WEB:45014015",
+          "score": 5.967451
+        },
+        {
+          "targetId": "WEB:02020006",
+          "score": 4.920114
+        },
+        {
+          "targetId": "WEB:19040011",
+          "score": 4.915873
+        },
+        {
+          "targetId": "WEB:19040016",
+          "score": 4.846748
+        },
+        {
+          "targetId": "WEB:47012018",
+          "score": 4.837788
+        },
+        {
+          "targetId": "WEB:01003024",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:19051013",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:19056012",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:47012021",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:49002005",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:49005001",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:52004001",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:59002012",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:62002005",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:62002006",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:62002007",
+          "score": 4.5166
+        },
+        {
+          "targetId": "WEB:05007012",
+          "score": 4.291511
+        }
+      ]
+    },
+    {
+      "id": "ot-adversarial-census",
+      "results": [
+        {
+          "targetId": "WEB:01005008",
+          "score": 11.586052
+        },
+        {
+          "targetId": "WEB:01005004",
+          "score": 8.736364
+        },
+        {
+          "targetId": "WEB:01005005",
+          "score": 5.57953
+        },
+        {
+          "targetId": "WEB:02020009",
+          "score": 4.621207
+        },
+        {
+          "targetId": "WEB:20003002",
+          "score": 4.17832
+        },
+        {
+          "targetId": "WEB:20003016",
+          "score": 4.030691
+        },
+        {
+          "targetId": "WEB:33007015",
+          "score": 4.030691
+        },
+        {
+          "targetId": "WEB:43011006",
+          "score": 4.030691
+        },
+        {
+          "targetId": "WEB:43011017",
+          "score": 4.030691
+        },
+        {
+          "targetId": "WEB:58011030",
+          "score": 4.030691
+        },
+        {
+          "targetId": "WEB:58012010",
+          "score": 3.912587
+        },
+        {
+          "targetId": "WEB:39003004",
+          "score": 3.815957
+        },
+        {
+          "targetId": "WEB:44001005",
+          "score": 3.815957
+        },
+        {
+          "targetId": "WEB:44001012",
+          "score": 3.735432
+        },
+        {
+          "targetId": "WEB:19055023",
+          "score": 3.667296
+        },
+        {
+          "targetId": "WEB:40017001",
+          "score": 3.667296
+        },
+        {
+          "targetId": "WEB:60003010",
+          "score": 3.667296
+        },
+        {
+          "targetId": "WEB:11019008",
+          "score": 3.608893
+        },
+        {
+          "targetId": "WEB:14007008",
+          "score": 3.558277
+        },
+        {
+          "targetId": "WEB:43011039",
+          "score": 3.558277
+        },
+        {
+          "targetId": "WEB:59005003",
+          "score": 3.513989
+        },
+        {
+          "targetId": "WEB:41009002",
+          "score": 3.47491
+        },
+        {
+          "targetId": "WEB:06001011",
+          "score": 3.409094
+        },
+        {
+          "targetId": "WEB:02003018",
+          "score": 3.355815
+        },
+        {
+          "targetId": "WEB:11019004",
+          "score": 3.355815
+        }
+      ]
+    }
+  ]
+}
