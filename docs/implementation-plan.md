@@ -353,6 +353,17 @@ These are display obligations that follow from data this repo ships; an app
 that pins the artifact but skips the card has implemented the ranking and
 skipped the point.
 
+**Artifact identity is decoupled from engineVersion (2026-08-15).** The
+descriptor carries an optional `release: { tag }` naming the GitHub Release
+its bytes are published at. Consumers resolving a download URL must use that
+tag when present, falling back to `v{engineVersion}` for descriptors minted
+before the field existed (the workbench's `releaseTagFor` is the reference
+implementation). This is additive — `formatVersion` stays 1 and pinned
+`(engine semver, artifact descriptor)` pairs are unaffected — and it is what
+lets an artifact-only refresh ship at its own tag (e.g. `artifact/<date>`)
+with no engine bump: the steady-state cadence once data changes outpace code
+changes.
+
 ## 6. The concept-curation skill (ongoing enrichment)
 
 Lives in the engine repo; invocable from any project session.

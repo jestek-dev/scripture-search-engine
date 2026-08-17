@@ -15,13 +15,13 @@ import { mkdir, rename, rm } from 'node:fs/promises';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 
-import { artifactDir, databasePath, readDescriptor } from './descriptor.js';
+import { artifactDir, databasePath, readDescriptor, releaseTagFor } from './descriptor.js';
 
 const PROGRESS_EVERY_BYTES = 16 * 1024 * 1024;
 
 async function main(): Promise<void> {
   const descriptor = await readDescriptor();
-  const tag = `v${descriptor.engineVersion}`;
+  const tag = releaseTagFor(descriptor);
   const url = `https://github.com/jestek-dev/scripture-search-engine/releases/download/${tag}/content.db`;
 
   console.log(`Descriptor: engine ${descriptor.engineVersion}, ${descriptor.databaseBytes} bytes expected`);
@@ -31,7 +31,7 @@ async function main(): Promise<void> {
   if (response.status === 404) {
     console.error(
       `Release asset not found (404) at ${url}.\n` +
-        `The descriptor names engine ${descriptor.engineVersion} but no ${tag} release asset is published yet.\n` +
+        `The descriptor names release ${tag} (engine ${descriptor.engineVersion}) but no such release asset is published yet.\n` +
         `Fallback — build the artifact locally:\n` +
         `  npm run fetch:sources --workspace pipeline\n` +
         `  npm run build:artifact --workspace pipeline\n` +
