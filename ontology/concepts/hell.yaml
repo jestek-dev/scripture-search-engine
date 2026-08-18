@@ -1,0 +1,81 @@
+# DRAFT (round-2 curation, author E, 2026-08-18) — new concept.
+# Idea source (PR description only): Phillips, *A Topical Bible Guide*
+# (2004), topic "Hell" — topic lead only; every anchor below was verified
+# in WEB context against pipeline/fixtures/web-subset.json before drafting,
+# per the book table's own note ("use as leads, verify each pairing").
+#
+# ADMISSIBILITY: judgment and eternal states are point 9 of the shared core
+# (docs/DOCTRINAL-BASIS.md §2) — this is core, not a §4 non-criterion. The
+# concept still adjudicates nothing: it locates the passages where Scripture
+# itself names the referent (Gehenna, Hades, unquenchable fire, outer
+# darkness) and says which source named them. No nature-of-hell position
+# (duration/annihilation debates) is encoded; the anchors are the naming
+# passages and the label is one word.
+#
+# WHY sources: [editorial] and not [torrey]: Torrey's HELL outline exists,
+# but every one of its refs that overlaps this topic (Matt 13:42,50;
+# 25:41,46; Luke 16:23; Rev 20:14-15; Jude 7) is outside the current fixture
+# corpus. None of the five in-corpus anchors below appears under Torrey's
+# HELL heading (Matt 5:22 is under ANGER/COURTS; Mark 9:43 under
+# OFFENCE/SELF-DENIAL; Rev 1:18 under DEATH/RESURRECTION), so the torrey tag
+# would be false provenance here. Backlogged Torrey-verified anchors are in
+# the round-2 backlog.md.
+#
+# PASTORAL GEOMETRY (kept from round 1): Mark 9:43-48 / Matt 18:8-9 are the
+# "cut it off" sayings that the pastoral-abuse/self-harm fixtures gate with
+# mustNotRank for THOSE queries. This lexicon shares no token with those
+# queries ("hell", "gehenna", "unquenchable fire", "outer darkness"), so the
+# pack cannot route these sayings into a self-harm search; the pastoral
+# fixtures continue to assert that independently.
+id: hell
+label: Hell
+lexicon:
+  # Single-token entry, deliberate (NEEDS-JESSE §1.6d option 3, same as
+  # "suicide"/"cancer"/"rapture"): "hell" appears NOWHERE in the WEB corpus
+  # text (it says Gehenna, Hades, Sheol), so no lexical rung can reach the
+  # naming passages, and the word IS the concept.
+  - hell
+  # "gehenna" is in the WEB text; the entry makes the query fire the whole
+  # curated set rather than only the verses whose surface form matches.
+  # One-token specificity discount applies, per the prayer.yaml precedent.
+  - gehenna
+  - unquenchable fire
+  - outer darkness
+  - weeping and gnashing of teeth
+anchors:
+  # "…to be cast into Gehenna, into the unquenchable fire… 'where their worm
+  # doesn't die, and the fire is not quenched.'" Phillips cites 9:48 alone;
+  # the anchor keeps the whole saying (43-48) because v48 by itself is a
+  # dangling Isaiah quotation — the naming ("Gehenna", three times) is in
+  # 43/45/47. Same narrowing-to-the-honest-unit move as caught-up-together.
+  - ref: Mark 9:43-48
+    sources: [editorial]
+    weight: 1.0
+  # "…rather than having two eyes to be cast into the Gehenna of fire."
+  - ref: Matthew 18:8-9
+    sources: [editorial]
+    weight: 0.9
+  # "…whoever says, 'You fool!' will be in danger of the fire of Gehenna."
+  # Jesus' own warning; kept because it names the referent, with the anger
+  # context intact in the verse itself.
+  - ref: Matthew 5:22
+    sources: [editorial]
+    weight: 0.8
+  # "I have the keys of Death and of Hades." Phillips's pairing kept: the
+  # verse names Hades and locates Christ's authority over it — the one
+  # anchor in the set that answers the searcher's fear rather than only the
+  # searcher's question.
+  - ref: Revelation 1:18
+    sources: [editorial]
+    weight: 0.75
+  # "…throw him into the outer darkness. That is where the weeping and
+  # grinding of teeth will be." A parable's judgment imagery, not a Gehenna
+  # naming — kept at the bottom of the set because "outer darkness" is a
+  # query people genuinely bring, and the label claims only that a curated
+  # source names this passage for the concept.
+  - ref: Matthew 22:13
+    sources: [editorial]
+    weight: 0.7
+related:
+  - salvation
+  - repentance
