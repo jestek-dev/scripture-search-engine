@@ -1,0 +1,33 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topics "Doubtful Things" (Rom 14:19) and "Will of
+# God" (Rom 14:5, rehomed — its subject is disputable days, not discerning
+# God's will). This is the Romans 14 disputable-matters sense per the
+# round-2 worklist note.
+#
+# KNOWN ALIAS TRAP (by design): no bare "doubt"/"doubtful" token — a future
+# "doubt/doubting God" concept must stay disjoint from this pack. The book's
+# other Doubtful Things leads (James 4:4, 1 John 2:15-17) are worldliness
+# texts, not gray-area texts — they live in love-not-the-world.
+# Corpus-blocked leads 1 Cor 8:9,13 and Phil 2:15: see backlog.md.
+id: disputable-matters
+label: Disputable matters
+lexicon:
+  - doubtful things
+  - disputable matters
+  - gray areas
+  - christian gray areas
+  - weaker brother
+anchors:
+  # "One man esteems one day as more important... Let each man be fully
+  # assured in his own mind."
+  - ref: Romans 14:5
+    sources: [editorial]
+    weight: 0.9
+  # "let's follow after things which make for peace, and things by which we
+  # may build one another up"
+  - ref: Romans 14:19
+    sources: [editorial]
+    weight: 0.85
+related:
+  - freedom-from-bondage
+  - loving-others

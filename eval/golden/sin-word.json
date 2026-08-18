@@ -1,7 +1,7 @@
 {
   "id": "sin-word",
   "query": "what is sin",
-  "status": "pending",
+  "status": "active",
   "additionalQueries": [
     "sin",
     "wages of sin",

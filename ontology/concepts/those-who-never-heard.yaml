@@ -1,0 +1,37 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topic "Those Who Haven't Heard" — the apologetics
+# question ("what about people who never heard the gospel"). The engine
+# reports which passages curated sources name for the question — creation's
+# witness, conscience, the Spirit's conviction — and adjudicates nothing
+# about anyone's destiny (CLAUDE.md #6). Rejected lead: Rom 2:18 (it
+# describes the Jew instructed in the law — the opposite subject; see
+# rejects.md). Rom 2:15 anchored with v14, the sentence it completes.
+id: those-who-never-heard
+label: God's witness to all
+lexicon:
+  - those who never heard
+  - never heard the gospel
+  - what about those who never heard
+  - general revelation
+  - without excuse
+anchors:
+  # "the invisible things of him since the creation of the world are
+  # clearly seen... that they may be without excuse" — Torrey files it
+  # under HEATHEN, THE.
+  - ref: Romans 1:18-20
+    sources: [torrey]
+    weight: 1.0
+  # Gentiles without the law "show the work of the law written in their
+  # hearts, their conscience testifying with them"
+  - ref: Romans 2:14-15
+    sources: [editorial]
+    weight: 0.9
+  # "he will convict the world about sin, about righteousness, and about
+  # judgment"
+  - ref: John 16:8
+    sources: [editorial]
+    weight: 0.7
+related:
+  - creation
+  - sharing-your-faith
+  - salvation

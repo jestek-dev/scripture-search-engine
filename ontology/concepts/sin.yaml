@@ -1,0 +1,36 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topics "Sin" and "Man's Need of Salvation"
+# (Rom 5:12). The ontology had the remedy (the-cross, forgiveness-of-sins,
+# repentance) but no home for the diagnosis itself. Corpus-blocked lead
+# Isa 59:1-2: backlog.md.
+id: sin
+label: Sin and its wages
+lexicon:
+  - what is sin
+  - sin
+  - the wages of sin
+  - consequences of sin
+  - reap what you sow
+anchors:
+  # "the wages of sin is death, but the free gift of God is eternal life" —
+  # diagnosis and remedy in one sentence; verbatim in Torrey's SIN.
+  - ref: Romans 6:23
+    sources: [torrey]
+    weight: 1.0
+  # "as sin entered into the world through one man, and death through sin"
+  - ref: Romans 5:12
+    sources: [torrey]
+    weight: 0.9
+  # "everyone who commits sin is the bondservant of sin"
+  - ref: John 8:34
+    sources: [torrey]
+    weight: 0.85
+  # "whatever a man sows, that he will also reap... he who sows to his own
+  # flesh will from the flesh reap corruption"
+  - ref: Galatians 6:7-8
+    sources: [editorial]
+    weight: 0.8
+related:
+  - the-cross
+  - repentance
+  - forgiveness-of-sins

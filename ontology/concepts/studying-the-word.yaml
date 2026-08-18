@@ -1,0 +1,49 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D; lexicon split settled
+# by the integrator). Lead source: Phillips "A Topical Bible Guide", topic
+# "Study" — the scripture-engagement sense ("study the bible", 2 Tim 2:15),
+# per the round-2 worklist note. Matt 24:35 arrived via the book's
+# "Assurance of Salvation" topic, rehomed here because its own words are
+# about the permanence of Christ's words, not personal assurance.
+#
+# SPLIT vs delight-in-the-word (author F, same round): STUDY (workman,
+# rightly handling, the word living and active) and DELIGHT/MEDITATION
+# (Ps 1:2, Josh 1:8, the word dwelling richly) are two honest registers,
+# kept token-disjoint. The generic "gods word" / "the word of god"
+# phrasings live HERE (the lookup/engagement sense); the meditation
+# phrasings live there. Col 3:16 ("dwell in you richly") anchors
+# delight-in-the-word — its own indwelling register — not this pack.
+# Torrey labels: refs verbatim under SCRIPTURES, THE.
+id: studying-the-word
+label: Studying the Word
+lexicon:
+  - study the bible
+  - the word of god
+  - gods word
+  - study scripture
+  - rightly dividing the word
+  - how to study the bible
+anchors:
+  # "a workman who doesn't need to be ashamed, properly handling the Word of
+  # Truth" — Torrey lists it under TRUTH, not SCRIPTURES; editorial here.
+  - ref: 2 Timothy 2:15
+    sources: [editorial]
+    weight: 1.0
+  # "the word of God is living and active, and sharper than any two-edged
+  # sword"
+  - ref: Hebrews 4:12
+    sources: [torrey]
+    weight: 0.95
+  # "The LORD's law is perfect, restoring the soul... more to be desired
+  # than gold" — SCRIPTURES, THE lists 19:7, 8, 10, 11 across its points.
+  - ref: Psalms 19:7-11
+    sources: [torrey]
+    weight: 0.9
+  # "Heaven and earth will pass away, but my words will not pass away."
+  - ref: Matthew 24:35
+    sources: [editorial]
+    weight: 0.7
+related:
+  - obedience-to-the-word
+  - delight-in-the-word
+  - spiritual-growth
+  - guidance

@@ -1,0 +1,55 @@
+# ROUND-2 AUTHOR-F (2026-08-18) — new concept; lexicon split settled by the
+# integrator. Idea source (PR description only): Scriptural Prayers
+# "Putting God and His Word First" (Josh 1:8, Ps 1:2), "Spiritual Drought"
+# (Col 3:16), "Being a Godly Husband" / "Being a Godly Wife" (Ps 1:2 — the
+# books send spouses to the Psalm 1 pattern). Each anchor verified against
+# the WEB text in context.
+#
+# Deliberately DISTINCT from `obedience-to-the-word` (hearing-and-DOING)
+# and from `studying-the-word` (author D, same round — the study/workman
+# register): this concept is the delight/meditation register — loving,
+# meditating on, dwelling in the Word. The generic "gods word" / "the word
+# of god" phrasings live on studying-the-word; this lexicon keeps only the
+# meditation phrasings, so the two packs stay token-disjoint where it
+# matters (G4-checked).
+#
+# WATCHLIST HYGIENE: Joshua 1:8's own text ends "you shall make your way
+# prosperous, and then you shall have good success" — the lexicon
+# deliberately carries NO prosperity/success vocabulary, so the verse is
+# reached by meditation queries, never recruited by material-frame ones.
+id: delight-in-the-word
+label: Delighting in God's Word
+lexicon:
+  - meditate on the word
+  - meditate on gods word
+  - delight in the word
+  - meditate day and night
+  - let the word of christ dwell in you
+anchors:
+  # "His delight is in the LORD's law. On his law he meditates day and
+  # night" (WEB). The blessed man's pattern — delight, then rootedness
+  # (v3). Torrey: SCRIPTURES, THE ("Saints > Delight in").
+  - ref: Psalms 1:2
+    sources: [torrey]
+    weight: 1.0
+  # "This book of the law shall not depart from your mouth, but you shall
+  # meditate on it day and night, that you may observe to do according to
+  # all that is written in it" (WEB). Meditation ordered toward doing —
+  # the charge to Joshua, and the verse the prayer book leads with. (No
+  # Torrey heading lists Josh 1:8; editorial.)
+  - ref: Joshua 1:8
+    sources: [editorial]
+    weight: 0.9
+  # "Let the word of Christ dwell in you richly; in all wisdom teaching
+  # and admonishing one another with psalms, hymns, and spiritual songs"
+  # (WEB). The Word dwelling richly — the NT's own indwelling-Word verse.
+  # Editorial (Torrey files 3:16 under GOSPEL naming / COMMUNION headings,
+  # adjacent senses).
+  - ref: Colossians 3:16
+    sources: [editorial]
+    weight: 0.85
+related:
+  - obedience-to-the-word
+  - studying-the-word
+  - wisdom-from-god
+  - hunger-for-god
