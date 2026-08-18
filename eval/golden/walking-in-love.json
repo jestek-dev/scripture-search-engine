@@ -1,10 +1,8 @@
 {
   "id": "walking-in-love",
-  "query": "walk in love",
-  "additionalQueries": [
-    "love one another as I have loved you"
-  ],
-  "status": "pending",
+  "query": "love one another as I have loved you",
+  "additionalQueries": [],
+  "status": "active",
   "note": [
     "ROUND-2 AUTHOR-F (2026-08-18). Exercises the loving-others EXTENSION",
     "(new anchors John 15:12, Gal 5:14, 1 John 4:12, Matt 5:43-44, 1 Cor",
@@ -18,7 +16,8 @@
     "The existing 1.0 anchor (John 13:34-35) may honestly lead; the",
     "assertion is only that the John 15:12 command reaches the top ten with",
     "its curated reason, so the extension is measured without forcing a",
-    "reordering of a healthy list."
+    "reordering of a healthy list.",
+    "Integrator: the drafted 'walk in love' query and lexicon entry were dropped on G8 evidence (the phrase's tokens sit inside the ot-prophets-justly probe query and flooded it; Eph 5:2 already serves 'walk in love' lexically). The fixture keeps measuring the extension through the John 15:12 command's own phrasing."
   ],
   "expectedTop": [
     {

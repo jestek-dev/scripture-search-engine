@@ -1,7 +1,7 @@
 {
   "id": "honesty",
   "query": "honesty",
-  "status": "pending",
+  "status": "active",
   "additionalQueries": [
     "lying",
     "telling the truth"

@@ -14,6 +14,9 @@ lexicon:
   - guard my mouth
   - the power of the tongue
   - careless words
+  # Round-2 book admission 2026-08-18.
+  - slow to speak
+  - speak the truth in love
 anchors:
   # "Set a watch, LORD, before my mouth. Keep the door of my lips." (WEB
   # from knowledge — Psalm 141 not yet in the fixture corpus.) The prayer
@@ -66,5 +69,22 @@ anchors:
   - ref: Proverbs 16:24
     sources: [editorial]
     weight: 0.65
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "swift to hear, slow to speak, and slow to anger." Torrey: HEEDFULNESS
+  # ("Necessary In speech"), ANGER ("Be slow to").
+  - ref: James 1:19
+    sources: [torrey]
+    weight: 0.85
+  # "I will watch my ways, so that I don't sin with my tongue... keep my
+  # mouth with a bridle."
+  - ref: Psalms 39:1
+    sources: [editorial]
+    weight: 0.75
+  # "speaking truth in love" — the constructive-speech companion to the
+  # pack's Eph 4:29.
+  - ref: Ephesians 4:15
+    sources: [editorial]
+    weight: 0.7
 related:
   - loving-others

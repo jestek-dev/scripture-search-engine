@@ -7,22 +7,29 @@
   ],
   "note": [
     "Added with the remembered-phrasings pack. The WEB reads \"not forsaking our own assembling together\", so the remembered NIV wording reached nothing. Directly useful to the consuming apps, which plan gatherings.",
-    "Requires requiredReasonLabel so a neighbouring concept anchoring the same verse cannot satisfy this fixture."
+    "Requires requiredReasonLabel so a neighbouring concept anchoring the same verse cannot satisfy this fixture.",
+    "Round-2 book admission 2026-08-18: gathering-together gained 1 Thess 5:11; the WEB reads 'exhort one another', so the common 'encourage one another' phrasing has no lexical path — the curated rung is what surfaces it (asserted below)."
   ],
   "expectedTop": [
     {
       "reference": "Hebrews 10:24-25",
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Gathering together"
+    },
+    {
+      "reference": "1 Thessalonians 5:11",
+      "requiredReasonFamily": "concept_anchor"
     }
   ],
   "expectedWithinTop": 10,
   "additionalQueries": [
     "meeting together",
-    "where two or three gather"
+    "where two or three gather",
+    "encourage one another"
   ],
   "alsoAcceptable": [
     "Matthew 18:20",
-    "Acts 2:42"
+    "Acts 2:42",
+    "1 Thessalonians 5:11"
   ]
 }

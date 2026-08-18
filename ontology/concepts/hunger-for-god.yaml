@@ -1,0 +1,65 @@
+# ROUND-2 AUTHOR-F (2026-08-18) — new concept.
+# Idea source (PR description only, never an engine source): Scriptural
+# Prayers "Hunger for God" / "My Child's Hunger for God" / "Spiritual
+# Drought"; Growing by Heart wk3 "living water" and wk40 "a deep well".
+# Each anchor verified against the WEB text in context.
+#
+# Deliberately DISTINCT from `presence-of-god` (nearness language) and
+# `worship` (adoration register): this concept is the DESIRE register —
+# longing, thirst, dryness. "spiritually dry" / "spiritual drought" are the
+# felt-need phrasings the prayer book's Spiritual Drought chapter answers;
+# today they reach nothing curated.
+#
+# Ephesians 5:18 (the prayer book's third Hunger for God ref) is REJECTED:
+# its own subject is Spirit-filled living contrasted with drunkenness, not
+# appetite for God — see rejects.md. Ephesians 3:17-18 lands on `gods-love`
+# (widened 3:19 anchor) where its own subject lives — see patches.md.
+id: hunger-for-god
+label: Hunger for God
+lexicon:
+  - hunger for god
+  - thirst for god
+  - as the deer pants
+  - my soul thirsts for god
+  - hunger and thirst for righteousness
+  - taste and see
+  # Felt-need phrasings for the dry season (one-token discounts keep the
+  # bare forms humble).
+  - spiritually dry
+  - spiritual drought
+anchors:
+  # "As the deer pants for the water brooks, so my soul pants after you,
+  # God. My soul thirsts for God, for the living God" (WEB). The psalm IS
+  # the longing — written from spiritual desolation (42:3 "tears my food"),
+  # which is why it also answers the drought register honestly.
+  # Torrey: COMMUNION WITH GOD ("Saints > Desire"), SAINTS, COMPARED TO
+  # ("Thirsting deer") — both list 42:1. Single source deliberately: the
+  # engine sums duplicate anchors (the round-1 1 Pet 5:7 dedup), so a
+  # dual-source anchor would double-count.
+  - ref: Psalms 42:1-2
+    sources: [torrey]
+    weight: 1.0
+  # "Blessed are those who hunger and thirst for righteousness, for they
+  # shall be filled" (WEB). The beatitude's own promise: the appetite
+  # itself is blessed and will be satisfied.
+  # Torrey: BLESSED, THE ("Who hunger and thirst after righteousness").
+  - ref: Matthew 5:6
+    sources: [torrey]
+    weight: 0.9
+  # "Oh taste and see that the LORD is good" (WEB). The invitation to
+  # firsthand experience of God — the psalm's own imperative, not a
+  # metaphor we imported.
+  - ref: Psalms 34:8
+    sources: [editorial]
+    weight: 0.8
+  # "I will give freely to him who is thirsty from the spring of the water
+  # of life" (WEB). The consummation promise to the thirsty — freely, so
+  # the thirst-frame stays grace, never technique. John 7:37-38 (the
+  # living-water invitation itself) is corpus-blocked; see backlog.md.
+  - ref: Revelation 21:6
+    sources: [editorial]
+    weight: 0.7
+related:
+  - presence-of-god
+  - delight-in-the-word
+  - joy-in-the-lord

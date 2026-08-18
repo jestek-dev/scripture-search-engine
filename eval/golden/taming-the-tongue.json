@@ -17,23 +17,32 @@
     "Matt 12:36, Prov 16:24 — are all outside it; see corpus-needs. Until",
     "those chapters land, Eph 4:29 is the honest expectedTop: the positive",
     "speech command, and the strongest in-corpus answer for 'gossip' is",
-    "Eph 4:31's slander prohibition."
+    "Eph 4:31's slander prohibition.",
+    "Round-2 book admission 2026-08-18: taming-the-tongue gained James 1:19 (slow to speak), Ps 39:1 (bridle my mouth), Eph 4:15 (speaking truth in love); 'slow to speak' asserted."
   ],
   "expectedTop": [
     {
       "reference": "Ephesians 4:29",
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Taming the tongue"
+    },
+    {
+      "reference": "James 1:19",
+      "requiredReasonFamily": "concept_anchor"
     }
   ],
   "expectedWithinTop": 10,
   "alsoAcceptable": [
     "Ephesians 4:31",
-    "Psalms 34:13"
+    "Psalms 34:13",
+    "James 1:19",
+    "Psalms 39:1",
+    "Ephesians 4:15"
   ],
   "additionalQueries": [
     "gossip",
-    "guard my mouth"
+    "guard my mouth",
+    "slow to speak"
   ],
   "coversConcepts": [
     "taming-the-tongue"

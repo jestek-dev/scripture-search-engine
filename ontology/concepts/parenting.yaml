@@ -19,6 +19,8 @@ lexicon:
   - train up a child
   - prayer for my child
   - prayer for my teenager
+  # Round-2 book admission 2026-08-18.
+  - children obey your parents
 anchors:
   # Torrey PARENTS "To train them up for God :: Proverbs 22:6".
   # "Train up a child in the way he should go, and when he is old he will
@@ -52,5 +54,21 @@ anchors:
   - ref: Psalms 127:3
     sources: [torrey]
     weight: 0.85
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # children obey; fathers, don't provoke — beside the existing Eph 6:4
+  # anchor. Torrey: CHILDREN, GOOD (3:20) / PARENTS (3:21).
+  - ref: Colossians 3:20-21
+    sources: [torrey]
+    weight: 0.85
+  # "whom the LORD loves, he corrects, even as a father reproves the son in
+  # whom he delights." NOTE THE FRAME: the verse's subject is GOD's
+  # discipline of us, offered as the pattern the father simile assumes;
+  # anchored low so the chip never reads as a proof-text for any specific
+  # discipline practice. Torrey files it under ADOPTION (fatherly
+  # discipline of God) — the same reading; editorial for the range.
+  - ref: Proverbs 3:11-12
+    sources: [editorial]
+    weight: 0.6
 related:
   - obedience-to-the-word
