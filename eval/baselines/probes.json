@@ -1,7 +1,7 @@
 {
   "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+  "layerFingerprint": "77257e2c6bca1a5cf23c5fc90ce7c6aa1e1d2b2836755fd26fe80a5654eea3f1",
   "engineVersion": "0.9.0",
-  "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a",
   "observations": [
     {
       "id": "broad-love",
@@ -85,13 +85,13 @@
         "WEB:34001007",
         "WEB:19009009",
         "WEB:19121005",
+        "WEB:19046010",
         "WEB:23025004",
-        "WEB:19121007",
-        "WEB:19034019"
+        "WEB:19121007"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.224862,
-      "meanTopScore": 30.724089
+      "weakReasonShare": 0.214625,
+      "meanTopScore": 30.859123
     },
     {
       "id": "medium-fear-not",
@@ -307,12 +307,12 @@
         "WEB:59002007",
         "WEB:01016013",
         "WEB:10012024",
-        "WEB:23040026",
-        "WEB:25003055"
+        "WEB:60005006",
+        "WEB:23040026"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.709903,
-      "meanTopScore": 15.51205
+      "weakReasonShare": 0.646168,
+      "meanTopScore": 15.826731
     },
     {
       "id": "ot-wisdom-trust",
@@ -373,18 +373,18 @@
       "top": [
         "WEB:24029011",
         "WEB:50004007",
-        "WEB:60005007",
         "WEB:43014027",
         "WEB:59002004",
         "WEB:50004006",
         "WEB:23026003",
         "WEB:40006027",
         "WEB:19034014",
-        "WEB:60003011"
+        "WEB:60003011",
+        "WEB:43016033"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.320926,
-      "meanTopScore": 20.338802
+      "weakReasonShare": 0.341386,
+      "meanTopScore": 19.427794
     },
     {
       "id": "ot-prophets-justly",

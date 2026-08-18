@@ -1,7 +1,7 @@
 {
   "engineVersion": "0.9.0",
   "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
-  "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a",
+  "layerFingerprint": "77257e2c6bca1a5cf23c5fc90ce7c6aa1e1d2b2836755fd26fe80a5654eea3f1",
   "probes": [
     {
       "id": "broad-love",
@@ -455,6 +455,10 @@
           "score": 25.6
         },
         {
+          "targetId": "WEB:19046010",
+          "score": 23.8
+        },
+        {
           "targetId": "WEB:23025004",
           "score": 23.341722
         },
@@ -521,10 +525,6 @@
         {
           "targetId": "WEB:23043003",
           "score": 6
-        },
-        {
-          "targetId": "WEB:19023004",
-          "score": 5.884569
         }
       ]
     },
@@ -1599,8 +1599,16 @@
           "score": 11.361425
         },
         {
+          "targetId": "WEB:60005006",
+          "score": 11
+        },
+        {
           "targetId": "WEB:23040026",
           "score": 10.689874
+        },
+        {
+          "targetId": "WEB:59004010",
+          "score": 10.45
         },
         {
           "targetId": "WEB:25003055",
@@ -1657,14 +1665,6 @@
         {
           "targetId": "WEB:23041025",
           "score": 6.626598
-        },
-        {
-          "targetId": "WEB:11018025",
-          "score": 6.473274
-        },
-        {
-          "targetId": "WEB:24010025",
-          "score": 6.473274
         }
       ]
     },
@@ -1732,10 +1732,6 @@
           "score": 9.982331
         },
         {
-          "targetId": "WEB:60005007",
-          "score": 9.6
-        },
-        {
           "targetId": "WEB:23026008",
           "score": 9.396063
         },
@@ -1770,6 +1766,10 @@
         {
           "targetId": "WEB:40024048",
           "score": 7.955656
+        },
+        {
+          "targetId": "WEB:19032010",
+          "score": 7.838974
         }
       ]
     },
@@ -1995,10 +1995,6 @@
           "score": 22.205084
         },
         {
-          "targetId": "WEB:60005007",
-          "score": 20.322729
-        },
-        {
           "targetId": "WEB:43014027",
           "score": 15.776418
         },
@@ -2029,6 +2025,10 @@
         {
           "targetId": "WEB:43016033",
           "score": 11.212646
+        },
+        {
+          "targetId": "WEB:60005007",
+          "score": 9.526279
         },
         {
           "targetId": "WEB:40006025",
