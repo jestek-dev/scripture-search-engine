@@ -1,0 +1,30 @@
+{
+  "id": "deity-of-christ",
+  "query": "deity of christ",
+  "status": "pending",
+  "additionalQueries": [
+    "jesus is god",
+    "the word was god"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "Shared-core doctrine (DOCTRINAL-BASIS.md §2). The chip must read as a curated-source claim (Theme: The deity of Christ), never a verdict."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 1:1",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The deity of Christ"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 14:9",
+    "1 John 5:20",
+    "Matthew 26:63-64",
+    "John 16:15"
+  ],
+  "coversConcepts": [
+    "deity-of-christ"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "disputable-matters",
+  "query": "doubtful things",
+  "status": "pending",
+  "additionalQueries": [
+    "disputable matters",
+    "gray areas"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "Romans 14 sense only. A future 'doubting God' concept must NOT satisfy these queries; the pack deliberately carries no bare 'doubt' token."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 14:5",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Disputable matters"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 14:19"
+  ],
+  "coversConcepts": [
+    "disputable-matters"
+  ]
+}

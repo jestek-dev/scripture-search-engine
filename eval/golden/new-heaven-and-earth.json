@@ -1,0 +1,41 @@
+{
+  "id": "new-heaven-and-earth",
+  "query": "new heaven and new earth",
+  "additionalQueries": [
+    "new jerusalem"
+  ],
+  "status": "pending",
+  "note": [
+    "Round-2 curation (author E, 2026-08-18). Fixtures-first: written with",
+    "the draft `new-heaven-and-earth` pack; pending until it lands and this",
+    "passes. Idea source: Phillips 'New Heaven and Earth' (topic lead only;",
+    "asserted references verified in WEB context).",
+    "",
+    "The head query has one surface hit in the corpus (Rev 21:1 itself);",
+    "the fixture requires concept_anchor evidence anyway so the passage",
+    "surfaces as a curated, attributed answer, not a lucky token match —",
+    "and so 'new jerusalem' (naming verse 21:2, inside the second anchor's",
+    "range) reaches the same curated set.",
+    "",
+    "GEOMETRY: grief-and-loss (Rev 21:3-4) and new-creation (Rev 21:5)",
+    "already anchor this chapter under their own labels; the overlap on",
+    "21:2-4 is deliberate, per the 1 Thess 4:16-17 precedent of one verse",
+    "honestly serving two concepts. Isa 65:17-25 and 2 Pet 3:13 are",
+    "corpus-blocked (backlog.md); assert Isa 65:17 in the PR that adds the",
+    "chapter, with its own context note (Isa 65:20 still has death in it)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Revelation 21:1",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: A new heaven and a new earth"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Revelation 21:2-4"
+  ],
+  "coversConcepts": [
+    "new-heaven-and-earth"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "death-of-a-believer",
+  "query": "to die is gain",
+  "status": "pending",
+  "additionalQueries": [
+    "absent from the body present with the lord",
+    "what happens when a believer dies"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18 — exercises an EXTENSION of an existing concept (see author-d/patches.md). Leads from Phillips 'A Topical Bible Guide', verified in context; the book is never an engine source. PENDING per fixtures-first; flip to active with the patch.",
+    "Rom 14:8 accepted: existing serious-illness-and-dying anchor, honest for these queries."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 1:21-23",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "2 Corinthians 5:1",
+    "2 Corinthians 5:6-8",
+    "Psalms 116:15",
+    "1 Thessalonians 5:9-10",
+    "Romans 14:8"
+  ],
+  "coversConcepts": [
+    "serious-illness-and-dying"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "freedom-in-christ",
+  "query": "freedom in christ",
+  "status": "pending",
+  "additionalQueries": [
+    "called to freedom"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18 — exercises an EXTENSION of an existing concept (see author-d/patches.md). Leads from Phillips 'A Topical Bible Guide', verified in context; the book is never an engine source. PENDING per fixtures-first; flip to active with the patch.",
+    "'christian liberty' deliberately NOT asserted: no pack carries that phrase (disputable-matters and freedom-from-bondage both border it); assert it only after Jesse picks its home."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Galatians 5:1",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Galatians 5:13",
+    "Romans 8:2",
+    "Romans 7:6",
+    "John 8:36"
+  ],
+  "coversConcepts": [
+    "freedom-from-bondage"
+  ]
+}

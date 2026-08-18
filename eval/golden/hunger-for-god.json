@@ -1,0 +1,42 @@
+{
+  "id": "hunger-for-god",
+  "query": "hunger for god",
+  "additionalQueries": [
+    "as the deer pants",
+    "thirst for god",
+    "spiritually dry"
+  ],
+  "status": "pending",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new hunger-for-god",
+    "concept; pending until the pack lands, then flip active in the same PR.",
+    "Idea source: Scriptural Prayers 'Hunger for God', 'My Child's Hunger",
+    "for God', 'Spiritual Drought'; Growing by Heart wk3/wk40 (idea only, no",
+    "verse list copied; provenance is editorial + verified Torrey outline).",
+    "",
+    "'spiritually dry' is the drought register the prayer book answers with",
+    "Col 3:16 (which anchors delight-in-the-word) — asserted here against",
+    "Ps 42:1-2 because the thirst psalm is the honest first answer to felt",
+    "dryness. All asserted references verified in the fixture corpus.",
+    "",
+    "requiredReasonFamily is concept_anchor: 'thirsts' appears lexically in",
+    "Ps 42:2, so the assertion must be that the curated anchor put it there."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 42:1-2",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hunger for God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 5:6",
+    "Psalms 34:8",
+    "Revelation 21:6"
+  ],
+  "coversConcepts": [
+    "hunger-for-god"
+  ]
+}

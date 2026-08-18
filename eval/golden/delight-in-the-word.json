@@ -1,0 +1,37 @@
+{
+  "id": "delight-in-the-word",
+  "query": "meditate on gods word",
+  "additionalQueries": [
+    "delight in the word",
+    "let the word of christ dwell in you"
+  ],
+  "status": "pending",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new",
+    "delight-in-the-word concept; pending until the pack lands, then flip",
+    "active in the same PR. Idea source: Scriptural Prayers 'Putting God and",
+    "His Word First', 'Spiritual Drought', 'Being a Godly Husband/Wife'",
+    "(idea only, no verse list copied; Ps 1:2 provenance is the verified",
+    "Torrey SCRIPTURES outline).",
+    "",
+    "Psalm 119 (the meditation psalm) is largely outside the fixture corpus;",
+    "Ps 119:105 anchors guidance and is not re-asserted here. All asserted",
+    "references verified in the fixture corpus."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 1:2",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Delighting in God's Word"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Joshua 1:8",
+    "Colossians 3:16"
+  ],
+  "coversConcepts": [
+    "delight-in-the-word"
+  ]
+}

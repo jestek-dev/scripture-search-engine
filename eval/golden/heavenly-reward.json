@@ -1,0 +1,29 @@
+{
+  "id": "heavenly-reward",
+  "query": "rewards in heaven",
+  "status": "pending",
+  "additionalQueries": [
+    "crown of life",
+    "heavenly reward"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "Matt 6:19-21 accepted (treasures in heaven; anchored by contentment). Doctrinal geometry: every asserted reward text is eschatological; no watchlist ref may satisfy this fixture."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 1:12",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The believer's reward"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ephesians 6:8",
+    "1 Peter 5:4",
+    "Matthew 6:19-21"
+  ],
+  "coversConcepts": [
+    "heavenly-reward"
+  ]
+}

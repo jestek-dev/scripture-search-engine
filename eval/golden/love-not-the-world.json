@@ -1,0 +1,26 @@
+{
+  "id": "love-not-the-world",
+  "query": "love not the world",
+  "status": "pending",
+  "additionalQueries": [
+    "worldliness",
+    "friendship with the world"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 John 2:15-17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Love not the world"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "James 4:4"
+  ],
+  "coversConcepts": [
+    "love-not-the-world"
+  ]
+}

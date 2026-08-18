@@ -1,0 +1,50 @@
+{
+  "id": "hell",
+  "query": "hell",
+  "additionalQueries": [
+    "gehenna",
+    "outer darkness"
+  ],
+  "status": "pending",
+  "note": [
+    "Round-2 curation (author E, 2026-08-18). Fixtures-first: written with",
+    "the draft `hell` concept pack; pending until the pack lands and this",
+    "passes. Idea source: Phillips 'Hell' (topic lead only; every asserted",
+    "reference verified in WEB context).",
+    "",
+    "MEASURED GAP: the word 'hell' appears NOWHERE in the WEB corpus text",
+    "(it says Gehenna, Hades, Sheol), so no lexical rung can serve the",
+    "query at all today — the same shape as the rapture fixture.",
+    "requiredReasonFamily is concept_anchor so the assertion is that a",
+    "curated, attributed anchor put the passage there.",
+    "",
+    "NEUTRALITY: judgment and eternal states are shared-core point 9",
+    "(DOCTRINAL-BASIS §2), so the topic is admissible; the pack locates",
+    "only the passages where Scripture names the referent and encodes no",
+    "position on the nature-of-hell debates.",
+    "",
+    "PASTORAL GUARD (design note): Mark 9:43-48 and Matt 18:8-9 are the",
+    "'cut it off' sayings that the pastoral self-harm fixtures gate for",
+    "THOSE queries; this fixture's queries share no token with them, and",
+    "those fixtures keep asserting the gate independently.",
+    "",
+    "All asserted references verified IN the fixture corpus."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Mark 9:43-48",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hell"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 18:8-9",
+    "Matthew 5:22",
+    "Revelation 1:18",
+    "Matthew 22:13"
+  ],
+  "coversConcepts": [
+    "hell"
+  ]
+}

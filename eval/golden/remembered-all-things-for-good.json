@@ -1,0 +1,32 @@
+{
+  "id": "remembered-all-things-for-good",
+  "query": "all things work together for good",
+  "additionalQueries": [
+    "god works all things for good"
+  ],
+  "status": "pending",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new",
+    "remembered-all-things-for-good pack; pending until the pack lands, then",
+    "flip active in the same PR. Idea source: Growing by Heart wk14",
+    "'seasons'; Scriptural Prayers 'Worry' and 'Patience' — three chapters",
+    "independently lean on Rom 8:28, today reachable only lexically.",
+    "",
+    "requiredReasonFamily is concept_anchor: the query IS the verse's own",
+    "words, so lexical retrieval would find it anyway — the assertion is",
+    "that the remembered phrasing resolves to the curated anchor with its",
+    "reason chip, exactly like the other remembered-* fixtures."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 8:28",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: All things for good"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "remembered-all-things-for-good"
+  ]
+}

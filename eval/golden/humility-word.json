@@ -1,0 +1,28 @@
+{
+  "id": "humility-word",
+  "query": "humility",
+  "status": "pending",
+  "additionalQueries": [
+    "walk humbly with your god"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18 — exercises an EXTENSION of an existing concept (see author-d/patches.md). Leads from Phillips 'A Topical Bible Guide', verified in context; the book is never an engine source. PENDING per fixtures-first; flip to active with the patch.",
+    "Guard: sense-inversion-promotion.json must keep 1 Pet 5:6 top for 'promotion' — new anchors are all weighted below the existing top anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 4:10",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 5:6",
+    "Micah 6:8",
+    "Romans 12:3",
+    "Acts 20:19"
+  ],
+  "coversConcepts": [
+    "humble-exaltation"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "self-control",
+  "query": "self control",
+  "status": "pending",
+  "additionalQueries": [
+    "self discipline"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "Gal 5:22-23 accepted: the fruit list names self-control; anchored by remembered-fruit-of-the-spirit."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Timothy 1:7",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Self-control"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 13:14",
+    "2 Timothy 2:3-5",
+    "Galatians 5:22-23"
+  ],
+  "coversConcepts": [
+    "self-control"
+  ]
+}

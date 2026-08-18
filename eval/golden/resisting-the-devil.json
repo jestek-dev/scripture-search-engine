@@ -1,0 +1,30 @@
+{
+  "id": "resisting-the-devil",
+  "query": "resist the devil",
+  "status": "pending",
+  "additionalQueries": [
+    "satan",
+    "spiritual warfare",
+    "power over satan"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "Eph 6:11 (remembered-full-armor-of-god) and 1 John 4:4 (victory-in-christ, this round) accepted as honest neighbors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 4:7",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Resisting the devil"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 5:8-9",
+    "Ephesians 6:11",
+    "1 John 4:4"
+  ],
+  "coversConcepts": [
+    "resisting-the-devil"
+  ]
+}
