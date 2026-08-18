@@ -1,7 +1,7 @@
 {
   "id": "friendship",
   "query": "friendship",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
     "the `friendship` concept pack, pending until the pack lands and it",
@@ -35,5 +35,8 @@
     "friends",
     "a friend loves at all times",
     "choosing friends"
+  ],
+  "coversConcepts": [
+    "friendship"
   ]
 }

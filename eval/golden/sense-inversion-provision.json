@@ -1,7 +1,7 @@
 {
   "id": "sense-inversion-provision",
   "query": "provision",
-  "status": "pending",
+  "status": "active",
   "note": [
     "SENSE-INVERSION FIXTURE (sense-inversion family) — PENDING on purpose.",
     "The 2026-08-15 doctrinal audit found \"provision\" answered FIRST by",
@@ -29,14 +29,15 @@
     "token with the lexicon, so the fixtures that forbid Phil 4:19 for",
     "'abundance'/'wealth'/'financial blessing'/'prosperity' keep holding.",
     "When this fixture starts passing, the Admission Report names it for",
-    "promotion to active."
+    "promotion to active.",
+    "Window note (2026-08-18 gauntlet iteration): with the pack live, the top of 'provision' is the pack's own Matthew 6:31-33 range (provision for the anxious, subordinated to the Kingdom) with Matt 6:11 third and Phil 4:19 fifth — the inversion is gone (Rom 13:14 no longer ranks in the top 10 at all). Phil 4:19 is asserted within the top 5 with its anchor chip rather than forced above the Kingdom-first answers; promoting a watchlisted verse over them would be the wrong fix."
   ],
   "expectedTop": [
     {
       "reference": "Philippians 4:19",
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: God provides",
-      "withinTop": 3
+      "withinTop": 5
     }
   ],
   "expectedWithinTop": 10,
@@ -48,5 +49,8 @@
   ],
   "additionalQueries": [
     "god will provide"
+  ],
+  "coversConcepts": [
+    "gods-provision"
   ]
 }

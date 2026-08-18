@@ -1,0 +1,64 @@
+# DRAFT (cluster C, 2026-08-18) — new concept.
+# THIS IS THE PACK eval/golden/sense-inversion-promotion.json HAS BEEN
+# WAITING FOR: that pending fixture found "promotion" answered only by
+# Proverbs 3:35 ("shame will be the promotion of fools" — the word in
+# irony, leading at #1) and its note asks for the honest teaching a
+# promotion-seeker should find: exaltation comes from God (Ps 75:6-7),
+# reached through humility. This pack does exactly that and nothing more.
+#
+# Idea source (PR description only): prayer books "Finances" prints
+# Ps 75:6-7 (OCR'd as "Proverbs 75:6,7"); Phillips "Humility"
+# (1 Pet 5:5-6). Verified Torrey headings: HUMILITY; PROVIDENCE OF GOD,
+# THE.
+#
+# DOCTRINAL-GUARDRAIL DESIGN (docs/DOCTRINAL-BASIS.md §3): "promotion" IS a
+# materialFrameKeyword, so this concept is deliberately IN SCOPE for the
+# G4 pairing scan — and it anchors NO watchlist reference (checked each
+# anchor against ontology/flagged-pairings.yaml), so the scan stays at
+# zero flags. The frame is humble-exaltation: God opposes the proud and
+# lifts the lowly in his time — never career technique. Prov 4:7-8
+# (wisdom "will promote thee", KJV) was considered and left out: it is
+# about exalting WISDOM, a different subject, and the pending fixture asks
+# only for the humble-exaltation frame.
+id: humble-exaltation
+label: God exalts the humble
+# Torrey/Miller supporting anchors (admission 2026-08-06) — from the
+# verified outlines: HUMILITY; PROVIDENCE OF GOD, THE.
+lexicon:
+  - promotion
+  - humility
+  - humble yourselves
+  - god exalts the humble
+anchors:
+  # "Humble yourselves therefore under the mighty hand of God, that he may
+  # exalt you in due time" — exaltation is God's act, on God's clock, and
+  # its road is downward first. Editorial: the verified outline (HUMILITY)
+  # lists 1 Pet 5:5, not 5:6.
+  - ref: 1 Peter 5:6
+    sources: [editorial]
+    weight: 1.0
+  # Torrey HUMILITY "Lifted up by God :: James 4:10".
+  # "Humble yourselves in the sight of the Lord, and he will exalt you." —
+  # the same teaching in James, addressed to quarreling believers, with
+  # 4:6 ("God resists the proud") behind it.
+  - ref: James 4:10
+    sources: [torrey]
+    weight: 0.95
+  # "For neither from the east, nor from the west, nor yet from the south,
+  # comes exaltation. But God is the judge. He puts down one, and lifts up
+  # another." (WEB from knowledge — Psalm 75 not yet in the fixture
+  # corpus; the KJV famously reads "promotion cometh".) The honest home for
+  # the query word itself. Editorial for the range: the verified outline
+  # (PROVIDENCE OF GOD, "Ordaining the conditions and circumstances of
+  # men") lists 75:6 and 75:7 as two adjacent refs.
+  - ref: Psalms 75:6-7
+    sources: [editorial]
+    weight: 0.95
+  # Torrey HUMILITY "Is before honour :: Proverbs 15:33".
+  # "The fear of the LORD teaches wisdom. Before honor is humility." (WEB
+  # from knowledge — Proverbs 15 not yet in the fixture corpus.)
+  - ref: Proverbs 15:33
+    sources: [torrey]
+    weight: 0.75
+related:
+  - surrender-to-god

@@ -1,0 +1,77 @@
+# DRAFT (cluster C, 2026-08-18) — new concept.
+# THIS IS THE PACK eval/golden/sense-inversion-provision.json HAS BEEN
+# WAITING FOR: that pending fixture found "provision" answered FIRST by
+# Romans 13:14 ("make no provision for the flesh" — the word in its
+# opposite frame) and its note names Philippians 4:19 as "the natural
+# expectedTop candidate when a provision concept pack lands; add it then,
+# with its anchor reason."
+#
+# Idea source (PR description only): Phillips "Provision" (Matt 6:33,
+# Ps 23); prayer books' provision language. Verified Torrey heading:
+# PROVIDENCE OF GOD, THE.
+#
+# DOCTRINAL-GUARDRAIL DESIGN (docs/DOCTRINAL-BASIS.md §3): Philippians 4:19
+# is on the flagged-pairings watchlist — forbidden under wealth-claim
+# frames, honest for God-provides-needs. This concept is the honest frame:
+# its id, label and lexicon speak NO materialFrameKeyword (deliberately —
+# "money"/"finances"/"wealth" live in the separate `contentment` concept,
+# which anchors no watchlist verse; the split is what keeps watchlisted
+# refs and material-frame vocabulary from ever co-occurring in one
+# concept, so the G4 pairing scan stays at zero flags). None of the ten
+# prosperity-* fixture queries shares a token with this lexicon
+# ("provision" ≠ "prosperity"; "abundance", "financial blessing", "wealth",
+# "sow a seed" match nothing here), so prosperity-abundance /
+# prosperity-word / prosperity-financial-blessing — which forbid Phil 4:19
+# for THOSE queries — all stay green.
+id: gods-provision
+label: God provides
+# Torrey/Miller supporting anchors (admission 2026-08-06) — from the
+# verified outline: PROVIDENCE OF GOD, THE.
+lexicon:
+  - provision
+  - god will provide
+  - give us this day our daily bread
+  - my god shall supply all your needs
+  - seek first the kingdom of god
+anchors:
+  # "But seek first God's Kingdom and his righteousness; and all these
+  # things will be given to you as well." — read with 6:25-32: food and
+  # clothing for the anxious, from a Father who already knows the need;
+  # provision subordinated to the Kingdom, the exact opposite of
+  # provision-as-goal. Editorial for the range: the verified outline
+  # (PROVIDENCE, "Trust in") lists 6:33 and 6:34 singly.
+  - ref: Matthew 6:31-33
+    sources: [editorial]
+    weight: 1.0
+  # WATCHLISTED VERSE, anchored deliberately in its honest frame
+  # (ontology/flagged-pairings.yaml: "forbidden as an unconditional wealth
+  # guarantee"; honest as God-supplies-needs). "My God will supply every
+  # need of yours according to his riches in glory in Christ Jesus." — a
+  # promise of needs met, written to a church that had just given
+  # sacrificially to Paul's mission; NEEDS, not riches, and the riches are
+  # God's in glory. sense-inversion-provision.json's own note asks for
+  # exactly this anchor.
+  - ref: Philippians 4:19
+    sources: [editorial]
+    weight: 0.95
+  # "Give us today our daily bread." — provision asked of the Father, one
+  # day at a time; the verse the pending fixture already prefers above
+  # Romans 13:14.
+  - ref: Matthew 6:11
+    sources: [editorial]
+    weight: 0.9
+  # "The LORD is my shepherd; I shall lack nothing." — the shepherd's
+  # provision; the psalm the whole theme rests on.
+  - ref: Psalms 23:1
+    sources: [editorial]
+    weight: 0.85
+  # Torrey PROVIDENCE OF GOD "Providing for his creatures :: Matthew 6:26".
+  # "See the birds of the sky … your heavenly Father feeds them. Aren't you
+  # of much more value than they?"
+  - ref: Matthew 6:26
+    sources: [torrey]
+    weight: 0.8
+related:
+  - trust-in-god
+  - contentment
+  - remembered-anxious-for-nothing

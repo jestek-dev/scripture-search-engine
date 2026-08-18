@@ -1,7 +1,7 @@
 {
   "id": "tithing",
   "query": "tithing",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
     "the `tithing` concept pack, pending until the pack lands and it passes.",
@@ -42,5 +42,8 @@
   "additionalQueries": [
     "tithe",
     "firstfruits"
+  ],
+  "coversConcepts": [
+    "tithing"
   ]
 }

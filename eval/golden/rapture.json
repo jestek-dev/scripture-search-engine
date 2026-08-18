@@ -1,7 +1,7 @@
 {
   "id": "rapture",
   "query": "rapture",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Cluster C (life situations cluster's eschatology item), 2026-08-18.",
     "Fixtures-first: written before the `caught-up-together` concept pack,",
@@ -39,5 +39,8 @@
   ],
   "additionalQueries": [
     "caught up together"
+  ],
+  "coversConcepts": [
+    "caught-up-together"
   ]
 }

@@ -1,0 +1,61 @@
+# DRAFT (cluster C, 2026-08-18) — new concept.
+# Idea source (PR description only, never an engine source label): Growing by
+# Heart wk29 (Prov 17:17) and wk23 (1 Cor 15:33, Eccl 4:12); Phillips
+# "Friends and Friendliness" (Prov 18:24, John 15:13-14); prayer books
+# "Choosing the Right Friends" (Prov 13:20). Torrey/Miller has NO friendship
+# heading (verified against torrey-miller-topics.json 2026-08-18), so every
+# anchor is editorial.
+id: friendship
+label: Friendship
+lexicon:
+  - friendship
+  # Single-token entry — bare word people actually type; the one-token
+  # specificity discount keeps the claim humble (precedent: prayer).
+  - friends
+  # Remembered NIV/ESV phrasings; the WEB reads "a friend loves at all
+  # times" (Prov 17:17) and "evil companionships corrupt good morals"
+  # (1 Cor 15:33) / "a threefold cord is not quickly broken" (Eccl 4:12).
+  - a friend loves at all times
+  - bad company corrupts good character
+  - a cord of three strands
+  - choosing friends
+anchors:
+  # "Greater love has no one than this, that someone lay down his life for
+  # his friends." — Jesus defines the outer limit of friendship-love; the
+  # honest center for the theme.
+  - ref: John 15:13
+    sources: [editorial]
+    weight: 1.0
+  # "A friend loves at all times, and a brother is born for adversity."
+  # (KJV/WEB from knowledge — Proverbs 17 not yet in the fixture corpus.)
+  - ref: Proverbs 17:17
+    sources: [editorial]
+    weight: 0.95
+  # "Two are better than one … a threefold cord is not quickly broken."
+  # (WEB from knowledge — Ecclesiastes 4 not yet in the fixture corpus.)
+  # Companionship commended by the Preacher; honest for friendship even
+  # though verse 12's cord is often applied to marriage as well.
+  - ref: Ecclesiastes 4:9-12
+    sources: [editorial]
+    weight: 0.85
+  # "There are friends who destroy a man, but there is a friend who sticks
+  # closer than a brother." (WEB wording from knowledge — Proverbs 18 not yet
+  # in the fixture corpus.) Both halves speak to choosing and being a friend.
+  - ref: Proverbs 18:24
+    sources: [editorial]
+    weight: 0.8
+  # "Don't be deceived! 'Evil companionships corrupt good morals.'" —
+  # Paul's warning about the company we keep; the honest answer to
+  # "choosing friends", in context a warning inside the resurrection
+  # argument but stated by Paul as a general maxim.
+  - ref: 1 Corinthians 15:33
+    sources: [editorial]
+    weight: 0.75
+  # "One who walks with wise men grows wise, but a companion of fools
+  # suffers harm." (WEB from knowledge — Proverbs 13 not yet in the fixture
+  # corpus.) The book-of-Proverbs companion to 1 Cor 15:33.
+  - ref: Proverbs 13:20
+    sources: [editorial]
+    weight: 0.7
+related:
+  - loving-others

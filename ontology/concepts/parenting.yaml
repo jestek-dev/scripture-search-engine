@@ -1,0 +1,56 @@
+# DRAFT (cluster C, 2026-08-18) — new concept.
+# Idea source (PR description only): prayer books section V ("Being a Godly
+# Parent" — Ps 127:3; "For My Teenager"; "Protection for My Children";
+# "Teenager to Return to God" — Prov 22:6); Growing by Heart wk49
+# (Prov 14:1, Deut 31:8); Phillips "Parents and Children" (Eph 6:1-4).
+# Verified Torrey headings: PARENTS; CHILDREN.
+#
+# The prayer books' child-protection topics lean on Ps 91 promises; the
+# existing remembered-shelter-of-the-most-high fixture already covers Ps 91
+# territory, so this pack stays on the PARENTING task — training,
+# teaching, not provoking — and adds no protection-promise anchors.
+id: parenting
+label: Raising children
+# Torrey/Miller supporting anchors (admission 2026-08-06) — from the
+# verified outline: PARENTS.
+lexicon:
+  - parenting
+  - raising children
+  - train up a child
+  - prayer for my child
+  - prayer for my teenager
+anchors:
+  # Torrey PARENTS "To train them up for God :: Proverbs 22:6".
+  # "Train up a child in the way he should go, and when he is old he will
+  # not depart from it." (WEB from knowledge — Proverbs 22 not yet in the
+  # fixture corpus.) A wisdom-genre generalization, not an unconditional
+  # guarantee — which is how the concept presents it: the parent's charge,
+  # not a formula.
+  - ref: Proverbs 22:6
+    sources: [torrey]
+    weight: 1.0
+  # "These words … shall be on your heart; and you shall teach them
+  # diligently to your children, and shall talk of them when you sit in
+  # your house…" — the Shema's own program for parenting: the word held
+  # first by the parent, then taught in the rhythms of ordinary life.
+  # Editorial: the verified outline (PARENTS, "To instruct them in God's
+  # word") lists Deut 4:9 and 11:19, not 6:6-7.
+  - ref: Deuteronomy 6:6-7
+    sources: [editorial]
+    weight: 0.95
+  # Torrey PARENTS "To train them up for God / Not to provoke them ::
+  # Ephesians 6:4". "You fathers, don't provoke your children to wrath,
+  # but nurture them in the discipline and instruction of the Lord." — the
+  # NT parenting charge, with its guard against harshness built in.
+  - ref: Ephesians 6:4
+    sources: [torrey]
+    weight: 0.9
+  # Torrey PARENTS "Receive their children from God :: Psalms 127:3".
+  # "Behold, children are a heritage of the LORD. The fruit of the womb is
+  # his reward." (WEB from knowledge — Psalm 127 not yet in the fixture
+  # corpus.) Children as gift, the ground under all the charges above.
+  - ref: Psalms 127:3
+    sources: [torrey]
+    weight: 0.85
+related:
+  - obedience-to-the-word

@@ -1,7 +1,7 @@
 {
   "id": "parenting",
   "query": "parenting",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
     "the `parenting` concept pack, pending until the pack lands and it",
@@ -38,5 +38,8 @@
     "raising children",
     "prayer for my child",
     "prayer for my teenager"
+  ],
+  "coversConcepts": [
+    "parenting"
   ]
 }

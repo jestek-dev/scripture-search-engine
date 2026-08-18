@@ -116,5 +116,7 @@ anchors:
     sources: [editorial]
     weight: 0.6
 related:
+  - gods-provision
+  - generosity
   - thanksgiving
   - trust-in-god

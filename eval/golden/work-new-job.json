@@ -1,7 +1,7 @@
 {
   "id": "work-new-job",
   "query": "new job",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Cluster C (life situations), 2026-08-18. Fixtures-first: pending until",
     "the proposed lexicon patch to remembered-work-as-for-the-lord lands",
@@ -32,7 +32,9 @@
     }
   ],
   "expectedWithinTop": 10,
-  "coversConcepts": ["remembered-work-as-for-the-lord"],
+  "coversConcepts": [
+    "remembered-work-as-for-the-lord"
+  ],
   "additionalQueries": [
     "my job"
   ]

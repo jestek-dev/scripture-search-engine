@@ -1,7 +1,7 @@
 {
   "id": "sense-inversion-promotion",
   "query": "promotion",
-  "status": "pending",
+  "status": "active",
   "note": [
     "SENSE-INVERSION FIXTURE (sense-inversion family) — PENDING on purpose.",
     "The 2026-08-15 doctrinal audit found \"promotion\" answered by exactly one",
@@ -50,5 +50,8 @@
       "below": "Proverbs 3:35",
       "withinTop": 10
     }
+  ],
+  "coversConcepts": [
+    "humble-exaltation"
   ]
 }

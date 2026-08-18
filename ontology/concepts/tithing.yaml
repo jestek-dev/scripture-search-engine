@@ -1,0 +1,67 @@
+# DRAFT (cluster C, 2026-08-18) — new concept.
+# Idea source (PR description only): prayer books "Giving"/"Finances" name
+# Mal 3:10 and Prov 3:9; Murdock-adjacent vocabulary EXCLUDED. Verified
+# Torrey heading: TITHE.
+#
+# DOCTRINAL-GUARDRAIL DESIGN (docs/DOCTRINAL-BASIS.md §3): Malachi 3:10 is
+# on the flagged-pairings watchlist, whose own entry rules it "ranks
+# honestly for tithing queries" — and prosperity-financial-blessing.json's
+# note says the same. This concept is that honest home. Its id, label and
+# lexicon speak NO materialFrameKeyword, so the G4 pairing scan never puts
+# it in scope; and no prosperity-* fixture query ("financial blessing",
+# "wealth", "abundance", "sow a seed", "breakthrough", …) shares a token
+# with this lexicon, so these anchors cannot fire on those queries — the
+# tithe-transaction recruitment those ten fixtures forbid stays forbidden,
+# while a searcher who actually asks about tithing gets the tithing
+# passages.
+id: tithing
+label: Tithing and firstfruits
+# Torrey/Miller supporting anchors (admission 2026-08-06) — from the
+# verified outline: TITHE.
+lexicon:
+  - tithing
+  - tithe
+  - firstfruits
+  - bring the whole tithe
+anchors:
+  # "Bring the whole tithe into the storehouse, that there may be food in
+  # my house, and test me now in this … if I will not open you the windows
+  # of heaven." — the canonical tithe text; in context, covenant Israel
+  # rebuked for withholding what the law owed the temple. Editorial, not
+  # torrey: the verified outline's Malachi ref is 3:8.
+  - ref: Malachi 3:10
+    sources: [editorial]
+    weight: 1.0
+  # Torrey TITHE "The Jews reproved for withholding :: Malachi 3:8".
+  # "Will a man rob God? Yet you rob me! … In tithes and offerings." — the
+  # charge that frames 3:10; keeping it beside 3:10 keeps the passage's own
+  # frame (obligation withheld) rather than the pulled-out promise.
+  - ref: Malachi 3:8
+    sources: [torrey]
+    weight: 0.85
+  # "Honor the LORD with your substance, with the first fruits of all your
+  # increase; so your barns will be filled with plenty." — firstfruits as
+  # worship: honoring God comes first and the blessing is the
+  # wisdom-genre generalization, not a mechanism. Anchored for the
+  # "firstfruits" searcher.
+  - ref: Proverbs 3:9-10
+    sources: [editorial]
+    weight: 0.9
+  # Torrey TITHE "Under the law belonged to God :: Leviticus 27:30".
+  # "All the tithe of the land … is the LORD's. It is holy to the LORD."
+  # (WEB from knowledge — Leviticus 27 not yet in the fixture corpus.) The
+  # law's own definition of the tithe.
+  - ref: Leviticus 27:30
+    sources: [torrey]
+    weight: 0.75
+  # "You tithe mint, dill, and cumin, and have left undone the weightier
+  # matters of the law: justice, mercy, and faith." (WEB from knowledge —
+  # Matthew 23 not yet in the fixture corpus.) Jesus' own word on tithing —
+  # it belongs in any honest answer so the topic is never all storehouse
+  # and no justice. Editorial: the verified outline's NT scruple refs are
+  # Luke 11:42/18:12, not Matt 23:23.
+  - ref: Matthew 23:23
+    sources: [editorial]
+    weight: 0.7
+related:
+  - generosity

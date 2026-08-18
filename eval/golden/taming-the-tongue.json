@@ -1,7 +1,7 @@
 {
   "id": "taming-the-tongue",
   "query": "taming the tongue",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
     "the `taming-the-tongue` concept pack, pending until the pack lands and",
@@ -34,5 +34,8 @@
   "additionalQueries": [
     "gossip",
     "guard my mouth"
+  ],
+  "coversConcepts": [
+    "taming-the-tongue"
   ]
 }
