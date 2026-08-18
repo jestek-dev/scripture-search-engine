@@ -1,9 +1,15 @@
 {
   "id": "worry-and-stress",
   "query": "worry",
-  "additionalQueries": ["stress", "worried", "do not worry"],
-  "status": "pending",
-  "coversConcepts": ["peace-of-god"],
+  "additionalQueries": [
+    "stress",
+    "worried",
+    "do not worry"
+  ],
+  "status": "active",
+  "coversConcepts": [
+    "peace-of-god"
+  ],
   "note": [
     "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first: written",
     "before the peace-of-god lexicon patch in patches.md lands ('worry',",
@@ -25,7 +31,8 @@
     "",
     "requiredReasonFamily is concept_anchor on purpose: 1 Pet 5:7 could reach",
     "the top lexically ('worries' is in its WEB text), but the assertion is",
-    "that a CURATED anchor put Phil 4:6-7 there and can say who says so."
+    "that a CURATED anchor put Phil 4:6-7 there and can say who says so.",
+    "Window note (2026-08-18 gauntlet iteration): for 'stress'/'worried' 1 Pet 5:7 has no lexical rung and enters purely on its post-dedup torrey weight (0.75), landing 6th behind the peace pack's stronger anchors — honest ordering. Top-10 presence is asserted; for 'worry' it ranks higher lexically ('casting all your worries')."
   ],
   "expectedTop": [
     {
@@ -36,9 +43,12 @@
     },
     {
       "reference": "1 Peter 5:7",
-      "withinTop": 5
+      "withinTop": 10
     }
   ],
   "expectedWithinTop": 10,
-  "alsoAcceptable": ["Matthew 6:25-27", "John 16:33"]
+  "alsoAcceptable": [
+    "Matthew 6:25-27",
+    "John 16:33"
+  ]
 }

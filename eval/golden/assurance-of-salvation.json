@@ -5,7 +5,7 @@
     "am i really saved",
     "know i am saved"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
     "new assurance-of-salvation concept; PENDING until the pack lands, then",
@@ -39,5 +39,8 @@
     "Romans 8:38-39",
     "Philippians 1:6",
     "Romans 8:16"
+  ],
+  "coversConcepts": [
+    "assurance-of-salvation"
   ]
 }

@@ -6,7 +6,7 @@
     "tired",
     "burnout"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
     "new rest-for-the-weary concept; PENDING until the pack lands, then flip",
@@ -41,5 +41,8 @@
       "above": "Matthew 11:28-30",
       "below": "Psalms 95:11"
     }
+  ],
+  "coversConcepts": [
+    "rest-for-the-weary"
   ]
 }

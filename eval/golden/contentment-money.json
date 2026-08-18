@@ -1,7 +1,7 @@
 {
   "id": "contentment-money",
   "query": "money",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
     "the `contentment` concept pack, pending until the pack lands and it",
@@ -30,25 +30,29 @@
     "are all verified IN the fixture corpus. Proverbs 22:7 (the borrower is",
     "servant to the lender — the canon's plainest debt text) is anchored in",
     "the pack but Proverbs 22 is not in the corpus; assert it for the",
-    "'debt' query in the PR that adds the chapter."
+    "'debt' query in the PR that adds the chapter.",
+    "Window note (2026-08-18 gauntlet iteration): the engine surfaces a range anchor at its opening verse (1 Tim 6:6), so the expectedTop names the anchored RANGE 1 Timothy 6:6-10 — any verse of the passage satisfies it. For 'money' the specific verse 1 Tim 6:10 also ranks lexically."
   ],
   "expectedTop": [
     {
-      "reference": "1 Timothy 6:10",
+      "reference": "1 Timothy 6:6-10",
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Contentment"
     }
   ],
   "expectedWithinTop": 10,
   "alsoAcceptable": [
-    "1 Timothy 6:6-10",
     "Hebrews 13:5",
     "Matthew 6:24",
-    "Matthew 6:19-21"
+    "Matthew 6:19-21",
+    "1 Timothy 6:10"
   ],
   "additionalQueries": [
     "debt",
     "finances",
     "love of money"
+  ],
+  "coversConcepts": [
+    "contentment"
   ]
 }

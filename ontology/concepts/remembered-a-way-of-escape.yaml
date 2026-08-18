@@ -20,6 +20,13 @@ lexicon:
   - tempted beyond what you can bear
   - he will provide a way of escape
   - God is faithful and will not let you be tempted
+  # Deliberate, commented exception to this pack's phrasing-only design
+  # (2026-08-14 plan, lexicon-concepts PR 2 item 4, reproduced exactly): the
+  # bare word cannot reach 1 Cor 10:13 today, and one narrow anchor is
+  # exactly what the bare word wants. Precedent: "anxiety" in
+  # remembered-anxious-for-nothing. Added 2026-08-18.
+  - temptation
+  - tempted
 anchors:
   - ref: 1 Corinthians 10:13
     sources: [editorial]

@@ -1,0 +1,53 @@
+# INNER-LIFE PACK (cluster B draft, 2026-08-18).
+#
+# WISDOM AND DISCERNMENT AS GOD'S GIFT — the sense of "I need wisdom".
+# One concept, deliberately, not two: "wisdom" and "discernment" queries want
+# the same passages (James 1:5 answers both, and the prayer books' Discernment
+# prayer opens with James 1:5), and two concepts sharing the answer set is the
+# dilution G4 exists to prevent.
+#
+# Torrey sense check (verified against torrey-miller-topics.json): the only
+# wisdom heading is "WISDOM OF GOD, THE" — God's own attribute, a DIFFERENT
+# sense from wisdom-given-to-people. Citing it here would be exactly the
+# sense-slip the 2026-08-15 audit warned about, so no torrey source appears
+# in this file; every anchor is editorial.
+id: wisdom-from-god
+label: Wisdom from God
+lexicon:
+  # Bare words, deliberate (§1.6d pattern; one-token discount keeps them
+  # humble). "discernment" is the prayer books' own topic word.
+  - wisdom
+  - discernment
+  - need wisdom
+  - ask god for wisdom
+  - lacking wisdom
+anchors:
+  # "If any of you lacks wisdom, let him ask of God, who gives to all
+  # liberally and without reproach, and it will be given to him" (WEB).
+  # The asking-for-wisdom verse; the whole concept in one sentence.
+  - ref: James 1:5
+    sources: [editorial]
+    weight: 1.0
+  # "For the LORD gives wisdom; out of his mouth comes knowledge and
+  # understanding" (WEB wording from knowledge — NOT in web-subset;
+  # corpus-needs.md). Wisdom as God's gift, not self-improvement.
+  - ref: Proverbs 2:6
+    sources: [editorial]
+    weight: 0.9
+  # "The fear of the LORD is the beginning of wisdom; the knowledge of the
+  # Holy One is understanding" (WEB wording from knowledge — NOT in
+  # web-subset; corpus-needs.md). Grounds wisdom in reverence — the
+  # corrective to wisdom-as-technique.
+  - ref: Proverbs 9:10
+    sources: [editorial]
+    weight: 0.85
+  # "Discretion will watch over you. Understanding will keep you" (WEB
+  # wording from knowledge — NOT in web-subset; corpus-needs.md). The
+  # discernment register: wisdom's protective work, continuing the Prov 2
+  # passage anchored above.
+  - ref: Proverbs 2:11
+    sources: [editorial]
+    weight: 0.7
+related:
+  - guidance
+  - obedience-to-the-word

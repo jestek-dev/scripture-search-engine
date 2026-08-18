@@ -5,7 +5,7 @@
     "fear of man",
     "seeking approval"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
     "new pleasing-god-not-people concept; PENDING until the pack lands, then",
@@ -29,5 +29,8 @@
   "expectedWithinTop": 10,
   "alsoAcceptable": [
     "Colossians 3:23"
+  ],
+  "coversConcepts": [
+    "pleasing-god-not-people"
   ]
 }

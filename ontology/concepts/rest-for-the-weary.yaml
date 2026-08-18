@@ -1,0 +1,73 @@
+# INNER-LIFE PACK (cluster B draft, 2026-08-18) — felt-need queries about the
+# heart and mind. Topic→verse pairings confirmed against the four admitted-idea
+# books (never copied; each anchor is our own editorial judgment against the
+# WEB text in context).
+#
+# The weariness/burnout register: "I am tired" is one of the commonest
+# felt-need searches and today it reaches nothing curated. Deliberately
+# DISTINCT from `strength-in-weakness` (2 Cor 12:9 — power in weakness under
+# affliction) and from `hope-in-despair` (crisis register): this concept is
+# for the exhausted, not the despairing. The lexicons are token-disjoint and
+# the crisis phrasings stay where they are.
+#
+# Bare single-word entries below follow the NEEDS-JESSE §1.6d option-3
+# precedent ("anxiety", "cancer"): "burnout" is a distinctive modern word
+# absent from the WEB text where the word IS the concept; "rest", "weary",
+# "tired", "exhausted" are the pack's own subject words, kept humble by the
+# one-token specificity discount (0.55) in conceptAnchorEvidence.
+#
+# "be still" is deliberately NOT here: Psalm 46:10 belongs to the refuge
+# psalm, and the phrase is proposed on `refuge-in-trouble` instead (see
+# patches.md) — anchoring it under rest would decontextualize the verse into
+# a quiet-time slogan.
+id: rest-for-the-weary
+label: Rest for the weary
+lexicon:
+  - come to me all who are weary
+  - i will give you rest
+  - rest for your souls
+  # Bare words, deliberate (see header comment).
+  - rest
+  - weary
+  - tired
+  - exhausted
+  - burnout
+anchors:
+  # "Come to me, all you who labor and are heavily burdened, and I will give
+  # you rest… you will find rest for your souls" (WEB). The passage IS the
+  # invitation to the weary; nothing to argue.
+  - ref: Matthew 11:28-30
+    sources: [editorial]
+    weight: 1.0
+  # "My soul rests in God alone. My salvation is from him" (WEB). Rest as
+  # trustful waiting on God — the psalm's own frame.
+  - ref: Psalms 62:1-2
+    sources: [editorial]
+    weight: 0.9
+  # "Those who wait for the LORD will renew their strength… they will run,
+  # and not be weary" (WEB). Spoken to an exhausted exile generation
+  # (Isaiah 40:28-30 names the faint and weary explicitly).
+  - ref: Isaiah 40:31
+    sources: [editorial]
+    weight: 0.85
+  # "Cast your burden on the LORD and he will sustain you" (WEB). David under
+  # crushing pressure; the burden-casting verse the NT echoes in 1 Pet 5:7.
+  - ref: Psalms 55:22
+    sources: [editorial]
+    weight: 0.8
+  # "My presence will go with you, and I will give you rest" (WEB wording from
+  # knowledge — NOT in pipeline/fixtures/web-subset.json; see corpus-needs.md).
+  # God's answer to Moses' exhaustion in leading; rest grounded in presence.
+  - ref: Exodus 33:14
+    sources: [editorial]
+    weight: 0.7
+  # "It is vain for you to rise up early… for he gives sleep to his loved
+  # ones" (WEB wording from knowledge — NOT in web-subset; corpus-needs.md).
+  # The psalm's point is exactly the burnout searcher's need: anxious toil
+  # without God is vain, and sleep is his gift.
+  - ref: Psalms 127:2
+    sources: [editorial]
+    weight: 0.6
+related:
+  - strength-in-weakness
+  - peace-of-god

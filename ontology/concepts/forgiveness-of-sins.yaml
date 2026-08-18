@@ -13,6 +13,16 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - forgiveness
+  # Inner-life aliases, 2026-08-18 (books-harvest curation; Phillips' "Guilt"
+  # topic confirms the felt-need vocabulary — his lead passage is Rom 8:1-2,
+  # matching the anchor added below). Bare words per the single-token
+  # precedent already in this file. "guilty" is a separate stemmer token from
+  # "guilt". "shame" is deliberately ABSENT: a distinct sense — often the
+  # abuse survivor's, for whom confess-your-sins answers would be
+  # sense-inverted (see the guilt-and-condemnation fixture note).
+  - guilt
+  - guilty
+  - condemnation
 anchors:
   - ref: Psalms 103:12
     sources: [editorial]
@@ -38,6 +48,16 @@ anchors:
   - ref: Acts 13:38-39
     sources: [torrey]
     weight: 0.65
+  # "There is therefore now no condemnation to those who are in Christ Jesus"
+  # (WEB, verified in web-subset). The no-condemnation answer to the guilt
+  # searcher; Romans' own summary of justification. Added 2026-08-18
+  # (books-harvest curation). Micah 7:19 was considered and NOT added: 7:18
+  # is already anchored and an adjacent-verse second anchor is overlap
+  # clutter — if the v19 imagery should be reachable, widen the torrey entry
+  # to 7:18-19 in a reviewed change instead.
+  - ref: Romans 8:1
+    sources: [editorial]
+    weight: 0.9
 related:
   - repentance
   - forgiving-others

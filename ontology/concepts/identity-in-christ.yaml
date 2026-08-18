@@ -1,0 +1,60 @@
+# INNER-LIFE PACK (cluster B draft, 2026-08-18).
+#
+# SELF-WORTH / IDENTITY IN CHRIST — named by Phillips' "Self-Image" topic
+# (lead verse 1 Sam 16:7; also Ps 139:14-16, Phil 1:6) and by Growing by
+# Heart's weeks on Ps 139:14 and Eph 2:10.
+#
+# LEXICON DISCIPLINE: "fearfully and wonderfully made" belongs to `creation`
+# (in its lexicon since the founding wave) and is deliberately NOT repeated
+# here — that query already lands on Ps 139:13-14 via creation, and a shared
+# phrase is a G4 phrase collision. Sharing the ANCHOR (Ps 139:13-14, also in
+# creation, hope-in-despair, pregnancy-and-child-loss) is deliberate: the
+# passage honestly serves all these registers.
+#
+# "am i enough" was considered and REJECTED for now: it normalizes to the
+# single token `enough`, which would fire this concept on every
+# grace-is-sufficient query ("his grace is enough"). Recorded as a structural
+# limit, not papered over.
+id: identity-in-christ
+label: Identity in Christ
+lexicon:
+  - identity in christ
+  # Bare word, deliberate (§1.6d option-3 pattern): a distinctive modern
+  # word absent from the WEB text, and the bare word IS this concept.
+  - identity
+  - self worth
+  - gods workmanship
+  - god looks at the heart
+anchors:
+  # "You formed my inmost being… I am fearfully and wonderfully made" (WEB).
+  # Worth grounded in being God's handiwork from the womb.
+  - ref: Psalms 139:13-14
+    sources: [editorial]
+    weight: 1.0
+  # "For we are his workmanship, created in Christ Jesus for good works"
+  # (WEB). The identity-in-Christ verse proper: made, remade, and purposed.
+  - ref: Ephesians 2:10
+    sources: [editorial]
+    weight: 0.95
+  # "Man looks at the outward appearance, but the LORD looks at the heart"
+  # (WEB wording from knowledge — NOT in web-subset; corpus-needs.md).
+  # Spoken at David's anointing — worth is not appearance; Phillips' lead
+  # Self-Image verse.
+  - ref: 1 Samuel 16:7
+    sources: [editorial]
+    weight: 0.85
+  # "You are a chosen race, a royal priesthood, a holy nation, a people for
+  # God's own possession" (WEB). Corporate identity conferred, not achieved —
+  # kept mid-weight because the address is the church, applied personally.
+  - ref: 1 Peter 2:9
+    sources: [editorial]
+    weight: 0.8
+  # "I have been crucified with Christ… Christ lives in me" (WEB wording from
+  # knowledge — NOT in web-subset; corpus-needs.md). The exchanged life —
+  # identity relocated into Christ.
+  - ref: Galatians 2:20
+    sources: [editorial]
+    weight: 0.75
+related:
+  - creation
+  - gods-love

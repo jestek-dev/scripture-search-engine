@@ -5,7 +5,7 @@
     "discernment",
     "need wisdom"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
     "new wisdom-from-god concept; PENDING until the pack lands, then flip",
@@ -29,5 +29,8 @@
       "requiredReasonLabel": "Theme: Wisdom from God"
     }
   ],
-  "expectedWithinTop": 10
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "wisdom-from-god"
+  ]
 }

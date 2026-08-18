@@ -17,6 +17,22 @@ lexicon:
   # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
   # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
   - cast all your anxiety on him
+  # Inner-life aliases, 2026-08-18 (books-harvest curation). Bare words per
+  # the approved "anxiety" precedent (§1.6d option 3 /
+  # remembered-anxious-for-nothing): the words people actually type, kept
+  # humble by the one-token discount. Routed HERE and not to
+  # remembered-anxious-for-nothing because the worry answer set is this
+  # concept's anchor set (Phil 4:6-7; 1 Pet 5:7, whose WEB text reads
+  # "casting all your worries on him"; Matt 6:25-27; John 16:33); the
+  # remembered pack keeps its narrow one-anchor design. Landed together with
+  # the 1 Peter 5:7 dedup so the added traffic never sees the double-count.
+  # "worried" is a separate entry because the stemmer yields a different
+  # token than "worry"; "worries"/"worrying" normalize to "worry" and
+  # "stressed" to "stress", so neither needs an entry.
+  - worry
+  - worried
+  - do not worry
+  - stress
 anchors:
   - ref: Philippians 4:6-7
     sources: [editorial]

@@ -5,7 +5,7 @@
     "direction",
     "gods will for my life"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
     "new guidance concept; PENDING until the pack lands, then flip active in",
@@ -35,5 +35,8 @@
   "expectedWithinTop": 10,
   "alsoAcceptable": [
     "Psalms 37:23"
+  ],
+  "coversConcepts": [
+    "guidance"
   ]
 }

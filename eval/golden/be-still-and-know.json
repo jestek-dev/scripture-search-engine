@@ -1,9 +1,13 @@
 {
   "id": "be-still-and-know",
   "query": "be still and know that i am god",
-  "additionalQueries": ["be still and know"],
-  "status": "pending",
-  "coversConcepts": ["refuge-in-trouble"],
+  "additionalQueries": [
+    "be still and know"
+  ],
+  "status": "active",
+  "coversConcepts": [
+    "refuge-in-trouble"
+  ],
   "note": [
     "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Companion to the",
     "refuge-in-trouble patch in patches.md ('be still and know…' lexicon",
@@ -32,5 +36,7 @@
     }
   ],
   "expectedWithinTop": 5,
-  "alsoAcceptable": ["Psalms 46:1-3"]
+  "alsoAcceptable": [
+    "Psalms 46:1-3"
+  ]
 }

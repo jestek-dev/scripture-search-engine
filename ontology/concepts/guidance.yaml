@@ -1,0 +1,70 @@
+# INNER-LIFE PACK (cluster B draft, 2026-08-18).
+#
+# "guidance" / "god's will for my life" — a modern pastoral cluster the
+# 2026-08-15 books assessment lists among Phillips' topics with no concept at
+# all. No Torrey heading fits (COUNSELS AND PURPOSES OF GOD, THE is God's own
+# decrees, a different sense), so every anchor is editorial.
+#
+# Proverbs 3:5-6 is deliberately NOT anchored here: it is the 1.0 anchor of
+# `trust-in-god`, and minting a second concept over the same verse is the
+# anchor dilution G4 exists to prevent. The cross-link is `related:` — a
+# guidance search surfaces trusting-God as the neighbouring theme, labelled
+# as such.
+#
+# Structural limits recorded rather than papered over: "which way to go"
+# normalizes to the single token `way` (which/to stopwords, "go" under the
+# 3-char floor) — a bare `way` entry would fire this concept on "I am the
+# way", so that phrasing stays unreachable; likewise "god's will" alone
+# normalizes to just `gods` ("will" is a stopword).
+id: guidance
+label: "God's guidance"
+lexicon:
+  # Bare words, deliberate — the words people actually type; the one-token
+  # specificity discount keeps the claim humble.
+  - guidance
+  - direction
+  # Collapses to the single token `guide` — deliberate: "guide" / "guide me"
+  # are guidance queries.
+  - guide me
+  - direction for my life
+  - gods will for my life
+  - show me the way to go
+  - direct my steps
+anchors:
+  # "I will instruct you and teach you in the way which you shall go. I will
+  # counsel you with my eye on you" (WEB). God's own first-person promise of
+  # instruction — the defining guidance verse, and Phillips' lead quote for
+  # his Guidance topic.
+  - ref: Psalms 32:8
+    sources: [editorial]
+    weight: 1.0
+  # "Your ears will hear a word behind you, saying, 'This is the way, walk in
+  # it'" (WEB wording from knowledge — NOT in web-subset; corpus-needs.md).
+  # In context a promise to returned Israel after discipline (Isa 30:19-21) —
+  # guidance as God's gracious restoration, sound when presented as promise
+  # to God's people, not private oracle-on-demand.
+  - ref: Isaiah 30:21
+    sources: [editorial]
+    weight: 0.9
+  # "Show me your ways, LORD. Teach me your paths. Guide me in your truth"
+  # (WEB wording from knowledge — NOT in web-subset; corpus-needs.md).
+  # David's own guidance prayer; preferred over the mission's Ps 25:9 alone
+  # because vv4-5 are the prayer itself while v9 states whom God guides.
+  - ref: Psalms 25:4-5
+    sources: [editorial]
+    weight: 0.85
+  # "A man's steps are established by the LORD. He delights in his way" (WEB).
+  # Named by the prayer books' Discernment scripture list; the proverb's own
+  # sense is God ordering a person's path.
+  - ref: Psalms 37:23
+    sources: [editorial]
+    weight: 0.75
+  # "Your word is a lamp to my feet, and a light for my path" (WEB wording
+  # from knowledge — NOT in web-subset; corpus-needs.md). Guidance located in
+  # the Word — the corrective to purely inward-impression seeking.
+  - ref: Psalms 119:105
+    sources: [editorial]
+    weight: 0.7
+related:
+  - trust-in-god
+  - wisdom-from-god
