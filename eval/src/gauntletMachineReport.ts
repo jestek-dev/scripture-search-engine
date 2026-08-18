@@ -62,6 +62,13 @@ export type MachineGateVerdict =
 export interface GauntletOptions {
   readonly checkSources: boolean;
   readonly updateBaseline: boolean;
+  /**
+   * Regenerates eval/baselines/ordering.snapshot.json. Optional and present
+   * only when true so recorded flag identities from before the flag existed
+   * stay valid; it can never appear in a machine report because it is
+   * mutually exclusive with --json.
+   */
+  readonly updateOrderingSnapshot?: boolean;
   readonly requireAdmit: boolean;
   readonly jsonPath?: string;
   readonly candidateDescriptorPath?: string;
@@ -175,12 +182,14 @@ export interface GauntletMachineReport {
 }
 
 const USAGE =
-  'Usage: npm run gauntlet -- [--check-sources] [--update-baseline] [--require-admit] [--json <path>] ' +
+  'Usage: npm run gauntlet -- [--check-sources] [--update-baseline] [--update-ordering-snapshot] ' +
+  '[--require-admit] [--json <path>] ' +
   '[--candidate-descriptor <path> --candidate-database <path> | --release-database <path>]';
 
 export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
   let checkSources = false;
   let updateBaseline = false;
+  let updateOrderingSnapshot = false;
   let requireAdmit = false;
   let jsonPath: string | undefined;
   let candidateDescriptorPath: string | undefined;
@@ -197,6 +206,10 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
       case '--update-baseline':
         if (updateBaseline) throw new Error(`Duplicate --update-baseline.\n${USAGE}`);
         updateBaseline = true;
+        break;
+      case '--update-ordering-snapshot':
+        if (updateOrderingSnapshot) throw new Error(`Duplicate --update-ordering-snapshot.\n${USAGE}`);
+        updateOrderingSnapshot = true;
         break;
       case '--require-admit':
         if (requireAdmit) throw new Error(`Duplicate --require-admit.\n${USAGE}`);
@@ -236,6 +249,9 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
   if (updateBaseline && (requireAdmit || jsonPath !== undefined)) {
     throw new Error('--update-baseline cannot be combined with --require-admit or --json; review the new baseline separately.');
   }
+  if (updateOrderingSnapshot && (requireAdmit || jsonPath !== undefined)) {
+    throw new Error('--update-ordering-snapshot cannot be combined with --require-admit or --json; review the new snapshot separately.');
+  }
 
   const hasCandidate = candidateDescriptorPath !== undefined || candidateDatabasePath !== undefined;
   if (hasCandidate && (candidateDescriptorPath === undefined || candidateDatabasePath === undefined)) {
@@ -247,9 +263,13 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
   if (updateBaseline && (hasCandidate || releaseDatabasePath !== undefined)) {
     throw new Error('--update-baseline cannot evaluate an explicit candidate or release target.');
   }
+  if (updateOrderingSnapshot && (hasCandidate || releaseDatabasePath !== undefined)) {
+    throw new Error('--update-ordering-snapshot cannot evaluate an explicit candidate or release target.');
+  }
 
   return {
     checkSources, updateBaseline, requireAdmit,
+    ...(updateOrderingSnapshot ? { updateOrderingSnapshot } : {}),
     ...(jsonPath ? { jsonPath } : {}),
     ...(candidateDescriptorPath ? { candidateDescriptorPath } : {}),
     ...(candidateDatabasePath ? { candidateDatabasePath } : {}),

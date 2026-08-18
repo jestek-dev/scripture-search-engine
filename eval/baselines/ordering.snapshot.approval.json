@@ -1,0 +1,14 @@
+{
+  "schema": "scripture-search-engine/ordering-snapshot-approval/v1",
+  "snapshotSha256": "a1b6c521fc3feac657a2b589757e567bcb25d14fb668d0a725167ff2adf361f9",
+  "probeListsSha256": "bb88765d2918e4e90e4197ed2392e714101ae59d61fa362f6339d3c4005eb6f9",
+  "engine": {
+    "engineVersion": "0.9.0",
+    "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+    "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a"
+  },
+  "reviewer": "project owner (bootstrap ordering snapshot, approved by merging PR-A)",
+  "reviewedAt": "2026-08-17",
+  "rationale": "Bootstrap ordering snapshot: pins every probe's full default page at engine 0.9.0 with the re-pinned source fingerprints, matching the identity of the independently approved G8 probe baseline. No prior snapshot exists, so priorProvenance is null; from the next regeneration onward it must name the merge-base blob.",
+  "priorProvenance": null
+}

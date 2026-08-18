@@ -27,6 +27,7 @@ import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 import { isAuthoritative } from '@jestek-dev/scripture-engine';
 
 import { fail, pass, type GateFinding, type GateResult } from './types.js';
+import type { ProbeOrderedResults } from './orderingSnapshot.js';
 
 export interface Probe {
   readonly id: string;
@@ -308,8 +309,18 @@ function round(value: number): number {
 export async function observeProbes(
   engine: ScriptureEngine,
   probes: readonly Probe[],
-): Promise<{ observations: ProbeObservation[]; latenciesMs: number[] }> {
+): Promise<{
+  observations: ProbeObservation[];
+  /**
+   * Every probe's FULL default page (25) in exact rank order, scores rounded
+   * to 6 dp, for the G2 ordering snapshot. Recorded alongside rather than
+   * inside `ProbeObservation` so the G8 baseline digests stay byte-identical.
+   */
+  orderedResults: ProbeOrderedResults[];
+  latenciesMs: number[];
+}> {
   const observations: ProbeObservation[] = [];
+  const orderedResults: ProbeOrderedResults[] = [];
   const latenciesMs: number[] = [];
 
   // Warm-up pass, discarded. The first query of a process pays for module
@@ -347,8 +358,12 @@ export async function observeProbes(
         ? round(top.reduce((sum, entry) => sum + entry.score, 0) / top.length)
         : 0,
     });
+    orderedResults.push({
+      id: probe.id,
+      results: results.map((entry) => ({ targetId: entry.targetId, score: round(entry.score) })),
+    });
   }
-  return { observations, latenciesMs };
+  return { observations, orderedResults, latenciesMs };
 }
 
 /** Fraction of the previous top-10 no longer present in the new top-10. */

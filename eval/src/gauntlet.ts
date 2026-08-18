@@ -66,6 +66,10 @@ import {
   type ProbeBaseline,
 } from './gates/probes.js';
 import { openCorpus } from './nodeSqlitePort.js';
+import {
+  orderingSnapshotGate,
+  type OrderingSnapshot,
+} from './gates/orderingSnapshot.js';
 import { determinismGate, goldenGate, type GoldenFixture } from './gates/golden.js';
 import {
   notApplicable,
@@ -540,6 +544,8 @@ async function reachabilityGate(options: GauntletOptions): Promise<GateResult> {
 
 const BASELINE_PATH = join(EVAL_ROOT, 'baselines', 'probes.json');
 const BASELINE_APPROVAL_PATH = join(EVAL_ROOT, 'baselines', 'probes.approval.json');
+const ORDERING_SNAPSHOT_PATH = join(EVAL_ROOT, 'baselines', 'ordering.snapshot.json');
+const ORDERING_SNAPSHOT_APPROVAL_PATH = join(EVAL_ROOT, 'baselines', 'ordering.snapshot.approval.json');
 
 /**
  * SHA-256 of the review record a v2 approval binds as evidence, or null when
@@ -600,7 +606,7 @@ async function runProbeGates(
       if (target !== null && JSON.stringify(evaluatedIdentity) !== JSON.stringify(target.identity.engine)) {
         throw new Error('Selected gauntlet target database engine identity does not match its verified descriptor.');
       }
-      const { observations, latenciesMs } = await observeProbes(engine, probeFile.probes);
+      const { observations, orderedResults, latenciesMs } = await observeProbes(engine, probeFile.probes);
       const baseline: ProbeBaseline | null = existsSync(BASELINE_PATH)
         ? (JSON.parse(readFileSync(BASELINE_PATH, 'utf8')) as ProbeBaseline)
         : null;
@@ -656,11 +662,48 @@ async function runProbeGates(
         );
       }
 
+      // Same discipline for the G2 ordering snapshot: this writes only the
+      // candidate snapshot, never the approval — writing the approval IS the
+      // reviewer's act — and --json/--require-admit are rejected alongside it,
+      // so a run cannot attest to the snapshot it just generated.
+      if (options.updateOrderingSnapshot) {
+        const next: OrderingSnapshot = {
+          engineVersion: engine.engineVersion,
+          corpusFingerprint: engine.corpusFingerprint,
+          layerFingerprint: engine.layerFingerprint,
+          probes: orderedResults,
+        };
+        writeFileSync(ORDERING_SNAPSHOT_PATH, `${JSON.stringify(next, null, 2)}
+`, 'utf8');
+        process.stderr.write(
+          `Ordering snapshot updated: ${ORDERING_SNAPSHOT_PATH}. The reviewer must hand-write ` +
+            `${ORDERING_SNAPSHOT_APPROVAL_PATH} — writing it is the approval act.\n`,
+        );
+      }
+
+      const orderingSnapshot: OrderingSnapshot | null = existsSync(ORDERING_SNAPSHOT_PATH)
+        ? (JSON.parse(readFileSync(ORDERING_SNAPSHOT_PATH, 'utf8')) as OrderingSnapshot)
+        : null;
+      const orderingApproval = existsSync(ORDERING_SNAPSHOT_APPROVAL_PATH)
+        ? JSON.parse(readFileSync(ORDERING_SNAPSHOT_APPROVAL_PATH, 'utf8')) as unknown
+        : null;
+      const ordering = orderingSnapshotGate({
+        snapshot: orderingSnapshot,
+        approval: orderingApproval,
+        // An explicit candidate/release target intentionally differs from the
+        // fixture identity the snapshot pins; only document integrity and the
+        // tripwire apply on those runs, and the fixture-based CI legs keep
+        // enforcing the orderings themselves.
+        observed: target === null
+          ? { identity: evaluatedIdentity, probes: orderedResults }
+          : null,
+      });
+
       const corpusFixtures = loadFixtures() as unknown as CorpusFixture[];
       const corpusGolden = await corpusGoldenGate(engine, corpusFixtures);
 
       return {
-        gates: [noise, latencyGate(latenciesMs, budgets.latency.p95Ms), corpusGolden],
+        gates: [noise, latencyGate(latenciesMs, budgets.latency.p95Ms), corpusGolden, ordering],
         identity: evaluatedIdentity,
         builtArtifactBytes,
       };
@@ -766,10 +809,14 @@ async function main(): Promise<void> {
               watchlistFileContents: flaggedPairingsContents,
             }),
           ]);
+    // G2 is the determinism contract: the in-process replay AND the committed
+    // ordering snapshot ride one roster row via mergeGateResults, the same way
+    // concept coverage rides G3 — the roster stays 12 rows.
+    const g2 = mergeGateResults('Determinism', [determinismGate(fixtures), probeGates[3]!]);
     const gates: GateResult[] = [
       g1,
       await reachabilityGate(options),
-      determinismGate(fixtures),
+      g2,
       g3,
       g4,
       distinctivenessGate(distillate, budgets.distinctiveness),
@@ -825,7 +872,7 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  if (error instanceof Error && /(?:Unknown gauntlet argument|Duplicate --|requires (?:a path|both)|mutually exclusive|--update-baseline cannot)/.test(error.message)) {
+  if (error instanceof Error && /(?:Unknown gauntlet argument|Duplicate --|requires (?:a path|both)|mutually exclusive|--update-(?:baseline|ordering-snapshot) cannot)/.test(error.message)) {
     process.stderr.write(`${error.message}\n`);
     process.exitCode = 2;
   } else {
