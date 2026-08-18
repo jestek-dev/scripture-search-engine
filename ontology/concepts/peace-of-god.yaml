@@ -30,6 +30,14 @@ anchors:
   - ref: John 16:33
     sources: [torrey]
     weight: 0.8
+  # Deduplicated 2026-08-18: this concept listed 1 Peter 5:7 twice (torrey
+  # 0.75 + a remembered-phrasing editorial entry at 0.85, added 2026-08-08 —
+  # "cast all your anxiety on him" is this verse), and the engine sums
+  # duplicate anchors, so the verse outscored Philippians 4:6-7 for "peace".
+  # The torrey entry survives with its original weight; the remembered-
+  # phrasing rationale now lives on this comment. Dual citation
+  # `sources: [torrey, editorial]` should be restored once multi-source
+  # entries are single-scoring (2026-08-14 plan, ranking-fixes §6 #3).
   - ref: 1 Peter 5:7
     sources: [torrey]
     weight: 0.75
@@ -39,11 +47,6 @@ anchors:
   - ref: Romans 5:1
     sources: [torrey]
     weight: 0.6
-  # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
-  # wording renders).
-  - ref: 1 Peter 5:7
-    sources: [editorial]
-    weight: 0.85
 related:
   - trust-in-god
   - fear-not
