@@ -1,0 +1,38 @@
+{
+  "id": "taming-the-tongue",
+  "query": "taming the tongue",
+  "status": "pending",
+  "note": [
+    "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
+    "the `taming-the-tongue` concept pack, pending until the pack lands and",
+    "it passes. Idea confirmed by Growing by Heart wk24 (Ps 141:3-4,",
+    "Prov 16:24) and the prayer books' 'Speaking the Right Words' /",
+    "'Communication With Others' — topic ideas only, no verse list copied;",
+    "three anchors are from Torrey's verified SLANDER outline.",
+    "",
+    "Ephesians 4:29, Ephesians 4:31 and Psalms 34:13 are asserted because",
+    "they are the pack's anchors present in the fixture corpus. The theme's",
+    "signature texts — Ps 141:3 ('set a watch before my mouth'), Jas 3:5-10,",
+    "Prov 18:21 ('death and life are in the power of the tongue'),",
+    "Matt 12:36, Prov 16:24 — are all outside it; see corpus-needs. Until",
+    "those chapters land, Eph 4:29 is the honest expectedTop: the positive",
+    "speech command, and the strongest in-corpus answer for 'gossip' is",
+    "Eph 4:31's slander prohibition."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 4:29",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Taming the tongue"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ephesians 4:31",
+    "Psalms 34:13"
+  ],
+  "additionalQueries": [
+    "gossip",
+    "guard my mouth"
+  ]
+}

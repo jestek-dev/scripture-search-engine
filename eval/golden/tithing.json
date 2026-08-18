@@ -1,0 +1,46 @@
+{
+  "id": "tithing",
+  "query": "tithing",
+  "status": "pending",
+  "note": [
+    "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
+    "the `tithing` concept pack, pending until the pack lands and it passes.",
+    "",
+    "CHARTER: prosperity-financial-blessing.json's own note rules that",
+    "Malachi 3:10 'ranks honestly for tithing queries', and the",
+    "flagged-pairings watchlist entry for the verse says the same. This",
+    "fixture is that ruling made positive: the searcher who actually asks",
+    "about tithing gets the tithe texts, with their own frame (Mal 3:8's",
+    "withholding charge alongside 3:10's storehouse, Prov 3:9's firstfruits",
+    "worship, and — once Matthew 23 joins the corpus — Jesus' weightier",
+    "matters).",
+    "",
+    "THE GUARDRAIL HOLDS BOTH WAYS: the tithing lexicon (tithing, tithe,",
+    "firstfruits, bring the whole tithe) shares no token with any",
+    "prosperity-* query ('financial blessing', 'wealth', 'abundance', 'sow a",
+    "seed', 'breakthrough', 'prosperity', 'riches', 'success', 'name it and",
+    "claim it'), so the concept's anchors cannot fire on those queries and",
+    "all ten doctrine-negative fixtures keep holding. Checked query-by-query",
+    "at design time.",
+    "",
+    "Malachi 3:10 and Proverbs 3:9-10 are verified IN the fixture corpus.",
+    "Lev 27:30 and Matt 23:23 are anchored in the pack but outside the",
+    "corpus — see corpus-needs; assert them only with their chapters."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Malachi 3:10",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Tithing and firstfruits"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Malachi 3:8",
+    "Proverbs 3:9-10"
+  ],
+  "additionalQueries": [
+    "tithe",
+    "firstfruits"
+  ]
+}

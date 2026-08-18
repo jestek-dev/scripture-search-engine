@@ -1,0 +1,51 @@
+{
+  "id": "new-creation",
+  "query": "new creation",
+  "status": "pending",
+  "note": [
+    "SENSE-INVERSION REPAIR (§7.7 PR 4 + audit follow-up). The 2026-08-13",
+    "audit found 'new beginnings' answered by Ecclesiastes 1:9 — 'there is",
+    "no new thing under the sun' — the query's words in their opposite",
+    "frame: a searcher reaching for a fresh start told there is none.",
+    "",
+    "Ecclesiastes 1:9 is DEMOTED, never forbidden, on the",
+    "sense-inversion-provision pattern: Qoheleth's line genuinely carries",
+    "the words and honestly ranks for them; it must simply never lead a",
+    "fresh-start query over 2 Corinthians 5:17. NOTE: Ecclesiastes 1 is not",
+    "yet in the fixture corpus (only ch. 3 is), so the preferredOrder is",
+    "vacuous until the selection is extended — corpus-needs.md marks",
+    "Ecclesiastes 1 REQUIRED.",
+    "",
+    "The bare query 'creation' is NOT asserted here — that is creation.yaml",
+    "territory; this pack's lexicon deliberately has no bare single word.",
+    "Ezekiel 36:26 is an anchor but unasserted (Ezekiel 36 absent from the",
+    "fixture corpus; see corpus-needs.md).",
+    "",
+    "Pending per fixtures-first; flip active with the concept PR."
+  ],
+  "additionalQueries": [
+    "fresh start",
+    "new beginnings",
+    "starting over"
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Corinthians 5:17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: A new creation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "2 Corinthians 5:17",
+      "below": "Ecclesiastes 1:9"
+    }
+  ],
+  "alsoAcceptable": [
+    "Psalms 51:10",
+    "Galatians 6:15",
+    "Revelation 21:5",
+    "Acts 3:19"
+  ]
+}

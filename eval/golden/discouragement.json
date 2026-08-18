@@ -1,0 +1,37 @@
+{
+  "id": "discouragement",
+  "query": "discouraged",
+  "additionalQueries": [
+    "discouragement",
+    "weary in doing good"
+  ],
+  "status": "pending",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
+    "new do-not-lose-heart concept; PENDING until the pack lands, then flip",
+    "active in the same PR.",
+    "",
+    "REGISTER SPLIT, on purpose: 'I want to give up' already belongs to the",
+    "crisis register — pastoral-despair-give-up.json owns that query and gates",
+    "the suicide-narrative near-misses — so it is deliberately NOT a query",
+    "here. This fixture covers the milder discouragement vocabulary, whose",
+    "right lead answer is Gal 6:9's keep-going word (a verse that would be",
+    "wrong served to a suicidal search, which is why the concepts are",
+    "separate)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Galatians 6:9",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Do not lose heart"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 42:5",
+    "2 Corinthians 4:16-18",
+    "Isaiah 41:10",
+    "Joshua 1:9"
+  ]
+}

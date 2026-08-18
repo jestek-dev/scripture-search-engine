@@ -1,0 +1,43 @@
+{
+  "id": "rapture",
+  "query": "rapture",
+  "status": "pending",
+  "note": [
+    "Cluster C (life situations cluster's eschatology item), 2026-08-18.",
+    "Fixtures-first: written before the `caught-up-together` concept pack,",
+    "pending until the pack lands and it passes. Idea confirmed by Phillips'",
+    "'Rapture' topic (which the 2026-08-15 books assessment noted he keeps",
+    "distinct from 'Return of Christ') — topic idea only, no verse list",
+    "copied.",
+    "",
+    "NEUTRALITY (docs/DOCTRINAL-BASIS.md §4: millennial views are",
+    "non-criteria): the concept locates the passages the word refers to —",
+    "1 Thess 4:16-17 ('caught up together … in the clouds', the harpazo",
+    "text) and 1 Cor 15:51-52 — and adjudicates nothing about timing or",
+    "sequence. 'rapture' was deliberately NOT added to second-coming's",
+    "lexicon: a lexicon match fires every anchor of its concept, and",
+    "answering the query with the full second-coming anchor set would",
+    "silently assert one position on a question the anchors' congregations",
+    "do not share. The label is the passage's own words.",
+    "",
+    "The query word 'rapture' appears nowhere in the WEB text, so no",
+    "lexical rung can reach the passage — the same measured-gap shape as",
+    "the remembered-phrasing packs. requiredReasonFamily is concept_anchor",
+    "so the assertion is that a curated, attributed anchor put it there.",
+    "Both asserted references are verified IN the fixture corpus."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Thessalonians 4:16-17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Caught up together with the Lord"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 15:51-52"
+  ],
+  "additionalQueries": [
+    "caught up together"
+  ]
+}

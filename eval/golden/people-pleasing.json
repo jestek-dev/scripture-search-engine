@@ -1,0 +1,33 @@
+{
+  "id": "people-pleasing",
+  "query": "people pleasing",
+  "additionalQueries": [
+    "fear of man",
+    "seeking approval"
+  ],
+  "status": "pending",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
+    "new pleasing-god-not-people concept; PENDING until the pack lands, then",
+    "flip active in the same PR.",
+    "",
+    "Proverbs 29:25 (the fear-of-man proverb) is the natural second assertion",
+    "but its chapter is not yet in the fixture corpus (corpus-needs.md); add",
+    "it as expectedTop for the 'fear of man' query when it lands. Colossians",
+    "3:23 is in the corpus and asserted as acceptable: it is shared with",
+    "remembered-work-as-for-the-lord by design ('not for men' is this",
+    "concept's sense of the verse)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Galatians 1:10",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Pleasing God, not people"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Colossians 3:23"
+  ]
+}

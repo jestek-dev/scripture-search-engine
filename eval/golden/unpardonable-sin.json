@@ -1,0 +1,56 @@
+{
+  "id": "unpardonable-sin",
+  "query": "unpardonable sin",
+  "additionalQueries": [
+    "unforgivable sin",
+    "blasphemy against the holy spirit"
+  ],
+  "status": "pending",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for a",
+    "future blasphemy-against-the-spirit concept. BLOCKED ON CORPUS: none of",
+    "the three naming passages (Matt 12:31-32, Mark 3:28-29, Luke 12:10) is",
+    "in pipeline/fixtures/web-subset.json — and at integration time",
+    "(2026-08-18) the corpus CANNOT be extended, because the pinned WEB",
+    "source has drifted upstream (check:drift names it) and regenerating the",
+    "fixture corpus requires the reviewed re-pin process in",
+    "docs/source-repins.md. The concept pack is therefore deliberately NOT",
+    "in this PR: G3 requires an active fixture that can actually measure a",
+    "pack, and this one cannot pass until the chapters exist. This pending",
+    "fixture stays as the measured-gap record; land the concept, the corpus",
+    "chapters, and a coversConcepts claim together in the re-pin/corpus PR.",
+    "",
+    "ANXIOUS-SEARCHER GUARD (design note for that PR): the person typing",
+    "this query is usually afraid they have committed it. The engine locates",
+    "the passages that name the saying and never adjudicates; the pastoral",
+    "hand-off is the concept's related: forgiveness-of-sins link, not a",
+    "reassurance anchor. The mustNotRank entry gates the one text that would",
+    "terrify precisely this searcher: Hebrews 10:26-27 ('no more a sacrifice",
+    "for sins… a fearful expectation of judgment') — serving it to an",
+    "anxious searcher as if it named their case is the sense-inverted",
+    "pairing this family exists to prevent. It IS in the fixture corpus, so",
+    "that assertion can already fail."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 12:31-32",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Blasphemy against the Spirit"
+    },
+    {
+      "reference": "Mark 3:28-29",
+      "withinTop": 5
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 12:10"
+  ],
+  "mustNotRank": [
+    {
+      "reference": "Hebrews 10:26-27",
+      "why": "'There remains no more a sacrifice for sins… a fearful expectation of judgment' — a warning passage about willful apostasy, not a definition of the unpardonable sin; served to an anxious 'have I committed it' searcher it reads as their verdict. It ranks honestly for apostasy/warning queries."
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "wisdom",
+  "query": "wisdom",
+  "additionalQueries": [
+    "discernment",
+    "need wisdom"
+  ],
+  "status": "pending",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
+    "new wisdom-from-god concept; PENDING until the pack lands, then flip",
+    "active in the same PR.",
+    "",
+    "Sense guard, stated: the concept is wisdom GIVEN to people (James 1:5),",
+    "not Torrey's 'WISDOM OF GOD, THE' (God's own attribute) — the label",
+    "asserted below is the give-away if a wrong-sense pack ever lands.",
+    "",
+    "Proverbs 2:6 / 2:11 / 9:10 are anchors but not asserted — their chapters",
+    "are not yet in the fixture corpus (corpus-needs.md); add assertions when",
+    "they land. requiredReasonFamily is concept_anchor: James 1:5 contains",
+    "'wisdom' lexically, so the assertion must be that the curated anchor put",
+    "it there and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 1:5",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Wisdom from God"
+    }
+  ],
+  "expectedWithinTop": 10
+}

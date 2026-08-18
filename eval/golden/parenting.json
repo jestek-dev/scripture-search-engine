@@ -1,0 +1,42 @@
+{
+  "id": "parenting",
+  "query": "parenting",
+  "status": "pending",
+  "note": [
+    "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
+    "the `parenting` concept pack, pending until the pack lands and it",
+    "passes. Idea confirmed by the prayer books' section V (Being a Godly",
+    "Parent, For My Teenager, Teenager to Return to God), Growing by Heart",
+    "wk49, and Phillips 'Parents and Children' — topic ideas only, no verse",
+    "list copied; anchor provenance is Torrey's verified PARENTS outline",
+    "plus editorial.",
+    "",
+    "Ephesians 6:4 and Deuteronomy 6:6-7 are asserted because they are the",
+    "pack's anchors present in the fixture corpus. Proverbs 22:6 ('train up",
+    "a child' — the pack's top anchor) and Psalm 127:3 are outside it — see",
+    "corpus-needs; assert Prov 22:6 for the 'train up a child' query in the",
+    "PR that adds Proverbs 22.",
+    "",
+    "'prayer for my child' / 'prayer for my teenager' are the prayer books'",
+    "own table-of-contents language — the queries a church member actually",
+    "types. They are asserted against the concept (lexicon match fires all",
+    "anchors), so the parent asking gets the parenting charge, not a",
+    "keyword scatter."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 6:4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Raising children"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Deuteronomy 6:6-7"
+  ],
+  "additionalQueries": [
+    "raising children",
+    "prayer for my child",
+    "prayer for my teenager"
+  ]
+}

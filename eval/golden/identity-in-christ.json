@@ -1,0 +1,39 @@
+{
+  "id": "identity-in-christ",
+  "query": "identity in christ",
+  "additionalQueries": [
+    "self worth",
+    "identity"
+  ],
+  "status": "pending",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
+    "new identity-in-christ concept; PENDING until the pack lands, then flip",
+    "active in the same PR.",
+    "",
+    "'fearfully and wonderfully made' is deliberately NOT a query here: that",
+    "phrasing already belongs to the creation concept's lexicon and lands on",
+    "Ps 139:13-14 through it — duplicating it would be a G4 phrase collision",
+    "and would assert nothing new. The two concepts SHARE the Ps 139:13-14",
+    "anchor on purpose (the passage honestly serves both registers).",
+    "",
+    "1 Samuel 16:7 and Galatians 2:20 are anchors but not asserted — their",
+    "chapters are not yet in the fixture corpus (corpus-needs.md)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 2:10",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Identity in Christ"
+    },
+    {
+      "reference": "Psalms 139:13-14",
+      "withinTop": 5
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 2:9"
+  ]
+}

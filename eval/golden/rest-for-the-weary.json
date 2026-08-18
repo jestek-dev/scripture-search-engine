@@ -1,0 +1,45 @@
+{
+  "id": "rest-for-the-weary",
+  "query": "rest",
+  "additionalQueries": [
+    "weary",
+    "tired",
+    "burnout"
+  ],
+  "status": "pending",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
+    "new rest-for-the-weary concept; PENDING until the pack lands, then flip",
+    "active in the same PR (pending fixtures do not count for G3 coverage).",
+    "",
+    "The preferredOrder entry follows the sense-inversion-provision ruling",
+    "(Jesse, 2026-08-15): Psalms 95:11 — 'They won't enter into my rest' — is",
+    "an honest lexical match for the query word in its OPPOSITE frame: a",
+    "rest-seeker served an oath of exclusion. It is demoted, never forbidden;",
+    "it may rank, just never above the invitation. Both references are in the",
+    "fixture corpus, so the pair cannot pass vacuously.",
+    "",
+    "requiredReasonFamily is concept_anchor: Matt 11:28-30 contains 'rest'",
+    "lexically, so the assertion must be that the curated anchor put it there."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 11:28-30",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Rest for the weary"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 62:1-2",
+    "Isaiah 40:31",
+    "Psalms 55:22"
+  ],
+  "preferredOrder": [
+    {
+      "above": "Matthew 11:28-30",
+      "below": "Psalms 95:11"
+    }
+  ]
+}

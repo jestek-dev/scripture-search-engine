@@ -1,0 +1,44 @@
+{
+  "id": "worry-and-stress",
+  "query": "worry",
+  "additionalQueries": ["stress", "worried", "do not worry"],
+  "status": "pending",
+  "coversConcepts": ["peace-of-god"],
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first: written",
+    "before the peace-of-god lexicon patch in patches.md lands ('worry',",
+    "'worried', 'do not worry', 'stress'). PENDING until that patch merges;",
+    "flip active in the same PR.",
+    "",
+    "Routed to peace-of-god, NOT remembered-anxious-for-nothing, because the",
+    "expected answer set is the peace pack's anchor set: Phil 4:6-7, 1 Pet 5:7",
+    "(whose WEB text literally reads 'casting all your worries on him'), and",
+    "Matt 6:25-27 (the do-not-worry teaching; the anchor's range is 6:25-27,",
+    "so that is what is asserted, not 6:25-34). The remembered pack keeps its",
+    "narrow one-anchor design.",
+    "",
+    "SEQUENCING: peace-of-god currently double-counts 1 Peter 5:7 (the",
+    "lexicon-concepts PR 1 dedup in docs/plans/2026-08-14-implementation-plan.md",
+    "removes the duplicate). This fixture asserts nothing about 1 Pet 5:7's",
+    "exact rank so it cannot lock the duplicate in; land it after or with the",
+    "dedup.",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose: 1 Pet 5:7 could reach",
+    "the top lexically ('worries' is in its WEB text), but the assertion is",
+    "that a CURATED anchor put Phil 4:6-7 there and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 4:6-7",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Peace of God"
+    },
+    {
+      "reference": "1 Peter 5:7",
+      "withinTop": 5
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": ["Matthew 6:25-27", "John 16:33"]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "loneliness",
+  "query": "loneliness",
+  "status": "pending",
+  "note": [
+    "New pastoral-register coverage: the books assessment lists 'loneliness",
+    "/ feeling alone' among the ~45 real-world queries the suite has no",
+    "protection for. Torrey's AFFLICTION, CONSOLATION UNDER carries a",
+    "'To those deserted by friends' sub-point — the pack mines it.",
+    "",
+    "Psalms 27:10 is the expectedTop: abandonment by the closest human",
+    "relationships answered by the LORD taking the abandoned one up.",
+    "Psalms 68:6 and Deuteronomy 31:8 are anchors but unasserted — Psalms",
+    "68 and Deuteronomy 31 are absent from the fixture corpus (see",
+    "corpus-needs.md); assert them when the selection is extended.",
+    "",
+    "No mustNotRank: no dangerous near-miss surfaced for these phrasings in",
+    "the audit. If one appears (e.g. a result telling a lonely searcher the",
+    "answer is a spouse), add it with its why then — an invented forbidding",
+    "is decoration.",
+    "",
+    "Pending per fixtures-first; flip active with the concept PR."
+  ],
+  "additionalQueries": [
+    "feeling alone",
+    "never alone",
+    "lonely"
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 27:10",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Loneliness"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 28:20",
+    "Hebrews 13:5",
+    "John 14:18"
+  ]
+}
