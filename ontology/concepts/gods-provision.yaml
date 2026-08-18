@@ -71,6 +71,14 @@ anchors:
   - ref: Matthew 6:26
     sources: [torrey]
     weight: 0.8
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "those who seek the LORD shall not lack any good thing"; weighted
+  # below Phil 4:19 and the Matt 6 leads so sense-inversion-provision.json
+  # keeps its expectedTop.
+  - ref: Psalms 34:10
+    sources: [editorial]
+    weight: 0.7
 related:
   - trust-in-god
   - contentment

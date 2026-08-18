@@ -9,7 +9,9 @@
     "the right passage for the wrong reason is still a failure.",
     "God so loved the world; nothing can separate us from the love of God.",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "Jesse's 2026-08-08 call: the bare word \"love\" defaults to this concept, with loving-others surfacing as a related theme rather than competing. Asserted here so the default cannot silently flip."
+    "Jesse's 2026-08-08 call: the bare word \"love\" defaults to this concept, with loving-others surfacing as a related theme rather than competing. Asserted here so the default cannot silently flip.",
+    "Round-2 book admission 2026-08-18: gods-love widened Eph 3:19 to 3:17-19 and gained the Rom 8:31-35 / Eph 2:4-5 / 1 Jn 4:16,19 cluster.",
+    "Integrator correction: the drafted 'he first loved us' additionalQuery was removed — asserting it would bind the pack's John 3:16 / Rom 8:38-39 leads to that query's window, where 1 John 4:19 honestly wins on its own words (measured in the round-2 admission run). The 1 John 4:19 anchor itself stays."
   ],
   "expectedTop": [
     {
@@ -28,7 +30,12 @@
     "Romans 5:8",
     "1 John 4:9-10",
     "Jeremiah 31:3",
-    "1 John 3:1"
+    "1 John 3:1",
+    "Romans 8:31-32",
+    "Romans 8:35",
+    "Ephesians 2:4-5",
+    "1 John 4:19",
+    "1 John 4:16"
   ],
   "additionalQueries": [
     "love"

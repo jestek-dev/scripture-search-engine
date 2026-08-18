@@ -30,7 +30,8 @@
     "'abundance'/'wealth'/'financial blessing'/'prosperity' keep holding.",
     "When this fixture starts passing, the Admission Report names it for",
     "promotion to active.",
-    "Window note (2026-08-18 gauntlet iteration): with the pack live, the top of 'provision' is the pack's own Matthew 6:31-33 range (provision for the anxious, subordinated to the Kingdom) with Matt 6:11 third and Phil 4:19 fifth — the inversion is gone (Rom 13:14 no longer ranks in the top 10 at all). Phil 4:19 is asserted within the top 5 with its anchor chip rather than forced above the Kingdom-first answers; promoting a watchlisted verse over them would be the wrong fix."
+    "Window note (2026-08-18 gauntlet iteration): with the pack live, the top of 'provision' is the pack's own Matthew 6:31-33 range (provision for the anxious, subordinated to the Kingdom) with Matt 6:11 third and Phil 4:19 fifth — the inversion is gone (Rom 13:14 no longer ranks in the top 10 at all). Phil 4:19 is asserted within the top 5 with its anchor chip rather than forced above the Kingdom-first answers; promoting a watchlisted verse over them would be the wrong fix.",
+    "Round-2 book admission 2026-08-18: gods-provision gained Ps 34:10, weighted below the Matt 6 / Phil 4:19 leads so this fixture's expectedTop holds."
   ],
   "expectedTop": [
     {
@@ -52,5 +53,8 @@
   ],
   "coversConcepts": [
     "gods-provision"
+  ],
+  "alsoAcceptable": [
+    "Psalms 34:10"
   ]
 }

@@ -58,6 +58,23 @@ anchors:
   - ref: Romans 8:1
     sources: [editorial]
     weight: 0.9
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "I acknowledged my sin to you... and you forgave the iniquity of my
+  # sin." Torrey: CONFESSION OF SIN / PARDON.
+  - ref: Psalms 32:5
+    sources: [torrey]
+    weight: 0.9
+  # "Blessed is he whose disobedience is forgiven." Torrey: PARDON /
+  # JUSTIFICATION BEFORE GOD list 32:1 and 32:2.
+  - ref: Psalms 32:1-2
+    sources: [torrey]
+    weight: 0.85
+  # "You, Lord, are good, and ready to forgive." Torrey: PARDON ("Is
+  # granted Readily").
+  - ref: Psalms 86:5
+    sources: [torrey]
+    weight: 0.75
 related:
   - repentance
   - forgiving-others

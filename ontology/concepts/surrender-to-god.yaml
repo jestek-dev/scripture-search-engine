@@ -13,6 +13,10 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - surrender
+  # Round-2 book admission 2026-08-18.
+  - lordship
+  - jesus is lord
+  - he must increase but i must decrease
 anchors:
   - ref: Romans 12:1
     sources: [editorial]
@@ -32,5 +36,18 @@ anchors:
   - ref: Job 1:21
     sources: [torrey]
     weight: 0.6
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "present yourselves to God as alive from the dead" (book lead Rom
+  # 6:13-16 split: 6:16 went to obedience-to-the-word). Torrey:
+  # DEVOTEDNESS TO GOD.
+  - ref: Romans 6:13
+    sources: [torrey]
+    weight: 0.8
+  # "He must increase, but I must decrease." The Baptist's
+  # self-displacement — the surrender register's remembered phrasing.
+  - ref: John 3:30
+    sources: [editorial]
+    weight: 0.8
 related:
   - obedience-to-the-word

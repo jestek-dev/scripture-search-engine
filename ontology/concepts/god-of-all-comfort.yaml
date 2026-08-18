@@ -49,6 +49,13 @@ anchors:
   - ref: Isaiah 61:1-2
     sources: [torrey]
     weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "through perseverance and through encouragement of the Scriptures we
+  # might have hope." Torrey: AFFLICTION, CONSOLATION UNDER.
+  - ref: Romans 15:4
+    sources: [torrey]
+    weight: 0.7
 openbibleTopics:
   - comfort
 related:

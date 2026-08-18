@@ -23,6 +23,8 @@ lexicon:
   - know i am saved
   - know that you have eternal life
   - never snatch them out of my hand
+  # Round-2 book admission 2026-08-18.
+  - the lord knows those who are his
 anchors:
   # "These things I have written to you who believe… that you may KNOW that
   # you have eternal life" (WEB). The letter's own stated purpose is
@@ -59,6 +61,21 @@ anchors:
   - ref: Isaiah 12:2
     sources: [torrey]
     weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "God's firm foundation stands... 'The Lord knows those who are his'" —
+  # and the seal's second line with it: "Let everyone who names the name of
+  # the Lord depart from unrighteousness" — quoted here so the chip never
+  # hides the verse's charge.
+  - ref: 2 Timothy 2:19
+    sources: [editorial]
+    weight: 0.7
+  # "If anyone sins, we have a Counselor with the Father" — the advocate
+  # clause that keeps assurance honest after failure. (Torrey: PRIVILEGES
+  # OF SAINTS "Christ for their intercessor" — adjacent; editorial.)
+  - ref: 1 John 2:1
+    sources: [editorial]
+    weight: 0.75
 related:
   - salvation
   - gods-love

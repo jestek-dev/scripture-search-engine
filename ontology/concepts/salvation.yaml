@@ -17,6 +17,9 @@ lexicon:
   # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
   # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
   - you must be born again
+  # Round-2 book admission 2026-08-18.
+  - call on the name of the lord
+  - i am the way the truth and the life
 anchors:
   - ref: Acts 16:30-31
     sources: [editorial]
@@ -44,6 +47,22 @@ anchors:
   - ref: John 3:3
     sources: [editorial]
     weight: 0.9
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "I am the way, the truth, and the life. No one comes to the Father,
+  # except through me." Torrey: ACCESS TO GOD ("Is by Christ").
+  - ref: John 14:6
+    sources: [torrey]
+    weight: 0.9
+  # "Whoever will call on the name of the Lord will be saved" — beside the
+  # existing Rom 10:9 anchor.
+  - ref: Romans 10:13
+    sources: [editorial]
+    weight: 0.85
+  # "as many as received him... the right to become God's children."
+  - ref: John 1:12
+    sources: [editorial]
+    weight: 0.85
 related:
   - grace-not-earned
   - the-cross

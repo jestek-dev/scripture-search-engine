@@ -1,7 +1,7 @@
 {
   "id": "obedience-keep-my-commandments",
   "query": "if you love me keep my commandments",
-  "status": "pending",
+  "status": "active",
   "additionalQueries": [
     "keep his commandments"
   ],

@@ -21,7 +21,10 @@ anchors:
   - ref: 1 John 2:6
     sources: [editorial]
     weight: 0.95
-  - ref: Ephesians 5:8
+  # Widened 5:8 -> 5:8-9, round-2 book admission 2026-08-18: v9 names the
+  # fruit of walking as light. Torrey lists 5:9 under RIGHTEOUSNESS / TRUTH
+  # ("fruit of the Spirit is in"). Sources/weight kept.
+  - ref: Ephesians 5:8-9
     sources: [editorial]
     weight: 0.7
   # Torrey/Miller admission 2026-08-06 — supporting anchors from the verified
@@ -29,5 +32,12 @@ anchors:
   - ref: Colossians 1:10
     sources: [torrey]
     weight: 0.65
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "let your way of life be worthy of the Good News" — the
+  # conduct-worthy register.
+  - ref: Philippians 1:27
+    sources: [editorial]
+    weight: 0.7
 related:
   - obedience-to-the-word

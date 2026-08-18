@@ -29,6 +29,12 @@ lexicon:
   - humility
   - humble yourselves
   - god exalts the humble
+  # Round-2 book admission 2026-08-18: the drafted "walk humbly" /
+  # "act justly love mercy" lexicon entries were DROPPED by the integrator
+  # on G8 evidence — they fired this concept for the ot-prophets-justly
+  # noise probe ("do justly love mercy walk humbly") and displaced 80% of
+  # its top-10 (limit 40%). Micah 6:8 keeps ranking first for that query
+  # lexically; the anchors below stay reachable through "humility".
 anchors:
   # "Humble yourselves therefore under the mighty hand of God, that he may
   # exalt you in due time" — exaltation is God's act, on God's clock, and
@@ -60,5 +66,21 @@ anchors:
   - ref: Proverbs 15:33
     sources: [torrey]
     weight: 0.75
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "walk humbly with your God". Torrey: HUMILITY.
+  - ref: Micah 6:8
+    sources: [torrey]
+    weight: 0.85
+  # "not to think of yourself more highly than you ought" — the book lists
+  # it under both Faith and Humility; its context (sober self-assessment)
+  # makes this the honest home.
+  - ref: Romans 12:3
+    sources: [editorial]
+    weight: 0.8
+  # "serving the Lord with all humility". Torrey: HUMILITY.
+  - ref: Acts 20:19
+    sources: [torrey]
+    weight: 0.6
 related:
   - surrender-to-god

@@ -63,6 +63,18 @@ anchors:
   - ref: Luke 6:38
     sources: [editorial]
     weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "Give to him who asks you." Torrey: LIBERALITY. Watchlist care: this
+  # pack's vocabulary stays material-frame-free; Luke 6:38 remains anchored
+  # as-is; prosperity-sow-a-seed geometry untouched.
+  - ref: Matthew 5:42
+    sources: [torrey]
+    weight: 0.8
+  # "the righteous give generously."
+  - ref: Psalms 37:21
+    sources: [editorial]
+    weight: 0.7
 related:
   - contentment
   - tithing

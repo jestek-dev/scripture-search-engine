@@ -37,6 +37,10 @@ lexicon:
   # no lexicon carried the token. Same §1.6d exception as "suicide"/"cancer"
   # above — a distinctive modern word where the word IS the concept.
   - bereavement
+  # Round-2 book admission 2026-08-18.
+  # Bare word (one-token discount): the phillips "Sorrow" register.
+  - sorrow
+  - sorrow into joy
 anchors:
   - ref: John 11:25-26
     sources: [editorial]
@@ -70,6 +74,13 @@ anchors:
   - ref: John 14:18
     sources: [editorial]
     weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "you now have sorrow, but I will see you again, and your heart will
+  # rejoice". Torrey: AFFLICTION, CONSOLATION UNDER.
+  - ref: John 16:22
+    sources: [torrey]
+    weight: 0.8
 related:
   - pregnancy-and-child-loss
   - near-to-the-brokenhearted

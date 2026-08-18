@@ -15,6 +15,9 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - obedience
+  # Round-2 book admission 2026-08-18.
+  - keep my commandments
+  - if you love me keep my commandments
 anchors:
   - ref: James 1:22-25
     sources: [editorial]
@@ -42,6 +45,38 @@ anchors:
   - ref: 1 Samuel 15:22
     sources: [torrey]
     weight: 0.75
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "If you love me, keep my commandments."
+  - ref: John 14:15
+    sources: [editorial]
+    weight: 0.9
+  # "he who does the will of my Father"; contiguous with the existing
+  # 7:24-27 anchor (collapseAnchorRuns applies). Torrey files it under
+  # SELF-DELUSION — honest cross-link to self-deception.
+  - ref: Matthew 7:21
+    sources: [editorial]
+    weight: 0.85
+  # keeping his commandments = loving him.
+  - ref: John 14:21
+    sources: [editorial]
+    weight: 0.8
+  # "willing and obedient" — Torrey OBEDIENCE TO GOD lists 1:19 and 1:20.
+  # Covenant-Israel frame noted: the eat-the-good-of-the-land clause raises
+  # no watchlist geometry (this concept has zero material-frame vocabulary).
+  - ref: Isaiah 1:19-20
+    sources: [torrey]
+    weight: 0.7
+  # obedience unto righteousness (trimmed from the book's Lordship lead
+  # Rom 6:13-16; 6:13 went to surrender-to-god).
+  - ref: Romans 6:16
+    sources: [editorial]
+    weight: 0.65
+  # asking-and-receiving grounded in keeping his commandments; kept in this
+  # zero-material-vocab concept deliberately.
+  - ref: 1 John 3:22
+    sources: [editorial]
+    weight: 0.6
 openbibleTopics:
   - obedience
 related:

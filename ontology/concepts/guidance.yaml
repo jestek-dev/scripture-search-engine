@@ -30,6 +30,8 @@ lexicon:
   - gods will for my life
   - show me the way to go
   - direct my steps
+  # Round-2 book admission 2026-08-18.
+  - the will of the lord
 anchors:
   # "I will instruct you and teach you in the way which you shall go. I will
   # counsel you with my eye on you" (WEB). God's own first-person promise of
@@ -65,6 +67,13 @@ anchors:
   - ref: Psalms 119:105
     sources: [editorial]
     weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "don't be foolish, but understand what the will of the Lord is"; the
+  # lexicon already carries "gods will for my life".
+  - ref: Ephesians 5:17
+    sources: [editorial]
+    weight: 0.85
 related:
   - trust-in-god
   - wisdom-from-god

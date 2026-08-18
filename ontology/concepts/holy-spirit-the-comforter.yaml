@@ -23,6 +23,9 @@ lexicon:
   - advocate
   - spirit of truth
   - holy spirit
+  # Round-2 book admission 2026-08-18.
+  - filled with the spirit
+  - be filled with the holy spirit
 anchors:
   # Torrey/Miller admission (drafted 2026-08-18) — anchors from the verified
   # outline: HOLY SPIRIT, THE COMFORTER, THE.
@@ -50,6 +53,21 @@ anchors:
   # intercession for us" — the Helper actually helping; not in the Torrey
   # outline, hence editorial (per §7.7).
   - ref: Romans 8:26
+    sources: [editorial]
+    weight: 0.75
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "he will guide you into all truth" — the lexicon already carries
+  # "spirit of truth". Torrey: HOLY SPIRIT, THE TEACHER, THE. The book
+  # files this under Guidance; the paraclete discourse is its honest home —
+  # pairing it with personal decision-guidance queries would
+  # decontextualize the promise.
+  - ref: John 16:13
+    sources: [torrey]
+    weight: 0.85
+  # "be filled with the Spirit"; Torrey files 5:18 under INDWELLING OF THE
+  # HOLY SPIRIT, THE — editorial for this pack's Comforter sense.
+  - ref: Ephesians 5:18
     sources: [editorial]
     weight: 0.75
 openbibleTopics:

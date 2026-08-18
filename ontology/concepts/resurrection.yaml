@@ -13,6 +13,10 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - resurrection
+  # Round-2 book admission 2026-08-18.
+  - resurrection power
+  - raised with christ
+  - newness of life
 anchors:
   - ref: Luke 24:5-6
     sources: [editorial]
@@ -32,5 +36,19 @@ anchors:
   - ref: Romans 1:4
     sources: [torrey]
     weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "he who raised up Christ Jesus from the dead will also give life to
+  # your mortal bodies" — the believer-facing resurrection-life verse,
+  # distinct from the he-is-risen event anchors above. Torrey:
+  # RESURRECTION OF CHRIST, THE / POWER OF THE HOLY SPIRIT.
+  - ref: Romans 8:11
+    sources: [torrey]
+    weight: 0.85
+  # "we will also be part of his resurrection" — united with him. Torrey:
+  # RESURRECTION OF CHRIST, THE ("Saints Shall rise in the likeness of").
+  - ref: Romans 6:5
+    sources: [torrey]
+    weight: 0.8
 related:
   - the-cross

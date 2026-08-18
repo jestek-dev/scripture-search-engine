@@ -32,7 +32,8 @@
     "requiredReasonFamily is concept_anchor on purpose: 1 Pet 5:7 could reach",
     "the top lexically ('worries' is in its WEB text), but the assertion is",
     "that a CURATED anchor put Phil 4:6-7 there and can say who says so.",
-    "Window note (2026-08-18 gauntlet iteration): for 'stress'/'worried' 1 Pet 5:7 has no lexical rung and enters purely on its post-dedup torrey weight (0.75), landing 6th behind the peace pack's stronger anchors — honest ordering. Top-10 presence is asserted; for 'worry' it ranks higher lexically ('casting all your worries')."
+    "Window note (2026-08-18 gauntlet iteration): for 'stress'/'worried' 1 Pet 5:7 has no lexical rung and enters purely on its post-dedup torrey weight (0.75), landing 6th behind the peace pack's stronger anchors — honest ordering. Top-10 presence is asserted; for 'worry' it ranks higher lexically ('casting all your worries').",
+    "Round-2 book admission 2026-08-18: peace-of-god gained Col 3:15, Ps 37:7/37:1 (do not fret), and Phil 4:8-9 (see whatever-is-true.json)."
   ],
   "expectedTop": [
     {
@@ -49,6 +50,8 @@
   "expectedWithinTop": 10,
   "alsoAcceptable": [
     "Matthew 6:25-27",
-    "John 16:33"
+    "John 16:33",
+    "Colossians 3:15",
+    "Psalms 37:7"
   ]
 }

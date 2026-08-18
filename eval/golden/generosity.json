@@ -24,7 +24,8 @@
     "",
     "No prosperity-* query shares a token with the generosity lexicon, so",
     "the pack cannot move those ten fixtures; this was checked",
-    "query-by-query at design time."
+    "query-by-query at design time.",
+    "Round-2 book admission 2026-08-18: generosity gained Matt 5:42 and Ps 37:21; vocabulary stays material-frame-free and the Luke 6:38 geometry is untouched."
   ],
   "expectedTop": [
     {
@@ -46,5 +47,9 @@
   ],
   "coversConcepts": [
     "generosity"
+  ],
+  "alsoAcceptable": [
+    "Matthew 5:42",
+    "Psalms 37:21"
   ]
 }
