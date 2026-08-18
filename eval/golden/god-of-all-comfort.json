@@ -1,7 +1,7 @@
 {
   "id": "god-of-all-comfort",
   "query": "comfort",
-  "status": "pending",
+  "status": "active",
   "note": [
     "COMFORT PAIR fixture (§7.7 PR 3), pending per the fixtures-first rule:",
     "the 2026-08-13 audit found 'comfort' reaches no concept at all. Flip to",
@@ -33,5 +33,8 @@
     "Isaiah 40:1",
     "Psalms 23:4",
     "Isaiah 61:1-2"
+  ],
+  "coversConcepts": [
+    "god-of-all-comfort"
   ]
 }

@@ -1,7 +1,7 @@
 {
   "id": "new-creation",
   "query": "new creation",
-  "status": "pending",
+  "status": "active",
   "note": [
     "SENSE-INVERSION REPAIR (§7.7 PR 4 + audit follow-up). The 2026-08-13",
     "audit found 'new beginnings' answered by Ecclesiastes 1:9 — 'there is",
@@ -47,5 +47,8 @@
     "Galatians 6:15",
     "Revelation 21:5",
     "Acts 3:19"
+  ],
+  "coversConcepts": [
+    "new-creation"
   ]
 }

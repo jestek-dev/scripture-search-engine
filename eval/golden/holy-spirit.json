@@ -1,7 +1,7 @@
 {
   "id": "holy-spirit",
   "query": "holy spirit",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Bare-phrase coverage for the audit gap 'holy spirit', which currently",
     "reaches no concept. Per §7.7 the phrase 'holy spirit' belongs to the",
@@ -38,5 +38,8 @@
     "John 16:7",
     "Galatians 5:22",
     "Romans 8:26"
+  ],
+  "coversConcepts": [
+    "holy-spirit-the-comforter"
   ]
 }

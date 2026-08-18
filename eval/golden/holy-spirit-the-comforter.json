@@ -1,7 +1,7 @@
 {
   "id": "holy-spirit-the-comforter",
   "query": "comforter",
-  "status": "pending",
+  "status": "active",
   "note": [
     "COMFORT PAIR fixture (§7.7 PR 3) — the audit's flagship sense",
     "inversion: 'comforter' answered FIRST by Job 16:2, 'you are all",
@@ -54,5 +54,8 @@
     "John 15:26",
     "John 16:7",
     "Romans 8:26"
+  ],
+  "coversConcepts": [
+    "holy-spirit-the-comforter"
   ]
 }

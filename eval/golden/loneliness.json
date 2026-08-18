@@ -1,7 +1,7 @@
 {
   "id": "loneliness",
   "query": "loneliness",
-  "status": "pending",
+  "status": "active",
   "note": [
     "New pastoral-register coverage: the books assessment lists 'loneliness",
     "/ feeling alone' among the ~45 real-world queries the suite has no",
@@ -38,5 +38,8 @@
     "Matthew 28:20",
     "Hebrews 13:5",
     "John 14:18"
+  ],
+  "coversConcepts": [
+    "loneliness"
   ]
 }
