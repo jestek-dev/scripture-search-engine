@@ -20,6 +20,8 @@ lexicon:
   - power made perfect in weakness
   - strength when I am weak
   - too weak to keep going
+  # Round-2 book admission 2026-08-18.
+  - as your days so your strength will be
 anchors:
   - ref: 2 Corinthians 12:9-10
     sources: [editorial]
@@ -30,3 +32,11 @@ anchors:
   - ref: Psalms 73:26
     sources: [editorial]
     weight: 0.8
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "As your days, so your strength will be" — Moses' blessing on Asher;
+  # the tribal-blessing frame stays visible in this comment and the chip's
+  # passage.
+  - ref: Deuteronomy 33:25
+    sources: [editorial]
+    weight: 0.6

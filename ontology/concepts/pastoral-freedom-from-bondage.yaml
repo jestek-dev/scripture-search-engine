@@ -36,6 +36,10 @@ lexicon:
   - cant stop drinking
   - cant stop using
   - struggling to stay sober
+  # Round-2 book admission 2026-08-18.
+  - freedom in christ
+  - called to freedom
+  - watch and pray
 anchors:
   - ref: 1 Corinthians 6:12
     sources: [editorial]
@@ -61,6 +65,28 @@ anchors:
   - ref: Romans 7:24-25
     sources: [editorial]
     weight: 0.6
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "the law of the Spirit of life in Christ Jesus made me free." Torrey:
+  # LIBERTY, CHRISTIAN.
+  - ref: Romans 8:2
+    sources: [torrey]
+    weight: 0.9
+  # "called for freedom. Only don't use your freedom as an opportunity for
+  # the flesh." Torrey: LIBERTY, CHRISTIAN.
+  - ref: Galatians 5:13
+    sources: [torrey]
+    weight: 0.85
+  # "Watch and pray, that you don't enter into temptation." Torrey:
+  # TEMPTATION / WATCHFULNESS.
+  - ref: Matthew 26:41
+    sources: [torrey]
+    weight: 0.8
+  # discharged from the law, serving in newness of the spirit. Torrey:
+  # LIBERTY, CHRISTIAN.
+  - ref: Romans 7:6
+    sources: [torrey]
+    weight: 0.7
 related:
   - sexual-purity
   - relapse-and-restoration

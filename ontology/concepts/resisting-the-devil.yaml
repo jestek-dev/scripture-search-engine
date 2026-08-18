@@ -1,0 +1,31 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topics "Satan", "Power over Satan", "Occult",
+# "Temptation" (James 4:7 appears under all four). The book's 1 John 4:4
+# went to victory-in-christ (its "overcome" family); the Isaiah 14 /
+# Ezekiel 28 leads are corpus-blocked (backlog.md).
+#
+# The engine locates the passages that name the adversary and the command to
+# resist; it renders no verdict on any deliverance practice (CLAUDE.md #6).
+id: resisting-the-devil
+label: Resisting the devil
+lexicon:
+  - resist the devil
+  - satan
+  - the devil
+  - spiritual warfare
+  - power over satan
+anchors:
+  # "Be subject therefore to God. Resist the devil, and he will flee from
+  # you." — verbatim in Torrey's DEVIL, THE.
+  - ref: James 4:7
+    sources: [torrey]
+    weight: 1.0
+  # "Your adversary, the devil, walks around like a roaring lion...
+  # Withstand him steadfast in your faith"
+  - ref: 1 Peter 5:8-9
+    sources: [torrey]
+    weight: 0.95
+related:
+  - remembered-full-armor-of-god
+  - victory-in-christ
+  - freedom-from-bondage

@@ -11,7 +11,8 @@
     "drift into the right answer on a corpus change and the fixture would",
     "report success for a reason that is not the one we built. The assertion",
     "is that a CURATED anchor put it there and can say who says so.",
-    "2026-08-18 books-harvest curation (2026-08-14 plan, lexicon-concepts PR 2 item 4): the bare words 'temptation'/'tempted' are asserted alongside the phrase query. Before the matching lexicon entries landed, neither reached 1 Corinthians 10:13 — the failing pre-patch run is the gap evidence."
+    "2026-08-18 books-harvest curation (2026-08-14 plan, lexicon-concepts PR 2 item 4): the bare words 'temptation'/'tempted' are asserted alongside the phrase query. Before the matching lexicon entries landed, neither reached 1 Corinthians 10:13 — the failing pre-patch run is the gap evidence.",
+    "Round-2 book admission 2026-08-18: freedom-from-bondage gained Matt 26:41 (watch and pray); its 'temptation' query is where the anchor should surface."
   ],
   "expectedTop": [
     {
@@ -24,5 +25,8 @@
   "additionalQueries": [
     "temptation",
     "tempted"
+  ],
+  "alsoAcceptable": [
+    "Matthew 26:41"
   ]
 }

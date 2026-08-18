@@ -9,7 +9,8 @@
     "the right passage for the wrong reason is still a failure.",
     "More than conquerors through him who loved us (Romans 8:37).",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "2026-08-08 single-token audit: the bare query \"victory\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
+    "2026-08-08 single-token audit: the bare query \"victory\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
+    "Round-2 book admission 2026-08-18: victory-in-christ gained 1 Jn 4:4 (greater is he), Rev 21:7, Rev 3:5; strong-in-the-lord.json asserts the extension."
   ],
   "expectedTop": [
     {
@@ -22,7 +23,8 @@
   "alsoAcceptable": [
     "1 Corinthians 15:57",
     "1 John 5:4",
-    "Exodus 14:13-14"
+    "Exodus 14:13-14",
+    "1 John 4:4"
   ],
   "additionalQueries": [
     "victory"

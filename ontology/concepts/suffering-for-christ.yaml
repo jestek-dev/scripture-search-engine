@@ -1,0 +1,78 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead sources: Phillips
+# "A Topical Bible Guide", topics "Suffering", "Persecution", "Sorrow"
+# (1 Pet 1:6-7), and "Will of God" (1 Pet 3:17, rehomed — its own words are
+# suffering for doing right). One pack, not two: the book's Suffering and
+# Persecution lists interleave the same 1 Peter texts, and G4 would rightly
+# call two packs here near-duplicates.
+#
+# Distinct from serious-illness-and-dying (illness/dying pastoral register)
+# and god-sees-my-suffering (the God-who-sees comfort register): this pack is
+# suffering AS A CHRISTIAN — fiery trial, unjust suffering, sharing Christ's
+# sufferings. Rejected lead: Heb 11:25 (a mid-sentence clause about Moses'
+# choice; see rejects.md).
+id: suffering-for-christ
+label: Suffering with Christ
+lexicon:
+  - suffering
+  - why do christians suffer
+  - suffering for christ
+  - fiery trial
+  - persecution
+  - persecuted
+  - suffering unjustly
+anchors:
+  # "don't be astonished at the fiery trial... you are partakers of Christ's
+  # sufferings... if one of you suffers for being a Christian, let him not
+  # be ashamed" — book leads 1 Pet 4:12-13,16 anchored as the contiguous
+  # unit (v14-15 sit inside the same charge).
+  - ref: 1 Peter 4:12-16
+    sources: [editorial]
+    weight: 1.0
+  # "Blessed are those who have been persecuted for righteousness' sake"
+  - ref: Matthew 5:10
+    sources: [torrey]
+    weight: 0.95
+  # "after you have suffered a little while, perfect, establish, strengthen"
+  - ref: 1 Peter 5:10
+    sources: [torrey]
+    weight: 0.9
+  # "heirs of God... if indeed we suffer with him, that we may also be
+  # glorified with him"
+  - ref: Romans 8:17
+    sources: [editorial]
+    weight: 0.85
+  # "it has been granted to you... not only to believe in him, but also to
+  # suffer on his behalf"
+  - ref: Philippians 1:29
+    sources: [editorial]
+    weight: 0.85
+  # "you have been grieved in various trials, that the proof of your faith
+  # ... tested by fire" — also the book's Sorrow/Faith lead for 1 Pet 1:7.
+  - ref: 1 Peter 1:6-7
+    sources: [torrey]
+    weight: 0.8
+  # "as the sufferings of Christ abound to us, even so our comfort also
+  # abounds through Christ"
+  - ref: 2 Corinthians 1:5
+    sources: [torrey]
+    weight: 0.8
+  # "if when you do well, you patiently endure suffering, this is
+  # commendable with God" — book leads 1 Pet 2:19 + 2:20 merged.
+  - ref: 1 Peter 2:19-20
+    sources: [editorial]
+    weight: 0.8
+  # "it is better, if it is God's will, that you suffer for doing what is
+  # right than for doing evil"
+  - ref: 1 Peter 3:17
+    sources: [editorial]
+    weight: 0.75
+  # "If we endure, we will also reign with him" — the verse's second half
+  # ("if we deny him...") is quoted in the chip's passage; the endurance
+  # promise is the pairing, and the warning is not hidden.
+  - ref: 2 Timothy 2:12
+    sources: [torrey]
+    weight: 0.7
+related:
+  - god-sees-my-suffering
+  - remembered-joy-in-trials
+  - do-not-lose-heart

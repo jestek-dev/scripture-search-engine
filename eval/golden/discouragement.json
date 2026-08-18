@@ -17,7 +17,8 @@
     "here. This fixture covers the milder discouragement vocabulary, whose",
     "right lead answer is Gal 6:9's keep-going word (a verse that would be",
     "wrong served to a suicidal search, which is why the concepts are",
-    "separate)."
+    "separate).",
+    "Round-2 book admission 2026-08-18: do-not-lose-heart gained the pressed-on-every-side and hold-fast-your-boldness anchors."
   ],
   "expectedTop": [
     {
@@ -32,7 +33,9 @@
     "Psalms 42:5",
     "2 Corinthians 4:16-18",
     "Isaiah 41:10",
-    "Joshua 1:9"
+    "Joshua 1:9",
+    "2 Corinthians 4:8-10",
+    "Hebrews 10:35"
   ],
   "coversConcepts": [
     "do-not-lose-heart"

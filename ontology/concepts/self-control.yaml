@@ -1,0 +1,31 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topic "Self-Control". 2 Tim 1:7 is deliberately
+# dual-homed (fear-not names the spirit-of-fear half; this pack names the
+# self-control half — both are the verse's own words). No bare "discipline"
+# token: that word must stay free for the-lords-discipline sense.
+# Corpus-blocked leads 1 Cor 9:24-25, Prov 4:23-26, 1 Cor 16:13: backlog.md.
+id: self-control
+label: Self-control
+lexicon:
+  - self control
+  - self discipline
+  - self controlled
+anchors:
+  # "God didn't give us a spirit of fear, but of power, love, and
+  # self-control."
+  - ref: 2 Timothy 1:7
+    sources: [editorial]
+    weight: 0.9
+  # "put on the Lord Jesus Christ, and make no provision for the flesh"
+  - ref: Romans 13:14
+    sources: [editorial]
+    weight: 0.8
+  # the soldier and athlete figures — discipline that refuses entanglement
+  # and competes by the rules. Torrey lists 2:3-5 under SELF-DENIAL.
+  - ref: 2 Timothy 2:3-5
+    sources: [editorial]
+    weight: 0.7
+related:
+  - remembered-fruit-of-the-spirit
+  - freedom-from-bondage
+  - sexual-purity

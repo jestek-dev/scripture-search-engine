@@ -13,6 +13,9 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - victory
+  # Round-2 book admission 2026-08-18.
+  - greater is he who is in you
+  - he who overcomes
 anchors:
   - ref: Romans 8:37
     sources: [editorial]
@@ -34,6 +37,22 @@ anchors:
     weight: 0.7
   - ref: 1 Timothy 6:12
     sources: [torrey]
+    weight: 0.65
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "greater is he who is in you than he who is in the world" — Torrey
+  # WARFARE OF SAINTS ("Saints Encouraged in"). The round's most-requested
+  # lead (five topics across both books); this is its one home.
+  - ref: 1 John 4:4
+    sources: [torrey]
+    weight: 0.9
+  # "He who overcomes, I will give him these things."
+  - ref: Revelation 21:7
+    sources: [editorial]
+    weight: 0.7
+  # "He who overcomes will be arrayed in white garments."
+  - ref: Revelation 3:5
+    sources: [editorial]
     weight: 0.65
 related:
   - refuge-in-trouble

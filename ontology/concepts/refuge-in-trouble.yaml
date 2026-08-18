@@ -60,6 +60,25 @@ anchors:
   - ref: Psalms 46:10
     sources: [editorial]
     weight: 0.85
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # (The protection-PRAYER register — "protect my children", travel — is
+  # the new gods-protection pack; these three stay in this pack's own
+  # distress register, and no protection lexicon is added here.)
+  # "He will cover you with his feathers." Torrey PROTECTION lists 91:3-7.
+  - ref: Psalms 91:4
+    sources: [torrey]
+    weight: 0.85
+  # "You are my hiding place" — the lexicon has carried the phrase since
+  # round 1 with no anchor behind the phrase's own psalm.
+  - ref: Psalms 32:7
+    sources: [editorial]
+    weight: 0.8
+  # "The LORD's angel encamps around those who fear him"; Torrey files it
+  # under ANGELS — editorial here.
+  - ref: Psalms 34:7
+    sources: [editorial]
+    weight: 0.8
 openbibleTopics:
   - refuge
 related:

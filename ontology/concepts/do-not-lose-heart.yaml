@@ -25,6 +25,9 @@ lexicon:
   # hope-in-despair's "want to give up" (the crisis phrasing stays there,
   # and the existing pastoral-despair-give-up fixture keeps owning it).
   - dont give up
+  # Round-2 book admission 2026-08-18.
+  - pressed on every side
+  - dont throw away your confidence
 anchors:
   # "Let's not be weary in doing good, for we will reap in due season if we
   # don't give up" (WEB). The keep-going verse for the discouraged-but-
@@ -56,6 +59,18 @@ anchors:
   - ref: Joshua 1:9
     sources: [editorial]
     weight: 0.75
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "pressed on every side, yet not crushed... struck down, yet not
+  # destroyed" — leads into the existing 4:16-18 anchor. Torrey DESPAIR
+  # lists 4:8; editorial for the range (round-1 gods-provision precedent).
+  - ref: 2 Corinthians 4:8-10
+    sources: [editorial]
+    weight: 0.85
+  # "don't throw away your boldness."
+  - ref: Hebrews 10:35
+    sources: [editorial]
+    weight: 0.8
 related:
   - hope-in-despair
   - strength-in-weakness
