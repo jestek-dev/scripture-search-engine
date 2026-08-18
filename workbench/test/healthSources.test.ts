@@ -97,8 +97,10 @@ describe('health source semantics', () => {
   it('mirrors G3 active fixture coverage, including implicit fixture-id coverage', async () => {
     const { golden, coverage } = await readGoldenAndCoverage();
     expect(golden.filter((fixture) => fixture.status === 'active').length).toBeGreaterThan(0);
-    expect(coverage).toHaveLength(58);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(58);
+    // 78 = 58 founding concepts + the 20 books-harvest curation packs
+    // (2026-08-18). This mirror moves whenever a concept wave is admitted.
+    expect(coverage).toHaveLength(78);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(78);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });
