@@ -86,8 +86,15 @@
   },
   "noise": {
     "$comment": "G8. Measured against the previous artifact. Exceeding any of these fails the build and names the offending probes.",
+    "$comment_minMeanDistinctiveness": [
+      "Deleted 2026-08-17 (eval-toughening PR-B). The key sat here as null and",
+      "no gate ever read it, so it read as protection while providing none -",
+      "worse than a missing threshold, because a reviewer scanning this file",
+      "would count it as coverage. If a mean-distinctiveness floor is ever",
+      "wanted, it returns together with a gate that reads it and a real",
+      "measured baseline, in one reviewed PR."
+    ],
     "maxTop10ChurnRatio": 0.4,
-    "minMeanDistinctiveness": null,
     "$comment_weak": [
       "Weak-reason share is gated as an INCREASE over baseline, not an absolute",
       "ceiling. An absolute cap is meaningless while a query has no authoritative",
