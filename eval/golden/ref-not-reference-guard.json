@@ -1,0 +1,18 @@
+{
+  "id": "ref-not-reference-guard",
+  "status": "active",
+  "note": [
+    "Discovery-intent guards for QR-4's grammar widening: both queries genuinely ARE discovery today (they end in letters, so no reference-locator candidate parses), and this fixture prevents a widened reference grammar from capturing non-reference-shaped text. Active immediately.",
+    "\"plans 29 11\" does NOT belong here — it is invalid-reference today (bare-number over-capture), so it lives in ref-shaped-fallthrough where the behavior flip stays auditable."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "love one another",
+      "expectedKind": "discovery"
+    },
+    {
+      "query": "40 days and 40 nights",
+      "expectedKind": "discovery"
+    }
+  ]
+}

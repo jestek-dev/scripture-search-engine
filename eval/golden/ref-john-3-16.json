@@ -1,0 +1,25 @@
+{
+  "id": "ref-john-3-16",
+  "status": "pending",
+  "note": [
+    "Battery row ref1 (search-quality audit 2026-08-20): \"John 3 16\" — space-separated chapter/verse, the most common phone-typed form — returns INVALID-REFERENCE today. Written fixture-first; the space-separated reference grammar lands in QR-4, whose commit activates this fixture.",
+    "The range entry pins QR-4's space-range + dash handling by exact label, not kind alone; John 3:17 is present in the fixture corpus."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "John 3 16",
+      "expectedKind": "reference",
+      "expectedPassage": "John 3:16"
+    },
+    {
+      "query": "john 3 16",
+      "expectedKind": "reference",
+      "expectedPassage": "John 3:16"
+    },
+    {
+      "query": "John 3 16-17",
+      "expectedKind": "reference",
+      "expectedPassage": "John 3:16-17"
+    }
+  ]
+}
