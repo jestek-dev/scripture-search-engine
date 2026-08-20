@@ -20,7 +20,8 @@ export type GateId =
   | 'G8-noise-probes'
   | 'G9-saturation'
   | 'G10-size'
-  | 'G11-latency';
+  | 'G11-latency'
+  | 'G12-battery';
 
 export type GateStatus =
   /** Ran and passed. */
@@ -44,9 +45,31 @@ export type GateStatus =
  */
 export type GateApplicability = 'required' | 'optional-advisory';
 
-/** The sole opt-in network check is advisory; every other gate is required. */
-export function gateApplicability(gate: GateId): GateApplicability {
-  return gate === 'G1b-reachability' ? 'optional-advisory' : 'required';
+/**
+ * What kind of run a gate result is being produced for. The battery gate is
+ * the reason this exists: it measures the release/candidate artifact, so on
+ * an explicit-target run an unrun battery must REJECT, while on the fixture
+ * corpus it can only be visible advisory evidence.
+ */
+export interface GateRunContext {
+  readonly explicitTarget: boolean;
+}
+
+/**
+ * The conservative default. A caller that loses its context produces an
+ * advisory row — still visible, never wrongly green as a satisfied required
+ * gate — instead of silently upgrading itself to enforcement it cannot back.
+ */
+export const DEFAULT_GATE_RUN_CONTEXT: GateRunContext = { explicitTarget: false };
+
+/** The opt-in network check is always advisory; the battery is required only where it can actually run (an explicit artifact target); every other gate is required. */
+export function gateApplicability(
+  gate: GateId,
+  context: GateRunContext = DEFAULT_GATE_RUN_CONTEXT,
+): GateApplicability {
+  if (gate === 'G1b-reachability') return 'optional-advisory';
+  if (gate === 'G12-battery') return context.explicitTarget ? 'required' : 'optional-advisory';
+  return 'required';
 }
 
 export interface GateFinding {
@@ -81,12 +104,13 @@ export function pass(
   title: string,
   summary: string,
   metrics?: Readonly<Record<string, number>>,
+  context?: GateRunContext,
 ): GateResult {
   return {
     gate,
     title,
     status: 'pass',
-    applicability: gateApplicability(gate),
+    applicability: gateApplicability(gate, context),
     summary,
     ...(metrics ? { metrics } : {}),
   };
@@ -98,24 +122,30 @@ export function fail(
   summary: string,
   findings: readonly GateFinding[],
   metrics?: Readonly<Record<string, number>>,
+  context?: GateRunContext,
 ): GateResult {
   return {
     gate,
     title,
     status: 'fail',
-    applicability: gateApplicability(gate),
+    applicability: gateApplicability(gate, context),
     summary,
     findings,
     ...(metrics ? { metrics } : {}),
   };
 }
 
-export function notApplicable(gate: GateId, title: string, reason: string): GateResult {
+export function notApplicable(
+  gate: GateId,
+  title: string,
+  reason: string,
+  context?: GateRunContext,
+): GateResult {
   return {
     gate,
     title,
     status: 'not-applicable',
-    applicability: gateApplicability(gate),
+    applicability: gateApplicability(gate, context),
     summary: reason,
   };
 }
@@ -136,12 +166,13 @@ export function warn(
   summary: string,
   findings: readonly GateFinding[],
   metrics?: Readonly<Record<string, number>>,
+  context?: GateRunContext,
 ): GateResult {
   return {
     gate,
     title,
     status: 'warn',
-    applicability: gateApplicability(gate),
+    applicability: gateApplicability(gate, context),
     summary,
     findings,
     ...(metrics ? { metrics } : {}),

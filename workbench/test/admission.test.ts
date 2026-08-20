@@ -185,9 +185,10 @@ async function previewInput(root: string, commit: string, sourceText: string, su
 function machineReport(expectation: AdmissionGauntletExpectation, reportPath: string, blocking = false, variant = 'primary'): GauntletMachineReport {
   const startedAt = at(-2 * HOUR_MS);
   const finishedAt = at(-2 * HOUR_MS + 1000);
+  // Explicit-target report: G12's applicability is context-dependent.
   const gates = GAUNTLET_GATE_ROSTER.map((gate, index) => blocking && index === 0
-    ? fail(gate.id, gate.title, 'Deliberate blocking gate.', [{ message: 'Deliberate admission blocker.', subjects: ['candidate'] }])
-    : pass(gate.id, gate.title, `Complete trusted test gate passed (${variant}).`));
+    ? fail(gate.id, gate.title, 'Deliberate blocking gate.', [{ message: 'Deliberate admission blocker.', subjects: ['candidate'] }], undefined, { explicitTarget: true })
+    : pass(gate.id, gate.title, `Complete trusted test gate passed (${variant}).`, undefined, { explicitTarget: true }));
   return buildMachineReport({
     startedAt, finishedAt,
     identity: {
@@ -238,7 +239,7 @@ function releaseMachineReport(preview: AdmissionPreview, rebuilt: RebuildEvidenc
         argv: ['--require-admit', '--json', reportPath, '--release-database', 'workbench/.artifact/content.db'],
       },
     },
-    report: buildReport({ gates: GAUNTLET_GATE_ROSTER.map((gate) => pass(gate.id, gate.title, 'Rebuilt release gate passed.')) }),
+    report: buildReport({ gates: GAUNTLET_GATE_ROSTER.map((gate) => pass(gate.id, gate.title, 'Rebuilt release gate passed.', undefined, { explicitTarget: true })) }),
   });
   return Buffer.from(`${JSON.stringify(report, null, 2)}\n`);
 }

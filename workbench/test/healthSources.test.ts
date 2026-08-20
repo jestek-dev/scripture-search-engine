@@ -40,7 +40,7 @@ afterEach(() => {
 });
 
 const REPORT = {
-  schema: 'scripture-search-engine/gauntlet-report/v1',
+  schema: 'scripture-search-engine/gauntlet-report/v2',
   payload: {
     verdict: 'ADMIT',
     headline: 'Admissible. All applicable gates passed.',

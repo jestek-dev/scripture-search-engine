@@ -577,7 +577,13 @@ function parseGauntletBytes(
   const identity = parsedValue.identity;
   const payload = parsedValue.payload;
   exactKeys(identity, ['gitCommitSha', 'dirtyTreeSha256', 'descriptor', 'engine', 'target', 'budgetsSha256', 'fixtureInputSha256', 'flags'], 'Gauntlet identity');
-  exactKeys(payload, ['verdict', 'headline', 'gates'], 'Gauntlet payload');
+  // `battery` (schema v2) is the G12 evidence section; admission verdicts
+  // read the G12 roster row, so the section itself is optional here.
+  exactKeys(
+    payload,
+    ['verdict', 'headline', 'gates', ...(isRecord(payload) && 'battery' in payload ? ['battery'] : [])],
+    'Gauntlet payload',
+  );
   if (!isRecord(identity.descriptor) || !isRecord(identity.engine) || !isRecord(identity.target)
       || !isRecord(identity.flags) || !Array.isArray(payload.gates)) {
     fail('invalid_gauntlet', 'Gauntlet identity, flags, engine, descriptor, or gates are malformed.');

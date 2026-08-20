@@ -17,6 +17,7 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 
 import { headlineFor, type AdmissionReport, type Verdict } from './report.js';
 import { DOCTRINAL_REVIEWS_PATH, FLAGGED_PAIRINGS_PATH } from './gates/doctrinalGuardrail.js';
+import type { BatteryReportSection } from './gates/rankMetrics.js';
 import {
   gateApplicability,
   type GateApplicability,
@@ -26,7 +27,7 @@ import {
   type GateStatus,
 } from './gates/types.js';
 
-export const GAUNTLET_MACHINE_REPORT_SCHEMA = 'scripture-search-engine/gauntlet-report/v1';
+export const GAUNTLET_MACHINE_REPORT_SCHEMA = 'scripture-search-engine/gauntlet-report/v2';
 export const GAUNTLET_RUNNING_MARKER_SCHEMA = 'scripture-search-engine/gauntlet-running/v1';
 export const GAUNTLET_FINDING_CATEGORY_SCHEMA = 'scripture-search-engine/gauntlet-finding-category/v1';
 export const DEFAULT_MACHINE_REPORT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
@@ -34,6 +35,13 @@ export const DEFAULT_MACHINE_REPORT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 export interface GauntletGateDefinition {
   readonly id: GateId;
   readonly title: string;
+  /**
+   * Applicability in the ENFORCEMENT context — an explicit-target run. G12
+   * is the one context-dependent row: required against a real artifact,
+   * optional-advisory (visible N/A) on fixture-corpus runs. Report
+   * validation computes the per-run expectation via
+   * `gateApplicability(id, { explicitTarget })`.
+   */
   readonly applicability: GateApplicability;
 }
 
@@ -51,6 +59,9 @@ export const GAUNTLET_GATE_ROSTER: readonly GauntletGateDefinition[] = [
   { id: 'G9-saturation', title: 'Saturation', applicability: 'required' },
   { id: 'G10-size', title: 'Size budgets', applicability: 'required' },
   { id: 'G11-latency', title: 'Latency', applicability: 'required' },
+  // Its OWN row, never merged into G3: mergeGateResults would swallow an
+  // unrun battery beside passing sub-results into a green row.
+  { id: 'G12-battery', title: 'Pastoral battery', applicability: 'required' },
 ];
 
 export type MachineGateVerdict =
@@ -175,6 +186,8 @@ export interface GauntletMachineReport {
     readonly verdict: Verdict;
     readonly headline: string;
     readonly gates: readonly MachineGate[];
+    /** Battery evidence — present only on explicit-target (artifact) runs. */
+    readonly battery?: BatteryReportSection;
   };
   /** SHA-256 of canonical JSON for `payload`, not the enclosing report. */
   readonly payloadSha256: string;
@@ -584,6 +597,7 @@ export function dirtyTreeSha256(
  */
 function fixtureInputs(repoRoot: string): string[] {
   const roots = [
+    join(repoRoot, 'eval', 'battery'),
     join(repoRoot, 'eval', 'golden'),
     join(repoRoot, 'eval', 'probes'),
     join(repoRoot, 'eval', 'baselines'),
@@ -760,11 +774,13 @@ export function buildMachineReport(input: {
   readonly finishedAt: string;
   readonly identity: GauntletRunIdentity;
   readonly report: AdmissionReport;
+  readonly battery?: BatteryReportSection;
 }): GauntletMachineReport {
   const payload = {
     verdict: input.report.verdict,
     headline: input.report.headline,
     gates: input.report.gates.map(toMachineGate),
+    ...(input.battery === undefined ? {} : { battery: input.battery }),
   };
   const unsigned: Omit<GauntletMachineReport, 'reportSha256'> = {
     schema: GAUNTLET_MACHINE_REPORT_SCHEMA,
@@ -885,6 +901,41 @@ function validTargetIdentity(value: unknown): value is Record<string, unknown> {
     && database['path'] === `workbench/.state/candidates/${value['cacheKey']}/content.db`;
 }
 
+const BATTERY_RESULT_KINDS = ['discovery', 'reference', 'invalid-reference'] as const;
+
+function validBatterySection(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (!exactKeys(value, [
+    'batteryVersion', 'queriesSha256', 'judgmentsSha256', 'activeQueries', 'judgedRows', 'provisionalRows', 'results',
+  ])) return false;
+  if (value['batteryVersion'] !== 1 || !isDigest(value['queriesSha256']) || !isDigest(value['judgmentsSha256'])) {
+    return false;
+  }
+  for (const field of ['activeQueries', 'judgedRows', 'provisionalRows'] as const) {
+    if (!Number.isSafeInteger(value[field]) || (value[field] as number) < 0) return false;
+  }
+  const results = value['results'];
+  if (!Array.isArray(results)) return false;
+  return results.every((entry) => {
+    if (!isRecord(entry)) return false;
+    const hasPassage = Object.hasOwn(entry, 'passageReference');
+    if (!exactKeys(entry, ['id', 'query', 'kind', 'top', ...(hasPassage ? ['passageReference'] : [])])) return false;
+    if (typeof entry['id'] !== 'string' || typeof entry['query'] !== 'string'
+        || !(BATTERY_RESULT_KINDS as readonly unknown[]).includes(entry['kind'])) return false;
+    if (hasPassage && (entry['kind'] !== 'reference' || typeof entry['passageReference'] !== 'string')) return false;
+    const top = entry['top'];
+    return Array.isArray(top) && top.every((result, index) =>
+      isRecord(result)
+      && exactKeys(result, ['rank', 'targetId', 'reference', 'score', 'families'])
+      && result['rank'] === index + 1
+      && typeof result['targetId'] === 'string'
+      && typeof result['reference'] === 'string'
+      && typeof result['score'] === 'number' && Number.isFinite(result['score'])
+      && Array.isArray(result['families'])
+      && result['families'].every((family) => typeof family === 'string'));
+  });
+}
+
 function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, maxAgeMs: number): FreshnessMismatch[] {
   const mismatches: FreshnessMismatch[] = [];
   addShapeMismatch(mismatches, exactKeys(parsed, ['schema', 'startedAt', 'finishedAt', 'identity', 'payload', 'payloadSha256', 'reportSha256']), 'report keys');
@@ -919,7 +970,10 @@ function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, m
     && typeof flags['updateBaseline'] === 'boolean' && typeof flags['requireAdmit'] === 'boolean'
     && typeof flags['jsonPath'] === 'string' && flags['jsonPath'].length > 0
     && Array.isArray(flags['argv']) && flags['argv'].every((value) => typeof value === 'string'), 'identity.flags');
-  addShapeMismatch(mismatches, exactKeys(payload, ['verdict', 'headline', 'gates']) && typeof payload['headline'] === 'string' && payload['headline'].length > 0 && Array.isArray(payload['gates']) && payload['gates'].length === GAUNTLET_GATE_ROSTER.length, 'payload');
+  const hasBattery = Object.hasOwn(payload, 'battery');
+  addShapeMismatch(mismatches, exactKeys(payload, ['verdict', 'headline', 'gates', ...(hasBattery ? ['battery'] : [])]) && typeof payload['headline'] === 'string' && payload['headline'].length > 0 && Array.isArray(payload['gates']) && payload['gates'].length === GAUNTLET_GATE_ROSTER.length, 'payload');
+  // Battery evidence exists only where the battery can run: explicit targets.
+  addShapeMismatch(mismatches, !hasBattery || (hasTarget && validBatterySection(payload['battery'])), 'payload.battery');
   if (mismatches.length > 0 || !isRecord(engine) || !isRecord(flags) || !Array.isArray(payload['gates'])) return mismatches;
 
   try {
@@ -951,8 +1005,12 @@ function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, m
       'gate', 'code', 'title', 'status', 'applicability', 'verdict', 'summary', 'findings', 'metrics',
       ...(hasPromotionCandidates ? ['promotionCandidates'] : []),
     ]);
+    // G12's applicability depends on the run context this report records:
+    // required against an explicit artifact target, optional-advisory on the
+    // fixture corpus. Every other row is context-independent.
+    const expectedApplicability = gateApplicability(expected.id, { explicitTarget: hasTarget });
     const valid = validKeys &&
-      candidate['gate'] === expected.id && !seen.has(expected.id) && candidate['title'] === expected.title && applicability === expected.applicability && applicability === gateApplicability(expected.id) && typeof status === 'string' && validStatus.includes(status as GateStatus) && candidate['code'] === `sse.gauntlet.v1.${expected.id.toLowerCase()}.${status}` && candidate['verdict'] === expectedMachineVerdict(status as GateStatus, applicability as GateApplicability) && typeof candidate['summary'] === 'string' && candidate['summary'].length > 0 && Array.isArray(findings) && isFiniteMetrics(candidate['metrics']) && validPromotionCandidates && !((status === 'fail' || status === 'warn') && findings.length === 0) && !(status === 'not-applicable' && findings.length > 0);
+      candidate['gate'] === expected.id && !seen.has(expected.id) && candidate['title'] === expected.title && applicability === expectedApplicability && typeof status === 'string' && validStatus.includes(status as GateStatus) && candidate['code'] === `sse.gauntlet.v1.${expected.id.toLowerCase()}.${status}` && candidate['verdict'] === expectedMachineVerdict(status as GateStatus, applicability as GateApplicability) && typeof candidate['summary'] === 'string' && candidate['summary'].length > 0 && Array.isArray(findings) && isFiniteMetrics(candidate['metrics']) && validPromotionCandidates && !((status === 'fail' || status === 'warn') && findings.length === 0) && !(status === 'not-applicable' && findings.length > 0);
     addShapeMismatch(mismatches, valid, `payload.gates[${index}]`);
     seen.add(expected.id);
     if (!Array.isArray(findings)) continue;

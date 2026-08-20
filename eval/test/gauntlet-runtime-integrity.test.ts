@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { buildReport } from '../src/report.js';
-import { notApplicable, pass } from '../src/gates/types.js';
+import { gateApplicability, notApplicable, pass } from '../src/gates/types.js';
 import {
   GAUNTLET_GATE_ROSTER,
   gauntletExitCode,
@@ -153,8 +153,11 @@ describe('gauntlet runtime integrity', () => {
   it('keeps the strict roster order and applicability visible in the report', () => {
     const report = completePassingReport();
 
+    // Fixture-context report: the roster's static column is the
+    // explicit-target applicability, so G12 is compared through the shared
+    // context-aware helper instead.
     expect(report.gates.map((gate) => [gate.gate, gate.applicability])).toEqual(
-      GAUNTLET_GATE_ROSTER.map((gate) => [gate.id, gate.applicability]),
+      GAUNTLET_GATE_ROSTER.map((gate) => [gate.id, gateApplicability(gate.id)]),
     );
   });
 });

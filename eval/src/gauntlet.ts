@@ -67,6 +67,17 @@ import {
 } from './gates/probes.js';
 import { openCorpus } from './nodeSqlitePort.js';
 import {
+  batteryGate,
+  buildBatterySection,
+  runBattery,
+  validateBattery,
+  BATTERY_JUDGMENTS_PATH,
+  BATTERY_QUERIES_PATH,
+  type BatteryQueryOutcome,
+  type BatteryReportSection,
+  type ValidatedBattery,
+} from './gates/rankMetrics.js';
+import {
   orderingSnapshotGate,
   type OrderingSnapshot,
 } from './gates/orderingSnapshot.js';
@@ -568,6 +579,38 @@ function approvalEvidenceSha256(approval: unknown): string | null {
 }
 const DISTILLATE_PATH = join(REPO_ROOT, 'pipeline', 'fixtures', 'passage-terms-subset.json');
 
+interface LoadedBattery {
+  readonly validated: ValidatedBattery;
+  readonly queriesSha256: string;
+  readonly judgmentsSha256: string;
+}
+
+/**
+ * G12 inputs. Missing or unparsable files surface as structural findings on
+ * the gate rather than a loader throw, so the roster row stays honest.
+ */
+function loadBattery(): LoadedBattery {
+  const read = (relativePath: string): { parsed: unknown; sha256: string } => {
+    const path = join(REPO_ROOT, ...relativePath.split('/'));
+    if (!existsSync(path)) return { parsed: undefined, sha256: '' };
+    const bytes = readFileSync(path);
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(bytes.toString('utf8')) as unknown;
+    } catch {
+      parsed = undefined;
+    }
+    return { parsed, sha256: createHash('sha256').update(bytes).digest('hex') };
+  };
+  const queries = read(BATTERY_QUERIES_PATH);
+  const judgments = read(BATTERY_JUDGMENTS_PATH);
+  return {
+    validated: validateBattery(queries.parsed, judgments.parsed),
+    queriesSha256: queries.sha256,
+    judgmentsSha256: judgments.sha256,
+  };
+}
+
 function loadDistillate(): DistillateFile | null {
   return existsSync(DISTILLATE_PATH) ? readJson<DistillateFile>(DISTILLATE_PATH) : null;
 }
@@ -583,10 +626,13 @@ async function runProbeGates(
   budgets: Budgets,
   options: GauntletOptions,
   target: ResolvedGauntletTarget | null,
+  battery: LoadedBattery,
 ): Promise<{
   readonly gates: readonly GateResult[];
   readonly identity: EngineIdentity;
   readonly builtArtifactBytes: number;
+  /** null on fixture-database runs: the battery measures a real artifact. */
+  readonly batteryOutcomes: readonly BatteryQueryOutcome[] | null;
 }> {
   const probeFile = JSON.parse(readFileSync(join(EVAL_ROOT, 'probes', 'probes.json'), 'utf8')) as {
     probes: Probe[];
@@ -703,10 +749,18 @@ async function runProbeGates(
       const corpusFixtures = loadFixtures() as unknown as CorpusFixture[];
       const corpusGolden = await corpusGoldenGate(engine, corpusFixtures);
 
+      // Battery execution is explicit-target only, and only over a battery
+      // that validated structurally — a malformed battery already fails G12
+      // without an engine run.
+      const batteryOutcomes = target !== null && battery.validated.findings.length === 0
+        ? await runBattery(engine, battery.validated)
+        : null;
+
       return {
         gates: [noise, latencyGate(latenciesMs, budgets.latency.p95Ms), corpusGolden, ordering],
         identity: evaluatedIdentity,
         builtArtifactBytes,
+        batteryOutcomes,
       };
     } finally {
       await engine.close();
@@ -738,7 +792,8 @@ async function main(): Promise<void> {
     const flaggedPairingsContents = existsSync(watchlistPath) ? readFileSync(watchlistPath, 'utf8') : null;
 
     const distillate = loadDistillate();
-    const probeRun = await runProbeGates(budgets, options, target);
+    const battery = loadBattery();
+    const probeRun = await runProbeGates(budgets, options, target, battery);
     const probeGates = probeRun.gates;
     const g3 = mergeGateResults('Golden regression', [
       goldenGate(fixtures),
@@ -831,6 +886,14 @@ async function main(): Promise<void> {
       saturationGate(distillate, budgets.saturation),
       sizeGate(budgets, probeRun.builtArtifactBytes),
       probeGates[1]!,
+      // 13th row, its own row by design: merging G12 into G3 would let
+      // mergeGateResults swallow a not-applicable battery beside passing
+      // sub-results into a green row.
+      batteryGate({
+        validated: battery.validated,
+        outcomes: probeRun.batteryOutcomes,
+        context: { explicitTarget: target !== null },
+      }),
     ];
 
     const finishedAt = new Date().toISOString();
@@ -848,9 +911,23 @@ async function main(): Promise<void> {
 
     if (options.jsonPath) {
       const identity = captureRunIdentity(REPO_ROOT, options, probeRun.identity, startIdentity, target?.identity);
+      const batterySection: BatteryReportSection | undefined = probeRun.batteryOutcomes === null
+        ? undefined
+        : buildBatterySection({
+          queriesSha256: battery.queriesSha256,
+          judgmentsSha256: battery.judgmentsSha256,
+          validated: battery.validated,
+          outcomes: probeRun.batteryOutcomes,
+        });
       writeMachineReportAtomically(
         resolveMachineReportPath(REPO_ROOT, options.jsonPath),
-        buildMachineReport({ startedAt, finishedAt, identity, report }),
+        buildMachineReport({
+          startedAt,
+          finishedAt,
+          identity,
+          report,
+          ...(batterySection === undefined ? {} : { battery: batterySection }),
+        }),
       );
     }
 
