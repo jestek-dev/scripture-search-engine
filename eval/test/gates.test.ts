@@ -7,6 +7,7 @@ import {
 } from '../src/gates/collision.js';
 import {
   conceptCoverageGate,
+  corpusGoldenGate,
   runCorpusFixture,
   type CorpusFixture,
 } from '../src/gates/corpusGolden.js';
@@ -306,6 +307,242 @@ describe('G3 fixtures must measure their OWN concept', () => {
     const problems = await runCorpusFixture(engineWith('Theme: Salvation'), fixture);
     expect(problems).toHaveLength(1);
     expect(problems[0]).toContain('measuring a different concept');
+  });
+});
+
+describe('G3 reference-intent fixtures', () => {
+  /**
+   * Minimal engine stub keyed by query. Reference-intent fixtures assert the
+   * research() outcome KIND, so the stub returns whole outcomes, not result
+   * lists.
+   */
+  const engineAnswering = (byQuery: Record<string, unknown>) =>
+    ({
+      research: async (query: string) =>
+        byQuery[query] ?? { kind: 'discovery', query, results: [] },
+    }) as never;
+
+  const psalmEngine = engineAnswering({
+    'psalm 23': { kind: 'reference', passage: { reference: 'Psalms 23' } },
+    'john 3 16': { kind: 'reference', passage: { reference: 'John 3:16' } },
+    'xyzzy 9': { kind: 'invalid-reference', query: 'xyzzy 9' },
+  });
+
+  const referenceFixture = (
+    entries: readonly Record<string, unknown>[],
+    overrides: Record<string, unknown> = {},
+  ): CorpusFixture =>
+    ({
+      id: 'ref-test',
+      status: 'active',
+      referenceExpectations: entries,
+      ...overrides,
+    }) as unknown as CorpusFixture;
+
+  it('passes a reference entry whose exact passage label matches', async () => {
+    const problems = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        { query: 'psalm 23', expectedKind: 'reference', expectedPassage: 'Psalms 23' },
+      ]),
+    );
+    expect(problems).toEqual([]);
+  });
+
+  it('fails a reference entry whose query falls through to discovery', async () => {
+    const problems = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        { query: 'unmapped words', expectedKind: 'reference', expectedPassage: 'Psalms 23' },
+      ]),
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain('expected "unmapped words" to resolve as reference');
+    expect(problems[0]).toContain('discovery');
+  });
+
+  it('fails on a passage-label mismatch even when the kind is right', async () => {
+    const problems = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        { query: 'psalm 23', expectedKind: 'reference', expectedPassage: 'Psalm 23' },
+      ]),
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain('"Psalms 23"');
+    expect(problems[0]).toContain('"Psalm 23"');
+  });
+
+  it('rejects a reference entry missing expectedPassage as malformed', async () => {
+    // A kind-only "reference" assertion is a hollow guard; the schema refuses it.
+    const problems = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([{ query: 'psalm 23', expectedKind: 'reference' }]),
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain('expectedPassage is required');
+  });
+
+  it('asserts each entry independently, so one fixture can pin different passages', async () => {
+    const problems = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        { query: 'psalm 23', expectedKind: 'reference', expectedPassage: 'Psalms 23' },
+        { query: 'john 3 16', expectedKind: 'reference', expectedPassage: 'John 3:17' },
+      ]),
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain('john 3 16');
+  });
+
+  it('passes and fails invalid-reference kind assertions', async () => {
+    const good = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([{ query: 'xyzzy 9', expectedKind: 'invalid-reference' }]),
+    );
+    const bad = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([{ query: 'psalm 23', expectedKind: 'invalid-reference' }]),
+    );
+    expect(good).toEqual([]);
+    expect(bad).toHaveLength(1);
+    expect(bad[0]).toContain('expected "psalm 23" to resolve as invalid-reference');
+  });
+
+  it('passes and fails discovery guard assertions', async () => {
+    const good = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([{ query: 'plans for hope', expectedKind: 'discovery' }]),
+    );
+    const bad = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([{ query: 'john 3 16', expectedKind: 'discovery' }]),
+    );
+    expect(good).toEqual([]);
+    expect(bad).toHaveLength(1);
+  });
+
+  it('fails an expectedSuggestion assertion until the engine grows the field', async () => {
+    // The suggestion field does not exist yet; the assertion must FAIL
+    // against its absence, never pass vacuously, so a pending fixture keeps
+    // specifying the unlanded work honestly.
+    const problems = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        { query: 'xyzzy 9', expectedKind: 'invalid-reference', expectedSuggestion: 'Psalms' },
+      ]),
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain('no suggestion');
+  });
+
+  it('passes an expectedSuggestion assertion once the engine cites the book', async () => {
+    const suggesting = engineAnswering({
+      phillipians: {
+        kind: 'invalid-reference',
+        query: 'phillipians',
+        suggestion: { book: 'Philippians', reference: 'Philippians' },
+      },
+    });
+    const problems = await runCorpusFixture(
+      suggesting,
+      referenceFixture([
+        { query: 'phillipians', expectedKind: 'invalid-reference', expectedSuggestion: 'Philippians' },
+      ]),
+    );
+    expect(problems).toEqual([]);
+  });
+
+  it('rejects expectedPassage and expectedSuggestion outside their kinds', async () => {
+    const wrongPassage = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        { query: 'xyzzy 9', expectedKind: 'invalid-reference', expectedPassage: 'Psalms 23' },
+      ]),
+    );
+    const wrongSuggestion = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        { query: 'plans for hope', expectedKind: 'discovery', expectedSuggestion: 'Psalms' },
+      ]),
+    );
+    expect(wrongPassage).toHaveLength(1);
+    expect(wrongPassage[0]).toContain('only valid with expectedKind "reference"');
+    expect(wrongSuggestion).toHaveLength(1);
+    expect(wrongSuggestion[0]).toContain('only valid with expectedKind "invalid-reference"');
+  });
+
+  it('rejects mixing referenceExpectations with any discovery field', async () => {
+    for (const mixed of [
+      { query: 'psalm 23' },
+      { expectedTop: [{ ref: 'John 3:16' }] },
+      { expectedWithinTop: 3 },
+      { preferredOrder: [{ above: 'John 3:16', below: 'John 3:17' }] },
+      { mustNotRank: [{ ref: 'John 3:16' }] },
+      { additionalQueries: ['also'] },
+      { coversConcepts: ['worship'] },
+    ]) {
+      const problems = await runCorpusFixture(
+        psalmEngine,
+        referenceFixture(
+          [{ query: 'psalm 23', expectedKind: 'reference', expectedPassage: 'Psalms 23' }],
+          mixed,
+        ),
+      );
+      expect(problems.some((message) => message.includes('never both'))).toBe(true);
+    }
+  });
+
+  it('rejects malformed entries: bad kind, empty list, unknown field, duplicate query', async () => {
+    const badKind = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([{ query: 'psalm 23', expectedKind: 'passage' }]),
+    );
+    const empty = await runCorpusFixture(psalmEngine, referenceFixture([]));
+    const unknownField = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        {
+          query: 'psalm 23',
+          expectedKind: 'reference',
+          expectedPassage: 'Psalms 23',
+          within: 1,
+        },
+      ]),
+    );
+    const duplicate = await runCorpusFixture(
+      psalmEngine,
+      referenceFixture([
+        { query: 'psalm 23', expectedKind: 'reference', expectedPassage: 'Psalms 23' },
+        { query: 'psalm 23', expectedKind: 'reference', expectedPassage: 'Psalms 23' },
+      ]),
+    );
+    expect(badKind[0]).toContain('expectedKind must be');
+    expect(empty[0]).toContain('at least one entry');
+    expect(unknownField[0]).toContain('unknown field "within"');
+    expect(duplicate[0]).toContain('duplicates');
+  });
+
+  it('runs active reference fixtures through the gate and fails on a miss', async () => {
+    const result = await corpusGoldenGate(psalmEngine, [
+      referenceFixture([
+        { query: 'psalm 23', expectedKind: 'reference', expectedPassage: 'Psalms 24' },
+      ]),
+    ]);
+    expect(result.status).toBe('fail');
+    expect(result.findings?.[0]?.categoryCode).toBe('G3_REFERENCE_PASSAGE_LABEL');
+    expect(result.metrics?.['activeCorpusFixtures']).toBe(1);
+  });
+
+  it('treats a failing pending reference fixture as a warn, not a silent skip', async () => {
+    const result = await corpusGoldenGate(psalmEngine, [
+      referenceFixture(
+        [{ query: 'xyzzy 9', expectedKind: 'invalid-reference', expectedSuggestion: 'Psalms' }],
+        { id: 'ref-pending', status: 'pending' },
+      ),
+    ]);
+    expect(result.status).toBe('warn');
+    expect(result.summary).toContain('1 of 1 still failing');
   });
 });
 

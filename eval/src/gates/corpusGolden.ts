@@ -35,6 +35,34 @@ export interface PreferredOrder {
   readonly withinTop?: WithinTop;
 }
 
+export const REFERENCE_EXPECTATION_KINDS = ['reference', 'invalid-reference', 'discovery'] as const;
+export type ReferenceExpectationKind = (typeof REFERENCE_EXPECTATION_KINDS)[number];
+
+/**
+ * One reference-intent assertion: this exact query must produce this
+ * `research()` outcome kind. Per-query entries rather than one fixture-level
+ * pair, because a single fixture may cover queries resolving to different
+ * passages (one ordinal fixture pinning both "1st Corinthians 13" and
+ * "2nd Timothy 1:7").
+ */
+export interface ReferenceExpectation {
+  readonly query: string;
+  readonly expectedKind: ReferenceExpectationKind;
+  /**
+   * Required with kind `reference`, forbidden otherwise: the exact
+   * `passage.reference` label. A kind-only "it resolved" assertion is a
+   * hollow guard — every reference pin names the label it must produce.
+   */
+  readonly expectedPassage?: string;
+  /**
+   * Valid only with kind `invalid-reference`: the canonical book name the
+   * result's `suggestion.book` must cite. Until the engine carries a
+   * suggestion field, an entry asserting this fails — keep such fixtures
+   * pending; they are the specification for the unlanded work.
+   */
+  readonly expectedSuggestion?: string;
+}
+
 export interface CorpusFixture {
   readonly id: string;
   readonly status: 'active' | 'pending';
@@ -49,6 +77,12 @@ export interface CorpusFixture {
   readonly additionalQueries?: readonly string[];
   readonly mustNotRank?: readonly { reference?: string; ref?: string; why?: string }[];
   readonly coversConcepts?: readonly string[];
+  /**
+   * Reference-intent form: mutually exclusive with every discovery-measuring
+   * field above. A fixture measures either reference resolution or discovery
+   * ranking, never both, so no combination is ever half-defined.
+   */
+  readonly referenceExpectations?: readonly ReferenceExpectation[];
   /** Informational fields accepted by the existing hand-written fixtures. */
   readonly note?: readonly string[];
   readonly alsoAcceptable?: readonly string[];
@@ -82,6 +116,7 @@ interface NormalizedCorpusFixture {
   readonly additionalQueries: readonly string[];
   readonly mustNotRank: readonly { ref: string; why?: string; range: { start: number; end: number } }[];
   readonly coversConcepts?: readonly string[];
+  readonly referenceExpectations: readonly ReferenceExpectation[];
 }
 
 interface FixtureValidation {
@@ -102,6 +137,23 @@ const FIXTURE_FIELDS = new Set([
   'note',
   'alsoAcceptable',
   'generatedBy',
+  'referenceExpectations',
+]);
+/** The discovery-measuring fields a reference-intent fixture may not carry. */
+const DISCOVERY_ONLY_FIELDS = [
+  'query',
+  'additionalQueries',
+  'expectedTop',
+  'expectedWithinTop',
+  'preferredOrder',
+  'mustNotRank',
+  'coversConcepts',
+] as const;
+const REFERENCE_EXPECTATION_FIELDS = new Set([
+  'query',
+  'expectedKind',
+  'expectedPassage',
+  'expectedSuggestion',
 ]);
 const EXPECTATION_FIELDS = new Set([
   'ref',
@@ -119,6 +171,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isWithinTop(value: unknown): value is WithinTop {
   return typeof value === 'number' && (WITHIN_TOP_VALUES as readonly number[]).includes(value);
+}
+
+function isReferenceExpectationKind(value: unknown): value is ReferenceExpectationKind {
+  return typeof value === 'string' && (REFERENCE_EXPECTATION_KINDS as readonly string[]).includes(value);
 }
 
 function rangesOverlap(
@@ -200,7 +256,8 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
     'expectedWithinTop' in input ||
     'preferredOrder' in input ||
     'mustNotRank' in input ||
-    'additionalQueries' in input;
+    'additionalQueries' in input ||
+    'referenceExpectations' in input;
   if (!isCorpusFixture) return { findings: [] };
 
   const fixtureId = typeof input.id === 'string' && input.id.trim() ? input.id.trim() : '<unknown>';
@@ -388,6 +445,113 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
     }
   }
 
+  const referenceExpectations: ReferenceExpectation[] = [];
+  if (input.referenceExpectations !== undefined) {
+    const mixed = DISCOVERY_ONLY_FIELDS.filter((field) => field in input);
+    if (mixed.length > 0) {
+      findings.push(
+        fixtureFinding(
+          fixtureId,
+          'G3_FIXTURE_MALFORMED',
+          `referenceExpectations cannot be combined with ${mixed.join(', ')} — a fixture ` +
+            'measures reference resolution or discovery ranking, never both',
+          { fields: mixed },
+        ),
+      );
+    }
+    if (!Array.isArray(input.referenceExpectations)) {
+      findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'referenceExpectations must be an array'));
+    } else if (input.referenceExpectations.length === 0) {
+      // An empty list would be an active fixture asserting nothing — the
+      // vacuous pass this schema exists to make impossible.
+      findings.push(
+        fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'referenceExpectations must contain at least one entry'),
+      );
+    } else {
+      const seenQueries = new Set<string>();
+      for (const [index, entry] of input.referenceExpectations.entries()) {
+        const location = `referenceExpectations[${index}]`;
+        if (!isRecord(entry)) {
+          findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must be an object`));
+          continue;
+        }
+        findings.push(...unknownFieldFindings(fixtureId, entry, REFERENCE_EXPECTATION_FIELDS, location));
+        if (typeof entry.query !== 'string' || entry.query.trim().length === 0) {
+          findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.query must be a non-empty string`));
+          continue;
+        }
+        if (!isReferenceExpectationKind(entry.expectedKind)) {
+          findings.push(
+            fixtureFinding(
+              fixtureId,
+              'G3_FIXTURE_MALFORMED',
+              `${location}.expectedKind must be "reference", "invalid-reference", or "discovery"`,
+            ),
+          );
+          continue;
+        }
+        if (entry.expectedKind === 'reference') {
+          if (typeof entry.expectedPassage !== 'string' || entry.expectedPassage.trim().length === 0) {
+            // Kind alone is a hollow guard: "it resolved to SOME passage"
+            // admits every mis-resolution. Each reference pin names its label.
+            findings.push(
+              fixtureFinding(
+                fixtureId,
+                'G3_FIXTURE_MALFORMED',
+                `${location}.expectedPassage is required with expectedKind "reference": ` +
+                  'name the exact passage label the query must resolve to',
+              ),
+            );
+            continue;
+          }
+        } else if (entry.expectedPassage !== undefined) {
+          findings.push(
+            fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.expectedPassage is only valid with expectedKind "reference"`),
+          );
+          continue;
+        }
+        if (entry.expectedKind === 'invalid-reference') {
+          if (entry.expectedSuggestion !== undefined &&
+            (typeof entry.expectedSuggestion !== 'string' || entry.expectedSuggestion.trim().length === 0)) {
+            findings.push(
+              fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.expectedSuggestion must be a non-empty canonical book name`),
+            );
+            continue;
+          }
+        } else if (entry.expectedSuggestion !== undefined) {
+          findings.push(
+            fixtureFinding(
+              fixtureId,
+              'G3_FIXTURE_MALFORMED',
+              `${location}.expectedSuggestion is only valid with expectedKind "invalid-reference"`,
+            ),
+          );
+          continue;
+        }
+        // Deterministic engine, one query, one outcome: a second entry for
+        // the same query is either redundant or contradictory.
+        if (seenQueries.has(entry.query)) {
+          findings.push(
+            fixtureFinding(
+              fixtureId,
+              'G3_FIXTURE_DUPLICATE_EXPECTATION',
+              `${location} duplicates the query "${entry.query}"`,
+              { query: entry.query },
+            ),
+          );
+          continue;
+        }
+        seenQueries.add(entry.query);
+        referenceExpectations.push({
+          query: entry.query,
+          expectedKind: entry.expectedKind,
+          ...(typeof entry.expectedPassage === 'string' ? { expectedPassage: entry.expectedPassage } : {}),
+          ...(typeof entry.expectedSuggestion === 'string' ? { expectedSuggestion: entry.expectedSuggestion } : {}),
+        });
+      }
+    }
+  }
+
   if (findings.length > 0 || fixtureId === '<unknown>' || (input.status !== 'active' && input.status !== 'pending')) {
     return { findings };
   }
@@ -403,6 +567,7 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
       additionalQueries: (input.additionalQueries as readonly string[] | undefined) ?? [],
       mustNotRank,
       ...(Array.isArray(input.coversConcepts) ? { coversConcepts: input.coversConcepts as readonly string[] } : {}),
+      referenceExpectations,
     },
   };
 }
@@ -548,8 +713,12 @@ export async function runCorpusFixture(
 ): Promise<string[]> {
   const validated = normaliseCorpusFixture(fixture);
   if (!validated.fixture) return validated.findings.map((finding) => finding.message);
-  if (!validated.fixture.query) return [];
+  if (!isRunnable(validated.fixture)) return [];
   return (await runNormalisedFixture(engine, validated.fixture)).map((finding) => finding.message);
+}
+
+function isRunnable(fixture: NormalizedCorpusFixture): boolean {
+  return Boolean(fixture.query) || fixture.referenceExpectations.length > 0;
 }
 
 async function runNormalisedFixture(
@@ -557,8 +726,67 @@ async function runNormalisedFixture(
   fixture: NormalizedCorpusFixture,
 ): Promise<GateFinding[]> {
   const findings: GateFinding[] = [];
-  for (const query of [fixture.query!, ...fixture.additionalQueries]) {
-    findings.push(...(await runOneQuery(engine, fixture, query)));
+  // The two fixture forms are structurally exclusive, so exactly one loop runs.
+  for (const expectation of fixture.referenceExpectations) {
+    findings.push(...(await runOneReferenceQuery(engine, fixture.id, expectation)));
+  }
+  if (fixture.query) {
+    for (const query of [fixture.query, ...fixture.additionalQueries]) {
+      findings.push(...(await runOneQuery(engine, fixture, query)));
+    }
+  }
+  return findings;
+}
+
+async function runOneReferenceQuery(
+  engine: ScriptureEngine,
+  fixtureId: string,
+  expectation: ReferenceExpectation,
+): Promise<GateFinding[]> {
+  const { query, expectedKind } = expectation;
+  const result = await engine.research(query);
+  if (result.kind !== expectedKind) {
+    return [
+      fixtureFinding(
+        fixtureId,
+        'G3_REFERENCE_KIND',
+        `expected "${query}" to resolve as ${expectedKind}, but the engine returned ${result.kind}`,
+        { query, expectedKind, actualKind: result.kind },
+      ),
+    ];
+  }
+  const findings: GateFinding[] = [];
+  if (result.kind === 'reference' && expectation.expectedPassage !== undefined &&
+    result.passage.reference !== expectation.expectedPassage) {
+    findings.push(
+      fixtureFinding(
+        fixtureId,
+        'G3_REFERENCE_PASSAGE_LABEL',
+        `"${query}" resolves to "${result.passage.reference}", expected exactly ` +
+          `"${expectation.expectedPassage}". The label is part of the contract: the right ` +
+          'passage under the wrong name is still a failure.',
+        { query, expectedPassage: expectation.expectedPassage, actualPassage: result.passage.reference },
+      ),
+    );
+  }
+  if (result.kind === 'invalid-reference' && expectation.expectedSuggestion !== undefined) {
+    // The suggestion field is unlanded engine work; read it structurally so
+    // the assertion fails honestly against its absence instead of the runner
+    // passing vacuously or refusing the fixture.
+    const suggestion = (result as { readonly suggestion?: { readonly book?: unknown } }).suggestion;
+    const book = typeof suggestion?.book === 'string' ? suggestion.book : undefined;
+    if (book !== expectation.expectedSuggestion) {
+      findings.push(
+        fixtureFinding(
+          fixtureId,
+          'G3_REFERENCE_SUGGESTION',
+          `"${query}" is invalid-reference but ` +
+            (book === undefined ? 'carries no suggestion' : `suggests the book "${book}"`) +
+            `; expected the suggestion book "${expectation.expectedSuggestion}"`,
+          { query, expectedSuggestion: expectation.expectedSuggestion, actualSuggestion: book ?? '' },
+        ),
+      );
+    }
   }
   return findings;
 }
@@ -678,8 +906,8 @@ export async function corpusGoldenGate(
 ): Promise<GateResult> {
   const validated = fixtures.map(normaliseCorpusFixture);
   const runnable = validated.flatMap((result) => result.fixture ? [result.fixture] : []);
-  const active = runnable.filter((fixture) => fixture.status === 'active' && fixture.query);
-  const pending = runnable.filter((fixture) => fixture.status === 'pending' && fixture.query);
+  const active = runnable.filter((fixture) => fixture.status === 'active' && isRunnable(fixture));
+  const pending = runnable.filter((fixture) => fixture.status === 'pending' && isRunnable(fixture));
   const metrics = {
     activeCorpusFixtures: active.length,
     pendingCorpusFixtures: pending.length,
