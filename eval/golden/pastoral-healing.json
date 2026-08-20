@@ -10,7 +10,11 @@
     "have dangerous lexical near-misses in the canon, every one of which is now",
     "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
     "against an absent verse passes vacuously â€” protection that is decoration.",
-    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts.",
+    "2026-08-20 bare-word strengthening (lexicon-concepts PR 2): the pack's own subject noun 'healing' is asserted as an additional query. Measured before the lexicon addition, the bare query fired no concept - every phrase in the pack is multi-token - so the most common way this pack is asked for bypassed Layer A entirely (the 2026-08-20 84-query battery flagged exactly this reachability gap). The failing run is the gap evidence in the PR body; the same PR adds the '- healing' lexicon entry (extending the NEEDS-JESSE 1.6d single-word exception to the pack's own subject noun, called out in the PR body) and the lexicon-inventory row."
+  ],
+  "additionalQueries": [
+    "healing"
   ],
   "expectedTop": [
     {
