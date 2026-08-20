@@ -10,7 +10,8 @@
     "requiredReasonFamily is concept_anchor on purpose. Token overlap could",
     "drift into the right answer on a corpus change and the fixture would",
     "report success for a reason that is not the one we built. The assertion",
-    "is that a CURATED anchor put it there and can say who says so."
+    "is that a CURATED anchor put it there and can say who says so.",
+    "Round-2 book admission 2026-08-18: anchor widened James 1:2 -> 1:2-4 (endurance's perfect work); 'patience'/'perseverance' aliases added and the bare 'patience' query asserted."
   ],
   "expectedTop": [
     {
@@ -19,5 +20,9 @@
       "requiredReasonLabel": "Theme: Joy in trials"
     }
   ],
-  "expectedWithinTop": 5
+  "expectedWithinTop": 5,
+  "alsoAcceptable": [],
+  "additionalQueries": [
+    "patience"
+  ]
 }

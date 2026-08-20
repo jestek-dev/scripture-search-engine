@@ -1,0 +1,29 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topic "Difficulties" — the Heb 12 / Rev 3:19
+# leads name discipline-as-sonship, which no existing concept carried
+# (do-not-lose-heart is perseverance, not chastening). The same topic's
+# Rom 8:28 went to trust-in-god. Corpus-blocked lead Heb 5:8: backlog.md.
+id: the-lords-discipline
+label: The Lord's discipline
+lexicon:
+  - gods discipline
+  - the lord disciplines those he loves
+  - chastening
+  - why is god disciplining me
+anchors:
+  # "It is for discipline that you endure. God deals with you as with
+  # children... All chastening seems for the present to be not joyous but
+  # grievous; yet afterward it yields the peaceful fruit of righteousness."
+  # Book leads 12:7 and 12:11 anchored as the contiguous argument 12:7-11.
+  - ref: Hebrews 12:7-11
+    sources: [editorial]
+    weight: 1.0
+  # "As many as I love, I reprove and chasten. Be zealous therefore, and
+  # repent."
+  - ref: Revelation 3:19
+    sources: [torrey]
+    weight: 0.85
+related:
+  - do-not-lose-heart
+  - repentance
+  - parenting

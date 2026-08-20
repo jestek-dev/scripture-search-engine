@@ -17,6 +17,8 @@ lexicon:
   # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
   # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
   - consider it pure joy
+  # Round-2 book admission 2026-08-18.
+  - joy unspeakable
 anchors:
   - ref: Nehemiah 8:10
     sources: [editorial]
@@ -47,5 +49,13 @@ anchors:
   - ref: James 1:2
     sources: [editorial]
     weight: 0.8
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "you rejoice greatly with joy that is unspeakable and full of glory"
+  # (book lead 1 Pet 1:6-9 trimmed: 1:6-7 is anchored in
+  # suffering-for-christ; v9's salvation clause needs no anchor).
+  - ref: 1 Peter 1:8
+    sources: [editorial]
+    weight: 0.7
 related:
   - praise

@@ -52,6 +52,12 @@ anchors:
   - ref: Hebrews 11:1
     sources: [editorial]
     weight: 0.85
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "the hope which is laid up for you in the heavens." Torrey: HOPE.
+  - ref: Colossians 1:5
+    sources: [torrey]
+    weight: 0.6
 related:
   - gods-faithfulness
   - second-coming

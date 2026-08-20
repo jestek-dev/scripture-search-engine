@@ -1,0 +1,41 @@
+{
+  "id": "god-of-all-comfort",
+  "query": "comfort",
+  "status": "active",
+  "note": [
+    "COMFORT PAIR fixture (§7.7 PR 3), pending per the fixtures-first rule:",
+    "the 2026-08-13 audit found 'comfort' reaches no concept at all. Flip to",
+    "active in the same PR that lands god-of-all-comfort.yaml, after the",
+    "Admission Report names it.",
+    "",
+    "expectedTop is the §7.7 design: 2 Corinthians 1:3-4 leading with the",
+    "concept's own reason chip — the passage that defines the topic. The",
+    "additionalQueries are the phrasings a searcher actually types; all",
+    "asserted references are in the fixture corpus (2 Corinthians 1, Matthew",
+    "5, Isaiah 40/61, Psalms 23 — verified 2026-08-18). 2 Thessalonians",
+    "2:16-17 is an anchor but is NOT asserted here because 2 Thessalonians",
+    "is absent from the fixture corpus; see corpus-needs.md."
+  ],
+  "additionalQueries": [
+    "god of all comfort",
+    "comfort in hard times"
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Corinthians 1:3-4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God of all comfort"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 5:4",
+    "Isaiah 40:1",
+    "Psalms 23:4",
+    "Isaiah 61:1-2",
+    "Romans 15:4"
+  ],
+  "coversConcepts": [
+    "god-of-all-comfort"
+  ]
+}

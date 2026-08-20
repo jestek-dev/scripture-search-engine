@@ -20,7 +20,18 @@ lexicon:
   - fixing our eyes on Jesus
   - fix your eyes on Jesus
   - author and finisher of our faith
+  # Round-2 book admission 2026-08-18.
+  - run the race
+  - run with perseverance the race
+  - cloud of witnesses
 anchors:
   - ref: Hebrews 12:2
     sources: [editorial]
     weight: 1.0
+  # Round-2 book admission 2026-08-18: the SAME sentence as the pack's
+  # Heb 12:2 (narrow-claim design holds — one passage, now whole). Torrey:
+  # PATIENCE ("To be exercised Running the race set before us"), SAINTS,
+  # COMPARED TO ("Runners in a race").
+  - ref: Hebrews 12:1
+    sources: [torrey]
+    weight: 0.9

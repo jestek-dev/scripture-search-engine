@@ -31,7 +31,8 @@
     "detected this itself - it runs pending fixtures precisely so a target that",
     "starts passing cannot go unnoticed.",
     "2026-08-08 single-token audit: the bare query \"obedience\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
-    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts. Observed #1 for both queries is Matthew 7:24-27 (James 1:22 sits at #2 for the phrase query and #5 for \"obedience\"), so the top-1 pin goes to the observed leader. If James 1:22 SHOULD lead, that is a ranking/data change and belongs to ranking-fixes or lexicon-concepts, not here."
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts. Observed #1 for both queries is Matthew 7:24-27 (James 1:22 sits at #2 for the phrase query and #5 for \"obedience\"), so the top-1 pin goes to the observed leader. If James 1:22 SHOULD lead, that is a ranking/data change and belongs to ranking-fixes or lexicon-concepts, not here.",
+    "Round-2 book admission 2026-08-18: obedience-to-the-word gained the keep-my-commandments family (see obedience-keep-my-commandments.json for the asserting fixture)."
   ],
   "expectedTop": [
     {
@@ -69,7 +70,9 @@
   "alsoAcceptable": [
     "Ezekiel 33:31-32",
     "Romans 2:13",
-    "John 13:17"
+    "John 13:17",
+    "John 14:15",
+    "Matthew 7:21"
   ],
   "mustNotRank": [
     {

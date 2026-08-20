@@ -14,6 +14,11 @@ lexicon:
   - gathering with believers
   - where two or three gather
   - devoted to fellowship
+  # Round-2 book admission 2026-08-18.
+  # The WEB text reads "exhort one another", so the common phrasings do
+  # NOT match lexically — the curated rung is what surfaces the verse.
+  - encourage one another
+  - build each other up
 anchors:
   - ref: Hebrews 10:24-25
     sources: [editorial]
@@ -23,6 +28,14 @@ anchors:
     weight: 0.9
   - ref: Acts 2:42
     sources: [editorial]
+    weight: 0.85
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "exhort one another, and build each other up." Torrey: EDIFICATION
+  # ("Mutual, commanded"), COMMUNION OF SAINTS ("In mutual comfort and
+  # edification").
+  - ref: 1 Thessalonians 5:11
+    sources: [torrey]
     weight: 0.85
 related:
   - loving-others

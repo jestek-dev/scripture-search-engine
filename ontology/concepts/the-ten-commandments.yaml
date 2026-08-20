@@ -1,0 +1,20 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topic "Ten Commandments". A lookup concept: the
+# searcher wants the passage itself. Deut 5's parallel is not in the corpus
+# (backlog.md). Single-anchor pack is within schema (precedent: the
+# remembered-* packs); lexicon meets the G4 minimum.
+id: the-ten-commandments
+label: The Ten Commandments
+lexicon:
+  - ten commandments
+  - the ten commandments
+  - decalogue
+  # ("thou shalt not" was drafted and dropped by the integrator: it
+  # normalizes to nothing — all stopwords — so no query could match it.)
+anchors:
+  # The Decalogue itself — verbatim in Torrey's COMMANDMENTS, THE TEN.
+  - ref: Exodus 20:1-17
+    sources: [torrey]
+    weight: 1.0
+related:
+  - obedience-to-the-word

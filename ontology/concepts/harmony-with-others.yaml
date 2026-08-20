@@ -1,0 +1,55 @@
+# ROUND-2 AUTHOR-F (2026-08-18) — new concept.
+# Idea source (PR description only): Scriptural Prayers "Harmony With
+# Others" (Rom 12:18, 2 Tim 2:24), "For My Husband" / "For My Wife" (Rom
+# 14:19); Growing by Heart wk28 "winding paths" (Eph 4:2). Each anchor
+# verified against the WEB text in context.
+#
+# Deliberately DISTINCT from `loving-others` (the love command itself) and
+# `forgiving-others` (repair after offense): this concept is the PEACEABLE
+# RELATIONS register — living at peace, keeping unity, refusing quarrels.
+# Collision check (G4, hand-run): shared content tokens with loving-others
+# = {one, another} (2 of ~13 here, 0.15); with peace-of-god = {peace}
+# (1 of ~13, 0.08); zero shared phrases with either.
+id: harmony-with-others
+label: Peace with others
+lexicon:
+  - live at peace with everyone
+  - peace with all men
+  - harmony with others
+  - getting along with others
+  - bearing with one another
+  - keep the unity of the spirit
+  - avoid quarreling
+anchors:
+  # "If it is possible, as much as it is up to you, be at peace with all
+  # men" (WEB). The command in its own honest limits ("as much as it is up
+  # to you"). Torrey: PEACE ("Saints should > Endeavour to have with all
+  # men"), CONDUCT, CHRISTIAN ("Living peaceably with all").
+  - ref: Romans 12:18
+    sources: [torrey]
+    weight: 1.0
+  # "With all lowliness and humility, with patience, bearing with one
+  # another in love, being eager to keep the unity of the Spirit in the
+  # bond of peace" (WEB). Unity kept, not manufactured. Torrey lists 4:2
+  # under MEEKNESS / LOVE TO MAN ("forbearing"); editorial for the range.
+  - ref: Ephesians 4:2-3
+    sources: [editorial]
+    weight: 0.9
+  # "Let's follow after things which make for peace, and things by which
+  # we may build one another up" (WEB). Torrey: PEACE ("Follow the things
+  # which make for"), EDIFICATION ("Mutual, commanded").
+  - ref: Romans 14:19
+    sources: [torrey]
+    weight: 0.85
+  # "The Lord's servant must not quarrel, but be gentle toward all, able
+  # to teach, patient" (WEB). Addressed to Timothy's ministry, applied by
+  # extension to every servant of the Lord — the anti-quarrel verse the
+  # prayer book names for harmony. Editorial (Torrey files it under
+  # MINISTERS' duties, a narrower sense).
+  - ref: 2 Timothy 2:24
+    sources: [editorial]
+    weight: 0.75
+related:
+  - loving-others
+  - forgiving-others
+  - peace-of-god

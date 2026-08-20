@@ -39,3 +39,10 @@ anchors:
   - ref: Malachi 2:13-16
     sources: [editorial]
     weight: 0.6
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # the Sermon-on-the-Mount divorce saying, beside the existing Matt
+  # 19:3-9 anchor. Torrey: DIVORCE lists 5:31 and 5:32.
+  - ref: Matthew 5:31-32
+    sources: [torrey]
+    weight: 0.85

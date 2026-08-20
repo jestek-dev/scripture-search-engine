@@ -14,6 +14,8 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - prayer
+  # Round-2 book admission 2026-08-18.
+  - ask according to his will
 anchors:
   - ref: Matthew 6:9-13
     sources: [editorial]
@@ -39,6 +41,50 @@ anchors:
   - ref: Jeremiah 33:3
     sources: [torrey]
     weight: 0.65
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # asking "according to his will" — Torrey PRAYER, ANSWERS TO lists 5:14
+  # and 5:15. The qualifier that guards the ask-in-my-name pair below.
+  - ref: 1 John 5:14-15
+    sources: [torrey]
+    weight: 0.85
+  # praying at all times, for all the saints. Torrey: PRAYER / PRAYER,
+  # INTERCESSORY.
+  - ref: Ephesians 6:18
+    sources: [torrey]
+    weight: 0.8
+  # "Listen, LORD, to my prayer" — the book's 86:5,7 lead widened by v6,
+  # the listen-to-my-prayer verse; Torrey corroborates 86:5 and 86:7 under
+  # PRAYER headings; editorial for the range.
+  - ref: Psalms 86:5-7
+    sources: [editorial]
+    weight: 0.8
+  # Paul's model intercession ("that you may know what is the hope of his
+  # calling") — the honest home for the prayer books' pray-for-another
+  # chapters, which quote 1:18 for children, teachers, and the unsaved.
+  - ref: Ephesians 1:17-18
+    sources: [editorial]
+    weight: 0.7
+  # WATCHLISTED VERSE (flagged-pairings.yaml), anchored deliberately in its
+  # honest believing-prayer frame: forbidden as a claim-it guarantee, honest
+  # as believing prayer. This concept's id, label, and lexicon speak no
+  # materialFrameKeyword, so the G4 pairing scan stays at zero flags — the
+  # Phil 4:19-on-gods-provision geometry. The active prosperity-* fixtures
+  # forbid this verse only for material-vocabulary queries, none of which
+  # shares a token with this lexicon. Weight keeps it below the Lord's
+  # Prayer / ask-seek-knock tier.
+  - ref: Mark 11:24
+    sources: [editorial]
+    weight: 0.65
+  # WATCHLISTED VERSE (flagged-pairings.yaml): ask-in-my-name, per Jesse's
+  # 2026-08-15 ruling — rankable on its own words, never the leading answer
+  # to the name-it-claim-it slogan. Torrey PRAYER lists 14:13 and 14:14.
+  # Zero material-frame vocabulary here; the slogan query shares no token
+  # with this lexicon, so prosperity-name-it-claim-it.json stays green —
+  # verified in the Admission Report for this wave.
+  - ref: John 14:13-14
+    sources: [torrey]
+    weight: 0.6
 related:
   - thanksgiving
   - presence-of-god

@@ -1,0 +1,31 @@
+# ROUND-2 AUTHOR-F (2026-08-18) — new concept (remembered-phrasing pack,
+# single-anchor by design, following the remembered-* precedent).
+# Idea source (PR description only): Growing by Heart wk14 "seasons";
+# Scriptural Prayers "Worry" and "Patience" — three independent chapters
+# lean on Rom 8:28, which today is anchored by NO concept and reachable
+# only lexically. Verified against the WEB text in context.
+#
+# SOUNDNESS FRAME: the promise is scoped by its own words — "for those who
+# love God, for those who are called according to his purpose" — and the
+# lexicon phrasings all carry the "work together for good" clause rather
+# than a bare "everything happens for a reason" slogan, which is NOT this
+# verse and is not curated here.
+id: remembered-all-things-for-good
+label: All things for good
+lexicon:
+  - all things work together for good
+  - god works all things for good
+  - works for the good of those who love him
+  - all things god works for the good
+anchors:
+  # "We know that all things work together for good for those who love
+  # God, for those who are called according to his purpose" (WEB).
+  # Torrey: LOVE TO GOD ("They who have > Have all things working for
+  # their good"), ELECTION ("Ensures to saints > Working of all things
+  # for good").
+  - ref: Romans 8:28
+    sources: [torrey]
+    weight: 1.0
+related:
+  - trust-in-god
+  - hope-in-god

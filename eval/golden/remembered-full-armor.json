@@ -13,7 +13,8 @@
     "requiredReasonFamily is concept_anchor on purpose. Token overlap could",
     "drift into the right answer on a corpus change and the fixture would",
     "report success for a reason that is not the one we built. The assertion",
-    "is that a CURATED anchor put it there and can say who says so."
+    "is that a CURATED anchor put it there and can say who says so.",
+    "Round-2 book admission 2026-08-18: the pack now carries the whole armor passage (6:11 summons + 6:13-17 armor) — same passage, narrow claim intact."
   ],
   "expectedTop": [
     {
@@ -22,5 +23,8 @@
       "requiredReasonLabel": "Theme: The full armor of God"
     }
   ],
-  "expectedWithinTop": 5
+  "expectedWithinTop": 5,
+  "alsoAcceptable": [
+    "Ephesians 6:13-17"
+  ]
 }

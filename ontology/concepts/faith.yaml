@@ -1,0 +1,47 @@
+# DRAFT 2026-08-18 (Round-2 book admission — MERGED by the integrator from
+# two independent drafts). Authors D (Phillips "A Topical Bible Guide",
+# topic "Faith") and F (Scriptural Prayers "Faith" chapter) each minted this
+# pack with the same two anchors; one concept, one home. Leads only; every
+# pairing verified in context against the branch web-subset. No general
+# faith concept existed before this: faith-and-works owns the works DEBATE,
+# remembered-faith-as-assurance owns the Heb 11:1 phrasing,
+# remembered-faith-like-a-mustard-seed owns Matt 17:20. Heb 11:1 is
+# deliberately NOT re-anchored here; the cross-link is related:.
+#
+# Both books' Rom 12:3 lead is REJECTED for this concept (its point is sober
+# self-assessment — it anchors humble-exaltation); 1 Pet 1:7 went to
+# suffering-for-christ (tested-by-fire frame). See the round-2 rejects.
+#
+# G8 CAUTION (both authors flagged it): bare "faith" is a high-traffic
+# token. The one-token specificity discount applies; if the report names
+# churn on faith-adjacent probes, narrow this lexicon first.
+id: faith
+label: Faith
+lexicon:
+  # Bare word, deliberate — the query people type; one-token discount.
+  - faith
+  - what is faith
+  - faith comes by hearing
+  - without faith it is impossible to please god
+  - increase my faith
+  - grow in faith
+  - how to have more faith
+anchors:
+  # "Without faith it is impossible to be well pleasing to him, for he who
+  # comes to God must believe that he exists, and that he is a rewarder of
+  # those who seek him" (WEB). The definitional necessity verse.
+  # Torrey: FAITH ("Impossible to please God without").
+  - ref: Hebrews 11:6
+    sources: [torrey]
+    weight: 1.0
+  # "So faith comes by hearing, and hearing by the word of God" (WEB).
+  # Where faith comes from — the means, in Paul's own summary.
+  # Torrey: FAITH ("Preaching designed to produce").
+  - ref: Romans 10:17
+    sources: [torrey]
+    weight: 0.95
+related:
+  - faith-and-works
+  - remembered-faith-as-assurance
+  - remembered-faith-like-a-mustard-seed
+  - trust-in-god

@@ -1,0 +1,60 @@
+{
+  "id": "praying-for-leaders",
+  "query": "pray for our nation",
+  "additionalQueries": [
+    "pray for our leaders",
+    "government"
+  ],
+  "status": "active",
+  "note": [
+    "Round-2 curation (author E, 2026-08-18). Fixtures-first: written with",
+    "the draft `praying-for-leaders` pack — the ONE concept the whole civic",
+    "cluster (National Responsibilities / Our Nation / National Protection /",
+    "The President; rejected frames National Patriotism and Time of War)",
+    "resolves to. Idea sources: Phillips and the White Stone prayer books,",
+    "topic leads only; every asserted reference verified in WEB context.",
+    "",
+    "MEASURED GAP: 'government' appears nowhere in the WEB corpus text, and",
+    "neither praying query shares a content token with the anchors' own",
+    "words, so nothing lexical can serve these queries today.",
+    "requiredReasonFamily is concept_anchor throughout.",
+    "",
+    "SENSE-CARE GUARD, the load-bearing assertion of this fixture:",
+    "2 Chronicles 7:14 ('if my people who are called by my name…') is IN",
+    "the corpus, and both prayer books pair it with 'Our Nation' /",
+    "'National Protection'. That pairing was REJECTED in round-2 curation —",
+    "the verse is God's answer to Solomon at the temple dedication, and",
+    "'my people called by my name' is not a modern nation; serving it as",
+    "the curated answer to a national query would silently encode a",
+    "national-covenant framing (rejects.md has the full account). The",
+    "mustNotRank entry keeps the rejection measured: the verse stays",
+    "rankable everywhere on its own words (humbling, prayer, forgiveness,",
+    "repentance queries), just never inside this query's answer window.",
+    "",
+    "1 Tim 2:1-2, the concept's naming text (Torrey KINGS: 'Prayed for'),",
+    "is corpus-blocked; assert it as expectedTop in the PR that adds the",
+    "chapter (backlog.md)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 29:7",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Praying for leaders and the nation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 13:1-7",
+    "1 Peter 2:13-17",
+    "Psalms 33:12"
+  ],
+  "mustNotRank": [
+    {
+      "reference": "2 Chronicles 7:14",
+      "why": "covenant promise to Israel at the temple dedication; the prayer books' our-nation pairing was rejected in round-2 curation — the verse ranks honestly for humbling/repentance/prayer queries, never as the curated answer to a national query"
+    }
+  ],
+  "coversConcepts": [
+    "praying-for-leaders"
+  ]
+}

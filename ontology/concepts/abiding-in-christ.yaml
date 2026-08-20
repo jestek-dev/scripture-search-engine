@@ -25,6 +25,14 @@ anchors:
   - ref: John 15:7
     sources: [editorial]
     weight: 0.8
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "I chose you and appointed you, that you should go and bear fruit" —
+  # the vine discourse's own fruit-bearing commission. (Torrey files it
+  # under ELECTION / PRAYER senses; editorial for the abiding-fruit sense.)
+  - ref: John 15:16
+    sources: [editorial]
+    weight: 0.8
 related:
   - presence-of-god
   - obedience-to-the-word

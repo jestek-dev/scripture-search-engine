@@ -10,7 +10,8 @@
     "The new commandment (John 13:34-35); love described (1 Corinthians 13).",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
     "2026-08-08 remembered-phrasings: the NIV/ESV wordings above are asserted here. Each was a MEASURED gap â€” it returned the target verse nowhere in the top 10 before this pack.",
-    "The Golden Rule as usually quoted (\"do to others as you would have them do to you\") is entirely stopwords and can never match; \"the golden rule\" is asserted instead. See docs/research/2026-08-08-remembered-phrasings.md."
+    "The Golden Rule as usually quoted (\"do to others as you would have them do to you\") is entirely stopwords and can never match; \"the golden rule\" is asserted instead. See docs/research/2026-08-08-remembered-phrasings.md.",
+    "Round-2 book admission 2026-08-18: loving-others gained the love-command cluster (John 15:12, Gal 5:14, 1 Jn 4:12, 1 Cor 13:13), Luke's golden rule, and the Matt 5:44-45 anchor its lexicon had carried unanchored; love-your-enemies.json and walking-in-love.json assert the extension."
   ],
   "expectedTop": [
     {
@@ -25,7 +26,13 @@
     "Romans 13:8-10",
     "1 John 4:11",
     "1 John 3:18",
-    "1 Peter 4:8"
+    "1 Peter 4:8",
+    "Luke 6:31",
+    "John 15:12",
+    "Galatians 5:14",
+    "1 John 4:12",
+    "1 Corinthians 13:13",
+    "Matthew 5:44-45"
   ],
   "additionalQueries": [
     "the golden rule",

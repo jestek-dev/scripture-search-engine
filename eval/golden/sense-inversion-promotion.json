@@ -1,7 +1,7 @@
 {
   "id": "sense-inversion-promotion",
   "query": "promotion",
-  "status": "pending",
+  "status": "active",
   "note": [
     "SENSE-INVERSION FIXTURE (sense-inversion family) — PENDING on purpose.",
     "The 2026-08-15 doctrinal audit found \"promotion\" answered by exactly one",
@@ -11,27 +11,47 @@
     "RULING (Jesse, 2026-08-15, audit follow-up): KEEP this result — the",
     "query's word is genuinely in the passage, and honest lexical retrieval",
     "is fine. It is demoted, never forbidden: Proverbs 3:35 may appear, just",
-    "at low priority, never leading. The assertion encodes exactly that:",
-    "expectedWithinTop is 1, so the mustNotRank forbids only the LEADING",
-    "position. The verse remains free to rank anywhere below #1, and ranks",
-    "honestly for wisdom, folly, and shame queries and for the exact-phrase",
-    "search of its own words. The verse is verified IN the fixture corpus, so",
-    "the assertion cannot pass vacuously by absence.",
+    "at low priority, never leading.",
     "",
-    "Pending because the pairing is live at HEAD (Proverbs 3:35 is the sole",
-    "result, so it leads at #1): fixtures-first, exactly like",
-    "prosperity-contentment.json. The honest fix is not suppression — it is",
-    "teaching the engine what a promotion-seeker should find (e.g. Psalm",
-    "75:6-7, exaltation comes from God, once that passage's chapter joins the",
-    "corpus; or a future contentment/work concept). Any such result ranking",
-    "above Proverbs 3:35 satisfies this fixture; when that lands, the",
-    "Admission Report names this fixture for promotion to active."
+    "REVISED 2026-08-18 (books-harvest curation): the earlier note asked for",
+    "'teaching the engine what a promotion-seeker should find' — the",
+    "humble-exaltation pack is that teaching, and the assertion is added:",
+    "1 Peter 5:6 ('humble yourselves … that he may exalt you in due time')",
+    "within the top 3 with concept_anchor evidence. ENCODING CHANGE, stated:",
+    "the original pending fixture encoded 'never leading' as expectedWithinTop",
+    "1 + mustNotRank, which forbids exactly rank #1. Adding an expectedTop",
+    "with withinTop 3 widens the fixture's measured window, so a mustNotRank",
+    "would now forbid ranks 1-3 — STRICTER than Jesse's ruling. The demotion",
+    "is therefore re-encoded as preferredOrder (1 Peter 5:6 above Proverbs",
+    "3:35, within the top 10): the verse stays rankable anywhere below the",
+    "concept answer and can never lead while the concept answer is present —",
+    "the same demote-don't-forbid shape as sense-inversion-provision.",
+    "Psalm 75:6-7, the honest home for the KJV's 'promotion cometh', is",
+    "anchored in the pack but Psalm 75 is not in the fixture corpus (corpus",
+    "extension is blocked on the WEB source re-pin); assert it in the PR",
+    "that adds the chapter. 'promotion' is a materialFrameKeyword, so the",
+    "pack is in scope for the G4 pairing scan by design; it anchors no",
+    "watchlisted reference, so the scan stays at zero flags. When this",
+    "fixture starts passing, the Admission Report names it for promotion to",
+    "active."
   ],
-  "expectedWithinTop": 1,
-  "mustNotRank": [
+  "expectedTop": [
     {
-      "reference": "Proverbs 3:35",
-      "why": "'Shame will be the promotion of fools' — the query word appears only in an ironic frame, and as the LEADING answer it reads as the canon's word to a promotion-seeker. Per Jesse's 2026-08-15 ruling the verse is kept, demoted: it may rank anywhere below #1, and it ranks honestly for folly and shame queries and for the exact-phrase search of its own words."
+      "reference": "1 Peter 5:6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God exalts the humble",
+      "withinTop": 3
     }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "1 Peter 5:6",
+      "below": "Proverbs 3:35",
+      "withinTop": 10
+    }
+  ],
+  "coversConcepts": [
+    "humble-exaltation"
   ]
 }

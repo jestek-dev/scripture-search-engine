@@ -1,0 +1,41 @@
+{
+  "id": "resurrection-power",
+  "query": "resurrection power",
+  "additionalQueries": [
+    "raised with christ"
+  ],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Exercises the resurrection EXTENSION",
+    "(new anchors Rom 8:11 and Rom 6:5, new lexicon entries 'resurrection",
+    "power' / 'raised with christ' / 'newness of life') — see patches.md.",
+    "Pending until the extension lands, then flip active in the same PR.",
+    "Idea source: Scriptural Prayers 'Resurrection Power' and 'Help From the",
+    "Holy Spirit' (idea only, no verse list copied; provenance is the",
+    "verified Torrey RESURRECTION OF CHRIST outline — 'Saints shall rise in",
+    "the likeness of' / POWER OF THE HOLY SPIRIT 'Giving spiritual life').",
+    "",
+    "Philippians 3:10 ('the power of his resurrection' — the phrase's own",
+    "verse) is NOT in the fixture corpus (backlog.md); assert it as the",
+    "expected top in the PR that adds Philippians 3. Until then Rom 8:11 is",
+    "the honest expected answer: the believer-facing resurrection-life",
+    "verse, distinct from the he-is-risen event anchors the concept already",
+    "carries."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 8:11",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: He is risen"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 6:5",
+    "1 Corinthians 15:20"
+  ],
+  "coversConcepts": [
+    "resurrection"
+  ]
+}

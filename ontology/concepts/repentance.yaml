@@ -35,6 +35,13 @@ anchors:
   - ref: Ezekiel 18:30-32
     sources: [torrey]
     weight: 0.65
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "Repent and be baptized... and you will receive the gift of the Holy
+  # Spirit" — beside the existing Acts 3:19 anchor. Torrey: REPENTANCE.
+  - ref: Acts 2:38
+    sources: [torrey]
+    weight: 0.85
 related:
   - forgiveness-of-sins
   - salvation

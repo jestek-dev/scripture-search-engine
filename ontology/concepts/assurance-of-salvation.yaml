@@ -1,0 +1,81 @@
+# INNER-LIFE PACK (cluster B draft, 2026-08-18).
+#
+# "am I really saved?" — an anxious-searcher query named by Phillips'
+# "Assurance of Salvation" topic (his lead passages are John 10:27-30 and
+# Rom 8:37-39, independently confirming the anchor choice below).
+#
+# SENSE DISCIPLINE: `remembered-faith-as-assurance` is Heb 11:1 — faith
+# DEFINED as assurance of things hoped for. A different sense. The lexicons
+# are kept token-disjoint (shared token: only `assurance`; ratio well under
+# the G4 budget) and Heb 11:1 is deliberately not anchored here.
+#
+# DOCTRINAL NEUTRALITY: DOCTRINAL-BASIS.md §4 rules perseverance debates
+# (Calvinism vs. Arminianism) a non-criterion. The phrasing here is therefore
+# assurance language, never "eternal security" party vocabulary, and the
+# anchors are the passages that NAME assurance — the engine states, it never
+# adjudicates. Torrey's ASSURANCE outline is the provenance where the exact
+# ref appears.
+id: assurance-of-salvation
+label: Assurance of salvation
+lexicon:
+  - assurance of salvation
+  - am i really saved
+  - know i am saved
+  - know that you have eternal life
+  - never snatch them out of my hand
+  # Round-2 book admission 2026-08-18.
+  - the lord knows those who are his
+anchors:
+  # "These things I have written to you who believe… that you may KNOW that
+  # you have eternal life" (WEB). The letter's own stated purpose is
+  # assurance — the defining anchor.
+  - ref: 1 John 5:11-13
+    sources: [editorial]
+    weight: 1.0
+  # "I give them eternal life… no one will snatch them out of my hand" (WEB
+  # wording from knowledge — NOT in web-subset; corpus-needs.md). Jesus' own
+  # words about the security of his sheep.
+  - ref: John 10:28-29
+    sources: [editorial]
+    weight: 0.9
+  # "…nor any other created thing will be able to separate us from God's love
+  # which is in Christ Jesus" (WEB). Assurance grounded in God's hold, not
+  # the believer's grip.
+  - ref: Romans 8:38-39
+    sources: [editorial]
+    weight: 0.85
+  # Torrey/Miller admission 2026-08-18 (draft) — supporting anchors from the
+  # verified outline(s): ASSURANCE.
+  # "He who began a good work in you will complete it" (WEB).
+  - ref: Philippians 1:6
+    sources: [torrey]
+    weight: 0.8
+  # "The Spirit himself testifies with our spirit that we are children of
+  # God" (WEB) — the inward witness, ASSURANCE outline: "Their adoption."
+  - ref: Romans 8:16
+    sources: [torrey]
+    weight: 0.75
+  # "Behold, God is my salvation. I will trust, and will not be afraid" (WEB
+  # wording from knowledge — NOT in web-subset; corpus-needs.md). ASSURANCE
+  # outline: "Their salvation."
+  - ref: Isaiah 12:2
+    sources: [torrey]
+    weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "God's firm foundation stands... 'The Lord knows those who are his'" —
+  # and the seal's second line with it: "Let everyone who names the name of
+  # the Lord depart from unrighteousness" — quoted here so the chip never
+  # hides the verse's charge.
+  - ref: 2 Timothy 2:19
+    sources: [editorial]
+    weight: 0.7
+  # "If anyone sins, we have a Counselor with the Father" — the advocate
+  # clause that keeps assurance honest after failure. (Torrey: PRIVILEGES
+  # OF SAINTS "Christ for their intercessor" — adjacent; editorial.)
+  - ref: 1 John 2:1
+    sources: [editorial]
+    weight: 0.75
+related:
+  - salvation
+  - gods-love

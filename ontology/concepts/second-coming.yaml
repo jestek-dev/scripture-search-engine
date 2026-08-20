@@ -35,5 +35,14 @@ anchors:
   - ref: Matthew 24:42-44
     sources: [torrey]
     weight: 0.65
+  # "when he is revealed, we will be like him … everyone who has this hope
+  # set on him purifies himself." Torrey-verified (SECOND COMING OF CHRIST,
+  # THE lists 3:2 twice); v3 completes the sentence. Round-2 curation
+  # 2026-08-18; idea confirmed by a book topic lead only. An appearing-hope
+  # text — NOT a catching-up text, so it lands here and not on
+  # caught-up-together (whose round-1 neutrality geometry is untouched).
+  - ref: 1 John 3:2-3
+    sources: [torrey]
+    weight: 0.65
 related:
   - hope-in-god

@@ -8,7 +8,8 @@
   "note": [
     "Founding concept 'fear-not'.",
     "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own â€” the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
-    "Also probed by G8 as 'medium-fear-not'; the probe watches for churn, this fixture asserts the passages and their reason family. The two are complementary, not redundant."
+    "Also probed by G8 as 'medium-fear-not'; the probe watches for churn, this fixture asserts the passages and their reason family. The two are complementary, not redundant.",
+    "Round-2 book admission 2026-08-18: fear-not gained 2 Tim 1:7 (spirit of fear; dual-homed with the new self-control pack), Ps 56:11, Ps 27:3, Prov 3:25. fear-spirit-of-fear.json asserts the extension. Watchlist geometry unchanged: zero material-frame vocabulary, Phil 4:19 not anchored here."
   ],
   "expectedTop": [
     {
@@ -23,6 +24,7 @@
     "1 John 4:18",
     "Isaiah 41:10",
     "Psalms 27:1",
-    "Hebrews 13:6"
+    "Hebrews 13:6",
+    "2 Timothy 1:7"
   ]
 }

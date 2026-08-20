@@ -20,6 +20,18 @@ lexicon:
   - work at it with all your heart
   - whatever you do work at it with all your heart
   - working for the Lord and not for men
+  # Life-situation aliases, 2026-08-18 (books-harvest curation). The prayer
+  # books' "New Job" / "Being a Godly Employee" topics and Phillips
+  # "Occupation" confirm these as real search language; Col 3:23 is the
+  # pack's answer to them. They widen this pack's remembered-phrasing
+  # charter slightly while keeping its single anchor (two new queries, still
+  # exactly one passage answered). Bare "work" is deliberately NOT an entry:
+  # it normalizes to one generic token and would anchor this verse into
+  # every query carrying it. A Prov 16:3 anchor was considered and deferred
+  # (breaks the one-anchor design; unmeasurable until Proverbs 16 joins the
+  # fixture corpus).
+  - new job
+  - my job
 anchors:
   - ref: Colossians 3:23
     sources: [editorial]

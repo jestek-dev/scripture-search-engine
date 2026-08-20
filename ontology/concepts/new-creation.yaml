@@ -1,0 +1,57 @@
+# DRAFT 2026-08-18 (Comfort & the Spirit cluster) — §7.7 PR-4's new-creation
+# pack, extended with the fresh-start sense the 2026-08-13 audit found
+# inverted ("new beginnings" → Ecclesiastes 1:9, "no new thing under the
+# sun"). ONE concept, both senses: the candidate two-concept split shared
+# the "new" token across both lexicons and split the anchors across two
+# half-firing packs — exactly the near-duplicate failure G4 exists to catch.
+#
+# Bare-word decisions (for ontology/lexicon-inventory.yaml when §7.7 PR 2
+# lands): "new" SKIPPED — catastrophic generic trigger, per §7.7. "born
+# again" deliberately absent — salvation.yaml already owns that phrasing.
+# Fresh-start phrasings corroborated by Growing by Heart's "Starting Over"
+# week (see manifest.md); anchors are our own selection.
+id: new-creation
+label: A new creation
+lexicon:
+  - new creation
+  - fresh start
+  - new beginnings
+  - starting over
+anchors:
+  # "if anyone is in Christ, he is a new creation. The old things have
+  # passed away. Behold, all things have become new." The defining text.
+  - ref: 2 Corinthians 5:17
+    sources: [editorial]
+    weight: 1.0
+  # "Create in me a clean heart, O God. Renew a right spirit within me."
+  # David after Nathan — the fresh start asked for from inside the wreck.
+  - ref: Psalms 51:10
+    sources: [editorial]
+    weight: 0.9
+  # "neither is circumcision anything, nor uncircumcision, but a new
+  # creation."
+  - ref: Galatians 6:15
+    sources: [editorial]
+    weight: 0.8
+  # "I will also give you a new heart, and I will put a new spirit within
+  # you" — the promise behind Psalm 51's prayer.
+  - ref: Ezekiel 36:26
+    sources: [editorial]
+    weight: 0.75
+  # "Behold, I am making all things new." The sense the searcher wants,
+  # spoken from the throne.
+  - ref: Revelation 21:5
+    sources: [editorial]
+    weight: 0.75
+  # "Repent therefore, and turn again... so that there may come times of
+  # refreshing" — the fresh start's honest doorway is repentance; the
+  # anchor keeps the concept from promising newness without turning.
+  - ref: Acts 3:19
+    sources: [editorial]
+    weight: 0.7
+openbibleTopics:
+  - new creation
+related:
+  - repentance
+  - salvation
+  - forgiveness-of-sins

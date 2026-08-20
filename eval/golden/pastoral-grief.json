@@ -10,7 +10,9 @@
     "have dangerous lexical near-misses in the canon, every one of which is now",
     "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
     "against an absent verse passes vacuously â€” protection that is decoration.",
-    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts.",
+    "2026-08-18 books-harvest curation: 'bereavement' asserted alongside the primary query. Before the matching lexicon entry landed, the query reached no curated concept — the failing pre-patch run is the gap evidence in the PR body.",
+    "Round-2 book admission 2026-08-18: grief-and-loss gained John 16:22 (sorrow into joy) and the bare 'sorrow' register."
   ],
   "expectedTop": [
     {
@@ -49,5 +51,11 @@
       "reference": "Psalms 116:15",
       "why": "Globally excluded from grief queries."
     }
+  ],
+  "additionalQueries": [
+    "bereavement"
+  ],
+  "alsoAcceptable": [
+    "John 16:22"
   ]
 }

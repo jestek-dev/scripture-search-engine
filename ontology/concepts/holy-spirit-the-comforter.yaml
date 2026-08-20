@@ -1,0 +1,78 @@
+# DRAFT 2026-08-18 (Comfort & the Spirit cluster) — the comforter half of
+# the §7.7 PR-3 "comfort pair", followed verbatim: lexicon, anchors, weights
+# and source labels are the plan's own design.
+#
+# WHY THE LEXICON CARRIES WORDS THE WEB TEXT DOESN'T: the WEB renders
+# paraklētos as "Counselor"; KJV says "Comforter", NIV "Advocate"/"Helper".
+# A searcher types whichever their translation taught them, so the lexicon
+# carries all four English renderings plus the John 14-16 titles. This is
+# query language, not verse text — the §1.6d pattern.
+#
+# "holy spirit" lives HERE, not in a separate general concept: §7.7 assigns
+# it to this pack, and a sibling holy-spirit concept would collide with this
+# lexicon in G4. If Jesse later wants a broader Holy Spirit pack (Phillips's
+# topic: Eph 5:18; 1 Cor 3:16, 6:19, 12:4-6; 2 Cor 13:14), "holy spirit"
+# moves there in the same PR — see manifest.md open questions.
+id: holy-spirit-the-comforter
+label: The Holy Spirit, the Comforter
+lexicon:
+  - the comforter
+  - comforter
+  - counselor
+  - helper
+  - advocate
+  - spirit of truth
+  - holy spirit
+  # Round-2 book admission 2026-08-18.
+  - filled with the spirit
+  - be filled with the holy spirit
+anchors:
+  # Torrey/Miller admission (drafted 2026-08-18) — anchors from the verified
+  # outline: HOLY SPIRIT, THE COMFORTER, THE.
+  # "he will give you another Counselor... the Spirit of truth... he lives
+  # with you, and will be in you." The promise itself.
+  - ref: John 14:16-17
+    sources: [torrey]
+    weight: 1.0
+  # "the Counselor, the Holy Spirit, whom the Father will send in my name,
+  # will teach you all things, and will remind you..."
+  - ref: John 14:26
+    sources: [torrey]
+    weight: 0.95
+  # "It is to your advantage that I go away; for if I don't go away, the
+  # Counselor won't come to you."
+  - ref: John 16:7
+    sources: [torrey]
+    weight: 0.85
+  # "When the Counselor has come... the Spirit of truth... he will testify
+  # about me."
+  - ref: John 15:26
+    sources: [torrey]
+    weight: 0.8
+  # "the Spirit also helps our weaknesses... the Spirit himself makes
+  # intercession for us" — the Helper actually helping; not in the Torrey
+  # outline, hence editorial (per §7.7).
+  - ref: Romans 8:26
+    sources: [editorial]
+    weight: 0.75
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "he will guide you into all truth" — the lexicon already carries
+  # "spirit of truth". Torrey: HOLY SPIRIT, THE TEACHER, THE. The book
+  # files this under Guidance; the paraclete discourse is its honest home —
+  # pairing it with personal decision-guidance queries would
+  # decontextualize the promise.
+  - ref: John 16:13
+    sources: [torrey]
+    weight: 0.85
+  # "be filled with the Spirit"; Torrey files 5:18 under INDWELLING OF THE
+  # HOLY SPIRIT, THE — editorial for this pack's Comforter sense.
+  - ref: Ephesians 5:18
+    sources: [editorial]
+    weight: 0.75
+openbibleTopics:
+  - the comforter
+related:
+  - god-of-all-comfort
+  - remembered-fruit-of-the-spirit
+  - presence-of-god

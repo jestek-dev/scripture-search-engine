@@ -1,0 +1,42 @@
+{
+  "id": "faith",
+  "query": "faith",
+  "additionalQueries": [
+    "what is faith",
+    "faith comes by hearing",
+    "increase my faith",
+    "grow in faith"
+  ],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new general",
+    "faith concept; pending until the pack lands, then flip active in the",
+    "same PR. Idea source: Scriptural Prayers 'Faith' chapter (idea only, no",
+    "verse list copied; provenance is the verified Torrey FAITH outline).",
+    "",
+    "'faith' is a heavy lexical query (the word appears hundreds of times),",
+    "which is exactly why the assertion demands the concept_anchor reason:",
+    "the curated definitional verse must reach the leading window on",
+    "curation, not on term frequency. Heb 11:1 is deliberately not asserted",
+    "here — it belongs to remembered-faith-as-assurance and may rank on its",
+    "own anchor; it is listed alsoAcceptable rather than expected.",
+    "INTEGRATOR (round-2 merge): authors D and F independently drafted the same faith pack (Heb 11:6 / Rom 10:17); one concept, one fixture. D’s “what is faith” query folded in. Watch G8: “faith” is high-traffic; remembered-faith-* and faith-and-works probes must not churn."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hebrews 11:6",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Faith"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 10:17",
+    "Hebrews 11:1",
+    "Matthew 17:20"
+  ],
+  "coversConcepts": [
+    "faith"
+  ]
+}

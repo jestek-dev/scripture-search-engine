@@ -1,0 +1,38 @@
+{
+  "id": "stewardship-of-days",
+  "query": "time management",
+  "additionalQueries": [
+    "redeeming the time",
+    "procrastination"
+  ],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new",
+    "stewardship-of-days concept; pending until the pack lands, then flip",
+    "active in the same PR. Idea source: Scriptural Prayers 'Time",
+    "Management' and 'Procrastination'; Growing by Heart wk15 (idea only, no",
+    "verse list copied).",
+    "",
+    "Psalm 90:12 ('teach us to number our days') is the natural companion",
+    "assertion but is NOT in the fixture corpus — see backlog.md; assert it",
+    "in the PR that adds Psalm 90. The prayer book's Ps 1:2 pairing for time",
+    "management is rejected (its subject is delight in the law; it anchors",
+    "delight-in-the-word), so it is deliberately not asserted here."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 5:15-17",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Redeeming the time"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 12:11",
+    "Hebrews 6:12"
+  ],
+  "coversConcepts": [
+    "stewardship-of-days"
+  ]
+}

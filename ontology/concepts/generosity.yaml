@@ -1,0 +1,80 @@
+# DRAFT (cluster C, 2026-08-18) — new concept.
+# Idea source (PR description only): Phillips "Generosity"; prayer books
+# "Giving"; Growing by Heart generosity theme. The books were used to confirm
+# the topic and the passages people associate with it, never copied as a
+# verse list.
+#
+# DOCTRINAL-GUARDRAIL DESIGN (docs/DOCTRINAL-BASIS.md §3): the concept frame
+# is the GIVER'S HEART — cheerfulness, blessing-in-giving, refreshment of
+# others — never return-on-giving. Luke 6:38 is on the flagged-pairings
+# watchlist; it is anchored here because the watchlist itself rules it
+# "ranks honestly for giving queries". This concept's id, label and lexicon
+# speak NO materialFrameKeyword (checked against
+# ontology/flagged-pairings.yaml: prosperity, wealth, success, money, favor,
+# increase, breakthrough, abundance, promotion, financial), so the G4
+# pairing scan does not even put it in scope — and none of the ten
+# prosperity-* fixture queries ("abundance", "financial blessing", "wealth",
+# "sow a seed", …) shares a token with this lexicon, so no anchor here can
+# fire on those queries and every prosperity fixture stays green.
+id: generosity
+label: Generosity
+# Torrey/Miller supporting anchors (admission 2026-08-06) — from the
+# verified outline: LIBERALITY.
+lexicon:
+  - generosity
+  - cheerful giver
+  - god loves a cheerful giver
+  - it is more blessed to give than to receive
+anchors:
+  # Torrey LIBERALITY "Pleasing to God :: 2 Corinthians 9:7".
+  # "Let each man give according as he has determined in his heart, not
+  # grudgingly or under compulsion, for God loves a cheerful giver." (WEB
+  # from knowledge — 2 Corinthians 9 not yet in the fixture corpus.) The
+  # definitive giver's-heart text: the how and why of giving, no return
+  # arithmetic.
+  - ref: 2 Corinthians 9:7
+    sources: [torrey]
+    weight: 1.0
+  # Torrey LIBERALITY "Exhortations to :: Acts 20:35".
+  # "…remember the words of the Lord Jesus, that he himself said, 'It is
+  # more blessed to give than to receive.'" — blessedness located in the
+  # giving itself, the exact inversion of the seed-faith frame.
+  - ref: Acts 20:35
+    sources: [torrey]
+    weight: 0.95
+  # Torrey LIBERALITY "Promises to :: Proverbs 11:25".
+  # "The liberal soul shall be made fat. He who waters shall be watered
+  # also himself." (WEB from knowledge — Proverbs 11 not yet in the fixture
+  # corpus.) A wisdom-genre observation that generosity enriches the
+  # generous person; kept at modest weight so the promise-shaped proverb
+  # never leads the concept.
+  - ref: Proverbs 11:25
+    sources: [torrey]
+    weight: 0.8
+  # WATCHLISTED VERSE, anchored deliberately and honestly
+  # (ontology/flagged-pairings.yaml, Luke 6:38: "Ranks honestly for giving
+  # queries"). "Give, and it will be given to you: good measure, pressed
+  # down, shaken together, and running over…" — in context (Luke 6:27-38)
+  # this is Jesus' ethic of non-reciprocal mercy: give as your Father is
+  # merciful, judged with the measure you use. Lowest weight in the pack so
+  # the giver's-heart anchors always lead it; forbidden recruitment (a
+  # financial-return mechanism) cannot occur here because no
+  # material-frame query reaches this lexicon.
+  - ref: Luke 6:38
+    sources: [editorial]
+    weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "Give to him who asks you." Torrey: LIBERALITY. Watchlist care: this
+  # pack's vocabulary stays material-frame-free; Luke 6:38 remains anchored
+  # as-is; prosperity-sow-a-seed geometry untouched.
+  - ref: Matthew 5:42
+    sources: [torrey]
+    weight: 0.8
+  # "the righteous give generously."
+  - ref: Psalms 37:21
+    sources: [editorial]
+    weight: 0.7
+related:
+  - contentment
+  - tithing

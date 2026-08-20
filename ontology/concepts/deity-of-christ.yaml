@@ -1,0 +1,42 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Bob
+# Phillips, "A Topical Bible Guide" (2004), topic "Deity of Christ" — leads
+# only; every pairing verified in context against the branch web-subset.
+# Shared-core doctrine (docs/DOCTRINAL-BASIS.md §2): the concept reports that
+# curated sources name these passages for Christ's deity; it adjudicates
+# nothing. Torrey labels below are refs verbatim in the verified outline's
+# CHRIST IS GOD heading.
+id: deity-of-christ
+label: The deity of Christ
+lexicon:
+  - deity of christ
+  - jesus is god
+  - is jesus god
+  - the word was god
+  - christ is god
+anchors:
+  # "In the beginning was the Word... and the Word was God."
+  - ref: John 1:1
+    sources: [torrey]
+    weight: 1.0
+  # "He who has seen me has seen the Father."
+  - ref: John 14:9
+    sources: [torrey]
+    weight: 0.9
+  # "...his Son Jesus Christ. This is the true God and eternal life."
+  - ref: 1 John 5:20
+    sources: [torrey]
+    weight: 0.9
+  # Jesus under the high priest's oath: Son of Man at the right hand of
+  # Power — the self-identification the council called blasphemy.
+  - ref: Matthew 26:63-64
+    sources: [torrey]
+    weight: 0.8
+  # "All things that the Father has are mine" — kept low: the sentence's
+  # frame is the Spirit's declaring, the deity claim is embedded.
+  - ref: John 16:15
+    sources: [torrey]
+    weight: 0.6
+related:
+  - creation
+  - resurrection
+  - salvation

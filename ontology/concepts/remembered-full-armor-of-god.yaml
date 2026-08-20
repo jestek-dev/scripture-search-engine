@@ -24,3 +24,11 @@ anchors:
   - ref: Ephesians 6:11
     sources: [editorial]
     weight: 1.0
+  # Round-2 book admission 2026-08-18: the armor itself (belt through
+  # sword) — the SAME passage continuing the 6:11 summons, so the pack's
+  # narrow-claim design holds (one passage, now whole). Torrey lists 6:13
+  # under WARFARE OF SAINTS ("Armour for The whole, is required");
+  # editorial for the range.
+  - ref: Ephesians 6:13-17
+    sources: [editorial]
+    weight: 0.9

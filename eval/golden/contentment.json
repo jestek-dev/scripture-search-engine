@@ -1,0 +1,52 @@
+{
+  "id": "contentment",
+  "query": "contentment",
+  "additionalQueries": [
+    "being content",
+    "comparison"
+  ],
+  "status": "active",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
+    "new contentment concept; PENDING until the pack lands, then flip active",
+    "in the same PR.",
+    "",
+    "DESIGNED AROUND THE PROSPERITY FAMILY, explicitly: the pending",
+    "prosperity-contentment.json has asserted since 2026-08-15 that the query",
+    "'wealth' should surface 1 Timothy 6:6-10 under 'Theme: Contentment' —",
+    "this pack is the concept that fixture is waiting for (label and anchor",
+    "range match it exactly), and landing the pack should make that fixture's",
+    "Admission Report line name it for promotion. The ACTIVE",
+    "prosperity-wealth.json mustNotRank set (Mal 3:10, Mark 11:24, Phil 4:19)",
+    "must stay green: none of those refs are anchored by this pack, and the",
+    "'wealth' lexicon entry can only promote the pack's own anchors.",
+    "",
+    "The 'comparison' query asserts only within-top-10 for the concept's",
+    "anchors via expectedWithinTop; 2 Cor 10:12 (its naming verse) is in the",
+    "corpus but enters at 0.6, so no rank position is pinned for it.",
+    "",
+    "INTEGRATION NOTE (2026-08-18): two clusters drafted contentment packs;",
+    "they were merged into one concept (label 'Contentment', 1 Tim 6:6-10 +",
+    "Phil 4:11-13 leading, zero watchlist anchors). The money/debt register",
+    "is asserted by the sister fixture contentment-money.json."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 4:11-13",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Contentment"
+    },
+    {
+      "reference": "1 Timothy 6:6-10",
+      "withinTop": 5
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 13:5"
+  ],
+  "coversConcepts": [
+    "contentment"
+  ]
+}

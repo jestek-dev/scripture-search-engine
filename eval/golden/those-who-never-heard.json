@@ -1,0 +1,28 @@
+{
+  "id": "those-who-never-heard",
+  "query": "what about those who never heard the gospel",
+  "status": "active",
+  "additionalQueries": [
+    "never heard the gospel",
+    "without excuse"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "ANSWER GEOMETRY: the engine locates the passages sources name for the question; it must never adjudicate anyone's destiny (CLAUDE.md #6) — the chip is the claim, the verses are the answer."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 1:18-20",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's witness to all"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 2:14-15",
+    "John 16:8"
+  ],
+  "coversConcepts": [
+    "those-who-never-heard"
+  ]
+}

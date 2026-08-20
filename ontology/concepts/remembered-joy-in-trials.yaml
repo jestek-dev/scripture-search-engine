@@ -20,7 +20,16 @@ lexicon:
   - consider it pure joy
   - pure joy when you face trials
   - trials of many kinds
+  # Round-2 book admission 2026-08-18. Bare words, one-token discount; the
+  # fruit-of-the-spirit lexicon shares only the token "patience" inside one
+  # longer entry — hand-checked well under G4 ratios.
+  - patience
+  - perseverance
 anchors:
-  - ref: James 1:2
+  # Widened 1:2 -> 1:2-4, round-2 book admission 2026-08-18: the sentence
+  # runs through v4 ("let endurance have its perfect work"), which the
+  # clipped anchor missed. Torrey lists 1:4 under PATIENCE ("Should have
+  # its perfect work"). Same passage; the pack's narrow-claim design holds.
+  - ref: James 1:2-4
     sources: [editorial]
     weight: 1.0

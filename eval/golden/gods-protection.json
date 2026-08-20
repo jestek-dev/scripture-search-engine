@@ -1,0 +1,45 @@
+{
+  "id": "gods-protection",
+  "query": "protection",
+  "additionalQueries": [
+    "no weapon formed against me",
+    "prayer for safe travel",
+    "protect my children"
+  ],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new",
+    "gods-protection concept; pending until the pack lands, then flip active",
+    "in the same PR. Idea source: Scriptural Prayers 'Divine Protection',",
+    "'Safety for Travel', 'Protection for My Children', 'For My Baby' (idea",
+    "only, no verse list copied).",
+    "",
+    "'protect my children' is the prayer books' own register — the query a",
+    "parent actually types; it reaches the concept through the 'protect me'",
+    "and 'protection' entries after tokenization.",
+    "",
+    "The Psalm 91 anchor is asserted as the range 91:9-12 so the promise",
+    "verses never surface stripped of their condition verse (91:9) — the",
+    "Matthew 4:6 recruitment is the canonical warning. All asserted",
+    "references verified in the fixture corpus."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 91:9-12",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's protection"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 54:17",
+    "Psalms 91:5-7",
+    "Psalms 91:14-16",
+    "Psalms 91:1-2",
+    "Psalms 121:1-8"
+  ],
+  "coversConcepts": [
+    "gods-protection"
+  ]
+}

@@ -1,0 +1,90 @@
+# DRAFT (cluster C, 2026-08-18) — new concept.
+# Idea source (PR description only): Growing by Heart wk24 (Ps 141:3-4,
+# Prov 16:24); prayer books "Speaking the Right Words" (Matt 12:37,
+# Eph 4:29) and "Communication With Others" (Jas 1:19, Ps 39:1). Verified
+# Torrey heading: SLANDER (Torrey has no gossip/tongue heading; SLANDER is
+# the nearest verified outline and three anchors below are drawn from it).
+id: taming-the-tongue
+label: Taming the tongue
+# Torrey/Miller supporting anchors (admission 2026-08-06) — from the
+# verified outline: SLANDER.
+lexicon:
+  - taming the tongue
+  - gossip
+  - guard my mouth
+  - the power of the tongue
+  - careless words
+  # Round-2 book admission 2026-08-18.
+  - slow to speak
+  - speak the truth in love
+anchors:
+  # "Set a watch, LORD, before my mouth. Keep the door of my lips." (WEB
+  # from knowledge — Psalm 141 not yet in the fixture corpus.) The prayer
+  # the whole theme teaches you to pray.
+  - ref: Psalms 141:3
+    sources: [editorial]
+    weight: 1.0
+  # "The tongue is a little member … a world of iniquity … no man can tame
+  # it … With it we bless our God and Father, and with it we curse men."
+  # (WEB from knowledge — James 3 not yet in the fixture corpus.) The NT's
+  # definitive tongue passage.
+  - ref: James 3:5-10
+    sources: [editorial]
+    weight: 0.95
+  # "Let no corrupt speech proceed out of your mouth, but only what is
+  # good for building others up as the need may be, that it may give grace
+  # to those who hear." — the positive command: speech that gives grace.
+  - ref: Ephesians 4:29
+    sources: [editorial]
+    weight: 0.9
+  # "Death and life are in the power of the tongue; those who love it will
+  # eat its fruit." (WEB from knowledge — Proverbs 18 not yet in the
+  # fixture corpus.)
+  - ref: Proverbs 18:21
+    sources: [editorial]
+    weight: 0.85
+  # Torrey SLANDER "Should keep their tongue from :: Psalms 34:13".
+  # "Keep your tongue from evil, and your lips from speaking lies."
+  - ref: Psalms 34:13
+    sources: [torrey]
+    weight: 0.8
+  # Torrey SLANDER "Men shall give account for :: Matthew 12:36".
+  # "Every idle word that men speak, they will give account of it in the
+  # day of judgment." (WEB from knowledge — Matthew 12 not yet in the
+  # fixture corpus.) The weight behind "careless words".
+  - ref: Matthew 12:36
+    sources: [torrey]
+    weight: 0.75
+  # Torrey SLANDER "Forbidden :: Ephesians 4:31".
+  # "Let all bitterness, wrath, anger, outcry, and slander be put away
+  # from you, with all malice." — the honest gossip/slander answer that is
+  # already in the fixture corpus.
+  - ref: Ephesians 4:31
+    sources: [torrey]
+    weight: 0.7
+  # "Pleasant words are a honeycomb, sweet to the soul, and health to the
+  # bones." (WEB from knowledge — Proverbs 16 not yet in the fixture
+  # corpus.) The theme's positive face, paired with Ps 141:3 in Growing by
+  # Heart wk24.
+  - ref: Proverbs 16:24
+    sources: [editorial]
+    weight: 0.65
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "swift to hear, slow to speak, and slow to anger." Torrey: HEEDFULNESS
+  # ("Necessary In speech"), ANGER ("Be slow to").
+  - ref: James 1:19
+    sources: [torrey]
+    weight: 0.85
+  # "I will watch my ways, so that I don't sin with my tongue... keep my
+  # mouth with a bridle."
+  - ref: Psalms 39:1
+    sources: [editorial]
+    weight: 0.75
+  # "speaking truth in love" — the constructive-speech companion to the
+  # pack's Eph 4:29.
+  - ref: Ephesians 4:15
+    sources: [editorial]
+    weight: 0.7
+related:
+  - loving-others

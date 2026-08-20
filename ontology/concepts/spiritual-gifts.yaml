@@ -1,0 +1,52 @@
+# DRAFT 2026-08-18 (Round-2 book admission — MERGED by the integrator from
+# two independent drafts). Author D (Phillips "A Topical Bible Guide",
+# topic "Spiritual Gifts"; its "Witnessing" lead 1 Pet 4:11 rehomed here —
+# its subject is speaking/serving gifts, not evangelism) and author F
+# (Growing by Heart wk45 "beautifully unique"; Scriptural Prayers "Before a
+# Church Service", "My Child's School and Teachers", "New Job") drafted the
+# same pack; one concept, one home. Leads only; every pairing verified in
+# context against the branch web-subset.
+#
+# The Romans 12 anchor is the contiguous unit 12:4-8 (D chose 12:6-8, F
+# chose 12:4-6 — many members in one body, then the differing gifts; the
+# argument is one run and the trims were two windows onto it).
+# 1 Corinthians 12:4-6 (the classic varieties-of-gifts text) is
+# corpus-blocked — see the round-2 backlog; add it when 1 Cor 12 lands.
+id: spiritual-gifts
+label: Spiritual gifts
+lexicon:
+  - spiritual gifts
+  - gifts of the spirit
+  - use your gifts
+  - serving with your gifts
+  - each has received a gift
+  - many members one body
+  - what are my gifts
+anchors:
+  # "We have many members in one body... having gifts differing according
+  # to the grace that was given to us: prophecy... service... teaching...
+  # giving... ruling... mercy" (WEB). One body, differing gifts — the
+  # defining passage in the corpus today. Torrey lists 12:6 under GIFTS OF
+  # GOD, THE ("dispensed according to his will"); editorial for the range.
+  - ref: Romans 12:4-8
+    sources: [editorial]
+    weight: 1.0
+  # "As each has received a gift, employ it in serving one another, as
+  # good managers of the grace of God" (+ v11: speaking as oracles,
+  # serving in God's strength) (WEB). Gifts as stewardship for one another
+  # — the anti-status frame. Torrey lists 4:10 under GIFTS OF GOD, THE
+  # ("Spiritual > To be used for mutual profit"); editorial for the range.
+  - ref: 1 Peter 4:10-11
+    sources: [editorial]
+    weight: 0.9
+  # apostles, prophets, evangelists, shepherds and teachers — given "for
+  # the perfecting of the saints... to the building up of the body of
+  # Christ" (WEB). Torrey lists 4:11 under EDIFICATION ("the object of the
+  # ministerial office"); editorial for the range.
+  - ref: Ephesians 4:11-12
+    sources: [editorial]
+    weight: 0.85
+related:
+  - gathering-together
+  - loving-others
+  - remembered-work-as-for-the-lord

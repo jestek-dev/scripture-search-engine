@@ -1,7 +1,7 @@
 {
   "id": "sense-inversion-provision",
   "query": "provision",
-  "status": "pending",
+  "status": "active",
   "note": [
     "SENSE-INVERSION FIXTURE (sense-inversion family) — PENDING on purpose.",
     "The 2026-08-15 doctrinal audit found \"provision\" answered FIRST by",
@@ -12,21 +12,34 @@
     "RULING (Jesse, 2026-08-15, audit follow-up): KEEP this result — the",
     "query's word is genuinely in the passage, and honest lexical retrieval",
     "is fine. It is demoted, never forbidden: Romans 13:14 may rank, just at",
-    "low priority, never leading. The assertion encodes exactly that ruling:",
-    "no mustNotRank, only Matthew 6:11 (daily bread — provision asked of the",
-    "Father) preferred above Romans 13:14. Both references are verified IN",
-    "the fixture corpus, so the pair cannot pass vacuously by absence.",
+    "low priority, never leading. The preferredOrder pair encodes exactly",
+    "that ruling: Matthew 6:11 (daily bread — provision asked of the Father)",
+    "preferred above Romans 13:14. Both references are verified IN the",
+    "fixture corpus, so the pair cannot pass vacuously by absence.",
     "",
-    "Pending because the inversion is live at HEAD (Romans 13:14 at #1,",
-    "Matthew 6:11 at #9): fixtures-first, exactly like",
-    "prosperity-contentment.json. When curation teaches the honest provision",
-    "frame, the Admission Report names this fixture for promotion to active.",
-    "",
-    "Philippians 4:19 ('my God will supply every need') was probed and does",
-    "NOT rank for this query at HEAD — its words carry no 'provision' token —",
-    "so no expectedTop is asserted for it here: an assertion that cannot",
-    "fail is decoration. It is the natural expectedTop candidate when a",
-    "provision concept pack lands; add it then, with its anchor reason."
+    "REVISED 2026-08-18 (cluster C curation): the earlier note said",
+    "Philippians 4:19 'is the natural expectedTop candidate when a provision",
+    "concept pack lands; add it then, with its anchor reason.' The",
+    "`gods-provision` pack is that pack, and the assertion is added",
+    "accordingly: Phil 4:19 within the top 3 with concept_anchor evidence.",
+    "The verse is watchlisted for wealth-frame recruitment",
+    "(ontology/flagged-pairings.yaml) and the pack's frame is",
+    "God-supplies-needs — its lexicon speaks no materialFrameKeyword, so the",
+    "G4 pairing scan stays at zero flags, and no prosperity-* query shares a",
+    "token with the lexicon, so the fixtures that forbid Phil 4:19 for",
+    "'abundance'/'wealth'/'financial blessing'/'prosperity' keep holding.",
+    "When this fixture starts passing, the Admission Report names it for",
+    "promotion to active.",
+    "Window note (2026-08-18 gauntlet iteration): with the pack live, the top of 'provision' is the pack's own Matthew 6:31-33 range (provision for the anxious, subordinated to the Kingdom) with Matt 6:11 third and Phil 4:19 fifth — the inversion is gone (Rom 13:14 no longer ranks in the top 10 at all). Phil 4:19 is asserted within the top 5 with its anchor chip rather than forced above the Kingdom-first answers; promoting a watchlisted verse over them would be the wrong fix.",
+    "Round-2 book admission 2026-08-18: gods-provision gained Ps 34:10, weighted below the Matt 6 / Phil 4:19 leads so this fixture's expectedTop holds."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 4:19",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God provides",
+      "withinTop": 5
+    }
   ],
   "expectedWithinTop": 10,
   "preferredOrder": [
@@ -34,5 +47,14 @@
       "above": "Matthew 6:11",
       "below": "Romans 13:14"
     }
+  ],
+  "additionalQueries": [
+    "god will provide"
+  ],
+  "coversConcepts": [
+    "gods-provision"
+  ],
+  "alsoAcceptable": [
+    "Psalms 34:10"
   ]
 }

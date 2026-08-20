@@ -10,7 +10,8 @@
     "requiredReasonFamily is concept_anchor on purpose. Token overlap could",
     "drift into the right answer on a corpus change and the fixture would",
     "report success for a reason that is not the one we built. The assertion",
-    "is that a CURATED anchor put it there and can say who says so."
+    "is that a CURATED anchor put it there and can say who says so.",
+    "Round-2 book admission 2026-08-18: Heb 12:1 (same sentence as 12:2) with the run-the-race aliases; 'run the race' asserted."
   ],
   "expectedTop": [
     {
@@ -19,5 +20,11 @@
       "requiredReasonLabel": "Theme: Looking to Jesus"
     }
   ],
-  "expectedWithinTop": 5
+  "expectedWithinTop": 5,
+  "alsoAcceptable": [
+    "Hebrews 12:1"
+  ],
+  "additionalQueries": [
+    "run the race"
+  ]
 }

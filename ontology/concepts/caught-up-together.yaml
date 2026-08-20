@@ -1,0 +1,42 @@
+# DRAFT (cluster C, 2026-08-18) — new concept.
+# Idea source (PR description only): Phillips "Rapture" (1 Cor 15:51-52,
+# 1 Thess 4:13-18) — and the 2026-08-15 books assessment's modeling hint
+# that Phillips keeps Rapture distinct from Return of Christ.
+#
+# NEUTRALITY DESIGN (docs/DOCTRINAL-BASIS.md §4: millennial views are
+# NON-criteria): "rapture" is not added to second-coming's lexicon, because
+# a lexicon match fires EVERY anchor of its concept — the query would then
+# be answered with the full second-coming anchor set, which silently
+# asserts that the rapture IS the second coming (one position among
+# several). Instead this narrow pack does the only neutral thing a search
+# engine can do: it locates the passages the word "rapture" refers to
+# (harpazo, "caught up", 1 Thess 4:17; with the parallel mystery text
+# 1 Cor 15:51-52) and adjudicates nothing about timing or sequence. The
+# label is the passage's own words, not a position. Same one-anchor-family
+# narrowness as the remembered-phrasing packs: narrow anchor, narrow claim.
+id: caught-up-together
+label: Caught up together with the Lord
+lexicon:
+  - rapture
+  - caught up together
+  - caught up in the clouds
+  - in the twinkling of an eye
+anchors:
+  # "For the Lord himself will descend from heaven with a shout … then we
+  # who are alive, who are left, will be caught up together with them in
+  # the clouds to meet the Lord in the air. So we will be with the Lord
+  # forever." — the text the word "rapture" names (Latin rapiemur); written
+  # as comfort about believers who have died (4:13, 4:18), which is the
+  # frame the concept keeps.
+  - ref: 1 Thessalonians 4:16-17
+    sources: [editorial]
+    weight: 1.0
+  # "We will not all sleep, but we will all be changed, in a moment, in
+  # the twinkling of an eye, at the last trumpet." — Paul's parallel
+  # mystery text; every major tradition reads these two passages together.
+  - ref: 1 Corinthians 15:51-52
+    sources: [editorial]
+    weight: 0.9
+related:
+  - second-coming
+  - resurrection

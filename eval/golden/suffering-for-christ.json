@@ -1,0 +1,35 @@
+{
+  "id": "suffering-for-christ",
+  "query": "suffering",
+  "status": "active",
+  "additionalQueries": [
+    "persecution",
+    "why do christians suffer",
+    "fiery trial"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "Rom 8:18 accepted: already anchored by serious-illness-and-dying and honest for the bare query."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Peter 4:12-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Suffering with Christ"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 5:10",
+    "1 Peter 5:10",
+    "Romans 8:17",
+    "Philippians 1:29",
+    "1 Peter 1:6-7",
+    "2 Corinthians 1:5",
+    "1 Peter 2:19-20",
+    "Romans 8:18"
+  ],
+  "coversConcepts": [
+    "suffering-for-christ"
+  ]
+}

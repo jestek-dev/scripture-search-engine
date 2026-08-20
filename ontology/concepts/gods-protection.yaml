@@ -1,0 +1,72 @@
+# ROUND-2 AUTHOR-F (2026-08-18) — new concept.
+# Idea source (PR description only): Scriptural Prayers "Divine Protection",
+# "Safety for Travel", "Protection for My Children", "For My Baby", "The
+# Lord Is My Refuge", "Dwelling in the Secret Place". Each anchor verified
+# against the WEB text in context.
+#
+# Deliberately DISTINCT from `refuge-in-trouble` (shelter WHEN trouble has
+# come — the distress register): this concept is the protection-PRAYER
+# register — asking God's keeping over children, travel, daily life. The
+# lexicons are token-disjoint (verified against refuge-in-trouble's entries;
+# zero shared phrases, zero shared content tokens), and refuge keeps Psalm
+# 91:1-2 — this pack anchors the psalm's PROMISE verses, not its dwelling
+# verses.
+#
+# SOUNDNESS FRAME: every Psalm 91 promise below is spoken to the one who
+# has made the LORD his refuge (91:9 states the condition; Satan's Matthew
+# 4:6 recruitment of 91:11-12 as a talisman is the canonical warning). The
+# anchors carry the promise verses WITH their condition verse (9) and the
+# psalm's own "with him in trouble" realism (15) — protection as trust in
+# the Protector, never a force-field claim.
+#
+# Psalm 32:7 ("you are my hiding place") goes to refuge-in-trouble, whose
+# lexicon already speaks "hiding place" — see patches.md.
+id: gods-protection
+label: "God's protection"
+lexicon:
+  # Bare words, deliberate — what people type; one-token discount applies.
+  - protection
+  - protect me
+  - divine protection
+  - no weapon formed against me
+  - angels charge over you
+  - keep me safe
+  - prayer for protection
+  - safe travel
+  - traveling mercies
+anchors:
+  # "Because you have made the LORD your refuge... no evil shall happen to
+  # you... For he will put his angels in charge of you, to guard you in all
+  # your ways" (WEB). The condition (v9) travels with the promise (v10-12).
+  # Torrey lists 91:11 under ANGELS ("Have charge over the children of
+  # God") and PROVIDENCE OF GOD ("special preservation of saints");
+  # editorial for the range.
+  - ref: Psalms 91:9-12
+    sources: [editorial]
+    weight: 1.0
+  # "No weapon that is formed against you will prevail... This is the
+  # heritage of the LORD's servants" (WEB). Vindication promised to God's
+  # servants — the "heritage" clause keeps it covenantal, not incantational.
+  # (Torrey files 54:17 under righteousness/justification headings, a
+  # different sense, so this anchor is editorial.)
+  - ref: Isaiah 54:17
+    sources: [editorial]
+    weight: 0.85
+  # "You shall not be afraid of the terror by night... A thousand may fall
+  # at your side... but it will not come near you" (WEB). The psalm's own
+  # fearless-under-danger stanza.
+  - ref: Psalms 91:5-7
+    sources: [editorial]
+    weight: 0.75
+  # "Because he has set his love on me, therefore I will deliver him... He
+  # will call on me, and I will answer him. I will be with him in trouble"
+  # (WEB). God's own voice closing the psalm — deliverance grounded in
+  # love and presence IN trouble, the honest counterweight to
+  # never-any-trouble readings.
+  - ref: Psalms 91:14-16
+    sources: [editorial]
+    weight: 0.7
+related:
+  - refuge-in-trouble
+  - fear-not
+  - trust-in-god

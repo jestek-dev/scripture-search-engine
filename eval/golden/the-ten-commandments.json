@@ -1,0 +1,22 @@
+{
+  "id": "the-ten-commandments",
+  "query": "ten commandments",
+  "status": "active",
+  "additionalQueries": [
+    "the ten commandments"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Exodus 20:1-17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Ten Commandments"
+    }
+  ],
+  "expectedWithinTop": 5,
+  "coversConcepts": [
+    "the-ten-commandments"
+  ]
+}

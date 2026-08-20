@@ -1,0 +1,39 @@
+{
+  "id": "restoration",
+  "query": "restore my soul",
+  "additionalQueries": [
+    "restoration",
+    "renew me"
+  ],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new restoration",
+    "concept; pending until the pack lands, then flip active in the same PR.",
+    "Idea source: Scriptural Prayers 'Restoration', 'Fatigue', 'God Working",
+    "in Me', 'My Child's Spiritual Growth', 'Forgiveness' (Isa 43:18) —",
+    "idea only, no verse list copied.",
+    "",
+    "requiredReasonFamily is concept_anchor: Ps 23:3 contains 'restores'",
+    "and 'soul' lexically, so the assertion must be that the curated anchor",
+    "put it there. Psalm 103:2-3 is deliberately not asserted — it anchors",
+    "prayer-for-healing; this pack anchors vv4-5. All asserted references",
+    "verified in the fixture corpus."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 23:3",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Restoration and renewal"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 103:4-5",
+    "Isaiah 43:18-19",
+    "Psalms 51:10-12"
+  ],
+  "coversConcepts": [
+    "restoration"
+  ]
+}

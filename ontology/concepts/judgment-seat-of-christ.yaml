@@ -1,0 +1,52 @@
+# DRAFT (round-2 curation, author E, 2026-08-18) — new concept.
+# Idea source (PR description only): Phillips, *A Topical Bible Guide*
+# (2004), topic "Judgment Seat of Christ" — topic lead only; anchors
+# verified in WEB context.
+#
+# NEUTRALITY DESIGN (docs/DOCTRINAL-BASIS.md §4: millennial views and their
+# scaffolding are non-criteria): dispensational systems distinguish the
+# bema (believers' rewards) from the great white throne (final judgment) as
+# two separate events. This concept encodes NO such schema. It locates the
+# two passages where Scripture itself says "judgment seat of Christ"
+# (2 Cor 5:10; Rom 14:10, with 14:11-12 completing the sentence), and the
+# label is the text's own phrase. Whether that seat is the same event as
+# Rev 20:11-15 is exactly the kind of question the engine never answers.
+#
+# Deliberately LEFT OUT from Phillips's list:
+# - Matt 6:2-4 (in corpus): reward-for-secret-giving; it does not name the
+#   judgment seat, and pairing it here is the rewards-schema link this pack
+#   refuses to encode. It stays reachable on its own words.
+# - Matt 25:14-30 / Luke 19:11-27 / 2 Tim 4:8 (corpus-blocked): see
+#   backlog.md — soundness call deferred with the same schema caution.
+# - 1 Cor 3:9-15 is already anchored by building-on-the-rock (related below)
+#   — re-anchoring it here would be the anchor dilution G4 exists to catch.
+id: judgment-seat-of-christ
+label: The judgment seat of Christ
+lexicon:
+  - judgment seat of christ
+  - the judgment seat
+  # "bema seat" is teaching-circles shorthand (Greek bēma = judgment seat);
+  # the word appears nowhere in the WEB text, so without this entry the
+  # query is unreachable. The entry locates the same two naming passages
+  # and asserts nothing the phrase's home tradition asserts.
+  - bema seat
+  # Rom 14:12's own sentence, as searchers phrase it.
+  - give account of himself to god
+anchors:
+  # "For we must all be revealed before the judgment seat of Christ that
+  # each one may receive the things in the body according to what he has
+  # done, whether good or bad." Torrey-verified: JUDGMENT, THE ("Shall be
+  # administered by Christ").
+  - ref: 2 Corinthians 5:10
+    sources: [torrey]
+    weight: 1.0
+  # "For we will all stand before the judgment seat of Christ … each one of
+  # us will give account of himself to God." Torrey-verified: JUDGMENT, THE
+  # (14:10, same point). 14:11-12 kept — they are the sentence's Scripture
+  # citation and conclusion.
+  - ref: Romans 14:10-12
+    sources: [torrey]
+    weight: 0.95
+related:
+  - building-on-the-rock
+  - second-coming

@@ -1,0 +1,48 @@
+# ROUND-2 AUTHOR-F (2026-08-18) — new concept.
+# Idea source (PR description only): Scriptural Prayers "Restoration"
+# (Ps 103:4), "Fatigue" (Ps 103:5), "God Working in Me" / "My Child's
+# Spiritual Growth" / "Exalting the Lord" (Ps 23:3), "Forgiveness"
+# (Isa 43:18). Each anchor verified against the WEB text in context.
+#
+# Deliberately DISTINCT from `relapse-and-restoration` (restoration AFTER
+# moral failure — its lexicon is the relapse register and shares zero
+# content tokens with this one), from `new-creation` (conversion register;
+# shared token: {new} only), and from `rest-for-the-weary` (the exhausted
+# register; this is the renewal PRAYER register — "restore my soul").
+id: restoration
+label: Restoration and renewal
+lexicon:
+  - restore my soul
+  - he restores my soul
+  - restoration
+  - restore me
+  - renew me
+  - god will do a new thing
+anchors:
+  # "He restores my soul. He guides me in the paths of righteousness for
+  # his name's sake" (WEB). The shepherd's restoring of the sheep — the
+  # verse the prayer books return to across four chapters. Editorial
+  # (Torrey files 23:3 under shepherd/righteousness headings).
+  - ref: Psalms 23:3
+    sources: [editorial]
+    weight: 1.0
+  # "Who redeems your life from destruction, who crowns you with loving
+  # kindness... so that your youth is renewed like the eagle's" (WEB).
+  # Renewal as one of the psalm's counted benefits. Kept to vv4-5: vv2-3
+  # ("heals all your diseases") already anchor prayer-for-healing, and
+  # duplicating them here would dilute that anchor.
+  - ref: Psalms 103:4-5
+    sources: [editorial]
+    weight: 0.9
+  # "Don't remember the former things... Behold, I will do a new thing...
+  # I will even make a way in the wilderness" (WEB). Spoken to exiled
+  # Israel — God's new-exodus promise; honest for the restoration prayer
+  # when presented as God's initiative, which the anchor range preserves
+  # by carrying v19 (the new thing) with v18 (the forgetting).
+  - ref: Isaiah 43:18-19
+    sources: [editorial]
+    weight: 0.8
+related:
+  - new-creation
+  - rest-for-the-weary
+  - relapse-and-restoration

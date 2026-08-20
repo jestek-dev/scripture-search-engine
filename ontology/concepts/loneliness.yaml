@@ -1,0 +1,57 @@
+# DRAFT 2026-08-18 (Comfort & the Spirit cluster). New pastoral-register
+# concept for a query family with no coverage: loneliness / feeling alone.
+# Torrey anchors from the verified outline AFFLICTION, CONSOLATION UNDER,
+# sub-point "To those deserted by friends". Editorial anchors corroborated
+# by Phillips's Loneliness topic (Ps 68:6, Heb 13:5, Ps 23, Ps 27:10,
+# Ps 91:11, Isa 41:10, Matt 28:20 — corroboration only; this selection is
+# our own; see manifest.md).
+#
+# Single-word entries "loneliness"/"lonely" are the §1.6d pattern: the word
+# IS the concept, and "lonely" is the WEB's own word (Ps 68:6, "God sets
+# the lonely in families" — WEB wording verified 2026-08-18). The light
+# stemmer does not connect "loneliness" to "lonely", so both are listed.
+id: loneliness
+label: Loneliness
+lexicon:
+  - loneliness
+  - lonely
+  - feeling alone
+  - never alone
+anchors:
+  # Torrey/Miller admission (drafted 2026-08-18) — from the verified
+  # outline: AFFLICTION, CONSOLATION UNDER ("To those deserted by friends").
+  # "When my father and my mother forsake me, then the LORD will take me
+  # up." Abandonment by the closest relationships, answered by adoption.
+  - ref: Psalms 27:10
+    sources: [torrey]
+    weight: 1.0
+  # "Yahweh himself is who goes before you. He will be with you. He will
+  # not fail you nor forsake you." Spoken to Joshua facing Moses' departure.
+  - ref: Deuteronomy 31:8
+    sources: [editorial]
+    weight: 0.9
+  # "I will not leave you orphans. I will come to you." — Jesus to the
+  # disciples on the night of his departure. Torrey lists it under the same
+  # deserted-by-friends sub-point.
+  - ref: John 14:18
+    sources: [torrey]
+    weight: 0.85
+  # "God sets the lonely in families." — the answer to loneliness is
+  # belonging, and God builds it.
+  - ref: Psalms 68:6
+    sources: [editorial]
+    weight: 0.8
+  # "Behold, I am with you always, even to the end of the age."
+  - ref: Matthew 28:20
+    sources: [editorial]
+    weight: 0.75
+  # "I will in no way leave you, neither will I in any way forsake you."
+  # Also anchors presence-of-god — same verse, two honest doors; only
+  # within-concept duplicates are forbidden.
+  - ref: Hebrews 13:5
+    sources: [editorial]
+    weight: 0.7
+related:
+  - presence-of-god
+  - god-sees-my-suffering
+  - god-of-all-comfort

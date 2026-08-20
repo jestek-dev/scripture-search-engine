@@ -1,0 +1,43 @@
+{
+  "id": "judgment-seat-of-christ",
+  "query": "judgment seat of christ",
+  "additionalQueries": [
+    "bema seat"
+  ],
+  "status": "active",
+  "note": [
+    "Round-2 curation (author E, 2026-08-18). Fixtures-first: written with",
+    "the draft `judgment-seat-of-christ` pack; pending until it lands and",
+    "this passes. Idea source: Phillips 'Judgment Seat of Christ' (topic",
+    "lead only; asserted references verified in WEB context).",
+    "",
+    "The corpus contains exactly three 'judgment seat' surface hits:",
+    "2 Cor 5:10, Rom 14:10, and Matt 27:19 — Pilate's wife warning him as",
+    "he sits on the judgment seat. Matt 27:19 ranking somewhere for the",
+    "head query is honest lexical retrieval and is deliberately NOT",
+    "forbidden; the fixture instead requires the concept answer to lead",
+    "with concept_anchor evidence, so the curated naming passage always",
+    "outranks the surface coincidence. 'bema seat' has no lexical path at",
+    "all (the word is not in the WEB text) — pure measured gap.",
+    "",
+    "NEUTRALITY: the pack encodes no bema-vs-great-white-throne schema",
+    "(DOCTRINAL-BASIS §4); it locates the two passages that say 'judgment",
+    "seat of Christ' and the label is the text's own phrase. Matt 6:2-4",
+    "(Phillips's third in-corpus ref) is deliberately not asserted — it",
+    "does not name the judgment seat."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Corinthians 5:10",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The judgment seat of Christ"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 14:10-12"
+  ],
+  "coversConcepts": [
+    "judgment-seat-of-christ"
+  ]
+}
