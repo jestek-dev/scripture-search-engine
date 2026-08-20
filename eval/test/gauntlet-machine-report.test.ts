@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
@@ -28,6 +28,7 @@ import {
   type GauntletRunIdentity,
 } from '../src/gauntletMachineReport.js';
 import { buildReport } from '../src/report.js';
+import { DOCTRINAL_REVIEWS_PATH, FLAGGED_PAIRINGS_PATH } from '../src/gates/doctrinalGuardrail.js';
 import { fail, pass } from '../src/gates/types.js';
 import { openCorpus } from '../src/nodeSqlitePort.js';
 
@@ -365,11 +366,12 @@ describe.sequential('gauntlet CLI process', () => {
     try {
       // A scratch repo containing only the guardrail files: absent roots hash
       // as empty, so any hash movement below is attributable to these files.
-      mkdirSync(join(scratch, 'ontology'), { recursive: true });
-      const guardrailFiles = [
-        join(scratch, 'ontology', 'doctrinal-reviews.yaml'),
-        join(scratch, 'ontology', 'flagged-pairings.yaml'),
-      ];
+      // Paths come from the gate's own constants, so roster and gate cannot
+      // drift apart on a move/rename.
+      const guardrailFiles = [DOCTRINAL_REVIEWS_PATH, FLAGGED_PAIRINGS_PATH].map((path) =>
+        join(scratch, path),
+      );
+      for (const file of guardrailFiles) mkdirSync(dirname(file), { recursive: true });
       writeFileSync(guardrailFiles[0]!, 'reviews: []\n');
       writeFileSync(guardrailFiles[1]!, 'pairings: []\n');
       const baseline = fixtureInputSha256(scratch);
@@ -389,7 +391,7 @@ describe.sequential('gauntlet CLI process', () => {
 
       // Files outside the enumerated roster must not move the hash; widening
       // the roster is a deliberate change that updates this expectation.
-      writeFileSync(join(scratch, 'ontology', 'README.md'), 'stray\n');
+      writeFileSync(join(dirname(guardrailFiles[0]!), 'README.md'), 'stray\n');
       expect(fixtureInputSha256(scratch)).toBe(baseline);
     } finally {
       rmSync(scratch, { recursive: true, force: true });

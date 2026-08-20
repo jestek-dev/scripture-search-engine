@@ -16,6 +16,7 @@ import { execFileSync } from 'node:child_process';
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 
 import { headlineFor, type AdmissionReport, type Verdict } from './report.js';
+import { DOCTRINAL_REVIEWS_PATH, FLAGGED_PAIRINGS_PATH } from './gates/doctrinalGuardrail.js';
 import {
   gateApplicability,
   type GateApplicability,
@@ -590,10 +591,11 @@ function fixtureInputs(repoRoot: string): string[] {
     join(repoRoot, 'pipeline', 'fixtures'),
     join(repoRoot, 'pipeline', 'manifests'),
   ];
-  const files = [
-    join(repoRoot, 'ontology', 'doctrinal-reviews.yaml'),
-    join(repoRoot, 'ontology', 'flagged-pairings.yaml'),
-  ];
+  // Named files come from the guardrail gate's own path constants, so a
+  // move/rename through those constants carries gate and roster together.
+  const files = [DOCTRINAL_REVIEWS_PATH, FLAGGED_PAIRINGS_PATH].map((path) =>
+    join(repoRoot, path),
+  );
   return [...roots.flatMap(listFilesRecursively), ...files.filter(existsSync)].sort();
 }
 
