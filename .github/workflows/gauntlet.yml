@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Manual runs exist for the battery job: doctored-input checker drills and
+  # artifact-bearing runs between PRs.
+  workflow_dispatch:
 
 # Cancel superseded runs on the same PR; the gauntlet is the slow job here.
 concurrency:
@@ -281,3 +284,157 @@ jobs:
           console.log(`Ordering snapshot regeneration verified against merge-base ${mergeBase}: ` +
             'identity moved and priorProvenance names the real prior blob.');
           EOF
+
+  # ---------------------------------------------------------------------------
+  # battery (full artifact) — the enforcement point for G12 on the release
+  # corpus. Two-phase activation: this job lands red-but-honest (the pinned
+  # openbible source has drifted upstream and the committed descriptor is
+  # 0.7.1-era) and is NOT in branch protection. After release-housekeeping's
+  # re-pins + fresh mint, its first checker-green run on both OS legs is
+  # pasted in the activation PR and Jesse flips it to a required status check.
+  # Until then the harmful-#1 guarantee is enforced only in artifact-bearing
+  # runs performed deliberately — that interim gap is disclosed, not hidden.
+  # ---------------------------------------------------------------------------
+  battery-build:
+    name: battery (full artifact) — build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Restore pinned sources
+        id: sources-cache
+        uses: actions/cache@v4
+        with:
+          path: pipeline/sources
+          key: battery-sources-${{ hashFiles('pipeline/manifests/**') }}
+
+      - name: Fetch pinned sources (cache miss)
+        if: steps.sources-cache.outputs.cache-hit != 'true'
+        # A fetch failure fails the job loudly — never a silent skip. This is
+        # the step that is deterministically red until the re-pin lands.
+        run: |
+          if ! npm run fetch:sources --workspace pipeline; then
+            echo "::error::sources unfetchable — re-pin required (docs/source-repins.md)"
+            exit 1
+          fi
+
+      - name: Build release artifact at the committed builtAt
+        # Passing the committed descriptor's builtAt invokes the documented
+        # reproduction contract: same sources + same declared build time =>
+        # identical bytes. Built ONCE, on this leg only — cross-OS engine
+        # determinism over identical bytes is what G2 protects; cross-OS
+        # bit-reproducibility of the sqlite build is a separate requirement
+        # this design deliberately avoids taking on.
+        run: |
+          mkdir -p workbench/.artifact
+          BUILT_AT=$(node -p "JSON.parse(require('fs').readFileSync('artifacts/content-artifact.json','utf8')).builtAt")
+          npm run build:artifact --workspace pipeline -- --out ../workbench/.artifact/content.db --built-at "$BUILT_AT"
+
+      - name: Committed descriptor matches the rebuilt artifact
+        # The build regenerates artifacts/content-artifact.json in the
+        # worktree; any diff means the freshly written descriptor would be
+        # self-validating the freshly built database — the loophole this
+        # step closes.
+        run: |
+          if ! git diff --exit-code -- artifacts/content-artifact.json; then
+            echo "::error::artifact not reproducible from pinned sources — descriptor stale or pipeline drifted; re-mint required (release-housekeeping 0.5-0.7)"
+            exit 1
+          fi
+
+      - name: Upload built artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: battery-content-db
+          path: workbench/.artifact/content.db
+          if-no-files-found: error
+
+  battery:
+    name: battery (full artifact) — ${{ matrix.os }}
+    needs: battery-build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build engine
+        run: npm run build --workspace engine
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: battery-content-db
+          path: workbench/.artifact
+
+      - name: Release-database gauntlet
+        # continue-on-error on this ONE step is load-bearing, not decoration:
+        # gauntletExitCode returns 1 on any REJECT even without
+        # --require-admit, and a Phase-2 release run's verdict IS expected to
+        # REJECT (the committed G8/G2 baselines bind the FIXTURE identity;
+        # those same rows are merge-enforced by the verify job in their own
+        # identity). The machine report is written before the exit code is
+        # applied, so a REJECTing run still yields the full --json report;
+        # an early-abort run writes no report, which the checker treats as
+        # red. Phase 3 retires this tolerance with target-flavored baselines
+        # and --require-admit.
+        continue-on-error: true
+        run: npm run gauntlet -- --json eval/.runs/battery-report.json --release-database workbench/.artifact/content.db
+
+      - name: G12 checker — the job's sole success criterion
+        # Fails unless the report exists and parses, its G12-battery row is
+        # pass AND required, and the battery evidence section exists. It also
+        # prints the run verdict and every non-G12 row under an advisory
+        # banner, so the tolerated REJECT stays visible, never hidden.
+        if: always()
+        run: npm run battery:check --workspace eval -- check eval/.runs/battery-report.json
+
+      - name: Upload battery machine report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: battery-report-${{ runner.os }}
+          path: eval/.runs/battery-report.json
+          if-no-files-found: error
+
+  battery-cross-leg:
+    name: battery (full artifact) — cross-leg agreement
+    needs: battery
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: battery-report-Linux
+          path: reports/linux
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: battery-report-Windows
+          path: reports/windows
+
+      - name: Byte-compare G12 + battery sections across OS legs
+        run: npm run battery:check --workspace eval -- compare reports/linux/battery-report.json reports/windows/battery-report.json
