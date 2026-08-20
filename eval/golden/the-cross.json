@@ -9,21 +9,31 @@
     "the right passage for the wrong reason is still a failure.",
     "While we were yet sinners, Christ died for us; by his wounds we are healed.",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "2026-08-08 single-token audit: the bare query \"the cross\" is measured separately in the-cross-bare.json because its exact-text competitors make its honest expectations different from this remembered phrasing."
+    "2026-08-08 single-token audit: the bare query \"the cross\" is measured separately in the-cross-bare.json because its exact-text competitors make its honest expectations different from this remembered phrasing.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
   ],
   "expectedTop": [
     {
       "reference": "Romans 5:8",
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: The cross and atonement"
     },
     {
       "reference": "1 Corinthians 15:3",
+      "withinTop": 1,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: The cross and atonement"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "1 Corinthians 15:3",
+      "below": "Isaiah 53:5",
+      "withinTop": 5
+    }
+  ],
   "alsoAcceptable": [
     "Isaiah 53:5",
     "1 Peter 2:24",

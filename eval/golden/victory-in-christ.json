@@ -10,16 +10,31 @@
     "More than conquerors through him who loved us (Romans 8:37).",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
     "2026-08-08 single-token audit: the bare query \"victory\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts. Romans 8:37 is top-3 (not top-1) because the bare query \"victory\" is led by 1 Corinthians 15:57 — correctly.",
     "Round-2 book admission 2026-08-18: victory-in-christ gained 1 Jn 4:4 (greater is he), Rev 21:7, Rev 3:5; strong-in-the-lord.json asserts the extension."
   ],
   "expectedTop": [
     {
+      "reference": "1 Corinthians 15:57",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Victory in Christ"
+    },
+    {
       "reference": "Romans 8:37",
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Victory in Christ"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Romans 8:37",
+      "below": "1 John 5:4",
+      "withinTop": 3
+    }
+  ],
   "alsoAcceptable": [
     "1 Corinthians 15:57",
     "1 John 5:4",

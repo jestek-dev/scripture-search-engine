@@ -110,7 +110,6 @@ interface Budgets {
   readonly noise: {
     readonly maxTop10ChurnRatio: number;
     readonly maxWeakReasonShareIncrease: number;
-    readonly minMeanDistinctiveness: number | null;
   };
   readonly distinctiveness: {
     readonly minPmi: number;

@@ -10,22 +10,38 @@
     "God so loved the world; nothing can separate us from the love of God.",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
     "Jesse's 2026-08-08 call: the bare word \"love\" defaults to this concept, with loving-others surfacing as a related theme rather than competing. Asserted here so the default cannot silently flip.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts.",
     "Round-2 book admission 2026-08-18: gods-love widened Eph 3:19 to 3:17-19 and gained the Rom 8:31-35 / Eph 2:4-5 / 1 Jn 4:16,19 cluster.",
     "Integrator correction: the drafted 'he first loved us' additionalQuery was removed — asserting it would bind the pack's John 3:16 / Rom 8:38-39 leads to that query's window, where 1 John 4:19 honestly wins on its own words (measured in the round-2 admission run). The 1 John 4:19 anchor itself stays."
   ],
   "expectedTop": [
     {
+      "reference": "Romans 5:8",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The love of God"
+    },
+    {
       "reference": "John 3:16",
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: The love of God"
     },
     {
       "reference": "Romans 8:38-39",
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: The love of God"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Romans 5:8",
+      "below": "John 3:16",
+      "withinTop": 5
+    }
+  ],
   "alsoAcceptable": [
     "Romans 5:8",
     "1 John 4:9-10",
