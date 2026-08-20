@@ -9,7 +9,8 @@
     "the right passage for the wrong reason is still a failure.",
     "The Lord's Prayer answers the question directly; pray without ceasing.",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "2026-08-08 single-token audit: the bare query \"prayer\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
+    "2026-08-08 single-token audit: the bare query \"prayer\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
+    "Round-2 book admission 2026-08-18: prayer gained Eph 6:18, 1 Jn 5:14-15 (the according-to-his-will qualifier), Ps 86:5-7, Eph 1:17-18 (intercession for another), and the WATCHLISTED Mark 11:24 at the pack's low end in its honest believing-prayer frame. Mark 11:24 is deliberately NOT an expectedTop assertion — the pack must not be seen pushing a watchlisted verse upward; alsoAcceptable records that its presence is honest. John 14:13-14 (also watchlisted, anchored at the very bottom) is deliberately asserted NOWHERE, per Jesse's 2026-08-15 ruling; prosperity-name-it-claim-it.json remains the measured guard."
   ],
   "expectedTop": [
     {
@@ -24,7 +25,12 @@
     "Matthew 7:7",
     "Matthew 6:6",
     "Philippians 4:6",
-    "Luke 18:1"
+    "Luke 18:1",
+    "Ephesians 6:18",
+    "1 John 5:14-15",
+    "Psalms 86:5-7",
+    "Ephesians 1:17-18",
+    "Mark 11:24"
   ],
   "additionalQueries": [
     "prayer"

@@ -1,0 +1,39 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topics "Crowns" and "Rewards" (one pack; the
+# lists are one promise family). Rejected lead: Eph 5:27 (Christ presenting
+# the church spotless is his sanctifying work, not believer reward — see
+# rejects.md). Most crown texts are corpus-blocked (2 Tim 4:7-8, 1 Cor 9:25,
+# Rev 2:10, 1 Thess 2:19-20, Rev 22:12 — backlog.md); this pack should grow
+# with the corpus. NOTE for G4/doctrinal review: "reward" is not a
+# materialFrameKeyword and every anchor's reward is explicitly eschatological
+# — no watchlist ref is anchored here.
+id: heavenly-reward
+label: The believer's reward
+lexicon:
+  - crown of life
+  - rewards in heaven
+  - heavenly reward
+  - eternal reward
+  - crowns
+anchors:
+  # "when he has been approved, he will receive the crown of life which the
+  # Lord promised to those who love him" — verbatim in Torrey's REWARD OF
+  # SAINTS, THE.
+  - ref: James 1:12
+    sources: [torrey]
+    weight: 1.0
+  # "whatever good thing each one does, he will receive the same good again
+  # from the Lord, whether he is bound or free"
+  - ref: Ephesians 6:8
+    sources: [editorial]
+    weight: 0.85
+  # "When the chief Shepherd is revealed, you will receive the crown of
+  # glory that doesn't fade away" — the crown verse of the book's 5:2-4
+  # lead; vv2-3 address elders' motives and are not anchored.
+  - ref: 1 Peter 5:4
+    sources: [editorial]
+    weight: 0.8
+related:
+  - building-on-the-rock
+  - hope-in-god
+  - victory-in-christ

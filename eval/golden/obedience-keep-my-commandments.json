@@ -1,0 +1,26 @@
+{
+  "id": "obedience-keep-my-commandments",
+  "query": "if you love me keep my commandments",
+  "status": "active",
+  "additionalQueries": [
+    "keep his commandments"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18 — exercises an EXTENSION of an existing concept (see author-d/patches.md). Leads from Phillips 'A Topical Bible Guide', verified in context; the book is never an engine source. PENDING per fixtures-first; flip to active with the patch."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 14:15",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 14:21",
+    "1 John 3:22",
+    "Luke 11:28"
+  ],
+  "coversConcepts": [
+    "obedience-to-the-word"
+  ]
+}

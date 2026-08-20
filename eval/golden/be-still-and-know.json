@@ -1,0 +1,42 @@
+{
+  "id": "be-still-and-know",
+  "query": "be still and know that i am god",
+  "additionalQueries": [
+    "be still and know"
+  ],
+  "status": "active",
+  "coversConcepts": [
+    "refuge-in-trouble"
+  ],
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Companion to the",
+    "refuge-in-trouble patch in patches.md ('be still and know…' lexicon",
+    "entries + Psalms 46:10 anchor). PENDING until that patch merges.",
+    "",
+    "Routed to refuge-in-trouble ON PURPOSE, not to the rest/burnout pack:",
+    "Psalm 46:10 in context is God's word amid the roaring of nations in the",
+    "refuge psalm ('God is our refuge and strength' is the concept's existing",
+    "1.0 anchor, 46:1-3) — presenting it as a quiet-time relaxation verse is",
+    "the decontextualization this pass exists to catch. The Ps-91 remembered",
+    "phrasings set the precedent: a remembered phrasing joins the concept that",
+    "already anchors its passage rather than minting a duplicate.",
+    "",
+    "Structural limit, recorded: the bare query 'be still' normalizes to the",
+    "single token 'still' ('be' is a stopword), and a bare 'still' lexicon",
+    "entry would fire this concept on every query containing that common",
+    "word — so 'be still' alone deliberately stays unreachable, like the",
+    "golden-rule stopword case in loving-others."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 46:10",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Refuge in trouble"
+    }
+  ],
+  "expectedWithinTop": 5,
+  "alsoAcceptable": [
+    "Psalms 46:1-3"
+  ]
+}

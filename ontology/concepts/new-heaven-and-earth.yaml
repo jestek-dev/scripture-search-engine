@@ -1,0 +1,42 @@
+# DRAFT (round-2 curation, author E, 2026-08-18) — new concept.
+# Idea source (PR description only): Phillips, *A Topical Bible Guide*
+# (2004), topic "New Heaven and Earth" — topic lead only; anchors verified
+# in WEB context.
+#
+# NEUTRALITY: "new heaven and new earth" is the text's own phrase (Rev 21:1;
+# Isa 65:17; 2 Pet 3:13). The concept locates the naming passage and claims
+# nothing about millennial sequencing (DOCTRINAL-BASIS §4). Isa 65:17-25 and
+# 2 Pet 3:13 are corpus-blocked — see backlog.md; add them when the corpus
+# grows, at which point the Isaiah anchor needs its own honest comment (its
+# "new heavens and a new earth" still contains death, Isa 65:20 — quoting it
+# as a straight Rev 21 parallel is itself a system move).
+#
+# GEOMETRY vs existing packs (checked before drafting, per the collision
+# rule): grief-and-loss anchors Rev 21:3-4 (label "Grief and loss") and
+# new-creation anchors Rev 21:5 ("all things new" as fresh-start sense).
+# This pack overlaps 21:2-4 deliberately UNDER A DIFFERENT CLAIM — the same
+# verse serving two honest labels is the 1 Thess 4:16-17 precedent
+# (caught-up-together + second-coming). Rev 21:5 is NOT re-anchored here;
+# "all things new" phrasing stays new-creation's.
+id: new-heaven-and-earth
+label: A new heaven and a new earth
+lexicon:
+  - new heaven and new earth
+  # Isaiah / 2 Peter phrasing, as searchers quote it.
+  - new heavens and a new earth
+  - new jerusalem
+anchors:
+  # "I saw a new heaven and a new earth, for the first heaven and the first
+  # earth have passed away" — the naming verse Phillips cites.
+  - ref: Revelation 21:1
+    sources: [editorial]
+    weight: 1.0
+  # "…the holy city, New Jerusalem… God's dwelling is with people… He will
+  # wipe away every tear." Completes the vision unit and carries the
+  # "new jerusalem" lexicon entry's naming verse (21:2).
+  - ref: Revelation 21:2-4
+    sources: [editorial]
+    weight: 0.85
+related:
+  - new-creation
+  - second-coming

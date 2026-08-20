@@ -1,0 +1,42 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topic "Witnessing" — per the round-2 worklist
+# note, this is the evangelism / sharing-your-faith sense. The book's
+# 1 Pet 4:11 lead was rehomed to spiritual-gifts (its subject is
+# speaking/serving gifts). Corpus-blocked leads Ps 66:16, Prov 11:30:
+# backlog.md. No Torrey labels: the outline files these under
+# apostles/ministers headings, not an evangelism heading.
+id: sharing-your-faith
+label: Sharing your faith
+lexicon:
+  - sharing your faith
+  - witnessing
+  - evangelism
+  - how to share the gospel
+  - be my witnesses
+  - ambassadors for christ
+  - tell others about jesus
+anchors:
+  # "You will be witnesses to me in Jerusalem... to the uttermost parts of
+  # the earth."
+  - ref: Acts 1:8
+    sources: [editorial]
+    weight: 1.0
+  # "gave to us the ministry of reconciliation... We are therefore
+  # ambassadors on behalf of Christ"
+  - ref: 2 Corinthians 5:18-20
+    sources: [editorial]
+    weight: 0.95
+  # "You are witnesses of these things" — anchored with v46-47 (what the
+  # witness is OF: the risen Christ, repentance and remission preached to
+  # all nations); the bare book lead 24:48 alone is a sentence fragment.
+  - ref: Luke 24:46-48
+    sources: [editorial]
+    weight: 0.8
+  # "Go to your house, to your friends, and tell them what great things the
+  # Lord has done for you" — personal testimony as witness.
+  - ref: Mark 5:19
+    sources: [editorial]
+    weight: 0.75
+related:
+  - salvation
+  - those-who-never-heard

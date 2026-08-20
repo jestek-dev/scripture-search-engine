@@ -9,6 +9,10 @@ lexicon:
   - pursue holiness
   - sanctified
   - clean hands and a pure heart
+  # Round-2 book admission 2026-08-18.
+  # Bare word (one-token discount): sexual-purity keeps its multi-word
+  # phrases — the bare token's honest home is the general call to holiness.
+  - purity
 anchors:
   - ref: 1 Peter 1:15-16
     sources: [editorial]
@@ -28,5 +32,12 @@ anchors:
   - ref: 1 Thessalonians 5:23
     sources: [torrey]
     weight: 0.7
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "everyone who has this hope set on him purifies himself, even as he is
+  # pure."
+  - ref: 1 John 3:3
+    sources: [editorial]
+    weight: 0.75
 related:
   - walking-in-the-light

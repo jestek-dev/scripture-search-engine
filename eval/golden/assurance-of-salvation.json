@@ -1,0 +1,49 @@
+{
+  "id": "assurance-of-salvation",
+  "query": "assurance of salvation",
+  "additionalQueries": [
+    "am i really saved",
+    "know i am saved"
+  ],
+  "status": "active",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
+    "new assurance-of-salvation concept; PENDING until the pack lands, then",
+    "flip active in the same PR.",
+    "",
+    "Phrased in assurance language only — 'eternal security' is deliberately",
+    "absent: DOCTRINAL-BASIS.md §4 rules perseverance debates a non-criterion,",
+    "and the query set must not import one side's vocabulary.",
+    "",
+    "Matthew 7:21-23 ('I never knew you') was probed as the dangerous",
+    "near-miss for an anxious 'am I really saved' searcher, and NO assertion",
+    "is made about it: it shares no token with these queries, so it has no",
+    "lexical rung to rank on, and an assertion that cannot fail is decoration",
+    "(the sense-inversion-provision precedent). If a later corpus or concept",
+    "change gives it a rung, add a preferredOrder demotion then.",
+    "",
+    "Kept disjoint from remembered-faith-as-assurance (Heb 11:1, the",
+    "faith-definition sense): that fixture owns 'confidence in what we hope",
+    "for'; this one never asserts Heb 11:1.",
+    "Round-2 book admission 2026-08-18: assurance-of-salvation gained 2 Tim 2:19 (with the seal's second line quoted in the pack comment) and 1 Jn 2:1 (the advocate clause)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 John 5:11-13",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Assurance of salvation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 8:38-39",
+    "Philippians 1:6",
+    "Romans 8:16",
+    "2 Timothy 2:19",
+    "1 John 2:1"
+  ],
+  "coversConcepts": [
+    "assurance-of-salvation"
+  ]
+}

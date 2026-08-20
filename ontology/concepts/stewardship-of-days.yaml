@@ -1,0 +1,52 @@
+# ROUND-2 AUTHOR-F (2026-08-18) — new concept.
+# Idea source (PR description only): Scriptural Prayers "Time Management"
+# and "Procrastination"; Growing by Heart wk15 "garden bench time" (Eph
+# 5:15-17) and wk50 "sundials" (Ps 90:12, corpus-blocked). Each anchor
+# verified against the WEB text in context.
+#
+# NEUTRAL LABEL, deliberate: the honest biblical home for "time management"
+# is stewardship of days — walking wisely because the days are evil — not a
+# productivity system. Psalm 90:12 ("teach us to number our days"), the
+# natural companion anchor, is NOT in web-subset — see backlog.md; add it
+# when Psalm 90 lands.
+#
+# Psalm 1:2 (the prayer book's other Time Management ref) is REJECTED for
+# this topic: its subject is delight in the law, and it anchors
+# `delight-in-the-word` instead — see manifest.md.
+#
+# WATCHLIST HYGIENE: no materialFrameKeyword appears in id, label, or
+# lexicon ("make the best use of the time" carefully avoids "success" /
+# "increase" vocabulary), and no watchlisted verse is anchored.
+id: stewardship-of-days
+label: Redeeming the time
+lexicon:
+  - time management
+  - redeeming the time
+  - make the best use of the time
+  - making the most of every opportunity
+  - procrastination
+  - stop procrastinating
+anchors:
+  # "Watch carefully how you walk, not as unwise, but as wise, redeeming
+  # the time, because the days are evil... understand what the will of the
+  # Lord is" (WEB). Wisdom-walking is the frame; time is stewarded, not
+  # optimized. (No Torrey heading lists Eph 5:15-17; editorial.)
+  - ref: Ephesians 5:15-17
+    sources: [editorial]
+    weight: 1.0
+  # "Not lagging in diligence, fervent in spirit, serving the Lord" (WEB).
+  # The anti-sloth charge in its serving-the-Lord frame.
+  # Torrey: IDLENESS AND SLOTH ("Forbidden") lists 12:11.
+  - ref: Romans 12:11
+    sources: [torrey]
+    weight: 0.8
+  # "That you won't be sluggish, but imitators of those who through faith
+  # and perseverance inherited the promises" (WEB). Sluggishness answered
+  # with imitation of the faithful — the procrastination register's honest
+  # verse. Torrey: IDLENESS AND SLOTH ("Forbidden"), DILIGENCE.
+  - ref: Hebrews 6:12
+    sources: [torrey]
+    weight: 0.7
+related:
+  - wisdom-from-god
+  - remembered-work-as-for-the-lord

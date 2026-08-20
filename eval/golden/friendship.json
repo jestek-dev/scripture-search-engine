@@ -1,0 +1,42 @@
+{
+  "id": "friendship",
+  "query": "friendship",
+  "status": "active",
+  "note": [
+    "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
+    "the `friendship` concept pack, pending until the pack lands and it",
+    "passes. Idea confirmed by Growing by Heart wk29/wk23, Phillips 'Friends",
+    "and Friendliness', and the prayer books' 'Choosing the Right Friends' —",
+    "topic ideas only, no verse list copied; anchors are editorial (Torrey",
+    "has no friendship heading).",
+    "",
+    "John 15:13 and 1 Corinthians 15:33 are asserted because they are the",
+    "pack's only anchors present in the fixture corpus. The theme's other",
+    "anchors (Prov 17:17, Prov 18:24, Eccl 4:9-12, Prov 13:20) are outside",
+    "it — see the pack's corpus-needs note; asserting them here would fail",
+    "on absence, not on ranking, which measures nothing.",
+    "",
+    "'a friend loves at all times' is remembered NIV phrasing of Prov 17:17;",
+    "it is asserted against the concept (which fires all anchors), not",
+    "against the absent verse."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 15:13",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Friendship"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 15:33"
+  ],
+  "additionalQueries": [
+    "friends",
+    "a friend loves at all times",
+    "choosing friends"
+  ],
+  "coversConcepts": [
+    "friendship"
+  ]
+}

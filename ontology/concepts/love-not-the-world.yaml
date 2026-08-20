@@ -1,0 +1,27 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topic "Doubtful Things" — but these two texts are
+# not gray-area texts (that is disputable-matters); they are the worldliness
+# warnings, so they get their own honest home. Also covers the sound core of
+# the book's "Man's Need of Salvation" lead 1 John 2:13-17 (the 2:13-14
+# fathers/young-men address is not a worldliness anchor; see rejects.md).
+id: love-not-the-world
+label: Love not the world
+lexicon:
+  - worldliness
+  - love not the world
+  - do not love the world
+  - friendship with the world
+anchors:
+  # "Don't love the world or the things that are in the world... the lust of
+  # the flesh, the lust of the eyes, and the pride of life"
+  - ref: 1 John 2:15-17
+    sources: [torrey]
+    weight: 1.0
+  # "friendship with the world is hostility toward God"
+  - ref: James 4:4
+    sources: [editorial]
+    weight: 0.9
+related:
+  - holiness
+  - surrender-to-god
+  - disputable-matters

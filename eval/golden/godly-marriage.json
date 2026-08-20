@@ -1,0 +1,51 @@
+{
+  "id": "godly-marriage",
+  "query": "marriage",
+  "additionalQueries": [
+    "godly husband",
+    "prayer for my husband",
+    "husbands love your wives",
+    "biblical marriage",
+    "godly wife"
+  ],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new",
+    "godly-marriage concept; pending until the pack lands, then flip active",
+    "in the same PR. Idea source: Scriptural Prayers 'Being a Godly",
+    "Husband' / 'Being a Godly Wife' (idea only, no verse list copied).",
+    "Phillips' 'Husbands' / 'Wives' / 'Sex and Marriage' (another author's",
+    "slice) share this home — merge there, don't mint a neighbour.",
+    "",
+    "For the bare query 'marriage' the crisis pack",
+    "(betrayal-and-marriage-crisis) and doctrine pack",
+    "(marriage-divorce-teaching) must not be displaced — their anchors are",
+    "listed alsoAcceptable so the three registers can interleave; the",
+    "assertion is only that the positive charge reaches the leading window",
+    "with its curated reason.",
+    "INTEGRATOR (round-2 merge): author D’s phillips marriage pack (Husbands / Wives / Sex and Marriage) merged INTO this concept per author F’s own header note — one marriage home, not two. D’s 1 Pet 3 / Heb 13:4 / Titus 2 / 1 Cor 7:3 anchors listed acceptable."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 5:25",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Marriage"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ephesians 5:22-24",
+    "Ephesians 5:28",
+    "Genesis 2:24",
+    "Matthew 19:3-9",
+    "1 Peter 3:7",
+    "Hebrews 13:4",
+    "1 Peter 3:1-6",
+    "Titus 2:3-5",
+    "1 Corinthians 7:3"
+  ],
+  "coversConcepts": [
+    "godly-marriage"
+  ]
+}

@@ -1,0 +1,42 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead sources:
+# Phillips "A Topical Bible Guide", topics "Occupation" and "Honesty"
+# (1 Thess 4:11-12 rehomed — its subject is quiet diligent labor; the
+# KJV's "honestly toward them that are without" was the book's hook).
+# Distinct from remembered-work-as-for-the-lord, which is the single
+# Col 3:23 remembered phrasing plus new-job queries; related-edge below.
+# Corpus-blocked leads 2 Thess 3:10, Prov 14:23, Eccl 9:10: backlog.md.
+id: work-and-diligence
+label: Work and diligence
+lexicon:
+  - work
+  - hard work
+  - work ethic
+  - diligence
+  - diligent
+  - what does the bible say about work
+anchors:
+  # work precedes the fall: "put him into the garden of Eden to cultivate
+  # and keep it" — verbatim in Torrey's INDUSTRY.
+  - ref: Genesis 2:15
+    sources: [torrey]
+    weight: 0.9
+  # "lead a quiet life... work with your own hands... walk properly toward
+  # those who are outside"
+  - ref: 1 Thessalonians 4:11-12
+    sources: [torrey]
+    weight: 0.85
+  # "let him labor, producing with his hands something that is good, that
+  # he may have something to give"
+  - ref: Ephesians 4:28
+    sources: [torrey]
+    weight: 0.85
+  # "not lagging in diligence, fervent in spirit, serving the Lord" — the
+  # book's 12:11-13 lead trimmed to the diligence verse (vv12-13 turn to
+  # hope, prayer, and hospitality).
+  - ref: Romans 12:11
+    sources: [editorial]
+    weight: 0.8
+related:
+  - remembered-work-as-for-the-lord
+  - generosity
+  - honesty

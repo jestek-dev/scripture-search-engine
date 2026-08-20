@@ -1,0 +1,62 @@
+# INNER-LIFE PACK (cluster B draft, 2026-08-18).
+#
+# PEOPLE-PLEASING / FEAR OF MAN — a small concept, kept small on purpose.
+# Named by Growing by Heart week 39 (memory verse Gal 1:10). Its other
+# wk39 verse, Prov 31:30, was considered and REJECTED here: that verse is
+# about the fear of the LORD versus fleeting beauty, not about craving human
+# approval — pairing it here would be the decontextualization this pass
+# exists to prevent.
+#
+# VOCABULARY NOTE: Gal 1:10 (WEB) says "seeking the favor of men", and
+# "favor" is a materialFrameKeyword in ontology/flagged-pairings.yaml. The
+# word is deliberately kept OUT of the id/label/lexicon so this concept never
+# enters the doctrinal-scan's scope for no reason; none of its anchors are
+# watchlist refs either way.
+id: pleasing-god-not-people
+label: "Pleasing God, not people"
+lexicon:
+  - people pleasing
+  - people pleaser
+  - fear of man
+  # Bare word, deliberate: "approval" is the modern vocabulary of this
+  # struggle and queries like "approval of others" normalize to the single
+  # token `approval` ("others" is a stopword) — without this entry that
+  # search reaches nothing curated.
+  - approval
+  - seeking approval
+  - approval of people
+anchors:
+  # "For am I now seeking the favor of men, or of God?… if I were still
+  # pleasing men, I wouldn't be a servant of Christ" (WEB). The naming verse:
+  # men-pleasing and Christ's service set in opposition.
+  - ref: Galatians 1:10
+    sources: [editorial]
+    weight: 1.0
+  # "The fear of man proves to be a snare, but whoever puts his trust in the
+  # LORD is kept safe" (WEB wording from knowledge — NOT in web-subset;
+  # corpus-needs.md). The proverb that names fear-of-man itself.
+  - ref: Proverbs 29:25
+    sources: [editorial]
+    weight: 0.9
+  # "…not as pleasing men, but God, who tests our hearts" (WEB wording from
+  # knowledge — NOT in web-subset; corpus-needs.md). Paul's ministry ethic
+  # stated as principle.
+  - ref: 1 Thessalonians 2:4
+    sources: [editorial]
+    weight: 0.8
+  # "For they loved men's praise more than God's praise" (WEB wording from
+  # knowledge — NOT in web-subset; corpus-needs.md). The diagnosis, in John's
+  # narrative of rulers who believed but would not confess.
+  - ref: John 12:43
+    sources: [editorial]
+    weight: 0.7
+  # "Whatever you do, work heartily, as for the Lord and not for men" (WEB).
+  # Also the 1.0 anchor of remembered-work-as-for-the-lord — shared
+  # deliberately at low weight, because "not for men" is this concept's sense
+  # of the verse.
+  - ref: Colossians 3:23
+    sources: [editorial]
+    weight: 0.65
+related:
+  - remembered-work-as-for-the-lord
+  - trust-in-god

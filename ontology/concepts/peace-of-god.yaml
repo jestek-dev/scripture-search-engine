@@ -17,6 +17,33 @@ lexicon:
   # NIV/ESV; the corpus is WEB, so this phrasing reached nothing before.
   # Measured gap — see docs/research/2026-08-08-remembered-phrasings.md.
   - cast all your anxiety on him
+  # Inner-life aliases, 2026-08-18 (books-harvest curation). Bare words per
+  # the approved "anxiety" precedent (§1.6d option 3 /
+  # remembered-anxious-for-nothing): the words people actually type, kept
+  # humble by the one-token discount. Routed HERE and not to
+  # remembered-anxious-for-nothing because the worry answer set is this
+  # concept's anchor set (Phil 4:6-7; 1 Pet 5:7, whose WEB text reads
+  # "casting all your worries on him"; Matt 6:25-27; John 16:33); the
+  # remembered pack keeps its narrow one-anchor design. Landed together with
+  # the 1 Peter 5:7 dedup so the added traffic never sees the double-count.
+  # "worried" is a separate entry because the stemmer yields a different
+  # token than "worry"; "worries"/"worrying" normalize to "worry" and
+  # "stressed" to "stress", so neither needs an entry.
+  - worry
+  - worried
+  - do not worry
+  - stress
+  # Round-2 book admission 2026-08-18.
+  - let the peace of god rule
+  - do not fret
+  # The Phil 4:8 thought-life phrasings, routed HERE per the Psalm-91
+  # precedent: this concept already owns the passage (Phil 4:6-7 at 1.0),
+  # and the anchor below carries vv8-9 to its "the God of peace will be
+  # with you" close. The remembered-transformed-not-conformed pack keeps
+  # its narrow one-anchor design (integrator call; author F had proposed
+  # Phil 4:8 there).
+  - whatever is true
+  - think about such things
 anchors:
   - ref: Philippians 4:6-7
     sources: [editorial]
@@ -30,12 +57,14 @@ anchors:
   - ref: John 16:33
     sources: [torrey]
     weight: 0.8
-  # Also the remembered-phrasing anchor, 2026-08-08 (editorial: the verse the
-  # remembered wording "cast all your anxiety on him" renders). A second entry
-  # for the same ref double-counted it — the engine sums duplicate anchors —
-  # so the editorial citation was deduplicated 2026-08-17. Dual citation
-  # `sources: [torrey, editorial]` is restored by `ranking-fixes` once
-  # multi-source entries are single-scoring.
+  # Deduplicated 2026-08-18: this concept listed 1 Peter 5:7 twice (torrey
+  # 0.75 + a remembered-phrasing editorial entry at 0.85, added 2026-08-08 —
+  # "cast all your anxiety on him" is this verse), and the engine sums
+  # duplicate anchors, so the verse outscored Philippians 4:6-7 for "peace".
+  # The torrey entry survives with its original weight; the remembered-
+  # phrasing rationale now lives on this comment. Dual citation
+  # `sources: [torrey, editorial]` should be restored once multi-source
+  # entries are single-scoring (2026-08-14 plan, ranking-fixes §6 #3).
   - ref: 1 Peter 5:7
     sources: [torrey]
     weight: 0.75
@@ -44,6 +73,26 @@ anchors:
     weight: 0.7
   - ref: Romans 5:1
     sources: [torrey]
+    weight: 0.6
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "let the peace of God rule in your hearts." Torrey: PEACE, SPIRITUAL.
+  - ref: Colossians 3:15
+    sources: [torrey]
+    weight: 0.85
+  # "whatever things are true... think about these things. ...and the God
+  # of peace will be with you" — contiguous with the pack's Phil 4:6-7
+  # lead (collapseAnchorRuns applies); the peace promise closes the unit.
+  - ref: Philippians 4:8-9
+    sources: [editorial]
+    weight: 0.8
+  # "Rest in the LORD... Don't fret."
+  - ref: Psalms 37:7
+    sources: [editorial]
+    weight: 0.7
+  # "Don't fret because of evildoers."
+  - ref: Psalms 37:1
+    sources: [editorial]
     weight: 0.6
 related:
   - trust-in-god

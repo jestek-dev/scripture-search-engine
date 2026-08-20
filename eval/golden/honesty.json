@@ -1,0 +1,28 @@
+{
+  "id": "honesty",
+  "query": "honesty",
+  "status": "active",
+  "additionalQueries": [
+    "lying",
+    "telling the truth"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 4:25",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Honesty"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Colossians 3:9-10",
+    "Hebrews 13:18",
+    "1 Peter 2:11-12"
+  ],
+  "coversConcepts": [
+    "honesty"
+  ]
+}

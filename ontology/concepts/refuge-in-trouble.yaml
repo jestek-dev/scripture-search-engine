@@ -17,6 +17,15 @@ lexicon:
   # Bare words are how people commonly search. The one-token specificity
   # discount keeps this trigger weaker than a multi-word concept match.
   - refuge
+  # "Be still and know" (Psalm 46:10), added 2026-08-18 (books-harvest
+  # curation). Belongs HERE per the Psalm-91 precedent above: this concept
+  # already owns Psalm 46 (46:1-3 at 1.0), and minting a rest/quiet concept
+  # over 46:10 would decontextualize the verse — in the psalm it is God's
+  # word amid the roaring nations, not a relaxation mantra. Bare "be still"
+  # collapses to the single common token "still" and is deliberately NOT an
+  # entry (see eval/golden/be-still-and-know.json).
+  - be still and know
+  - be still and know that i am god
 anchors:
   - ref: Psalms 46:1-3
     sources: [editorial]
@@ -44,6 +53,32 @@ anchors:
   - ref: Deuteronomy 33:27
     sources: [torrey]
     weight: 0.7
+  # "Be still, and know that I am God. I will be exalted among the nations"
+  # (WEB, verified in web-subset). Same psalm as the 46:1-3 anchor above;
+  # non-overlapping range, so the duplicate-anchor guard is not tripped.
+  # Added 2026-08-18 (books-harvest curation).
+  - ref: Psalms 46:10
+    sources: [editorial]
+    weight: 0.85
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # (The protection-PRAYER register — "protect my children", travel — is
+  # the new gods-protection pack; these three stay in this pack's own
+  # distress register, and no protection lexicon is added here.)
+  # "He will cover you with his feathers." Torrey PROTECTION lists 91:3-7.
+  - ref: Psalms 91:4
+    sources: [torrey]
+    weight: 0.85
+  # "You are my hiding place" — the lexicon has carried the phrase since
+  # round 1 with no anchor behind the phrase's own psalm.
+  - ref: Psalms 32:7
+    sources: [editorial]
+    weight: 0.8
+  # "The LORD's angel encamps around those who fear him"; Torrey files it
+  # under ANGELS — editorial here.
+  - ref: Psalms 34:7
+    sources: [editorial]
+    weight: 0.8
 openbibleTopics:
   - refuge
 related:

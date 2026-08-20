@@ -1,0 +1,26 @@
+{
+  "id": "the-lords-discipline",
+  "query": "gods discipline",
+  "status": "active",
+  "additionalQueries": [
+    "the lord disciplines those he loves",
+    "chastening"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hebrews 12:7-11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Lord's discipline"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Revelation 3:19"
+  ],
+  "coversConcepts": [
+    "the-lords-discipline"
+  ]
+}

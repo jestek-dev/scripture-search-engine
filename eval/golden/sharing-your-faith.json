@@ -1,0 +1,29 @@
+{
+  "id": "sharing-your-faith",
+  "query": "sharing your faith",
+  "status": "active",
+  "additionalQueries": [
+    "witnessing",
+    "evangelism",
+    "how to share the gospel"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 1:8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Sharing your faith"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "2 Corinthians 5:18-20",
+    "Luke 24:46-48",
+    "Mark 5:19"
+  ],
+  "coversConcepts": [
+    "sharing-your-faith"
+  ]
+}

@@ -16,6 +16,17 @@ lexicon:
   # than papered over. These are the matchable ways people name the same idea.
   - the golden rule
   - treat others the way you want to be treated
+  # Round-2 book admission 2026-08-18: Matt 5:44's own second clause, as
+  # searchers quote it. Measured: without this entry the bare-token
+  # "pray" fired the prayer pack's anchors over the exact-phrase verse
+  # itself, and Matt 5:44 appeared nowhere in the top 10.
+  - pray for those who persecute you
+  # (Round-2 note: a "walk in love" lexicon entry was drafted and DROPPED
+  # by the integrator on G8 evidence — its two tokens sit inside the
+  # ot-prophets-justly noise probe's query, so the entry flooded that
+  # probe's top-10 with this pack's anchors (80% displaced, limit 40%).
+  # The query needs no curation anyway: Ephesians 5:2 "walk in love" serves
+  # it lexically.)
 anchors:
   - ref: John 13:34-35
     sources: [editorial]
@@ -43,6 +54,40 @@ anchors:
   - ref: Matthew 7:12
     sources: [editorial]
     weight: 0.9
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "love your enemies... that you may be children of your Father" (book
+  # lead 5:44-47 trimmed: vv46-47 are the supporting a-fortiori; v43 is the
+  # foil quotation). Torrey corroborates 5:44 under ENEMIES / LOVE TO MAN.
+  # Closes a measured gap: the lexicon already carried "love your enemies"
+  # with no anchor.
+  - ref: Matthew 5:44-45
+    sources: [editorial]
+    weight: 0.9
+  # "love one another, even as I have loved you." Torrey: LOVE TO MAN
+  # ("Commanded by Christ" / "After the example of Christ").
+  - ref: John 15:12
+    sources: [torrey]
+    weight: 0.85
+  # the golden rule in Luke's form; the lexicon already carries "the golden
+  # rule" (Matt 7:12 was its only anchor).
+  - ref: Luke 6:31
+    sources: [editorial]
+    weight: 0.8
+  # "the whole law is fulfilled in one word: love your neighbor as
+  # yourself." Torrey: LOVE TO MAN ("Is the fulfilling of the law").
+  - ref: Galatians 5:14
+    sources: [torrey]
+    weight: 0.8
+  # "If we love one another, God remains in us."
+  - ref: 1 John 4:12
+    sources: [editorial]
+    weight: 0.75
+  # "the greatest of these is love." Torrey: LOVE TO MAN ("Is an abiding
+  # principle").
+  - ref: 1 Corinthians 13:13
+    sources: [torrey]
+    weight: 0.7
 related:
   - gods-love
   - forgiving-others

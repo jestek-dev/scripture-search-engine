@@ -1,0 +1,26 @@
+{
+  "id": "love-your-enemies",
+  "query": "love your enemies",
+  "status": "active",
+  "additionalQueries": [
+    "pray for those who persecute you"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18 — exercises an EXTENSION of an existing concept (see author-d/patches.md). Leads from Phillips 'A Topical Bible Guide', verified in context; the book is never an engine source. PENDING per fixtures-first; flip to active with the patch.",
+    "Closes a measured lexicon-anchor gap: loving-others already carried the phrase 'love your enemies' with no Matt 5:44 anchor."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 5:44-45",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 6:31",
+    "Matthew 5:46-47"
+  ],
+  "coversConcepts": [
+    "loving-others"
+  ]
+}

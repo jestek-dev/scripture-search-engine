@@ -1,0 +1,122 @@
+# CONTENTMENT — merged pack (books-harvest curation, 2026-08-18).
+#
+# Two curation clusters independently drafted this concept, both designed
+# around the pending doctrine-negative fixture
+# eval/golden/prosperity-contentment.json (waiting since 2026-08-15): that
+# fixture asserts the query "wealth" should surface 1 Timothy 6:6-10 under
+# requiredReasonLabel "Theme: Contentment". This merged pack keeps the LABEL
+# exactly "Contentment" and 1 Tim 6:6-10 as the lead anchor with that exact
+# range — change either only together with that fixture. The merge took the
+# inner-life cluster's comparison register and Phil 4:11-13 framing and the
+# life-situations cluster's money/debt vocabulary and Matthew 6 anchors.
+#
+# DOCTRINAL SCAN, faced head-on rather than avoided: the lexicon deliberately
+# carries the material-frame words "wealth" and "money"
+# (flagged-pairings.yaml vocabulary), because routing wealth-seekers to
+# contentment teaching is this concept's entire point. That puts the concept
+# IN SCOPE for the G4 doctrinal red-flag check — and its anchors are chosen
+# so the check finds nothing: no watchlist reference (Phil 4:19, Mal 3:10,
+# Luke 6:38, Prov 18:16, 3 John 1:2, …) is anchored here, and Phil 4:19 in
+# particular is deliberately absent even though it sits four verses from an
+# anchor. The active prosperity-* mustNotRank sets stay green: none of their
+# forbidden refs appear below.
+id: contentment
+label: Contentment
+lexicon:
+  # Bare words, deliberate (§1.6d pattern; the one-token discount keeps them
+  # humble).
+  - contentment
+  # Collapses to the single token "content" — deliberate: "content" / "being
+  # content" are this concept's own subject words.
+  - being content
+  - godliness with contentment
+  # The love-of-money phrasing of 1 Tim 6:10 / Heb 13:5 — the discontent
+  # diagnosis in the texts' own words.
+  - love of money
+  # Bare "wealth", deliberate: the designed trigger that lets the pending
+  # prosperity-contentment fixture pass — a wealth query answered with the
+  # canon's contentment teaching, by a curated, attributed anchor. "money",
+  # "finances", "debt" extend the same design to the vocabulary the
+  # prosperity family does not protect; "money" only reaches Matt 6:24 and
+  # 1 Tim 6:10 through curation (the WEB says "Mammon").
+  - wealth
+  - money
+  - finances
+  - debt
+  # The comparison register (Growing by Heart's "Greener Grass" week is built
+  # on exactly this: discontent born of looking over the fence).
+  - comparison
+  - comparing yourself
+anchors:
+  # "Godliness with contentment is great gain… the love of money is a root of
+  # all kinds of evil" (WEB). Range matches the pending fixture's assertion
+  # exactly: gain redefined, the trap named, the wealth-seeker answered.
+  # Editorial for the range: Torrey's CONTENTMENT/RICHES outlines list 6:6,
+  # 6:8, 6:9, 6:10 individually but not 6:7.
+  - ref: 1 Timothy 6:6-10
+    sources: [editorial]
+    weight: 1.0
+  # "I have learned in whatever state I am, to be content in it… I can do all
+  # things through Christ who strengthens me" (WEB). Contentment as learned
+  # secret — and 4:13 restored to its home context (strength to be content in
+  # plenty and in want), the exact opposite of its achievement recruitment.
+  - ref: Philippians 4:11-13
+    sources: [editorial]
+    weight: 0.95
+  # Torrey/Miller admission (2026-08-18) — from the verified outline:
+  # CONTENTMENT ("With what things they have :: Hebrews 13:5").
+  # "Be free from the love of money, content with such things as you have,
+  # for he has said, 'I will in no way leave you'" (WEB) — contentment
+  # grounded in presence, not possessions; also the honest pastoral word for
+  # debt anxiety.
+  - ref: Hebrews 13:5
+    sources: [torrey]
+    weight: 0.9
+  # "No one can serve two masters… You can't serve both God and Mammon"
+  # (WEB). Jesus on money as a rival lord; the WEB says "Mammon", so the word
+  # "money" never reaches this verse lexically and only a curated anchor can
+  # connect it to the money searcher. Editorial.
+  - ref: Matthew 6:24
+    sources: [editorial]
+    weight: 0.85
+  # "Don't lay up treasures for yourselves on the earth… For where your
+  # treasure is, there your heart will be also" (WEB). Editorial for the
+  # range: the RICHES outline lists 6:19 and 6:20 but not 6:21.
+  - ref: Matthew 6:19-21
+    sources: [editorial]
+    weight: 0.8
+  # Torrey RICHES ("Give worldly power :: Proverbs 22:7").
+  # "The rich rule over the poor. The borrower is servant to the lender."
+  # (WEB wording verified against the WEB text; Proverbs 22 is not yet in the
+  # fixture corpus.) The canon's plainest word on debt; observation, not
+  # condemnation, which is why it sits mid-weight.
+  - ref: Proverbs 22:7
+    sources: [torrey]
+    weight: 0.75
+  # Torrey RICHES ("Uncertain :: 1 Timothy 6:17").
+  # "…not be arrogant, nor have their hope set on the uncertainty of riches,
+  # but on the living God, who richly provides us with everything to enjoy"
+  # (WEB) — the instruction to those who HAVE money; it is God, not wealth,
+  # who "richly provides".
+  - ref: 1 Timothy 6:17
+    sources: [torrey]
+    weight: 0.7
+  # Torrey CONTENTMENT ("Exemplified — Agur :: Proverbs 30:8").
+  # "Give me neither poverty nor riches. Feed me with the food that is
+  # needful for me" (WEB wording verified against the WEB text; Proverbs 30
+  # is not yet in the fixture corpus). Agur's prayer.
+  - ref: Proverbs 30:8
+    sources: [torrey]
+    weight: 0.65
+  # "…measuring themselves by themselves, and comparing themselves with
+  # themselves, are without understanding" (WEB). The comparison register's
+  # naming verse — kept low: its context is Paul answering rival apostles,
+  # applied here as the canon's clearest word that comparison is folly.
+  - ref: 2 Corinthians 10:12
+    sources: [editorial]
+    weight: 0.6
+related:
+  - gods-provision
+  - generosity
+  - thanksgiving
+  - trust-in-god

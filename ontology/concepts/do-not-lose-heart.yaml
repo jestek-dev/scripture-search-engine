@@ -1,0 +1,76 @@
+# INNER-LIFE PACK (cluster B draft, 2026-08-18).
+#
+# DISCOURAGEMENT — the mild register, deliberately its own concept rather
+# than aliases on `hope-in-despair`. That pack is the crisis register
+# ("suicide", "no reason to live") with crisis-weighted anchors (2 Cor 1:8-10
+# leads, Psalm 88 enters at 0.35); "I'm discouraged" is a different pastoral
+# moment wanting Gal 6:9's keep-going word, which would be wrong served to a
+# suicidal search and is not anchored there. The two lexicons are disjoint —
+# crisis phrasings ("want to give up", "feeling hopeless") STAY on
+# hope-in-despair; this pack takes only the discouragement vocabulary.
+#
+# Shared anchors (Ps 42:5 with hope-in-despair; Isa 41:10/Josh 1:9 with
+# fear-not; 2 Cor 4:16-18 with serious-illness-and-dying) are deliberate:
+# the same passage honestly serves adjacent registers, per the Ps 34:18
+# precedent across the pastoral pack. No shared lexicon phrases (G4-checked).
+id: do-not-lose-heart
+label: Do not lose heart
+lexicon:
+  - discouraged
+  - discouragement
+  - do not lose heart
+  - losing heart
+  - weary in doing good
+  # "don't give up" after apostrophe-stripping; distinct phrase from
+  # hope-in-despair's "want to give up" (the crisis phrasing stays there,
+  # and the existing pastoral-despair-give-up fixture keeps owning it).
+  - dont give up
+  # Round-2 book admission 2026-08-18.
+  - pressed on every side
+  - dont throw away your confidence
+anchors:
+  # "Let's not be weary in doing good, for we will reap in due season if we
+  # don't give up" (WEB). The keep-going verse for the discouraged-but-
+  # still-serving — named by the prayer books' Fatigue scripture list and by
+  # Growing by Heart's perseverance week.
+  - ref: Galatians 6:9
+    sources: [editorial]
+    weight: 1.0
+  # "Why are you in despair, my soul?… Hope in God! For I shall still praise
+  # him" (WEB). The psalmist talking his own soul out of discouragement.
+  - ref: Psalms 42:5
+    sources: [editorial]
+    weight: 0.9
+  # "Therefore we don't faint, but though our outward person is decaying, yet
+  # our inward person is renewed day by day" (WEB). Paul's own do-not-lose-
+  # heart passage — the phrase is the passage's refrain (4:1, 4:16).
+  - ref: 2 Corinthians 4:16-18
+    sources: [editorial]
+    weight: 0.85
+  # "Don't you be afraid… Don't be dismayed, for I am your God. I will
+  # strengthen you" (WEB). "Dismayed" is the discouragement word; God's
+  # strengthening promise to fearful Israel.
+  - ref: Isaiah 41:10
+    sources: [editorial]
+    weight: 0.8
+  # "Be strong and courageous. Don't be afraid. Don't be dismayed, for the
+  # LORD your God is with you wherever you go" (WEB). To Joshua facing a task
+  # too big for him — the commissioning word against losing heart.
+  - ref: Joshua 1:9
+    sources: [editorial]
+    weight: 0.75
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "pressed on every side, yet not crushed... struck down, yet not
+  # destroyed" — leads into the existing 4:16-18 anchor. Torrey DESPAIR
+  # lists 4:8; editorial for the range (round-1 gods-provision precedent).
+  - ref: 2 Corinthians 4:8-10
+    sources: [editorial]
+    weight: 0.85
+  # "don't throw away your boldness."
+  - ref: Hebrews 10:35
+    sources: [editorial]
+    weight: 0.8
+related:
+  - hope-in-despair
+  - strength-in-weakness

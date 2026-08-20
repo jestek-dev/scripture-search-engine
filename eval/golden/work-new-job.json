@@ -1,0 +1,41 @@
+{
+  "id": "work-new-job",
+  "query": "new job",
+  "status": "active",
+  "note": [
+    "Cluster C (life situations), 2026-08-18. Fixtures-first: pending until",
+    "the proposed lexicon patch to remembered-work-as-for-the-lord lands",
+    "(see the cluster's patches.md) and this passes. Idea confirmed by the",
+    "prayer books' 'New Job' and 'Being a Godly Employee' topics and",
+    "Phillips 'Occupation' — topic ideas only, no verse list copied.",
+    "",
+    "The patch adds the life-situation aliases 'new job' and 'my job' to the",
+    "existing single-anchor pack, so a job-seeker's query reaches",
+    "Colossians 3:23 ('whatever you do, work heartily, as for the Lord and",
+    "not for men') with a curated, attributed reason. requiredReasonFamily",
+    "is concept_anchor on purpose: neither query shares a token with the",
+    "verse's own words, so nothing lexical can drift into a false pass.",
+    "",
+    "The bare query 'work' is deliberately NOT asserted and deliberately NOT",
+    "added to the lexicon: it normalises to a single generic token, and the",
+    "pack's own fixture already documents (NEEDS-JESSE §1.6d) how a",
+    "single-token lexicon entry anchors its verse into EVERY query carrying",
+    "that token. 'promotion' queries are covered separately by the",
+    "humble-exaltation pack; 'work as for the Lord' phrasings are already",
+    "covered by the pack's existing lexicon."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Colossians 3:23",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Working as for the Lord"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "remembered-work-as-for-the-lord"
+  ],
+  "additionalQueries": [
+    "my job"
+  ]
+}

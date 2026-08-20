@@ -1,0 +1,85 @@
+# DRAFT 2026-08-18 (Round-2 book admission — MERGED by the integrator).
+# Author F minted this pack from Scriptural Prayers "Being a Godly Husband"
+# / "Being a Godly Wife" (Eph 5) and its own header said the phillips
+# author should merge here rather than mint a neighbour; author D's
+# phillips pack ("Husbands", "Wives", "Sex and Marriage" — one household
+# teaching) is folded in below. Leads only; every pairing verified in
+# context against the branch web-subset.
+#
+# The positive-marriage home the ontology lacked: marriage-divorce-teaching
+# is the divorce question, betrayal-and-marriage-crisis is the crisis
+# register. Genesis 2:24 is deliberately NOT re-anchored here (it belongs
+# to marriage-divorce-teaching); the cross-link is related:.
+# Book lead 1 Pet 3:1-9 covered by the 3:1-6 + 3:7 anchors (3:8-9 widens
+# to all-of-you conduct; not anchored).
+#
+# The books' other Being-a-Godly-Spouse ref (Ps 1:2) lands on
+# delight-in-the-word, its own subject.
+id: godly-marriage
+label: Marriage
+lexicon:
+  - marriage
+  - husbands
+  - wives
+  - husbands love your wives
+  - biblical marriage
+  - godly husband
+  - godly wife
+  - prayer for my husband
+  - prayer for my wife
+  - being a good husband
+  - being a good wife
+anchors:
+  # "Husbands, love your wives, even as Christ also loved the assembly and
+  # gave himself up for her" (WEB). The husband's charge, measured by the
+  # cross. Editorial: Torrey files 5:25 christologically (ATONEMENT /
+  # CHURCH, THE), which is the verse's ground but not this query sense.
+  - ref: Ephesians 5:25
+    sources: [editorial]
+    weight: 1.0
+  # "Wives, be subject to your own husbands, as to the Lord..." (WEB).
+  # Kept as the full unit vv22-24 so the Christ-and-church frame (v23-24)
+  # travels with the charge — never clipped to a bare imperative. Torrey:
+  # WIVES ("Duties of, to their husbands") lists 5:22; editorial for the
+  # range.
+  - ref: Ephesians 5:22-24
+    sources: [editorial]
+    weight: 0.9
+  # "live with your wives according to knowledge, giving honor... joint
+  # heirs of the grace of life, that your prayers may not be hindered"
+  # (WEB). Torrey: HUSBANDS lists 3:7.
+  - ref: 1 Peter 3:7
+    sources: [torrey]
+    weight: 0.85
+  # "Let marriage be held in honor among all, and let the bed be undefiled"
+  # (WEB) — the phillips "Sex and Marriage" lead. Torrey: MARRIAGE.
+  - ref: Hebrews 13:4
+    sources: [torrey]
+    weight: 0.85
+  # "Husbands also ought to love their own wives as their own bodies. He
+  # who loves his own wife loves himself" (WEB).
+  - ref: Ephesians 5:28
+    sources: [editorial]
+    weight: 0.8
+  # "wives, be in subjection to your own husbands... the hidden person of
+  # the heart, in the incorruptible adornment of a gentle and quiet
+  # spirit" (WEB). Torrey: WIVES lists 3:1-6 across its duty points.
+  - ref: 1 Peter 3:1-6
+    sources: [torrey]
+    weight: 0.8
+  # older women training the young wives — the Titus household charge.
+  # Torrey: WIVES ("To love them", 2:4; "To obey them", 2:5).
+  - ref: Titus 2:3-5
+    sources: [torrey]
+    weight: 0.75
+  # "Let the husband give his wife the affection owed her, and likewise
+  # also the wife her husband" (WEB). Torrey: HUSBANDS (7:2-4) and
+  # WIVES (7:3-5).
+  - ref: 1 Corinthians 7:3
+    sources: [torrey]
+    weight: 0.7
+related:
+  - marriage-divorce-teaching
+  - betrayal-and-marriage-crisis
+  - loving-others
+  - parenting

@@ -1,0 +1,29 @@
+{
+  "id": "studying-the-word",
+  "query": "study the bible",
+  "status": "active",
+  "additionalQueries": [
+    "how to study the bible",
+    "rightly dividing the word"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "INTEGRATOR (round-2 merge): the bare 'gods word' / 'the word of god' phrasings live on studying-the-word's lexicon; the meditation register is the separate delight-in-the-word pack (author-f). Col 3:16 rehomed to delight-in-the-word (the dwell-richly sense), so it is not listed acceptable here."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Timothy 2:15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Studying the Word"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 4:12",
+    "Psalms 19:7-11",
+    "Matthew 24:35"
+  ],
+  "coversConcepts": [
+    "studying-the-word"
+  ]
+}

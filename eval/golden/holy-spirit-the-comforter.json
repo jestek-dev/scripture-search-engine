@@ -1,0 +1,61 @@
+{
+  "id": "holy-spirit-the-comforter",
+  "query": "comforter",
+  "status": "active",
+  "note": [
+    "COMFORT PAIR fixture (§7.7 PR 3) — the audit's flagship sense",
+    "inversion: 'comforter' answered FIRST by Job 16:2, 'you are all",
+    "miserable comforters', the query word in its opposite frame.",
+    "",
+    "Job 16:2 is DEMOTED, never forbidden, on the sense-inversion-provision",
+    "pattern (Jesse's 2026-08-15 audit ruling): the query's word is",
+    "genuinely in the passage and honest lexical retrieval is fine — Job",
+    "16:2 may rank, just never lead. §7.7 says the same: 'Job legitimately",
+    "token-matches; it must simply not lead.' This is why the assertion is",
+    "preferredOrder and NOT mustNotRank; a mustNotRank here would forbid an",
+    "honest result. NOTE: Job 16 is not yet in the fixture corpus, so the",
+    "preferredOrder passes vacuously until the selection is extended —",
+    "corpus-needs.md marks Job 16 as REQUIRED for this fixture to protect",
+    "anything.",
+    "",
+    "The WEB says 'Counselor' where KJV says 'Comforter' — which is exactly",
+    "why this must be a concept lexicon fix, not a token fix: the searcher's",
+    "word is not in the translation's text.",
+    "",
+    "Pending per fixtures-first; flip active in the PR that lands",
+    "holy-spirit-the-comforter.yaml."
+  ],
+  "additionalQueries": [
+    "the comforter",
+    "counselor",
+    "helper",
+    "advocate"
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 14:16-17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Holy Spirit, the Comforter"
+    },
+    {
+      "reference": "John 14:26",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Holy Spirit, the Comforter"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "John 14:26",
+      "below": "Job 16:2"
+    }
+  ],
+  "alsoAcceptable": [
+    "John 15:26",
+    "John 16:7",
+    "Romans 8:26"
+  ],
+  "coversConcepts": [
+    "holy-spirit-the-comforter"
+  ]
+}

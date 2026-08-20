@@ -6,7 +6,9 @@
     "Bare-query companion to the-cross.json.",
     "The corpus contains many passages that say 'the cross' exactly, so this",
     "query should preserve those strong lexical results while still surfacing",
-    "a central curated atonement anchor for the right, named reason."
+    "a central curated atonement anchor for the right, named reason.",
+    "Round-2 book admission 2026-08-18: Isa 53:4 anchored beside the existing 53:5 (collapseAnchorRuns applies).",
+    "Round-2 book admission 2026-08-18: the drafted Isaiah 53:4 anchor (flagged NME-risk by its author) was DROPPED by the integrator — its one measurable effect was displacing Romans 5:8 from this fixture's top-10 for 'the cross'. Isa 53:5 remains anchored; the passage stays fully reachable."
   ],
   "expectedTop": [
     {

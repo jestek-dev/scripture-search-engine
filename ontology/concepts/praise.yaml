@@ -36,6 +36,13 @@ anchors:
   - ref: Psalms 33:1
     sources: [torrey]
     weight: 0.65
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "Lord, open my lips. My mouth will declare your praise." Torrey:
+  # PRAISE.
+  - ref: Psalms 51:15
+    sources: [torrey]
+    weight: 0.7
 related:
   - worship
   - thanksgiving

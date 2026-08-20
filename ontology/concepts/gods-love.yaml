@@ -38,9 +38,43 @@ anchors:
   - ref: John 15:13
     sources: [torrey]
     weight: 0.7
-  - ref: Ephesians 3:19
+  # Widened 3:19 -> 3:17-19, round-2 book admission 2026-08-18: vv17-18
+  # are the same sentence — "rooted and grounded in love... to know
+  # Christ's love"; three book chapters cite 3:17-18 and the clipped v19
+  # anchor missed them. Sources/weight kept.
+  - ref: Ephesians 3:17-19
     sources: [torrey]
     weight: 0.65
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "If God is for us... He who didn't spare his own Son" — the love
+  # proven by the giving of the Son. (Torrey files 8:32 under ATONEMENT /
+  # GIFTS OF GOD; editorial for the range.)
+  - ref: Romans 8:31-32
+    sources: [editorial]
+    weight: 0.85
+  # "Who shall separate us from the love of Christ?" — adjacent to the
+  # pack's existing 8:38-39, but the question verse people quote. Torrey:
+  # LOVE OF CHRIST, THE ("To saints, is Indissoluble").
+  - ref: Romans 8:35
+    sources: [torrey]
+    weight: 0.8
+  # "for his great love with which he loved us... made us alive"; Torrey
+  # lists 2:4 under LOVE OF GOD, THE ("Described as Great"); editorial for
+  # the range.
+  - ref: Ephesians 2:4-5
+    sources: [editorial]
+    weight: 0.8
+  # "We know and have believed the love which God has for us." Torrey:
+  # LOVE OF GOD, THE.
+  - ref: 1 John 4:16
+    sources: [torrey]
+    weight: 0.8
+  # "We love him, because he first loved us." Torrey: LOVE OF GOD, THE
+  # ("The source of our love to him").
+  - ref: 1 John 4:19
+    sources: [torrey]
+    weight: 0.75
 related:
   - loving-others
   - the-cross

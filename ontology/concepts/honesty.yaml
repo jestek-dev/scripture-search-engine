@@ -1,0 +1,36 @@
+# DRAFT 2026-08-18 (Round-2 book admission, author D). Lead source: Phillips
+# "A Topical Bible Guide", topic "Honesty". Two of the book's six leads were
+# rejected or rehomed: Rom 13:13 (the "walk honestly" reading is a KJV
+# artifact; the verse's own target is debauchery and strife) and 1 Thess
+# 4:11-12 (its subject is quiet diligent labor — rehomed to
+# work-and-diligence). Torrey labels: Eph 4:25 verbatim under TRUTH,
+# Col 3:9-10 under LYING.
+id: honesty
+label: Honesty
+lexicon:
+  - honesty
+  - telling the truth
+  - lying
+  - do not lie
+  - speak truth
+anchors:
+  # "putting away falsehood, speak truth each one with his neighbor"
+  - ref: Ephesians 4:25
+    sources: [torrey]
+    weight: 1.0
+  # "Don't lie to one another, seeing that you have put off the old man"
+  - ref: Colossians 3:9-10
+    sources: [torrey]
+    weight: 0.95
+  # "we have a good conscience, desiring to live honorably in all things"
+  - ref: Hebrews 13:18
+    sources: [editorial]
+    weight: 0.7
+  # "having good behavior among the nations... they may see your good works"
+  - ref: 1 Peter 2:11-12
+    sources: [editorial]
+    weight: 0.65
+related:
+  - taming-the-tongue
+  - self-deception
+  - walking-in-the-light

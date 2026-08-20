@@ -27,6 +27,17 @@ lexicon:
   - stage four
   - dying of cancer
   - facing death
+  # Round-2 book admission 2026-08-18.
+  # The death-of-a-believer register (phillips "Death" topic): this pack
+  # already carries the dying-pastoral anchors, so the bare word lands here
+  # (one-token discount applies).
+  - death
+  - to die is gain
+  - what happens when we die
+  # ("dies" and "die" tokenize differently, so the believer's-death felt
+  # phrasing needs its own entry — measured: without it the query reached
+  # no curated concept at all.)
+  - when a believer dies
 anchors:
   - ref: Psalms 23:4
     sources: [editorial]
@@ -52,6 +63,32 @@ anchors:
   - ref: Psalms 73:26
     sources: [editorial]
     weight: 0.75
+  # Round-2 book admission 2026-08-18 — leads from the approved books,
+  # verified in WEB context; the books are never engine sources.
+  # "to die is gain... to depart and be with Christ, which is far better"
+  # (book lead 1:21-22 widened by the contiguous v23 that completes the
+  # sentence's thought).
+  - ref: Philippians 1:21-23
+    sources: [editorial]
+    weight: 0.9
+  # "absent from the body and at home with the Lord" (book lead 5:6-9
+  # trimmed of v9's aim-to-please turn).
+  - ref: 2 Corinthians 5:6-8
+    sources: [editorial]
+    weight: 0.9
+  # the earthly tent and the building from God. Torrey: DEATH, NATURAL.
+  - ref: 2 Corinthians 5:1
+    sources: [torrey]
+    weight: 0.85
+  # "Precious in the LORD's sight is the death of his saints." Torrey:
+  # DEATH OF SAINTS, THE.
+  - ref: Psalms 116:15
+    sources: [torrey]
+    weight: 0.75
+  # "whether we wake or sleep, we should live together with him."
+  - ref: 1 Thessalonians 5:9-10
+    sources: [editorial]
+    weight: 0.7
 related:
   - strength-in-weakness
   - prayer-for-healing

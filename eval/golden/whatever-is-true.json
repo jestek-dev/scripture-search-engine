@@ -1,0 +1,23 @@
+{
+  "id": "whatever-is-true",
+  "query": "whatever is true",
+  "status": "active",
+  "additionalQueries": [
+    "think about such things"
+  ],
+  "note": [
+    "Round-2 book admission (integrator decision), 2026-08-18. Author F proposed Phil 4:8 as a second anchor on remembered-transformed-not-conformed; that pack's header commits to ONE narrow anchor per remembered phrasing, so the integrator kept the pack narrow and homed the thought-life verse on peace-of-god instead - as Philippians 4:8-9, contiguous with the pack's Phil 4:6-7 lead, closing on 'and the God of peace will be with you' (the passage's own frame).",
+    "PENDING per fixtures-first; flips active with the extensions commit."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 4:8-9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Peace of God"
+    }
+  ],
+  "expectedWithinTop": 5,
+  "coversConcepts": [
+    "peace-of-god"
+  ]
+}

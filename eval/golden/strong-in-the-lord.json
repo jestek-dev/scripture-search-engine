@@ -1,0 +1,39 @@
+{
+  "id": "strong-in-the-lord",
+  "query": "greater is he who is in you",
+  "additionalQueries": [],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Exercises the victory-in-christ",
+    "EXTENSION (new anchors James 4:7 and 1 John 4:4, new lexicon entries",
+    "'resist the devil' / 'greater is he who is in you') — see patches.md.",
+    "Pending until the extension lands, then flip active in the same PR.",
+    "Idea source: Scriptural Prayers 'Strong in the Lord', 'The Greater One",
+    "in Me', 'Confidence'; Growing by Heart wk12 'riding out storms', wk25",
+    "'stop weeds before they start!' (idea only, no verse list copied;",
+    "provenance is the verified Torrey WARFARE OF SAINTS outline).",
+    "",
+    "requiredReasonFamily is concept_anchor: both asserted verses carry",
+    "their query words lexically, so the assertion must be that the curated",
+    "anchor put them there. Both verified in the fixture corpus.",
+    "INTEGRATOR (round-2 merge): James 4:7 and the “resist the devil” lexicon are anchored by author D’s new resisting-the-devil pack (its own fixture asserts them); this fixture keeps measuring the victory-in-christ extension through its remaining distinctive query, 1 John 4:4."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 John 4:4",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Victory in Christ"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "James 4:7",
+    "Ephesians 6:11",
+    "Ephesians 6:13-17",
+    "1 John 5:4"
+  ],
+  "coversConcepts": [
+    "victory-in-christ"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "guidance",
+  "query": "guidance",
+  "additionalQueries": [
+    "direction",
+    "gods will for my life"
+  ],
+  "status": "active",
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for the",
+    "new guidance concept; PENDING until the pack lands, then flip active in",
+    "the same PR.",
+    "",
+    "Proverbs 3:5-6 is deliberately NOT asserted here even though it is the",
+    "verse most people associate with guidance: it anchors trust-in-god, and",
+    "the guidance pack cross-links it via related: rather than duplicating the",
+    "anchor. For the query 'guidance' no lexical or curated rung reaches it,",
+    "and an assertion that cannot fail is decoration.",
+    "",
+    "'which way to go' is recorded as unreachable by design: it normalizes to",
+    "the single token 'way' (which/to are stopwords, 'go' falls under the",
+    "3-char floor), and a bare 'way' entry would fire the concept on 'I am",
+    "the way'. Isaiah 30:21 and Ps 25:4-5 / Ps 119:105 are anchors but not",
+    "asserted — their chapters are not yet in the fixture corpus (see",
+    "corpus-needs.md); add assertions when they land."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 32:8",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's guidance"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 37:23",
+    "Ephesians 5:17"
+  ],
+  "coversConcepts": [
+    "guidance"
+  ]
+}

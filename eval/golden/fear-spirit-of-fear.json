@@ -1,0 +1,26 @@
+{
+  "id": "fear-spirit-of-fear",
+  "query": "spirit of fear",
+  "status": "active",
+  "additionalQueries": [
+    "god has not given us a spirit of fear"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18 — exercises an EXTENSION of an existing concept (see author-d/patches.md). Leads from Phillips 'A Topical Bible Guide', verified in context; the book is never an engine source. PENDING per fixtures-first; flip to active with the patch.",
+    "Watchlist geometry unchanged: fear-not carries no material-frame vocabulary and Phil 4:19 is NOT anchored here; prosperity-*.json stay green by design."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Timothy 1:7",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 41:10",
+    "1 John 4:18"
+  ],
+  "coversConcepts": [
+    "fear-not"
+  ]
+}

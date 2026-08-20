@@ -1,0 +1,40 @@
+{
+  "id": "walking-in-love",
+  "query": "love one another as I have loved you",
+  "additionalQueries": [],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Exercises the loving-others EXTENSION",
+    "(new anchors John 15:12, Gal 5:14, 1 John 4:12, Matt 5:43-44, 1 Cor",
+    "13:13; new lexicon entry 'walk in love') — see patches.md. Pending",
+    "until the extension lands, then flip active in the same PR. Idea",
+    "source: Scriptural Prayers 'Walking in Love', 'Rejection' (Matt 5:44);",
+    "Growing by Heart wk31 'marigolds', wk34 'sweet fragrance of Christ'",
+    "(idea only, no verse list copied; John 15:12 / Gal 5:14 / Matt 5:44",
+    "provenance is the verified Torrey LOVE TO MAN outline).",
+    "",
+    "The existing 1.0 anchor (John 13:34-35) may honestly lead; the",
+    "assertion is only that the John 15:12 command reaches the top ten with",
+    "its curated reason, so the extension is measured without forcing a",
+    "reordering of a healthy list.",
+    "Integrator: the drafted 'walk in love' query and lexicon entry were dropped on G8 evidence (the phrase's tokens sit inside the ot-prophets-justly probe query and flooded it; Eph 5:2 already serves 'walk in love' lexically). The fixture keeps measuring the extension through the John 15:12 command's own phrasing."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 15:12",
+      "withinTop": 10,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Loving one another"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 13:34-35",
+    "1 John 4:11",
+    "1 John 4:12",
+    "Galatians 5:14"
+  ],
+  "coversConcepts": [
+    "loving-others"
+  ]
+}

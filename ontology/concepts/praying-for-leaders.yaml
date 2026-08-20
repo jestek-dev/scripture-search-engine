@@ -1,0 +1,74 @@
+# DRAFT (round-2 curation, author E, 2026-08-18) — new concept, and the ONE
+# concept the whole civic cluster resolves to.
+#
+# Idea sources (PR description only): Phillips, *A Topical Bible Guide*
+# (2004), "National Responsibilities"; White Stone Books, *Scriptural
+# Prayers for the Praying Mother / Man* (2003), "Our Nation", "National
+# Protection", "The President" — topic leads only; every anchor verified in
+# WEB context.
+#
+# CIVIC NEUTRALITY DESIGN: the sound, historic pairing here is praying for
+# rulers and the nation, and submitting to / honoring the governing
+# authorities — what the passages themselves teach. The books' other civic
+# frames were REJECTED (see the round-2 rejects.md): "National Patriotism"
+# and "Time of War" attach Scripture to a civic posture the passages don't
+# teach, and several individual pairings (2 Chr 7:14 as a modern-nation
+# promise, Acts 2:17 as national revival, Matt 26:41 as national defense,
+# Eph 6:18-20 as prayer for the President) misassign the passages'
+# referents. This pack claims: submit, honor, pray. Nothing more.
+#
+# THE NAMING TEXT IS CORPUS-BLOCKED: 1 Tim 2:1-2 ("supplications … for kings
+# and all who are in high places" — Torrey KINGS: "Prayed for") is not in
+# pipeline/fixtures/web-subset.json. It is this concept's missing 1.0 anchor;
+# add it first when the corpus grows (backlog.md), likewise Prov 21:1.
+id: praying-for-leaders
+label: Praying for leaders and the nation
+lexicon:
+  - pray for our leaders
+  - pray for our nation
+  - pray for the president
+  - pray for the government
+  # ESV/NIV phrasing of Rom 13:1 that searchers quote (WEB says "higher
+  # authorities").
+  - governing authorities
+  # Single-token entry, deliberate (NEEDS-JESSE §1.6d option 3): the word
+  # "government" appears nowhere in the WEB corpus text, so no lexical rung
+  # can serve the query, and the word is how people actually search this
+  # topic. One-token specificity discount applies.
+  - government
+anchors:
+  # "Seek the peace of the city where I have caused you to be carried away
+  # captive, and pray to the LORD for it; for in its peace you will have
+  # peace." Written to EXILES about the pagan city holding them — which is
+  # exactly why it generalizes honestly: prayer for the polity you live in,
+  # not a covenant claim over it. Torrey-verified: PRAYER, INTERCESSORY
+  # ("Enemies among whom we dwell"). Leads the set because it is the one
+  # in-corpus anchor that is itself a command to pray.
+  - ref: Jeremiah 29:7
+    sources: [torrey]
+    weight: 1.0
+  # "Let every soul be in subjection to the higher authorities, for there
+  # is no authority except from God" — through taxes, respect, and honor
+  # (13:6-7). Torrey-verified: KINGS (13:1 "God ordains"; 13:2, 13:5-7).
+  - ref: Romans 13:1-7
+    sources: [torrey]
+    weight: 0.9
+  # "Honor all men. Love the brotherhood. Fear God. Honor the king."
+  # Torrey-verified: KINGS (2:13 "Obeyed", 2:17 "Honoured").
+  - ref: 1 Peter 2:13-17
+    sources: [torrey]
+    weight: 0.85
+  # "Blessed is the nation whose God is the LORD, the people whom he has
+  # chosen for his own inheritance." Kept per the round-2 ruling that this
+  # is part of the sound historic set — at LOW weight and with its context
+  # on record: v12b identifies the blessed nation as the people God chose,
+  # inside a psalm about God overruling the counsel of the nations
+  # (33:10-11). The anchor claims a passage about nations under God, never
+  # a national-election promise. Torrey lists it only under ELECTION, so
+  # the tag here is editorial.
+  - ref: Psalms 33:12
+    sources: [editorial]
+    weight: 0.6
+related:
+  - prayer
+  - humble-exaltation

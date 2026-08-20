@@ -1,0 +1,31 @@
+{
+  "id": "work-and-diligence",
+  "query": "hard work",
+  "status": "active",
+  "additionalQueries": [
+    "work ethic",
+    "diligence",
+    "what does the bible say about work"
+  ],
+  "note": [
+    "Round-2 book admission (author D), 2026-08-18. Leads from Bob Phillips, 'A Topical Bible Guide' (2004) — bare references used as leads only, each verified in context against the branch web-subset; the book is never an engine source. PENDING per the fixtures-first rule: flip to active in the PR that lands the pack, after the Admission Report names it.",
+    "Col 3:23 accepted: remembered-work-as-for-the-lord's anchor is honest for every query here."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Thessalonians 4:11-12",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Work and diligence"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Genesis 2:15",
+    "Ephesians 4:28",
+    "Romans 12:11",
+    "Colossians 3:23"
+  ],
+  "coversConcepts": [
+    "work-and-diligence"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "guilt-and-condemnation",
+  "query": "guilt",
+  "additionalQueries": [
+    "guilty",
+    "condemnation"
+  ],
+  "status": "active",
+  "coversConcepts": [
+    "forgiveness-of-sins"
+  ],
+  "note": [
+    "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Companion to the",
+    "forgiveness-of-sins patch in patches.md (aliases 'guilt', 'guilty',",
+    "'condemnation' + Romans 8:1 anchor). PENDING until that patch merges.",
+    "",
+    "The preferredOrder entry follows the sense-inversion-provision ruling:",
+    "James 2:10 — 'he has become GUILTY of all' — is an honest lexical match",
+    "for the query 'guilty' in its opposite frame: a guilt-burdened searcher",
+    "served a verdict with no gospel. Demoted, never forbidden; it may rank,",
+    "just never above the no-condemnation answer. Both refs are in the fixture",
+    "corpus. (For the query 'guilt' the pair passes vacuously — James 2:10",
+    "carries no 'guilt' token — the assertion is live for 'guilty'.)",
+    "",
+    "'shame' is deliberately NOT an alias here — see manifest.md: shame is a",
+    "distinct sense (often the abuse survivor's, where 'confess your sins'",
+    "would be a sense-inverted answer), and routing it to confession texts is",
+    "exactly the wrong-pairing class the audit flagged.",
+    "Window note (2026-08-18 gauntlet iteration): for the bare queries the whole forgiveness answer set fires, and the concept's own lead anchors (Ps 103:12, Isa 1:18, 1 Jn 1:9) honestly precede Rom 8:1 (weight 0.9, deliberately below them). The assertion is top-5 presence with the concept chip, not a forced lead — loosening the window, not bending the weights.",
+    "Round-2 book admission 2026-08-18: forgiveness-of-sins gained the Psalm 32 confession-and-pardon pair."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 8:1",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's forgiveness"
+    },
+    {
+      "reference": "1 John 1:9",
+      "withinTop": 5
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 103:12",
+    "Psalms 32:5",
+    "Psalms 32:1-2"
+  ],
+  "preferredOrder": [
+    {
+      "above": "Romans 8:1",
+      "below": "James 2:10"
+    }
+  ]
+}

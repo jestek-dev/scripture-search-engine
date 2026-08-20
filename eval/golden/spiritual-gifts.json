@@ -1,0 +1,40 @@
+{
+  "id": "spiritual-gifts",
+  "query": "spiritual gifts",
+  "additionalQueries": [
+    "gifts of the spirit",
+    "use your gifts",
+    "what are my gifts"
+  ],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new",
+    "spiritual-gifts concept; pending until the pack lands, then flip active",
+    "in the same PR. Idea source: Growing by Heart wk45 'beautifully",
+    "unique'; Scriptural Prayers 'Before a Church Service', 'My Child's",
+    "School and Teachers', 'New Job' (idea only, no verse list copied).",
+    "Phillips' 'Spiritual Gifts' topic (another author's slice) shares this",
+    "home — the integrator should merge, not mint a neighbour.",
+    "",
+    "1 Corinthians 12:4-6 is the passage most people mean and it is NOT in",
+    "the fixture corpus (backlog.md) — assert it in the PR that adds 1 Cor",
+    "12. Until then Rom 12:4-6 is the honest expected top.",
+    "INTEGRATOR (round-2 merge): authors D and F independently drafted spiritual-gifts; merged into one pack. The Romans 12 anchor is the contiguous many-members-then-gifts unit 12:4-8 (D chose 12:6-8, F chose 12:4-6 — the argument is one sentence-run); 1 Pet 4:10-11 keeps D’s wider unit (v11: speaking and serving gifts)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 12:4-8",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Spiritual gifts"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 4:10-11",
+    "Ephesians 4:11-12"
+  ],
+  "coversConcepts": [
+    "spiritual-gifts"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "harmony-with-others",
+  "query": "live at peace with everyone",
+  "additionalQueries": [
+    "getting along with others",
+    "harmony with others"
+  ],
+  "status": "active",
+  "note": [
+    "ROUND-2 AUTHOR-F (2026-08-18). Fixtures-first for the new",
+    "harmony-with-others concept; pending until the pack lands, then flip",
+    "active in the same PR. Idea source: Scriptural Prayers 'Harmony With",
+    "Others', 'For My Husband', 'For My Wife'; Growing by Heart wk28 (idea",
+    "only, no verse list copied).",
+    "",
+    "requiredReasonFamily is concept_anchor: Rom 12:18 carries 'peace'",
+    "lexically, so the assertion must be that the curated anchor put it",
+    "there. All asserted references verified in the fixture corpus."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 12:18",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Peace with others"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ephesians 4:2-3",
+    "Romans 14:19",
+    "2 Timothy 2:24"
+  ],
+  "coversConcepts": [
+    "harmony-with-others"
+  ]
+}

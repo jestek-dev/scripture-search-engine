@@ -1,7 +1,7 @@
 {
   "id": "prosperity-contentment",
   "query": "wealth",
-  "status": "pending",
+  "status": "active",
   "note": [
     "DOCTRINE-NEGATIVE FIXTURE (prosperity family) — the positive half,",
     "PENDING on purpose. The family's active fixtures say what wealth queries",
@@ -17,7 +17,8 @@
     "that a CURATED, attributed anchor put the passage there (see",
     "remembered-plans-and-future.json for the reasoning). The Theme label is",
     "the proposed name; if the pack that lands names the concept differently,",
-    "update the label here in the same PR."
+    "update the label here in the same PR.",
+    "PROMOTED TO ACTIVE 2026-08-18, in the admission that landed the merged contentment pack: its label is exactly 'Contentment' and 1 Timothy 6:6-10 is its lead anchor, so this fixture's assertion passes with no label edit. coversConcepts added because the fixture id does not match the concept id."
   ],
   "expectedTop": [
     {
@@ -26,5 +27,8 @@
       "requiredReasonLabel": "Theme: Contentment"
     }
   ],
-  "expectedWithinTop": 10
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "contentment"
+  ]
 }

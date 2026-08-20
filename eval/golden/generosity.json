@@ -1,0 +1,55 @@
+{
+  "id": "generosity",
+  "query": "generosity",
+  "status": "active",
+  "note": [
+    "Cluster C (life situations), 2026-08-18. Fixtures-first: written before",
+    "the `generosity` concept pack, pending until the pack lands and it",
+    "passes.",
+    "",
+    "DOCTRINAL FRAME (docs/DOCTRINAL-BASIS.md §3): the concept frame is the",
+    "giver's heart, never return-on-giving. Acts 20:35 ('It is more blessed",
+    "to give than to receive') is asserted as the leading answer because it",
+    "is the giver's-heart anchor present in the fixture corpus; 2 Cor 9:7",
+    "('God loves a cheerful giver') is the pack's top anchor but 2 Cor 9 is",
+    "not in the corpus yet — assert it in the same PR that adds the chapter.",
+    "",
+    "Luke 6:38 is watchlisted (ontology/flagged-pairings.yaml) and its entry",
+    "rules it 'ranks honestly for giving queries' — so it is NOT forbidden",
+    "here. The preferredOrder pair encodes the frame instead: the",
+    "blessedness-of-giving verse above the give-and-receive verse, demoted",
+    "never suppressed — the same demote-don't-forbid shape as",
+    "sense-inversion-provision.json. Both references are IN the fixture",
+    "corpus, so the pair cannot pass vacuously.",
+    "",
+    "No prosperity-* query shares a token with the generosity lexicon, so",
+    "the pack cannot move those ten fixtures; this was checked",
+    "query-by-query at design time.",
+    "Round-2 book admission 2026-08-18: generosity gained Matt 5:42 and Ps 37:21; vocabulary stays material-frame-free and the Luke 6:38 geometry is untouched."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 20:35",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Generosity"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Acts 20:35",
+      "below": "Luke 6:38"
+    }
+  ],
+  "additionalQueries": [
+    "cheerful giver",
+    "god loves a cheerful giver"
+  ],
+  "coversConcepts": [
+    "generosity"
+  ],
+  "alsoAcceptable": [
+    "Matthew 5:42",
+    "Psalms 37:21"
+  ]
+}
