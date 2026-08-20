@@ -124,14 +124,26 @@ export function notApplicable(gate: GateId, title: string, reason: string): Gate
  * Ran, found something, but does not block admission.
  *
  * Reserved for findings whose cause is outside the change under review — a
- * third-party host being down, say. Blocking on those trains people to
- * override gates, which costs more than the finding is worth.
+ * third-party host being down, say, or a pending fixture that specifies
+ * UNLANDED engine work: its failing state is definitionally not this
+ * change's fault, but hiding it would make the specification invisible.
+ * Blocking on those trains people to override gates, which costs more than
+ * the finding is worth.
  */
 export function warn(
   gate: GateId,
   title: string,
   summary: string,
   findings: readonly GateFinding[],
+  metrics?: Readonly<Record<string, number>>,
 ): GateResult {
-  return { gate, title, status: 'warn', applicability: gateApplicability(gate), summary, findings };
+  return {
+    gate,
+    title,
+    status: 'warn',
+    applicability: gateApplicability(gate),
+    summary,
+    findings,
+    ...(metrics ? { metrics } : {}),
+  };
 }

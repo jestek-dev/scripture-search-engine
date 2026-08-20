@@ -13,7 +13,8 @@
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 
 import { parseAnchorRef } from '../../../pipeline/src/importers/ontologyImporter.js';
-import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
+import { mergeGateResults } from './merge.js';
+import { fail, notApplicable, pass, warn, type GateFinding, type GateResult } from './types.js';
 
 export const WITHIN_TOP_VALUES = [1, 3, 5, 10] as const;
 export type WithinTop = (typeof WITHIN_TOP_VALUES)[number];
@@ -703,19 +704,44 @@ export async function corpusGoldenGate(
   }
 
   // Pending fixtures are RUN even though they cannot fail the build, because
-  // a pending fixture that has started passing is exactly the signal that it
-  // should be promoted — and nobody would notice if it were never executed.
+  // both of their states carry a signal nobody would notice otherwise: one
+  // that has started passing is exactly the promotion trigger, and one that
+  // still fails is the live specification for unlanded engine work — its
+  // current failure detail must be visible, not just "now passing".
   const nowPassing: string[] = [];
+  const stillFailing: GateFinding[] = [];
   for (const fixture of pending) {
     const pendingFindings = await runNormalisedFixture(engine, fixture);
-    if (pendingFindings.length === 0) nowPassing.push(fixture.id);
+    if (pendingFindings.length === 0) {
+      nowPassing.push(fixture.id);
+      continue;
+    }
+    const preview = pendingFindings
+      .slice(0, 2)
+      .map((finding) => {
+        const ref = finding.params?.['ref'];
+        return typeof ref === 'string' ? `${finding.categoryCode} ${ref}` : `${finding.categoryCode}`;
+      })
+      .join(', ');
+    stillFailing.push({
+      message:
+        `pending fixture ${fixture.id}: currently fails ${pendingFindings.length} ` +
+        `expectation(s): ${preview}; full detail in machine report`,
+      subjects: [fixture.id],
+      // Semantic (machine-report) form, unlike the G3_* codes above: this
+      // finding rides a warn gate through report generation on every honest
+      // run, so it must satisfy the machine report's category pattern.
+      categoryCode: 'sse.gauntlet.v1.finding.g3-golden.pending-still-failing',
+      params: { failedExpectationMessages: pendingFindings.map((finding) => finding.message) },
+      metrics: { failedExpectations: pendingFindings.length },
+    });
   }
 
   const promote =
     nowPassing.length > 0
       ? ` — PENDING FIXTURES NOW PASSING, promote to active: ${nowPassing.join(', ')}`
       : '';
-  return {
+  const corpusResult: GateResult = {
     ...pass(
     'G3-golden',
     'Golden regression (corpus)',
@@ -724,4 +750,26 @@ export async function corpusGoldenGate(
     ),
     promotionCandidates: nowPassing,
   };
+  // Warn, never fail: a pending fixture specifies unlanded work, so its
+  // failing state is outside the change under review. The warn status flips
+  // the verdict to ADMIT_WITH_WARNINGS through the normal status path —
+  // findings alone cannot change a verdict.
+  const pendingStatus =
+    stillFailing.length > 0
+      ? warn(
+          'G3-golden',
+          'Pending fixture status',
+          `Pending fixture status: ${stillFailing.length} of ${pending.length} still failing`,
+          stillFailing,
+          { pendingFailures: stillFailing.length },
+        )
+      : pass(
+          'G3-golden',
+          'Pending fixture status',
+          pending.length === 0
+            ? 'Pending fixture status: no pending fixtures'
+            : `Pending fixture status: ${pending.length} pending, all currently passing`,
+          { pendingFailures: 0 },
+        );
+  return mergeGateResults('Golden regression (corpus)', [corpusResult, pendingStatus]);
 }

@@ -10,6 +10,9 @@ import {
   runCorpusFixture,
   type CorpusFixture,
 } from '../src/gates/corpusGolden.js';
+import { mergeGateResults } from '../src/gates/merge.js';
+import { pass } from '../src/gates/types.js';
+import { decideVerdict } from '../src/report.js';
 
 const IDENTITY = {
   engineVersion: 'test-engine',
@@ -261,5 +264,96 @@ describe('G3 corpus golden v2 contract', () => {
 
     expect(first).toEqual(second);
     expect(codes(first)).toEqual(['G3_EXPECTED_TOP_ABSENT', 'G3_PREFERRED_ORDER']);
+  });
+});
+
+describe('G3 pending fixture status', () => {
+  const activeGreen = fixture({
+    id: 'act-green',
+    query: 'act-green',
+    expectedTop: [{ ref: 'John 3:16', withinTop: 1 }],
+  });
+  const pendingFailing = fixture({
+    id: 'pend-fail',
+    status: 'pending',
+    query: 'pend-fail',
+    expectedTop: [{ ref: 'John 3:16', withinTop: 1 }],
+  });
+  const pendingPassing = fixture({
+    id: 'pend-pass',
+    status: 'pending',
+    query: 'pend-pass',
+    expectedTop: [{ ref: 'John 3:16', withinTop: 1 }],
+  });
+  const engine = mockEngine({
+    'act-green': [johnVerse(16)],
+    'pend-fail': [johnVerse(17)],
+    'pend-pass': [johnVerse(16)],
+  });
+
+  it('surfaces a still-failing pending fixture as a warn sub-result with its failure count', async () => {
+    const result = await corpusGoldenGate(engine, [activeGreen, pendingFailing, pendingPassing]);
+
+    expect(result.status).toBe('warn');
+    expect(result.summary).toContain('Pending fixture status: 1 of 2 still failing');
+    expect(result.metrics?.['pendingFailures']).toBe(1);
+
+    const finding = (result.findings ?? []).find(
+      (candidate) => candidate.subjects?.includes('pend-fail'),
+    );
+    expect(finding).toBeDefined();
+    expect(finding?.message).toContain('pending fixture pend-fail: currently fails 1 expectation(s)');
+    expect(finding?.message).toContain('G3_EXPECTED_TOP_ABSENT John 3:16');
+    expect(finding?.message).toContain('full detail in machine report');
+    expect(finding?.metrics?.['failedExpectations']).toBe(1);
+    expect(finding?.params?.['failedExpectationMessages']).toHaveLength(1);
+    // The machine report refuses non-semantic categories; a still-failing
+    // pending fixture must never crash report generation on an honest run.
+    expect(finding?.categoryCode).toMatch(/^sse\.gauntlet\.v1\.finding\.g3-golden\.[a-z][a-z0-9-]*$/);
+  });
+
+  it('flips the run verdict to ADMIT_WITH_WARNINGS through the existing G3 merge', async () => {
+    const corpus = await corpusGoldenGate(engine, [activeGreen, pendingFailing]);
+    const g3 = mergeGateResults('Golden regression', [
+      pass('G3-golden', 'Golden regression (ranking)', 'ranking fixtures hold'),
+      corpus,
+    ]);
+
+    expect(g3.status).toBe('warn');
+    expect(decideVerdict({ gates: [g3] })).toBe('ADMIT_WITH_WARNINGS');
+  });
+
+  it('keeps the promotion path alive alongside a still-failing pending fixture', async () => {
+    const corpus = await corpusGoldenGate(engine, [activeGreen, pendingFailing, pendingPassing]);
+    const g3 = mergeGateResults('Golden regression', [
+      pass('G3-golden', 'Golden regression (ranking)', 'ranking fixtures hold'),
+      corpus,
+    ]);
+
+    expect(corpus.promotionCandidates).toEqual(['pend-pass']);
+    expect(g3.promotionCandidates).toEqual(['pend-pass']);
+  });
+
+  it('reports a pass sub-result when every pending fixture currently passes', async () => {
+    const result = await corpusGoldenGate(engine, [activeGreen, pendingPassing]);
+
+    expect(result.status).toBe('pass');
+    expect(result.summary).toContain('Pending fixture status: 1 pending, all currently passing');
+    expect(result.metrics?.['pendingFailures']).toBe(0);
+    expect(result.promotionCandidates).toEqual(['pend-pass']);
+    expect(decideVerdict({ gates: [result] })).toBe('ADMIT');
+  });
+
+  it('still hard-fails on an active-fixture failure, without pending noise', async () => {
+    const brokenActive = fixture({
+      id: 'act-broken',
+      query: 'pend-fail', // engine returns the wrong verse for this query
+      expectedTop: [{ ref: 'John 3:16', withinTop: 1 }],
+    });
+    const result = await corpusGoldenGate(engine, [brokenActive, pendingFailing]);
+
+    expect(result.status).toBe('fail');
+    expect(codes(result)).toEqual(['G3_EXPECTED_TOP_ABSENT']);
+    expect(decideVerdict({ gates: [result] })).toBe('REJECT');
   });
 });
