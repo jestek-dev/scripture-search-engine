@@ -57,13 +57,13 @@ export const PROBE_BASELINE_APPROVAL_SCHEMA = 'scripture-search-engine/probe-bas
 /**
  * v2 strengthens the approval from a free-text role into an accountable
  * record: a named reviewer with contact, an explicit independence attestation
- * (what the reviewer did NOT author), and a byte digest binding the review
- * record itself. Both schemas validate today because the committed approval
- * is still the v1 record; the cutover commit that re-issues it as a signed
- * v2 record also deletes v1 acceptance, and per
- * docs/governance/probe-baseline-review.md that commit is never opened until
- * the designated reviewer has signed — the repository never carries an
- * approval its own gauntlet rejects.
+ * (what the reviewer did NOT author), a byte digest binding the review record
+ * itself, and the digest of the review packet the decision was read from.
+ * The already-committed v1 records stay valid — grandfathered by their exact
+ * fingerprint identity, with none of their original checks loosened — but a
+ * v1 approval for any other identity, or dated after the sunset, fails with a
+ * named finding: every new approval is authored in v2
+ * (docs/governance/probe-baseline-review.md).
  */
 export const PROBE_BASELINE_APPROVAL_SCHEMA_V2 = 'scripture-search-engine/probe-baseline-approval/v2';
 
@@ -79,6 +79,28 @@ export interface ProbeEngineIdentity {
   readonly corpusFingerprint: string;
   readonly layerFingerprint: string;
 }
+
+/**
+ * Schema v1 is closed to new records: an approval whose `reviewedAt`
+ * postdates this day must be authored in v2. Shared by the probe-baseline
+ * and ordering-snapshot validators.
+ */
+export const APPROVAL_V1_SUNSET_DATE = '2026-08-20';
+
+/**
+ * The only identities a v1 approval may still bind — the ones the committed
+ * records bound when v2 landed (probes.approval.json, 2026-08-10, and
+ * ordering.snapshot.approval.json, 2026-08-17, share this triple). Pinning
+ * the identity keeps the sunset unbackdatable: a back-dated v1 record for a
+ * new baseline would have to claim an identity outside this list.
+ */
+export const GRANDFATHERED_V1_APPROVAL_IDENTITIES: readonly ProbeEngineIdentity[] = [
+  {
+    engineVersion: '0.9.0',
+    corpusFingerprint: '60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed',
+    layerFingerprint: 'b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a',
+  },
+];
 
 interface ProbeBaselinePriorProvenance {
   readonly baselineGitBlobSha1: string;
@@ -111,9 +133,13 @@ export interface ProbeBaselineApprovalV2 {
   readonly reviewerContact: string;
   readonly independence: string;
   readonly evidence: { readonly path: string; readonly sha256: string };
+  /** SHA-256 of the review-packet file the decision was read from. */
+  readonly reviewPacketSha256: string;
   readonly reviewedAt: string;
   readonly rationale: string;
-  readonly priorProvenance: ProbeBaselinePriorProvenance;
+  /** Null only beside `bootstrap`, which documents why no prior exists. */
+  readonly priorProvenance: ProbeBaselinePriorProvenance | null;
+  readonly bootstrap?: string;
 }
 
 function canonicalJson(value: unknown): string {
@@ -197,29 +223,76 @@ function validV1Shape(approval: Record<string, unknown>): boolean {
     approval['rationale'].trim().length > 0 && validPriorProvenance(approval);
 }
 
-function validV2Shape(approval: Record<string, unknown>): boolean {
+function sameEngineIdentity(left: ProbeEngineIdentity, right: ProbeEngineIdentity): boolean {
+  return left.engineVersion === right.engineVersion &&
+    left.corpusFingerprint === right.corpusFingerprint &&
+    left.layerFingerprint === right.layerFingerprint;
+}
+
+const V2_KEYS = [
+  'schema',
+  'baselineSha256',
+  'probesSha256',
+  'engine',
+  'reviewerName',
+  'reviewerContact',
+  'independence',
+  'evidence',
+  'reviewPacketSha256',
+  'reviewedAt',
+  'rationale',
+  'priorProvenance',
+] as const;
+
+/**
+ * Field-level v2 shape problems, each naming the offending field: a reviewer
+ * fixing a malformed approval should not have to bisect the document.
+ */
+function v2ShapeProblems(approval: Record<string, unknown>): string[] {
+  const problems: string[] = [];
+  const allowed = new Set<string>([...V2_KEYS, 'bootstrap']);
+  for (const key of Object.keys(approval).sort()) {
+    if (!allowed.has(key)) problems.push(`unexpected field "${key}"`);
+  }
+  for (const key of V2_KEYS) {
+    if (!(key in approval)) problems.push(`missing field "${key}"`);
+  }
+  const check = (field: string, valid: boolean, expected: string): void => {
+    if (field in approval && !valid) problems.push(`"${field}" must be ${expected}`);
+  };
+  check('baselineSha256', isSha256(approval['baselineSha256']), 'a 64-hex sha256');
+  check('probesSha256', isSha256(approval['probesSha256']), 'a 64-hex sha256');
+  check('engine', isEngineIdentity(approval['engine']), 'the exact engine identity triple');
+  check('reviewerName', typeof approval['reviewerName'] === 'string', 'a string');
+  check('reviewerContact', typeof approval['reviewerContact'] === 'string', 'a string');
+  check('independence', typeof approval['independence'] === 'string', 'a string');
   const evidence = approval['evidence'];
-  const validEvidence = isRecord(evidence) && exactKeys(evidence, ['path', 'sha256']) &&
+  check('evidence', isRecord(evidence) && exactKeys(evidence, ['path', 'sha256']) &&
     typeof evidence['path'] === 'string' && APPROVAL_EVIDENCE_PATH_PATTERN.test(evidence['path']) &&
-    isSha256(evidence['sha256']);
-  return exactKeys(approval, [
-    'schema',
-    'baselineSha256',
-    'probesSha256',
-    'engine',
-    'reviewerName',
-    'reviewerContact',
-    'independence',
-    'evidence',
-    'reviewedAt',
-    'rationale',
-    'priorProvenance',
-  ]) && isSha256(approval['baselineSha256']) &&
-    isSha256(approval['probesSha256']) && isEngineIdentity(approval['engine']) &&
-    typeof approval['reviewerName'] === 'string' && typeof approval['reviewerContact'] === 'string' &&
-    typeof approval['independence'] === 'string' && validEvidence &&
-    isReviewDate(approval['reviewedAt']) && typeof approval['rationale'] === 'string' &&
-    approval['rationale'].trim().length > 0 && validPriorProvenance(approval);
+    isSha256(evidence['sha256']),
+  'a {path, sha256} record naming a docs/reviews/*.md review record');
+  check('reviewPacketSha256', isSha256(approval['reviewPacketSha256']),
+    'the 64-hex sha256 the review-packet tool printed for the packet read');
+  check('reviewedAt', isReviewDate(approval['reviewedAt']), 'a real YYYY-MM-DD date');
+  check('rationale', typeof approval['rationale'] === 'string' && approval['rationale'].trim().length > 0,
+    'a non-empty string');
+  if ('bootstrap' in approval &&
+      (typeof approval['bootstrap'] !== 'string' || approval['bootstrap'].trim().length === 0)) {
+    problems.push('"bootstrap" must be a non-empty string documenting why no prior baseline exists');
+  }
+  if ('priorProvenance' in approval) {
+    if (approval['priorProvenance'] === null) {
+      if (!('bootstrap' in approval)) {
+        problems.push('"priorProvenance" may be null only beside a "bootstrap" field documenting the missing prior');
+      }
+    } else {
+      if ('bootstrap' in approval) problems.push('"bootstrap" is valid only when "priorProvenance" is null');
+      if (!validPriorProvenance(approval)) {
+        problems.push('"priorProvenance" must bind the prior baseline git blob and engine identity');
+      }
+    }
+  }
+  return problems;
 }
 
 /**
@@ -250,9 +323,24 @@ export function validateProbeBaselineApproval(input: {
     if (!validV1Shape(approval)) {
       return [approvalFinding('baseline-approval-malformed', 'Probe baseline approval is malformed or incomplete.')];
     }
+    // v1 is closed to new records: only the identities the committed records
+    // bound stay accepted, and only at their pre-sunset dates.
+    if (!GRANDFATHERED_V1_APPROVAL_IDENTITIES.some((identity) =>
+      sameEngineIdentity(identity, approval['engine'] as ProbeEngineIdentity))) {
+      findings.push(approvalFinding('baseline-approval-v1-not-grandfathered',
+        'Probe baseline approval declares retired schema v1 for an engine identity outside the ' +
+        'grandfathered committed records; author it as a v2 approval instead.'));
+    }
+    if ((approval['reviewedAt'] as string) > APPROVAL_V1_SUNSET_DATE) {
+      findings.push(approvalFinding('baseline-approval-v1-retired',
+        `Probe baseline approval is schema v1 but its reviewedAt ${approval['reviewedAt'] as string} ` +
+        `postdates the v1 sunset ${APPROVAL_V1_SUNSET_DATE}; new approvals must be authored in schema v2.`));
+    }
   } else if (approval['schema'] === PROBE_BASELINE_APPROVAL_SCHEMA_V2) {
-    if (!validV2Shape(approval)) {
-      return [approvalFinding('baseline-approval-malformed', 'Probe baseline approval is malformed or incomplete.')];
+    const problems = v2ShapeProblems(approval);
+    if (problems.length > 0) {
+      return [approvalFinding('baseline-approval-malformed',
+        `Probe baseline approval (v2) is malformed: ${problems.join('; ')}.`)];
     }
     // Blank identity or attestation fields are named findings rather than
     // generic malformation: they are how a rubber stamp becomes visible.

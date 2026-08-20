@@ -552,6 +552,7 @@ const ORDERING_SNAPSHOT_APPROVAL_PATH = join(EVAL_ROOT, 'baselines', 'ordering.s
  * validator turns null into a fail-closed evidence-mismatch finding on the
  * v2 branch; the byte-read happens here because eval does I/O and the gate
  * stays pure. A v1 approval declares no evidence and gets null harmlessly.
+ * Serves both the probe-baseline and the ordering-snapshot approvals.
  */
 function approvalEvidenceSha256(approval: unknown): string | null {
   if (approval === null || typeof approval !== 'object' || Array.isArray(approval)) return null;
@@ -689,6 +690,7 @@ async function runProbeGates(
       const ordering = orderingSnapshotGate({
         snapshot: orderingSnapshot,
         approval: orderingApproval,
+        evidenceSha256: approvalEvidenceSha256(orderingApproval),
         // An explicit candidate/release target intentionally differs from the
         // fixture identity the snapshot pins; only document integrity and the
         // tripwire apply on those runs, and the fixture-based CI legs keep

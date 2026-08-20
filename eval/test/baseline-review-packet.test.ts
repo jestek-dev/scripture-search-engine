@@ -4,16 +4,21 @@
  * reviewer signs against — silent rendering drift is evidence drift.
  */
 
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { describeTargetId, renderBaselineReviewPacket } from '../src/baselineReviewPacket.js';
+import { describeTargetId, renderBaselineReviewPacket, reviewPacketSha256 } from '../src/baselineReviewPacket.js';
 import { canonicalJsonSha256, type Probe, type ProbeBaseline } from '../src/gates/probes.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+const EVAL_ROOT = join(HERE, '..');
+const TSX_CLI = fileURLToPath(new URL('../../node_modules/tsx/dist/cli.mjs', import.meta.url));
 
 const BEFORE: ProbeBaseline = {
   corpusFingerprint: 'a'.repeat(64),
@@ -71,6 +76,39 @@ describe('baseline review packet', () => {
     expect(packet).toContain(`- \`probesSha256\`: \`${canonicalJsonSha256(PROBES)}\``);
     expect(packet).toContain(`- \`engine.layerFingerprint\`: \`${'c'.repeat(64)}\``);
     expect(packet).toContain(canonicalJsonSha256(BEFORE));
+  });
+
+  it('emits the packet hash a v2 approval must quote, matching the written bytes exactly', () => {
+    const packet = renderBaselineReviewPacket({ before: BEFORE, after: AFTER, probeFile: PROBES, noise: NOISE });
+    // The footer tells the reviewer where the hash comes from.
+    expect(packet).toContain('reviewPacketSha256');
+
+    const dir = mkdtempSync(join(tmpdir(), 'review-packet-'));
+    const paths = {
+      before: join(dir, 'before.json'),
+      after: join(dir, 'after.json'),
+      probes: join(dir, 'probes.json'),
+      budgets: join(dir, 'budgets.json'),
+      out: join(dir, 'packet.md'),
+    };
+    writeFileSync(paths.before, JSON.stringify(BEFORE), 'utf8');
+    writeFileSync(paths.after, JSON.stringify(AFTER), 'utf8');
+    writeFileSync(paths.probes, JSON.stringify(PROBES), 'utf8');
+    writeFileSync(paths.budgets, JSON.stringify({ noise: NOISE }), 'utf8');
+    const run = spawnSync(process.execPath, [
+      TSX_CLI, 'src/baselineReviewPacket.ts',
+      '--before', paths.before, '--after', paths.after,
+      '--probes', paths.probes, '--budgets', paths.budgets,
+      '--out', paths.out,
+    ], { cwd: EVAL_ROOT, encoding: 'utf8' });
+    expect(run.status).toBe(0);
+
+    // The exported hash IS the hash of the file the tool wrote, so
+    // `sha256sum <packet>.md` reproduces what the approval quotes.
+    const written = createHash('sha256').update(readFileSync(paths.out)).digest('hex');
+    expect(reviewPacketSha256(packet)).toBe(written);
+    expect(run.stderr).toContain('reviewPacketSha256');
+    expect(run.stderr).toContain(written);
   });
 
   it('marks exceeded budgets and broken adversarial silence so a reviewer cannot miss them', () => {

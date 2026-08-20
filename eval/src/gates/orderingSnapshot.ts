@@ -37,7 +37,12 @@
  */
 
 import { fail, pass, type GateFinding, type GateResult } from './types.js';
-import { canonicalJsonSha256 } from './probes.js';
+import {
+  APPROVAL_EVIDENCE_PATH_PATTERN,
+  APPROVAL_V1_SUNSET_DATE,
+  GRANDFATHERED_V1_APPROVAL_IDENTITIES,
+  canonicalJsonSha256,
+} from './probes.js';
 
 /** One ranked result as the snapshot records it: identity and rounded score. */
 export interface OrderedProbeResult {
@@ -67,6 +72,17 @@ export interface OrderingSnapshot {
 export const ORDERING_SNAPSHOT_APPROVAL_SCHEMA =
   'scripture-search-engine/ordering-snapshot-approval/v1';
 
+/**
+ * v2 mirrors the probe-baseline approval's accountable record: named reviewer
+ * with contact, independence attestation, and a byte digest binding the
+ * review record under docs/reviews/. It binds no review-packet digest — the
+ * packet renders G8 baseline movement only; the rendered evidence for an
+ * ordering review is the review record itself. v1 stays valid solely for the
+ * grandfathered committed record (same identity pin and sunset as G8's).
+ */
+export const ORDERING_SNAPSHOT_APPROVAL_SCHEMA_V2 =
+  'scripture-search-engine/ordering-snapshot-approval/v2';
+
 interface OrderingSnapshotPriorProvenance {
   readonly snapshotGitBlobSha1: string;
   readonly probeListsSha256: string;
@@ -87,6 +103,23 @@ export interface OrderingSnapshotApproval {
   readonly reviewedAt: string;
   readonly rationale: string;
   readonly priorProvenance: OrderingSnapshotPriorProvenance | null;
+}
+
+/** The v2 review record: identity, attestation, and evidence are explicit. */
+export interface OrderingSnapshotApprovalV2 {
+  readonly schema: typeof ORDERING_SNAPSHOT_APPROVAL_SCHEMA_V2;
+  readonly snapshotSha256: string;
+  readonly probeListsSha256: string;
+  readonly engine: OrderingEngineIdentity;
+  readonly reviewerName: string;
+  readonly reviewerContact: string;
+  readonly independence: string;
+  readonly evidence: { readonly path: string; readonly sha256: string };
+  readonly reviewedAt: string;
+  readonly rationale: string;
+  /** Null only beside `bootstrap`, which documents why no prior exists. */
+  readonly priorProvenance: OrderingSnapshotPriorProvenance | null;
+  readonly bootstrap?: string;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -147,11 +180,87 @@ function validShape(approval: Record<string, unknown>): boolean {
     approval['rationale'].trim().length > 0 && validPriorProvenance(approval);
 }
 
+const V2_KEYS = [
+  'schema',
+  'snapshotSha256',
+  'probeListsSha256',
+  'engine',
+  'reviewerName',
+  'reviewerContact',
+  'independence',
+  'evidence',
+  'reviewedAt',
+  'rationale',
+  'priorProvenance',
+] as const;
+
+/**
+ * Field-level v2 shape problems, each naming the offending field — same
+ * discipline as the G8 approval validator's.
+ */
+function v2ShapeProblems(approval: Record<string, unknown>): string[] {
+  const problems: string[] = [];
+  const allowed = new Set<string>([...V2_KEYS, 'bootstrap']);
+  for (const key of Object.keys(approval).sort()) {
+    if (!allowed.has(key)) problems.push(`unexpected field "${key}"`);
+  }
+  for (const key of V2_KEYS) {
+    if (!(key in approval)) problems.push(`missing field "${key}"`);
+  }
+  const check = (field: string, valid: boolean, expected: string): void => {
+    if (field in approval && !valid) problems.push(`"${field}" must be ${expected}`);
+  };
+  check('snapshotSha256', isSha256(approval['snapshotSha256']), 'a 64-hex sha256');
+  check('probeListsSha256', isSha256(approval['probeListsSha256']), 'a 64-hex sha256');
+  check('engine', isEngineIdentity(approval['engine']), 'the exact engine identity triple');
+  check('reviewerName', typeof approval['reviewerName'] === 'string', 'a string');
+  check('reviewerContact', typeof approval['reviewerContact'] === 'string', 'a string');
+  check('independence', typeof approval['independence'] === 'string', 'a string');
+  const evidence = approval['evidence'];
+  check('evidence', isRecord(evidence) && exactKeys(evidence, ['path', 'sha256']) &&
+    typeof evidence['path'] === 'string' && APPROVAL_EVIDENCE_PATH_PATTERN.test(evidence['path']) &&
+    isSha256(evidence['sha256']),
+  'a {path, sha256} record naming a docs/reviews/*.md review record');
+  check('reviewedAt', isReviewDate(approval['reviewedAt']), 'a real YYYY-MM-DD date');
+  check('rationale', typeof approval['rationale'] === 'string' && approval['rationale'].trim().length > 0,
+    'a non-empty string');
+  if ('bootstrap' in approval &&
+      (typeof approval['bootstrap'] !== 'string' || approval['bootstrap'].trim().length === 0)) {
+    problems.push('"bootstrap" must be a non-empty string documenting why no prior snapshot exists');
+  }
+  if ('priorProvenance' in approval) {
+    if (approval['priorProvenance'] === null) {
+      if (!('bootstrap' in approval)) {
+        problems.push('"priorProvenance" may be null only beside a "bootstrap" field documenting the missing prior');
+      }
+    } else {
+      if ('bootstrap' in approval) problems.push('"bootstrap" is valid only when "priorProvenance" is null');
+      if (!validPriorProvenance(approval)) {
+        problems.push('"priorProvenance" must bind the prior snapshot git blob, probe-lists digest, and engine identity');
+      }
+    }
+  }
+  return problems;
+}
+
+/** True for a document well-formed under either approval schema. */
+function wellFormedApproval(approval: unknown): approval is Record<string, unknown> {
+  if (!isRecord(approval)) return false;
+  if (approval['schema'] === ORDERING_SNAPSHOT_APPROVAL_SCHEMA) return validShape(approval);
+  if (approval['schema'] === ORDERING_SNAPSHOT_APPROVAL_SCHEMA_V2) return v2ShapeProblems(approval).length === 0;
+  return false;
+}
+
 /**
  * Checks the approval for a committed ordering snapshot. Modeled line-for-line
  * on the G8 probe-baseline approval validator: hashes bind the exact logical
  * JSON documents, so a checkout's CRLF/LF policy does not change what a
  * reviewer approved.
+ *
+ * `evidenceSha256` is the SHA-256 of the bytes at `approval.evidence.path`,
+ * computed by the caller (eval does the I/O; this validator stays pure), or
+ * null when the file is missing or unreadable. The grandfathered v1 record
+ * binds no evidence, so the value is ignored on that branch.
  */
 export function validateOrderingSnapshotApproval(input: {
   readonly snapshot: OrderingSnapshot;
@@ -159,6 +268,7 @@ export function validateOrderingSnapshotApproval(input: {
   readonly snapshotSha256: string;
   readonly probeListsSha256: string;
   readonly engine: OrderingEngineIdentity;
+  readonly evidenceSha256: string | null;
 }): readonly GateFinding[] {
   if (!isRecord(input.approval)) {
     return [approvalFinding('ordering-approval-missing', 'Ordering snapshot has no machine-readable approval.')];
@@ -166,11 +276,50 @@ export function validateOrderingSnapshotApproval(input: {
 
   const approval = input.approval;
   const findings: GateFinding[] = [];
-  if (approval['schema'] !== ORDERING_SNAPSHOT_APPROVAL_SCHEMA) {
+  if (approval['schema'] === ORDERING_SNAPSHOT_APPROVAL_SCHEMA) {
+    if (!validShape(approval)) {
+      return [approvalFinding('ordering-approval-malformed', 'Ordering snapshot approval is malformed or incomplete.')];
+    }
+    // v1 is closed to new records: only the identity the committed record
+    // bound stays accepted, and only at its pre-sunset date.
+    if (!GRANDFATHERED_V1_APPROVAL_IDENTITIES.some((identity) =>
+      sameIdentity(identity, approval['engine'] as OrderingEngineIdentity))) {
+      findings.push(approvalFinding('ordering-approval-v1-not-grandfathered',
+        'Ordering snapshot approval declares retired schema v1 for an engine identity outside the ' +
+        'grandfathered committed records; author it as a v2 approval instead.'));
+    }
+    if ((approval['reviewedAt'] as string) > APPROVAL_V1_SUNSET_DATE) {
+      findings.push(approvalFinding('ordering-approval-v1-retired',
+        `Ordering snapshot approval is schema v1 but its reviewedAt ${approval['reviewedAt'] as string} ` +
+        `postdates the v1 sunset ${APPROVAL_V1_SUNSET_DATE}; new approvals must be authored in schema v2.`));
+    }
+  } else if (approval['schema'] === ORDERING_SNAPSHOT_APPROVAL_SCHEMA_V2) {
+    const problems = v2ShapeProblems(approval);
+    if (problems.length > 0) {
+      return [approvalFinding('ordering-approval-malformed',
+        `Ordering snapshot approval (v2) is malformed: ${problems.join('; ')}.`)];
+    }
+    // Blank identity or attestation fields are named findings rather than
+    // generic malformation: they are how a rubber stamp becomes visible.
+    if ((approval['reviewerName'] as string).trim().length === 0 ||
+        (approval['reviewerContact'] as string).trim().length === 0) {
+      findings.push(approvalFinding('ordering-approval-reviewer-unidentified',
+        'Ordering snapshot approval does not name an identifiable independent reviewer.'));
+    }
+    if ((approval['independence'] as string).trim().length === 0) {
+      findings.push(approvalFinding('ordering-approval-independence-missing',
+        'Ordering snapshot approval carries no independence attestation naming what the reviewer did not author.'));
+    }
+    const evidence = approval['evidence'] as { readonly path: string; readonly sha256: string };
+    if (input.evidenceSha256 === null) {
+      findings.push(approvalFinding('ordering-approval-evidence-mismatch',
+        `Ordering snapshot approval evidence ${evidence.path} is missing or unreadable.`));
+    } else if (input.evidenceSha256 !== evidence.sha256) {
+      findings.push(approvalFinding('ordering-approval-evidence-mismatch',
+        `Ordering snapshot approval evidence ${evidence.path} does not match the approved review-record digest.`));
+    }
+  } else {
     return [approvalFinding('ordering-approval-malformed', 'Ordering snapshot approval does not declare a supported approval schema.')];
-  }
-  if (!validShape(approval)) {
-    return [approvalFinding('ordering-approval-malformed', 'Ordering snapshot approval is malformed or incomplete.')];
   }
 
   if (approval['snapshotSha256'] !== input.snapshotSha256) {
@@ -218,6 +367,11 @@ export function orderingSnapshotGate(options: {
   readonly snapshot: OrderingSnapshot | null;
   readonly approval: unknown;
   /**
+   * SHA-256 of the bytes at the approval's evidence path, computed by the
+   * caller, or null when absent. Ignored for the grandfathered v1 record.
+   */
+  readonly evidenceSha256: string | null;
+  /**
    * The identity and ordered lists this run actually observed, or null when
    * an explicit candidate/release target was evaluated — those artifacts
    * intentionally differ from the fixture identity the snapshot pins, so
@@ -258,6 +412,7 @@ export function orderingSnapshotGate(options: {
       snapshotSha256: canonicalJsonSha256(snapshot),
       probeListsSha256: probeListsSha256(snapshot.probes),
       engine: snapshotIdentity,
+      evidenceSha256: options.evidenceSha256,
     }),
   ];
 
@@ -265,9 +420,10 @@ export function orderingSnapshotGate(options: {
   // in the rewritten approval; if the approval's engine identity did not move
   // with it, the ordering changed without a version bump and the re-approval
   // itself is the evidence. Checked whenever the approval is well-formed
-  // enough to carry both fields, independent of what this run observed.
-  if (isRecord(options.approval) && validShape(options.approval)) {
-    const approval = options.approval as unknown as OrderingSnapshotApproval;
+  // enough to carry both fields — under either schema — independent of what
+  // this run observed.
+  if (wellFormedApproval(options.approval)) {
+    const approval = options.approval as unknown as OrderingSnapshotApproval | OrderingSnapshotApprovalV2;
     const prior = approval.priorProvenance;
     if (prior !== null && approval.probeListsSha256 !== prior.probeListsSha256 &&
         sameIdentity(approval.engine, prior.engine)) {
