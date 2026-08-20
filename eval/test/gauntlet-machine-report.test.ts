@@ -16,6 +16,7 @@ import {
   canonicalJson,
   captureRunIdentity,
   dirtyTreeSha256,
+  fixtureInputSha256,
   gauntletExitCode,
   parseGauntletOptions,
   resolveMachineReportPath,
@@ -356,6 +357,42 @@ describe.sequential('gauntlet CLI process', () => {
       expect(secondJson.reportSha256).toMatch(/^[0-9a-f]{64}$/);
     } finally {
       rmSync(jsonPath, { force: true });
+    }
+  });
+
+  it('names the doctrinal-guardrail data files in fixtureInputSha256 (edit moves the hash, revert restores it)', () => {
+    const scratch = mkdtempSync(join(tmpdir(), 'fixture-input-sha-'));
+    try {
+      // A scratch repo containing only the guardrail files: absent roots hash
+      // as empty, so any hash movement below is attributable to these files.
+      mkdirSync(join(scratch, 'ontology'), { recursive: true });
+      const guardrailFiles = [
+        join(scratch, 'ontology', 'doctrinal-reviews.yaml'),
+        join(scratch, 'ontology', 'flagged-pairings.yaml'),
+      ];
+      writeFileSync(guardrailFiles[0]!, 'reviews: []\n');
+      writeFileSync(guardrailFiles[1]!, 'pairings: []\n');
+      const baseline = fixtureInputSha256(scratch);
+
+      for (const file of guardrailFiles) {
+        const original = readFileSync(file, 'utf8');
+
+        writeFileSync(file, `${original}# reviewed-data edit\n`);
+        expect(fixtureInputSha256(scratch)).not.toBe(baseline);
+
+        rmSync(file);
+        expect(fixtureInputSha256(scratch)).not.toBe(baseline);
+
+        writeFileSync(file, original);
+        expect(fixtureInputSha256(scratch)).toBe(baseline);
+      }
+
+      // Files outside the enumerated roster must not move the hash; widening
+      // the roster is a deliberate change that updates this expectation.
+      writeFileSync(join(scratch, 'ontology', 'README.md'), 'stray\n');
+      expect(fixtureInputSha256(scratch)).toBe(baseline);
+    } finally {
+      rmSync(scratch, { recursive: true, force: true });
     }
   });
 

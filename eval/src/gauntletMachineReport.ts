@@ -573,6 +573,14 @@ export function dirtyTreeSha256(
   return sha256(canonicalJson(paths.sort((left, right) => left.path.localeCompare(right.path))));
 }
 
+/**
+ * The fixture-input roster. Every reviewed data file that can change what the
+ * gauntlet evaluates must appear here, either under an enumerated root or as a
+ * named file — an edit that cannot move fixtureInputSha256 is invisible to the
+ * input-identity check. Directory roots are hashed recursively; named files
+ * cover reviewed data living outside those roots (the doctrinal guardrail's
+ * review and flagged-pairing tables sit beside, not inside, ontology/concepts).
+ */
 function fixtureInputs(repoRoot: string): string[] {
   const roots = [
     join(repoRoot, 'eval', 'golden'),
@@ -582,7 +590,11 @@ function fixtureInputs(repoRoot: string): string[] {
     join(repoRoot, 'pipeline', 'fixtures'),
     join(repoRoot, 'pipeline', 'manifests'),
   ];
-  return roots.flatMap(listFilesRecursively).sort();
+  const files = [
+    join(repoRoot, 'ontology', 'doctrinal-reviews.yaml'),
+    join(repoRoot, 'ontology', 'flagged-pairings.yaml'),
+  ];
+  return [...roots.flatMap(listFilesRecursively), ...files.filter(existsSync)].sort();
 }
 
 export function fixtureInputSha256(repoRoot: string): string {
