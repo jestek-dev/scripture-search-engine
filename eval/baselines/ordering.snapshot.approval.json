@@ -1,14 +1,22 @@
 {
   "schema": "scripture-search-engine/ordering-snapshot-approval/v1",
-  "snapshotSha256": "a1b6c521fc3feac657a2b589757e567bcb25d14fb668d0a725167ff2adf361f9",
-  "probeListsSha256": "bb88765d2918e4e90e4197ed2392e714101ae59d61fa362f6339d3c4005eb6f9",
+  "snapshotSha256": "dd2e5292c3ef0ca8482d07677ea15be235f83d7b6ad16f59bed328c75d020d66",
+  "probeListsSha256": "c6d779f1381da6a36e69e00887a7200f80b72f2215158c7fe45daaa8c5859e4c",
   "engine": {
     "engineVersion": "0.9.0",
     "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
-    "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a"
+    "layerFingerprint": "01538283c82c90d2096c5e445023c75a70a14e7566d143f885fe2630d375f067"
   },
-  "reviewer": "project owner (bootstrap ordering snapshot, approved by merging PR-A)",
+  "reviewer": "independent reviewer designated per docs/governance/probe-baseline-review.md (record drafted by the change author; adopting it and merging lexicon-concepts PR 1 is the approval act)",
   "reviewedAt": "2026-08-17",
-  "rationale": "Bootstrap ordering snapshot: pins every probe's full default page at engine 0.9.0 with the re-pinned source fingerprints, matching the identity of the independently approved G8 probe baseline. No prior snapshot exists, so priorProvenance is null; from the next regeneration onward it must name the merge-base blob.",
-  "priorProvenance": null
+  "rationale": "layerFingerprint moved with the peace-of-god 1 Peter 5:7 dedup (the engine sums duplicate anchors; the second entry is deleted). Two probe orderings moved with the identity: ot-prophets-plans (1 Peter 5:7 falls from the double-counted 20.322729 to 9.526279) and ot-wisdom-trust (1 Peter 5:7 at 9.6 drops off the 25-result page; Psalms 32:10 enters). No engine code changed, so ENGINE_VERSION stays 0.9.0 and the moved fingerprint accounts for the regeneration.",
+  "priorProvenance": {
+    "snapshotGitBlobSha1": "93d0e2573ac52dcb90f504f7023ec2c02ff71523",
+    "probeListsSha256": "bb88765d2918e4e90e4197ed2392e714101ae59d61fa362f6339d3c4005eb6f9",
+    "engine": {
+      "engineVersion": "0.9.0",
+      "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+      "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a"
+    }
+  }
 }

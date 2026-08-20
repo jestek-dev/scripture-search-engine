@@ -1,7 +1,7 @@
 {
   "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+  "layerFingerprint": "01538283c82c90d2096c5e445023c75a70a14e7566d143f885fe2630d375f067",
   "engineVersion": "0.9.0",
-  "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a",
   "observations": [
     {
       "id": "broad-love",
@@ -373,18 +373,18 @@
       "top": [
         "WEB:24029011",
         "WEB:50004007",
-        "WEB:60005007",
         "WEB:43014027",
         "WEB:59002004",
         "WEB:50004006",
         "WEB:23026003",
         "WEB:40006027",
         "WEB:19034014",
-        "WEB:60003011"
+        "WEB:60003011",
+        "WEB:43016033"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.320926,
-      "meanTopScore": 20.338802
+      "weakReasonShare": 0.341386,
+      "meanTopScore": 19.427794
     },
     {
       "id": "ot-prophets-justly",

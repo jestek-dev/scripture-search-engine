@@ -30,6 +30,12 @@ anchors:
   - ref: John 16:33
     sources: [torrey]
     weight: 0.8
+  # Also the remembered-phrasing anchor, 2026-08-08 (editorial: the verse the
+  # remembered wording "cast all your anxiety on him" renders). A second entry
+  # for the same ref double-counted it — the engine sums duplicate anchors —
+  # so the editorial citation was deduplicated 2026-08-17. Dual citation
+  # `sources: [torrey, editorial]` is restored by `ranking-fixes` once
+  # multi-source entries are single-scoring.
   - ref: 1 Peter 5:7
     sources: [torrey]
     weight: 0.75
@@ -39,11 +45,6 @@ anchors:
   - ref: Romans 5:1
     sources: [torrey]
     weight: 0.6
-  # Remembered-phrasing anchor, 2026-08-08 (editorial: the verse the remembered
-  # wording renders).
-  - ref: 1 Peter 5:7
-    sources: [editorial]
-    weight: 0.85
 related:
   - trust-in-god
   - fear-not

@@ -136,6 +136,13 @@ export function compileOntology(files: readonly { name: string; contents: string
       });
     }
 
+    // One anchor ENTRY per range. The engine sums anchor rows, so a concept
+    // listing the same range twice double-counts it — exactly how a duplicate
+    // 1 Peter 5:7 outranked peace-of-god's own 1.0 anchor. Multiple sources on
+    // a single entry (`sources: [torrey, editorial]`) stay legal: that is
+    // provenance, not duplication. Overlapping-but-not-identical ranges are a
+    // separate reporting concern that lands with `ranking-fixes`.
+    const seenAnchorRanges = new Map<string, string>();
     for (const anchor of parsed.anchors ?? []) {
       const range = parseAnchorRef(anchor.ref);
       if (!range) {
@@ -146,6 +153,18 @@ export function compileOntology(files: readonly { name: string; contents: string
         errors.push(`${parsed.id}: anchor "${anchor.ref}" declares no sources`);
         continue;
       }
+      const rangeKey = `${range.start}:${range.end}`;
+      const firstRef = seenAnchorRanges.get(rangeKey);
+      if (firstRef !== undefined) {
+        errors.push(
+          `${parsed.id}: anchor "${anchor.ref}" resolves to the same range as anchor ` +
+            `"${firstRef}" — the engine sums duplicate anchors, so a second entry ` +
+            'double-counts the passage. Cite every source on one entry instead ' +
+            '(sources: [a, b]).',
+        );
+        continue;
+      }
+      seenAnchorRanges.set(rangeKey, anchor.ref);
       for (const sourceId of anchor.sources) {
         citedSourceIds.add(sourceId);
         anchors.push({

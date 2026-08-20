@@ -1,21 +1,21 @@
 {
   "schema": "scripture-search-engine/probe-baseline-approval/v1",
-  "baselineSha256": "6f3c6c0c5ef11daad7d88ead586160db151eb017ee23ee60f314137794d36fda",
+  "baselineSha256": "ba16a6353f1055089bc7d4a7ec929d0ff42aeb214eb757d0adcb604a14b53545",
   "probesSha256": "3d437b030362d5e717a048cf2b163129b7a530a49fc0f2921c0de37e8aaf8d50",
   "engine": {
     "engineVersion": "0.9.0",
     "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
-    "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a"
+    "layerFingerprint": "01538283c82c90d2096c5e445023c75a70a14e7566d143f885fe2630d375f067"
   },
-  "reviewer": "independent admission baseline reviewer",
-  "reviewedAt": "2026-08-10",
-  "rationale": "The reviewed probe movement sharpens canonical anchors, reduces weak-signal dominance where applicable, and preserves adversarial suppression without a silent product regression.",
+  "reviewer": "independent reviewer designated per docs/governance/probe-baseline-review.md (record drafted by the change author from the review packet; adopting it and merging lexicon-concepts PR 1 is the approval act)",
+  "reviewedAt": "2026-08-17",
+  "rationale": "1 Pet 5:7 no longer double-counts; Phil 4:6-7 leads 'peace'. peace-of-god.yaml listed 1 Peter 5:7 twice (torrey 0.75 + editorial 0.85) and the engine sums duplicate anchors; deleting the second entry moves only layerFingerprint. One probe's top-10 moved: ot-prophets-plans ('thoughts of peace and not of evil'), where 1 Peter 5:7 leaves the top-10 and John 16:33 enters — the double-counted anchor no longer outranks the concept's own weighted choices.",
   "priorProvenance": {
-    "baselineGitBlobSha1": "1fc76aa59d987877849a96642604981b0d858145",
+    "baselineGitBlobSha1": "0f1aabc06c1e2ee0e16e5c3d4f86e7531ba7f315",
     "engine": {
-      "engineVersion": "0.7.1",
-      "corpusFingerprint": "d4835d2052b6923f253fce337e77952571f6618a1799911f17c1548ee80c12c8",
-      "layerFingerprint": null
+      "engineVersion": "0.9.0",
+      "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+      "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a"
     }
   }
 }
