@@ -10,16 +10,30 @@
     "Plans for a future and a hope; hope as an anchor for the soul.",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
     "2026-08-08 single-token audit: the bare query \"hope\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
-    "2026-08-08 remembered-phrasings: the NIV/ESV wordings above are asserted here. Each was a MEASURED gap â€” it returned the target verse nowhere in the top 10 before this pack."
+    "2026-08-08 remembered-phrasings: the NIV/ESV wordings above are asserted here. Each was a MEASURED gap â€” it returned the target verse nowhere in the top 10 before this pack.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts. Jeremiah 29:11 is top-3 (not top-1) because \"confidence in what we hope for\" is led by Hebrews 11:1 — correctly."
   ],
   "expectedTop": [
     {
       "reference": "Jeremiah 29:11",
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Hope"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Jeremiah 29:11",
+      "below": "Hebrews 6:19",
+      "withinTop": 3
+    },
+    {
+      "above": "Jeremiah 29:11",
+      "below": "Romans 15:13",
+      "withinTop": 5
+    }
+  ],
   "alsoAcceptable": [
     "Hebrews 6:19",
     "Romans 15:13",

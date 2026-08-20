@@ -9,9 +9,16 @@
     "PASTORAL-CARE FIXTURE. The mustNotRank list is the point: these queries",
     "have dangerous lexical near-misses in the canon, every one of which is now",
     "IN the fixture corpus precisely so this assertion can fail. A mustNotRank",
-    "against an absent verse passes vacuously â€” protection that is decoration."
+    "against an absent verse passes vacuously â€” protection that is decoration.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
   ],
   "expectedTop": [
+    {
+      "reference": "Psalms 34:18",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Grief and loss"
+    },
     {
       "reference": "1 Thessalonians 4:13-18",
       "requiredReasonFamily": "concept_anchor",
@@ -19,11 +26,24 @@
     },
     {
       "reference": "John 11:25-26",
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Grief and loss"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Psalms 34:18",
+      "below": "Revelation 21:4",
+      "withinTop": 3
+    },
+    {
+      "above": "Psalms 34:18",
+      "below": "John 11:25-26",
+      "withinTop": 5
+    }
+  ],
   "mustNotRank": [
     {
       "reference": "Psalms 116:15",

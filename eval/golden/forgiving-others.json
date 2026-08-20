@@ -8,21 +8,42 @@
     "concept_anchor evidence so a lexical hit cannot pass as understanding -",
     "the right passage for the wrong reason is still a failure.",
     "Seventy times seven; forgive as God in Christ forgave you.",
-    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending."
+    "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
   ],
   "expectedTop": [
     {
+      "reference": "Matthew 6:14-15",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Forgiving others"
+    },
+    {
       "reference": "Matthew 18:21-22",
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Forgiving others"
     },
     {
       "reference": "Ephesians 4:32",
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Forgiving others"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Matthew 6:14-15",
+      "below": "Matthew 18:21-22",
+      "withinTop": 3
+    },
+    {
+      "above": "Matthew 6:14-15",
+      "below": "Ephesians 4:32",
+      "withinTop": 3
+    }
+  ],
   "alsoAcceptable": [
     "Matthew 6:14-15",
     "Colossians 3:13",

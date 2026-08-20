@@ -11,6 +11,7 @@ import {
   type CorpusFixture,
 } from '../src/gates/corpusGolden.js';
 import { determinismGate, goldenGate, type GoldenFixture } from '../src/gates/golden.js';
+import { latencyGate } from '../src/gates/probes.js';
 import { buildReport, decideVerdict } from '../src/report.js';
 import { fail, pass, notApplicable } from '../src/gates/types.js';
 
@@ -341,5 +342,29 @@ describe('single-token collapse detection', () => {
       'a-concept',
       'b-concept',
     ]);
+  });
+});
+
+describe('G11 latency', () => {
+  it('reports not-applicable, never pass, when no probe was timed', () => {
+    // The pass-without-running edge: an empty probe file used to earn a green
+    // G11 row. A gate that is not running must look different from a gate
+    // that is running and finding nothing.
+    const result = latencyGate([], 150);
+    expect(result.status).toBe('not-applicable');
+    expect(result.applicability).toBe('required');
+    expect(result.summary).toContain('no probes were timed');
+  });
+
+  it('REJECTs the run on an empty probe file, because G11 is required', () => {
+    expect(decideVerdict({ gates: [latencyGate([], 150)] })).toBe('REJECT');
+  });
+
+  it('passes when the measured p95 is within budget', () => {
+    expect(latencyGate([5, 6, 7], 150).status).toBe('pass');
+  });
+
+  it('fails when the measured p95 exceeds budget', () => {
+    expect(latencyGate([500], 150).status).toBe('fail');
   });
 });

@@ -9,16 +9,25 @@
     "the right passage for the wrong reason is still a failure.",
     "New every morning: great is your faithfulness (Lamentations 3:22-23).",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "2026-08-08 single-token audit: the bare query \"faithfulness\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
+    "2026-08-08 single-token audit: the bare query \"faithfulness\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
   ],
   "expectedTop": [
     {
       "reference": "Lamentations 3:22-23",
+      "withinTop": 1,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: God's faithfulness"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Lamentations 3:22-23",
+      "below": "Deuteronomy 7:9",
+      "withinTop": 3
+    }
+  ],
   "alsoAcceptable": [
     "Deuteronomy 7:9",
     "2 Timothy 2:13",

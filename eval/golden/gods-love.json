@@ -9,21 +9,37 @@
     "the right passage for the wrong reason is still a failure.",
     "God so loved the world; nothing can separate us from the love of God.",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "Jesse's 2026-08-08 call: the bare word \"love\" defaults to this concept, with loving-others surfacing as a related theme rather than competing. Asserted here so the default cannot silently flip."
+    "Jesse's 2026-08-08 call: the bare word \"love\" defaults to this concept, with loving-others surfacing as a related theme rather than competing. Asserted here so the default cannot silently flip.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
   ],
   "expectedTop": [
     {
+      "reference": "Romans 5:8",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The love of God"
+    },
+    {
       "reference": "John 3:16",
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: The love of God"
     },
     {
       "reference": "Romans 8:38-39",
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: The love of God"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Romans 5:8",
+      "below": "John 3:16",
+      "withinTop": 5
+    }
+  ],
   "alsoAcceptable": [
     "Romans 5:8",
     "1 John 4:9-10",

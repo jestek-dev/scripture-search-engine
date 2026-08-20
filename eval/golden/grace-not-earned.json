@@ -9,16 +9,30 @@
     "Founding concept 'grace-not-earned'.",
     "Backfilled 2026-08-08 with the structural coverage check in G3. This concept shipped in the founding wave before the fixtures-first rule was enforceable in code, so it had no fixture of its own â€” the gap the check now makes impossible. Requires concept_anchor evidence: the right passage for the wrong reason is still a failure.",
     "Deliberately distinct from 'faith-and-works': that concept holds the tension, this one names the unearned side. G4 keeps the two lexicons from collapsing into each other.",
-    "2026-08-08 single-token audit: the bare query \"grace\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
+    "2026-08-08 single-token audit: the bare query \"grace\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
   ],
   "expectedTop": [
     {
       "reference": "Ephesians 2:8-9",
+      "withinTop": 1,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Grace, not earned"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Ephesians 2:8-9",
+      "below": "Romans 11:6",
+      "withinTop": 3
+    },
+    {
+      "above": "Ephesians 2:8-9",
+      "below": "Titus 3:5",
+      "withinTop": 5
+    }
+  ],
   "alsoAcceptable": [
     "Romans 3:23-24",
     "Titus 3:5"

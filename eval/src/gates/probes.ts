@@ -26,7 +26,7 @@ import { createHash } from 'node:crypto';
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 import { isAuthoritative } from '@jestek-dev/scripture-engine';
 
-import { fail, pass, type GateFinding, type GateResult } from './types.js';
+import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
 import type { ProbeOrderedResults } from './orderingSnapshot.js';
 
 export interface Probe {
@@ -295,7 +295,6 @@ export function validateProbeBaselineApproval(input: {
 export interface NoiseThresholds {
   readonly maxTop10ChurnRatio: number;
   readonly maxWeakReasonShareIncrease: number;
-  readonly minMeanDistinctiveness: number | null;
 }
 
 const TOP_N = 10;
@@ -469,7 +468,15 @@ export function noiseGate(options: {
 
 export function latencyGate(latenciesMs: readonly number[], budgetMs: number): GateResult {
   if (latenciesMs.length === 0) {
-    return pass('G11-latency', 'Latency', 'no probes to time');
+    // Previously this branch reported `pass` — a gate that never ran wearing
+    // a green checkmark, which is how a guardrail becomes decoration. G11 is
+    // a required gate, so not-applicable makes the run REJECT: emptying the
+    // probe file now fails closed instead of shipping unmeasured.
+    return notApplicable(
+      'G11-latency',
+      'Latency',
+      'no probes were timed — the probe file supplied no queries, so p95 cannot be measured',
+    );
   }
   const sorted = [...latenciesMs].sort((a, b) => a - b);
   const index = Math.min(sorted.length - 1, Math.ceil(sorted.length * 0.95) - 1);

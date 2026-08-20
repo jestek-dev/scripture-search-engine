@@ -10,14 +10,23 @@
     "requiredReasonFamily is concept_anchor on purpose. Token overlap could",
     "drift into the right answer on a corpus change and the fixture would",
     "report success for a reason that is not the one we built. The assertion",
-    "is that a CURATED anchor put it there and can say who says so."
+    "is that a CURATED anchor put it there and can say who says so.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts."
   ],
   "expectedTop": [
     {
       "reference": "Philippians 4:6-7",
+      "withinTop": 1,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Anxious for nothing"
     }
   ],
-  "expectedWithinTop": 5
+  "expectedWithinTop": 5,
+  "preferredOrder": [
+    {
+      "above": "Philippians 4:6-7",
+      "below": "1 Peter 5:7",
+      "withinTop": 3
+    }
+  ]
 }

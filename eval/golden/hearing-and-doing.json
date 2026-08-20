@@ -30,26 +30,42 @@
     "say WHY these passages belong together and cite who says so. The gauntlet",
     "detected this itself - it runs pending fixtures precisely so a target that",
     "starts passing cannot go unnoticed.",
-    "2026-08-08 single-token audit: the bare query \"obedience\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching."
+    "2026-08-08 single-token audit: the bare query \"obedience\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
+    "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts. Observed #1 for both queries is Matthew 7:24-27 (James 1:22 sits at #2 for the phrase query and #5 for \"obedience\"), so the top-1 pin goes to the observed leader. If James 1:22 SHOULD lead, that is a ranking/data change and belongs to ranking-fixes or lexicon-concepts, not here."
   ],
   "expectedTop": [
     {
       "reference": "James 1:22-25",
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Hearing and doing"
     },
     {
       "reference": "Matthew 7:24-27",
+      "withinTop": 1,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Hearing and doing"
     },
     {
       "reference": "Luke 6:46-49",
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Hearing and doing"
     }
   ],
   "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Matthew 7:24-27",
+      "below": "Luke 6:46-49",
+      "withinTop": 3
+    },
+    {
+      "above": "Matthew 7:24-27",
+      "below": "James 1:22-25",
+      "withinTop": 5
+    }
+  ],
   "alsoAcceptable": [
     "Ezekiel 33:31-32",
     "Romans 2:13",
