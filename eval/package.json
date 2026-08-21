@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "gauntlet": "tsx src/gauntlet.ts",
+    "tier-report": "tsx src/tierReport.ts",
     "battery:check": "tsx src/batteryJobCheck.ts",
     "review-packet": "tsx src/baselineReviewPacket.ts"
   },

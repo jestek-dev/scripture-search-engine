@@ -88,6 +88,9 @@ export interface ValidatedBatteryQuery {
   readonly id: string;
   readonly query: string;
   readonly category: BatteryCategory;
+  /** Provenance carried through for process criteria (tier S5's battery growth). */
+  readonly addedAt: string;
+  readonly origin: string;
   readonly judged: readonly BatteryJudgedRange[];
   readonly harmful: readonly BatteryHarmfulRange[];
   readonly legitimatelyEmpty: boolean;
@@ -171,7 +174,7 @@ function parseRange(
   return { ref, range };
 }
 
-function rangesOverlap(
+export function rangesOverlap(
   left: { start: number; end: number },
   right: { start: number; end: number },
 ): boolean {
@@ -242,8 +245,8 @@ export function validateBattery(
     unknownFields(row, QUERY_FIELDS, location, findings);
     const id = requireString(row, 'id', location, findings);
     const query = requireString(row, 'query', location, findings);
-    requireString(row, 'addedAt', location, findings);
-    requireString(row, 'origin', location, findings);
+    const addedAt = requireString(row, 'addedAt', location, findings);
+    const origin = requireString(row, 'origin', location, findings);
     const categoryName = row['category'];
     const status = row['status'];
     if (id === null || query === null) continue;
@@ -391,7 +394,9 @@ export function validateBattery(
       ));
     }
 
-    queries.push({ id, query, category: cat, judged, harmful, legitimatelyEmpty });
+    queries.push({
+      id, query, category: cat, addedAt: addedAt ?? '', origin: origin ?? '', judged, harmful, legitimatelyEmpty,
+    });
   }
 
   for (const id of Object.keys(judgments)) {
