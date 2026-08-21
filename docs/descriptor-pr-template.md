@@ -136,6 +136,10 @@ tag. Record the merge commit SHA — it is the commit being tagged.
       `verify (windows-latest)`, and `cross-platform ordering (G2)`.
       Lookup: Actions tab filtered by commit, or
       `gh run list --workflow gauntlet.yml --commit <merge SHA>`.
+      If a rapid follow-up push to main cancelled that run (`gauntlet.yml`
+      sets `cancel-in-progress` per ref), re-run the cancelled run from the
+      Actions tab — or dispatch `gauntlet.yml` (`workflow_dispatch`) while
+      main is at the merge commit — and use that green run instead.
 - [ ] **Local smoke dry-run against the real bytes, before any tag exists:**
       run `.github/scripts/release-smoke.mjs` with `SMOKE_DB_PATH` (the draft
       asset, downloaded with a token), `SMOKE_DESCRIPTOR_PATH` (the minted

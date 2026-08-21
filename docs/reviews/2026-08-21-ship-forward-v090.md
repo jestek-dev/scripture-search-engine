@@ -13,7 +13,7 @@ different artifacts:
 
 - **Committed** `artifacts/content-artifact.json` (in-tree today, verified):
   `schemaVersion "6"`, `databaseSha256 35b7a6f3…`, 137,412,608 bytes,
-  `builtAt 2026-07-31T14:00:43Z`, `counts.concepts 33`, a
+  `builtAt 2026-07-31T14:00:43.785Z`, `counts.concepts 33`, a
   14,102,528-byte `verse_translation_tokens` table in `perTableBytes`, no
   `release.tag`, and a `stale` block (`since 2026-08-08`,
   `blocksRelease: true`). No release anywhere carries these bytes — it is a
@@ -22,7 +22,9 @@ different artifacts:
   descriptor, both verified 2026-08-20): schema 5, `sha256:b57d3676…`,
   123,310,080 bytes, 8 concepts, no `verse_translation_tokens` table. The
   byte gap (137,412,608 − 123,310,080 = 14,102,528) is exactly the
-  `verse_translation_tokens` table.
+  `verse_translation_tokens` table — descriptor-stated arithmetic (committed
+  `perTableBytes` vs published `databaseBytes`), not a byte-level diff of the
+  two assets.
 
 Consequence, verified: `npm run fetch-artifact --workspace workbench`
 resolves tag `v0.7.1` via the `releaseTagFor` fallback
@@ -67,30 +69,55 @@ on four verified grounds:
 
 ## 2. The v0.7.1 hash history, stated precisely
 
-The committed descriptor has held three distinct identities; conflating them
-has caused miscitations before. The sequence, verified 2026-08-21 by
-`git show <commit>:artifacts/content-artifact.json` at each step:
+On main's first-parent line the committed descriptor has held three distinct
+identities — `403d0fb9…` → `b57d3676…` → `35b7a6f3…`. Branch ancestry now in
+HEAD carries a **fourth**: commit `9177e90` (2026-07-31, pastoral-care packs;
+`51b5d59`'s second parent) committed `131e4443…`, so anyone walking
+`git log --all -- artifacts/content-artifact.json` will meet all four.
+Conflating them has caused miscitations before. The sequence, verified
+2026-08-21 by `git log --first-parent -- artifacts/content-artifact.json`
+plus `git show <commit>:artifacts/content-artifact.json` and
+`git merge-base --is-ancestor` at each step:
 
-1. **At v0.7.1 release time (2026-07-31, release commit `8f708d9`):** the
-   committed descriptor said `databaseSha256: 403d0fb9…` while the
-   `content.db` actually attached to the release was `b57d3676…` — SQLite
-   byte layout differing between a local build and CI, every other field
-   byte-identical. The release verify step was a tautology then and could
-   not catch it (`docs/NEEDS-JESSE.md` §7.1 — formerly the doc's second
-   section numbered "2.11"; renumbered 2026-08-21).
+1. **At v0.7.1 release time (2026-07-31):** the release-PR merge `8f708d9`
+   — the v0.7.1 tag itself points at its descendant `ac64800` (#8), which
+   carries the identical descriptor — said `databaseSha256: 403d0fb9…`
+   while the `content.db` actually attached to the release was `b57d3676…`
+   — SQLite byte layout differing between a local build and CI, every other
+   field byte-identical. The release verify step was a tautology then and
+   could not catch it (`docs/NEEDS-JESSE.md` §7.1 — formerly the doc's
+   second section numbered "2.11"; renumbered 2026-08-21).
 2. **Same day, commit `7c1e53b`** ("fix(release): verify against the
-   reviewed descriptor, not the one the build just wrote"): the committed
-   descriptor was corrected to the CI-built `b57d3676…` and the workflow was
-   fixed to verify against a pre-build snapshot of the reviewed descriptor.
-3. **The phantom's braided arrival:** commit `c469ef1` (2026-07-31,
-   translation-neutral search) overwrote the descriptor with a local
-   schema-6 build — `35b7a6f3…` / 137,412,608 B, matching no release asset.
-   Commit `f9fd586` (2026-08-06) restored the schema-5 `b57d3676…`
-   descriptor; commit `0478da1` (2026-08-08) kept it and added the `stale`
-   block; the 2026-08-10 merges (`51b5d59`, `9cd54ec`) brought the schema-6
-   phantom back with the stale block attached — the state the tree has held
-   since, and the state the v0.9.0 descriptor PR replaces verbatim with a
-   minted descriptor.
+   reviewed descriptor, not the one the build just wrote") corrected the
+   descriptor to the CI-built `b57d3676…` and fixed the workflow to verify
+   against a pre-build snapshot of the reviewed descriptor — on a branch
+   line (it reaches today's HEAD only through `9177e90`, `51b5d59`'s second
+   parent; it is not an ancestor of `f9fd586`). Main's own first-parent
+   line picked up the corrected schema-5 `b57d3676…` at `f9fd586`
+   (2026-08-06, workbench PR #15), whose parent `3ef56ab` still carried the
+   original wrong `403d0fb9…` — a correction of the release-day error, not
+   an undo of the phantom, which had never been on main.
+3. **The phantom and its 2026-08-10 arrival on main:** commit `c469ef1`
+   (2026-07-31, translation-neutral search) wrote a local schema-6 build —
+   `35b7a6f3…` / 137,412,608 B, matching no release asset — on its feature
+   branch; `c469ef1` is not an ancestor of `f9fd586`, and the phantom was
+   never on main before 2026-08-10. Separately, `0478da1` (2026-08-08) kept
+   `b57d3676…` and added the `stale` block (`blocksRelease: true`) on a
+   line that reaches main only through `54f952a`. Then three merges landed
+   on 2026-08-10, in first-parent order:
+   - `d2c0ea5` ("Merge origin/feat/translation-neutral", parents `1f33bb3`
+     + `c469ef1`) is the merge that landed the phantom on main: schema 6,
+     `35b7a6f3…`, no `stale` block.
+   - `51b5d59` (second parent `9177e90`, whose line carried the fourth
+     identity `131e4443…`) kept the phantom in its conflict resolution —
+     still no `stale` block.
+   - `9cd54ec` (second parent `54f952a`, which carried the stale-marked
+     `b57d3676…`) kept the phantom and attached the `stale` block: schema
+     6, `35b7a6f3…`, `blocksRelease: true`. That identity is the state the
+     tree has held since (`12a0593`, 2026-08-11, later reworded the
+     `stale.reason` and `engineVersion` fields without changing the
+     identity), and the state the v0.9.0 descriptor PR replaces verbatim
+     with a minted descriptor.
 4. **PR #26 (`276bdbd`, 2026-08-16)** split minting from promotion:
    `mint-artifact.yml` is now the only place release bytes are born, and
    `release.yml` rebuilds nothing at tag time — the design the four grounds
