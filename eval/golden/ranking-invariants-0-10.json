@@ -1,0 +1,93 @@
+{
+  "id": "ranking-invariants-0-10",
+  "status": "pending",
+  "note": [
+    "PENDING RANKER TWIN for the 0.10.0 ranking stages (plan Phase-1 preamble",
+    "rider / P3.1 + P3.3 field-4 obligations; engine-scoring PR-1(a)/(b)).",
+    "Authored 2026-08-21 on engine 0.9.0, where the failing cases below are",
+    "the measured-gap record; promoted to active in the 0.10.0 squash PR",
+    "(PR-2) alongside the ENGINE_VERSION bump. Pending ranker fixtures never",
+    "execute in G2/G3, so the fail-today state is demonstrated by out-of-band",
+    "replay pasted in the item log, per the F21 workaround.",
+    "",
+    "J-question discipline: cases encode BEHAVIOR, never a disputed constant.",
+    "The sole-evidence case holds for any cap below token_overlap's 10 — the",
+    "specific value 6 is Jesse's (J20). The tie-break case encodes the plan's",
+    "recommended default (curated anchor before bare verbatim at an exact",
+    "authoritative tie) and awaits J25 ratification before promotion. The",
+    "taper case locks the stage-3 invariant at the evidence level; its",
+    "fail-today acceptance evidence is the lords-supper corpus fixture",
+    "(J19 owns the taper constant; J3 owns the ad8 ordering — reserved)."
+  ],
+  "cases": [
+    {
+      "id": "sole-translation-variant-never-outranks-honest-text-match",
+      "rule": "P3.1 sole-evidence floor: a result whose ONLY evidence is translation_variant is a vocabulary hint and must rank below any honest text match (token_overlap + proximity). Fails on 0.9.0: sole variant scores 14 (1.0 x 14) vs 10 (0.7 x 10 + 0.5 x 6) — the prior plan's exact arithmetic. Holds for any sole-evidence cap below 10; the value 6 is J20's call, not encoded here.",
+      "candidates": [
+        {
+          "targetId": "honest-text-match",
+          "groupId": "g-honest",
+          "evidence": [
+            { "family": "token_overlap", "label": "Shared words", "strength": 0.7 },
+            { "family": "proximity", "label": "Words near each other", "strength": 0.5 }
+          ]
+        },
+        {
+          "targetId": "variant-hint-only",
+          "groupId": "g-variant",
+          "evidence": [
+            { "family": "translation_variant", "label": "Worded this way in another translation", "strength": 1 }
+          ]
+        }
+      ],
+      "expectedOrder": ["honest-text-match", "variant-hint-only"],
+      "requiredReasons": { "honest-text-match": "token_overlap" }
+    },
+    {
+      "id": "two-word-phrase-taper-never-drowns-full-query-anchor",
+      "rule": "P3.3(3a) invariant lock: a 2-significant-word verbatim phrase files at the tapered 40-point tier (strength here encodes the post-taper emission, approximately 40/60), so a full-query curated anchor with honest corroboration outranks it. The taper itself happens at evidence emission, so the fail-today evidence for this stage is the lords-supper corpus fixture; this case locks the invariant so PR-2 cannot regress it. Taper constant is J19's.",
+      "candidates": [
+        {
+          "targetId": "full-query-anchor-with-corroboration",
+          "groupId": "g-anchor",
+          "evidence": [
+            { "family": "concept_anchor", "label": "Theme: instituting passage", "strength": 1 },
+            { "family": "token_overlap", "label": "Shared words", "strength": 0.7 },
+            { "family": "proximity", "label": "Words near each other", "strength": 0.5 }
+          ]
+        },
+        {
+          "targetId": "two-word-verbatim-tapered",
+          "groupId": "g-verbatim",
+          "evidence": [
+            { "family": "exact_phrase", "label": "Exact phrase (2 significant words, tapered)", "strength": 0.667 }
+          ]
+        }
+      ],
+      "expectedOrder": ["full-query-anchor-with-corroboration", "two-word-verbatim-tapered"],
+      "requiredReasons": { "full-query-anchor-with-corroboration": "concept_anchor" }
+    },
+    {
+      "id": "equal-score-authoritative-tie-orders-curated-anchor-first",
+      "rule": "P3.3(3c) equal-score curated tie-break (plan's recommended default, pending J25): at an EXACT score tie between two authoritative results, the one a curated source anchors orders above a bare verbatim-string match, then targetId. Fails on 0.9.0: compareResults falls through to targetId asc, handing the tie to the verbatim side (the measured post-fix ad8 tie is exactly 40.00:40.00 and book order hands it to the rebuke). Scores here are exact in binary: 0.5 x 60 = 30 = 0.75 x 40.",
+      "candidates": [
+        {
+          "targetId": "a-bare-verbatim-match",
+          "groupId": "g-verbatim-tie",
+          "evidence": [
+            { "family": "exact_phrase", "label": "Exact phrase", "strength": 0.5 }
+          ]
+        },
+        {
+          "targetId": "b-curated-anchored",
+          "groupId": "g-anchor-tie",
+          "evidence": [
+            { "family": "concept_anchor", "label": "Theme: named by a curated source", "strength": 0.75 }
+          ]
+        }
+      ],
+      "expectedOrder": ["b-curated-anchored", "a-bare-verbatim-match"],
+      "requiredReasons": { "b-curated-anchored": "concept_anchor" }
+    }
+  ]
+}

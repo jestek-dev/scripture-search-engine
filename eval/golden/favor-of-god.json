@@ -1,0 +1,42 @@
+{
+  "id": "favor-of-god",
+  "query": "favor of God",
+  "status": "pending",
+  "note": [
+    "0.10.0 STAGE-3 SPECIFICATION (plan P3.3 / ES-2 field-4 obligation,",
+    "authored in Phase 1 per the P1 preamble rider; audit ad12, FLAG #5;",
+    "conditional on J5). On 0.9.0 the verbatim 'favor of God' in",
+    "Malachi 1:9 — a rebuke of corrupt priests — takes the lead over the",
+    "catered answer (Psalms 90:17 'let the favor of the Lord our God be on",
+    "us'; Proverbs 3:3-4). This fixture encodes the plan's stated J5",
+    "default ('catered answer leads'), provisional in the battery-judgment",
+    "sense: Jesse's ruling writes the final assertion either way, and the",
+    "fixture is amended to his answer before the fix that promotes it",
+    "lands. Battery twin: judgments.json ad12 (Ps 90:17 grade 3,",
+    "provisional; Mal 1:9 deliberately unjudged there).",
+    "",
+    "HONESTLY CORPUS-BLOCKED: Malachi 1 and Psalms 90 are both absent from",
+    "the 5,667-verse fixture corpus, so the expectedTop fails as unfound",
+    "and the mustNotLead guard reports VACUOUS on fixture runs — expected",
+    "and honest until the F34 corpus PR lands those chapters. The stage-3",
+    "battery replay over the reconstructed full corpus is the interim",
+    "acceptance evidence. Proverbs 3 IS present, so the alsoAcceptable",
+    "companion is reachable on the fixture bed."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 90:17",
+      "withinTop": 3
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotLead": [
+    {
+      "ref": "Malachi 1:9",
+      "why": "verbatim 'favor of God' inside a rebuke of corrupt priests; sense-inverted for a favor-seeking asker (audit ad12, 2026-08-20; provisional pending J5/J16)"
+    }
+  ],
+  "alsoAcceptable": [
+    "Proverbs 3:3-4"
+  ]
+}

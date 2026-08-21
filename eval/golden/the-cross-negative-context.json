@@ -1,0 +1,49 @@
+{
+  "id": "the-cross-negative-context",
+  "query": "the cross",
+  "status": "pending",
+  "note": [
+    "0.10.0 STAGE-3 SPECIFICATION (plan P3.3 / ES-2 field-4 obligation,",
+    "authored in Phase 1 per the P1 preamble rider; prior-plan P2/F2",
+    "evidence class). On 0.9.0 the whole-query phrase branch grants full",
+    "60-point exact_phrase authority regardless of significant-word count,",
+    "so verbatim occurrences in NEGATIVE context — the Matthew 27:40",
+    "crucifixion mockery, 'come down from the cross' — can outrank the",
+    "curated atonement anchors. Under the stage-3 taper a <2-significant-",
+    "word match ('the cross' collapses to the single significant token",
+    "'cross') files honestly as token_overlap at 10, and the measured",
+    "post-fix replay puts Romans 5:8 #1 with Isaiah 53:5 #3 and no mockery",
+    "verse above either. Fixture-corpus-live: Matthew 27 and Romans 5",
+    "verified present.",
+    "",
+    "Kept separate from the ACTIVE the-cross-bare.json (same query), which",
+    "pins today's admitted concept-coverage behavior; this pending twin",
+    "specifies the 0.10.0 negative-context ordering so the active fixture",
+    "never has to carry a failing assertion. Provisional in the",
+    "battery-judgment sense: the Rom 5:8-above-mockery ordering is a",
+    "pastoral opinion Jesse ratifies at PR-1 review (engine-scoring's",
+    "approval Q4 batch); the taper constant itself is J19's. Promote in",
+    "the 0.10.0 squash PR."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 5:8",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The cross and atonement"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Romans 5:8",
+      "below": "Matthew 27:40",
+      "withinTop": 10
+    }
+  ],
+  "alsoAcceptable": [
+    "Isaiah 53:5",
+    "1 Peter 2:24",
+    "1 Corinthians 15:3"
+  ]
+}

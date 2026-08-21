@@ -1,0 +1,47 @@
+{
+  "id": "propitiation-pmi-ordering",
+  "query": "propitiation",
+  "status": "pending",
+  "note": [
+    "0.10.0 STAGE-5 SPECIFICATION (plan P3.5 / ES-4 field-4 obligation,",
+    "authored in Phase 1 per the P1 preamble rider; audit th2). The",
+    "passage_terms family carries pmiSum and never uses it, so equal-count",
+    "matches tie exactly and canonical book order decides — the measured",
+    "fixture-corpus baseline for 'propitiation' is a flat 2.85-point tie",
+    "led by John 1:29 by book-order accident. Stage 5's asymptotic",
+    "pmiFactor is strictly monotone (distinct pmiSums never tie); the",
+    "measured post-fix fixture-corpus ordering is 1 John 2:2 ('He is the",
+    "propitiation for our sins') first, then 1 John 2:1, then John 1:29.",
+    "This preferredOrder is that unconditional, fixture-corpus-live part:",
+    "it encodes de-flattening BEHAVIOR, not the half-saturation constant",
+    "(the form and the value 6.0 are Jesse's, J21).",
+    "",
+    "J23 PLACEHOLDER — DELIBERATELY NOT ENCODED: the Rom 3:25 vs",
+    "Exod 25:17 discriminating assertion is corpus-blocked (Romans 3 and",
+    "Exodus 25 absent from the fixture corpus) AND measurement-gated: the",
+    "full-corpus pmiSum table for th2's top-10 is dumped and pasted",
+    "BEFORE any fixture pins that ordering, and Jesse rules (J23) whether",
+    "to accept the statistical order or commission the F10 doctrinal-term",
+    "pack to carry the preference as curated data. It activates only with",
+    "the F34 corpus PR and after that ruling; the fixture is never edited",
+    "after the engine run to match output.",
+    "",
+    "Kept separate from the pending propitiation.json (same query), which",
+    "is th2's DATA-half specification (lexicon reachability, W16 gap",
+    "sweep); this file is the ENGINE-half tie-resolution spec so the two",
+    "can promote with their own fixes. Promote in the 0.10.0 squash PR."
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "1 John 2:2",
+      "below": "John 1:29",
+      "withinTop": 10
+    }
+  ],
+  "alsoAcceptable": [
+    "1 John 2:2",
+    "1 John 4:10",
+    "John 1:29"
+  ]
+}

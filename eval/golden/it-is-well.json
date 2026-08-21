@@ -21,7 +21,15 @@
     "Jeremiah 4 is not in the fixture corpus, so the Guard vacuity report",
     "names this guard VACUOUS on fixture runs — expected and honest until",
     "the chapter lands (corpus-needs territory). Pending per fixtures-first;",
-    "promote with the fix that demotes Jer 4:10 on the artifact it ships on."
+    "promote with the fix that demotes Jer 4:10 on the artifact it ships on.",
+    "",
+    "2026-08-21 (0.10.0 PR-1 rider): this guard is also plan P3.1's stage-1",
+    "corpus obligation — the sole-evidence floor (translation_variant alone",
+    "capped below any honest text match; the cap value is J20's) is the",
+    "engine half that demotes Jer 4:10 here; the guard stays mustNotLead,",
+    "not mustNotRank, per the E2 reasoning above. Its pending ranker twin",
+    "is ranking-invariants-0-10.json; stage-1 battery replay on the full",
+    "corpus is the acceptance evidence."
   ],
   "mustNotLead": [
     {

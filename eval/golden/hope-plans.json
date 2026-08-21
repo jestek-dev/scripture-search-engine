@@ -1,0 +1,44 @@
+{
+  "id": "hope-plans",
+  "query": "for I know the plans I have for you",
+  "status": "pending",
+  "note": [
+    "0.10.0 STAGE-4 SPECIFICATION (plan P3.4 / ES-3 field-4 obligation,",
+    "authored in Phase 1 per the P1 preamble rider; audit ph2, both",
+    "configs). Cross-reference expansion seeds from concept anchors and",
+    "emits edge evidence for targets that are THEMSELVES anchors of the",
+    "seeding concept — non-independent consensus stacked as evidence. The",
+    "measured harm: Jeremiah 29:11, the verse being quoted, sits #2 by 0.3",
+    "points behind Romans 15:13's same-concept xref stack (hope-in-god",
+    "anchors both: Jer 29:11 at 1.0 editorial, Rom 15:13 at 0.8 torrey;",
+    "the 5.6-point anchor gap is closed by the capped <=6 same-concept",
+    "stack). Stage 4 SUPPRESSES same-concept edges (J22, the plan's",
+    "recommended default over a x0.5 discount): within one concept's",
+    "anchor set an edge restates the consensus the anchor chip already",
+    "carries — the G7 principle across the anchor/xref boundary.",
+    "",
+    "Fixture-corpus-live: Jeremiah 29 AND Romans 15 verified present, both",
+    "verses anchored by hope-in-god. Honesty note: the committed",
+    "openbible-subset lacks the Rom 15:13 inbound edges, so the ph2 flip",
+    "itself cannot reproduce on the fixture bed — the full-corpus stage-4",
+    "battery replay is the acceptance evidence, and this fixture is its",
+    "lock. The quoted-verse-leads expectation matches the plan's J4",
+    "default (quoted verse grade 3 for remembered phrases, provisional).",
+    "Promote in the 0.10.0 squash PR."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 29:11",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Jeremiah 29:11",
+      "below": "Romans 15:13",
+      "withinTop": 10
+    }
+  ]
+}
