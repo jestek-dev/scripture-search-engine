@@ -11,11 +11,12 @@
     "drift into the right answer on a corpus change and the fixture would",
     "report success for a reason that is not the one we built. The assertion",
     "is that a CURATED anchor put it there and can say who says so.",
-    "Round-2 book admission 2026-08-18: anchor widened James 1:2 -> 1:2-4 (endurance's perfect work); 'patience'/'perseverance' aliases added and the bare 'patience' query asserted."
+    "Round-2 book admission 2026-08-18: anchor widened James 1:2 -> 1:2-4 (endurance's perfect work); 'patience'/'perseverance' aliases added and the bare 'patience' query asserted.",
+    "0.10.0 stage-7 re-cut (plan P3.6 / CO-1): the binding range widens to the anchor's own 2026-08-18 span, James 1:2 -> 1:2-4 — a relaxation, no ordering assertion touched. The span-membership collapse presents the curated passage as ONE row addressed by its best-ranked member, and for 'patience' that member is James 1:3 (measured: #1 'James 1:2-4', targetId verse 1:3, 23.75, concept_anchor 'Theme: Joy in trials' — the very anchor this fixture asserts), which the old single-verse range could not bind. 'consider it pure joy' still binds via 1:2 either way. The assertion's substance is unchanged: the Joy-in-trials anchor puts this passage in the window and says who says so."
   ],
   "expectedTop": [
     {
-      "reference": "James 1:2",
+      "reference": "James 1:2-4",
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Joy in trials"
     }

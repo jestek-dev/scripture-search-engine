@@ -132,7 +132,11 @@ describe('complete-match subsumption marking site (0.10.0 stage 3 pin)', () => {
     // token_overlap chip and the proximity chip all coexist on one result.
     const results = await discover('be doers of the word not hearers only');
     const top = results[0]!;
-    expect(top.reference).toBe('James 1:22');
+    // Since the 0.10.0 stage-7 span collapse, the leading row is the curated
+    // obedience-to-the-word passage James 1:22-25 (James 1:22 is its best
+    // member and carries the fragment chips; reasons merge strongest-per-
+    // label, so the chips this test pins are the same chips).
+    expect(top.reference).toBe('James 1:22-25');
     const families = top.reasons.map((reason) => reason.family);
     expect(families).toContain('exact_phrase');
     expect(families).toContain('token_overlap');

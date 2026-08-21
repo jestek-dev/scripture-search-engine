@@ -66,14 +66,86 @@ describe('collapseAnchorRuns', () => {
     expect(collapseAnchorRuns(results, verses, spans)[0]!.reference).toBe('1 Corinthians 11:23');
   });
 
-  it('does NOT collapse across a gap in verse ids', () => {
-    // :23 and :25 are both the anchor's, but :24 is missing from the results,
-    // so merging them would silently claim a passage that was not returned.
+  it('collapses across a gap in verse ids: span membership, not contiguity (0.10.0 stage 7)', () => {
+    // :23 and :25 are both the anchor's; :24 is absent from the results. The
+    // curated span is the unit, so the surfaced members merge — the label
+    // spans the surfaced members and the excerpt carries ONLY their texts.
     const { verses, spans, results } = fixture(
       [46_011_023, 46_011_025],
       'lords-supper:46011023-46011026',
     );
-    expect(collapseAnchorRuns(results, verses, spans)).toHaveLength(2);
+    const out = collapseAnchorRuns(results, verses, spans);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.reference).toBe('1 Corinthians 11:23-25');
+    expect(out[0]!.excerpt).toBe('text 1 Corinthians 11:23 text 1 Corinthians 11:25');
+  });
+
+  it('collapses non-adjacent members separated by an unrelated result (Psalm-150 shape, 0.10.0 stage 7)', () => {
+    // The pre-0.10.0 rank-adjacency rule left every member where it ranked
+    // whenever anything else landed between them — `praise` filled five slots
+    // with individual verses of Psalm 150. Members now merge at the best
+    // member's position; the interloper keeps its own slot and shifts up.
+    const { verses, spans, results } = fixture(
+      [46_011_023, 46_011_024, 46_011_026],
+      'lords-supper:46011023-46011026',
+    );
+    const interloper: DiscoveryResult = {
+      targetId: 'WEB:19100004',
+      reference: 'Psalms 100:4',
+      excerpt: 'unrelated',
+      score: 21,
+      reasons: [{ family: 'token_overlap', label: 'Shared words', points: 21 }],
+    };
+    verses.set('WEB:19100004', { ...verse(19100004, 100, 4), bookName: 'Psalms', bookId: 19 });
+    const interleaved = [results[0]!, results[1]!, interloper, results[2]!];
+    const out = collapseAnchorRuns(interleaved, verses, spans);
+    expect(out).toHaveLength(2);
+    expect(out[0]!.reference).toBe('1 Corinthians 11:23-26');
+    expect(out[0]!.targetId).toBe('WEB:46011023');
+    expect(out[1]!.reference).toBe('Psalms 100:4');
+  });
+
+  it('anchors the merged row at the best-ranked member and labels it in canonical order', () => {
+    // Rank order :25 then :23 — the merged row sits where :25 ranked (its
+    // targetId), but the label and excerpt read in canonical verse order.
+    const { verses, spans } = fixture(
+      [46_011_023, 46_011_025],
+      'lords-supper:46011023-46011026',
+    );
+    const ranked = [
+      result(46_011_025, '1 Corinthians 11:25', 30),
+      result(46_011_023, '1 Corinthians 11:23', 22),
+    ];
+    const out = collapseAnchorRuns(ranked, verses, spans);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.targetId).toBe('WEB:46011025');
+    expect(out[0]!.reference).toBe('1 Corinthians 11:23-25');
+    expect(out[0]!.excerpt).toBe('text 1 Corinthians 11:23 text 1 Corinthians 11:25');
+    expect(out[0]!.score).toBe(30);
+  });
+
+  it('merges reasons strongest-per-label across non-adjacent members', () => {
+    const { verses, spans } = fixture(
+      [46_011_023, 46_011_025],
+      'lords-supper:46011023-46011026',
+    );
+    const a: DiscoveryResult = {
+      ...result(46_011_023, '1 Corinthians 11:23', 40),
+      reasons: [
+        { family: 'concept_anchor', label: "Theme: The Lord's Supper", points: 40 },
+        { family: 'token_overlap', label: 'Shared words', points: 3 },
+      ],
+    };
+    const b: DiscoveryResult = {
+      ...result(46_011_025, '1 Corinthians 11:25', 38),
+      reasons: [{ family: 'concept_anchor', label: "Theme: The Lord's Supper", points: 38 }],
+    };
+    const out = collapseAnchorRuns([a, b], verses, spans);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.reasons).toEqual([
+      { family: 'concept_anchor', label: "Theme: The Lord's Supper", points: 40 },
+      { family: 'token_overlap', label: 'Shared words', points: 3 },
+    ]);
   });
 
   it('does NOT collapse results from different anchors', () => {

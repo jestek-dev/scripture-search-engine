@@ -112,7 +112,11 @@ describe('forSong()', () => {
     });
     expect(result.kind).toBe('discovery');
     if (result.kind !== 'discovery') return;
-    expect(result.results.map((entry) => entry.reference)).toContain('James 1:22');
+    // The 0.10.0 stage-7 span collapse presents James 1:22 inside its
+    // curated obedience-to-the-word passage row.
+    expect(
+      result.results.some((entry) => entry.reference.startsWith('James 1:22')),
+    ).toBe(true);
   });
 
   it('is deterministic regardless of input key order', async () => {
