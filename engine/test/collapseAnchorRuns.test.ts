@@ -148,6 +148,41 @@ describe('collapseAnchorRuns', () => {
     ]);
   });
 
+  it('governing span: the span covering the most surfaced members wins across overlapping spans', () => {
+    // The Ephesians 2:8-10 shape from the live fixture bed (`faith works
+    // grace`): verses 8-10 belong to a three-member span, 8-9 also to a
+    // two-member one. Every member must join the span that gathers more of
+    // this result page, so the page shows ONE merged row covering all three
+    // — an inverted count rule splits it into 2:8-9 plus a separate 2:10.
+    const { verses, spans, results } = fixture(
+      [46_002_008, 46_002_009, 46_002_010],
+      'faith-and-works:46002008-46002010',
+    );
+    spans.set('WEB:46002008', new Set(['faith-and-works:46002008-46002010', 'grace-not-earned:46002008-46002009']));
+    spans.set('WEB:46002009', new Set(['faith-and-works:46002008-46002010', 'grace-not-earned:46002008-46002009']));
+    const out = collapseAnchorRuns(results, verses, spans);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.reference).toBe('1 Corinthians 2:8-10');
+    expect(out[0]!.targetId).toBe('WEB:46002008');
+  });
+
+  it('governing span: at equal surfaced-member counts the tie resolves to the ascending span key', () => {
+    // v24 sits in two spans that each cover two surfaced members. The tie
+    // must break to the ascending span key ('alpha' < 'beta'), so v24 merges
+    // with v23 and v25 stands alone — the key-descending mutation produces
+    // the mirror image (v23 alone, v24-25 merged) and must fail here.
+    const { verses, spans, results } = fixture(
+      [46_011_023, 46_011_024, 46_011_025],
+      'alpha:46011023-46011024',
+    );
+    spans.set('WEB:46011024', new Set(['alpha:46011023-46011024', 'beta:46011024-46011025']));
+    spans.set('WEB:46011025', new Set(['beta:46011024-46011025']));
+    const out = collapseAnchorRuns(results, verses, spans);
+    expect(out).toHaveLength(2);
+    expect(out[0]!.reference).toBe('1 Corinthians 11:23-24');
+    expect(out[1]!.reference).toBe('1 Corinthians 11:25');
+  });
+
   it('does NOT collapse results from different anchors', () => {
     const { verses, spans, results } = fixture([46_011_023, 46_011_024], 'a:1-2');
     spans.set('WEB:46011024', new Set(['b:3-4']));
