@@ -1,0 +1,112 @@
+# DOUBT — pastoral pack for the doubter (Phase-4 item P4.10 / DG-10,
+# prior-plan 1.9 remainder; authored 2026-08-21 fixture-first:
+# eval/golden/doubt.json was committed pending-and-failing before this file
+# existed. Measured gap, both beds: "doubt" returned token_overlap accidents
+# only — Matt 28:17 "some doubted" #1 @6.00, Rom 14:23 "he who doubts is
+# condemned" #4 — no concept, no curated chip; a doubter typing the word met
+# a condemnation text in the top-5 with no mercy register anywhere.)
+#
+# TONE (the prior plan's own merge-checklist line, quoted in the pending
+# fixture): "Jesus meets doubters, He does not scold them." A doubter
+# searching "doubt" should first meet Mark 9:23-24 — the honest cry "I
+# believe. Help my unbelief!" answered, not rebuked. That is why Mark
+# 9:23-24 leads at 1.0 with a deliberately wide gap over Jas 1:5-6 at 0.75
+# (the ask-in-faith counsel is kept, but it counsels; it must not be the
+# first word a doubter reads). The related edges are chosen on the same
+# rule: assurance-of-salvation and gods-faithfulness (whose 2 Tim 2:13 —
+# "if we are faithless, he remains faithful" — is the register's own
+# promise); NOT `faith`, whose 1.0 anchor Heb 11:6 ("without faith it is
+# impossible to please him") would put a rebuke-adjacent row into a
+# doubter's tail. Corpus-deferred mercy texts named for the re-pin payload
+# (P4.15): Matt 14:29-31 (the immediate hand stretched out BEFORE the
+# gentle question), John 20:26-29 (Thomas invited, not shamed), and —
+# recorded here as a candidate beyond the prior plan's two — Jude 1:22
+# ("On some have compassion...", Jude absent from the pinned subset).
+#
+# SENSE BOUNDARY (the known trap, held): "doubtful things" (Romans 14
+# adiaphora — disputable-matters.yaml, whose header demands a future doubt
+# concept "stay disjoint from this pack") is NOT this concept. Verified
+# under the one tokenizer: "doubtful" stems to `doubtful`, NOT `doubt`, so
+# the bare `doubt` entry below cannot fire on "doubtful things" /
+# "doubtful disputations" queries — disjointness holds structurally, and
+# was probed unchanged before→after on both beds (Rom 14:5 keeps its
+# Disputable-matters #1 @36.00 with zero Doubt chips in the top-10).
+# Rom 14:23 ("he who doubts is condemned if he eats") is about eating
+# against conscience, not wavering faith — deliberately NOT anchored; on
+# the quoted query its own exact-phrase armor (40.0) keeps it #1 (probed).
+#
+# Attribution note (trinity/benediction precedent): both anchors are
+# [editorial] — Torrey has NO DOUBT or DOUBTING topic in the verified
+# outline set (docs/research/torrey-topical/torrey-miller-topics.json,
+# checked 2026-08-21; the substring hits are other topics' refs). Nearest
+# corroborations recorded per anchor below; they corroborate under other
+# topic identities, they do not attribute. No new source ⇒ no
+# doctrinal-reviews.yaml row due.
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist; no
+# materialFrameKeyword appears in this id, label, or lexicon.
+#
+# SENSE-INVERSION SWEEP (2026-08-21): Mark 9:23-24 meets doubt with help —
+# nothing inverted. Jas 1:5-6 counsels AGAINST doubting ("ask in faith,
+# without any doubting") — anchored with open eyes as the counsel register
+# at reduced weight, not as a scold at the top (see TONE note); the verse
+# pair leads with the promise ("lacks wisdom... it WILL be given to him")
+# before the counsel, which is why the range is 1:5-6 and never 1:6 alone.
+#
+# Lexicon width note (one tokenizer, verified with engine significantWords
+# BEFORE commit): "doubt" is the subject noun — one WORD (and the stem for
+# doubts/doubted/doubting), not a multi-word collapse, no lexicon-inventory
+# row due. "help my unbelief" -> {help, unbelief}, two significant tokens.
+# NO single-token collapses. Quoted-verse breadth probed on both beds
+# before commit: "he who doubts is condemned" (Rom 14:23 armor 40.0 holds
+# #1), "doesnt doubt in his heart" (Mark 11:23 armor 35.2 holds #1), "why
+# do doubts arise in your hearts" (Luke 24:38 armor 60.0 holds #1),
+# "because of unbelief they were broken off" (Rom 11 rows unchanged — no
+# bare `unbelief` entry, see below). The stopword-collapsing quote "some
+# doubted" reduces to the bare token {doubt} — the whole-query subject-noun
+# case the engine treats as authoritative by design (the locked fear-not
+# "do not be afraid" regression is the precedent), so the pack leads while
+# Matt 28:17 keeps its exact-phrase row in-window (measured #2).
+# DELIBERATELY NOT admitted: bare `unbelief` — with it the concept would
+# fire on the Rom 11 / Heb 3 unbelief-of-Israel register and the quoted
+# "because of your unbelief" (Matt 17:20), which are different claims;
+# "help my unbelief" carries the fixture's register with two-token
+# containment instead. Honest tradeoff (PR body): the bare query
+# "unbelief" stays chip-less — its lexical #1 is already Mark 9:24.
+id: doubt
+label: Doubt
+lexicon:
+  # The subject noun — the audit query. One word; also the stem of
+  # doubts/doubted/doubting, so every inflection reaches the concept.
+  - doubt
+  # Mark 9:24's own cry in WEB wording — the register a struggling
+  # believer actually types; {help, unbelief}, two significant tokens.
+  - help my unbelief
+anchors:
+  # "Jesus said to him, 'If you can believe, all things are possible to
+  # him who believes.' Immediately the father of the child cried out with
+  # tears, 'I believe. Help my unbelief!'" (WEB). The honest doubter's
+  # prayer — belief and unbelief in the same breath — and Jesus answers it
+  # (the boy is healed in the verses that follow). The pack lead by
+  # design: mercy first (see TONE note); the pending fixture's
+  # expectedTop. Torrey corroboration (no DOUBT outline — see attribution
+  # note): UNBELIEF, "Pray for help against" (Mark 9:24); AFFLICTION,
+  # PRAYER UNDER, "For increase of faith" (Mark 9:24); FAITH, "All
+  # difficulties overcome by" (Mark 9:23).
+  - ref: Mark 9:23-24
+    sources: [editorial]
+    weight: 1.0
+  # "But if any of you lacks wisdom, let him ask of God, who gives to all
+  # liberally and without reproach... But let him ask in faith, without
+  # any doubting, for he who doubts is like a wave of the sea" (WEB). The
+  # counsel register — promise first ("gives to all liberally and WITHOUT
+  # REPROACH"), then the call to ask in faith; anchored at a deliberate
+  # distance below the mercy lead (see TONE and sweep notes). Torrey
+  # corroboration: GIFTS OF GOD, THE, "Wisdom" (Jas 1:5); FAITH,
+  # "Necessary in prayer" (Jas 1:6); PRAYER, "In faith" (Jas 1:6).
+  - ref: James 1:5-6
+    sources: [editorial]
+    weight: 0.75
+related:
+  - assurance-of-salvation
+  - gods-faithfulness

@@ -4,7 +4,10 @@
   "additionalQueries": [
     "help my unbelief"
   ],
-  "status": "pending",
+  "status": "active",
+  "coversConcepts": [
+    "doubt"
+  ],
   "note": [
     "GAP FIXTURE (prior-plan 1.9 remainder; re-verified 2026-08-21 sweep).",
     "No concept, no fixture; the hermetic run answers 'doubt' with",
@@ -17,13 +20,32 @@
     "pack's tone is the prior plan's own merge-checklist question ('doubt's",
     "tone matches how LH pastors doubters').",
     "Corpus-deferred: Matt 14:29-31, John 20:26-29 (Matthew 14, John 20",
-    "absent — re-pin payload)."
+    "absent — re-pin payload).",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-21 (P4.10c). One GATE-FORCED edit (the",
+    "trinity/incarnation precedent): the authored note above deferred",
+    "requiredReasonLabel to the batch sign-off, but G3's coverage check",
+    "requires the active demonstrating fixture to assert the exact label,",
+    "so the proposed wording 'Theme: Doubt' is now pinned. If Jesse's",
+    "batch sign-off changes the wording, the label re-cuts in the same",
+    "commit as the yaml change. Measured on the fixture bed at promotion:",
+    "'doubt' puts Mark 9:23-24 #1 (23.33, anchor) with Jas 1:5-6 #2 and",
+    "the assurance/faithfulness related chips behind them — the",
+    "condemnation accident Rom 14:23 (pre-pack #4) is out of the top-5,",
+    "which is the tone requirement made measurable; 'help my unbelief'",
+    "puts Mark 9:23-24 #1 (82.48, exact phrase + anchor). Sense boundary",
+    "held: 'doubtful things' / 'disputable matters' are byte-identical",
+    "before->after (Rom 14:5 keeps its Disputable-matters lead; 'doubtful'",
+    "does not stem to 'doubt'). Quoted-verse armors hold #1 on 'he who",
+    "doubts is condemned' (Rom 14:23 @40), 'doesnt doubt in his heart'",
+    "(Mark 11:23), 'why do doubts arise in your hearts' (Luke 24:38)."
   ],
   "expectedTop": [
     {
       "reference": "Mark 9:23-24",
       "withinTop": 3,
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Doubt"
     }
   ],
   "expectedWithinTop": 10,
