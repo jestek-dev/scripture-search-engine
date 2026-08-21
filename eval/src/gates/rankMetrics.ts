@@ -14,6 +14,8 @@
  * aggregate — an unratified judgment must not gate.
  */
 
+import { createHash } from 'node:crypto';
+
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 
 import { parseAnchorRef } from '../../../pipeline/src/importers/ontologyImporter.js';
@@ -48,23 +50,13 @@ export const BATTERY_CATEGORIES = [
 export type BatteryCategory = (typeof BATTERY_CATEGORIES)[number];
 
 /**
- * Structural minimums, not quality thresholds: the nine seed counts of the
- * transcribed battery. An active-query count below any floor means the
+ * Structural minimums live in `eval/budgets.json` (`rankQuality.battery.
+ * categoryFloors`) as reviewed data — known facts about the committed
+ * specimen set, deliberately not guessed quality numbers, which stay null
+ * there until baselined. An active-query count below any floor means the
  * battery has been hollowed out, which is a gate FAIL naming the category.
- * (Known facts about the committed specimen set — deliberately not guessed
- * quality numbers, which live null in eval/budgets.json until baselined.)
  */
-export const BATTERY_CATEGORY_FLOORS: Readonly<Record<BatteryCategory, number>> = {
-  'felt-need': 14,
-  'single-word': 12,
-  'remembered-phrase': 12,
-  'theological-term': 8,
-  'reference-adjacent': 8,
-  'misspelling': 6,
-  'adversarial': 14,
-  'multi-concept': 6,
-  'worship-leader': 4,
-};
+export type BatteryCategoryFloors = Readonly<Record<BatteryCategory, number>>;
 
 const QUERY_FIELDS = ['id', 'query', 'category', 'status', 'addedAt', 'origin', 'retiredAt', 'retirementNote'] as const;
 const QUERIES_FILE_FIELDS = ['$schema', 'batteryVersion', 'policy', 'queries'] as const;
@@ -188,8 +180,17 @@ function rangesOverlap(
  * Validates the two battery files against the reviewed-data schema. Never
  * throws on bad data — every problem becomes a finding, so a PR author sees
  * the complete list in one run.
+ *
+ * `floors` is the reviewed `rankQuality.battery.categoryFloors` record from
+ * eval/budgets.json (via validateRankQualityBlock), or null when that block
+ * is missing or malformed — which is itself a finding here: a battery whose
+ * structural minimums cannot be read must not be certified structurally sound.
  */
-export function validateBattery(queriesFile: unknown, judgmentsFile: unknown): ValidatedBattery {
+export function validateBattery(
+  queriesFile: unknown,
+  judgmentsFile: unknown,
+  floors: BatteryCategoryFloors | null,
+): ValidatedBattery {
   const findings: GateFinding[] = [];
   const queries: ValidatedBatteryQuery[] = [];
   let judgedRows = 0;
@@ -397,15 +398,23 @@ export function validateBattery(queriesFile: unknown, judgmentsFile: unknown): V
     }
   }
 
-  for (const categoryName of BATTERY_CATEGORIES) {
-    const floor = BATTERY_CATEGORY_FLOORS[categoryName];
-    const active = activePerCategory.get(categoryName) ?? 0;
-    if (active < floor) {
-      findings.push(finding(
-        'category-floor',
-        `category "${categoryName}" has ${active} active quer(ies), below its structural floor of ${floor}`,
-        [categoryName],
-      ));
+  if (floors === null) {
+    findings.push(finding(
+      'category-floors-unavailable',
+      'battery category floors are unavailable — eval/budgets.json rankQuality.battery.categoryFloors ' +
+        'is missing or malformed, so the battery\'s structural minimums cannot be certified',
+    ));
+  } else {
+    for (const categoryName of BATTERY_CATEGORIES) {
+      const floor = floors[categoryName];
+      const active = activePerCategory.get(categoryName) ?? 0;
+      if (active < floor) {
+        findings.push(finding(
+          'category-floor',
+          `category "${categoryName}" has ${active} active quer(ies), below its structural floor of ${floor}`,
+          [categoryName],
+        ));
+      }
     }
   }
 
@@ -554,20 +563,30 @@ export function batteryGate(input: {
    * certification that every guard can fire.
    */
   readonly harmfulPresence: ReadonlyMap<string, boolean> | null;
+  /**
+   * File-level findings from the rank instrument's own reviewed data — a
+   * malformed rankQuality block in eval/budgets.json, or a committed
+   * rank-metrics baseline whose independent approval is missing, tampered,
+   * or mismatched. Checked in every context, exactly like the battery's own
+   * structural validation: an instrument whose configuration is broken must
+   * fail on fixture runs too, not wait for an artifact run to be noticed.
+   */
+  readonly instrumentFindings?: readonly GateFinding[];
   readonly context: GateRunContext;
 }): GateResult {
   const { validated, outcomes } = input;
   const context = input.context ?? DEFAULT_GATE_RUN_CONTEXT;
 
-  if (validated.findings.length > 0) {
+  const structuralFindings = [...validated.findings, ...(input.instrumentFindings ?? [])];
+  if (structuralFindings.length > 0) {
     // Structural integrity of reviewed data is checkable in every context,
     // and a malformed battery file must never wait for an artifact run to
     // be noticed.
     return fail(
       'G12-battery',
       BATTERY_GATE_TITLE,
-      `battery files failed structural validation (${validated.findings.length} finding(s))`,
-      validated.findings,
+      `battery/rank-instrument files failed structural validation (${structuralFindings.length} finding(s))`,
+      structuralFindings,
       {
         activeQueries: validated.activeQueries,
         judgedRows: validated.judgedRows,
@@ -1176,6 +1195,7 @@ export function withRankEvidence(
   gate: GateResult,
   metrics: RankMetricsReport,
   findings: readonly GateFinding[],
+  quality?: RankQualityOutcome,
 ): GateResult {
   const overall = metrics.overall;
   const display = (value: RankMetricValue): string =>
@@ -1190,17 +1210,37 @@ export function withRankEvidence(
     numbers['rankGoodOrBetterTop3RateMicro'] = overall.goodOrBetterTop3Rate.micro;
   }
   if (overall.recallAt50.micro !== null) numbers['rankRecallAt50Micro'] = overall.recallAt50.micro;
-  return {
+
+  // Threshold accounting for the row summary. A null threshold contributes
+  // to "unset" and NOTHING else — reported, never passed, never failed. The
+  // count-of-set/met/unmet wording keeps the summary truthful the day a
+  // threshold flips, instead of hardcoding today's all-null state.
+  let thresholdsSummary = 'thresholds: none evaluated (rankQuality block unavailable)';
+  const qualityFailures = quality?.failures ?? [];
+  if (quality !== undefined) {
+    const unset = quality.evaluations.filter((entry) => entry.outcome === 'no-threshold').length;
+    const set = quality.evaluations.length - unset;
+    thresholdsSummary = set === 0
+      ? `thresholds: none set, ${unset} null (measured and reported — ${RANK_QUALITY_NULL_MARKER})`
+      : `thresholds: ${set} set (${qualityFailures.length} FAILED), ${unset} null (measured and reported)`;
+  }
+  const summary =
+    `${gate.summary} | rank metrics: ` +
+    `nDCG@10 ${display(overall.ndcg10)}, MRR@10 ${display(overall.mrr10)}, ` +
+    `good-or-better@3 ${display(overall.goodOrBetterTop3Rate)}, ` +
+    `recall@50 ${display(overall.recallAt50)} over ${overall.scoreableQueries} scoreable ` +
+    `quer(ies) (${overall.excludedQueries} excluded, IDCG=0); ${thresholdsSummary}`;
+  const merged = {
     ...gate,
-    summary:
-      `${gate.summary} | rank metrics (no thresholds — baselines not yet established): ` +
-      `nDCG@10 ${display(overall.ndcg10)}, MRR@10 ${display(overall.mrr10)}, ` +
-      `good-or-better@3 ${display(overall.goodOrBetterTop3Rate)}, ` +
-      `recall@50 ${display(overall.recallAt50)} over ${overall.scoreableQueries} scoreable ` +
-      `quer(ies) (${overall.excludedQueries} excluded, IDCG=0)`,
+    summary,
     metrics: { ...(gate.metrics ?? {}), ...numbers },
-    findings: [...(gate.findings ?? []), ...findings],
+    findings: [...(gate.findings ?? []), ...findings, ...qualityFailures],
   };
+  // An enforced (non-null) threshold that failed or could not be measured
+  // fails the row; nothing here can ever upgrade a status.
+  return qualityFailures.length > 0 && gate.status !== 'fail'
+    ? { ...merged, status: 'fail', summary: `${summary}; ${qualityFailures.length} rank threshold(s) failed` }
+    : merged;
 }
 
 // ---------------------------------------------------------------------------
@@ -1429,6 +1469,491 @@ export function detectNoMeasurableEffect(input: NoEffectInput): {
     },
     findings,
   };
+}
+
+// ---------------------------------------------------------------------------
+// rankQuality threshold discipline (E5): null-until-real-baseline.
+//
+// Thresholds are reviewed data in eval/budgets.json, micro-integers only.
+// A null threshold means MEASURED AND REPORTED — the value prints with
+// RANK_QUALITY_NULL_MARKER, never counted as pass, never as fail. A null
+// flips to a value only via the four-step protocol in
+// docs/governance/probe-baseline-review.md, and the flip is structurally
+// impossible before an independently approved rank-metrics baseline exists.
+// ---------------------------------------------------------------------------
+
+/** The exact words a null threshold reports beside its measured value. */
+export const RANK_QUALITY_NULL_MARKER = 'no threshold — baseline not yet established';
+
+const THRESHOLD_MICRO_MAX = 1000000;
+
+export interface RankQualityThresholds {
+  readonly ndcg10: {
+    readonly overall: number | null;
+    readonly perCategory: Readonly<Record<BatteryCategory, number | null>>;
+  };
+  readonly mrr10: number | null;
+  readonly goodOrBetterTop3Rate: number | null;
+  readonly battery: { readonly categoryFloors: BatteryCategoryFloors };
+}
+
+function commentKeys(record: Record<string, unknown>): string[] {
+  return Object.keys(record).filter((key) => !key.startsWith('$comment'));
+}
+
+function parseThresholdMicro(
+  value: unknown,
+  path: string,
+  deps: { readonly rankBaselineEstablished: boolean },
+  findings: GateFinding[],
+): number | null {
+  if (value === null) return null;
+  if (!Number.isInteger(value) || (value as number) < 1 || (value as number) > THRESHOLD_MICRO_MAX) {
+    findings.push(finding(
+      'rank-quality-schema',
+      `rankQuality.${path} must be null or a micro-integer threshold in 1..${THRESHOLD_MICRO_MAX} ` +
+        `(value x 10^6), got ${String(value)}`,
+    ));
+    return null;
+  }
+  if (!deps.rankBaselineEstablished) {
+    // The protocol is structural, not procedural: no number may appear here
+    // before the independently approved baseline it must be derived from.
+    findings.push(finding(
+      'rank-quality-premature-threshold',
+      `rankQuality.${path} is non-null but no independently approved rank-metrics baseline exists ` +
+        `(${RANK_METRICS_BASELINE_PATH} + its approval) — thresholds flip only via the four-step ` +
+        'protocol in docs/governance/probe-baseline-review.md',
+    ));
+  }
+  return value as number;
+}
+
+/**
+ * Validates the reviewed `rankQuality` block of eval/budgets.json. Returns
+ * null thresholds (and findings) on any structural problem — a gate must
+ * never enforce, or skip enforcing, on the strength of a malformed document.
+ */
+export function validateRankQualityBlock(
+  block: unknown,
+  deps: { readonly rankBaselineEstablished: boolean },
+): { readonly thresholds: RankQualityThresholds | null; readonly findings: readonly GateFinding[] } {
+  const findings: GateFinding[] = [];
+  if (!isRecord(block)) {
+    return {
+      thresholds: null,
+      findings: [finding(
+        'rank-quality-schema',
+        'eval/budgets.json has no rankQuality block — rank-quality thresholds and battery ' +
+          'category floors are reviewed data and must exist (all-null thresholds included)',
+      )],
+    };
+  }
+  const allowed = ['ndcg10', 'mrr10', 'goodOrBetterTop3Rate', 'battery'];
+  for (const key of commentKeys(block)) {
+    if (!allowed.includes(key)) {
+      findings.push(finding('rank-quality-schema', `rankQuality has unknown field "${key}"`));
+    }
+  }
+
+  const ndcg = block['ndcg10'];
+  let overall: number | null = null;
+  const perCategory: Partial<Record<BatteryCategory, number | null>> = {};
+  if (!isRecord(ndcg) || !isRecord(ndcg['perCategory'])
+      || commentKeys(ndcg).sort().join(',') !== 'overall,perCategory') {
+    findings.push(finding(
+      'rank-quality-schema',
+      'rankQuality.ndcg10 must be { overall, perCategory: { <nine battery categories> } }',
+    ));
+  } else {
+    overall = parseThresholdMicro(ndcg['overall'], 'ndcg10.overall', deps, findings);
+    const categories = ndcg['perCategory'];
+    for (const key of commentKeys(categories)) {
+      if (!(BATTERY_CATEGORIES as readonly string[]).includes(key)) {
+        findings.push(finding('rank-quality-schema', `rankQuality.ndcg10.perCategory has unknown category "${key}"`));
+      }
+    }
+    for (const category of BATTERY_CATEGORIES) {
+      if (!(category in categories)) {
+        findings.push(finding(
+          'rank-quality-schema',
+          `rankQuality.ndcg10.perCategory is missing category "${category}" — every battery category ` +
+            'carries an explicit threshold entry, null included',
+        ));
+        continue;
+      }
+      perCategory[category] = parseThresholdMicro(
+        categories[category], `ndcg10.perCategory.${category}`, deps, findings,
+      );
+    }
+  }
+
+  const mrr10 = parseThresholdMicro(block['mrr10'], 'mrr10', deps, findings);
+  const goodOrBetterTop3Rate = parseThresholdMicro(
+    block['goodOrBetterTop3Rate'], 'goodOrBetterTop3Rate', deps, findings,
+  );
+
+  const battery = block['battery'];
+  const floors: Partial<Record<BatteryCategory, number>> = {};
+  if (!isRecord(battery) || !isRecord(battery['categoryFloors'])
+      || commentKeys(battery).join(',') !== 'categoryFloors') {
+    findings.push(finding(
+      'rank-quality-schema',
+      'rankQuality.battery must be { categoryFloors: { <nine battery categories> } }',
+    ));
+  } else {
+    const categoryFloors = battery['categoryFloors'];
+    for (const key of commentKeys(categoryFloors)) {
+      if (!(BATTERY_CATEGORIES as readonly string[]).includes(key)) {
+        findings.push(finding('rank-quality-schema', `rankQuality.battery.categoryFloors has unknown category "${key}"`));
+      }
+    }
+    for (const category of BATTERY_CATEGORIES) {
+      const floor = categoryFloors[category];
+      if (!Number.isInteger(floor) || (floor as number) < 1) {
+        findings.push(finding(
+          'rank-quality-schema',
+          `rankQuality.battery.categoryFloors.${category} must be a positive integer — floors are ` +
+            'structural facts about the committed specimen set, never unset',
+        ));
+        continue;
+      }
+      floors[category] = floor as number;
+    }
+  }
+
+  if (findings.length > 0) return { thresholds: null, findings };
+  return {
+    thresholds: {
+      ndcg10: { overall, perCategory: perCategory as Record<BatteryCategory, number | null> },
+      mrr10,
+      goodOrBetterTop3Rate,
+      battery: { categoryFloors: floors as BatteryCategoryFloors },
+    },
+    findings,
+  };
+}
+
+export interface RankThresholdEvaluation {
+  readonly metric: 'ndcg10' | 'mrr10' | 'goodOrBetterTop3Rate';
+  /** 'overall' or one of the nine battery categories. */
+  readonly scope: string;
+  /** Display value in micro units; null when the scope has no scoreable queries. */
+  readonly valueMicro: number | null;
+  readonly thresholdMicro: number | null;
+  /**
+   * 'no-threshold' is the null-honesty state: measured and reported, never
+   * pass, never fail. 'unmeasurable' — a set threshold with no scoreable
+   * queries — is a FAILURE: a threshold that cannot run must not pass.
+   */
+  readonly outcome: 'no-threshold' | 'met' | 'not-met' | 'unmeasurable';
+}
+
+export interface RankQualityOutcome {
+  readonly evaluations: readonly RankThresholdEvaluation[];
+  /** One finding per not-met or unmeasurable threshold; empty = no enforcement failed. */
+  readonly failures: readonly GateFinding[];
+}
+
+function parseExactRational(exact: string): { num: bigint; den: bigint } {
+  const [num, den] = exact.split('/');
+  return { num: BigInt(num!), den: BigInt(den!) };
+}
+
+function evaluateOne(
+  metric: RankThresholdEvaluation['metric'],
+  scope: string,
+  value: RankMetricValue | undefined,
+  thresholdMicro: number | null,
+  failures: GateFinding[],
+): RankThresholdEvaluation {
+  const valueMicro = value?.micro ?? null;
+  if (thresholdMicro === null) {
+    return { metric, scope, valueMicro, thresholdMicro: null, outcome: 'no-threshold' };
+  }
+  if (value === undefined || value.exact === null) {
+    failures.push(finding(
+      'rank-threshold-unmeasurable',
+      `rankQuality.${metric}${scope === 'overall' ? '' : `.perCategory.${scope}`} is set to ` +
+        `${thresholdMicro} micro but "${scope}" has no scoreable queries — a threshold that cannot ` +
+        'be measured must not pass',
+      [scope],
+    ));
+    return { metric, scope, valueMicro, thresholdMicro, outcome: 'unmeasurable' };
+  }
+  // Exact comparison on the reduced rational — the once-rounded display
+  // value can never decide a gate.
+  const { num, den } = parseExactRational(value.exact);
+  const met = meetsThresholdMicro(num, den, thresholdMicro);
+  if (met === false) {
+    failures.push(finding(
+      'rank-threshold-not-met',
+      `rankQuality.${metric}${scope === 'overall' ? '' : `.perCategory.${scope}`}: exact ${value.exact} ` +
+        `is below the reviewed threshold ${thresholdMicro} micro`,
+      [scope],
+    ));
+  }
+  return { metric, scope, valueMicro, thresholdMicro, outcome: met === true ? 'met' : 'not-met' };
+}
+
+/**
+ * Applies the reviewed thresholds to a computed metrics report. Twelve
+ * evaluation surfaces: nDCG@10 overall and per battery category, MRR@10, and
+ * goodOrBetterTop3Rate. The golden-derived category is measured and reported
+ * but carries no threshold surface — its judgments are fixture pins, not the
+ * battery's graded set.
+ */
+export function evaluateRankQuality(
+  thresholds: RankQualityThresholds,
+  metrics: RankMetricsReport,
+): RankQualityOutcome {
+  const failures: GateFinding[] = [];
+  const evaluations: RankThresholdEvaluation[] = [
+    evaluateOne('ndcg10', 'overall', metrics.overall.ndcg10, thresholds.ndcg10.overall, failures),
+  ];
+  for (const category of BATTERY_CATEGORIES) {
+    evaluations.push(evaluateOne(
+      'ndcg10',
+      category,
+      metrics.perCategory[category]?.ndcg10,
+      thresholds.ndcg10.perCategory[category],
+      failures,
+    ));
+  }
+  evaluations.push(
+    evaluateOne('mrr10', 'overall', metrics.overall.mrr10, thresholds.mrr10, failures),
+    evaluateOne(
+      'goodOrBetterTop3Rate', 'overall',
+      metrics.overall.goodOrBetterTop3Rate, thresholds.goodOrBetterTop3Rate, failures,
+    ),
+  );
+  return { evaluations, failures };
+}
+
+// ---------------------------------------------------------------------------
+// Rank-metrics baseline approval. The machine writes only the baseline
+// (`--update-rank-baseline`); the approval record beside it is hand-authored
+// by an independent reviewer — writing it IS the approval act, and no code
+// path in this repository performs it. This validator only checks.
+// ---------------------------------------------------------------------------
+
+export const RANK_METRICS_APPROVAL_PATH = 'eval/baselines/rank-metrics.approval.json';
+
+/**
+ * Born v2: the rank-metrics approval never had a v1 generation — it adopts
+ * the accountable-record schema (named reviewer, independence attestation,
+ * evidence binding, packet digest) from its first record.
+ */
+export const RANK_METRICS_APPROVAL_SCHEMA_V2 = 'scripture-search-engine/rank-metrics-approval/v2';
+
+const RANK_APPROVAL_KEYS = [
+  'schema',
+  'baselineSha256',
+  'batteryQueriesSha256',
+  'batteryJudgmentsSha256',
+  'engine',
+  'reviewerName',
+  'reviewerContact',
+  'independence',
+  'evidence',
+  'reviewPacketSha256',
+  'reviewedAt',
+  'rationale',
+  'priorProvenance',
+] as const;
+
+const EVIDENCE_PATH_PATTERN = /^docs\/reviews\/[A-Za-z0-9][A-Za-z0-9._-]*\.md$/;
+
+function rankApprovalFinding(code: string, message: string): GateFinding {
+  return {
+    categoryCode: category(code),
+    message,
+    subjects: ['rank-metrics-baseline-approval'],
+  };
+}
+
+function isSha256Hex(value: unknown): value is string {
+  return typeof value === 'string' && DIGEST_PATTERN.test(value);
+}
+
+function isReviewDay(value: unknown): value is string {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  return new Date(`${value}T00:00:00.000Z`).toISOString().slice(0, 10) === value;
+}
+
+function rankApprovalShapeProblems(approval: Record<string, unknown>): string[] {
+  const problems: string[] = [];
+  const allowed = new Set<string>([...RANK_APPROVAL_KEYS, 'bootstrap']);
+  for (const key of Object.keys(approval).sort()) {
+    if (!allowed.has(key)) problems.push(`unexpected field "${key}"`);
+  }
+  for (const key of RANK_APPROVAL_KEYS) {
+    if (!(key in approval)) problems.push(`missing field "${key}"`);
+  }
+  const check = (field: string, valid: boolean, expected: string): void => {
+    if (field in approval && !valid) problems.push(`"${field}" must be ${expected}`);
+  };
+  check('baselineSha256', isSha256Hex(approval['baselineSha256']), 'a 64-hex sha256');
+  check('batteryQueriesSha256', isSha256Hex(approval['batteryQueriesSha256']), 'a 64-hex sha256');
+  check('batteryJudgmentsSha256', isSha256Hex(approval['batteryJudgmentsSha256']), 'a 64-hex sha256');
+  const engine = approval['engine'];
+  check('engine', isRecord(engine)
+    && Object.keys(engine).sort().join(',') === 'corpusFingerprint,engineVersion,layerFingerprint'
+    && typeof engine['engineVersion'] === 'string' && engine['engineVersion'].length > 0
+    && isSha256Hex(engine['corpusFingerprint']) && isSha256Hex(engine['layerFingerprint']),
+  'the exact engine identity triple');
+  check('reviewerName', typeof approval['reviewerName'] === 'string', 'a string');
+  check('reviewerContact', typeof approval['reviewerContact'] === 'string', 'a string');
+  check('independence', typeof approval['independence'] === 'string', 'a string');
+  const evidence = approval['evidence'];
+  check('evidence', isRecord(evidence)
+    && Object.keys(evidence).sort().join(',') === 'path,sha256'
+    && typeof evidence['path'] === 'string' && EVIDENCE_PATH_PATTERN.test(evidence['path'])
+    && isSha256Hex(evidence['sha256']),
+  'a {path, sha256} record naming a docs/reviews/*.md review record');
+  check('reviewPacketSha256', isSha256Hex(approval['reviewPacketSha256']),
+    'the 64-hex sha256 the review-packet tool printed for the packet read');
+  check('reviewedAt', isReviewDay(approval['reviewedAt']), 'a real YYYY-MM-DD date');
+  check('rationale', typeof approval['rationale'] === 'string' && approval['rationale'].trim().length > 0,
+    'a non-empty string');
+  if ('bootstrap' in approval &&
+      (typeof approval['bootstrap'] !== 'string' || approval['bootstrap'].trim().length === 0)) {
+    problems.push('"bootstrap" must be a non-empty string documenting why no prior baseline exists');
+  }
+  if ('priorProvenance' in approval) {
+    const prior = approval['priorProvenance'];
+    if (prior === null) {
+      if (!('bootstrap' in approval)) {
+        problems.push('"priorProvenance" may be null only beside a "bootstrap" field documenting the missing prior');
+      }
+    } else {
+      if ('bootstrap' in approval) problems.push('"bootstrap" is valid only when "priorProvenance" is null');
+      const priorEngine = isRecord(prior) ? prior['engine'] : undefined;
+      const valid = isRecord(prior)
+        && Object.keys(prior).sort().join(',') === 'baselineGitBlobSha1,engine'
+        && typeof prior['baselineGitBlobSha1'] === 'string' && /^[0-9a-f]{40}$/.test(prior['baselineGitBlobSha1'])
+        && isRecord(priorEngine)
+        && Object.keys(priorEngine).sort().join(',') === 'corpusFingerprint,engineVersion,layerFingerprint'
+        && typeof priorEngine['engineVersion'] === 'string' && priorEngine['engineVersion'].length > 0
+        && isSha256Hex(priorEngine['corpusFingerprint'])
+        && (priorEngine['layerFingerprint'] === null || isSha256Hex(priorEngine['layerFingerprint']));
+      if (!valid) {
+        problems.push('"priorProvenance" must bind the prior baseline git blob and engine identity');
+      }
+    }
+  }
+  return problems;
+}
+
+/**
+ * Validates the committed rank-metrics baseline + approval pair. All four
+ * presence states are covered: absent/absent is the honest pre-protocol
+ * state and yields nothing; every other gap or tamper rings a named finding.
+ * Runs in every context (file-level, no engine), so an unapproved baseline
+ * cannot hide behind a fixture run.
+ */
+export function validateRankMetricsBaselineDocuments(input: {
+  /** Parsed eval/baselines/rank-metrics.json; null when absent. */
+  readonly baseline: unknown;
+  /** Parsed eval/baselines/rank-metrics.approval.json; null when absent. */
+  readonly approval: unknown;
+  /** SHA-256 of the battery files' bytes, as the machine report records them. */
+  readonly batteryQueriesSha256: string;
+  readonly batteryJudgmentsSha256: string;
+  /** SHA-256 of the bytes at approval.evidence.path; null when unreadable. */
+  readonly evidenceSha256: string | null;
+}): readonly GateFinding[] {
+  if (input.baseline === null && input.approval === null) return [];
+  if (input.baseline === null) {
+    return [rankApprovalFinding(
+      'rank-baseline-approval-orphaned',
+      `${RANK_METRICS_APPROVAL_PATH} exists but ${RANK_METRICS_BASELINE_PATH} does not — an orphaned ` +
+        'approval approves nothing and must not linger',
+    )];
+  }
+  const findings: GateFinding[] = [];
+  if (!validRankBaseline(input.baseline)) {
+    return [rankApprovalFinding(
+      'rank-baseline-malformed',
+      `${RANK_METRICS_BASELINE_PATH} does not match the v1 rank-metrics baseline schema`,
+    )];
+  }
+  if (!isRecord(input.approval)) {
+    return [rankApprovalFinding(
+      'rank-baseline-approval-missing',
+      `${RANK_METRICS_BASELINE_PATH} has no machine-readable independent approval — the reviewer ` +
+        `hand-authors ${RANK_METRICS_APPROVAL_PATH} under the threshold protocol`,
+    )];
+  }
+  const approval = input.approval;
+  if (approval['schema'] !== RANK_METRICS_APPROVAL_SCHEMA_V2) {
+    return [rankApprovalFinding(
+      'rank-baseline-approval-malformed',
+      'Rank-metrics baseline approval does not declare the supported v2 schema.',
+    )];
+  }
+  const problems = rankApprovalShapeProblems(approval);
+  if (problems.length > 0) {
+    return [rankApprovalFinding(
+      'rank-baseline-approval-malformed',
+      `Rank-metrics baseline approval is malformed: ${problems.join('; ')}.`,
+    )];
+  }
+  if ((approval['reviewerName'] as string).trim().length === 0
+      || (approval['reviewerContact'] as string).trim().length === 0) {
+    findings.push(rankApprovalFinding(
+      'rank-baseline-approval-reviewer-unidentified',
+      'Rank-metrics baseline approval does not name an identifiable independent reviewer.',
+    ));
+  }
+  if ((approval['independence'] as string).trim().length === 0) {
+    findings.push(rankApprovalFinding(
+      'rank-baseline-approval-independence-missing',
+      'Rank-metrics baseline approval carries no independence attestation naming what the reviewer did not author.',
+    ));
+  }
+  const baselineSha256 = createHash('sha256').update(canonicalJson(input.baseline)).digest('hex');
+  if (approval['baselineSha256'] !== baselineSha256) {
+    findings.push(rankApprovalFinding(
+      'rank-baseline-approval-baseline-mismatch',
+      'Rank-metrics baseline bytes differ from the independently approved baseline digest.',
+    ));
+  }
+  if (approval['batteryQueriesSha256'] !== input.batteryQueriesSha256) {
+    findings.push(rankApprovalFinding(
+      'rank-baseline-approval-battery-mismatch',
+      'Battery queries file differs from the digest the rank-metrics approval bound.',
+    ));
+  }
+  if (approval['batteryJudgmentsSha256'] !== input.batteryJudgmentsSha256) {
+    findings.push(rankApprovalFinding(
+      'rank-baseline-approval-battery-mismatch',
+      'Battery judgments file differs from the digest the rank-metrics approval bound — the metrics ' +
+        'are a function of the judgment set, so a changed set re-opens the baseline.',
+    ));
+  }
+  const evidence = approval['evidence'] as { readonly path: string; readonly sha256: string };
+  if (input.evidenceSha256 === null) {
+    findings.push(rankApprovalFinding(
+      'rank-baseline-approval-evidence-mismatch',
+      `Rank-metrics approval evidence ${evidence.path} is missing or unreadable.`,
+    ));
+  } else if (input.evidenceSha256 !== evidence.sha256) {
+    findings.push(rankApprovalFinding(
+      'rank-baseline-approval-evidence-mismatch',
+      `Rank-metrics approval evidence ${evidence.path} does not match the approved review-record digest.`,
+    ));
+  }
+  const approvalEngine = approval['engine'] as Record<string, string>;
+  for (const field of ['engineVersion', 'corpusFingerprint', 'layerFingerprint'] as const) {
+    if (approvalEngine[field] !== input.baseline[field]) {
+      findings.push(rankApprovalFinding(
+        'rank-baseline-approval-engine-mismatch',
+        `Rank-metrics baseline ${field} does not match the independently approved engine identity.`,
+      ));
+    }
+  }
+  return findings;
 }
 
 // Applicability of the battery row is context-dependent; re-export the

@@ -105,6 +105,63 @@
     ],
     "maxWeakReasonShareIncrease": 0.15
   },
+  "rankQuality": {
+    "$comment": [
+      "G12 rank-quality thresholds, in MICRO units (value × 10^6), integers",
+      "only — the gate compares exact rationals by integer cross-multiplication,",
+      "so a float here would claim a precision the arithmetic does not use.",
+      "",
+      "Every quality threshold is NULL at introduction. Null means MEASURED AND",
+      "REPORTED: the Admission Report prints the value with '(no threshold —",
+      "baseline not yet established)' — never pass, never fail. A null flips to",
+      "a value only via the four-step protocol in",
+      "docs/governance/probe-baseline-review.md §Rank-metrics baselines:",
+      "≥3 ADMIT runs → --update-rank-baseline writes the candidate baseline",
+      "(machine never writes approvals) → an independent reviewer hand-authors",
+      "eval/baselines/rank-metrics.approval.json → the same PR flips the chosen",
+      "nulls quoting the run history. The gauntlet enforces that ordering",
+      "structurally: a non-null threshold here with no independently approved",
+      "rank-metrics baseline fails G12. Rollback of a flipped threshold is",
+      "null-with-tombstone (the noise.$comment_minMeanDistinctiveness pattern)."
+    ],
+    "ndcg10": {
+      "overall": null,
+      "perCategory": {
+        "adversarial": null,
+        "felt-need": null,
+        "misspelling": null,
+        "multi-concept": null,
+        "reference-adjacent": null,
+        "remembered-phrase": null,
+        "single-word": null,
+        "theological-term": null,
+        "worship-leader": null
+      }
+    },
+    "mrr10": null,
+    "goodOrBetterTop3Rate": null,
+    "battery": {
+      "$comment_categoryFloors": [
+        "Structural minimums, not quality thresholds: the nine seed counts of",
+        "the transcribed 84-query battery — known facts about the committed",
+        "specimen set, so they are non-null from day one (J44). An active-query",
+        "count below any floor is a G12 FAIL naming the category: the battery",
+        "has been hollowed out. Raising a floor as the battery grows is a",
+        "reviewed data change like any other threshold in this file."
+      ],
+      "categoryFloors": {
+        "adversarial": 14,
+        "felt-need": 14,
+        "misspelling": 6,
+        "multi-concept": 6,
+        "reference-adjacent": 8,
+        "remembered-phrase": 12,
+        "single-word": 12,
+        "theological-term": 8,
+        "worship-leader": 4
+      }
+    }
+  },
   "saturation": {
     "$comment": "G9. A work that moves an already-covered pericope's profile less than minProfileDelta is recorded as saturated and skipped.",
     "worksPerPericopeBeforeCheck": 5,

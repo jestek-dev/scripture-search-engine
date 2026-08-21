@@ -73,14 +73,19 @@ import {
   computeRankMetrics,
   deriveGoldenRankJudgments,
   detectNoMeasurableEffect,
+  evaluateRankQuality,
   probeHarmfulRefPresence,
   runBattery,
   validateBattery,
+  validateRankMetricsBaselineDocuments,
+  validateRankQualityBlock,
   verseRangeOfTargetId,
   withRankEvidence,
   BATTERY_JUDGMENTS_PATH,
   BATTERY_QUERIES_PATH,
+  RANK_METRICS_APPROVAL_PATH,
   RANK_METRICS_BASELINE_PATH,
+  type BatteryCategoryFloors,
   type BatteryQueryOutcome,
   type BatteryReportSection,
   type NoEffectDetection,
@@ -130,6 +135,8 @@ interface Budgets {
   readonly provenance?: {
     readonly acknowledgedUnarchivedRollingSources?: readonly string[];
   };
+  /** Validated at runtime by validateRankQualityBlock — reviewed data, never trusted shapes. */
+  readonly rankQuality?: unknown;
   readonly latency: { readonly p95Ms: number };
   readonly noise: {
     readonly maxTop10ChurnRatio: number;
@@ -602,7 +609,7 @@ interface LoadedBattery {
  * G12 inputs. Missing or unparsable files surface as structural findings on
  * the gate rather than a loader throw, so the roster row stays honest.
  */
-function loadBattery(): LoadedBattery {
+function loadBattery(floors: BatteryCategoryFloors | null): LoadedBattery {
   const read = (relativePath: string): { parsed: unknown; sha256: string } => {
     const path = join(REPO_ROOT, ...relativePath.split('/'));
     if (!existsSync(path)) return { parsed: undefined, sha256: '' };
@@ -618,10 +625,27 @@ function loadBattery(): LoadedBattery {
   const queries = read(BATTERY_QUERIES_PATH);
   const judgments = read(BATTERY_JUDGMENTS_PATH);
   return {
-    validated: validateBattery(queries.parsed, judgments.parsed),
+    validated: validateBattery(queries.parsed, judgments.parsed, floors),
     queriesSha256: queries.sha256,
     judgmentsSha256: judgments.sha256,
   };
+}
+
+/**
+ * Rank-instrument reviewed documents (E5): the rank baseline pair is read on
+ * EVERY run — an unapproved committed baseline must fail the fixture CI legs
+ * too, not wait for an artifact run — and the file is distinguished from a
+ * parse failure so "absent" (the honest pre-protocol state) never aliases
+ * "unreadable".
+ */
+function readRankDocument(relativePath: string): unknown {
+  const path = join(REPO_ROOT, ...relativePath.split('/'));
+  if (!existsSync(path)) return null;
+  try {
+    return JSON.parse(readFileSync(path, 'utf8')) as unknown;
+  } catch {
+    return 'unparsable';
+  }
 }
 
 function loadDistillate(): DistillateFile | null {
@@ -915,8 +939,29 @@ async function main(): Promise<void> {
     const flaggedPairingsContents = existsSync(watchlistPath) ? readFileSync(watchlistPath, 'utf8') : null;
 
     const distillate = loadDistillate();
-    const battery = loadBattery();
+
+    // rankQuality thresholds and the rank-baseline approval pair (E5) are
+    // file-level reviewed data, checked on every run. The premature-threshold
+    // guard needs to know whether an approved baseline exists, so the pair is
+    // read before the block is validated.
+    const rankBaselineDocument = readRankDocument(RANK_METRICS_BASELINE_PATH);
+    const rankApprovalDocument = readRankDocument(RANK_METRICS_APPROVAL_PATH);
+    const rankQuality = validateRankQualityBlock(budgets.rankQuality, {
+      rankBaselineEstablished: rankBaselineDocument !== null && rankApprovalDocument !== null,
+    });
+
+    const battery = loadBattery(rankQuality.thresholds?.battery.categoryFloors ?? null);
+    const rankDocumentFindings = validateRankMetricsBaselineDocuments({
+      baseline: rankBaselineDocument,
+      approval: rankApprovalDocument,
+      batteryQueriesSha256: battery.queriesSha256,
+      batteryJudgmentsSha256: battery.judgmentsSha256,
+      evidenceSha256: approvalEvidenceSha256(rankApprovalDocument),
+    });
     const probeRun = await runProbeGates(budgets, options, target, battery);
+    const rankQualityOutcome = probeRun.rankMetrics !== null && rankQuality.thresholds !== null
+      ? evaluateRankQuality(rankQuality.thresholds, probeRun.rankMetrics)
+      : null;
     const probeGates = probeRun.gates;
     const g3 = mergeGateResults('Golden regression', [
       goldenGate(fixtures),
@@ -1020,11 +1065,17 @@ async function main(): Promise<void> {
           validated: battery.validated,
           outcomes: probeRun.batteryOutcomes,
           harmfulPresence: probeRun.batteryHarmfulPresence,
+          instrumentFindings: [...rankQuality.findings, ...rankDocumentFindings],
           context: { explicitTarget: target !== null },
         });
         return probeRun.rankMetrics === null
           ? g12
-          : withRankEvidence(g12, probeRun.rankMetrics, probeRun.noEffect?.findings ?? []);
+          : withRankEvidence(
+              g12,
+              probeRun.rankMetrics,
+              probeRun.noEffect?.findings ?? [],
+              rankQualityOutcome ?? undefined,
+            );
       })(),
     ];
 
@@ -1041,6 +1092,7 @@ async function main(): Promise<void> {
     const report = buildReport({
       gates,
       ...(probeRun.rankMetrics === null ? {} : { rankMetrics: probeRun.rankMetrics }),
+      ...(rankQualityOutcome === null ? {} : { rankQuality: rankQualityOutcome.evaluations }),
       ...(probeRun.noEffect === null ? {} : { noMeasurableEffect: probeRun.noEffect.detection }),
     });
     process.stdout.write(`${report.markdown}\n`);

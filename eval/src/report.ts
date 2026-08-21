@@ -14,11 +14,13 @@
  */
 
 import type { GateResult } from './gates/types.js';
-import type {
-  NoEffectDetection,
-  RankAggregate,
-  RankMetricValue,
-  RankMetricsReport,
+import {
+  RANK_QUALITY_NULL_MARKER,
+  type NoEffectDetection,
+  type RankAggregate,
+  type RankMetricValue,
+  type RankMetricsReport,
+  type RankThresholdEvaluation,
 } from './gates/rankMetrics.js';
 
 export type Verdict = 'ADMIT' | 'ADMIT_WITH_WARNINGS' | 'REJECT' | 'NO_MEASURABLE_EFFECT';
@@ -41,6 +43,8 @@ export interface ReportInput {
   readonly gates: readonly GateResult[];
   /** Present only on runs that executed the battery (explicit targets). */
   readonly rankMetrics?: RankMetricsReport;
+  /** Per-surface threshold evaluations from the reviewed rankQuality block. */
+  readonly rankQuality?: readonly RankThresholdEvaluation[];
   /** The anchored no-effect detection outcome, when it was attempted. */
   readonly noMeasurableEffect?: NoEffectDetection;
 }
@@ -93,6 +97,37 @@ function displayMetric(value: RankMetricValue): string {
   return value.micro === null ? 'n/a' : (value.micro / 1000000).toFixed(6);
 }
 
+const METRIC_LABEL: Readonly<Record<RankThresholdEvaluation['metric'], string>> = {
+  ndcg10: 'nDCG@10',
+  mrr10: 'MRR@10',
+  goodOrBetterTop3Rate: 'good-or-better@3',
+};
+
+function displayMicro(micro: number | null): string {
+  return micro === null ? 'n/a' : (micro / 1000000).toFixed(6);
+}
+
+/**
+ * One line per threshold surface. The null case carries the exact marker
+ * wording and no verdict word at all: a null threshold never passes and
+ * never fails — that sentence is the whole point of this section.
+ */
+function thresholdLine(evaluation: RankThresholdEvaluation): string {
+  const name = `${METRIC_LABEL[evaluation.metric]} ${evaluation.scope}`;
+  const value = displayMicro(evaluation.valueMicro);
+  switch (evaluation.outcome) {
+    case 'no-threshold':
+      return `- ${name}: ${value} (${RANK_QUALITY_NULL_MARKER})`;
+    case 'met':
+      return `- ${name}: ${value} — MET (threshold ${displayMicro(evaluation.thresholdMicro)})`;
+    case 'not-met':
+      return `- ${name}: ${value} — NOT MET (threshold ${displayMicro(evaluation.thresholdMicro)}; G12 fails)`;
+    case 'unmeasurable':
+      return `- ${name}: ${value} — threshold ${displayMicro(evaluation.thresholdMicro)} is set but no ` +
+        'scoreable queries exist (G12 fails; a threshold that cannot be measured must not pass)';
+  }
+}
+
 function rankMetricsRow(label: string, aggregate: RankAggregate): string {
   return `| ${label} | ${displayMetric(aggregate.ndcg10)} | ${displayMetric(aggregate.mrr10)} | ` +
     `${displayMetric(aggregate.goodOrBetterTop3Rate)} | ${displayMetric(aggregate.recallAt50)} | ` +
@@ -124,8 +159,9 @@ export function buildReport(input: ReportInput): AdmissionReport {
     lines.push('');
     lines.push(
       'Graded gains (linear 0-1-2-3, human judgments only) over the battery plus the ' +
-        'golden-derived pins. Measured and reported — no thresholds are enforced: every ' +
-        'rank-quality threshold stays null until a real baseline exists.',
+        'golden-derived pins. Thresholds are reviewed data (eval/budgets.json `rankQuality`) ' +
+        'and enforce only where set; a null threshold is measured and reported, never a ' +
+        'pass and never a fail.',
     );
     lines.push('');
     lines.push('| Category | nDCG@10 | MRR@10 | good-or-better@3 | Recall@50 | Scoreable | Excluded (IDCG=0) |');
@@ -133,6 +169,14 @@ export function buildReport(input: ReportInput): AdmissionReport {
     lines.push(rankMetricsRow('overall', input.rankMetrics.overall));
     for (const [category, aggregate] of Object.entries(input.rankMetrics.perCategory)) {
       lines.push(rankMetricsRow(category, aggregate));
+    }
+    if (input.rankQuality !== undefined) {
+      lines.push('');
+      lines.push('### Thresholds');
+      lines.push('');
+      for (const evaluation of input.rankQuality) {
+        lines.push(thresholdLine(evaluation));
+      }
     }
   }
 

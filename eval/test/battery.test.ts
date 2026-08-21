@@ -15,13 +15,13 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-  BATTERY_CATEGORY_FLOORS,
   batteryComparableSection,
   batteryGate,
   checkBatteryJobReport,
   harmfulPresenceKey,
   probeHarmfulRefPresence,
-  validateBattery,
+  validateBattery as validateBatteryWithFloors,
+  type BatteryCategoryFloors,
   type BatteryQueryOutcome,
   type ValidatedBattery,
 } from '../src/gates/rankMetrics.js';
@@ -31,6 +31,15 @@ import { gateApplicability, notApplicable, pass, type GateResult } from '../src/
 import { parseAnchorRef } from '../../pipeline/src/importers/ontologyImporter.js';
 
 const EVAL_ROOT = fileURLToPath(new URL('..', import.meta.url));
+
+/** The reviewed structural floors, from budgets.json — the single source. */
+const FLOORS = (JSON.parse(readFileSync(join(EVAL_ROOT, 'budgets.json'), 'utf8')) as {
+  rankQuality: { battery: { categoryFloors: BatteryCategoryFloors } };
+}).rankQuality.battery.categoryFloors;
+
+function validateBattery(queriesFile: unknown, judgmentsFile: unknown): ValidatedBattery {
+  return validateBatteryWithFloors(queriesFile, judgmentsFile, FLOORS);
+}
 
 function committedQueries(): unknown {
   return JSON.parse(readFileSync(join(EVAL_ROOT, 'battery', 'queries.json'), 'utf8'));
@@ -172,7 +181,7 @@ describe('battery schema validation', () => {
     const validated = validateBattery(committedQueries(), committedJudgments());
     expect(validated.findings).toEqual([]);
     expect(validated.activeQueries).toBe(84);
-    expect(Object.values(BATTERY_CATEGORY_FLOORS).reduce((sum, floor) => sum + floor, 0)).toBe(84);
+    expect(Object.values(FLOORS).reduce((sum, floor) => sum + floor, 0)).toBe(84);
     // Every seeded judgment is provisional until Jesse ratifies (J17).
     expect(validated.provisionalRows).toBe(validated.judgedRows + validated.harmfulRows);
   });
