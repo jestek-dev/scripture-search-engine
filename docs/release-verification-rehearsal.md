@@ -33,6 +33,14 @@ and promotes/publishes nothing (all promote steps are `if: startsWith(...,
 'refs/tags/v')`). Green = the workflow edits parse and the gates that can run
 without a tag stay green.
 
+> Executed 2026-08-21 against the RH-2 branch (run 32457527716): checkout /
+> npm ci green, then the FIRST gate — "Refuse to release against a stale
+> descriptor" — correctly failed the run, because the committed descriptor
+> still carries `stale.blocksRelease: true` (the v0.7.1 phantom, NEEDS-JESSE
+> §1.9; cured only by RH-1's minted descriptor). That is the gate working,
+> not a defect: re-run this step for a green result after the RH-1
+> descriptor PR lands.
+
 ## Step 1 — Throwaway-tag rehearsal: signer-pin ACCEPT path
 
 The `--signer-workflow` flag is regex-matched against the signing
