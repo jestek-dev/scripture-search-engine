@@ -41,18 +41,29 @@ not on soundness":
     them by adding mustNotRank — that contradicts the recorded ruling.
   - **The `prosperity-*` fixtures carry no vacuous assertion today.** Every
     mustNotRank ref they list (Luke 6:38, Mal 3:10, Phil 4:19, Mark 11:24,
-    John 14:12-14, Josh 1:8) is deliberately IN the 211-chapter corpus —
-    the fixture notes: "precisely so this assertion can fail." The classic
-    out-of-corpus proof-texts (John 10:10; Job 36:11, Prov 18:16,
-    3 John 1:2) are intentionally excluded from the lists to avoid vacuous
-    passes; they are named in `docs/DOCTRINAL-BASIS.md` §3 and become
-    assertable only when the re-pin lands their chapters.
+    John 14:12, 14:13, 14:14) is deliberately IN the 211-chapter corpus —
+    the fixture notes: "precisely so this assertion can fail." (Josh 1:8 is
+    the family's asserted counter-example, not a forbidden ref: it is
+    `prosperity-success.json`'s expectedTop — honest lexical retrieval of
+    its own "good success" — because "Verses are never the problem;
+    pairings are.") The classic out-of-corpus proof-texts (John 10:10,
+    Job 36:11, Prov 18:16, 3 John 1:2) are intentionally excluded from the
+    lists to avoid vacuous passes. Where each is recorded: Prov 18:16,
+    3 John 1:2, and Job 36:11 are watchlist entries in
+    `ontology/flagged-pairings.yaml`; John 10:10 is named in
+    `prosperity-abundance.json`'s note ("left to a future corpus-selection
+    change"); Job 36:11 is also `docs/DOCTRINAL-BASIS.md` §3's worked
+    example (Prosperity→Job 36:11). All four become assertable only when
+    the re-pin lands their chapters.
   - **Prov 18:16 has no guard fixture today** — only a watchlist entry in
     `ontology/flagged-pairings.yaml` plus the ledger's §0 caution that the
     PR adding Proverbs 18 should bring a prosperity-family guard with it.
   What the re-pin unblocks here is *assertion reach* — the guard families
-  gain the verses they were designed to police — not the flipping of any
-  existing assertion from vacuous to active.
+  gain the verses they were designed to police. No assertion needs its type
+  changed, and none is edited to "activate" it: the two vacuous ordering
+  guards (comforter, new-creation) become measured automatically when
+  their chapters land, the prosperity families have no vacuous assertion
+  to flip, and any assertion-type change remains Jesse's call.
 - **The unpardonable-sin trio** (Matt 12:22-32 / Mark 3:22-30 / Luke 12:10):
   the pending fixture `eval/golden/unpardonable-sin.json` and the
   blasphemy-against-the-spirit concept it gates.
@@ -148,6 +159,11 @@ a checksum is never edited in place.
   (§1: 18 entries / 13 rows; §2: 52 / 19; §3: 197 / 99). §2's 52 excludes
   Matt 24:21, which the ledger itself marks "(in corpus)" — in-corpus
   entries are not blocked, so a naive split's 53 counts one entry too many.
+  The two slash-pair rows are read by role, not by a uniform rule: §2's
+  talents/minas pair (Matt 25:14-30 / Luke 19:11-27) counts as two
+  passages, while §3's "Psalm 17:8 / Psalm 63:7" counts as one
+  alternates-entry — splitting both would make §3 = 198, splitting neither
+  would make §2 = 51, so the 267 total is counting-rule-sensitive at ±1.
   The plan's "338
   backlog associations" (F34) was counted at audit time under a finer
   association granularity; the ledger's tables are authoritative for what
