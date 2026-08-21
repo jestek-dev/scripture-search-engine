@@ -22,6 +22,7 @@ import {
   gateApplicability,
   notApplicable,
   pass,
+  warn,
   DEFAULT_GATE_RUN_CONTEXT,
   type GateFinding,
   type GateResult,
@@ -493,11 +494,44 @@ function verseIdOf(targetId: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
-function rank1InRange(outcome: BatteryQueryOutcome, range: { start: number; end: number }): boolean {
-  const first = outcome.top[0];
-  if (!first) return false;
-  const verseId = verseIdOf(first.targetId);
-  return verseId !== null && verseId >= range.start && verseId <= range.end;
+/** 1-based rank of the first result overlapping the range, or null if none does. */
+function firstRankInRange(
+  outcome: BatteryQueryOutcome,
+  range: { start: number; end: number },
+): number | null {
+  for (const entry of outcome.top) {
+    const verseId = verseIdOf(entry.targetId);
+    if (verseId !== null && verseId >= range.start && verseId <= range.end) return entry.rank;
+  }
+  return null;
+}
+
+/** Key for the harmful-guard corpus-presence map: one guard per (query, ref). */
+export function harmfulPresenceKey(queryId: string, ref: string): string {
+  return `${queryId}::${ref}`;
+}
+
+/**
+ * Asks the corpus, through the engine's public passage API, whether each
+ * harmful guard's reference resolves to any verse actually present. A guard
+ * naming an absent passage can never fire — reporting that vacuity (rather
+ * than letting the guard pass silently) is the F34 lesson made structural.
+ */
+export async function probeHarmfulRefPresence(
+  engine: Pick<ScriptureEngine, 'passage'>,
+  validated: ValidatedBattery,
+): Promise<ReadonlyMap<string, boolean>> {
+  const presence = new Map<string, boolean>();
+  for (const query of validated.queries) {
+    for (const harmful of query.harmful) {
+      const result = await engine.passage(harmful.ref);
+      presence.set(
+        harmfulPresenceKey(query.id, harmful.ref),
+        result.kind === 'passage' && result.passage.verses.length > 0,
+      );
+    }
+  }
+  return presence;
 }
 
 export const BATTERY_GATE_TITLE = 'Pastoral battery';
@@ -512,6 +546,13 @@ export function batteryGate(input: {
   readonly validated: ValidatedBattery;
   /** null on fixture-database runs — the battery measures a real artifact. */
   readonly outcomes: readonly BatteryQueryOutcome[] | null;
+  /**
+   * Corpus presence per harmful guard (probeHarmfulRefPresence), or null
+   * when nothing was probed. Required, not defaulted: a caller that loses
+   * this input degrades to a visible vacuity warning, never to a silent
+   * certification that every guard can fire.
+   */
+  readonly harmfulPresence: ReadonlyMap<string, boolean> | null;
   readonly context: GateRunContext;
 }): GateResult {
   const { validated, outcomes } = input;
@@ -548,26 +589,65 @@ export function batteryGate(input: {
   }
 
   // Hard-fail surface: a non-provisional harmful judgment overlapping rank 1.
-  // Provisional rows never gate; they are counted and reported instead.
+  // Evaluated first and independently of every aggregate — this check reads
+  // no thresholds, no nDCG, no budgets, so nothing can be tuned to outvote
+  // it. Provisional rows never gate; they are counted and reported instead.
   const failures: GateFinding[] = [];
+  const vacuity: GateFinding[] = [];
   let provisionalHarmfulAtRank1 = 0;
+  let harmfulInTop3 = 0;
+  let harmfulInTop10 = 0;
+  let vacuousHarmfulGuards = 0;
+  let unprobedHarmfulGuards = 0;
   const byId = new Map(validated.queries.map((query) => [query.id, query]));
   for (const outcome of outcomes) {
     const query = byId.get(outcome.id);
     if (!query || outcome.kind !== 'discovery') continue;
     for (const harmful of query.harmful) {
-      if (!rank1InRange(outcome, harmful.range)) continue;
-      if (harmful.provisional) {
-        provisionalHarmfulAtRank1 += 1;
+      const rank = firstRankInRange(outcome, harmful.range);
+      if (rank !== null && !harmful.provisional) {
+        // S-tier inputs, computed and reported here, gated only at #1 for now.
+        if (rank <= 3) harmfulInTop3 += 1;
+        harmfulInTop10 += 1;
+      }
+      if (rank === 1) {
+        if (harmful.provisional) {
+          provisionalHarmfulAtRank1 += 1;
+        } else {
+          failures.push(finding(
+            'harmful-at-rank-1',
+            `${outcome.id} ("${outcome.query}"): #1 result ${outcome.top[0]!.reference} overlaps the ` +
+              `harmful judgment ${harmful.ref} — ${harmful.why}`,
+            [outcome.id],
+          ));
+        }
         continue;
       }
-      failures.push(finding(
-        'harmful-at-rank-1',
-        `${outcome.id} ("${outcome.query}"): #1 result ${outcome.top[0]!.reference} overlaps the ` +
-          `harmful judgment ${harmful.ref} — ${harmful.why}`,
-        [outcome.id],
-      ));
+      if (rank !== null) continue; // observed in the results: presence is proven.
+      // The guard never fired. Distinguish "held" from "cannot fire": a
+      // reference absent from the corpus protects nothing, and saying so is
+      // the difference between a guard and a decoration (F34).
+      const present = input.harmfulPresence?.get(harmfulPresenceKey(outcome.id, harmful.ref));
+      if (present === false) {
+        vacuousHarmfulGuards += 1;
+        vacuity.push(finding(
+          'harmful-guard-vacuous',
+          `${outcome.id} ("${outcome.query}"): harmful guard ${harmful.ref}` +
+            `${harmful.provisional ? ' (provisional)' : ''} is VACUOUS — the reference resolves to ` +
+            'no verse in this corpus, so the guard cannot protect anything until the corpus carries it',
+          [outcome.id],
+        ));
+      } else if (present === undefined) {
+        unprobedHarmfulGuards += 1;
+      }
     }
+  }
+  if (unprobedHarmfulGuards > 0) {
+    vacuity.push(finding(
+      'harmful-guard-vacuity-unprobed',
+      `${unprobedHarmfulGuards} harmful guard(s) were not probed for corpus presence — their ` +
+        'vacuity cannot be certified either way; run probeHarmfulRefPresence and pass the result in',
+    ));
   }
 
   const metrics = {
@@ -578,6 +658,10 @@ export function batteryGate(input: {
     provisionalRows: validated.provisionalRows,
     harmfulAtRank1: failures.length,
     provisionalHarmfulAtRank1,
+    harmfulInTop3,
+    harmfulInTop10,
+    vacuousHarmfulGuards,
+    unprobedHarmfulGuards,
   };
   const summary =
     `${validated.activeQueries} active, ${validated.judgedRows} judged row(s), ` +
@@ -592,6 +676,17 @@ export function batteryGate(input: {
       BATTERY_GATE_TITLE,
       `${failures.length} harmful #1 result(s) against ratified judgments`,
       failures,
+      metrics,
+      context,
+    );
+  }
+  if (vacuity.length > 0) {
+    return warn(
+      'G12-battery',
+      BATTERY_GATE_TITLE,
+      `${summary}; ${vacuousHarmfulGuards} vacuous harmful guard(s), ` +
+        `${unprobedHarmfulGuards} unprobed`,
+      vacuity,
       metrics,
       context,
     );
@@ -673,6 +768,12 @@ export function checkBatteryJobReport(parsed: unknown): BatteryJobCheck {
     const row = batteryRows[0]!;
     if (row['status'] === 'not-applicable') {
       problems.push(`G12-battery did not run: ${String(row['summary'])}`);
+    } else if (row['status'] === 'warn') {
+      // warn is the vacuity-honesty state (guards that cannot fire on this
+      // corpus). It maps to ADMIT_WITH_WARNINGS, never REJECT, so the job
+      // mirrors that: tolerated, but printed where nobody can miss it.
+      // S-tier is where zero-vacuity becomes a hard requirement.
+      advisory.push(`G12-battery warn (tolerated, non-blocking): ${String(row['summary'])}`);
     } else if (row['status'] !== 'pass') {
       problems.push(`G12-battery status is "${String(row['status'])}": ${String(row['summary'])}`);
     }

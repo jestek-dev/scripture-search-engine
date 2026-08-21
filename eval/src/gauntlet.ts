@@ -69,6 +69,7 @@ import { openCorpus } from './nodeSqlitePort.js';
 import {
   batteryGate,
   buildBatterySection,
+  probeHarmfulRefPresence,
   runBattery,
   validateBattery,
   BATTERY_JUDGMENTS_PATH,
@@ -633,6 +634,8 @@ async function runProbeGates(
   readonly builtArtifactBytes: number;
   /** null on fixture-database runs: the battery measures a real artifact. */
   readonly batteryOutcomes: readonly BatteryQueryOutcome[] | null;
+  /** Corpus presence per harmful guard; null whenever the battery did not run. */
+  readonly batteryHarmfulPresence: ReadonlyMap<string, boolean> | null;
 }> {
   const probeFile = JSON.parse(readFileSync(join(EVAL_ROOT, 'probes', 'probes.json'), 'utf8')) as {
     probes: Probe[];
@@ -755,12 +758,18 @@ async function runProbeGates(
       const batteryOutcomes = target !== null && battery.validated.findings.length === 0
         ? await runBattery(engine, battery.validated)
         : null;
+      // Probed against the same engine instance the battery ran on, so a
+      // guard is called vacuous only about the exact corpus it measured.
+      const batteryHarmfulPresence = batteryOutcomes === null
+        ? null
+        : await probeHarmfulRefPresence(engine, battery.validated);
 
       return {
         gates: [noise, latencyGate(latenciesMs, budgets.latency.p95Ms), corpusGolden, ordering],
         identity: evaluatedIdentity,
         builtArtifactBytes,
         batteryOutcomes,
+        batteryHarmfulPresence,
       };
     } finally {
       await engine.close();
@@ -892,6 +901,7 @@ async function main(): Promise<void> {
       batteryGate({
         validated: battery.validated,
         outcomes: probeRun.batteryOutcomes,
+        harmfulPresence: probeRun.batteryHarmfulPresence,
         context: { explicitTarget: target !== null },
       }),
     ];

@@ -60,7 +60,12 @@ function runCheck(path: string): number {
   const check = checkBatteryJobReport(parseReport(resolved));
   const lines = [`## Battery checker — ${path}`, `reading ${resolved}`, '', `### ${ADVISORY_BANNER}`, ...check.advisory, ''];
   if (check.ok) {
-    lines.push('G12-battery: pass (required) — checker green');
+    const tolerated = check.advisory.some((line) => line.startsWith('G12-battery warn'));
+    lines.push(
+      tolerated
+        ? 'G12-battery: warn (required, tolerated — read the vacuity advisory above) — checker green'
+        : 'G12-battery: pass (required) — checker green',
+    );
   } else {
     lines.push('### Checker failures');
     lines.push(...check.problems.map((problem) => `- ${problem}`));
