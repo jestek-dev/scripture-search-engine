@@ -33,7 +33,8 @@
     "2026-08-08 single-token audit: the bare query \"obedience\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
     "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts. Observed #1 for both queries is Matthew 7:24-27 (James 1:22 sits at #2 for the phrase query and #5 for \"obedience\"), so the top-1 pin goes to the observed leader. If James 1:22 SHOULD lead, that is a ranking/data change and belongs to ranking-fixes or lexicon-concepts, not here.",
     "Round-2 book admission 2026-08-18: obedience-to-the-word gained the keep-my-commandments family (see obedience-keep-my-commandments.json for the asserting fixture).",
-    "2026-08-21 ranking-fixes 0.10.0 stage 3 (P3.3 full-query parity): the query's significant tokens equal the concept phrase's, so every co-anchor now scores weight x 40 instead of weight x 28 - co-anchors order by their CURATED weights at full scale, and the 2026-08-17 observed pins (held by a 0.12-point lexical-corroboration margin) no longer describe the output: measured post-stage-3, James 1:22 (weight 1.0, the concept's highest-weighted anchor) leads at 60.43 with Matthew 7:24 at 59.94. Per this fixture's own 2026-08-17 provision, the ranking-fixes change re-cuts the observed pins: the Matthew top-1 window widens to 3 and the Matthew-above-James pair is WITHDRAWN rather than flipped - asserting James-first would encode a pastoral preference nobody has ruled on. Whether Matthew 7:24-27 SHOULD lead is flagged for Jesse's PR-2 review with these numbers; if he rules yes, the remedy is a data-side weight adjustment (his call), and the pins re-tighten to his ruling. Windows deliberately leave room for the stage-4 xref-suppression re-measure, which moves the same rows again."
+    "2026-08-21 ranking-fixes 0.10.0 stage 3 (P3.3 full-query parity): the query's significant tokens equal the concept phrase's, so every co-anchor now scores weight x 40 instead of weight x 28 - co-anchors order by their CURATED weights at full scale, and the 2026-08-17 observed pins (held by a 0.12-point lexical-corroboration margin) no longer describe the output: measured post-stage-3, James 1:22 (weight 1.0, the concept's highest-weighted anchor) leads at 60.43 with Matthew 7:24 at 59.94. Per this fixture's own 2026-08-17 provision, the ranking-fixes change re-cuts the observed pins: the Matthew top-1 window widens to 3 and the Matthew-above-James pair is WITHDRAWN rather than flipped - asserting James-first would encode a pastoral preference nobody has ruled on. Whether Matthew 7:24-27 SHOULD lead is flagged for Jesse's PR-2 review with these numbers; if he rules yes, the remedy is a data-side weight adjustment (his call), and the pins re-tighten to his ruling. Windows deliberately leave room for the stage-4 xref-suppression re-measure, which moves the same rows again.",
+    "2026-08-21 ranking-fixes 0.10.0 stage 5 (P3.5 passage_terms PMI de-flattening), same 2026-08-17 provision, same withdraw-never-flip move: the factor shrinks Matthew 7:24's flat 2.85 passage_terms chip to 1.20 while Luke 6:47 carries no such chip and is untouched - measured post-stage-5, Luke 6:47 leads at 52.94 with Matthew 7:24 at 52.78, overtaken by 0.16 on honestly-quieter corroboration. Both stay inside the top-3 (Luke #1, Matthew #2, James 1:22-23 #3), so ONLY the Matthew-above-Luke preferredOrder pair is WITHDRAWN; both withinTop 3 pins stand unchanged. Whether Matthew SHOULD outrank Luke is flagged for Jesse's PR-2 review with these numbers (52.94 vs 52.78) - a pastoral ordering between parallel tellings is his call, and the remedy if he rules is a data-side weight adjustment, after which the pair re-tightens to his ruling."
   ],
   "expectedTop": [
     {
@@ -56,13 +57,6 @@
     }
   ],
   "expectedWithinTop": 10,
-  "preferredOrder": [
-    {
-      "above": "Matthew 7:24-27",
-      "below": "Luke 6:46-49",
-      "withinTop": 3
-    }
-  ],
   "alsoAcceptable": [
     "Ezekiel 33:31-32",
     "Romans 2:13",

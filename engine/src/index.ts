@@ -37,7 +37,7 @@ export {
   tokenEvidence,
 } from './intents/lexical.js';
 
-export { sourceLabel } from './intents/concept.js';
+export { PASSAGE_TERM_PMI_HALF_SATURATION, sourceLabel } from './intents/concept.js';
 
 export {
   normalizeToken,

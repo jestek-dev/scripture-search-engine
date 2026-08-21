@@ -265,6 +265,19 @@ export function translationVariantEvidence(
   };
 }
 
+/**
+ * Half-saturation constant for the passage_terms PMI factor (0.10.0 stage 5).
+ *
+ * A match whose mean per-term PMI equals this value scores factor 0.5. The
+ * value is calibrated against reviewed data: the G5 admission floor
+ * (`eval/budgets.json` distinctiveness.minPmi = 2.0) scores 0.25 — a term
+ * that barely cleared admission speaks at quarter volume — and the measured
+ * corpus-mean PMI 6.37 scores ≈0.52. Mirrored into `eval/budgets.json`
+ * signalBudgets for the G6 reviewed-constants check; value pending J21
+ * sign-off, which rides the normal approval flow.
+ */
+export const PASSAGE_TERM_PMI_HALF_SATURATION = 6.0;
+
 export function passageTermEvidence(match: {
   matchedTerms: readonly string[];
   pmiSum: number;
@@ -279,13 +292,30 @@ export function passageTermEvidence(match: {
   // purpose: diffuse commentary is discounted, never discarded.
   const span = Math.max(1, match.minSpanVerses);
   const specificity = 1 / (1 + 0.25 * Math.log2(span));
+  // Distinctiveness (0.10.0 stage 5): the pipeline computed a PMI for every
+  // admitted term under G5, and until this factor existed scoring threw that
+  // statistic away — every same-count, same-span match tied exactly and
+  // canonical book order decided ("propitiation" returned a flat 2.85 pile
+  // led by whichever book comes first). Asymptotic on purpose: the earlier
+  // `min(1, pmiSum / (terms × 6))` form saturates at 1 for any per-term PMI
+  // ≥ 6, and distinctive vocabulary lives ABOVE that line (measured corpus
+  // range 2.02–18.54, every stored `propitiation` row 8.52–11.21), so the
+  // ties it existed to break survived it byte-identical. This form is
+  // strictly monotone in pmiSum — distinct pmiSums never tie, at any
+  // magnitude — and bounded below 1. No new adjudication: the statistic was
+  // already reviewed data; this only stops discarding it. Zero/absent pmiSum
+  // degrades to factor 0 rather than NaN or a negative.
+  const pmiSum = Math.max(0, match.pmiSum);
+  const halfSaturationMass =
+    Math.max(1, match.matchedTerms.length) * PASSAGE_TERM_PMI_HALF_SATURATION;
+  const pmiFactor = pmiSum / (pmiSum + halfSaturationMass);
   return {
     family: 'passage_terms',
     label:
       match.matchedTerms.length === 1
         ? `Preached vocabulary: ${match.matchedTerms[0]}`
         : `Preached vocabulary: ${match.matchedTerms.slice(0, 3).join(', ')}`,
-    strength: Math.max(0, Math.min(1, saturating * specificity)),
+    strength: Math.max(0, Math.min(1, saturating * specificity * pmiFactor)),
     provenance: {
       sourceId: match.sourceIds,
       label: joinedSourceLabel(match.sourceIds),

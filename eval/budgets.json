@@ -111,10 +111,23 @@
       "60. FIXED, not a tuning knob: raising it to 4 would push 2-word phrases",
       "to 30, colliding with weakAggregateCap and endangering correct",
       "remembered-phrase verbatim #1s. The value 3 is plan-recommended pending",
-      "J19 sign-off, which rides the normal approval flow."
+      "J19 sign-off, which rides the normal approval flow.",
+      "",
+      "passageTermPmiHalfSaturation (stage 5, P3.5): half-saturation constant",
+      "of the asymptotic passage_terms PMI factor",
+      "pmiSum / (pmiSum + matchedTerms x this). A match whose mean per-term",
+      "PMI equals this value scores factor 0.5; the G5 admission floor",
+      "(distinctiveness.minPmi 2.0, above) scores 0.25; the measured corpus",
+      "mean 6.37 scores ~0.52. Asymptotic, not min()-capped: distinctive",
+      "vocabulary lives above any per-term cap (measured corpus PMI range",
+      "2.02-18.54), so a capped form leaves the flat ties it exists to break",
+      "byte-identical. Strictly monotone - distinct pmiSums never tie. The",
+      "value 6.0 is plan-recommended pending J21 sign-off, which rides the",
+      "normal approval flow."
     ],
     "soleEvidenceMaxPoints": { "translation_variant": 6 },
-    "exactPhraseFullAuthorityWords": 3
+    "exactPhraseFullAuthorityWords": 3,
+    "passageTermPmiHalfSaturation": 6
   },
   "noise": {
     "$comment": "G8. Measured against the previous artifact. Exceeding any of these fails the build and names the offending probes.",

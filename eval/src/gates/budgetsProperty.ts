@@ -29,6 +29,7 @@ import {
   EXACT_PHRASE_FULL_AUTHORITY_WORDS,
   isAuthoritative,
   normalizeToken as engineNormalizeToken,
+  PASSAGE_TERM_PMI_HALF_SATURATION,
   rank as engineRank,
   significantWords as engineSignificantWords,
   tokenStream as engineTokenStream,
@@ -377,6 +378,7 @@ export function reviewedConstantsCheck(signalBudgets?: unknown): GateResult {
   const engineValues: Record<string, unknown> = {
     soleEvidenceMaxPoints: DEFAULT_BUDGETS.soleEvidenceMaxPoints,
     exactPhraseFullAuthorityWords: EXACT_PHRASE_FULL_AUTHORITY_WORDS,
+    passageTermPmiHalfSaturation: PASSAGE_TERM_PMI_HALF_SATURATION,
   };
 
   const mirroredKeys = Object.keys(mirror)

@@ -6,6 +6,8 @@ import {
   isBareWordConceptCue,
   isThinBareWordConceptCue,
   MIN_AUTHORITATIVE_BARE_CUE_IDF_SHARE,
+  PASSAGE_TERM_PMI_HALF_SATURATION,
+  passageTermEvidence,
 } from '../src/intents/concept.js';
 
 const anchor = {
@@ -145,5 +147,84 @@ describe('conceptCueEvidence', () => {
 
   it('keeps the same bounded strength formula as authoritative concept anchors', () => {
     expect(conceptCueEvidence(anchor, 1, 5).strength).toBe(conceptAnchorEvidence(anchor, 1, 5).strength);
+  });
+});
+
+describe('passageTermEvidence PMI factor (0.10.0 stage 5)', () => {
+  const term = (overrides: Partial<Parameters<typeof passageTermEvidence>[0]> = {}) => ({
+    matchedTerms: ['propitiation'],
+    pmiSum: 6,
+    sourceIds: 'clarke',
+    minSpanVerses: 1,
+    locator: '1 John 2',
+    ...overrides,
+  });
+
+  it('is strictly monotone in pmiSum: distinct pmiSums never tie', () => {
+    const low = passageTermEvidence(term({ pmiSum: 2.02 })).strength;
+    const mid = passageTermEvidence(term({ pmiSum: 6.37 })).strength;
+    const high = passageTermEvidence(term({ pmiSum: 18.54 })).strength;
+    expect(low).toBeLessThan(mid);
+    expect(mid).toBeLessThan(high);
+  });
+
+  it('stays strictly monotone when every per-term PMI is above the half-saturation constant — the measured failure of the min() form', () => {
+    // Every stored `propitiation` row measures per-term PMI 8.52-11.21; the
+    // rejected min(1, pmiSum / (terms * 6)) form saturates at 1 across this
+    // whole range and leaves the flat tie byte-identical. The asymptotic
+    // form must still separate them.
+    const terms = ['propitiation', 'mercy', 'seat'];
+    const lower = passageTermEvidence(term({ matchedTerms: terms, pmiSum: 3 * 8.52 })).strength;
+    const upper = passageTermEvidence(term({ matchedTerms: terms, pmiSum: 3 * 11.21 })).strength;
+    expect(lower).toBeLessThan(upper);
+    // The min() form scores both rows at factor exactly 1, i.e. strength ==
+    // saturating x specificity. Verify this form stays strictly below that
+    // saturated ceiling for both, so the regression is detectable.
+    const minFormStrength = (Math.log1p(3) / Math.log1p(6)) * 1;
+    expect(upper).toBeLessThan(minFormStrength);
+  });
+
+  it('is bounded below 1 at any magnitude', () => {
+    const evidence = passageTermEvidence(term({ pmiSum: 1e9 }));
+    expect(evidence.strength).toBeLessThan(1);
+    expect(evidence.strength).toBeGreaterThan(0);
+  });
+
+  it('calibration: the G5 admission floor scores factor 0.25 and the half-saturation point scores 0.5', () => {
+    // Single term at the distinctiveness.minPmi floor of 2.0:
+    // 2 / (2 + 6) = 0.25. saturating(1 term) and specificity(1 verse) are
+    // both computed here so the assertion isolates the factor.
+    const saturating = Math.log1p(1) / Math.log1p(6);
+    const floor = passageTermEvidence(term({ pmiSum: 2.0 }));
+    expect(floor.strength).toBeCloseTo(saturating * 0.25, 10);
+    const half = passageTermEvidence(term({ pmiSum: PASSAGE_TERM_PMI_HALF_SATURATION }));
+    expect(half.strength).toBeCloseTo(saturating * 0.5, 10);
+  });
+
+  it('degrades gracefully on zero or negative pmiSum: factor 0, never NaN or negative', () => {
+    expect(passageTermEvidence(term({ pmiSum: 0 })).strength).toBe(0);
+    expect(passageTermEvidence(term({ pmiSum: -3 })).strength).toBe(0);
+  });
+
+  it('leaves the span-specificity interaction unchanged: the factor is independent of span', () => {
+    const oneVerse = passageTermEvidence(term({ pmiSum: 8, minSpanVerses: 1 }));
+    const sixVerses = passageTermEvidence(term({ pmiSum: 8, minSpanVerses: 6 }));
+    const specificityRatio =
+      (1 / (1 + 0.25 * Math.log2(6))) / (1 / (1 + 0.25 * Math.log2(1)));
+    expect(sixVerses.strength / oneVerse.strength).toBeCloseTo(specificityRatio, 10);
+  });
+
+  it('keeps the label and provenance untouched by the factor', () => {
+    const evidence = passageTermEvidence(term({ pmiSum: 9 }));
+    expect(evidence.family).toBe('passage_terms');
+    expect(evidence.label).toBe('Preached vocabulary: propitiation');
+    expect(evidence.provenance?.sourceId).toBe('clarke');
+  });
+
+  it('is deterministic across repeated calls', () => {
+    const first = passageTermEvidence(term({ pmiSum: 7.77 })).strength;
+    for (let i = 0; i < 3; i += 1) {
+      expect(passageTermEvidence(term({ pmiSum: 7.77 })).strength).toBe(first);
+    }
   });
 });
