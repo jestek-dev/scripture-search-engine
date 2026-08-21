@@ -14,6 +14,12 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - the cross
+  # Phase-4 P4.3 extension 2026-08-21 (audit th2, [VER] §4): the WEB never
+  # contains "propitiation" (verified corpus-wide), so no lexical rung can
+  # ever reach it — only a curated lexicon entry can. 'atoning sacrifice'
+  # is the WEB's own wording at 1 John 2:2 / 4:10.
+  - propitiation
+  - atoning sacrifice
 anchors:
   - ref: Isaiah 53:5
     sources: [editorial]
@@ -30,7 +36,22 @@ anchors:
   - ref: John 1:29
     sources: [torrey]
     weight: 0.8
+  # Phase-4 P4.3 re-weight 2026-08-21, 0.75 -> 0.85 (one rung, to 1 Cor
+  # 15:3's level): once 'propitiation' fires this concept, the query is
+  # anchor-dominated, and the ACTIVE propitiation-pmi-ordering.json pin
+  # (P3.5's promoted tie resolution: 1 John 2:2 above John 1:29) can only
+  # be honored by the weight order. Doctrinal basis: "he is the atoning
+  # sacrifice for our sins, and not for ours only, but also for the whole
+  # world" — the doctrine's summary sentence in the WEB's own words;
+  # Torrey's ATONEMENT, THE outline lists 1 John 2:2 under "Explained".
   - ref: 1 John 2:2
+    sources: [torrey]
+    weight: 0.85
+  # Phase-4 P4.3 extension 2026-08-21: "he loved us, and sent his Son as
+  # the atoning sacrifice for our sins" — the doctrine in the WEB's own
+  # words. Torrey's ATONEMENT, THE outline lists 1 John 4:10 ("Explained";
+  # "Love of God.").
+  - ref: 1 John 4:10
     sources: [torrey]
     weight: 0.75
   - ref: 2 Corinthians 5:21

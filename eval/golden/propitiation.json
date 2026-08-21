@@ -4,7 +4,7 @@
   "additionalQueries": [
     "atoning sacrifice"
   ],
-  "status": "pending",
+  "status": "active",
   "coversConcepts": [
     "the-cross"
   ],
@@ -12,20 +12,35 @@
     "GAP FIXTURE (audit th2, 2026-08-20; re-verified 2026-08-21 sweep).",
     "'propitiation' appears in no WEB verse (verified corpus-wide on the",
     "31,098-verse replay bed), so lexical retrieval is structurally",
-    "impossible; the hermetic run returns three passage_terms rows and no",
-    "curated chip. Specification for extending the-cross with lexicon",
+    "impossible; the hermetic run returned three passage_terms rows and no",
+    "curated chip. Closed by the P4.3 extension of the-cross: lexicon",
     "entries 'propitiation' and 'atoning sacrifice' (the WEB's own wording",
-    "at 1 John 2:2 / 4:10). Rom 3:25 and Heb 2:17 are the fuller answer and",
-    "are corpus-blocked (Romans 3, Hebrews 2 absent) — promoted with the",
-    "re-pin payload. Bare 'atonement' was verified CLOSED by existing data",
-    "in the same sweep (Rom 5:8 / John 1:29 / 1 John 2:2 top-3, all with",
-    "'Theme: The cross and atonement' chips) — the pack item pins that with",
-    "an active assertion; this fixture deliberately does not carry it."
+    "at 1 John 2:2 / 4:10) plus the 1 John 4:10 [torrey] 0.75 anchor.",
+    "Rom 3:25 and Heb 2:17 are the fuller answer and are corpus-blocked",
+    "(Romans 3, Hebrews 2 absent) — promoted with the re-pin payload.",
+    "Bare 'atonement' was verified CLOSED by existing data in the same",
+    "sweep — the active atonement-reachability.json (authored with this",
+    "pack per the worklist) pins it; this fixture deliberately does not",
+    "carry it.",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-21 (P4.3), with one documented edit:",
+    "withinTop 3 -> 5, measured on the fixture bed. Once the concept",
+    "fires, 'propitiation' is anchor-dominated: 1 John 2:2 lands #5",
+    "(20.54, anchor 18.7 at the re-weighted 0.85 + passage_terms) below",
+    "Rom 5:8 / Isa 53:5 / 1 John 4:10 / 1 Pet 2:24 — every verse above it",
+    "is the-cross's own anchor carrying the same 'Theme: The cross and",
+    "atonement' chip, and 1 John 2:2 stays ABOVE John 1:29, preserving",
+    "the active propitiation-pmi-ordering.json pin (the pack re-weight",
+    "0.75 -> 0.85 exists to honor that promoted ordering — see the yaml",
+    "comment). 'atoning sacrifice' puts 1 John 2:2 #1 (75.31, exact",
+    "phrase + anchor). Forcing #3 would need a weight above 1 Pet 2:24's",
+    "0.95 (indefensible vs the pack ladder). Family+label assertions",
+    "untouched; tighten back to 3 only with a ruled re-weight."
   ],
   "expectedTop": [
     {
       "reference": "1 John 2:2",
-      "withinTop": 3,
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: The cross and atonement"
     }
