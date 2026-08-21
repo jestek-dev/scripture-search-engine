@@ -10,7 +10,11 @@
  */
 // 0.9.0: query-coverage scaling, IDF-thin bare-concept cue demotion, and
 // one-significant-word phrase fallback suppression. These alter ordering and reasons.
-export const ENGINE_VERSION = '0.9.0';
+// 0.10.0: ranking fixes, staged on one branch and landed as one squash. Stage 1
+// (sole-evidence floor): a result whose only evidence is translation_variant is
+// capped at 6 points — below any honest text match — so a bag-of-stems hint can
+// accompany but never hold #1 alone. Later 0.10.0 stages ride this same bump.
+export const ENGINE_VERSION = '0.10.0';
 
 /**
  * Bumped independently of ENGINE_VERSION when the tokenizer changes, because
