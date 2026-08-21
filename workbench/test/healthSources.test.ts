@@ -97,7 +97,7 @@ describe('health source semantics', () => {
   it('mirrors G3 active fixture coverage, including implicit fixture-id coverage', async () => {
     const { golden, coverage } = await readGoldenAndCoverage();
     expect(golden.filter((fixture) => fixture.status === 'active').length).toBeGreaterThan(0);
-    // 110 = 58 founding concepts + the 20 round-1 books-harvest packs +
+    // 111 = 58 founding concepts + the 20 round-1 books-harvest packs +
     // the 30 round-2 books-harvest packs (2026-08-18) + asking-in-gods-will
     // (2026-08-21 prosperity-slogan adversarial coverage) + benediction +
     // justification-by-faith (2026-08-21 Phase-4 P4.9/P4.1 gap packs). This
