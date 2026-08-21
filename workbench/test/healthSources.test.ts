@@ -99,11 +99,11 @@ describe('health source semantics', () => {
     expect(golden.filter((fixture) => fixture.status === 'active').length).toBeGreaterThan(0);
     // 110 = 58 founding concepts + the 20 round-1 books-harvest packs +
     // the 30 round-2 books-harvest packs (2026-08-18) + asking-in-gods-will
-    // (2026-08-21 prosperity-slogan adversarial coverage) + benediction
-    // (2026-08-21 Phase-4 P4.9 worship-leader gap pack). This mirror moves
-    // whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(110);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(110);
+    // (2026-08-21 prosperity-slogan adversarial coverage) + benediction +
+    // justification-by-faith (2026-08-21 Phase-4 P4.9/P4.1 gap packs). This
+    // mirror moves whenever a concept wave is admitted.
+    expect(coverage).toHaveLength(111);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(111);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });
