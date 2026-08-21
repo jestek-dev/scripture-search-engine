@@ -39,6 +39,7 @@ import {
   translationVariantEvidence,
 } from './intents/concept.js';
 import { DEFAULT_LIMIT, rank, type RankOptions } from './ranking/rank.js';
+import { polishChipsForDisplay } from './reasons/display.js';
 
 /**
  * Extra candidates ranked beyond the caller's limit so that collapsing a run
@@ -419,20 +420,35 @@ export async function createEngine(
         limit: limit + COLLAPSE_HEADROOM,
       },
     );
-    return collapseAnchorRuns(
-      ranked.map((result) => {
-        const verse = verses.get(result.targetId)!;
-        return {
-          targetId: result.targetId,
-          reference: referenceLabel(verse),
-          excerpt: verse.text,
-          score: result.score,
-          reasons: result.reasons,
-        };
-      }),
-      verses,
-      anchorSpans,
-    ).slice(0, limit);
+    return (
+      collapseAnchorRuns(
+        ranked.map((result) => {
+          const verse = verses.get(result.targetId)!;
+          return {
+            targetId: result.targetId,
+            reference: referenceLabel(verse),
+            excerpt: verse.text,
+            score: result.score,
+            reasons: result.reasons,
+          };
+        }),
+        verses,
+        anchorSpans,
+      )
+        .slice(0, limit)
+        // Chip display polish (0.10.0 CO-2/F22), applied LAST — after
+        // ranking, collapsing and the cut — so it is display-only by
+        // construction: scores, order and the page are already decided.
+        // Withheld chips' points still count (a result's score may exceed
+        // the sum of its displayed chips). related() is deliberately
+        // untouched: its only chip family (cross_reference, votes >= 1
+        // against the corpus maximum) cannot produce a chip below the
+        // display minimum, and passage_terms never appears there.
+        .map((result) => {
+          const polished = polishChipsForDisplay(result.reasons);
+          return polished === result.reasons ? result : { ...result, reasons: polished };
+        })
+    );
   }
 
   async function relatedFor(reference: string): Promise<RelatedResult> {

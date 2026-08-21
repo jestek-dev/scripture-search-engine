@@ -73,6 +73,12 @@ export {
 } from './reasons/types.js';
 
 export {
+  CHIP_DISPLAY_MIN_POINTS,
+  PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
+  polishChipsForDisplay,
+} from './reasons/display.js';
+
+export {
   applyBudgets,
   DEFAULT_BUDGETS,
   type BudgetedScore,

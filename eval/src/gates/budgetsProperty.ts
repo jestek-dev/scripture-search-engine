@@ -25,9 +25,11 @@ import fc from 'fast-check';
 
 import {
   applyBudgets as engineApplyBudgets,
+  CHIP_DISPLAY_MIN_POINTS,
   DEFAULT_BUDGETS,
   EXACT_PHRASE_FULL_AUTHORITY_WORDS,
   isAuthoritative,
+  PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
   normalizeToken as engineNormalizeToken,
   PASSAGE_TERM_PMI_HALF_SATURATION,
   rank as engineRank,
@@ -379,6 +381,8 @@ export function reviewedConstantsCheck(signalBudgets?: unknown): GateResult {
     soleEvidenceMaxPoints: DEFAULT_BUDGETS.soleEvidenceMaxPoints,
     exactPhraseFullAuthorityWords: EXACT_PHRASE_FULL_AUTHORITY_WORDS,
     passageTermPmiHalfSaturation: PASSAGE_TERM_PMI_HALF_SATURATION,
+    chipDisplayMinPoints: CHIP_DISPLAY_MIN_POINTS,
+    passageTermChipDisplayFloor: PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
   };
 
   const mirroredKeys = Object.keys(mirror)

@@ -9,6 +9,7 @@ import {
   MIN_AUTHORITATIVE_BARE_CUE_IDF_SHARE,
   PASSAGE_TERM_PMI_HALF_SATURATION,
   passageTermEvidence,
+  translationVariantEvidence,
 } from '../src/intents/concept.js';
 
 const anchor = {
@@ -227,6 +228,39 @@ describe('passageTermEvidence PMI factor (0.10.0 stage 5)', () => {
     for (let i = 0; i < 3; i += 1) {
       expect(passageTermEvidence(term({ pmiSum: 7.77 })).strength).toBe(first);
     }
+  });
+});
+
+describe('translationVariantEvidence chip rendering (CO-2/F22 i)', () => {
+  const frequencies = new Map([
+    ['plan', 100],
+    ['prosper', 10],
+    ['hope', 40],
+    ['future', 30],
+  ]);
+
+  it('names its evidence — the matched stems — and never a translation', () => {
+    const evidence = translationVariantEvidence(
+      { matchedTokens: ['plan', 'prosper'] },
+      10,
+      frequencies,
+      1000,
+    );
+    expect(evidence!.label).toBe('Worded this way in another translation: plan, prosper');
+    // The stored stems are merged across sources, so naming a translation
+    // would invent provenance the data does not carry.
+    expect(evidence!.provenance!.label).toBe('Cross-translation vocabulary');
+    expect(evidence!.provenance!.sourceId).toBe('translation-variants');
+  });
+
+  it('lists at most three stems, in match order', () => {
+    const evidence = translationVariantEvidence(
+      { matchedTokens: ['plan', 'prosper', 'hope', 'future'] },
+      10,
+      frequencies,
+      1000,
+    );
+    expect(evidence!.label).toBe('Worded this way in another translation: plan, prosper, hope');
   });
 });
 
