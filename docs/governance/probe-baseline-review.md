@@ -40,9 +40,10 @@ budgets in `eval/budgets.json`. Adversarial probes that must return nothing
 are called out explicitly. The packet's footer prints exactly the digest and
 identity values the approval must bind.
 
-The packet tool is read-only. It never writes the approval, and
-`--update-baseline` on the gauntlet writes only the baseline — no code path
-in this repository authors an approval. The workbench only validates and
+The packet tool is read-only. It never writes the approval, and the
+gauntlet's update flags (`--update-baseline`, `--update-ordering-snapshot`,
+`--update-rank-baseline`) write only their baseline or snapshot — no code
+path in this repository authors an approval. The workbench only validates and
 carries an approval file the reviewer authored.
 
 ## Where the artifacts live
@@ -52,6 +53,8 @@ carries an approval file the reviewer authored.
 | Probe definitions | `eval/probes/probes.json` |
 | Baseline | `eval/baselines/probes.json` |
 | Approval | `eval/baselines/probes.approval.json` |
+| Rank-metrics baseline | `eval/baselines/rank-metrics.json` |
+| Rank-metrics approval | `eval/baselines/rank-metrics.approval.json` |
 | Review records | `docs/reviews/YYYY-MM-DD-*.md` |
 | Budgets consulted | `eval/budgets.json` |
 
@@ -112,6 +115,61 @@ with a named finding: every new approval is authored in v2. The schema change
 edited no committed approval file; the v1 records (including the pending
 re-review noted in `docs/reviews/2026-08-15-probe-baseline-re-review.md`)
 retire naturally when their identities are next re-baselined.
+
+## Rank-metrics baselines and the null-threshold protocol
+
+The rank-quality thresholds in `eval/budgets.json` (`rankQuality`: nDCG@10
+overall and per battery category, MRR@10, goodOrBetterTop3Rate — micro-integer
+units, value × 10⁶) are born **null**. A null threshold means measured and
+reported: the Admission Report prints the value with `(no threshold — baseline
+not yet established)` and it is never counted as a pass and never as a fail —
+"a guessed threshold that never fires is worse than an absent one" (CLAUDE.md).
+The one non-null sub-block at introduction is `battery.categoryFloors`: the
+nine seed counts of the transcribed battery, which are structural facts about
+the committed specimen set, not guessed quality numbers.
+
+### The only path from null to a number
+
+1. **≥ 3 ADMIT runs on main** establish a measured history for the metric
+   being armed.
+2. The change author runs the gauntlet with `--update-rank-baseline` against
+   an explicit artifact target. This writes `eval/baselines/rank-metrics.json`
+   **only** — the machine never writes an approval, the same discipline as
+   `--update-baseline` and `--update-ordering-snapshot`.
+3. An **independent reviewer** — same qualification rules as "Who can sign"
+   above, designated by Jesse per review — reads the review packet (generated
+   with `--rank-before <prior> --rank-after eval/baselines/rank-metrics.json`;
+   the packet renders per-category metric deltas and prints every digest the
+   approval must bind) and hand-authors
+   `eval/baselines/rank-metrics.approval.json`. There is no v1 generation for
+   this record: it is born under the accountable-record schema
+   (`…/rank-metrics-approval/v2` — named reviewer, contact, independence
+   attestation, `docs/reviews/` evidence binding, `reviewPacketSha256`,
+   `priorProvenance` chained to the prior baseline's git blob, or null beside
+   an explicit `bootstrap` field for the first record). Beyond the probe
+   approval's bindings it also binds `batteryQueriesSha256` and
+   `batteryJudgmentsSha256`: the metrics are a function of the judgment set,
+   so a changed set re-opens the baseline.
+4. **The same PR** flips the chosen nulls in `eval/budgets.json` to values,
+   quoting the run history from step 1. Jesse's merge is the sign-off on each
+   flip.
+
+The gauntlet enforces this ordering structurally, on every run including the
+fixture CI legs: a non-null `rankQuality` threshold with no approved baseline
+pair on disk fails G12 with a named finding, as does a committed
+`rank-metrics.json` whose approval is missing, malformed, tampered, or bound
+to different digests. Steps 1–4 cannot begin while main's standing G2/G8
+approval debt is open — a rank baseline minted now would chain from an
+unratified identity — so the first execution of this protocol is, by
+definition, a later PR after that debt clears.
+
+### Rolling a threshold back
+
+Reverting a flipped threshold is a reviewed data change like the flip itself:
+set it back to `null` and leave a dated `$comment` tombstone beside it saying
+why (the `noise.$comment_minMeanDistinctiveness` pattern in
+`eval/budgets.json`). Never delete the key silently — a threshold that
+vanishes reads as never having existed.
 
 ### Open decisions — Jesse (J40)
 
