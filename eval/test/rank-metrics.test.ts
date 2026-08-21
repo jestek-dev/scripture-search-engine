@@ -12,6 +12,7 @@ import {
   computeRankMetrics,
   deriveGoldenRankJudgments,
   detectNoMeasurableEffect,
+  goodOrBetterAt3,
   meetsThresholdMicro,
   roundHalfEvenMicro,
   verseRangeOfTargetId,
@@ -119,6 +120,16 @@ describe('claim-once gain assignment', () => {
     // The spanning result claims the range starting at 50, leaving 100-110
     // claimable by the second result. The wrong tie-break would zero it.
     expect(assignGains([{ start: 55, end: 105 }, point(105)], rows)).toEqual([2, 2]);
+  });
+});
+
+describe('goodOrBetterAt3', () => {
+  it('pins the shared definition serving computeRankMetrics and the tier report alike', () => {
+    expect(goodOrBetterAt3([0, 0, 2])).toBe(true); // grade 2 is good, not >= 3
+    expect(goodOrBetterAt3([1, 1, 1])).toBe(false); // merely relevant never counts
+    expect(goodOrBetterAt3([0, 0, 0, 3])).toBe(false); // the window is exactly @3
+    expect(goodOrBetterAt3([3])).toBe(true);
+    expect(goodOrBetterAt3([])).toBe(false);
   });
 });
 

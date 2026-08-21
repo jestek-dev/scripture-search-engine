@@ -1052,6 +1052,17 @@ export function assignGains(top: readonly VerseRange[], judged: readonly Battery
   return [...assignClaims(top, judged).gains];
 }
 
+/**
+ * The one definition of "good-or-better@3": a claimed gain of at least 2
+ * (good) within the first three ranks. computeRankMetrics and the tier
+ * report's independent recomputation deliberately share nothing except this
+ * definition — a drifted private copy would let the two displayed
+ * good-or-better numbers in one report disagree with a green suite.
+ */
+export function goodOrBetterAt3(gains: readonly number[]): boolean {
+  return gains.slice(0, 3).some((gain) => gain >= 2);
+}
+
 function dcgMicroOf(gains: readonly number[]): number {
   let sum = 0;
   for (let index = 0; index < Math.min(gains.length, DISCOUNT_MICRO.length); index += 1) {
@@ -1117,7 +1128,7 @@ export function computeRankMetrics(inputs: readonly RankQueryInput[]): RankMetri
 
     const firstGood = gains.findIndex((gain) => gain >= 2);
     const mrr: Rational = firstGood === -1 ? ZERO : { num: 1n, den: BigInt(firstGood + 1) };
-    const goodOrBetterTop3 = gains.slice(0, 3).some((gain) => gain >= 2);
+    const goodOrBetterTop3 = goodOrBetterAt3(gains);
 
     const relevant = judged.filter((row) => row.grade >= 1).length;
     const gains50 = assignClaims(input.top50.slice(0, 50), judged).gains;

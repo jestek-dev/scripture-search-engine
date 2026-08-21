@@ -486,6 +486,32 @@ describe('A2 and S1', () => {
     expect(criterion(at, 'A2').status).toBe('MET');
   });
 
+  it('pins the numerator predicate boundaries: grade 2 counts, grade 1 alone does not, the window ends at rank 3', () => {
+    // Bar at 100% over a single scoreable query, so MET is exactly "this
+    // query counted" — each case isolates one edge of good-or-better@3.
+    const oneQuery = (grade: 1 | 2 | 3, hitRank: 1 | 3 | 4) => {
+      const filler = [901, 902, 903].slice(0, hitRank - 1);
+      const report = computeTierReport(input({
+        battery: batteryOf([{ id: 'fn1', judged: [{ start: 1, grade }] }]),
+        tiersConfig: config({ aTierGoodOrBetterTop3RateMicro: 1000000 }),
+        evidence: { batteryResults: [outcomeOf('fn1', [...filler, 1])], gates: cleanGates(), rankMetrics: null },
+      }));
+      return criterion(report, 'A2');
+    };
+    // A good (grade-2) passage in the top 3 counts — the predicate is
+    // gain >= 2, not gain >= 3.
+    expect(oneQuery(2, 3).status).toBe('MET');
+    expect(oneQuery(2, 3).detail).toContain('1/1');
+    // A merely-relevant (grade-1) #1 keeps the query scoreable but never
+    // counts as good-or-better: 0/1, not excluded from the denominator.
+    expect(oneQuery(1, 1).status).toBe('NOT_MET');
+    expect(oneQuery(1, 1).detail).toContain('0/1');
+    // The window is exactly @3: an excellent hit at rank 4 does not count.
+    expect(oneQuery(3, 4).status).toBe('NOT_MET');
+    expect(oneQuery(3, 4).detail).toContain('0/1');
+    expect(oneQuery(3, 3).status).toBe('MET');
+  });
+
   it('is NOT EVALUABLE with zero scoreable queries — provisional judgments never enter the rate', () => {
     const report = computeTierReport(input({
       battery: batteryOf([{ id: 'fn1', judged: [{ start: 1, grade: 3, provisional: true }] }]),

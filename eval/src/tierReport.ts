@@ -35,6 +35,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
   assignGains,
+  goodOrBetterAt3,
   rangesOverlap,
   verseRangeOfTargetId,
   BATTERY_JUDGMENTS_PATH,
@@ -440,8 +441,10 @@ interface GoodOrBetterCount {
  * Recomputed from raw outcomes and judgments, never read back from the
  * metrics report: provisional judgments never enter (they cannot certify),
  * a query is scoreable when it has at least one ratified judged row with
- * gain >= 1, and good-or-better@3 means a claimed gain >= 2 in the top 3 —
- * the same claim-once matching computeRankMetrics uses, via assignGains.
+ * gain >= 1. The good-or-better@3 predicate itself is the shared
+ * goodOrBetterAt3 over the same claim-once matching computeRankMetrics
+ * uses — the recomputation must be independent in its inputs, never in the
+ * metric's definition.
  */
 function goodOrBetterOverBattery(
   battery: ValidatedBattery,
@@ -456,7 +459,7 @@ function goodOrBetterOverBattery(
     scoreable += 1;
     const outcome = byId.get(query.id);
     const top10 = outcome !== undefined && outcome.kind === 'discovery' ? top10Ranges(outcome) : [];
-    if (assignGains(top10, judged).slice(0, 3).some((gain) => gain >= 2)) good += 1;
+    if (goodOrBetterAt3(assignGains(top10, judged))) good += 1;
   }
   return { good, scoreable };
 }
