@@ -1,0 +1,31 @@
+{
+  "$comment": [
+    "Flagship queries: remembered-phrase battery rows where the quoted verse",
+    "must lead (#1). Reviewed data consumed by A-tier criterion A4 (E6): the",
+    "tier report checks that every query here is covered by at least one",
+    "ACTIVE golden fixture with the same query string carrying a",
+    "preferredOrder or a withinTop: 1 assertion - authoring those pins is",
+    "Phase-3 (ranking fixes) work, so uncovered rows keep A4 honestly NOT",
+    "MET until the pins exist.",
+    "",
+    "quotedVerse names the verse being quoted, transcribed from the",
+    "2026-08-20 search-quality report and the battery's grade-3 judgments;",
+    "it documents WHICH verse must lead, for the fixture author.",
+    "",
+    "ratification is 'pending' until Jesse ratifies the list (J4). ph4 is",
+    "the named product call - 'cast all your anxiety on him' demotes 1 Peter",
+    "5:7 behind on-theme companions, and whether the quoted verse must be #1",
+    "for remembered phrases is his ruling, not the audit's. Rows ride that",
+    "ruling; edits to this file are reviewed data changes."
+  ],
+  "flagshipVersion": 1,
+  "ratification": "pending",
+  "queries": [
+    { "id": "ph2", "query": "for I know the plans I have for you", "quotedVerse": "Jeremiah 29:11" },
+    { "id": "ph3", "query": "I can do all things", "quotedVerse": "Philippians 4:13" },
+    { "id": "ph4", "query": "cast all your anxiety on him", "quotedVerse": "1 Peter 5:7" },
+    { "id": "ph6", "query": "the Lord is my shepherd", "quotedVerse": "Psalms 23:1" },
+    { "id": "ph9", "query": "God so loved the world", "quotedVerse": "John 3:16" },
+    { "id": "ph10", "query": "trust in the Lord with all your heart", "quotedVerse": "Proverbs 3:5-6" }
+  ]
+}

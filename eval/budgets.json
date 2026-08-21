@@ -162,6 +162,66 @@
       }
     }
   },
+  "tiers": {
+    "$comment": [
+      "E6: the measurable A-tier / S-tier definitions the tier report computes",
+      "(eval/src/tierReport.ts; npm run tier-report --workspace eval). Reviewed",
+      "data like every threshold in this file. The two percentage bars are",
+      "PROPOSED at the audit's suggested 90% / 98% and await Jesse's",
+      "ratification as HIS quality bar, not the audit's suggestion (J41);",
+      "the tier report is the mega-sweep phase's exit bar (sweep exits at",
+      "A-tier MET on the release artifact; S-tier is the standing target).",
+      "",
+      "Tier semantics: a criterion prints MET / NOT MET / NOT EVALUABLE",
+      "(reason) / DISABLED. NOT EVALUABLE never satisfies a criterion - the",
+      "not-applicable-never-counts-as-pass rule applied to tiers. DISABLED is",
+      "different in kind: an explicit, dated editorial decision recorded here",
+      "removed the criterion, so it does not block. The two must never be",
+      "conflated - one is a measurement gap, the other is a decision."
+    ],
+    "goodOrBetterTop3RateMicro": {
+      "$comment": [
+        "Micro units (rate x 10^6), integers, compared by exact cross-",
+        "multiplication over battery-scoreable queries only (golden-derived",
+        "pins are fixture assertions, not the battery's graded set)."
+      ],
+      "aTier": 900000,
+      "sTier": 980000
+    },
+    "referenceGrammar": [
+      { "query": "John 3 16", "expectedReference": "John 3:16" },
+      { "query": "1 corinthians 13 4", "expectedReference": "1 Corinthians 13:4" },
+      { "query": "Phillipians 4:13", "expectedReference": "Philippians 4:13" },
+      { "query": "Songs of Solomon 2:1", "expectedReference": "Song of Solomon 2:1" }
+    ],
+    "$comment_referenceGrammar": [
+      "A3's grammar half: each row must resolve as a reference to exactly the",
+      "expected passage label. Rows are matched against battery outcomes by",
+      "query string; every seed row is also a battery specimen (ref1, ref7,",
+      "ms4, ref8)."
+    ],
+    "correctives": {
+      "$comment": [
+        "S2's prosperity-corrective criterion runs only under Jesse's",
+        "editorial stance on correctives (F14, J9). enabled null = UNDECIDED:",
+        "the criterion is NOT EVALUABLE and blocks S-tier honestly until he",
+        "rules. His decision sets enabled true or false together with",
+        "decidedAt; false prints 'DISABLED by editorial decision <date>' -",
+        "a decision, not a measurement gap."
+      ],
+      "enabled": null,
+      "decidedAt": null
+    },
+    "batteryGrowth": {
+      "$comment": [
+        "S5's process criterion: battery growth stays alive via mega-sweep or",
+        "consented gap-mining additions (checkable through queries.json",
+        "origin/addedAt), or an explicit dated waiver here ({grantedAt, note}).",
+        "null = no waiver."
+      ],
+      "waiver": null
+    }
+  },
   "saturation": {
     "$comment": "G9. A work that moves an already-covered pericope's profile less than minProfileDelta is recorded as saturated and skipped.",
     "worksPerPericopeBeforeCheck": 5,
