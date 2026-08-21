@@ -5,7 +5,7 @@ enforces this); the npm version ships in lockstep with it. Consumers pin
 **both** the engine semver and an artifact descriptor — see the release notes
 on each tag for the descriptor that goes with it.
 
-## 0.9.0 — 2026-08-15
+## 0.9.0 — unreleased (publishes when tag v0.9.0 is pushed; date set then)
 
 First published version since 0.7.1. **Includes the unpublished 0.8.0
 breaking change below — read that entry before upgrading from 0.7.x.**
@@ -23,7 +23,17 @@ breaking change below — read that entry before upgrading from 0.7.x.**
 - Translation-neutral search: a verse can be found in the wording of ESV/NIV/
   NLT-style phrasing via the artifact's `verse_translation_tokens` index
   (schema 6). Requires a schema-6 artifact; the engine accepts schemas 1-6.
+  Engines up through 0.7.1 support schemas 1-5 only, so they refuse a
+  schema-6 artifact by design — a pinned `(0.7.1, v0.7.1 descriptor)` pair
+  keeps working; upgrading is an explicit re-pin of both halves.
 - Every provenance source is labeled; reason completeness is enforced in eval.
+- Release channel (ships with, not in, the package): v0.9.0 is the first
+  release whose artifact is CI-minted and promoted without a rebuild, and the
+  first whose descriptor names its own `release.tag` — closing the v0.7.1
+  asset/descriptor split forward (decision record:
+  `docs/reviews/2026-08-21-ship-forward-v090.md`; v0.7.1's published assets
+  stay untouched). The artifact embeds OpenBible.info data (CC BY 4.0);
+  consumer apps surface the attribution per `docs/ATTRIBUTIONS.md`.
 
 ## 0.8.0 — 2026-08-08 — BREAKING, never published
 
