@@ -15,6 +15,7 @@
 import { significantWords } from '@jestek-dev/scripture-engine';
 
 import {
+  collapseAcknowledgmentKey,
   parseLexiconInventory,
   type LexiconCollapseAcknowledgment,
 } from '../../../pipeline/src/importers/lexiconInventory.js';
@@ -215,8 +216,11 @@ export function lexiconInventoryCheck(
 ): GateResult {
   const title = 'Single-token collapse inventory';
   const collapses = singleTokenCollapses(concepts);
+  // Keys join via the parser's own collapseAcknowledgmentKey — the dedupe
+  // and the deny-list matching are two halves of one mechanism and must
+  // never disagree on what identifies an entry.
   const collapseByKey = new Map(
-    collapses.map((entry) => [`${entry.conceptId} ${entry.phrase}`, entry]),
+    collapses.map((entry) => [collapseAcknowledgmentKey(entry.conceptId, entry.phrase), entry]),
   );
 
   const acknowledged: LexiconCollapseAcknowledgment[] = [];
@@ -246,7 +250,7 @@ export function lexiconInventoryCheck(
       });
     }
     for (const entry of entries) {
-      const live = collapseByKey.get(`${entry.conceptId} ${entry.phrase}`);
+      const live = collapseByKey.get(collapseAcknowledgmentKey(entry.conceptId, entry.phrase));
       if (!live) {
         findings.push({
           message:
@@ -274,10 +278,12 @@ export function lexiconInventoryCheck(
   }
 
   const acknowledgedKeys = new Set(
-    acknowledged.map((entry) => `${entry.conceptId} ${entry.phrase}`),
+    acknowledged.map((entry) => collapseAcknowledgmentKey(entry.conceptId, entry.phrase)),
   );
   for (const collapse of collapses) {
-    if (acknowledgedKeys.has(`${collapse.conceptId} ${collapse.phrase}`)) continue;
+    if (acknowledgedKeys.has(collapseAcknowledgmentKey(collapse.conceptId, collapse.phrase))) {
+      continue;
+    }
     findings.push({
       message:
         `${collapse.conceptId}: "${collapse.phrase}" normalizes to the single token ` +
