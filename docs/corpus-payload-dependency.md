@@ -27,13 +27,32 @@ not on soundness":
 - **Every Phase-4 item's "deferred" list** (plan P4.1–P4.14): each item
   ships its in-corpus portion and encodes its out-of-corpus refs as explicit
   deferrals riding DG-15.
-- **The vacuous ordering guards**: Job 16:2 (`holy-spirit-the-comforter`,
-  "miserable comforters" must never lead), Eccl 1:9 (`new-creation`, "no new
-  thing under the sun" must not lead fresh-start queries), the Prov 18:16
-  watchlist guard, and every `prosperity-*` fixture whose forbidden
-  proof-text is outside the corpus. Their mustNotRank assertions currently
-  pass vacuously — the fixture corpus cannot rank verses it does not
-  contain.
+- **The guard families whose reach the re-pin expands.** Three distinct
+  situations — the assertion type in each is settled, and changing it is
+  Jesse's call, not an implementer's:
+  - **Job 16:2 (`holy-spirit-the-comforter`) and Eccl 1:9 (`new-creation`)**
+    guard by `mustNotLead` + `preferredOrder` — NOT `mustNotRank` — per
+    Jesse's 2026-08-15 audit ruling recorded in both fixtures: these
+    sense-inversion verses are "demoted, never forbidden"; a mustNotRank
+    would forbid an honest lexical result. Those *ordering* assertions
+    currently pass vacuously (Job 16 and Ecclesiastes 1 are absent from the
+    corpus; the Guard vacuity report names both VACUOUS by design), and the
+    re-pin turns them from prose into measured guards. Do not "activate"
+    them by adding mustNotRank — that contradicts the recorded ruling.
+  - **The `prosperity-*` fixtures carry no vacuous assertion today.** Every
+    mustNotRank ref they list (Luke 6:38, Mal 3:10, Phil 4:19, Mark 11:24,
+    John 14:12-14, Josh 1:8) is deliberately IN the 211-chapter corpus —
+    the fixture notes: "precisely so this assertion can fail." The classic
+    out-of-corpus proof-texts (John 10:10; Job 36:11, Prov 18:16,
+    3 John 1:2) are intentionally excluded from the lists to avoid vacuous
+    passes; they are named in `docs/DOCTRINAL-BASIS.md` §3 and become
+    assertable only when the re-pin lands their chapters.
+  - **Prov 18:16 has no guard fixture today** — only a watchlist entry in
+    `ontology/flagged-pairings.yaml` plus the ledger's §0 caution that the
+    PR adding Proverbs 18 should bring a prosperity-family guard with it.
+  What the re-pin unblocks here is *assertion reach* — the guard families
+  gain the verses they were designed to police — not the flipping of any
+  existing assertion from vacuous to active.
 - **The unpardonable-sin trio** (Matt 12:22-32 / Mark 3:22-30 / Luke 12:10):
   the pending fixture `eval/golden/unpardonable-sin.json` and the
   blasphemy-against-the-spirit concept it gates.
@@ -125,8 +144,11 @@ a checksum is never edited in place.
   (`pipeline/fixtures/web-subset.json`).
 - Backlog ledger: at the granularity "each reference entry as printed in the
   ledger's tables, a range or chapter-list entry counting once", the backlog
-  doc enumerates **267 blocked reference entries across 132 table rows**
-  (§1: 18 entries / 14 rows; §2: 52 / 19; §3: 197 / 99). The plan's "338
+  doc enumerates **267 blocked reference entries across 131 table rows**
+  (§1: 18 entries / 13 rows; §2: 52 / 19; §3: 197 / 99). §2's 52 excludes
+  Matt 24:21, which the ledger itself marks "(in corpus)" — in-corpus
+  entries are not blocked, so a naive split's 53 counts one entry too many.
+  The plan's "338
   backlog associations" (F34) was counted at audit time under a finer
   association granularity; the ledger's tables are authoritative for what
   PR-β must carry, and its DoD is a zero-or-enumerated remainder in that
