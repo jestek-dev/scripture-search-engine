@@ -13,6 +13,17 @@ lexicon:
   # Bare word (one-token discount): sexual-purity keeps its multi-word
   # phrases — the bare token's honest home is the general call to holiness.
   - purity
+  # Phase-4 P4.2 extension 2026-08-21 (audit sanct1/sanct2, [VER] §4):
+  # 'sanctified' stems to the token `sanctifi`, but the pastor-register
+  # nouns normalize to themselves ('sanctification' -> `sanctification`,
+  # 'sanctify' -> `sanctify`) — distinct tokens under the one tokenizer, so
+  # neither query could ever fire this concept. Explicitly rejected
+  # alternative: extending the stemmer — the lexicon entry is the
+  # deterministic, reviewable, zero-blast-radius fix. Bare `holiness`
+  # stays OUT here: it belongs to the bare-word inventory item
+  # (P4.11, BLOCKED-coordination with PR #33).
+  - sanctification
+  - sanctify
 anchors:
   - ref: 1 Peter 1:15-16
     sources: [editorial]
@@ -22,6 +33,13 @@ anchors:
     weight: 0.95
   - ref: Psalms 24:3-4
     sources: [editorial]
+    weight: 0.9
+  # Phase-4 P4.2 extension 2026-08-21: "For this is the will of God: your
+  # sanctification, that you abstain from sexual immorality" — the noun's
+  # own definitional sentence. Torrey's SANCTIFICATION outline lists
+  # 1 Thess 4:3 ("God wills all saints to have"; "Mortification of sin.").
+  - ref: 1 Thessalonians 4:3
+    sources: [torrey]
     weight: 0.9
   - ref: 2 Corinthians 7:1
     sources: [torrey]
