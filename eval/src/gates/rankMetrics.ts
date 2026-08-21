@@ -19,6 +19,8 @@ import { createHash } from 'node:crypto';
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 
 import { parseAnchorRef } from '../../../pipeline/src/importers/ontologyImporter.js';
+
+import { APPROVAL_EVIDENCE_PATH_PATTERN } from './probes.js';
 import type { CorpusFixture } from './corpusGolden.js';
 import {
   fail,
@@ -1506,6 +1508,7 @@ function parseThresholdMicro(
   path: string,
   deps: { readonly rankBaselineEstablished: boolean },
   findings: GateFinding[],
+  prematureFindings: GateFinding[],
 ): number | null {
   if (value === null) return null;
   if (!Number.isInteger(value) || (value as number) < 1 || (value as number) > THRESHOLD_MICRO_MAX) {
@@ -1519,26 +1522,35 @@ function parseThresholdMicro(
   if (!deps.rankBaselineEstablished) {
     // The protocol is structural, not procedural: no number may appear here
     // before the independently approved baseline it must be derived from.
-    findings.push(finding(
+    // A value prohibition, not a shape problem — the prohibited value is
+    // coerced to null so it cannot enforce, while the rest of the block
+    // (the category floors above all) stays valid and truthfully reported.
+    prematureFindings.push(finding(
       'rank-quality-premature-threshold',
       `rankQuality.${path} is non-null but no independently approved rank-metrics baseline exists ` +
         `(${RANK_METRICS_BASELINE_PATH} + its approval) — thresholds flip only via the four-step ` +
-        'protocol in docs/governance/probe-baseline-review.md',
+        'protocol in docs/governance/probe-baseline-review.md; the value is not enforced on this run',
     ));
+    return null;
   }
   return value as number;
 }
 
 /**
  * Validates the reviewed `rankQuality` block of eval/budgets.json. Returns
- * null thresholds (and findings) on any structural problem — a gate must
- * never enforce, or skip enforcing, on the strength of a malformed document.
+ * null thresholds (and findings) on any structural shape problem — a gate
+ * must never enforce, or skip enforcing, on the strength of a malformed
+ * document. A prematurely non-null threshold is a value prohibition, not a
+ * shape problem: it rings `rank-quality-premature-threshold` (failing G12)
+ * and is coerced to null in the returned thresholds, so the structurally
+ * valid parts of the block survive and every other finding stays true.
  */
 export function validateRankQualityBlock(
   block: unknown,
   deps: { readonly rankBaselineEstablished: boolean },
 ): { readonly thresholds: RankQualityThresholds | null; readonly findings: readonly GateFinding[] } {
   const findings: GateFinding[] = [];
+  const prematureFindings: GateFinding[] = [];
   if (!isRecord(block)) {
     return {
       thresholds: null,
@@ -1566,7 +1578,7 @@ export function validateRankQualityBlock(
       'rankQuality.ndcg10 must be { overall, perCategory: { <nine battery categories> } }',
     ));
   } else {
-    overall = parseThresholdMicro(ndcg['overall'], 'ndcg10.overall', deps, findings);
+    overall = parseThresholdMicro(ndcg['overall'], 'ndcg10.overall', deps, findings, prematureFindings);
     const categories = ndcg['perCategory'];
     for (const key of commentKeys(categories)) {
       if (!(BATTERY_CATEGORIES as readonly string[]).includes(key)) {
@@ -1583,14 +1595,14 @@ export function validateRankQualityBlock(
         continue;
       }
       perCategory[category] = parseThresholdMicro(
-        categories[category], `ndcg10.perCategory.${category}`, deps, findings,
+        categories[category], `ndcg10.perCategory.${category}`, deps, findings, prematureFindings,
       );
     }
   }
 
-  const mrr10 = parseThresholdMicro(block['mrr10'], 'mrr10', deps, findings);
+  const mrr10 = parseThresholdMicro(block['mrr10'], 'mrr10', deps, findings, prematureFindings);
   const goodOrBetterTop3Rate = parseThresholdMicro(
-    block['goodOrBetterTop3Rate'], 'goodOrBetterTop3Rate', deps, findings,
+    block['goodOrBetterTop3Rate'], 'goodOrBetterTop3Rate', deps, findings, prematureFindings,
   );
 
   const battery = block['battery'];
@@ -1622,7 +1634,10 @@ export function validateRankQualityBlock(
     }
   }
 
-  if (findings.length > 0) return { thresholds: null, findings };
+  // Only shape problems nullify the thresholds; premature-threshold findings
+  // ride along without poisoning the structurally valid parts (their values
+  // are already coerced to null above).
+  if (findings.length > 0) return { thresholds: null, findings: [...findings, ...prematureFindings] };
   return {
     thresholds: {
       ndcg10: { overall, perCategory: perCategory as Record<BatteryCategory, number | null> },
@@ -1630,7 +1645,7 @@ export function validateRankQualityBlock(
       goodOrBetterTop3Rate,
       battery: { categoryFloors: floors as BatteryCategoryFloors },
     },
-    findings,
+    findings: prematureFindings,
   };
 }
 
@@ -1762,8 +1777,6 @@ const RANK_APPROVAL_KEYS = [
   'priorProvenance',
 ] as const;
 
-const EVIDENCE_PATH_PATTERN = /^docs\/reviews\/[A-Za-z0-9][A-Za-z0-9._-]*\.md$/;
-
 function rankApprovalFinding(code: string, message: string): GateFinding {
   return {
     categoryCode: category(code),
@@ -1808,7 +1821,7 @@ function rankApprovalShapeProblems(approval: Record<string, unknown>): string[] 
   const evidence = approval['evidence'];
   check('evidence', isRecord(evidence)
     && Object.keys(evidence).sort().join(',') === 'path,sha256'
-    && typeof evidence['path'] === 'string' && EVIDENCE_PATH_PATTERN.test(evidence['path'])
+    && typeof evidence['path'] === 'string' && APPROVAL_EVIDENCE_PATH_PATTERN.test(evidence['path'])
     && isSha256Hex(evidence['sha256']),
   'a {path, sha256} record naming a docs/reviews/*.md review record');
   check('reviewPacketSha256', isSha256Hex(approval['reviewPacketSha256']),

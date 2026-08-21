@@ -147,6 +147,30 @@ describe('rankQuality block validation', () => {
     expect(blockFindings(block, true)).toBe('');
   });
 
+  it('a premature threshold never poisons the valid parts: floors survive, the value is coerced to null', () => {
+    const { thresholds, findings } = validateRankQualityBlock(allNullBlock({ mrr10: 500000 }), {
+      rankBaselineEstablished: false,
+    });
+    // Exactly the one premature finding — nothing about the floors, which are
+    // present and valid; a finding that misstates the reviewed file is itself
+    // a defect (explanations are part of the contract).
+    expect(findings.length).toBe(1);
+    expect(findings[0]!.message).toContain('mrr10');
+    expect(thresholds).not.toBeNull();
+    expect(thresholds!.battery.categoryFloors).toEqual(FLOORS);
+    // The prohibited value must not enforce on this run.
+    expect(thresholds!.mrr10).toBeNull();
+    expect(thresholds!.ndcg10.overall).toBeNull();
+  });
+
+  it('a shape problem still nullifies the thresholds — a gate must not enforce a malformed document', () => {
+    const { thresholds, findings } = validateRankQualityBlock(allNullBlock({ mrr10: 0.9 }), {
+      rankBaselineEstablished: true,
+    });
+    expect(thresholds).toBeNull();
+    expect(findings.length).toBeGreaterThan(0);
+  });
+
   it('rings on floors missing a category, carrying an extra one, or non-positive', () => {
     const missing = allNullBlock({ battery: { categoryFloors: { ...FLOORS, adversarial: undefined } } });
     expect(blockFindings(missing)).toContain('adversarial');
