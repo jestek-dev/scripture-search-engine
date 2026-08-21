@@ -43,11 +43,25 @@ without a tag stay green.
 
 ## Step 1 — Throwaway-tag rehearsal: signer-pin ACCEPT path
 
-The `--signer-workflow` flag is regex-matched against the signing
-certificate's SAN (cli/cli#9507), and GitHub's docs frame it around reusable
-workflows — so the accept path is *expected* to work for
-`actions/attest-build-provenance@v3` running directly in `mint-artifact.yml`,
-but that is an assertion until this step evidences it.
+How gh actually verifies (read from cli/cli source; load-bearing for both
+this step and Step 2):
+
+- **Any-match over all attestations.** `gh attestation verify` fetches every
+  attestation recorded for the artifact's digest (up to `--limit`, default
+  30) and succeeds when **at least one** satisfies the policy —
+  `LiveSigstoreVerifier.Verify` (verification/sigstore.go) and
+  `VerifyCertExtensions` (verification/extensions.go) both fail only when
+  *zero* attestations verify. There is no "newest attestation" semantics.
+- **The pin is a literal prefix, not a user regex.** `validateSignerWorkflow`
+  (verify/policy.go) builds `https://github.com/<value>`,
+  `regexp.QuoteMeta`-escapes the whole URL (dots literal), and anchors it
+  with `^`. The missing end anchor is what admits the SAN's `@<ref>` suffix
+  (`…/mint-artifact.yml@refs/heads/main`).
+
+GitHub's docs frame `--signer-workflow` around reusable workflows — the
+accept path is *expected* to work for `actions/attest-build-provenance@v3`
+running directly in `mint-artifact.yml`, but that is an assertion until this
+step evidences it.
 
 1. Dispatch `mint-artifact.yml` with `release_tag: v0.0.0-releasetest2`.
    This produces a **draft** release (invisible to consumers) with a real,
@@ -71,24 +85,56 @@ but that is an assertion until this step evidences it.
      | jq '.[0].verificationResult.signature.certificate.subjectAlternativeName'
    ```
 
-   — and switch `release.yml`'s verify step to `--cert-identity` with that
-   full SAN string (same guarantee, no regex), then re-run this step to prove
+   — to see what the certificate really carries, then switch `release.yml`'s
+   verify step to `--cert-identity-regex` pinned to the path prefix:
+
+   ```
+   --cert-identity-regex '^https://github\.com/jestek-dev/scripture-search-engine/\.github/workflows/mint-artifact\.yml@'
+   ```
+
+   (Do **not** use exact `--cert-identity` with the full SAN string: the SAN
+   ends in `@<ref>`, so an exact pin freezes the mint's ref and breaks the
+   day a mint is dispatched from any other ref. The prefix regex gives the
+   same signer guarantee as `--signer-workflow`.) Re-run this step to prove
    the fallback. Do not ship v0.9.0 on an unproven accept path.
 
-## Step 2 — Throwaway-tag rehearsal: signer-pin REJECT path
+## Step 2 — Throwaway rehearsal: signer-pin REJECT path
 
-1. On a throwaway branch, add a minimal `attest-test.yml` workflow with
-   `attestations: write` + `id-token: write` that runs
-   `actions/attest-build-provenance@v3` over the **same** downloaded
-   `content.db` bytes. Dispatch it; delete the branch/workflow afterwards.
-2. Verify the same bytes with the same pinned flags as Step 1.
+Because verification is **any-match over all attestations for a digest**
+(see Step 1), the reject path can NOT be rehearsed by re-attesting the
+Step-1 `content.db` bytes with another workflow: the original mint
+attestation over those bytes is permanent (transparency log + GitHub's
+attestation store; gh has no delete), still satisfies the pin, and the
+pinned verify would **PASS** — proving nothing. The discriminating bytes
+must be bytes that have **never been minted**, so that no attestation
+matching the pin exists for their digest.
 
-   **Expected: FAIL.** The newest attestation over those bytes now comes from
-   `attest-test.yml`; the pin must refuse it. (This is exactly the threat the
-   pin closes: any branch-pushed workflow with `attestations: write` could
-   attest arbitrary bytes that a bare `--repo` check accepts.) For
-   completeness, confirm `gh attestation verify --repo` *without* the
-   `--signer-workflow` flag accepts it — demonstrating the hole existed.
+1. Generate fresh throwaway bytes no mint has ever attested, e.g.
+   `head -c 1024 /dev/urandom > never-minted.bin` (record their sha256).
+2. On a throwaway branch, add a minimal `attest-test.yml` workflow with
+   `attestations: write` + `id-token: write` that produces those bytes
+   (commit them, or generate in-run and log the sha256) and runs
+   `actions/attest-build-provenance@v3` over them. Dispatch it; delete the
+   branch/workflow afterwards.
+3. Verify the fresh bytes with the same pinned flags as Step 1:
+
+   ```bash
+   gh attestation verify never-minted.bin \
+     --repo jestek-dev/scripture-search-engine \
+     --signer-workflow "jestek-dev/scripture-search-engine/.github/workflows/mint-artifact.yml"
+   ```
+
+   **Expected: FAIL (non-zero exit).** The only attestation for those bytes
+   comes from `attest-test.yml`; nothing matches the mint pin, so any-match
+   finds zero verified attestations.
+4. Re-verify the same fresh bytes with `--repo` only (drop
+   `--signer-workflow`).
+
+   **Expected: PASS.** This is exactly the hole the pin closes: any
+   branch-pushed workflow with `attestations: write` can attest arbitrary
+   bytes that a bare `--repo` check accepts. FAIL-with-pin plus
+   PASS-without-pin on the *same* bytes together prove the pin — and only
+   the pin — rejects a foreign signer.
 
 ## Step 3 — [JESSE] Enable immutable releases (J51 / A4)
 
@@ -142,9 +188,13 @@ URLs, accept/reject verdicts, the `immutable: true` API response, the
 ## Exit criteria (mirrors RH-2's DoD)
 
 - [ ] Accept path proven: pinned verify passes against a real mint
-      attestation (or the `--cert-identity` fallback landed and proven).
-- [ ] Reject path proven: an other-workflow attestation over the same bytes
-      fails under the pinned flags.
+      attestation (or the `--cert-identity-regex` prefix fallback landed and
+      proven).
+- [ ] Reject path proven: fresh never-minted bytes, attested only by another
+      workflow, FAIL under the pinned flags and PASS under bare `--repo` —
+      isolating the pin as the thing doing the rejecting. (Re-attesting
+      already-minted bytes proves nothing: verification is any-match, and
+      the permanent mint attestation would still satisfy the pin.)
 - [ ] `immutable: true` observed via the API on a post-toggle release.
 - [ ] `--clobber` against a published immutable release refused.
 - [ ] Re-running release.yml on a published tag is a green no-op.

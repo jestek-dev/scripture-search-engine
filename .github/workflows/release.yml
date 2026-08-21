@@ -137,15 +137,29 @@ jobs:
         # attest arbitrary bytes that --repo alone would accept. Only
         # mint-artifact.yml is supposed to be able to mint bytes.
         #
-        # gh matches the --signer-workflow value as a REGEX against the
-        # signing certificate's SAN (cli/cli#9507). The unescaped dots are
-        # benign today (no sibling path in this repo matches), but re-check
-        # this line if the workflow is ever renamed. --repo is kept as
-        # belt-and-braces. If the accept path ever fails against a real mint
-        # attestation (rehearsal: docs/release-verification-rehearsal.md),
-        # the fallback is `--cert-identity` with the full SAN string read
-        # from `gh attestation verify --format json` — same guarantee, no
-        # regex.
+        # How gh matches the pin (verified against cli/cli source,
+        # pkg/cmd/attestation/verify/policy.go `validateSignerWorkflow`): the
+        # value is NOT treated as a user-supplied regex. gh builds
+        # `https://github.com/<value>`, regexp.QuoteMeta-escapes the whole
+        # URL (dots become literal), and anchors it with `^` — a literal,
+        # prefix-anchored SAN match, stricter than a raw regex. The missing
+        # end anchor is deliberate slack: the SAN carries an `@<ref>` suffix
+        # (…/mint-artifact.yml@refs/heads/main). Re-check this pin if the
+        # workflow file is ever renamed. --repo is kept as belt-and-braces.
+        #
+        # Verification is ANY-MATCH over ALL attestations recorded for the
+        # digest (up to --limit, default 30): gh succeeds when at least one
+        # attestation satisfies the policy. So this step proves "a genuine
+        # mint attestation exists for these bytes" — which is exactly the
+        # property we want — and a later foreign attestation over the same
+        # bytes cannot flip a passing verify to red.
+        #
+        # If the accept path ever fails against a real mint attestation
+        # (rehearsal: docs/release-verification-rehearsal.md), the fallback
+        # is `--cert-identity-regex` pinned to the path prefix
+        # (^https://github\.com/OWNER/REPO/\.github/workflows/mint-artifact\.yml@)
+        # — NOT exact `--cert-identity`, which would freeze the SAN's @<ref>
+        # suffix and break the day a mint runs from a different ref.
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
