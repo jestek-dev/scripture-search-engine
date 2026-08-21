@@ -1,0 +1,33 @@
+{
+  "id": "doubt",
+  "query": "doubt",
+  "additionalQueries": [
+    "help my unbelief"
+  ],
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (prior-plan 1.9 remainder; re-verified 2026-08-21 sweep).",
+    "No concept, no fixture; the hermetic run answers 'doubt' with",
+    "token_overlap accidents (Matt 28:17 'some doubted' #1) and no curated",
+    "chip. Specification for a future doubt pack, anchors re-cut to the",
+    "fixture corpus: Mark 9:23-24 ('I believe; help my unbelief') and",
+    "Jas 1:5-6 present. Mark 9:24 carries the pastoral register — Jesus",
+    "meets doubters, He does not scold them — until the Thomas narrative",
+    "lands. requiredReasonLabel absent until the label is approved; the",
+    "pack's tone is the prior plan's own merge-checklist question ('doubt's",
+    "tone matches how LH pastors doubters').",
+    "Corpus-deferred: Matt 14:29-31, John 20:26-29 (Matthew 14, John 20",
+    "absent — re-pin payload)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Mark 9:23-24",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "James 1:5-6"
+  ]
+}

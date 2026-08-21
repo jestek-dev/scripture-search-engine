@@ -1,0 +1,49 @@
+{
+  "id": "caring-for-aging-parents",
+  "query": "caring for a dying parent",
+  "additionalQueries": [
+    "my mother is dying",
+    "my father is dying",
+    "caring for aging parents",
+    "watching a parent die"
+  ],
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (audit F11 / fn13, FLAG-FOR-JESSE #7; re-verified",
+    "2026-08-21 sweep). The audit's one confidently-WRONG concept fire,",
+    "reproduced exactly on the hermetic bed: 'caring for a dying parent'",
+    "returns 'Theme: Raising children' anchors at #1-#4 (Col 3:20, Eph 6:4,",
+    "Col 3:21, Deut 6:6-7) — child-discipline verses for a person watching",
+    "a parent die. Mechanism: parenting.yaml's bare 'parenting' cue stems",
+    "to 'parent' and no caregiving concept competes. Specification for a",
+    "future caring-for-aging-parents pack (gated on approval item A2:",
+    "FLAG #7 confirmation, anchors, and the Ps 116:15 global-gate",
+    "question). The preferredOrder guard against Eph 6:4 is machine-",
+    "checkable today (Ephesians 6 is in the fixture corpus) and FAILS on",
+    "main; the equivalent Prov 22:6 guard is corpus-blocked (Proverbs 22",
+    "absent) and rides the re-pin payload with Isa 46:4 and Ps 71:9,18.",
+    "requiredReasonLabel deliberately absent until Jesse approves the",
+    "pack's label."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Corinthians 1:3-4",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "2 Corinthians 1:3-4",
+      "below": "Ephesians 6:4",
+      "withinTop": 10
+    }
+  ],
+  "alsoAcceptable": [
+    "Psalms 73:26",
+    "Psalms 23:4",
+    "Romans 8:38-39",
+    "1 Thessalonians 4:13-14"
+  ]
+}

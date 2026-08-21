@@ -1,0 +1,36 @@
+{
+  "id": "shepherd-psalm-guard",
+  "query": "the Lord is my shepherd",
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (audit ph6-B; re-verified 2026-08-21 sweep). The quoted",
+    "psalm leads (Ps 23:1 #1, exact_phrase) but ranks #2-#4 are 'Theme:",
+    "God's guidance' anchors (Ps 32:8, Eph 5:17, Ps 37:23) reached only",
+    "through the single-token collapse of guidance's lexicon phrase 'the",
+    "will of the lord' to the token 'lord' — an unrelated theme crowding",
+    "the top of a psalm-quote query. Specification for the bare-word/",
+    "collapse inventory's measured-harm cleanup: reword the collapsing",
+    "guidance phrase to a >=2-token phrasing and hold this guard. The",
+    "mustNotLead entry names the top measured hijacker; it FAILS on main",
+    "today (Ps 32:8 at #2) and passes when the reword lands. Psalm 23 is",
+    "in the fixture corpus, so every assertion here is machine-checkable",
+    "now. Activates with the inventory item; guidance's legitimate own",
+    "queries are asserted by its own fixture, which must stay green",
+    "through the reword."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 23:1",
+      "withinTop": 1,
+      "requiredReasonFamily": "exact_phrase"
+    }
+  ],
+  "expectedWithinTop": 1,
+  "mustNotLead": [
+    {
+      "reference": "Psalms 32:8",
+      "withinTop": 3,
+      "why": "guidance anchor reached only via the 'lord' single-token collapse of 'the will of the lord' (audit ph6-B); a quoted-psalm query's top-3 belongs to the psalm, not an unrelated theme's anchor list"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "christ-the-cornerstone",
+  "query": "christ the cornerstone",
+  "additionalQueries": [
+    "cornerstone"
+  ],
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (prior-plan 1.9 remainder; re-verified 2026-08-21 sweep).",
+    "No concept, no fixture; the hermetic run answers 'cornerstone' with",
+    "three token_overlap rows and 'christ the cornerstone' with a",
+    "translation_variant accident at #1 — no curated chip. Specification",
+    "for a future christ-the-cornerstone pack, anchors re-cut to the",
+    "fixture corpus: 1 Pet 2:4-7, Eph 2:19-22, Acts 4:11 present (all",
+    "editorial — the prior plan verified no admitted source carries the",
+    "topic). The lexicon keeps 'foundation'/'rock' OUT so G4 against",
+    "building-on-the-rock stays clean (the prior plan's explicit guard).",
+    "requiredReasonLabel absent until the label is approved.",
+    "Corpus-deferred: Ps 118:22, Isa 28:16, Matt 21:42 (Psalms 118,",
+    "Isaiah 28, Matthew 21 absent — re-pin payload)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Peter 2:4-7",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ephesians 2:19-22",
+    "Acts 4:11"
+  ]
+}

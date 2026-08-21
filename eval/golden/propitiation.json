@@ -1,0 +1,39 @@
+{
+  "id": "propitiation",
+  "query": "propitiation",
+  "additionalQueries": [
+    "atoning sacrifice"
+  ],
+  "status": "pending",
+  "coversConcepts": [
+    "the-cross"
+  ],
+  "note": [
+    "GAP FIXTURE (audit th2, 2026-08-20; re-verified 2026-08-21 sweep).",
+    "'propitiation' appears in no WEB verse (verified corpus-wide on the",
+    "31,098-verse replay bed), so lexical retrieval is structurally",
+    "impossible; the hermetic run returns three passage_terms rows and no",
+    "curated chip. Specification for extending the-cross with lexicon",
+    "entries 'propitiation' and 'atoning sacrifice' (the WEB's own wording",
+    "at 1 John 2:2 / 4:10). Rom 3:25 and Heb 2:17 are the fuller answer and",
+    "are corpus-blocked (Romans 3, Hebrews 2 absent) — promoted with the",
+    "re-pin payload. Bare 'atonement' was verified CLOSED by existing data",
+    "in the same sweep (Rom 5:8 / John 1:29 / 1 John 2:2 top-3, all with",
+    "'Theme: The cross and atonement' chips) — the pack item pins that with",
+    "an active assertion; this fixture deliberately does not carry it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 John 2:2",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The cross and atonement"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 John 4:10",
+    "Isaiah 53:5",
+    "Romans 5:8"
+  ]
+}

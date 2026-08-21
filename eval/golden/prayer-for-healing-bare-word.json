@@ -1,0 +1,36 @@
+{
+  "id": "prayer-for-healing-bare-word",
+  "query": "healing",
+  "status": "pending",
+  "coversConcepts": [
+    "prayer-for-healing"
+  ],
+  "note": [
+    "GAP FIXTURE (audit F13 / sw6; re-verified 2026-08-21 sweep). Bare",
+    "'healing' is lexical-only on the hermetic bed: five token_overlap rows",
+    "lead (Matt 19:2 #1) and no curated chip appears, because",
+    "pastoral-prayer-for-healing.yaml carries five multi-word phrases and",
+    "no bare word. Specification for the bare-word closure: lexicon entry",
+    "'- healing' on the existing pack (concept id prayer-for-healing — id",
+    "and filename differ). That entry extends the NEEDS-JESSE single-token",
+    "exception to a pack's own subject noun and is gated on the bare-word",
+    "inventory approval item (A6); this fixture is the measured-gap record",
+    "meanwhile. Folds into the active pastoral-healing.json as an",
+    "additionalQueries assertion when that item lands; this file then",
+    "retires."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 5:13-16",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Prayer for healing"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jeremiah 17:14",
+    "Psalms 103:2-3",
+    "Psalms 147:3"
+  ]
+}

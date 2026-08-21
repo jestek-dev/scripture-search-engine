@@ -1,0 +1,38 @@
+{
+  "id": "justification-by-faith",
+  "query": "justified by faith",
+  "additionalQueries": [
+    "justification",
+    "declared righteous",
+    "how can I be right with God"
+  ],
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (audit th1, 2026-08-20; re-verified 2026-08-21 sweep —",
+    "docs/research/2026-08-21-audit-gap-verification.md). Bare",
+    "'justification' returns passage_terms accidents (Ps 40:9 #1); 'justified",
+    "by faith' finds Gal 3:24 / Rom 5:1 by exact_phrase only — no concept",
+    "names the doctrine anywhere in ontology/concepts/. Specification for a",
+    "future justification-by-faith pack: Rom 5:1 leads with a curated chip.",
+    "Label 'Justified by faith' is the proposal on the doctrinal-wave",
+    "approval batch; Jesse fixes the final wording there. No coversConcepts",
+    "until the concept exists (a dangling claim is a structural failure).",
+    "Corpus-deferred to the re-pin payload: Rom 3:21-26, Rom 3:28, Rom 4:5,",
+    "Gal 2:16 (Romans 3-4, Galatians 2 absent from the fixture corpus)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 5:1",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Justified by faith"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 8:1",
+    "Romans 8:33-34",
+    "Galatians 3:24",
+    "Titus 3:7"
+  ]
+}
