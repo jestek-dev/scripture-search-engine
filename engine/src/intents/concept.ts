@@ -42,9 +42,23 @@ function conceptMatchStrength(
   matchedTokenCount: number,
   queryTokenCount: number,
 ): number {
+  // Full-query parity (0.10.0 stage 3): when the concept's normalized phrase
+  // accounts for EVERY significant token of the query — count equality
+  // implies set equality, because matchConcepts only matches phrases whose
+  // normalized tokens all occur among the query tokens — and is at least two
+  // tokens wide, specificity is 1. The query IS the phrase; docking it for
+  // being stored as a two-token entry made a weight-1.0 anchor worth 28 of
+  // its 40 points and let a tapered verbatim rebuke outrank the instituting
+  // passage a human curated. One- and zero-token matches keep the graded
+  // specificity: parity for a bare word would undo the thin-cue design.
+  // Deliberate, measured consequence: a stopword-heavy query that collapses
+  // to the same significant tokens as a remembered-phrasing lexicon entry
+  // gets parity — there is one tokenizer, and a query whose meaning collapses
+  // to two tokens IS a two-token query.
+  const parity = matchedTokenCount >= 2 && matchedTokenCount === queryTokenCount;
   return (
     Math.max(0, Math.min(1, anchorWeight)) *
-    conceptSpecificity(matchedTokenCount) *
+    (parity ? 1 : conceptSpecificity(matchedTokenCount)) *
     conceptCoverage(matchedTokenCount, queryTokenCount)
   );
 }

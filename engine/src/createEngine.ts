@@ -24,6 +24,7 @@ import {
   queryIdfTotal,
   referenceLabel,
   significantWords,
+  subsumeCompletePhraseRestatements,
   targetIdFor,
   tokenEvidence,
 } from './intents/lexical.js';
@@ -155,6 +156,11 @@ export async function createEngine(
     const verses = new Map<string, ScriptureVerse>();
     // targetId -> the curated anchor spans that produced it.
     const anchorSpans = new Map<string, Set<string>>();
+    // Targets whose evidence carries a COMPLETE whole-query exact_phrase
+    // match, marked for the complete-match subsumption at candidate merge
+    // (0.10.0 stage 3): their token_overlap/proximity evidence restates what
+    // the verbatim match already fully asserts. Fragments never mark.
+    const completePhraseTargets = new Set<string>();
     const contributions: { verse: ScriptureVerse; evidence: ReturnType<typeof tokenEvidence> }[] =
       [];
 
@@ -165,14 +171,25 @@ export async function createEngine(
     // badge it has not earned.
     if (query.trim().includes(' ')) {
       const whole = await repository.searchPhrase(query);
-      const queryWords = query.trim().split(/\s+/).filter(Boolean).length;
       if (whole.length > 0) {
+        // Whole-match authority is measured in SIGNIFICANT words (0.10.0
+        // stage 3), mirroring what the fragment branch has done since 0.8.0:
+        // "the cross" is two raw words but one unit of meaning, and granting
+        // it full 60-point authority let verbatim occurrences in negative
+        // context outrank the curated anchors. Deliberately NO raw-count
+        // fallback here (unlike the fragment branch, which needs one to
+        // avoid dividing by zero): an all-stopword verbatim match is the
+        // token intent wearing an authoritative badge, exactly what the
+        // taper demotes — phraseEvidence files anything under two
+        // significant words as token_overlap.
+        const querySignificant = significantWords(query).length;
         for (const match of whole) {
+          const evidence = phraseEvidence(query.trim(), querySignificant, querySignificant);
           verses.set(targetIdFor(match), match);
-          contributions.push({
-            verse: match,
-            evidence: [phraseEvidence(query.trim(), queryWords, queryWords)],
-          });
+          if (evidence.family === 'exact_phrase') {
+            completePhraseTargets.add(targetIdFor(match));
+          }
+          contributions.push({ verse: match, evidence: [evidence] });
         }
       } else {
         const fragment = await searchLongestFragment(repository, query);
@@ -349,10 +366,16 @@ export async function createEngine(
     // inside the top 25 becomes one row, and the three freed slots stay empty
     // while genuinely different passages sit just outside the window.
     const limit = options.rankOptions?.limit ?? DEFAULT_LIMIT;
-    const ranked = rank(mergeCandidates(contributions), {
-      ...options.rankOptions,
-      limit: limit + COLLAPSE_HEADROOM,
-    });
+    const ranked = rank(
+      // Complete-match subsumption (0.10.0 stage 3): a complete whole-query
+      // exact_phrase match drops its same-token token_overlap/proximity
+      // restatement before ranking. See subsumeCompletePhraseRestatements.
+      subsumeCompletePhraseRestatements(mergeCandidates(contributions), completePhraseTargets),
+      {
+        ...options.rankOptions,
+        limit: limit + COLLAPSE_HEADROOM,
+      },
+    );
     return collapseAnchorRuns(
       ranked.map((result) => {
         const verse = verses.get(result.targetId)!;

@@ -26,11 +26,13 @@ export {
 } from './corpus/repository.js';
 
 export {
+  EXACT_PHRASE_FULL_AUTHORITY_WORDS,
   groupIdFor,
   mergeCandidates,
   phraseEvidence,
   queryIdfTotal,
   referenceLabel,
+  subsumeCompletePhraseRestatements,
   targetIdFor,
   tokenEvidence,
 } from './intents/lexical.js';

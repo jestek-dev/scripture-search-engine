@@ -93,6 +93,48 @@ describe('isThinBareWordConceptCue', () => {
   });
 });
 
+describe('full-query parity (0.10.0 stage 3, via conceptAnchorEvidence)', () => {
+  const weighted = (weight: number) => ({ ...anchor, weight });
+
+  it('grants specificity 1 when a two-token match accounts for the whole query: strength becomes exactly the anchor weight', () => {
+    expect(conceptAnchorEvidence(weighted(1), 2, 2).strength).toBe(1);
+    // The measured Acts 2:42 shape: a 0.7-weight co-anchor at parity is
+    // worth 0.7 x 40 = 28 points, not 0.7 x 0.7 x 40.
+    expect(conceptAnchorEvidence(weighted(0.7), 2, 2).strength).toBeCloseTo(0.7, 10);
+  });
+
+  it('grants parity at any width of two or more when matched == query', () => {
+    expect(conceptAnchorEvidence(weighted(1), 3, 3).strength).toBe(1);
+    expect(conceptAnchorEvidence(weighted(1), 4, 4).strength).toBe(1);
+  });
+
+  it('never grants parity to a one-token match, even for a one-token query — the thin-cue design stays intact', () => {
+    // specificity 0.55, coverage 1.
+    expect(conceptAnchorEvidence(weighted(1), 1, 1).strength).toBeCloseTo(0.55, 10);
+  });
+
+  it('keeps graded specificity when the match covers only part of the query', () => {
+    // matched 2 of 3: specificity 0.7, coverage sqrt(2/3) — no parity.
+    expect(conceptAnchorEvidence(weighted(1), 2, 3).strength).toBeCloseTo(
+      0.7 * Math.sqrt(2 / 3),
+      10,
+    );
+  });
+
+  it('applies the same parity to weak cues, keeping the cue/anchor strength formulas identical', () => {
+    expect(conceptCueEvidence(weighted(0.7), 2, 2).strength).toBe(
+      conceptAnchorEvidence(weighted(0.7), 2, 2).strength,
+    );
+  });
+
+  it('is deterministic across repeated calls', () => {
+    const first = conceptAnchorEvidence(weighted(0.7), 2, 2).strength;
+    for (let i = 0; i < 3; i += 1) {
+      expect(conceptAnchorEvidence(weighted(0.7), 2, 2).strength).toBe(first);
+    }
+  });
+});
+
 describe('conceptCueEvidence', () => {
   it('uses the weak family while preserving the concept label and provenance', () => {
     const evidence = conceptCueEvidence(anchor, 1, 5);

@@ -32,7 +32,8 @@
     "starts passing cannot go unnoticed.",
     "2026-08-08 single-token audit: the bare query \"obedience\" is asserted alongside the phrase query. Before this the curated concept was reachable only by a multi-word phrase, so the most common way a user types this theme bypassed Layer A entirely and fell back to keyword matching.",
     "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts. Observed #1 for both queries is Matthew 7:24-27 (James 1:22 sits at #2 for the phrase query and #5 for \"obedience\"), so the top-1 pin goes to the observed leader. If James 1:22 SHOULD lead, that is a ranking/data change and belongs to ranking-fixes or lexicon-concepts, not here.",
-    "Round-2 book admission 2026-08-18: obedience-to-the-word gained the keep-my-commandments family (see obedience-keep-my-commandments.json for the asserting fixture)."
+    "Round-2 book admission 2026-08-18: obedience-to-the-word gained the keep-my-commandments family (see obedience-keep-my-commandments.json for the asserting fixture).",
+    "2026-08-21 ranking-fixes 0.10.0 stage 3 (P3.3 full-query parity): the query's significant tokens equal the concept phrase's, so every co-anchor now scores weight x 40 instead of weight x 28 - co-anchors order by their CURATED weights at full scale, and the 2026-08-17 observed pins (held by a 0.12-point lexical-corroboration margin) no longer describe the output: measured post-stage-3, James 1:22 (weight 1.0, the concept's highest-weighted anchor) leads at 60.43 with Matthew 7:24 at 59.94. Per this fixture's own 2026-08-17 provision, the ranking-fixes change re-cuts the observed pins: the Matthew top-1 window widens to 3 and the Matthew-above-James pair is WITHDRAWN rather than flipped - asserting James-first would encode a pastoral preference nobody has ruled on. Whether Matthew 7:24-27 SHOULD lead is flagged for Jesse's PR-2 review with these numbers; if he rules yes, the remedy is a data-side weight adjustment (his call), and the pins re-tighten to his ruling. Windows deliberately leave room for the stage-4 xref-suppression re-measure, which moves the same rows again."
   ],
   "expectedTop": [
     {
@@ -43,7 +44,7 @@
     },
     {
       "reference": "Matthew 7:24-27",
-      "withinTop": 1,
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Hearing and doing"
     },
@@ -60,11 +61,6 @@
       "above": "Matthew 7:24-27",
       "below": "Luke 6:46-49",
       "withinTop": 3
-    },
-    {
-      "above": "Matthew 7:24-27",
-      "below": "James 1:22-25",
-      "withinTop": 5
     }
   ],
   "alsoAcceptable": [
