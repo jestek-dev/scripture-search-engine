@@ -28,8 +28,12 @@
  * |                                 | malformed approval; binding mismatches; stale identity;      |
  * |                                 | changed-ordering-without-bump; regenerate tripwire; clean    |
  * |                                 | pass) + v2 tampers (blank reviewer/independence, evidence    |
- * |                                 | digest) + v1 grandfather/sunset                              |
+ * |                                 | digest) + v1 grandfather/sunset. Rule 5 owns the ordering    |
+ * |                                 | half of the G8 division-of-labor pair (see probes.ts row)    |
  * | probes.ts (G8/G11)              | adversarial silence; top-10 churn; weak-signal rise;         |
+ * |                                 | permuted same-set top-10 passes with churn 0 — ordering is   |
+ * |                                 | G2's job (failing half: rule-5 permutation, pinned in        |
+ * |                                 | ordering-snapshot.test.ts);                                  |
  * |                                 | baseline-approval tampers (missing, malformed v2, digest,    |
  * |                                 | v1 retired/not-grandfathered, blank attestations);           |
  * |                                 | G11 p95 breach + empty-probe N/A-never-pass edge             |
@@ -76,6 +80,11 @@
  * arithmetic to the end-to-end gauntlet run. Extracting sizeGate into
  * eval/src/gates/ is Phase-3 refactor territory, noted here so the gap reads
  * as a decision rather than an oversight.
+ *
+ * Likewise the --expect-no-effect coverage rings the single-token grammar and
+ * the exit-code contract; the YAML side that derives the flag from the diff
+ * shape lives in .github/workflows/gauntlet.yml and is not unit-reachable —
+ * it is exercised only by the workflow itself (E3's verification territory).
  *
  * Every mutation is synthetic and in-test. No committed reviewed data —
  * baselines, approvals, YAMLs, fixtures — is modified or regenerated here.
@@ -731,6 +740,29 @@ describe('noiseGate mutations', () => {
     });
     expect(result.status).toBe('fail');
     expect(categories(result)).toContain('sse.gauntlet.v1.finding.g8-noise-probes.top-results-churn');
+  });
+
+  it('division of labor: the same top-10 permuted is churn 0 — G8 stays green, ordering is G2 territory', () => {
+    // churn() is set-based by design: a reversed-but-identical top-10 drops
+    // nothing, so G8 passes with churn 0. The failing half of this pair —
+    // the same permutation ringing as a defect — is G2's rule-5 permutation
+    // case (ordering-snapshot.test.ts, '#2 and #1 swapped'). Together they
+    // pin the division of labor: G8 owns set membership, G2 owns order.
+    const before = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+    const baseline: ProbeBaseline = {
+      corpusFingerprint: HEX_A,
+      layerFingerprint: HEX_B,
+      engineVersion: '1.0.0',
+      observations: [observation({ id: 'p1', top: before, resultCount: 10 })],
+    };
+    const result = noiseGate({
+      probes: [{ id: 'p1', query: 'q', kind: 'broad' }],
+      observations: [observation({ id: 'p1', top: [...before].reverse(), resultCount: 10 })],
+      baseline,
+      thresholds,
+    });
+    expect(result.status).toBe('pass');
+    expect(result.metrics?.['maxChurnRatio']).toBe(0);
   });
 
   it('rings when weak signals rise past the budget — precision erosion made visible', () => {
