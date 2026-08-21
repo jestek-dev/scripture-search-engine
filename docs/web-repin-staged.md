@@ -49,11 +49,29 @@ precomputed term profile can move) and assigns the pre-declared outcome class:
 2 class (c). The class outcome and both delta reports go in the PR body
 (RH-3 DoD item (f)).
 
+Label caveat: "typography-only" is operationally **token identity** under the
+one tokenizer, which is broader than typography — stopword swaps (`he`→`she`)
+and inflection folds (`obeys`→`obeyed`) also tokenize identically and land in
+class (a). The report prints both halves of every such pair and its class-(a)
+outcome line says to skim them; the failure direction is conservative
+(anything the tokenizer cannot prove identical is GENUINE, never the
+reverse).
+
 Witness honesty: the subset witness covers the 211-chapter fixture corpus
 only, so `delta-vs-subset.md` proves or disproves changes **inside the
 corpus the gates measure**; verses outside it are out of the witness's sight,
 and only the recovered old full payload can widen the comparison. Say which
-witness a claim rests on.
+witness a claim rests on. That blind spot reaches into fixture scope itself:
+**20 golden-fixture-asserted verses lie outside the subset witness** (as of
+2026-08-21 — among them Job 16:2, Ecclesiastes 1:9, Romans 3:23–24,
+1 Corinthians 3:10–15, Psalms 90:17, Matthew 12:31–32, Mark 3:28–29), so an
+IDENTICAL/(a)/(b) verdict against the subset is **not** full-fixture-scope
+proof. The delta report computes and prints the exact list next to its
+verdict ("fixture-scope verses NOT carried by this witness"). Consequence for
+A5b: a sign-off taken on the subset witness signs off ONLY the witnessed
+scope — the unwitnessed fixture refs are re-verified either by the recovered
+old full payload (if the J52 archive search succeeds) or, failing that, only
+post-re-pin, by the gauntlet against the re-pinned corpus.
 
 ### Smoke-test evidence (2026-08-21, evidence only — NOT a pin)
 
@@ -61,8 +79,9 @@ A one-time live capture on 2026-08-21 ~08:37Z, used to prove the tooling on
 real bytes (payload not committed anywhere):
 
 - archive sha256 `b6f55cc787b1201b68dcfde8a1216e1a61ae6b3cc38748456cf58bdb5e95fc1c`,
-  4,281,529 B — the fourth/fifth observed upstream hash, unchanged since the
-  2026-08-21 intake observation;
+  4,281,529 B — the fourth distinct upstream hash observed since 2026-08-14
+  (fifth distinct overall, counting the 2026-07-29 pin `3458ca34…`), unchanged
+  since the 2026-08-21 intake observation;
 - unpacked content fingerprint
   `944e3883ca8120cdd6c62c0524ce45f156c9b48bd19d98bc0b7cce8524cf475b`
   (matches the drift sentinel's observation; ≠ pinned `335445ef…`);
@@ -76,7 +95,8 @@ real bytes (payload not committed anywhere):
 
 Read carefully: within everything the fixture corpus witnesses, the 2026-08
 drift is **not** verse-text change. Whether verse text moved *outside* the
-211 witnessed chapters, or only the non-verse site files
+211 witnessed chapters (including the 20 unwitnessed fixture-scope refs the
+witness-honesty paragraph above names), or only the non-verse site files
 (`engwebp_about.htm`, `haiola.css`, the `.sql`/`.xml` renderings) moved,
 cannot be decided without the old full payload — which is exactly what the
 J52 archive search is for, and exactly the sensitivity trade J53 prices.

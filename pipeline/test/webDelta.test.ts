@@ -347,6 +347,89 @@ describe('runWebDelta (file-level CLI behavior)', () => {
     expect(result.report).toContain('1 textless reference');
   });
 
+  it('under a subset witness the report names every fixture-asserted verse the witness does not carry', () => {
+    // The dangerous misreading this pins against: a subset witness compares
+    // only what it carries, so an IDENTICAL verdict printed under a "golden
+    // fixture scope: N refs" line invites "no fixture-asserted verse
+    // changed" — when fixture-asserted verses outside the witness were never
+    // compared at all. The report must name them, right next to the verdict.
+    const dir = join(TMP, 'golden-coverage');
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(
+      join(dir, 'fixture.json'),
+      JSON.stringify({
+        id: 'fixture',
+        expectedTop: [{ reference: 'John 15:4' }],
+        alsoAcceptable: ['Genesis 1:1', 'Job 16:2'], // neither is in the witness
+      }),
+    );
+    const subset = {
+      $schema: 'verse-array-subset/1',
+      generatedFrom: { translation: 'WEB', sourceSha256: 'f'.repeat(64), note: 'synthetic' },
+      selection: [],
+      verses: [
+        { book_name: 'John', book: 43, chapter: 15, verse: 4, text: 'Remain in me, and I in you.' },
+      ],
+    };
+    const oldPath = write('old-coverage.json', JSON.stringify(subset));
+    const newPath = write('new-coverage.txt', 'JOH 15:4 Remain in me, and I in you.\n');
+    const result = runWebDelta({ oldPath, newPath, goldenDir: dir, check: true });
+    // The verdict is IDENTICAL over the witnessed scope...
+    expect(result.exitCode).toBe(0);
+    expect(result.classification.outcome).toBe('identical');
+    // ...and the report says exactly which fixture-asserted verses that
+    // verdict does NOT cover, by name, with the never-compared warning.
+    expect(result.report).toContain('fixture-scope verses NOT carried by this witness: 2');
+    expect(result.report).toContain('Genesis 1:1');
+    expect(result.report).toContain('Job 16:2');
+    expect(result.report).toContain('NEVER COMPARED');
+    expect(result.report).toContain('NOT full-fixture-scope proof');
+    expect(result.witnessCoverage?.unwitnessedVerses.map((id) => formatRef(id))).toEqual([
+      'Genesis 1:1',
+      'Job 16:2',
+    ]);
+  });
+
+  it('flags a golden whole-chapter ref the subset witness carries only partially', () => {
+    const dir = join(TMP, 'golden-coverage-chapter');
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(
+      join(dir, 'fixture.json'),
+      JSON.stringify({
+        id: 'fixture',
+        referenceExpectations: [{ query: 'psalm 23', expectedPassage: 'Psalms 23' }],
+      }),
+    );
+    const subset = {
+      $schema: 'verse-array-subset/1',
+      generatedFrom: { translation: 'WEB', sourceSha256: 'f'.repeat(64), note: 'synthetic' },
+      selection: [],
+      verses: [
+        // Only 1 of Psalm 23's 6 verses: the chapter-scope assertion is
+        // witnessed at one-sixth strength and the report must say so.
+        { book_name: 'Psalms', book: 19, chapter: 23, verse: 1, text: 'Yahweh is my shepherd.' },
+      ],
+    };
+    const oldPath = write('old-coverage-ch.json', JSON.stringify(subset));
+    const newPath = write('new-coverage-ch.txt', 'PSA 23:1 Yahweh is my shepherd.\n');
+    const result = runWebDelta({ oldPath, newPath, goldenDir: dir, check: true });
+    expect(result.report).toContain('PARTIALLY carried');
+    expect(result.report).toContain('Psalms 23 (1/6 verses)');
+    expect(result.witnessCoverage?.partialChapters).toEqual([
+      { key: '19:23', ref: 'Psalms 23', witnessed: 1, expected: 6 },
+    ]);
+  });
+
+  it('prints no witness-coverage lines for a full-payload comparison', () => {
+    // Full payloads compare everything; a coverage disclaimer there would be
+    // noise that trains readers to skip the real one.
+    const oldPath = write('old-full.txt', OLD_VPL);
+    const newPath = write('new-full.txt', OLD_VPL);
+    const result = runWebDelta({ oldPath, newPath, goldenDir, check: false });
+    expect(result.witnessCoverage).toBeNull();
+    expect(result.report).not.toContain('NOT carried by this witness');
+  });
+
   it('report names both payloads by sha256 so it can stand as PR evidence', () => {
     const oldPath = write('old-d.txt', OLD_VPL);
     const newPath = write('new-d.txt', OLD_VPL);

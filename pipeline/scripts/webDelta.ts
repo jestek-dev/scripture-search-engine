@@ -11,7 +11,13 @@
  * typography-only vs genuine revisions using the ONE tokenizer (CLAUDE.md #4
  * — the same `tokenStream` the pipeline and runtime index with, so
  * "typography-only" means precisely "no precomputed term profile can move"),
- * and assigns the re-pin's pre-declared outcome class:
+ * and assigns the re-pin's pre-declared outcome class. Limitation, stated
+ * where the label is defined: "typography-only" is operationally TOKEN
+ * IDENTITY, which is broader than typography — stopword swaps (he→she) and
+ * inflection folds (obeys→obeyed) also tokenize identically. The report
+ * prints both halves of every such change and its class-(a) line says to skim
+ * them; the failure direction is conservative (anything the tokenizer cannot
+ * prove identical is GENUINE, never the reverse). The classes:
  *
  *   (a) typography-only        -> proceed with the re-pin;
  *   (b) genuine revisions in   -> list goes to Jesse for review (J52/A5c)
@@ -37,7 +43,10 @@
  *
  * `--old` / `--new` each accept a verse-array-subset JSON, a VPL .txt, or a
  * .zip containing one. When the old witness is a subset, comparison is
- * restricted to the witness's verses (a subset cannot measure adds).
+ * restricted to the witness's verses (a subset cannot measure adds) — and the
+ * report then states which golden-fixture-asserted verses lie OUTSIDE the
+ * witness, so an IDENTICAL/(a)/(b) verdict over a subset is never mistaken
+ * for full-fixture-scope proof.
  * `--check` makes the exit code machine-readable: 0 identical, 1 any
  * difference (class a/b), 2 class (c). Without `--check` the exit code is
  * always 0 — the report is the product.
@@ -55,6 +64,7 @@ import { tokenStream } from '@jestek-dev/scripture-engine';
 import { BOOKS, findBook } from '../src/books.js';
 import { importVpl } from '../src/importers/vplImporter.js';
 import { makeVerseId, parseVerseId } from '../src/verseId.js';
+import { KJV_VERSES_PER_CHAPTER } from '../src/versification/kjv.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -271,6 +281,73 @@ export function collectGoldenScope(dir: string): GoldenScope {
 }
 
 // ---------------------------------------------------------------------------
+// Witness coverage of the golden scope
+// ---------------------------------------------------------------------------
+
+export interface PartialChapter {
+  /** "bookId:chapter" key, as stored in FixtureScope.chapters. */
+  readonly key: string;
+  /** Human form, e.g. "Psalms 23". */
+  readonly ref: string;
+  /** Verses of the chapter the witness carries with text. */
+  readonly witnessed: number;
+  /** Verses the chapter has under KJV versification. */
+  readonly expected: number;
+}
+
+export interface WitnessCoverage {
+  /** Golden-scope exact verses the witness does not carry, sorted by id. */
+  readonly unwitnessedVerses: readonly number[];
+  /** Golden whole-chapter refs the witness carries only partially (or not at all). */
+  readonly partialChapters: readonly PartialChapter[];
+}
+
+/**
+ * Which golden-fixture-asserted verses a subset witness CANNOT compare.
+ * Under a subset witness the delta verdict is proven only over the verses the
+ * witness carries; a fixture-asserted verse outside the witness was never
+ * compared, so an IDENTICAL/(a)/(b) verdict says nothing about it. The report
+ * must name those refs, or the verdict invites the reading "no fixture-
+ * asserted verse changed" — the same misreading shape the null-scope path
+ * already guards against. Chapter-only refs are checked against KJV
+ * versification (the repo's canonical verse-count table); both counts are
+ * printed so a versification mismatch would be visible, never silent.
+ */
+export function computeWitnessCoverage(
+  scope: FixtureScope,
+  witnessIds: ReadonlySet<number>,
+): WitnessCoverage {
+  const unwitnessedVerses = [...scope.verses]
+    .filter((verseId) => !witnessIds.has(verseId))
+    .sort((a, b) => a - b);
+
+  const witnessedPerChapter = new Map<string, number>();
+  for (const verseId of witnessIds) {
+    const { bookId, chapter } = parseVerseId(verseId);
+    const key = `${bookId}:${chapter}`;
+    if (scope.chapters.has(key)) {
+      witnessedPerChapter.set(key, (witnessedPerChapter.get(key) ?? 0) + 1);
+    }
+  }
+  const partialChapters: PartialChapter[] = [];
+  for (const key of [...scope.chapters].sort()) {
+    const [bookId, chapter] = key.split(':').map(Number) as [number, number];
+    const expected = KJV_VERSES_PER_CHAPTER[bookId - 1]?.[chapter - 1];
+    if (expected === undefined) {
+      throw new Error(`computeWitnessCoverage: no KJV verse count for ${key}`);
+    }
+    const witnessed = witnessedPerChapter.get(key) ?? 0;
+    if (witnessed < expected) {
+      const name = BOOK_NAME.get(bookId);
+      if (!name) throw new Error(`computeWitnessCoverage: no book ${bookId}`);
+      partialChapters.push({ key, ref: `${name} ${chapter}`, witnessed, expected });
+    }
+  }
+
+  return { unwitnessedVerses, partialChapters };
+}
+
+// ---------------------------------------------------------------------------
 // Classification
 // ---------------------------------------------------------------------------
 
@@ -396,7 +473,10 @@ const OUTCOME_LINES: Readonly<Record<OutcomeClass, string>> = {
   identical: 'IDENTICAL — the candidate carries the witness\'s exact verse text.',
   'a-typography-only':
     '(a) typography-only — every changed verse tokenizes identically under the one ' +
-    'tokenizer. The re-pin may proceed (docs/source-repins.md §2).',
+    'tokenizer. The re-pin may proceed (docs/source-repins.md §2). Caveat: token ' +
+    'identity is broader than typography — stopword swaps and inflection folds ' +
+    '(e.g. obeys→obeyed) also tokenize identically. Both halves of every such ' +
+    'change are listed below; skim the pairs before proceeding.',
   'b-genuine-outside-fixtures':
     '(b) genuine revisions outside fixture-asserted verses — the list below goes to ' +
     'Jesse for review (J52/A5c) BEFORE the re-pin PR merges.',
@@ -410,6 +490,13 @@ export interface ReportContext {
   readonly newLabel: string;
   /** Extra scope line (e.g. golden ref counts), or null when scope was absent. */
   readonly scopeNote: string | null;
+  /**
+   * Under a subset witness with a golden scope: which fixture-asserted verses
+   * the witness cannot compare. Omitted/null when the comparison is
+   * unrestricted (full payloads compare everything) or no scope was supplied
+   * (the no-golden line already warns).
+   */
+  readonly witnessCoverage?: WitnessCoverage | null;
 }
 
 export function renderReport(
@@ -434,6 +521,28 @@ export function renderReport(
       '- golden fixture scope: no golden fixture scope supplied — class (c) CANNOT be ' +
         'ruled out by this report; re-run with --golden before treating (b) as final',
   );
+  const coverage = context.witnessCoverage;
+  if (coverage) {
+    const uncovered = coverage.unwitnessedVerses;
+    lines.push(
+      uncovered.length === 0
+        ? '- fixture-scope verses NOT carried by this witness: none — every golden-' +
+            'fixture-asserted exact verse was compared'
+        : `- fixture-scope verses NOT carried by this witness: ${uncovered.length} — ` +
+            `${uncovered.map((verseId) => formatRef(verseId)).join('; ')}. ` +
+            'These golden-fixture-asserted verses were NEVER COMPARED: the verdict ' +
+            'below is proven only over the witnessed scope and says nothing about ' +
+            'them — an IDENTICAL/(a)/(b) verdict here is NOT full-fixture-scope proof.',
+    );
+    if (coverage.partialChapters.length > 0) {
+      lines.push(
+        '- fixture-scope chapters only PARTIALLY carried by this witness: ' +
+          coverage.partialChapters
+            .map((entry) => `${entry.ref} (${entry.witnessed}/${entry.expected} verses)`)
+            .join('; '),
+      );
+    }
+  }
   lines.push('');
   lines.push('## Verdict');
   lines.push('');
@@ -495,6 +604,8 @@ export interface RunResult {
   readonly exitCode: number;
   readonly delta: VerseDelta;
   readonly classification: Classification;
+  /** Non-null exactly when the report carries the coverage lines (subset witness + golden scope). */
+  readonly witnessCoverage: WitnessCoverage | null;
 }
 
 export function runWebDelta(options: RunOptions): RunResult {
@@ -505,10 +616,18 @@ export function runWebDelta(options: RunOptions): RunResult {
     options.goldenDir === undefined ? join(ROOT, '..', 'eval', 'golden') : options.goldenDir;
   const golden = goldenDir === null ? null : collectGoldenScope(goldenDir);
 
+  const restricted = oldPayload.kind === 'verse-array-subset';
   const delta = computeVerseDelta(oldPayload.verses, newPayload.verses, {
-    restrictToOldWitness: oldPayload.kind === 'verse-array-subset',
+    restrictToOldWitness: restricted,
   });
   const classification = classifyDelta(delta, golden?.scope ?? null);
+  const witnessCoverage =
+    restricted && golden
+      ? computeWitnessCoverage(
+          golden.scope,
+          new Set(oldPayload.verses.map((entry) => entry.verseId)),
+        )
+      : null;
 
   const label = (payload: LoadedPayload): string =>
     `\`${basename(payload.path)}\` — ${payload.kind}, ${payload.verses.length} verses` +
@@ -523,13 +642,14 @@ export function runWebDelta(options: RunOptions): RunResult {
       ? `- golden fixture scope: ${golden.refCount} refs across ${golden.fileCount} fixtures ` +
         `(${goldenDir}) — ${golden.scope.verses.size} exact verses + ${golden.scope.chapters.size} whole chapters`
       : null,
+    witnessCoverage,
   });
 
   let exitCode = 0;
   if (options.check === true && classification.outcome !== 'identical') {
     exitCode = classification.outcome === 'c-genuine-inside-fixtures' ? 2 : 1;
   }
-  return { report, exitCode, delta, classification };
+  return { report, exitCode, delta, classification, witnessCoverage };
 }
 
 function parseArgs(argv: readonly string[]): RunOptions & { out?: string } {

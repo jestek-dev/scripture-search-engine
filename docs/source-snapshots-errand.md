@@ -14,8 +14,10 @@ time: roughly fifteen minutes plus the archive search.
 
 ## Why capture-once is a hard rule
 
-The WEB URL rolls near-daily (five distinct upstream archive hashes observed
-2026-08-14 → 2026-08-21). If the errand downloads a file and the re-pin PR
+The WEB URL rolls near-daily (four distinct upstream archive hashes observed
+2026-08-14 → 2026-08-21: `3073fead…`, `8b1f7bf0…`, `c860b546…`, `b6f55cc7…`;
+the 2026-07-29 pin `3458ca34…` makes a fifth distinct hash overall, but it is
+the pinned baseline, not an observation in that window). If the errand downloads a file and the re-pin PR
 later downloads "the same" file again, the two steps pin different bytes and
 the PR's checksums describe an archive asset that does not exist. So: one
 download per source, hashed the moment it lands, and every later step —
@@ -31,7 +33,7 @@ curl -fL -o engwebp_vpl-2026-08.zip      https://ebible.org/Scriptures/engwebp_v
 curl -fL -o topic-scores-2026-08.zip     https://a.openbible.info/data/topic-scores.zip
 curl -fL -o cross-references-2026-08.zip https://a.openbible.info/data/cross-references.zip
 
-sha256sum *.zip | tee CHECKSUMS.txt
+sha256sum *.zip | tee CHECKSUMS.txt   # macOS: shasum -a 256 *.zip | tee CHECKSUMS.txt
 wc -c *.zip
 ```
 
@@ -89,7 +91,7 @@ pipeline around 2026-07-29 may hold `pipeline/sources/engwebp_vpl.zip`.
 Check with:
 
 ```sh
-sha256sum pipeline/sources/engwebp_vpl.zip
+sha256sum pipeline/sources/engwebp_vpl.zip   # macOS: shasum -a 256 <file>
 # looking for: 3458ca34420c0547ec01b3dbda58a10a2d8fc511bdcd2e047ddd17fbe860b7b6
 ```
 
@@ -122,7 +124,13 @@ Then exactly one of:
   step 3 — the old snapshot stays reproducible and A5b never needs asking.
 - **Not found**: record the search evidence (CDX output + hash list) in the
   release notes or the WEB re-pin PR, and sign off the loss explicitly
-  (A5b). Silence is not a sign-off; an implementer may not default it.
+  (A5b). Silence is not a sign-off; an implementer may not default it. Know
+  what the sign-off then covers: with the old full payload gone, the delta
+  can only ever be measured against the subset witness, which does not carry
+  every golden-fixture-asserted verse — the delta report lists the uncovered
+  refs ("fixture-scope verses NOT carried by this witness"; 20 as of
+  2026-08-21), and those are re-verified only after the re-pin, by the
+  gauntlet against the re-pinned corpus (`docs/web-repin-staged.md` §1).
 
 ## Step 5 — hand-off
 
