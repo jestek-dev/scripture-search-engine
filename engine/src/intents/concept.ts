@@ -12,6 +12,7 @@
  */
 
 import type { ConceptAnchorRow, CrossReferenceRow } from '../corpus/repository.js';
+import { significantWords } from '../tokenizer/index.js';
 import type { Evidence } from '../reasons/types.js';
 
 function conceptSpecificity(matchedTokenCount: number): number {
@@ -109,21 +110,24 @@ export function conceptCueEvidence(
 }
 
 /**
- * Raw one-word lexicon entries are broad-query defaults.
+ * One-token lexicon entries are broad-query defaults.
  *
- * They remain authoritative when the whole query is that word. Inside a longer
- * query they should act as theme cues. Multi-word remembered phrasings like
- * "do not be afraid" are intentionally excluded even if normalization reduces
- * them to one token.
+ * They remain authoritative when the whole query is that token. Inside a
+ * longer query they should act as theme cues.
+ *
+ * Width is measured in SIGNIFICANT tokens, not raw words. This deliberately
+ * REVERSES the earlier carve-out that excluded multi-word phrasings whose
+ * normalization reduces to one token ("forgive others" -> `forgive`): at
+ * match time such a phrase IS its single stored token, so exempting it let a
+ * stopword-heavy phrase evade the thin-cue gate a deliberate bare word must
+ * face. Legitimate remembered phrasings stay protected by the two guards this
+ * keeps: (i) `queryTokenCount > 1` — a query that itself collapses to the
+ * same lone token ("do not be afraid" -> `afraid`) stays authoritative — and
+ * (ii) the IDF-share test in isThinBareWordConceptCue, so a collapsed cue
+ * that carries real query meaning survives.
  */
 export function isBareWordConceptCue(matchedPhrase: string, queryTokenCount: number): boolean {
-  return (
-    queryTokenCount > 1 &&
-    matchedPhrase
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean).length === 1
-  );
+  return queryTokenCount > 1 && significantWords(matchedPhrase).length <= 1;
 }
 
 export function isThinBareWordConceptCue(
