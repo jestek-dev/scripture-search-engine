@@ -52,9 +52,11 @@ describe('anchor dedupe (0.10.0 stage 6)', () => {
   it('scores a doubly-cited verse ONCE, and the one chip names both sources', async () => {
     // James 2:14-26 is anchored by faith-and-works twice over: the editorial
     // weight-1.0 entry and an OpenBible topic subscription. Before stage 6
-    // both rows entered the ranker and summed as if independent.
+    // both rows entered the ranker and summed as if independent. (Since the
+    // stage-7 span collapse the surfaced verses present as the one curated
+    // passage row; the merged chips are the same chips.)
     const results = await discover('faith without works');
-    const row = results.find((result) => result.reference.startsWith('James 2:17'));
+    const row = results.find((result) => result.reference.startsWith('James 2:14'));
     expect(row).toBeDefined();
     const anchors = row!.reasons.filter(
       (reason) => reason.family === 'concept_anchor' && reason.label === 'Theme: Faith and works',
