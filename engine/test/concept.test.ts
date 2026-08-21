@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   conceptAnchorEvidence,
   conceptCueEvidence,
+  dedupeConceptAnchors,
   isBareWordConceptCue,
   isThinBareWordConceptCue,
   MIN_AUTHORITATIVE_BARE_CUE_IDF_SHARE,
@@ -225,6 +226,109 @@ describe('passageTermEvidence PMI factor (0.10.0 stage 5)', () => {
     const first = passageTermEvidence(term({ pmiSum: 7.77 })).strength;
     for (let i = 0; i < 3; i += 1) {
       expect(passageTermEvidence(term({ pmiSum: 7.77 })).strength).toBe(first);
+    }
+  });
+});
+
+describe('dedupeConceptAnchors (0.10.0 stage 6)', () => {
+  const row = (over: Partial<typeof anchor>) => ({ ...anchor, ...over });
+
+  it('passes unmerged rows through byte-identical, in input order', () => {
+    const input = [
+      row({ verseId: 43003016 }),
+      row({ verseId: 43003017, sourceId: 'torrey', weight: 0.8 }),
+    ];
+    const out = dedupeConceptAnchors(input);
+    expect(out).toHaveLength(2);
+    // Same object references: nothing was copied, nothing reordered.
+    expect(out[0]).toBe(input[0]);
+    expect(out[1]).toBe(input[1]);
+  });
+
+  it('merges same-concept same-verse rows into one, keeping the higher-weight carrier', () => {
+    const out = dedupeConceptAnchors([
+      row({ sourceId: 'torrey', weight: 0.75, locator: '1 Peter 5:7' }),
+      row({ sourceId: 'editorial', weight: 0.85, locator: '1 Peter 5:7' }),
+    ]);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.weight).toBe(0.85);
+    expect(out[0]!.sourceId).toBe('editorial+torrey');
+  });
+
+  it("joins the surviving sourceId as the ascending '+' union regardless of input order", () => {
+    const a = dedupeConceptAnchors([
+      row({ sourceId: 'torrey', weight: 0.7 }),
+      row({ sourceId: 'editorial', weight: 0.7 }),
+    ]);
+    const b = dedupeConceptAnchors([
+      row({ sourceId: 'editorial', weight: 0.7 }),
+      row({ sourceId: 'torrey', weight: 0.7 }),
+    ]);
+    expect(a[0]!.sourceId).toBe('editorial+torrey');
+    expect(b[0]!.sourceId).toBe('editorial+torrey');
+  });
+
+  it('at equal weight the carrier is the sourceId-ascending row (deterministic)', () => {
+    const out = dedupeConceptAnchors([
+      row({ sourceId: 'torrey', weight: 0.8, locator: 'torrey-loc' }),
+      row({ sourceId: 'editorial', weight: 0.8, locator: 'editorial-loc' }),
+    ]);
+    expect(out[0]!.locator).toBe('editorial-loc');
+  });
+
+  it('a single entry citing the same source twice survives with the plain sourceId, no join', () => {
+    const out = dedupeConceptAnchors([
+      row({ sourceId: 'editorial', weight: 0.9 }),
+      row({ sourceId: 'editorial', weight: 0.9 }),
+    ]);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.sourceId).toBe('editorial');
+  });
+
+  it('never merges across concepts: cross-concept stacking is untouched', () => {
+    const out = dedupeConceptAnchors([
+      row({ conceptId: 'gods-love' }),
+      row({ conceptId: 'assurance' }),
+    ]);
+    expect(out).toHaveLength(2);
+  });
+
+  it('never merges across translations', () => {
+    const out = dedupeConceptAnchors([
+      row({ translationCode: 'WEB' }),
+      row({ translationCode: 'KJV' }),
+    ]);
+    expect(out).toHaveLength(2);
+  });
+
+  it('the merged chip names every agreeing source through conceptAnchorEvidence', () => {
+    const merged = dedupeConceptAnchors([
+      row({ sourceId: 'torrey', weight: 0.75 }),
+      row({ sourceId: 'editorial', weight: 0.85 }),
+    ])[0]!;
+    const evidence = conceptAnchorEvidence(merged, 2, 2);
+    expect(evidence.provenance!.sourceId).toBe('editorial+torrey');
+    expect(evidence.provenance!.label).toBe(
+      'LH editorial + Torrey, New Topical Textbook (public domain)',
+    );
+    // Scored once, at the carrier weight — not the sum of the two rows.
+    expect(evidence.strength).toBe(0.85);
+  });
+
+  it('a single-source chip renders byte-identically to the pre-dedupe label', () => {
+    const evidence = conceptAnchorEvidence(row({ sourceId: 'editorial' }), 1, 1);
+    expect(evidence.provenance!.label).toBe('LH editorial');
+  });
+
+  it('is deterministic across repeated calls and permutations', () => {
+    const rows = [
+      row({ sourceId: 'torrey', weight: 0.75 }),
+      row({ sourceId: 'editorial', weight: 0.85 }),
+      row({ verseId: 43003017, sourceId: 'nave', weight: 0.6 }),
+    ];
+    const once = JSON.stringify(dedupeConceptAnchors(rows));
+    for (let i = 0; i < 5; i += 1) {
+      expect(JSON.stringify(dedupeConceptAnchors(rows))).toBe(once);
     }
   });
 });

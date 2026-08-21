@@ -32,6 +32,7 @@ import {
   conceptAnchorEvidence,
   conceptCueEvidence,
   crossReferenceEvidence,
+  dedupeConceptAnchors,
   isThinBareWordConceptCue,
   passageTermEvidence,
   relatedConceptEvidence,
@@ -293,7 +294,12 @@ export async function createEngine(
           )
           .map((match) => match.conceptId);
         const authoritativeConceptSet = new Set(authoritativeConceptIds);
-        const anchors = await concepts.anchorVerses(matched.map((match) => match.conceptId));
+        // Anchor dedupe (0.10.0 stage 6): one verse, one concept, one scored
+        // contribution — the surviving row's chip names every agreeing source.
+        // See dedupeConceptAnchors.
+        const anchors = dedupeConceptAnchors(
+          await concepts.anchorVerses(matched.map((match) => match.conceptId)),
+        );
         for (const anchor of anchors) {
           const match = matchedByConcept.get(anchor.conceptId);
           const matchedTokenCount = match?.matchedTokenCount ?? 1;
@@ -325,7 +331,7 @@ export async function createEngine(
         if (authoritativeConceptIds.length > 0) {
           // One hop through the curated graph, filed as weak evidence.
           const relatedIds = await concepts.relatedConcepts(authoritativeConceptIds);
-          for (const anchor of await concepts.anchorVerses(relatedIds)) {
+          for (const anchor of dedupeConceptAnchors(await concepts.anchorVerses(relatedIds))) {
             verses.set(targetIdFor(anchor), anchor);
             contributions.push({ verse: anchor, evidence: [relatedConceptEvidence(anchor)] });
           }

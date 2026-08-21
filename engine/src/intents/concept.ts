@@ -68,6 +68,66 @@ function conceptMatchStrength(
 export const MIN_AUTHORITATIVE_BARE_CUE_IDF_SHARE = 0.2;
 
 /**
+ * One verse, one concept, ONE scored contribution (0.10.0 stage 6).
+ *
+ * The importer emits one anchor row per (entry × source), and overlapping
+ * ranges within a concept emit one row per range — so the same verse could
+ * reach the ranker several times for the SAME concept and be summed as if
+ * the entries were independent evidence. They are not: two sources naming
+ * one verse for one theme is agreement about a single fact, and G7 files
+ * agreement as one budget, not two. This is how a duplicated 1 Peter 5:7
+ * outscored peace-of-god's own weight-1.0 anchor.
+ *
+ * Groups by (conceptId, translationCode, verseId); the carrier is chosen
+ * deterministically (weight desc → sourceId asc → locator asc → anchor start
+ * asc) and provenance is NOT dropped: the surviving row's sourceId becomes
+ * the '+'-joined ascending union of the group's sources — the same
+ * convention passage_terms already uses — so one chip honestly names every
+ * agreeing source (covenant: explanations are contract; sources are named,
+ * never adjudicated). Cross-CONCEPT stacking is deliberately untouched: two
+ * different matched concepts naming one verse are two different claims.
+ * Groups keep first-occurrence order, so unmerged inputs pass through
+ * byte-identical and the output is a pure, deterministic function of the
+ * input order (the repository's ORDER BY makes that order stable).
+ */
+export function dedupeConceptAnchors(
+  anchors: readonly ConceptAnchorRow[],
+): readonly ConceptAnchorRow[] {
+  const groups = new Map<string, ConceptAnchorRow[]>();
+  const order: string[] = [];
+  for (const anchor of anchors) {
+    // U+0000 as the WRITTEN escape (never the raw byte, which turns a source
+    // file git-binary): no id component can contain it, so the joined key
+    // cannot collide across components.
+    const key = `${anchor.conceptId}\u0000${anchor.translationCode}\u0000${anchor.verseId}`;
+    const bucket = groups.get(key);
+    if (bucket) bucket.push(anchor);
+    else {
+      groups.set(key, [anchor]);
+      order.push(key);
+    }
+  }
+  return order.map((key) => {
+    const group = groups.get(key)!;
+    if (group.length === 1) return group[0]!;
+    const sorted = [...group].sort(
+      (a, b) =>
+        b.weight - a.weight ||
+        (a.sourceId < b.sourceId ? -1 : a.sourceId > b.sourceId ? 1 : 0) ||
+        ((a.locator ?? '') < (b.locator ?? '')
+          ? -1
+          : (a.locator ?? '') > (b.locator ?? '')
+            ? 1
+            : 0) ||
+        a.anchorStartVerseId - b.anchorStartVerseId,
+    );
+    const carrier = sorted[0]!;
+    const sourceIds = [...new Set(group.map((row) => row.sourceId))].sort();
+    return sourceIds.length === 1 ? carrier : { ...carrier, sourceId: sourceIds.join('+') };
+  });
+}
+
+/**
  * Anchor evidence.
  *
  * Strength is the curated weight, which is a PRIOR: editorial confidence for
@@ -91,7 +151,9 @@ export function conceptAnchorEvidence(
     strength: conceptMatchStrength(anchor.weight, matchedTokenCount, queryTokenCount),
     provenance: {
       sourceId: anchor.sourceId,
-      label: sourceLabel(anchor.sourceId),
+      // Rendered through joinedSourceLabel so a stage-6 merged row ('a+b')
+      // names every agreeing source; single ids render byte-identically.
+      label: joinedSourceLabel(anchor.sourceId),
       ...(anchor.locator ? { locator: anchor.locator } : {}),
       weight: anchor.weight,
     },
@@ -116,7 +178,7 @@ export function conceptCueEvidence(
     strength: conceptMatchStrength(anchor.weight, matchedTokenCount, queryTokenCount),
     provenance: {
       sourceId: anchor.sourceId,
-      label: sourceLabel(anchor.sourceId),
+      label: joinedSourceLabel(anchor.sourceId),
       ...(anchor.locator ? { locator: anchor.locator } : {}),
       weight: anchor.weight,
     },
@@ -170,7 +232,7 @@ export function relatedConceptEvidence(anchor: ConceptAnchorRow): Evidence {
     strength: Math.max(0, Math.min(1, anchor.weight)) * 0.5,
     provenance: {
       sourceId: anchor.sourceId,
-      label: sourceLabel(anchor.sourceId),
+      label: joinedSourceLabel(anchor.sourceId),
       ...(anchor.locator ? { locator: anchor.locator } : {}),
     },
   };
