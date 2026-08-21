@@ -22,6 +22,7 @@ import {
   type RankQueryInput,
 } from '../src/gates/rankMetrics.js';
 import { buildReport, decideVerdict, headlineFor } from '../src/report.js';
+import { computeTierReport } from '../src/tierReport.js';
 import {
   GAUNTLET_GATE_ROSTER,
   buildMachineReport,
@@ -555,6 +556,18 @@ describe('machine report v2 sections', () => {
   const detection = detectNoMeasurableEffect(
     noEffectInput({ expectNoEffect: 'ci-auto:re-pin-diff-shape:2-files' }),
   ).detection;
+  // Minimal honest tier section: everything NOT EVALUABLE, nothing attained.
+  const tiersSection = computeTierReport({
+    tiersConfig: null,
+    flagship: null,
+    battery: {
+      batteryVersion: 1, queries: [], activeQueries: 0, judgedRows: 0, harmfulRows: 0,
+      provisionalRows: 0, findings: [],
+    },
+    thresholds: null,
+    fixtures: [],
+    evidence: { batteryResults: [], gates: [], rankMetrics: null },
+  });
 
   function targetReport() {
     const gates = GAUNTLET_GATE_ROSTER.map((gate) =>
@@ -569,6 +582,7 @@ describe('machine report v2 sections', () => {
       battery: batterySection,
       rankMetrics: metrics,
       noMeasurableEffect: detection,
+      tiers: tiersSection,
     });
   }
 
@@ -585,6 +599,29 @@ describe('machine report v2 sections', () => {
     expect(report.payload.rankMetrics).toEqual(metrics);
     expect(report.payload.noMeasurableEffect).toEqual(detection);
     expect(shapeMismatches(report)).toEqual([]);
+  });
+
+  it('rejects a battery-bearing report that lost its tier section', () => {
+    const report = targetReport();
+    const { tiers: _droppedTiers, ...payload } = report.payload;
+    expect(shapeMismatches({ ...report, payload })).toContain(
+      'Machine report field payload.tiers is missing or malformed.',
+    );
+  });
+
+  it('rejects a doctored tier attainment claim — attainment is recomputed, never trusted', () => {
+    const report = targetReport();
+    const embedded = report.payload.tiers!;
+    const doctored = {
+      ...report,
+      payload: {
+        ...report.payload,
+        tiers: { ...embedded, tiers: embedded.tiers.map((tier) => ({ ...tier, attained: true })) },
+      },
+    };
+    expect(shapeMismatches(doctored)).toContain(
+      'Machine report field payload.tiers is missing or malformed.',
+    );
   });
 
   it('rejects a target report that lost its no-measurable-effect section', () => {

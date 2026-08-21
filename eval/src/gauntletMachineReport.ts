@@ -32,6 +32,7 @@ import {
   type GateResult,
   type GateStatus,
 } from './gates/types.js';
+import { tierAttained, TIER_REPORT_SCHEMA, type TierReportSection } from './tierReport.js';
 
 export const GAUNTLET_MACHINE_REPORT_SCHEMA = 'scripture-search-engine/gauntlet-report/v2';
 export const GAUNTLET_RUNNING_MARKER_SCHEMA = 'scripture-search-engine/gauntlet-running/v1';
@@ -217,6 +218,8 @@ export interface GauntletMachineReport {
     readonly rankMetrics?: RankMetricsReport;
     /** No-effect detection outcome — present on every explicit-target run. */
     readonly noMeasurableEffect?: NoEffectDetection;
+    /** Tier attainment (E6) — present exactly when the battery evidence is. */
+    readonly tiers?: TierReportSection;
   };
   /** SHA-256 of canonical JSON for `payload`, not the enclosing report. */
   readonly payloadSha256: string;
@@ -844,6 +847,7 @@ export function buildMachineReport(input: {
   readonly battery?: BatteryReportSection;
   readonly rankMetrics?: RankMetricsReport;
   readonly noMeasurableEffect?: NoEffectDetection;
+  readonly tiers?: TierReportSection;
 }): GauntletMachineReport {
   const payload = {
     verdict: input.report.verdict,
@@ -852,6 +856,7 @@ export function buildMachineReport(input: {
     ...(input.battery === undefined ? {} : { battery: input.battery }),
     ...(input.rankMetrics === undefined ? {} : { rankMetrics: input.rankMetrics }),
     ...(input.noMeasurableEffect === undefined ? {} : { noMeasurableEffect: input.noMeasurableEffect }),
+    ...(input.tiers === undefined ? {} : { tiers: input.tiers }),
   };
   const unsigned: Omit<GauntletMachineReport, 'reportSha256'> = {
     schema: GAUNTLET_MACHINE_REPORT_SCHEMA,
@@ -1101,6 +1106,37 @@ function validNoEffectSection(value: unknown): boolean {
   return value['fired'] === expectedFired;
 }
 
+/**
+ * The tier section is internally recomputable in the same way: each tier's
+ * `attained` flag must follow from its criteria statuses via tierAttained,
+ * so a doctored attainment claim cannot survive validation — the criteria
+ * themselves are recomputed from raw evidence by the tier-report tool.
+ */
+function validTiersSection(value: unknown): boolean {
+  if (!isRecord(value) || !exactKeys(value, ['schema', 'tiers'])) return false;
+  if (value['schema'] !== TIER_REPORT_SCHEMA) return false;
+  const tiers = value['tiers'];
+  if (!Array.isArray(tiers) || tiers.length !== 2) return false;
+  const rows = tiers.filter(isRecord);
+  if (rows.length !== tiers.length) return false;
+  if (rows[0]!['tier'] !== 'A' || rows[1]!['tier'] !== 'S') return false;
+  const statuses = ['MET', 'NOT_MET', 'NOT_EVALUABLE', 'DISABLED'];
+  return rows.every((tier) => {
+    if (!exactKeys(tier, ['tier', 'attained', 'criteria']) || typeof tier['attained'] !== 'boolean') return false;
+    const criteria = tier['criteria'];
+    if (!Array.isArray(criteria) || criteria.length === 0) return false;
+    const criteriaOk = criteria.every((row) => isRecord(row)
+      && exactKeys(row, ['id', 'planId', 'title', 'status', 'detail'])
+      && typeof row['id'] === 'string' && typeof row['planId'] === 'string'
+      && typeof row['title'] === 'string' && typeof row['detail'] === 'string'
+      && statuses.includes(row['status'] as string));
+    if (!criteriaOk) return false;
+    return tier['attained'] === tierAttained(
+      criteria.filter(isRecord) as unknown as readonly { status: 'MET' | 'NOT_MET' | 'NOT_EVALUABLE' | 'DISABLED' }[],
+    );
+  });
+}
+
 function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, maxAgeMs: number): FreshnessMismatch[] {
   const mismatches: FreshnessMismatch[] = [];
   addShapeMismatch(mismatches, exactKeys(parsed, ['schema', 'startedAt', 'finishedAt', 'identity', 'payload', 'payloadSha256', 'reportSha256']), 'report keys');
@@ -1140,11 +1176,13 @@ function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, m
   const hasBattery = Object.hasOwn(payload, 'battery');
   const hasRankMetrics = Object.hasOwn(payload, 'rankMetrics');
   const hasNoEffect = Object.hasOwn(payload, 'noMeasurableEffect');
+  const hasTiers = Object.hasOwn(payload, 'tiers');
   addShapeMismatch(mismatches, exactKeys(payload, [
     'verdict', 'headline', 'gates',
     ...(hasBattery ? ['battery'] : []),
     ...(hasRankMetrics ? ['rankMetrics'] : []),
     ...(hasNoEffect ? ['noMeasurableEffect'] : []),
+    ...(hasTiers ? ['tiers'] : []),
   ]) && typeof payload['headline'] === 'string' && payload['headline'].length > 0 && Array.isArray(payload['gates']) && payload['gates'].length === GAUNTLET_GATE_ROSTER.length, 'payload');
   // Battery evidence exists only where the battery can run: explicit targets.
   addShapeMismatch(mismatches, !hasBattery || (hasTarget && validBatterySection(payload['battery'])), 'payload.battery');
@@ -1153,6 +1191,10 @@ function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, m
   // fully-skipped one), and never anywhere else.
   addShapeMismatch(mismatches, hasRankMetrics === hasBattery
     && (!hasRankMetrics || validRankMetricsSection(payload['rankMetrics'])), 'payload.rankMetrics');
+  // Tier attainment (E6) is computed exactly when the battery ran, and its
+  // attained flags must be recomputable from the criteria statuses.
+  addShapeMismatch(mismatches, hasTiers === hasBattery
+    && (!hasTiers || validTiersSection(payload['tiers'])), 'payload.tiers');
   addShapeMismatch(mismatches, hasNoEffect === hasTarget
     && (!hasNoEffect || validNoEffectSection(payload['noMeasurableEffect'])), 'payload.noMeasurableEffect');
   // The recorded flag and the payload section must agree — the provenance

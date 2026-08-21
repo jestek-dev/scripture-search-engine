@@ -126,6 +126,13 @@ import {
   type GauntletOptions,
   type ResolvedGauntletTarget,
 } from './gauntletMachineReport.js';
+import {
+  computeTierReport,
+  validateFlagship,
+  validateTiersBlock,
+  FLAGSHIP_PATH,
+  type TierReportSection,
+} from './tierReport.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EVAL_ROOT = join(HERE, '..');
@@ -137,6 +144,8 @@ interface Budgets {
   };
   /** Validated at runtime by validateRankQualityBlock — reviewed data, never trusted shapes. */
   readonly rankQuality?: unknown;
+  /** Validated at runtime by validateTiersBlock (E6) — reviewed data, never trusted shapes. */
+  readonly tiers?: unknown;
   readonly latency: { readonly p95Ms: number };
   readonly noise: {
     readonly maxTop10ChurnRatio: number;
@@ -1107,6 +1116,28 @@ async function main(): Promise<void> {
           validated: battery.validated,
           outcomes: probeRun.batteryOutcomes,
         });
+      // Tier attainment (E6) rides the report exactly when the battery
+      // evidence does. Computed from the same raw inputs the standalone
+      // tier-report tool recomputes from, so the embedded section is a
+      // cross-checkable claim, never the only record.
+      const tiersSection: TierReportSection | undefined = probeRun.batteryOutcomes === null
+        ? undefined
+        : computeTierReport({
+          tiersConfig: validateTiersBlock(budgets.tiers).config,
+          flagship: validateFlagship(
+            existsSync(join(REPO_ROOT, ...FLAGSHIP_PATH.split('/')))
+              ? JSON.parse(readFileSync(join(REPO_ROOT, ...FLAGSHIP_PATH.split('/')), 'utf8')) as unknown
+              : undefined,
+          ).queries,
+          battery: battery.validated,
+          thresholds: rankQuality.thresholds,
+          fixtures: fixtures as unknown as CorpusFixture[],
+          evidence: {
+            batteryResults: probeRun.batteryOutcomes,
+            gates,
+            rankMetrics: probeRun.rankMetrics,
+          },
+        });
       writeMachineReportAtomically(
         resolveMachineReportPath(REPO_ROOT, options.jsonPath),
         buildMachineReport({
@@ -1117,6 +1148,7 @@ async function main(): Promise<void> {
           ...(batterySection === undefined ? {} : { battery: batterySection }),
           ...(probeRun.rankMetrics === null ? {} : { rankMetrics: probeRun.rankMetrics }),
           ...(probeRun.noEffect === null ? {} : { noMeasurableEffect: probeRun.noEffect.detection }),
+          ...(tiersSection === undefined ? {} : { tiers: tiersSection }),
         }),
       );
     }

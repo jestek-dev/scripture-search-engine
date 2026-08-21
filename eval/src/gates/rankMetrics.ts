@@ -849,6 +849,7 @@ export function batteryComparableSection(parsed: unknown): string {
     battery: payload['battery'] ?? null,
     rankMetrics: payload['rankMetrics'] ?? null,
     noMeasurableEffect: payload['noMeasurableEffect'] ?? null,
+    tiers: payload['tiers'] ?? null,
   });
 }
 
