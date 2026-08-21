@@ -581,7 +581,7 @@ export function batteryGate(input: {
   };
   const summary =
     `${validated.activeQueries} active, ${validated.judgedRows} judged row(s), ` +
-    `${validated.provisionalRows} provisional` +
+    `${validated.provisionalRows} provisional (judged + harmful)` +
     (provisionalHarmfulAtRank1 > 0
       ? `; ${provisionalHarmfulAtRank1} provisional harmful judgment(s) at #1 (non-gating until ratified)`
       : '');

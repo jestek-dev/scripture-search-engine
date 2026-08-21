@@ -7,7 +7,8 @@
  * behind a green suite.
  */
 
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -283,7 +284,7 @@ describe('battery full-artifact job checker', () => {
     gate: 'G12-battery',
     status: 'pass',
     applicability: 'required',
-    summary: '84 active, 1 judged row(s), 1 provisional',
+    summary: '84 active, 1 judged row(s), 1 provisional (judged + harmful)',
   };
 
   it('fails on a MISSING or unparsable report (the early-abort case)', () => {
@@ -329,8 +330,97 @@ describe('battery full-artifact job checker', () => {
     const right = batteryComparableSection(reportWith(healthyG12));
     expect(left).toBe(right);
     const drifted = batteryComparableSection(
-      reportWith({ ...healthyG12, summary: '84 active, 2 judged row(s), 2 provisional' }),
+      reportWith({ ...healthyG12, summary: '84 active, 2 judged row(s), 2 provisional (judged + harmful)' }),
     );
     expect(left).not.toBe(drifted);
+  });
+});
+
+describe('battery checker CLI in the workflow invocation form', () => {
+  // `npm run battery:check --workspace eval` runs `tsx src/batteryJobCheck.ts`
+  // with cwd = <repo>/eval, while the workflow passes repository-root-relative
+  // report paths (`eval/.runs/...`). These tests reproduce that exact cwd +
+  // argument shape, so a regression to cwd-relative resolution fails here
+  // instead of surfacing as an unsatisfiable CI job.
+  const TSX_CLI = fileURLToPath(new URL('../../node_modules/tsx/dist/cli.mjs', import.meta.url));
+  const RUNS_DIR = join(EVAL_ROOT, '.runs');
+
+  function healthyReport(summary = '84 active, 1 judged row(s), 1 provisional (judged + harmful)') {
+    return {
+      schema: 'scripture-search-engine/gauntlet-report/v2',
+      payload: {
+        verdict: 'REJECT',
+        gates: [
+          { gate: 'G8-noise-probes', status: 'fail', applicability: 'required', summary: 'baseline approval issue' },
+          { gate: 'G12-battery', status: 'pass', applicability: 'required', summary },
+        ],
+        battery: {
+          batteryVersion: 1,
+          queriesSha256: 'a'.repeat(64),
+          judgmentsSha256: 'b'.repeat(64),
+          activeQueries: 84,
+          judgedRows: 1,
+          provisionalRows: 1,
+          results: [],
+        },
+      },
+    };
+  }
+
+  function runCli(args: readonly string[]) {
+    return spawnSync(process.execPath, [TSX_CLI, 'src/batteryJobCheck.ts', ...args], {
+      cwd: EVAL_ROOT,
+      encoding: 'utf8',
+      timeout: 60_000,
+    });
+  }
+
+  it('greens a healthy report addressed by its repository-root-relative path', () => {
+    const relative = `eval/.runs/battery-cli-check-${process.pid}.json`;
+    const absolute = join(RUNS_DIR, `battery-cli-check-${process.pid}.json`);
+    mkdirSync(RUNS_DIR, { recursive: true });
+    writeFileSync(absolute, JSON.stringify(healthyReport()));
+    try {
+      const run = runCli(['check', relative]);
+      expect(run.error).toBeUndefined();
+      expect(run.stdout).toContain('checker green');
+      expect(run.status).toBe(0);
+    } finally {
+      rmSync(absolute, { force: true });
+    }
+  });
+
+  it('reds a missing report and names the resolved absolute path it read', () => {
+    const relative = `eval/.runs/battery-cli-missing-${process.pid}.json`;
+    const run = runCli(['check', relative]);
+    expect(run.error).toBeUndefined();
+    expect(run.status).toBe(1);
+    expect(run.stdout).toContain('no report');
+    expect(run.stdout).toContain(join(RUNS_DIR, `battery-cli-missing-${process.pid}.json`));
+  });
+
+  it('compares legs addressed by repository-root-relative paths, naming resolved paths on failure', () => {
+    const leftRelative = `eval/.runs/battery-cli-left-${process.pid}.json`;
+    const rightRelative = `eval/.runs/battery-cli-right-${process.pid}.json`;
+    const leftAbsolute = join(RUNS_DIR, `battery-cli-left-${process.pid}.json`);
+    const rightAbsolute = join(RUNS_DIR, `battery-cli-right-${process.pid}.json`);
+    mkdirSync(RUNS_DIR, { recursive: true });
+    writeFileSync(leftAbsolute, JSON.stringify(healthyReport()));
+    writeFileSync(rightAbsolute, JSON.stringify(healthyReport()));
+    try {
+      const identical = runCli(['compare', leftRelative, rightRelative]);
+      expect(identical.status).toBe(0);
+      expect(identical.stdout).toContain('byte-identical');
+
+      writeFileSync(rightAbsolute, JSON.stringify(healthyReport('84 active, 2 judged row(s), 2 provisional (judged + harmful)')));
+      const drifted = runCli(['compare', leftRelative, rightRelative]);
+      expect(drifted.status).toBe(1);
+      expect(drifted.stdout).toContain('FAILED');
+      expect(drifted.stdout).toContain(leftAbsolute);
+      expect(drifted.stdout).toContain(rightAbsolute);
+    } finally {
+      rmSync(leftAbsolute, { force: true });
+      rmSync(rightAbsolute, { force: true });
+    }
   });
 });

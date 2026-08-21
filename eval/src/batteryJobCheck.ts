@@ -14,11 +14,24 @@
  */
 
 import { appendFileSync, existsSync, readFileSync } from 'node:fs';
+import { isAbsolute, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { batteryComparableSection, checkBatteryJobReport } from './gates/rankMetrics.js';
 
 const ADVISORY_BANNER =
   'advisory in this job — these rows are merge-enforced by the verify job on the fixture identity';
+
+// `npm run battery:check --workspace eval` executes with cwd = <repo>/eval,
+// while the workflow and the docs pass repository-root-relative report paths
+// (`eval/.runs/...`, `reports/linux/...`). Relative arguments therefore
+// resolve against the repository root — the same convention gauntlet.ts uses
+// via REPO_ROOT — never against process.cwd(). Absolute paths pass through.
+const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url));
+
+function resolveReportPath(path: string): string {
+  return isAbsolute(path) ? path : resolve(REPO_ROOT, path);
+}
 
 function parseReport(path: string): unknown {
   if (!existsSync(path)) return undefined;
@@ -43,8 +56,9 @@ function emit(lines: readonly string[]): void {
 }
 
 function runCheck(path: string): number {
-  const check = checkBatteryJobReport(parseReport(path));
-  const lines = [`## Battery checker — ${path}`, '', `### ${ADVISORY_BANNER}`, ...check.advisory, ''];
+  const resolved = resolveReportPath(path);
+  const check = checkBatteryJobReport(parseReport(resolved));
+  const lines = [`## Battery checker — ${path}`, `reading ${resolved}`, '', `### ${ADVISORY_BANNER}`, ...check.advisory, ''];
   if (check.ok) {
     lines.push('G12-battery: pass (required) — checker green');
   } else {
@@ -56,16 +70,20 @@ function runCheck(path: string): number {
 }
 
 function runCompare(leftPath: string, rightPath: string): number {
-  const left = batteryComparableSection(parseReport(leftPath));
-  const right = batteryComparableSection(parseReport(rightPath));
+  const leftResolved = resolveReportPath(leftPath);
+  const rightResolved = resolveReportPath(rightPath);
+  const left = batteryComparableSection(parseReport(leftResolved));
+  const right = batteryComparableSection(parseReport(rightResolved));
   if (left === right && left !== 'missing-report' && left !== 'malformed-report') {
     emit([`Battery sections byte-identical across legs (${leftPath} vs ${rightPath}).`]);
     return 0;
   }
+  // The resolved absolute paths are printed so a missing-report failure
+  // points at the exact file the checker read, not just the argument text.
   emit([
     'Battery cross-leg comparison FAILED.',
-    `left  (${leftPath}): ${left.slice(0, 400)}`,
-    `right (${rightPath}): ${right.slice(0, 400)}`,
+    `left  (${leftPath} -> ${leftResolved}): ${left.slice(0, 400)}`,
+    `right (${rightPath} -> ${rightResolved}): ${right.slice(0, 400)}`,
   ]);
   return 1;
 }
