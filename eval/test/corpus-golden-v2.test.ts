@@ -357,3 +357,202 @@ describe('G3 pending fixture status', () => {
     expect(decideVerdict({ gates: [result] })).toBe('REJECT');
   });
 });
+
+describe('G3 mustNotLead and guard vacuity', () => {
+  const GUARD_VACUOUS = 'sse.gauntlet.v1.finding.g3-golden.guard-vacuous';
+
+  /**
+   * Engine whose corpus "contains" exactly the references listed in
+   * presentRefs: passage() answers with verses for those and
+   * invalid-reference for everything else, which is how guard vacuity is
+   * detected against the real engine.
+   */
+  function guardEngine(
+    resultsByQuery: Readonly<Record<string, readonly DiscoveryResult[]>>,
+    presentRefs: readonly string[],
+  ): ScriptureEngine {
+    const base = mockEngine(resultsByQuery);
+    return {
+      ...base,
+      passage: async (reference) =>
+        presentRefs.includes(reference)
+          ? {
+              kind: 'passage',
+              passage: {
+                reference,
+                bookId: 43,
+                chapterCount: 21,
+                startChapter: 3,
+                endChapter: 3,
+                verses: [
+                  {
+                    id: 1,
+                    verseId: 43003016,
+                    translationId: 1,
+                    translationCode: 'WEB',
+                    bookId: 43,
+                    bookName: 'John',
+                    chapter: 3,
+                    verse: 16,
+                    text: 'present',
+                  },
+                ],
+              },
+              ...IDENTITY,
+            }
+          : { kind: 'invalid-reference', query: reference, ...IDENTITY },
+    };
+  }
+
+  const guarded = (overrides: Record<string, unknown> = {}) =>
+    fixture({
+      query: 'guarded',
+      mustNotLead: [{ ref: 'John 3:18', why: 'sense-inverted for this query' }],
+      ...overrides,
+    });
+
+  it('fails when the guarded reference leads at #1 (default window 1)', async () => {
+    const result = await corpusGoldenGate(
+      guardEngine({ guarded: [johnVerse(18), johnVerse(16)] }, ['John 3:18']),
+      [guarded()],
+    );
+
+    expect(result.status).toBe('fail');
+    expect(codes(result)).toEqual(['G3_MUST_NOT_LEAD']);
+    expect(result.findings?.[0]?.message).toContain('John 3:18');
+    expect(result.findings?.[0]?.message).toContain('sense-inverted for this query');
+    expect(decideVerdict({ gates: [result] })).toBe('REJECT');
+  });
+
+  it('passes when the same reference ranks #2 — demoted, never suppressed', async () => {
+    const result = await corpusGoldenGate(
+      guardEngine({ guarded: [johnVerse(16), johnVerse(18)] }, ['John 3:18']),
+      [guarded()],
+    );
+
+    expect(result.status).toBe('pass');
+    expect(result.findings ?? []).toEqual([]);
+  });
+
+  it('honours withinTop 3: leading at #3 fails, #4 passes', async () => {
+    const wide = (query: string) =>
+      guarded({ query, mustNotLead: [{ ref: 'John 3:18', why: 'sense-inverted', withinTop: 3 }] });
+    const atThree = await corpusGoldenGate(
+      guardEngine({ 'at-three': [johnVerse(16), johnVerse(17), johnVerse(18)] }, ['John 3:18']),
+      [wide('at-three')],
+    );
+    const atFour = await corpusGoldenGate(
+      guardEngine(
+        { 'at-four': [johnVerse(16), johnVerse(17), johnVerse(19), johnVerse(18)] },
+        ['John 3:18'],
+      ),
+      [wide('at-four')],
+    );
+
+    expect(atThree.status).toBe('fail');
+    expect(codes(atThree)).toEqual(['G3_MUST_NOT_LEAD']);
+    expect(atThree.findings?.[0]?.message).toContain('top 3');
+    expect(atFour.status).toBe('pass');
+  });
+
+  it('requires why, and admits only leadership windows 1 and 3', async () => {
+    const missingWhy = await corpusGoldenGate(guardEngine({ q: [] }, []), [
+      fixture({ query: 'q', mustNotLead: [{ ref: 'John 3:18' }] }),
+    ]);
+    const badWindow = await corpusGoldenGate(guardEngine({ q: [] }, []), [
+      fixture({ query: 'q', mustNotLead: [{ ref: 'John 3:18', why: 'w', withinTop: 5 }] }),
+    ]);
+    const both = await corpusGoldenGate(guardEngine({ q: [] }, []), [
+      fixture({ query: 'q', mustNotLead: [{ ref: 'John 3:18', reference: 'John 3:18', why: 'w' }] }),
+    ]);
+
+    expect(codes(missingWhy)).toContain('G3_FIXTURE_MALFORMED');
+    expect(missingWhy.findings?.some((finding) => finding.message.includes('why'))).toBe(true);
+    expect(codes(badWindow)).toContain('G3_FIXTURE_INVALID_WINDOW');
+    expect(codes(both)).toContain('G3_FIXTURE_MALFORMED');
+  });
+
+  it('reports a corpus-absent mustNotLead guard as VACUOUS (warn), naming the ref', async () => {
+    const result = await corpusGoldenGate(
+      guardEngine({ guarded: [johnVerse(16)] }, []),
+      [guarded()],
+    );
+
+    expect(result.status).toBe('warn');
+    const vacuous = (result.findings ?? []).filter(
+      (finding) => finding.categoryCode === GUARD_VACUOUS,
+    );
+    expect(vacuous).toHaveLength(1);
+    expect(vacuous[0]?.message).toContain('John 3:18');
+    expect(vacuous[0]?.message).toContain('VACUOUS');
+    expect(result.metrics?.['vacuousGuards']).toBe(1);
+    expect(decideVerdict({ gates: [result] })).toBe('ADMIT_WITH_WARNINGS');
+  });
+
+  it('reports a corpus-absent mustNotRank guard as VACUOUS too', async () => {
+    const result = await corpusGoldenGate(guardEngine({ q: [johnVerse(16)] }, []), [
+      fixture({ query: 'q', mustNotRank: [{ ref: 'John 3:18', why: 'off-topic' }] }),
+    ]);
+
+    expect(result.status).toBe('warn');
+    expect(codes(result)).toEqual([GUARD_VACUOUS]);
+  });
+
+  it('stays silent about vacuity when the guard reference is in the corpus and holds', async () => {
+    const result = await corpusGoldenGate(
+      guardEngine({ guarded: [johnVerse(16)] }, ['John 3:18']),
+      [guarded()],
+    );
+
+    expect(result.status).toBe('pass');
+    expect(result.metrics?.['vacuousGuards']).toBe(0);
+  });
+
+  it('never reports a violated guard as vacuous, even when passage() denies the ref', async () => {
+    // A ref observed in the results is definitionally in the corpus; the
+    // violation wins and the vacuity probe must not contradict it.
+    const result = await corpusGoldenGate(
+      guardEngine({ guarded: [johnVerse(18)] }, []),
+      [guarded()],
+    );
+
+    expect(result.status).toBe('fail');
+    expect(codes(result)).toEqual(['G3_MUST_NOT_LEAD']);
+  });
+
+  it('keeps a pending fixture with only a vacuous guard out of promotion, visibly', async () => {
+    const pendingVacuous = guarded({ id: 'pend-vacuous', status: 'pending' });
+    const result = await corpusGoldenGate(
+      guardEngine({ guarded: [johnVerse(16)] }, []),
+      [pendingVacuous],
+    );
+
+    expect(result.status).toBe('warn');
+    expect(result.promotionCandidates).toEqual([]);
+    expect(result.summary).not.toContain('still failing');
+    const vacuous = (result.findings ?? []).filter(
+      (finding) => finding.categoryCode === GUARD_VACUOUS,
+    );
+    expect(vacuous).toHaveLength(1);
+    expect(vacuous[0]?.subjects).toContain('pend-vacuous');
+  });
+
+  it('rejects mustNotLead beside referenceExpectations', async () => {
+    const result = await corpusGoldenGate(guardEngine({}, []), [
+      {
+        id: 'ref-mixed',
+        status: 'active',
+        referenceExpectations: [
+          { query: 'john 3 16', expectedKind: 'reference', expectedPassage: 'John 3:16' },
+        ],
+        mustNotLead: [{ ref: 'John 3:18', why: 'w' }],
+      } as unknown as CorpusFixture,
+    ]);
+
+    expect(
+      result.findings?.some(
+        (finding) => finding.message.includes('never both') && finding.message.includes('mustNotLead'),
+      ),
+    ).toBe(true);
+  });
+});

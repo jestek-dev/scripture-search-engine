@@ -19,6 +19,21 @@ import { fail, notApplicable, pass, warn, type GateFinding, type GateResult } fr
 export const WITHIN_TOP_VALUES = [1, 3, 5, 10] as const;
 export type WithinTop = (typeof WITHIN_TOP_VALUES)[number];
 
+/**
+ * mustNotLead measures leadership, not presence, so its window is narrow by
+ * construction: rank 1 (the default) or the top 3. A wider ban is what
+ * mustNotRank is for.
+ */
+export const MUST_NOT_LEAD_WINDOWS = [1, 3] as const;
+export type MustNotLeadWindow = (typeof MUST_NOT_LEAD_WINDOWS)[number];
+
+/**
+ * Machine-report category for a guard whose reference resolves to no verse
+ * in the running corpus. Semantic (not G3_*-coded) because vacuity rides a
+ * warn sub-result through report generation on honest runs.
+ */
+export const GUARD_VACUOUS_CATEGORY = 'sse.gauntlet.v1.finding.g3-golden.guard-vacuous';
+
 export interface CorpusExpectation {
   /** Canonical Milestone 2 spelling. */
   readonly ref?: string;
@@ -33,6 +48,21 @@ export interface PreferredOrder {
   readonly above: string;
   readonly below: string;
   readonly withinTop?: WithinTop;
+}
+
+/**
+ * The missing middle between preferredOrder (needs a named counterpart
+ * present in the window) and mustNotRank (a total ban from the window): the
+ * reference MAY rank — it is scripture, and suppressing it is forbidden —
+ * but must not LEAD the fixture's query. `why` is required: every guard is
+ * an attributed human judgment, and the finding must be able to say whose
+ * reasoning it enforces.
+ */
+export interface MustNotLead {
+  readonly ref?: string;
+  readonly reference?: string;
+  readonly why?: string;
+  readonly withinTop?: MustNotLeadWindow;
 }
 
 export const REFERENCE_EXPECTATION_KINDS = ['reference', 'invalid-reference', 'discovery'] as const;
@@ -76,6 +106,7 @@ export interface CorpusFixture {
   readonly preferredOrder?: readonly PreferredOrder[];
   readonly additionalQueries?: readonly string[];
   readonly mustNotRank?: readonly { reference?: string; ref?: string; why?: string }[];
+  readonly mustNotLead?: readonly MustNotLead[];
   readonly coversConcepts?: readonly string[];
   /**
    * Reference-intent form: mutually exclusive with every discovery-measuring
@@ -115,6 +146,12 @@ interface NormalizedCorpusFixture {
   readonly preferredOrder: readonly NormalizedPreferredOrder[];
   readonly additionalQueries: readonly string[];
   readonly mustNotRank: readonly { ref: string; why?: string; range: { start: number; end: number } }[];
+  readonly mustNotLead: readonly {
+    ref: string;
+    why: string;
+    withinTop: MustNotLeadWindow;
+    range: { start: number; end: number };
+  }[];
   readonly coversConcepts?: readonly string[];
   readonly referenceExpectations: readonly ReferenceExpectation[];
 }
@@ -133,6 +170,7 @@ const FIXTURE_FIELDS = new Set([
   'preferredOrder',
   'additionalQueries',
   'mustNotRank',
+  'mustNotLead',
   'coversConcepts',
   'note',
   'alsoAcceptable',
@@ -147,6 +185,7 @@ const DISCOVERY_ONLY_FIELDS = [
   'expectedWithinTop',
   'preferredOrder',
   'mustNotRank',
+  'mustNotLead',
   'coversConcepts',
 ] as const;
 const REFERENCE_EXPECTATION_FIELDS = new Set([
@@ -164,6 +203,7 @@ const EXPECTATION_FIELDS = new Set([
 ]);
 const PREFERRED_ORDER_FIELDS = new Set(['above', 'below', 'withinTop']);
 const MUST_NOT_RANK_FIELDS = new Set(['ref', 'reference', 'why']);
+const MUST_NOT_LEAD_FIELDS = new Set(['ref', 'reference', 'why', 'withinTop']);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -256,6 +296,7 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
     'expectedWithinTop' in input ||
     'preferredOrder' in input ||
     'mustNotRank' in input ||
+    'mustNotLead' in input ||
     'additionalQueries' in input ||
     'referenceExpectations' in input;
   if (!isCorpusFixture) return { findings: [] };
@@ -445,6 +486,58 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
     }
   }
 
+  const mustNotLead: NormalizedCorpusFixture['mustNotLead'][number][] = [];
+  const leadGuardRanges = new Set<string>();
+  if (input.mustNotLead !== undefined && !Array.isArray(input.mustNotLead)) {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'mustNotLead must be an array'));
+  } else {
+    for (const [index, guard] of (input.mustNotLead ?? []).entries()) {
+      const location = `mustNotLead[${index}]`;
+      if (!isRecord(guard)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must be an object`));
+        continue;
+      }
+      findings.push(...unknownFieldFindings(fixtureId, guard, MUST_NOT_LEAD_FIELDS, location));
+      const hasRef = guard.ref !== undefined;
+      const hasReference = guard.reference !== undefined;
+      if (hasRef === hasReference) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must contain exactly one of "ref" or legacy "reference"`));
+        continue;
+      }
+      const parsed = parsedRef(fixtureId, hasRef ? guard.ref : guard.reference, location, findings);
+      if (!parsed) continue;
+      if (typeof guard.why !== 'string' || !guard.why.trim()) {
+        // Unlike mustNotRank's legacy-optional why: a leadership demotion is
+        // always a human ruling, and the finding must be able to cite it.
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.why is required: name the human judgment this guard enforces`));
+        continue;
+      }
+      if (guard.withinTop !== undefined
+          && !(MUST_NOT_LEAD_WINDOWS as readonly number[]).includes(guard.withinTop as number)) {
+        findings.push(
+          fixtureFinding(
+            fixtureId,
+            'G3_FIXTURE_INVALID_WINDOW',
+            `${location}.withinTop must be 1 or 3 — mustNotLead measures leadership, not presence`,
+          ),
+        );
+        continue;
+      }
+      const rangeKey = `${parsed.range.start}:${parsed.range.end}`;
+      if (leadGuardRanges.has(rangeKey)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_DUPLICATE_EXPECTATION', `${location} duplicates a mustNotLead reference range`, { ref: parsed.ref }));
+        continue;
+      }
+      leadGuardRanges.add(rangeKey);
+      mustNotLead.push({
+        ref: parsed.ref,
+        why: guard.why,
+        withinTop: (guard.withinTop as MustNotLeadWindow | undefined) ?? 1,
+        range: parsed.range,
+      });
+    }
+  }
+
   const referenceExpectations: ReferenceExpectation[] = [];
   if (input.referenceExpectations !== undefined) {
     const mixed = DISCOVERY_ONLY_FIELDS.filter((field) => field in input);
@@ -566,6 +659,7 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
       preferredOrder,
       additionalQueries: (input.additionalQueries as readonly string[] | undefined) ?? [],
       mustNotRank,
+      mustNotLead,
       ...(Array.isArray(input.coversConcepts) ? { coversConcepts: input.coversConcepts as readonly string[] } : {}),
       referenceExpectations,
     },
@@ -734,6 +828,52 @@ async function runNormalisedFixture(
     for (const query of [fixture.query, ...fixture.additionalQueries]) {
       findings.push(...(await runOneQuery(engine, fixture, query)));
     }
+    findings.push(...(await guardVacuityFindings(engine, fixture, findings)));
+  }
+  return findings;
+}
+
+/**
+ * A guard that never fires has two very different explanations: the corpus
+ * behaved, or the corpus does not contain the guarded passage at all. The
+ * second is a decoration wearing a guard's name — the F34 finding — so it is
+ * reported as VACUOUS, named, at warn level. Never as a pass.
+ */
+async function guardVacuityFindings(
+  engine: ScriptureEngine,
+  fixture: NormalizedCorpusFixture,
+  observed: readonly GateFinding[],
+): Promise<GateFinding[]> {
+  const violatedRefs = new Set(
+    observed
+      .filter(
+        (finding) =>
+          finding.categoryCode === 'G3_MUST_NOT_RANK' || finding.categoryCode === 'G3_MUST_NOT_LEAD',
+      )
+      .map((finding) => finding.params?.['ref'])
+      .filter((ref): ref is string => typeof ref === 'string'),
+  );
+  const findings: GateFinding[] = [];
+  const guards: readonly { readonly field: string; readonly ref: string }[] = [
+    ...fixture.mustNotRank.map((guard) => ({ field: 'mustNotRank', ref: guard.ref })),
+    ...fixture.mustNotLead.map((guard) => ({ field: 'mustNotLead', ref: guard.ref })),
+  ];
+  for (const guard of guards) {
+    // A ref observed in the results is definitionally present; the violation
+    // finding already rings and must not be contradicted by a vacuity claim.
+    if (violatedRefs.has(guard.ref)) continue;
+    const passage = await engine.passage(guard.ref);
+    const present = passage.kind === 'passage' && passage.passage.verses.length > 0;
+    if (present) continue;
+    findings.push({
+      message:
+        `${fixture.id}${fixture.status === 'pending' ? ' (pending)' : ''}: ${guard.field} guard ` +
+        `"${guard.ref}" is VACUOUS — the reference resolves to no verse in the running corpus, so ` +
+        'the guard cannot protect anything until the corpus carries it',
+      subjects: [fixture.id],
+      categoryCode: GUARD_VACUOUS_CATEGORY,
+      params: { field: guard.field, ref: guard.ref, fixtureStatus: fixture.status },
+    });
   }
   return findings;
 }
@@ -873,6 +1013,23 @@ async function runOneQuery(
     }
   }
 
+  for (const guard of fixture.mustNotLead) {
+    const window = results.slice(0, guard.withinTop);
+    const offender = window.find((entry) => hitInRange(entry, guard.range));
+    if (offender) {
+      findings.push(
+        fixtureFinding(
+          fixture.id,
+          'G3_MUST_NOT_LEAD',
+          `${guard.ref} must not lead "${query}" but appears at position ` +
+            `${window.indexOf(offender) + 1} of the top ${guard.withinTop}. ${guard.why} ` +
+            '(It may rank below the leadership window — scripture is demoted here, never suppressed.)',
+          { query, ref: guard.ref, withinTop: guard.withinTop },
+        ),
+      );
+    }
+  }
+
   for (const preference of fixture.preferredOrder) {
     const pairWindow = results.slice(0, preference.withinTop);
     const above = pairWindow.find((entry) => hitInRange(entry, preference.aboveRange));
@@ -908,27 +1065,44 @@ export async function corpusGoldenGate(
   const runnable = validated.flatMap((result) => result.fixture ? [result.fixture] : []);
   const active = runnable.filter((fixture) => fixture.status === 'active' && isRunnable(fixture));
   const pending = runnable.filter((fixture) => fixture.status === 'pending' && isRunnable(fixture));
+  const isVacuous = (finding: GateFinding): boolean =>
+    finding.categoryCode === GUARD_VACUOUS_CATEGORY;
+
+  const activeRun: GateFinding[] = [];
+  for (const fixture of active) {
+    activeRun.push(...(await runNormalisedFixture(engine, fixture)));
+  }
+  const findings: GateFinding[] = [
+    ...validated.flatMap((result) => result.findings),
+    ...activeRun.filter((finding) => !isVacuous(finding)),
+  ];
+  const vacuousFindings: GateFinding[] = activeRun.filter(isVacuous);
+
   const metrics = {
     activeCorpusFixtures: active.length,
     pendingCorpusFixtures: pending.length,
     expectedTopAssertions: runnable.reduce((count, fixture) => count + fixture.expectedTop.length, 0),
     preferredOrderAssertions: runnable.reduce((count, fixture) => count + fixture.preferredOrder.length, 0),
+    mustNotLeadAssertions: runnable.reduce((count, fixture) => count + fixture.mustNotLead.length, 0),
     fixtureValidationFailures: validated.reduce((count, result) => count + result.findings.length, 0),
   };
 
-  const findings: GateFinding[] = validated.flatMap((result) => result.findings);
-  for (const fixture of active) {
-    findings.push(...(await runNormalisedFixture(engine, fixture)));
-  }
-
   if (findings.length > 0) {
-    return fail(
+    const failure = fail(
       'G3-golden',
       'Golden regression (corpus)',
       `${findings.length} corpus fixture expectation(s) failed`,
       findings,
       metrics,
     );
+    // Vacuity stays visible even beside real failures — a red run must not
+    // hide which of its guards were decorations all along.
+    return vacuousFindings.length > 0
+      ? mergeGateResults('Golden regression (corpus)', [
+          failure,
+          guardVacuityResult(vacuousFindings),
+        ])
+      : failure;
   }
 
   // Pending fixtures are RUN even though they cannot fail the build, because
@@ -938,10 +1112,20 @@ export async function corpusGoldenGate(
   // current failure detail must be visible, not just "now passing".
   const nowPassing: string[] = [];
   const stillFailing: GateFinding[] = [];
+  let vacuousOnlyPending = 0;
   for (const fixture of pending) {
-    const pendingFindings = await runNormalisedFixture(engine, fixture);
-    if (pendingFindings.length === 0) {
+    const allPendingFindings = await runNormalisedFixture(engine, fixture);
+    const pendingFindings = allPendingFindings.filter((finding) => !isVacuous(finding));
+    const pendingVacuous = allPendingFindings.filter(isVacuous);
+    vacuousFindings.push(...pendingVacuous);
+    if (allPendingFindings.length === 0) {
       nowPassing.push(fixture.id);
+      continue;
+    }
+    if (pendingFindings.length === 0) {
+      // Only vacuous guards: nothing failed, but nothing was measured either.
+      // Not a promotion candidate — promoting it would activate a decoration.
+      vacuousOnlyPending += 1;
       continue;
     }
     const preview = pendingFindings
@@ -974,7 +1158,7 @@ export async function corpusGoldenGate(
     'G3-golden',
     'Golden regression (corpus)',
     `${active.length} corpus fixture(s) hold; ${pending.length} pending${promote}`,
-    metrics,
+    { ...metrics, vacuousGuards: vacuousFindings.length },
     ),
     promotionCandidates: nowPassing,
   };
@@ -996,8 +1180,29 @@ export async function corpusGoldenGate(
           'Pending fixture status',
           pending.length === 0
             ? 'Pending fixture status: no pending fixtures'
-            : `Pending fixture status: ${pending.length} pending, all currently passing`,
+            : vacuousOnlyPending > 0
+              ? `Pending fixture status: ${pending.length} pending, ` +
+                `${vacuousOnlyPending} vacuous-guarded (see Guard vacuity), none failing`
+              : `Pending fixture status: ${pending.length} pending, all currently passing`,
           { pendingFailures: 0 },
         );
-  return mergeGateResults('Golden regression (corpus)', [corpusResult, pendingStatus]);
+  return mergeGateResults('Golden regression (corpus)', [
+    corpusResult,
+    pendingStatus,
+    ...(vacuousFindings.length > 0 ? [guardVacuityResult(vacuousFindings)] : []),
+  ]);
+}
+
+/**
+ * The vacuity sub-result: warn-level, named refs, merged into G3 so an
+ * unmeasurable guard flips the verdict to ADMIT_WITH_WARNINGS instead of
+ * passing silently. S-tier declares zero vacuous guards a requirement.
+ */
+function guardVacuityResult(vacuousFindings: readonly GateFinding[]): GateResult {
+  return warn(
+    'G3-golden',
+    'Guard vacuity',
+    `Guard vacuity: ${vacuousFindings.length} guard(s) name references absent from this corpus`,
+    vacuousFindings,
+  );
 }
