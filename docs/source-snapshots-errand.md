@@ -137,10 +137,13 @@ Then exactly one of:
 Reply to the implementation thread with: the three capture hashes (+ the old
 WEB bytes outcome), and confirmation the release exists with verified
 digests. That answers **J52/A5a** (and **A5b** if the search was empty).
-The implementers then run the delta measurement against the captured bytes
-(`pipeline/scripts/webDelta.ts`; staged PR shape in
-`docs/web-repin-staged.md`) and bring you A5c — the review of any genuine
-verse-text changes — before any re-pin PR merges.
+The implementers then run the delta measurements against the captured bytes
+— WEB with `pipeline/scripts/webDelta.ts` (staged PR shape in
+`docs/web-repin-staged.md`), the two OpenBible snapshots with
+`pipeline/scripts/openbibleDelta.ts` (staged PR shape in
+`docs/openbible-repin-staged.md`) — and bring you A5c (review of any genuine
+WEB verse-text changes) plus the OpenBible consumed-scope vote-movement list,
+before any re-pin PR merges.
 
 What this errand does NOT do: edit any manifest, touch any checksum, merge
 anything. The re-pins remain reviewed PRs (`docs/source-repins.md`), queued
