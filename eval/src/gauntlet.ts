@@ -27,7 +27,8 @@ import { createEngine } from '@jestek-dev/scripture-engine';
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import {
   collisionGate,
-  singleTokenCollapses,
+  lexiconInventoryCheck,
+  LEXICON_INVENTORY_PATH,
   type ConceptRecord,
 } from './gates/collision.js';
 import {
@@ -950,6 +951,14 @@ async function main(): Promise<void> {
     const doctrinalReviewsContents = existsSync(reviewsPath) ? readFileSync(reviewsPath, 'utf8') : null;
     const flaggedPairingsContents = existsSync(watchlistPath) ? readFileSync(watchlistPath, 'utf8') : null;
 
+    // Single-token-collapse acknowledgment record (plan P3.2 gate half):
+    // contents-or-null for the same reason as the doctrinal files — the
+    // check itself reports a missing file against the live collapse count.
+    const lexiconInventoryPath = join(REPO_ROOT, ...LEXICON_INVENTORY_PATH.split('/'));
+    const lexiconInventoryContents = existsSync(lexiconInventoryPath)
+      ? readFileSync(lexiconInventoryPath, 'utf8')
+      : null;
+
     const distillate = loadDistillate();
 
     // rankQuality thresholds and the rank-baseline approval pair (E5) are
@@ -997,28 +1006,7 @@ async function main(): Promise<void> {
               'ontology failed to compile',
               ontologyErrors.map((message) => ({ message })),
             )
-          : (() => {
-              const result = collisionGate(concepts, budgets.collision);
-              if (result.status !== 'pass') return result;
-              // Collapses are reported ON the passing gate rather than as their
-              // own row: they are a curation diagnostic, not an admission
-              // decision, and they must be visible without ever blocking.
-              const collapses = singleTokenCollapses(concepts);
-              if (collapses.length === 0) return result;
-              return {
-                ...result,
-                summary:
-                  `${result.summary}; ${collapses.length} lexicon phrase(s) collapse to a ` +
-                  'single token and therefore act as bare-word triggers',
-                findings: collapses.map((entry) => ({
-                  message:
-                    `${entry.conceptId}: "${entry.phrase}" normalizes to the single token ` +
-                    `"${entry.token}", so the bare query "${entry.token}" fires this concept. ` +
-                    'Intended for most; check it is intended for this one.',
-                  subjects: [entry.conceptId],
-                })),
-              };
-            })();
+          : collisionGate(concepts, budgets.collision);
     // Doctrinal-guardrail sub-checks (docs/DOCTRINAL-BASIS.md §5), merged the
     // way concept-coverage merged into G3: review records ride G1 (they are
     // provenance for the human admission decision), the pairing watchlist
@@ -1038,6 +1026,15 @@ async function main(): Promise<void> {
         ? g4Base
         : mergeGateResults('Concept collision', [
             g4Base,
+            // Deny-list over singleTokenCollapses (plan P3.2 gate half):
+            // every collapse must be acknowledged in lexicon-inventory.yaml
+            // or the row fails naming it; stale acknowledgments fail too.
+            // Skipped while the ontology itself fails to compile — the
+            // compile failure already rejects, and collapses computed from a
+            // broken ontology would only produce confusing double findings.
+            ...(ontologyErrors.length === 0
+              ? [lexiconInventoryCheck(concepts, lexiconInventoryContents)]
+              : []),
             flaggedPairingsCheck({
               concepts,
               anchors,
