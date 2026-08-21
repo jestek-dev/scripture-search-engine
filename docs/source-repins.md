@@ -116,3 +116,8 @@ over it.
 
 Reference: `docs/plans/2026-08-14-implementation-plan.md` §7.3
 (`source-drift`), which this process operationalizes.
+
+Companion record: `docs/corpus-payload-dependency.md` — what the current WEB
+drift blocks on the data side (the corpus-expansion payload), how the
+expansion PR composes with the re-pin PR in one regeneration cycle, and when
+that dependency is discharged.
