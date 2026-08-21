@@ -153,3 +153,57 @@ anchors:
     expect(errors[0]).toContain('declares no sources');
   });
 });
+
+describe('compileOntology repeated-token lexicon invariant', () => {
+  // The engine's full-query parity (0.10.0 stage 3) assumes a phrase's stored
+  // tokenCount counts DISTINCT tokens. The shared tokenizer's
+  // significantWords() deduplicates by construction (pinned in
+  // engine/test/tokenizer.test.ts), so the importer's repeated-token error is
+  // unreachable today; it exists to fail closed under tokenizer drift. These
+  // tests keep the distinctness a checked invariant rather than a property of
+  // today's data.
+  it('stores deduplicated tokens for a phrase whose surface form repeats a word', () => {
+    const { errors, ontology } = compileOntology([
+      concept(
+        'lex-repeat.yaml',
+        `id: lex-repeat-test
+label: Lex Repeat Test
+lexicon:
+  - an eye for an eye
+`,
+      ),
+    ]);
+    expect(errors).toHaveLength(0);
+    const rows = ontology.lexicon.filter((entry) => entry.conceptId === 'lex-repeat-test');
+    expect(rows).toHaveLength(1);
+    // The stored form is the deduplicated one, and tokenCount counts it —
+    // NOT the surface form's two occurrences of "eye". This is exactly the
+    // count parity compares against the query's (also deduplicated) tokens.
+    expect(rows[0]!.normalized).toBe('eye');
+    expect(rows[0]!.tokenCount).toBe(1);
+  });
+
+  it('keeps phrases whose normalized tokens are distinct, however many stopwords repeat', () => {
+    const { errors, ontology } = compileOntology([
+      concept(
+        'lex-distinct.yaml',
+        `id: lex-distinct-test
+label: Lex Distinct Test
+lexicon:
+  - the peace of the God of the hope
+  - be doers of the word
+`,
+      ),
+    ]);
+    // Stopwords may repeat freely ("the" and "of" above); only a repeated
+    // SIGNIFICANT token is the hazard. What normalization keeps is the
+    // tokenizer's call, so assert via the compiled rows rather than guessing.
+    const rows = ontology.lexicon.filter((entry) => entry.conceptId === 'lex-distinct-test');
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      const tokens = row.normalized.split(' ');
+      expect(new Set(tokens).size).toBe(tokens.length);
+    }
+    expect(errors.filter((error) => error.includes('repeated token'))).toHaveLength(0);
+  });
+});

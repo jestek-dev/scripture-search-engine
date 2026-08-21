@@ -77,6 +77,62 @@ describe('deterministic ranking', () => {
     expect(results.map((r) => r.targetId)).toEqual(['verbatim', 'anchored']);
   });
 
+  it('treats a near-tie as unequal: the curated tie-break fires on EXACT score equality only', () => {
+    // 30.01-ish vs exactly 30 — a gap smaller than any plausible epsilon.
+    // An approximate-equality comparator (|a - b| < ~0.011 counted as a tie)
+    // would call these tied and hand first place to the anchored side via the
+    // curated tie-break; the shipped rule fires on exact equality only, so
+    // the higher score must lead even though it loses BOTH the curated
+    // tie-break and the targetId fallback.
+    const results = rank([
+      candidate('z-bare-verbatim', 'g1', [
+        { family: 'exact_phrase', label: 'Exact phrase', strength: 30.01 / 60 },
+      ]),
+      candidate('a-curated-anchored', 'g2', [
+        { family: 'concept_anchor', label: 'Theme: curated', strength: 0.75 },
+      ]),
+    ]);
+    expect(results[0]!.score).toBeGreaterThan(results[1]!.score);
+    expect(results[0]!.score - results[1]!.score).toBeLessThan(0.011);
+    expect(results.map((r) => r.targetId)).toEqual(['z-bare-verbatim', 'a-curated-anchored']);
+  });
+
+  it('keeps a strict near-tie score ladder strict under every input order (comparator transitivity)', () => {
+    // Three results ~0.005 apart with the anchor carrier in the middle. An
+    // epsilon comparator is not transitive on this ladder (top ~ middle and
+    // middle ~ bottom but top !~ bottom), so its sort output can depend on
+    // input order — a determinism hazard, not a styling choice. The exact
+    // comparator must produce the same strictly-descending order for every
+    // permutation of the input.
+    const top = candidate('z-top-verbatim', 'g1', [
+      { family: 'exact_phrase', label: 'Exact phrase', strength: 30.01 / 60 },
+    ]);
+    const middle = candidate('m-middle-anchored', 'g2', [
+      { family: 'concept_anchor', label: 'Theme: curated', strength: 30.005 / 40 },
+    ]);
+    const bottom = candidate('a-bottom-verbatim', 'g3', [
+      { family: 'exact_phrase', label: 'Exact phrase', strength: 0.5 },
+    ]);
+    const permutations: Candidate[][] = [
+      [top, middle, bottom],
+      [top, bottom, middle],
+      [middle, top, bottom],
+      [middle, bottom, top],
+      [bottom, top, middle],
+      [bottom, middle, top],
+    ];
+    for (const permutation of permutations) {
+      const results = rank(permutation);
+      expect(results.map((r) => r.targetId)).toEqual([
+        'z-top-verbatim',
+        'm-middle-anchored',
+        'a-bottom-verbatim',
+      ]);
+      expect(results[0]!.score).toBeGreaterThan(results[1]!.score);
+      expect(results[1]!.score).toBeGreaterThan(results[2]!.score);
+    }
+  });
+
   it('falls through to targetId when both tied authoritative results carry (or both lack) anchor evidence', () => {
     const bothAnchored = rank([
       candidate('b', 'g1', [{ family: 'concept_anchor', label: 'Theme: one', strength: 0.75 }]),

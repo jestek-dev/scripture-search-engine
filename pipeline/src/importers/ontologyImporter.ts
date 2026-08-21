@@ -128,6 +128,28 @@ export function compileOntology(files: readonly { name: string; contents: string
         );
         continue;
       }
+      // The engine's full-query parity (0.10.0 stage 3) rests on "matched
+      // token count equals query token count implies the phrase covers the
+      // whole query" — which holds only while no stored normalized phrase
+      // repeats a token ("an eye for an eye" -> `eye eye` would inflate
+      // tokenCount past the distinct tokens matching actually requires,
+      // granting inflated coverage and spurious parity). significantWords()
+      // already deduplicates by construction, so this branch is unreachable
+      // today; it exists to fail CLOSED if tokenizer drift ever removes that
+      // dedupe, instead of shipping inflated tokenCounts silently. The
+      // dedupe itself is pinned in engine/test/tokenizer.test.ts; the
+      // distinctness of every compiled row is pinned in
+      // pipeline/test/ontologyImporter.test.ts.
+      if (new Set(tokens).size !== tokens.length) {
+        errors.push(
+          `${parsed.id}: lexicon phrase "${phrase}" normalized with a repeated token ` +
+            `(\`${tokens.join(' ')}\`) — the shared tokenizer is expected to deduplicate, ` +
+            'and the engine matches DISTINCT query tokens, so a repeat would inflate ' +
+            'coverage and grant full-query parity the match has not earned. The tokenizer ' +
+            'contract has drifted; fix that before recompiling the ontology.',
+        );
+        continue;
+      }
       lexicon.push({
         conceptId: parsed.id,
         phrase,
