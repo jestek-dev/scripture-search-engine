@@ -1765,10 +1765,18 @@ describe('budgetsPropertyGate mutations', () => {
     expect(result.metrics?.['propertySeed']).toBe(G6_PROPERTY_SEED);
   });
 
-  it('the reviewed-constants half reports not-applicable WITH its reason, never a fake pass', () => {
+  it('the reviewed-constants half reports not-applicable WITH its reason when the mirror is absent, never a fake pass', () => {
     const result = reviewedConstantsCheck();
     expect(result.status).toBe('not-applicable');
-    expect(result.summary).toMatch(/reviewed-constants mirror not yet in budgets\.json/);
+    expect(result.summary).toMatch(/reviewed-constants mirror absent from budgets\.json/);
+  });
+
+  it('the reviewed-constants half rings when the mirror disagrees with the engine', () => {
+    const result = reviewedConstantsCheck({
+      soleEvidenceMaxPoints: { translation_variant: 7 },
+    });
+    expect(result.status).toBe('fail');
+    expect((result.findings ?? []).some((f) => f.categoryCode === 'mirror-mismatch')).toBe(true);
   });
 });
 

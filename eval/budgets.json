@@ -84,6 +84,27 @@
     "minPmi": 2.0,
     "maxTermsPerVerse": 40
   },
+  "signalBudgets": {
+    "$comment": [
+      "G6 reviewed-constants mirror of the engine's ranking constants",
+      "(engine/src/ranking/budgets.ts). Built INCREMENTALLY by the 0.10.0",
+      "stages - each stage adds the constant it introduces - and complete at",
+      "squash time. reviewedConstantsCheck fails on any key here that does not",
+      "equal the engine's value, and on any key the engine does not export, so",
+      "a constant cannot be retuned in code without this reviewed-data change",
+      "travelling in the same commit. Changing a value here changes ordering:",
+      "ENGINE_VERSION must bump in the same commit (covenant #2).",
+      "",
+      "soleEvidenceMaxPoints (stage 1, P3.1): a result whose EVERY surviving",
+      "reason family is named in this map has its total capped at the named",
+      "ceiling - in practice a lone translation_variant caps at 6, below",
+      "token_overlap's 10 and level with proximity/cross_reference, so a",
+      "bag-of-stems vocabulary hint can accompany but never overrule an honest",
+      "text match. The value 6 is plan-recommended pending J20 sign-off, which",
+      "rides the normal approval flow."
+    ],
+    "soleEvidenceMaxPoints": { "translation_variant": 6 }
+  },
   "noise": {
     "$comment": "G8. Measured against the previous artifact. Exceeding any of these fails the build and names the offending probes.",
     "$comment_minMeanDistinctiveness": [

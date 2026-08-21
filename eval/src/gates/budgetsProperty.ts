@@ -346,17 +346,95 @@ function hierarchyInvariantFinding(budgets: SignalBudgets): GateFinding | null {
 }
 
 /**
- * G6 reviewed-constants half. Delivered by the Phase-3 ranking-fixes work,
- * which mirrors the `ranking/budgets.ts` constants into `eval/budgets.json`
- * as reviewed data and compares them here. Until then this half honestly
- * cannot run — and per gate discipline it says so instead of passing.
+ * G6 reviewed-constants half: the engine's reviewed ranking constants must
+ * equal their mirror in `eval/budgets.json` (`signalBudgets`), so a constant
+ * cannot be retuned in code without the reviewed-data change travelling in
+ * the same commit. The mirror is built INCREMENTALLY by the 0.10.0 stages —
+ * each stage adds the constant it introduces — and is complete at squash
+ * time; this check verifies every key the mirror carries and fails on any
+ * mismatch or on a key the engine does not export (a stale mirror is worse
+ * than none: it reads as protection). With no mirror block at all this half
+ * honestly cannot run — and per gate discipline it says so instead of
+ * passing.
+ *
+ * The gauntlet passes the parsed `signalBudgets` block; the gate module does
+ * no I/O of its own.
  */
-export function reviewedConstantsCheck(): GateResult {
-  return notApplicable(
+export function reviewedConstantsCheck(signalBudgets?: unknown): GateResult {
+  if (signalBudgets === undefined || signalBudgets === null) {
+    return notApplicable(
+      'G6-signal-budgets',
+      'Signal budgets',
+      'signalBudgets reviewed-constants mirror absent from budgets.json (0.10.0 stages add it incrementally)',
+    );
+  }
+
+  const findings: GateFinding[] = [];
+  const mirror = signalBudgets as Record<string, unknown>;
+  // Engine-exported reviewed constants the mirror may carry. Later 0.10.0
+  // stages extend this registry together with the mirror they add.
+  const engineValues: Record<string, unknown> = {
+    soleEvidenceMaxPoints: DEFAULT_BUDGETS.soleEvidenceMaxPoints,
+  };
+
+  const mirroredKeys = Object.keys(mirror)
+    .filter((key) => !key.startsWith('$comment'))
+    .sort();
+  if (mirroredKeys.length === 0) {
+    findings.push({
+      message:
+        'signalBudgets block present but mirrors no constants — an empty mirror reads as protection while providing none',
+      subjects: ['signalBudgets'],
+      categoryCode: 'empty-mirror',
+    });
+  }
+  for (const key of mirroredKeys) {
+    if (!(key in engineValues)) {
+      findings.push({
+        message: `signalBudgets mirrors '${key}', which the engine does not export — stale mirror`,
+        subjects: [key],
+        categoryCode: 'unknown-constant',
+      });
+      continue;
+    }
+    const expected = canonicalConstant(engineValues[key]);
+    const actual = canonicalConstant(mirror[key]);
+    if (expected !== actual) {
+      findings.push({
+        message: `signalBudgets.${key} mirror ${actual} does not equal engine value ${expected}`,
+        subjects: [key],
+        categoryCode: 'mirror-mismatch',
+        params: { expected, actual },
+      });
+    }
+  }
+
+  if (findings.length > 0) {
+    return fail(
+      'G6-signal-budgets',
+      'Signal budgets',
+      `reviewed-constants mirror disagrees with the engine on ${findings.length} entr${findings.length === 1 ? 'y' : 'ies'}`,
+      findings,
+    );
+  }
+  return pass(
     'G6-signal-budgets',
     'Signal budgets',
-    'reviewed-constants mirror not yet in budgets.json (ranking-fixes)',
+    `reviewed-constants mirror matches the engine: ${mirroredKeys.join(', ')}`,
+    { mirroredConstants: mirroredKeys.length },
   );
+}
+
+/** Key-sorted JSON so object mirrors compare by value, not key order. */
+function canonicalConstant(value: unknown): string {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+    return JSON.stringify(value);
+  }
+  const record = value as Record<string, unknown>;
+  return `{${Object.keys(record)
+    .sort()
+    .map((key) => `${JSON.stringify(key)}:${canonicalConstant(record[key])}`)
+    .join(',')}}`;
 }
 
 export function budgetsPropertyGate(

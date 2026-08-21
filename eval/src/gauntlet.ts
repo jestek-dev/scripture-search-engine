@@ -147,6 +147,8 @@ interface Budgets {
   readonly rankQuality?: unknown;
   /** Validated at runtime by validateTiersBlock (E6) — reviewed data, never trusted shapes. */
   readonly tiers?: unknown;
+  /** G6 reviewed-constants mirror — validated by reviewedConstantsCheck, never trusted shapes. */
+  readonly signalBudgets?: unknown;
   readonly latency: { readonly p95Ms: number };
   readonly noise: {
     readonly maxTop10ChurnRatio: number;
@@ -1054,11 +1056,16 @@ async function main(): Promise<void> {
       g3,
       g4,
       distinctivenessGate(distillate, budgets.distinctiveness),
-      // G6 rides one roster row like G2/G3: the reviewed-constants half is
-      // honest N/A until Phase 3 mirrors the budget constants into
-      // budgets.json; the property half needs no data, so it always runs —
-      // this row never has a fully not-applicable state.
-      mergeGateResults('Signal budgets', [reviewedConstantsCheck(), budgetsPropertyGate()]),
+      // G6 rides one roster row like G2/G3: the reviewed-constants half
+      // compares the engine's constants against the signalBudgets mirror in
+      // budgets.json (built incrementally by the 0.10.0 stages; honest N/A
+      // only while the mirror block is absent); the property half needs no
+      // data, so it always runs — this row never has a fully not-applicable
+      // state.
+      mergeGateResults('Signal budgets', [
+        reviewedConstantsCheck(budgets.signalBudgets),
+        budgetsPropertyGate(),
+      ]),
       correlationGate(),
       probeGates[0]!,
       saturationGate(distillate, budgets.saturation),

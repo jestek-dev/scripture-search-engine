@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -106,25 +108,88 @@ describe('budgetsPropertyGate (G6 property half)', () => {
   });
 });
 
-describe('reviewedConstantsCheck (G6 reviewed-constants half, pre-Phase-3)', () => {
-  it('reports not-applicable with the reason, never a fake pass', () => {
+describe('reviewedConstantsCheck (G6 reviewed-constants half)', () => {
+  const committedMirror = () =>
+    (JSON.parse(readFileSync(new URL('../budgets.json', import.meta.url), 'utf8')) as {
+      signalBudgets?: unknown;
+    }).signalBudgets;
+
+  it('reports not-applicable with the reason when the mirror block is absent, never a fake pass', () => {
     const result = reviewedConstantsCheck();
     expect(result.gate).toBe('G6-signal-budgets');
     expect(result.status).toBe('not-applicable');
     expect(result.summary).toBe(
-      'reviewed-constants mirror not yet in budgets.json (ranking-fixes)',
+      'signalBudgets reviewed-constants mirror absent from budgets.json (0.10.0 stages add it incrementally)',
     );
+  });
+
+  it('passes when the committed budgets.json mirror equals the engine constants', () => {
+    const result = reviewedConstantsCheck(committedMirror());
+    expect(result.status).toBe('pass');
+    expect(result.summary).toContain('soleEvidenceMaxPoints');
+  });
+
+  it('the committed mirror actually names the sole-evidence floor', () => {
+    expect(committedMirror()).toMatchObject({
+      soleEvidenceMaxPoints: DEFAULT_BUDGETS.soleEvidenceMaxPoints,
+    });
+  });
+
+  it('rings on a retuned constant: mirror value differing from the engine fails', () => {
+    const result = reviewedConstantsCheck({
+      soleEvidenceMaxPoints: { translation_variant: 14 },
+    });
+    expect(result.status).toBe('fail');
+    expect((result.findings ?? []).some((f) => f.categoryCode === 'mirror-mismatch')).toBe(true);
+  });
+
+  it('rings on a stale mirror: a key the engine does not export fails', () => {
+    const result = reviewedConstantsCheck({
+      ...(committedMirror() as Record<string, unknown>),
+      retiredConstant: 3,
+    });
+    expect(result.status).toBe('fail');
+    expect((result.findings ?? []).some((f) => f.categoryCode === 'unknown-constant')).toBe(true);
+  });
+
+  it('rings on an empty mirror block - decoration is worse than absence', () => {
+    const result = reviewedConstantsCheck({ $comment: ['empty'] });
+    expect(result.status).toBe('fail');
+    expect((result.findings ?? []).some((f) => f.categoryCode === 'empty-mirror')).toBe(true);
+  });
+
+  it('compares by value, not key order', () => {
+    const result = reviewedConstantsCheck({
+      soleEvidenceMaxPoints: JSON.parse(
+        JSON.stringify(DEFAULT_BUDGETS.soleEvidenceMaxPoints),
+      ),
+    });
+    expect(result.status).toBe('pass');
   });
 });
 
 describe('merged G6 roster row', () => {
-  it('is a single required row: N/A half + passing property half = pass', () => {
-    const row = mergeGateResults('Signal budgets', [reviewedConstantsCheck(), budgetsPropertyGate()]);
+  it('is a single required row: passing constants half + passing property half = pass', () => {
+    const mirror = (JSON.parse(
+      readFileSync(new URL('../budgets.json', import.meta.url), 'utf8'),
+    ) as { signalBudgets?: unknown }).signalBudgets;
+    const row = mergeGateResults('Signal budgets', [
+      reviewedConstantsCheck(mirror),
+      budgetsPropertyGate(),
+    ]);
     expect(row.gate).toBe('G6-signal-budgets');
     expect(row.status).toBe('pass');
     expect(row.applicability).toBe('required');
-    expect(row.summary).toContain('reviewed-constants mirror not yet in budgets.json');
+    expect(row.summary).toContain('reviewed-constants mirror matches the engine');
     expect(row.summary).toContain(String(G6_PROPERTY_SEED));
+  });
+
+  it('a tampered mirror fails the whole row', () => {
+    const row = mergeGateResults('Signal budgets', [
+      reviewedConstantsCheck({ soleEvidenceMaxPoints: { translation_variant: 999 } }),
+      budgetsPropertyGate(),
+    ]);
+    expect(row.status).toBe('fail');
   });
 
   it('a falsified property fails the whole row', () => {
