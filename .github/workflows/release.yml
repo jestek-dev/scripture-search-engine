@@ -235,6 +235,11 @@ jobs:
           fi
           VERSION=$(node -p "require('./engine/package.json').version")
           gh release upload "$GITHUB_REF_NAME" artifacts/content-artifact.json "$TARBALL" --clobber
+          # The CC BY attribution paragraph below must stay in step with the
+          # consumer-contract commitment in docs/implementation-plan.md §5
+          # (RH-8/P2.5; §5 cross-references back here). The RH-1 release
+          # checklist carries "release notes and §5 attribution text agree" —
+          # if you edit one, edit both.
           cat > "$RUNNER_TEMP/release-notes.md" <<EOF
           Deterministic Scripture artifact — CI-built, attested bytes; nothing rebuilt at tag time.
 
