@@ -343,8 +343,45 @@ export async function createEngine(
           const seedLabels = new Map(
             authoritativeAnchors.map((anchor) => [anchor.verseId, referenceLabel(anchor)]),
           );
+          // Same-concept cross-reference suppression (0.10.0 stage 4). Within
+          // one concept's anchor set, an edge between two members restates the
+          // curated consensus each member's concept_anchor chip already
+          // carries — the same humans naming the same theme, walked one hop
+          // and counted again as if independent. That stacking is how a
+          // co-anchor's ≤6 "corroboration" points closed a deliberate
+          // curated-weight gap and displaced the verse being quoted (ph2,
+          // Jer 29:11 vs Rom 15:13). Suppressed, not discounted: a ×0.5 keeps
+          // a tunable fraction of double-counting with no principled value
+          // (G7 — correlated evidence shares one budget; identical facts
+          // collapse rather than sum — applied across the anchor/xref
+          // boundary). The map is built only from AUTHORITATIVE anchors of
+          // matched concepts, so edges from outside the set, edges whose
+          // target is not a co-anchor of the seeding concept, and edges
+          // between anchors of two DIFFERENT matched concepts are all
+          // untouched, and membership lookup is order-independent by
+          // construction. related() is deliberately untouched: there the
+          // passage is the input and its edges are exactly what was asked
+          // for — no concept consensus is being restated.
+          const anchorConceptsByVerse = new Map<number, Set<string>>();
+          for (const anchor of authoritativeAnchors) {
+            const bucket = anchorConceptsByVerse.get(anchor.verseId);
+            if (bucket) bucket.add(anchor.conceptId);
+            else anchorConceptsByVerse.set(anchor.verseId, new Set([anchor.conceptId]));
+          }
+          const sharesMatchedConcept = (fromVerseId: number, toVerseId: number): boolean => {
+            const from = anchorConceptsByVerse.get(fromVerseId);
+            const to = anchorConceptsByVerse.get(toVerseId);
+            if (!from || !to) return false;
+            for (const conceptId of from) if (to.has(conceptId)) return true;
+            return false;
+          };
           const maxVotes = await concepts.maxCrossReferenceVotes();
           for (const edge of await concepts.expandCrossReferences(seeds)) {
+            // The suppressed target stays in the candidate set through its own
+            // anchor evidence (it IS an anchor of the matched concept — that
+            // is why the edge is redundant); only the restated edge evidence
+            // is dropped, so no result ever disappears from this.
+            if (sharesMatchedConcept(edge.fromVerseId, edge.verseId)) continue;
             verses.set(targetIdFor(edge), edge);
             contributions.push({
               verse: edge,
