@@ -1,7 +1,7 @@
 {
   "id": "prosperity-name-it-claim-it-answered",
   "query": "name it and claim it",
-  "status": "pending",
+  "status": "active",
   "note": [
     "PROSPERITY FAMILY — the positive half for the slogan query, written",
     "BEFORE the concept pack per the fixtures-first rule (the",
@@ -28,7 +28,15 @@
     "item F14/A4) so the stage-5 PMI de-flattening could land without",
     "breaking the sibling guard; the editorial stance rides this PR's human",
     "review, per the A4 framing (attribute, never adjudicate — no 'this",
-    "saying is false' copy anywhere in engine output)."
+    "saying is false' copy anywhere in engine output).",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-21, in the admission that landed the",
+    "asking-in-gods-will pack: measured pre-pack fail (4 expectations,",
+    "recorded in the pending-fixture commit), post-pack the slogan query",
+    "returns 1 John 5:14-15 / James 4:3 / Matthew 26:39 as the top-3 with",
+    "John 14:14 and 14:13 at #5/#6 — kept, demoted, never leading, exactly",
+    "Jesse's 2026-08-15 state, now held by curated coverage instead of a",
+    "flat passage_terms tie."
   ],
   "expectedTop": [
     {
@@ -47,6 +55,9 @@
   "expectedWithinTop": 10,
   "alsoAcceptable": [
     "Matthew 26:39"
+  ],
+  "coversConcepts": [
+    "asking-in-gods-will"
   ],
   "additionalQueries": [
     "asking amiss"
