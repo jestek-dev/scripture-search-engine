@@ -353,13 +353,16 @@ function hierarchyInvariantFinding(budgets: SignalBudgets): GateFinding | null {
  * G6 reviewed-constants half: the engine's reviewed ranking constants must
  * equal their mirror in `eval/budgets.json` (`signalBudgets`), so a constant
  * cannot be retuned in code without the reviewed-data change travelling in
- * the same commit. The mirror is built INCREMENTALLY by the 0.10.0 stages —
- * each stage adds the constant it introduces — and is complete at squash
- * time; this check verifies every key the mirror carries and fails on any
- * mismatch or on a key the engine does not export (a stale mirror is worse
- * than none: it reads as protection). With no mirror block at all this half
- * honestly cannot run — and per gate discipline it says so instead of
- * passing.
+ * the same commit. The mirror was built INCREMENTALLY by the 0.10.0 stages —
+ * each stage added the constant it introduced — and is complete as of the
+ * 0.10.0 squash; this check verifies the relation in BOTH directions: every
+ * key the mirror carries must equal the engine value and be one the engine
+ * exports (a stale mirror is worse than none: it reads as protection), and
+ * every registered engine constant must be present in the mirror (otherwise
+ * deleting a key from budgets.json — or landing a stage constant code-only —
+ * would silently shrink the reviewed surface while the gate stayed green).
+ * With no mirror block at all this half honestly cannot run — and per gate
+ * discipline it says so instead of passing.
  *
  * The gauntlet passes the parsed `signalBudgets` block; the gate module does
  * no I/O of its own.
@@ -415,6 +418,18 @@ export function reviewedConstantsCheck(signalBudgets?: unknown): GateResult {
         params: { expected, actual },
       });
     }
+  }
+  // Reverse completeness (registry ⊆ mirror): a registered engine constant
+  // with no mirror key means the reviewed-data record was deleted or never
+  // written — previously a silent mutation, since the loop above only walks
+  // the keys the mirror happens to carry.
+  for (const key of Object.keys(engineValues).sort()) {
+    if (key in mirror) continue;
+    findings.push({
+      message: `engine constant '${key}' is registered for review but absent from the signalBudgets mirror — the reviewed-data record must travel with the code`,
+      subjects: [key],
+      categoryCode: 'unmirrored-constant',
+    });
   }
 
   if (findings.length > 0) {

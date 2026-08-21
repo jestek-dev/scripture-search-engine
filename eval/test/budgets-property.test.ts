@@ -176,11 +176,41 @@ describe('reviewedConstantsCheck (G6 reviewed-constants half)', () => {
 
   it('compares by value, not key order', () => {
     const result = reviewedConstantsCheck({
+      ...(committedMirror() as Record<string, unknown>),
       soleEvidenceMaxPoints: JSON.parse(
         JSON.stringify(DEFAULT_BUDGETS.soleEvidenceMaxPoints),
       ),
     });
     expect(result.status).toBe('pass');
+  });
+
+  it('rings on a deleted mirror key: a registered engine constant absent from the mirror fails (registry ⊆ mirror)', () => {
+    const truncated = { ...(committedMirror() as Record<string, unknown>) };
+    delete truncated['chipDisplayMinPoints'];
+    const result = reviewedConstantsCheck(truncated);
+    expect(result.status).toBe('fail');
+    expect(
+      (result.findings ?? []).some(
+        (f) =>
+          f.categoryCode === 'unmirrored-constant' &&
+          f.subjects?.includes('chipDisplayMinPoints'),
+      ),
+    ).toBe(true);
+  });
+
+  it('the reverse assertion covers every registered constant, not just one', () => {
+    const result = reviewedConstantsCheck({ $comment: ['deleted everything'] });
+    expect(result.status).toBe('fail');
+    const missing = (result.findings ?? [])
+      .filter((f) => f.categoryCode === 'unmirrored-constant')
+      .flatMap((f) => f.subjects ?? []);
+    expect(missing.sort()).toEqual([
+      'chipDisplayMinPoints',
+      'exactPhraseFullAuthorityWords',
+      'passageTermChipDisplayFloor',
+      'passageTermPmiHalfSaturation',
+      'soleEvidenceMaxPoints',
+    ]);
   });
 });
 
