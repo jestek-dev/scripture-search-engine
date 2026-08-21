@@ -17,6 +17,7 @@
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 
 import { parseAnchorRef } from '../../../pipeline/src/importers/ontologyImporter.js';
+import type { CorpusFixture } from './corpusGolden.js';
 import {
   fail,
   gateApplicability,
@@ -807,15 +808,627 @@ function canonicalJson(value: unknown): string {
 
 /**
  * Canonical serialization of the sections the two OS legs must byte-agree
- * on: the G12 row plus the battery evidence. Deliberately excludes G11 and
- * timestamps, which legitimately differ between legs.
+ * on: the G12 row plus the battery, rank-metric, and no-effect evidence.
+ * Deliberately excludes G11 and timestamps, which legitimately differ
+ * between legs; the rank metrics are all-integer arithmetic, so their
+ * agreement is a strict guarantee, not an aspiration.
  */
 export function batteryComparableSection(parsed: unknown): string {
   if (!isRecord(parsed)) return 'missing-report';
   const payload = parsed['payload'];
   if (!isRecord(payload) || !Array.isArray(payload['gates'])) return 'malformed-report';
   const g12 = payload['gates'].filter((gate) => isRecord(gate) && gate['gate'] === 'G12-battery');
-  return canonicalJson({ g12, battery: payload['battery'] ?? null });
+  return canonicalJson({
+    g12,
+    battery: payload['battery'] ?? null,
+    rankMetrics: payload['rankMetrics'] ?? null,
+    noMeasurableEffect: payload['noMeasurableEffect'] ?? null,
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Rank metrics (E3): graded gains, deterministic nDCG@10 / MRR@10 /
+// goodOrBetterTop3Rate / Recall@50, and NO_MEASURABLE_EFFECT detection.
+//
+// Everything below is measurement, never adjudication: gains come from the
+// attributed human judgments above and from golden-fixture pins, and no
+// threshold is enforced here — rank-quality thresholds stay null until a
+// real baseline exists (E5). Arithmetic is integer/bigint only, so both OS
+// legs byte-agree by construction rather than by tolerance.
+// ---------------------------------------------------------------------------
+
+/**
+ * Linear gains {0,1,2,3} (J30), chosen over exponential 2^g-1 deliberately:
+ * with a four-level scale the exponential form lets one grade-3 hit (gain 7)
+ * mask a top-10 otherwise full of junk. #1-primacy is enforced by harder
+ * instruments (the harmful-#1 hard-fail, preferredOrder, withinTop: 1).
+ * Changing this scale re-baselines and is a reviewed PR.
+ */
+export const RANK_GAIN_SCALE = 'linear-0-1-2-3';
+
+/**
+ * DISCOUNT_MICRO[rank-1] = floor(10^6 / log2(rank + 1)) for ranks 1..10,
+ * derived once by hand and committed. Runtime code must read this table and
+ * never call Math.log2: JS logarithms are implementation-varying across
+ * engines and platforms, and a metric that gates admission must not depend
+ * on libm. The unit test asserts each value against an independently
+ * transcribed literal table.
+ */
+export const DISCOUNT_MICRO: readonly number[] = [
+  1000000, 630929, 500000, 430676, 386852, 356207, 333333, 315464, 301029, 289064,
+];
+
+const MICRO = 1000000n;
+
+export interface VerseRange {
+  readonly start: number;
+  readonly end: number;
+}
+
+/** Verse-range form of a ranked result; battery target ids are single verses. */
+export function verseRangeOfTargetId(targetId: string): VerseRange | null {
+  const verseId = verseIdOf(targetId);
+  return verseId === null ? null : { start: verseId, end: verseId };
+}
+
+/**
+ * Rounds a non-negative rational to an integer count of micro units
+ * (value x 10^6), ties to even. Display-only: threshold checks go through
+ * meetsThresholdMicro so rounding can never decide a gate.
+ */
+export function roundHalfEvenMicro(numerator: bigint, denominator: bigint): number {
+  if (denominator <= 0n || numerator < 0n) {
+    throw new RangeError('roundHalfEvenMicro expects a non-negative rational with a positive denominator.');
+  }
+  const scaled = numerator * MICRO;
+  let quotient = scaled / denominator;
+  const doubledRemainder = (scaled % denominator) * 2n;
+  if (doubledRemainder > denominator || (doubledRemainder === denominator && quotient % 2n === 1n)) {
+    quotient += 1n;
+  }
+  return Number(quotient);
+}
+
+/**
+ * Exact threshold comparison by integer cross-multiplication:
+ * num/den >= threshold/10^6. A null threshold returns null — deliberately
+ * unset until a real baseline exists; it never passes and never fails.
+ */
+export function meetsThresholdMicro(
+  numerator: bigint,
+  denominator: bigint,
+  thresholdMicro: number | null,
+): boolean | null {
+  if (thresholdMicro === null) return null;
+  return numerator * MICRO >= BigInt(thresholdMicro) * denominator;
+}
+
+interface Rational {
+  readonly num: bigint;
+  readonly den: bigint;
+}
+
+const ZERO: Rational = { num: 0n, den: 1n };
+
+function addRational(left: Rational, right: Rational): Rational {
+  // Reduced at every step: exactness is unaffected and the accumulator's
+  // digits stay bounded by the true lcm of denominators, not their product.
+  return reduceRational({
+    num: left.num * right.den + right.num * left.den,
+    den: left.den * right.den,
+  });
+}
+
+function gcd(left: bigint, right: bigint): bigint {
+  let a = left < 0n ? -left : left;
+  let b = right < 0n ? -right : right;
+  while (b !== 0n) [a, b] = [b, a % b];
+  return a === 0n ? 1n : a;
+}
+
+function reduceRational(value: Rational): Rational {
+  const divisor = gcd(value.num, value.den);
+  return { num: value.num / divisor, den: value.den / divisor };
+}
+
+export interface RankMetricValue {
+  /** Reduced exact rational "numerator/denominator"; null with no scoreable queries. */
+  readonly exact: string | null;
+  /** Display value in micro units (x 10^-6), rounded half-even once. */
+  readonly micro: number | null;
+}
+
+function metricValue(sum: Rational, count: number): RankMetricValue {
+  if (count === 0) return { exact: null, micro: null };
+  const mean = reduceRational({ num: sum.num, den: sum.den * BigInt(count) });
+  return { exact: `${mean.num}/${mean.den}`, micro: roundHalfEvenMicro(mean.num, mean.den) };
+}
+
+export interface RankQueryInput {
+  readonly id: string;
+  readonly category: string;
+  readonly judged: readonly BatteryJudgedRange[];
+  /** Ranked verse ranges, best first, from the default engine page. */
+  readonly top10: readonly VerseRange[];
+  /** Ranked verse ranges from the dedicated limit-50 engine instance. */
+  readonly top50: readonly VerseRange[];
+}
+
+export interface RankQueryMetrics {
+  readonly id: string;
+  readonly category: string;
+  /** IDCG > 0: at least one non-provisional judged row with gain >= 1. */
+  readonly scoreable: boolean;
+  /** "judged results / results" over the top 10 — coverage pressure, per query. */
+  readonly judgedCoverageTop10: string;
+  readonly dcgMicro: number;
+  readonly idcgMicro: number;
+  readonly ndcgMicro: number | null;
+  /** Exact reciprocal rank of the first gain >= 2, "0/1" when none. */
+  readonly mrr: string;
+  readonly goodOrBetterTop3: boolean;
+  /** "claimed relevant / judged relevant" over the top 50; null when unscoreable. */
+  readonly recallAt50: string | null;
+}
+
+export interface RankAggregate {
+  readonly scoreableQueries: number;
+  /** IDCG=0 queries: excluded from every mean and counted, never scored 0 or 1. */
+  readonly excludedQueries: number;
+  readonly ndcg10: RankMetricValue;
+  readonly mrr10: RankMetricValue;
+  readonly goodOrBetterTop3Rate: RankMetricValue;
+  readonly recallAt50: RankMetricValue;
+}
+
+export interface RankMetricsReport {
+  readonly gainScale: typeof RANK_GAIN_SCALE;
+  readonly overall: RankAggregate;
+  readonly perCategory: Readonly<Record<string, RankAggregate>>;
+  readonly queries: readonly RankQueryMetrics[];
+}
+
+interface ClaimAssignment {
+  readonly gains: readonly number[];
+  readonly claimedResults: number;
+}
+
+/**
+ * Claim-once judgment matching. Walking ranks best-first, a result's gain is
+ * the grade of the highest-graded not-yet-claimed judged range its verse
+ * range overlaps; ties between same-grade ranges break to the lowest start
+ * verse id — a total, deterministic rule, and which range is consumed
+ * changes later results' gains, so it must be pinned. Each judged range is
+ * claimable once: a duplicate hit collects nothing.
+ */
+function assignClaims(top: readonly VerseRange[], judged: readonly BatteryJudgedRange[]): ClaimAssignment {
+  const claimed = new Set<number>();
+  let claimedResults = 0;
+  const gains = top.map((entry) => {
+    let best: { index: number; grade: number; start: number } | null = null;
+    for (const [index, row] of judged.entries()) {
+      if (claimed.has(index) || !rangesOverlap(entry, row.range)) continue;
+      if (best === null || row.grade > best.grade
+          || (row.grade === best.grade && row.range.start < best.start)) {
+        best = { index, grade: row.grade, start: row.range.start };
+      }
+    }
+    if (best === null) return 0;
+    claimed.add(best.index);
+    claimedResults += 1;
+    return best.grade;
+  });
+  return { gains, claimedResults };
+}
+
+export function assignGains(top: readonly VerseRange[], judged: readonly BatteryJudgedRange[]): number[] {
+  return [...assignClaims(top, judged).gains];
+}
+
+function dcgMicroOf(gains: readonly number[]): number {
+  let sum = 0;
+  for (let index = 0; index < Math.min(gains.length, DISCOUNT_MICRO.length); index += 1) {
+    sum += gains[index]! * DISCOUNT_MICRO[index]!;
+  }
+  return sum;
+}
+
+/**
+ * Ideal DCG: all non-provisional judged gains sorted descending (ties in
+ * gain broken by start verse id ascending — value-irrelevant, but specified
+ * so a rendered ideal list is reproducible), first 10, same discount sum.
+ */
+function idcgMicroOf(judged: readonly BatteryJudgedRange[]): number {
+  const ideal = [...judged]
+    .sort((left, right) => right.grade - left.grade || left.range.start - right.range.start)
+    .map((row) => row.grade);
+  return dcgMicroOf(ideal);
+}
+
+interface AggregateBucket {
+  scoreable: number;
+  excluded: number;
+  ndcg: Rational;
+  mrr: Rational;
+  goodOrBetter: number;
+  recall: Rational;
+}
+
+function emptyBucket(): AggregateBucket {
+  return { scoreable: 0, excluded: 0, ndcg: ZERO, mrr: ZERO, goodOrBetter: 0, recall: ZERO };
+}
+
+function finishBucket(bucket: AggregateBucket): RankAggregate {
+  return {
+    scoreableQueries: bucket.scoreable,
+    excludedQueries: bucket.excluded,
+    ndcg10: metricValue(bucket.ndcg, bucket.scoreable),
+    mrr10: metricValue(bucket.mrr, bucket.scoreable),
+    goodOrBetterTop3Rate: metricValue({ num: BigInt(bucket.goodOrBetter), den: 1n }, bucket.scoreable),
+    recallAt50: metricValue(bucket.recall, bucket.scoreable),
+  };
+}
+
+/**
+ * The whole metric, per query then per category then overall, as exact
+ * rationals with a single display rounding at the end. Provisional
+ * judgments never enter any gain, IDCG, or aggregate — an unratified
+ * judgment must not move a number a threshold will one day read.
+ */
+export function computeRankMetrics(inputs: readonly RankQueryInput[]): RankMetricsReport {
+  const queries: RankQueryMetrics[] = [];
+  const buckets = new Map<string, AggregateBucket>();
+  const overall = emptyBucket();
+
+  for (const input of inputs) {
+    const judged = input.judged.filter((row) => !row.provisional);
+    const top10 = input.top10.slice(0, 10);
+    const { gains, claimedResults } = assignClaims(top10, judged);
+    const dcgMicro = dcgMicroOf(gains);
+    const idcgMicro = idcgMicroOf(judged);
+    const scoreable = idcgMicro > 0;
+
+    const firstGood = gains.findIndex((gain) => gain >= 2);
+    const mrr: Rational = firstGood === -1 ? ZERO : { num: 1n, den: BigInt(firstGood + 1) };
+    const goodOrBetterTop3 = gains.slice(0, 3).some((gain) => gain >= 2);
+
+    const relevant = judged.filter((row) => row.grade >= 1).length;
+    const gains50 = assignClaims(input.top50.slice(0, 50), judged).gains;
+    const claimedRelevant = gains50.filter((gain) => gain >= 1).length;
+
+    queries.push({
+      id: input.id,
+      category: input.category,
+      scoreable,
+      judgedCoverageTop10: `${claimedResults}/${top10.length}`,
+      dcgMicro,
+      idcgMicro,
+      ndcgMicro: scoreable ? roundHalfEvenMicro(BigInt(dcgMicro), BigInt(idcgMicro)) : null,
+      mrr: firstGood === -1 ? '0/1' : `1/${firstGood + 1}`,
+      goodOrBetterTop3,
+      recallAt50: scoreable ? `${claimedRelevant}/${relevant}` : null,
+    });
+
+    const bucket = buckets.get(input.category) ?? emptyBucket();
+    buckets.set(input.category, bucket);
+    for (const target of [bucket, overall]) {
+      if (!scoreable) {
+        target.excluded += 1;
+        continue;
+      }
+      target.scoreable += 1;
+      target.ndcg = addRational(target.ndcg, { num: BigInt(dcgMicro), den: BigInt(idcgMicro) });
+      target.mrr = addRational(target.mrr, mrr);
+      if (goodOrBetterTop3) target.goodOrBetter += 1;
+      target.recall = addRational(target.recall, { num: BigInt(claimedRelevant), den: BigInt(relevant) });
+    }
+  }
+
+  const perCategory: Record<string, RankAggregate> = {};
+  for (const category of [...buckets.keys()].sort()) {
+    perCategory[category] = finishBucket(buckets.get(category)!);
+  }
+  return { gainScale: RANK_GAIN_SCALE, overall: finishBucket(overall), perCategory, queries };
+}
+
+export interface GoldenRankJudgment {
+  readonly id: string;
+  readonly query: string;
+  readonly judged: readonly BatteryJudgedRange[];
+}
+
+/**
+ * Golden fixtures as graded judgments: expectedTop pins are gain 3,
+ * alsoAcceptable gain 1 — human-authored, ratified-by-merge reviewed data.
+ * mustNotRank is deliberately never read here: folding a ban into the gain
+ * scale would be a negative theology score (covenant #6); it stays a hard
+ * assertion in G3. Reference-intent and pending fixtures derive nothing.
+ */
+export function deriveGoldenRankJudgments(
+  fixtures: readonly CorpusFixture[],
+): readonly GoldenRankJudgment[] {
+  const derived: GoldenRankJudgment[] = [];
+  for (const fixture of fixtures) {
+    if (fixture.status !== 'active' || typeof fixture.query !== 'string') continue;
+    if ((fixture.referenceExpectations?.length ?? 0) > 0) continue;
+    const judged: BatteryJudgedRange[] = [];
+    const push = (ref: unknown, grade: 1 | 3): void => {
+      if (typeof ref !== 'string') return;
+      const range = parseAnchorRef(ref);
+      if (!range) return;
+      if (judged.some((row) => rangesOverlap(row.range, range))) return;
+      judged.push({ ref, grade, provisional: false, range });
+    };
+    for (const expectation of fixture.expectedTop ?? []) push(expectation.ref ?? expectation.reference, 3);
+    for (const acceptable of fixture.alsoAcceptable ?? []) push(acceptable, 1);
+    if (judged.length > 0) derived.push({ id: fixture.id, query: fixture.query, judged });
+  }
+  return derived;
+}
+
+/**
+ * Folds the computed rank metrics (and any no-effect skip findings) into
+ * the G12 roster row. Deliberately NOT mergeGateResults: that helper
+ * recomputes applicability without the run context, which would downgrade
+ * the required battery row to advisory on the exact runs where it enforces.
+ */
+export function withRankEvidence(
+  gate: GateResult,
+  metrics: RankMetricsReport,
+  findings: readonly GateFinding[],
+): GateResult {
+  const overall = metrics.overall;
+  const display = (value: RankMetricValue): string =>
+    value.micro === null ? 'n/a' : (value.micro / 1000000).toFixed(6);
+  const numbers: Record<string, number> = {
+    rankScoreableQueries: overall.scoreableQueries,
+    rankExcludedQueries: overall.excludedQueries,
+  };
+  if (overall.ndcg10.micro !== null) numbers['rankNdcg10Micro'] = overall.ndcg10.micro;
+  if (overall.mrr10.micro !== null) numbers['rankMrr10Micro'] = overall.mrr10.micro;
+  if (overall.goodOrBetterTop3Rate.micro !== null) {
+    numbers['rankGoodOrBetterTop3RateMicro'] = overall.goodOrBetterTop3Rate.micro;
+  }
+  if (overall.recallAt50.micro !== null) numbers['rankRecallAt50Micro'] = overall.recallAt50.micro;
+  return {
+    ...gate,
+    summary:
+      `${gate.summary} | rank metrics (no thresholds — baselines not yet established): ` +
+      `nDCG@10 ${display(overall.ndcg10)}, MRR@10 ${display(overall.mrr10)}, ` +
+      `good-or-better@3 ${display(overall.goodOrBetterTop3Rate)}, ` +
+      `recall@50 ${display(overall.recallAt50)} over ${overall.scoreableQueries} scoreable ` +
+      `quer(ies) (${overall.excludedQueries} excluded, IDCG=0)`,
+    metrics: { ...(gate.metrics ?? {}), ...numbers },
+    findings: [...(gate.findings ?? []), ...findings],
+  };
+}
+
+// ---------------------------------------------------------------------------
+// NO_MEASURABLE_EFFECT: the code embodiment of CLAUDE.md's "NO MEASURABLE
+// EFFECT means don't merge". Detected against three NAMED COMMITTED anchors
+// never regenerated by the same PR; any precondition failure is reported as
+// skipped-with-finding, never silently treated as evaluated.
+// ---------------------------------------------------------------------------
+
+export const RANK_METRICS_BASELINE_PATH = 'eval/baselines/rank-metrics.json';
+export const RANK_METRICS_BASELINE_SCHEMA = 'scripture-search-engine/rank-metrics-baseline/v1';
+
+export interface RankMetricsBaseline {
+  readonly schema: typeof RANK_METRICS_BASELINE_SCHEMA;
+  readonly engineVersion: string;
+  readonly corpusFingerprint: string;
+  readonly layerFingerprint: string;
+  readonly overall: RankAggregate;
+  readonly perCategory: Readonly<Record<string, RankAggregate>>;
+}
+
+/**
+ * The candidate baseline `--update-rank-baseline` writes. The machine only
+ * ever writes this file — the approval record beside it is hand-authored by
+ * an independent reviewer under the E5 protocol; writing it IS the approval
+ * act and no code path here may perform it.
+ */
+export function buildRankMetricsBaseline(
+  engine: { readonly engineVersion: string; readonly corpusFingerprint: string; readonly layerFingerprint: string },
+  metrics: RankMetricsReport,
+): RankMetricsBaseline {
+  return {
+    schema: RANK_METRICS_BASELINE_SCHEMA,
+    engineVersion: engine.engineVersion,
+    corpusFingerprint: engine.corpusFingerprint,
+    layerFingerprint: engine.layerFingerprint,
+    overall: metrics.overall,
+    perCategory: metrics.perCategory,
+  };
+}
+
+export const NO_EFFECT_ANCHORS = [
+  'rank-metrics-baseline',
+  'prior-probe-orderings',
+  'g8-probe-baseline',
+] as const;
+
+export type NoEffectAnchor = (typeof NO_EFFECT_ANCHORS)[number];
+
+export interface NoEffectComparison {
+  readonly anchor: NoEffectAnchor;
+  readonly state: 'compared' | 'skipped';
+  /** Present exactly when compared. */
+  readonly moved: boolean | null;
+  /** Present exactly when skipped. */
+  readonly reason: string | null;
+}
+
+export interface NoEffectDetection {
+  /** All three anchors compared AND layer motion determinable. */
+  readonly evaluated: boolean;
+  /** layerFingerprint moved vs the baseline anchor AND nothing else moved. */
+  readonly fired: boolean;
+  readonly layerMoved: boolean | null;
+  readonly comparisons: readonly NoEffectComparison[];
+  /** The --expect-no-effect reason token, recorded verbatim; null without it. */
+  readonly expectNoEffect: string | null;
+}
+
+export interface NoEffectInput {
+  readonly run: { readonly corpusFingerprint: string; readonly layerFingerprint: string };
+  /** null when this run computed no rank metrics (no valid battery run). */
+  readonly metrics: RankMetricsReport | null;
+  /** Parsed eval/baselines/rank-metrics.json, or null when the file is absent. */
+  readonly rankBaseline: unknown;
+  /** Parsed ordering.snapshot.approval.json, or null when absent. */
+  readonly orderingApproval: unknown;
+  readonly currentProbeListsSha256: string;
+  /** Committed G8 baseline identity + canonical observations digest, or null. */
+  readonly probeBaseline: {
+    readonly corpusFingerprint: string;
+    readonly observationsSha256: string;
+  } | null;
+  readonly currentObservationsSha256: string;
+  readonly expectNoEffect: string | null;
+}
+
+const DIGEST_PATTERN = /^[0-9a-f]{64}$/;
+
+function compared(anchor: NoEffectAnchor, moved: boolean): NoEffectComparison {
+  return { anchor, state: 'compared', moved, reason: null };
+}
+
+function skipped(anchor: NoEffectAnchor, reason: string): NoEffectComparison {
+  return { anchor, state: 'skipped', moved: null, reason };
+}
+
+function validRankBaseline(value: unknown): value is RankMetricsBaseline {
+  return isRecord(value)
+    && value['schema'] === RANK_METRICS_BASELINE_SCHEMA
+    && typeof value['engineVersion'] === 'string'
+    && typeof value['corpusFingerprint'] === 'string' && DIGEST_PATTERN.test(value['corpusFingerprint'])
+    && typeof value['layerFingerprint'] === 'string' && DIGEST_PATTERN.test(value['layerFingerprint'])
+    && isRecord(value['overall']) && isRecord(value['perCategory']);
+}
+
+/**
+ * The pinned firing predicate — no implementer judgment left: the verdict
+ * fires ONLY when the run's layerFingerprint differs from the one recorded
+ * in the rank-metrics baseline (the PR actually changed curated data and
+ * thereby claims value) AND all three anchor comparisons show no movement.
+ * A run whose fingerprints equal the anchors' (docs, refactor, eval-only
+ * PRs) does not fire — CLAUDE.md's rule governs additions claiming value,
+ * not no-op diffs. The measurement never changes under --expect-no-effect;
+ * that flag only downgrades the verdict's exit code and is recorded here
+ * verbatim for the CI diff-shape audit.
+ */
+export function detectNoMeasurableEffect(input: NoEffectInput): {
+  readonly detection: NoEffectDetection;
+  readonly findings: readonly GateFinding[];
+} {
+  const comparisons: NoEffectComparison[] = [];
+  let layerMoved: boolean | null = null;
+
+  // Anchor 1: the committed rank-metrics baseline.
+  if (input.rankBaseline === null) {
+    comparisons.push(skipped(
+      'rank-metrics-baseline',
+      `anchor missing: ${RANK_METRICS_BASELINE_PATH} has not been established yet ` +
+        '(E5 threshold protocol; the baseline needs independent review before it exists)',
+    ));
+  } else if (!validRankBaseline(input.rankBaseline)) {
+    comparisons.push(skipped(
+      'rank-metrics-baseline',
+      `anchor malformed: ${RANK_METRICS_BASELINE_PATH} does not match the v1 baseline schema`,
+    ));
+  } else if (input.rankBaseline.corpusFingerprint !== input.run.corpusFingerprint) {
+    comparisons.push(skipped(
+      'rank-metrics-baseline',
+      'corpusFingerprint moved vs the rank-metrics baseline anchor — the scripture text itself ' +
+        'changed, so a metric comparison would be confounded',
+    ));
+  } else if (input.metrics === null) {
+    layerMoved = input.rankBaseline.layerFingerprint !== input.run.layerFingerprint;
+    comparisons.push(skipped(
+      'rank-metrics-baseline',
+      'rank metrics were not computed on this run — the battery measures an explicit artifact target',
+    ));
+  } else {
+    layerMoved = input.rankBaseline.layerFingerprint !== input.run.layerFingerprint;
+    const currentDigest = canonicalJson({
+      overall: input.metrics.overall,
+      perCategory: input.metrics.perCategory,
+    });
+    const baselineDigest = canonicalJson({
+      overall: input.rankBaseline.overall,
+      perCategory: input.rankBaseline.perCategory,
+    });
+    comparisons.push(compared('rank-metrics-baseline', currentDigest !== baselineDigest));
+  }
+
+  // Anchor 2: the pre-change probe orderings, via the ordering-snapshot
+  // approval's priorProvenance (an in-tree snapshot comparison would be
+  // circular whenever the same PR regenerated the snapshot).
+  const approval = input.orderingApproval;
+  if (!isRecord(approval)) {
+    comparisons.push(skipped('prior-probe-orderings', 'ordering snapshot approval is missing or malformed'));
+  } else if (approval['priorProvenance'] === null || approval['priorProvenance'] === undefined) {
+    comparisons.push(skipped(
+      'prior-probe-orderings',
+      'ordering approval priorProvenance is null (bootstrap) — the pre-change probe orderings ' +
+        'are not pinned anywhere this run can reach',
+    ));
+  } else {
+    const prior = approval['priorProvenance'];
+    const priorLists = isRecord(prior) ? prior['probeListsSha256'] : undefined;
+    const priorEngine = isRecord(prior) ? prior['engine'] : undefined;
+    const priorCorpus = isRecord(priorEngine) ? priorEngine['corpusFingerprint'] : undefined;
+    if (typeof priorLists !== 'string' || !DIGEST_PATTERN.test(priorLists)) {
+      comparisons.push(skipped(
+        'prior-probe-orderings',
+        'ordering approval priorProvenance carries no valid probeListsSha256 digest',
+      ));
+    } else if (typeof priorCorpus === 'string' && priorCorpus !== input.run.corpusFingerprint) {
+      comparisons.push(skipped(
+        'prior-probe-orderings',
+        'corpusFingerprint moved vs the prior-provenance anchor — probe orderings are not comparable',
+      ));
+    } else {
+      comparisons.push(compared('prior-probe-orderings', input.currentProbeListsSha256 !== priorLists));
+    }
+  }
+
+  // Anchor 3: the committed, independently approved G8 probe baseline.
+  if (input.probeBaseline === null) {
+    comparisons.push(skipped('g8-probe-baseline', 'anchor missing: eval/baselines/probes.json'));
+  } else if (input.probeBaseline.corpusFingerprint !== input.run.corpusFingerprint) {
+    comparisons.push(skipped(
+      'g8-probe-baseline',
+      'corpusFingerprint moved vs the G8 baseline anchor — observations are not comparable',
+    ));
+  } else {
+    comparisons.push(compared(
+      'g8-probe-baseline',
+      input.currentObservationsSha256 !== input.probeBaseline.observationsSha256,
+    ));
+  }
+
+  const evaluated = layerMoved !== null && comparisons.every((entry) => entry.state === 'compared');
+  const fired = evaluated && layerMoved === true && comparisons.every((entry) => entry.moved === false);
+  const findings = comparisons
+    .filter((entry) => entry.state === 'skipped')
+    .map((entry) => finding(
+      'no-effect-skipped',
+      `NO_MEASURABLE_EFFECT detection skipped for anchor "${entry.anchor}": ${entry.reason}`,
+      [entry.anchor],
+    ));
+
+  return {
+    detection: {
+      evaluated,
+      fired,
+      layerMoved,
+      comparisons,
+      expectNoEffect: input.expectNoEffect,
+    },
+    findings,
+  };
 }
 
 // Applicability of the battery row is context-dependent; re-export the

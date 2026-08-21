@@ -577,11 +577,17 @@ function parseGauntletBytes(
   const identity = parsedValue.identity;
   const payload = parsedValue.payload;
   exactKeys(identity, ['gitCommitSha', 'dirtyTreeSha256', 'descriptor', 'engine', 'target', 'budgetsSha256', 'fixtureInputSha256', 'flags'], 'Gauntlet identity');
-  // `battery` (schema v2) is the G12 evidence section; admission verdicts
-  // read the G12 roster row, so the section itself is optional here.
+  // `battery`, `rankMetrics`, and `noMeasurableEffect` (schema v2) are the
+  // G12/E3 evidence sections; admission verdicts read the G12 roster row and
+  // the payload verdict, so the sections themselves are optional here. A
+  // NO_MEASURABLE_EFFECT verdict still fails closed below — this parser
+  // admits only ADMIT / ADMIT_WITH_WARNINGS.
   exactKeys(
     payload,
-    ['verdict', 'headline', 'gates', ...(isRecord(payload) && 'battery' in payload ? ['battery'] : [])],
+    [
+      'verdict', 'headline', 'gates',
+      ...['battery', 'rankMetrics', 'noMeasurableEffect'].filter((key) => isRecord(payload) && key in payload),
+    ],
     'Gauntlet payload',
   );
   if (!isRecord(identity.descriptor) || !isRecord(identity.engine) || !isRecord(identity.target)

@@ -17,7 +17,13 @@ import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'nod
 
 import { headlineFor, type AdmissionReport, type Verdict } from './report.js';
 import { DOCTRINAL_REVIEWS_PATH, FLAGGED_PAIRINGS_PATH } from './gates/doctrinalGuardrail.js';
-import type { BatteryReportSection } from './gates/rankMetrics.js';
+import {
+  NO_EFFECT_ANCHORS,
+  RANK_GAIN_SCALE,
+  type BatteryReportSection,
+  type NoEffectDetection,
+  type RankMetricsReport,
+} from './gates/rankMetrics.js';
 import {
   gateApplicability,
   type GateApplicability,
@@ -81,6 +87,25 @@ export interface GauntletOptions {
    * mutually exclusive with --json.
    */
   readonly updateOrderingSnapshot?: boolean;
+  /**
+   * Regenerates eval/baselines/rank-metrics.json from an explicit artifact
+   * target. Same discipline as the other update flags (present only when
+   * true; mutually exclusive with --require-admit/--json, so it can never
+   * appear in a machine report) — and the machine writes only the baseline,
+   * never its approval.
+   */
+  readonly updateRankBaseline?: boolean;
+  /**
+   * Verbatim single space-free reason token declaring this run EXPECTS
+   * NO_MEASURABLE_EFFECT (a source re-pin claims no value — see
+   * docs/source-repins.md §5). Single-token BY DESIGN: CI passes it through
+   * an unquoted GAUNTLET_EXTRA_ARGS expansion, which word-splits into
+   * exactly flag + reason; a spaced reason cannot survive that round trip.
+   * Token grammar used by CI auto-injection:
+   * ci-auto:re-pin-diff-shape:<n>-files. Recorded in report identity and
+   * audited by the provenance job against the actual PR diff shape.
+   */
+  readonly expectNoEffect?: string;
   readonly requireAdmit: boolean;
   readonly jsonPath?: string;
   readonly candidateDescriptorPath?: string;
@@ -188,6 +213,10 @@ export interface GauntletMachineReport {
     readonly gates: readonly MachineGate[];
     /** Battery evidence — present only on explicit-target (artifact) runs. */
     readonly battery?: BatteryReportSection;
+    /** Rank metrics — present exactly when the battery evidence is. */
+    readonly rankMetrics?: RankMetricsReport;
+    /** No-effect detection outcome — present on every explicit-target run. */
+    readonly noMeasurableEffect?: NoEffectDetection;
   };
   /** SHA-256 of canonical JSON for `payload`, not the enclosing report. */
   readonly payloadSha256: string;
@@ -197,6 +226,7 @@ export interface GauntletMachineReport {
 
 const USAGE =
   'Usage: npm run gauntlet -- [--check-sources] [--update-baseline] [--update-ordering-snapshot] ' +
+  '[--update-rank-baseline] [--expect-no-effect <reason-token>] ' +
   '[--require-admit] [--json <path>] ' +
   '[--candidate-descriptor <path> --candidate-database <path> | --release-database <path>]';
 
@@ -204,6 +234,8 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
   let checkSources = false;
   let updateBaseline = false;
   let updateOrderingSnapshot = false;
+  let updateRankBaseline = false;
+  let expectNoEffect: string | undefined;
   let requireAdmit = false;
   let jsonPath: string | undefined;
   let candidateDescriptorPath: string | undefined;
@@ -225,6 +257,30 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
         if (updateOrderingSnapshot) throw new Error(`Duplicate --update-ordering-snapshot.\n${USAGE}`);
         updateOrderingSnapshot = true;
         break;
+      case '--update-rank-baseline':
+        if (updateRankBaseline) throw new Error(`Duplicate --update-rank-baseline.\n${USAGE}`);
+        updateRankBaseline = true;
+        break;
+      case '--expect-no-effect': {
+        if (expectNoEffect !== undefined) throw new Error(`Duplicate --expect-no-effect.\n${USAGE}`);
+        const reason = argv[index + 1];
+        if (!reason || reason.startsWith('--')) throw new Error(`--expect-no-effect requires a reason token.\n${USAGE}`);
+        if (!/^\S+$/.test(reason)) {
+          // Single-token by design: the CI auto-injection expands an
+          // UNQUOTED $GAUNTLET_EXTRA_ARGS, which word-splits into exactly
+          // two arguments (flag + reason). A spaced reason would either
+          // word-split into unknown-argument parse errors or collapse flag
+          // and reason into one argument, so it is rejected up front.
+          // Auto-injected grammar: ci-auto:re-pin-diff-shape:<n>-files.
+          throw new Error(
+            '--expect-no-effect reason must be a single space-free token ' +
+              `(e.g. ci-auto:re-pin-diff-shape:3-files).\n${USAGE}`,
+          );
+        }
+        expectNoEffect = reason;
+        index += 1;
+        break;
+      }
       case '--require-admit':
         if (requireAdmit) throw new Error(`Duplicate --require-admit.\n${USAGE}`);
         requireAdmit = true;
@@ -280,10 +336,21 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
   if (updateOrderingSnapshot && (hasCandidate || releaseDatabasePath !== undefined)) {
     throw new Error('--update-ordering-snapshot cannot evaluate an explicit candidate or release target.');
   }
+  if (updateRankBaseline && (requireAdmit || jsonPath !== undefined)) {
+    throw new Error('--update-rank-baseline cannot be combined with --require-admit or --json; review the new baseline separately.');
+  }
+  // Opposite of the probe-baseline flags on purpose: rank metrics measure a
+  // real artifact through the battery, so the candidate baseline can only be
+  // recorded from an explicit target, never the fixture corpus.
+  if (updateRankBaseline && !hasCandidate && releaseDatabasePath === undefined) {
+    throw new Error('--update-rank-baseline requires an explicit --candidate-* or --release-database target: rank metrics measure a real artifact.');
+  }
 
   return {
     checkSources, updateBaseline, requireAdmit,
     ...(updateOrderingSnapshot ? { updateOrderingSnapshot } : {}),
+    ...(updateRankBaseline ? { updateRankBaseline } : {}),
+    ...(expectNoEffect !== undefined ? { expectNoEffect } : {}),
     ...(jsonPath ? { jsonPath } : {}),
     ...(candidateDescriptorPath ? { candidateDescriptorPath } : {}),
     ...(candidateDatabasePath ? { candidateDatabasePath } : {}),
@@ -775,12 +842,16 @@ export function buildMachineReport(input: {
   readonly identity: GauntletRunIdentity;
   readonly report: AdmissionReport;
   readonly battery?: BatteryReportSection;
+  readonly rankMetrics?: RankMetricsReport;
+  readonly noMeasurableEffect?: NoEffectDetection;
 }): GauntletMachineReport {
   const payload = {
     verdict: input.report.verdict,
     headline: input.report.headline,
     gates: input.report.gates.map(toMachineGate),
     ...(input.battery === undefined ? {} : { battery: input.battery }),
+    ...(input.rankMetrics === undefined ? {} : { rankMetrics: input.rankMetrics }),
+    ...(input.noMeasurableEffect === undefined ? {} : { noMeasurableEffect: input.noMeasurableEffect }),
   };
   const unsigned: Omit<GauntletMachineReport, 'reportSha256'> = {
     schema: GAUNTLET_MACHINE_REPORT_SCHEMA,
@@ -850,15 +921,24 @@ function expectedMachineVerdict(status: GateStatus, applicability: GateApplicabi
   return machineGateVerdict(status, applicability);
 }
 
-function expectedPayloadVerdict(gates: readonly Record<string, unknown>[]): Verdict {
+function expectedPayloadVerdict(
+  gates: readonly Record<string, unknown>[],
+  noMeasurableEffect: Record<string, unknown> | undefined,
+): Verdict {
   if (gates.some((gate) => gate['status'] === 'fail' || gate['verdict'] === 'required-not-applicable')) {
     return 'REJECT';
+  }
+  if (noMeasurableEffect !== undefined && noMeasurableEffect['fired'] === true) {
+    return 'NO_MEASURABLE_EFFECT';
   }
   if (gates.some((gate) => gate['status'] === 'warn')) return 'ADMIT_WITH_WARNINGS';
   return 'ADMIT';
 }
 
-function expectedPayloadHeadline(gates: readonly Record<string, unknown>[]): string {
+function expectedPayloadHeadline(
+  gates: readonly Record<string, unknown>[],
+  noMeasurableEffect: Record<string, unknown> | undefined,
+): string {
   const reportGates = gates.map((gate) => ({
     gate: gate['gate'],
     title: gate['title'],
@@ -866,7 +946,16 @@ function expectedPayloadHeadline(gates: readonly Record<string, unknown>[]): str
     applicability: gate['applicability'],
     summary: '',
   })) as GateResult[];
-  return headlineFor(expectedPayloadVerdict(gates), reportGates);
+  const expectNoEffect = noMeasurableEffect === undefined
+    ? null
+    : typeof noMeasurableEffect['expectNoEffect'] === 'string'
+      ? noMeasurableEffect['expectNoEffect']
+      : null;
+  return headlineFor(
+    expectedPayloadVerdict(gates, noMeasurableEffect),
+    reportGates,
+    { expectNoEffect },
+  );
 }
 
 function validEngineIdentity(value: unknown): value is Record<string, unknown> {
@@ -936,6 +1025,82 @@ function validBatterySection(value: unknown): boolean {
   });
 }
 
+const RATIONAL_PATTERN = /^\d+\/\d+$/;
+
+function validRankMetricValue(value: unknown): boolean {
+  if (!isRecord(value) || !exactKeys(value, ['exact', 'micro'])) return false;
+  if (value['exact'] === null && value['micro'] === null) return true;
+  return typeof value['exact'] === 'string' && RATIONAL_PATTERN.test(value['exact'])
+    && Number.isSafeInteger(value['micro']) && (value['micro'] as number) >= 0;
+}
+
+function validRankAggregate(value: unknown): boolean {
+  if (!isRecord(value) || !exactKeys(value, [
+    'scoreableQueries', 'excludedQueries', 'ndcg10', 'mrr10', 'goodOrBetterTop3Rate', 'recallAt50',
+  ])) return false;
+  for (const field of ['scoreableQueries', 'excludedQueries'] as const) {
+    if (!Number.isSafeInteger(value[field]) || (value[field] as number) < 0) return false;
+  }
+  return (['ndcg10', 'mrr10', 'goodOrBetterTop3Rate', 'recallAt50'] as const)
+    .every((field) => validRankMetricValue(value[field]));
+}
+
+function validRankMetricsSection(value: unknown): boolean {
+  if (!isRecord(value) || !exactKeys(value, ['gainScale', 'overall', 'perCategory', 'queries'])) return false;
+  if (value['gainScale'] !== RANK_GAIN_SCALE) return false;
+  if (!validRankAggregate(value['overall'])) return false;
+  const perCategory = value['perCategory'];
+  if (!isRecord(perCategory) || !Object.values(perCategory).every(validRankAggregate)) return false;
+  const queries = value['queries'];
+  return Array.isArray(queries) && queries.every((entry) => isRecord(entry)
+    && exactKeys(entry, [
+      'id', 'category', 'scoreable', 'judgedCoverageTop10', 'dcgMicro', 'idcgMicro',
+      'ndcgMicro', 'mrr', 'goodOrBetterTop3', 'recallAt50',
+    ])
+    && typeof entry['id'] === 'string' && typeof entry['category'] === 'string'
+    && typeof entry['scoreable'] === 'boolean'
+    && typeof entry['judgedCoverageTop10'] === 'string' && RATIONAL_PATTERN.test(entry['judgedCoverageTop10'])
+    && Number.isSafeInteger(entry['dcgMicro']) && (entry['dcgMicro'] as number) >= 0
+    && Number.isSafeInteger(entry['idcgMicro']) && (entry['idcgMicro'] as number) >= 0
+    && (entry['ndcgMicro'] === null || (Number.isSafeInteger(entry['ndcgMicro']) && (entry['ndcgMicro'] as number) >= 0))
+    && typeof entry['mrr'] === 'string' && RATIONAL_PATTERN.test(entry['mrr'])
+    && typeof entry['goodOrBetterTop3'] === 'boolean'
+    && (entry['recallAt50'] === null
+      || (typeof entry['recallAt50'] === 'string' && RATIONAL_PATTERN.test(entry['recallAt50']))));
+}
+
+/**
+ * The no-effect section is internally recomputable: `evaluated` and `fired`
+ * must follow from the recorded comparisons and layer motion, so a doctored
+ * `fired` flag cannot survive validation.
+ */
+function validNoEffectSection(value: unknown): boolean {
+  if (!isRecord(value) || !exactKeys(value, [
+    'evaluated', 'fired', 'layerMoved', 'comparisons', 'expectNoEffect',
+  ])) return false;
+  if (typeof value['evaluated'] !== 'boolean' || typeof value['fired'] !== 'boolean') return false;
+  if (value['layerMoved'] !== null && typeof value['layerMoved'] !== 'boolean') return false;
+  if (value['expectNoEffect'] !== null
+      && !(typeof value['expectNoEffect'] === 'string' && /^\S+$/.test(value['expectNoEffect']))) return false;
+  const comparisons = value['comparisons'];
+  if (!Array.isArray(comparisons) || comparisons.length !== NO_EFFECT_ANCHORS.length) return false;
+  const rows = comparisons.filter(isRecord);
+  if (rows.length !== comparisons.length) return false;
+  const shapeOk = rows.every((entry, index) =>
+    exactKeys(entry, ['anchor', 'state', 'moved', 'reason'])
+    && entry['anchor'] === NO_EFFECT_ANCHORS[index]
+    && ((entry['state'] === 'compared' && typeof entry['moved'] === 'boolean' && entry['reason'] === null)
+      || (entry['state'] === 'skipped' && entry['moved'] === null
+        && typeof entry['reason'] === 'string' && entry['reason'].length > 0)));
+  if (!shapeOk) return false;
+  const allCompared = rows.every((entry) => entry['state'] === 'compared');
+  const expectedEvaluated = allCompared && typeof value['layerMoved'] === 'boolean';
+  if (value['evaluated'] !== expectedEvaluated) return false;
+  const expectedFired = expectedEvaluated && value['layerMoved'] === true
+    && rows.every((entry) => entry['moved'] === false);
+  return value['fired'] === expectedFired;
+}
+
 function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, maxAgeMs: number): FreshnessMismatch[] {
   const mismatches: FreshnessMismatch[] = [];
   addShapeMismatch(mismatches, exactKeys(parsed, ['schema', 'startedAt', 'finishedAt', 'identity', 'payload', 'payloadSha256', 'reportSha256']), 'report keys');
@@ -969,11 +1134,33 @@ function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, m
   addShapeMismatch(mismatches, isRecord(flags) && typeof flags['checkSources'] === 'boolean'
     && typeof flags['updateBaseline'] === 'boolean' && typeof flags['requireAdmit'] === 'boolean'
     && typeof flags['jsonPath'] === 'string' && flags['jsonPath'].length > 0
+    && (!Object.hasOwn(flags, 'expectNoEffect')
+      || (typeof flags['expectNoEffect'] === 'string' && /^\S+$/.test(flags['expectNoEffect'])))
     && Array.isArray(flags['argv']) && flags['argv'].every((value) => typeof value === 'string'), 'identity.flags');
   const hasBattery = Object.hasOwn(payload, 'battery');
-  addShapeMismatch(mismatches, exactKeys(payload, ['verdict', 'headline', 'gates', ...(hasBattery ? ['battery'] : [])]) && typeof payload['headline'] === 'string' && payload['headline'].length > 0 && Array.isArray(payload['gates']) && payload['gates'].length === GAUNTLET_GATE_ROSTER.length, 'payload');
+  const hasRankMetrics = Object.hasOwn(payload, 'rankMetrics');
+  const hasNoEffect = Object.hasOwn(payload, 'noMeasurableEffect');
+  addShapeMismatch(mismatches, exactKeys(payload, [
+    'verdict', 'headline', 'gates',
+    ...(hasBattery ? ['battery'] : []),
+    ...(hasRankMetrics ? ['rankMetrics'] : []),
+    ...(hasNoEffect ? ['noMeasurableEffect'] : []),
+  ]) && typeof payload['headline'] === 'string' && payload['headline'].length > 0 && Array.isArray(payload['gates']) && payload['gates'].length === GAUNTLET_GATE_ROSTER.length, 'payload');
   // Battery evidence exists only where the battery can run: explicit targets.
   addShapeMismatch(mismatches, !hasBattery || (hasTarget && validBatterySection(payload['battery'])), 'payload.battery');
+  // Rank metrics are computed exactly when the battery ran; the no-effect
+  // detection outcome is recorded on every explicit-target run (even a
+  // fully-skipped one), and never anywhere else.
+  addShapeMismatch(mismatches, hasRankMetrics === hasBattery
+    && (!hasRankMetrics || validRankMetricsSection(payload['rankMetrics'])), 'payload.rankMetrics');
+  addShapeMismatch(mismatches, hasNoEffect === hasTarget
+    && (!hasNoEffect || validNoEffectSection(payload['noMeasurableEffect'])), 'payload.noMeasurableEffect');
+  // The recorded flag and the payload section must agree — the provenance
+  // audit reads the flag, so a section claiming a different expectation is a
+  // doctored report.
+  addShapeMismatch(mismatches, !hasNoEffect || !isRecord(flags) || !isRecord(payload['noMeasurableEffect'])
+    || ((payload['noMeasurableEffect']['expectNoEffect'] ?? null) === (flags['expectNoEffect'] ?? null)),
+  'payload.noMeasurableEffect expect-no-effect flag agreement');
   if (mismatches.length > 0 || !isRecord(engine) || !isRecord(flags) || !Array.isArray(payload['gates'])) return mismatches;
 
   try {
@@ -1044,9 +1231,12 @@ function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, m
   addShapeMismatch(mismatches, nowMs - finished <= maxAgeMs, 'report maximum age');
   const verdict = payload['verdict'];
   const gates = payload['gates'] as Record<string, unknown>[];
-  const expectedVerdict = expectedPayloadVerdict(gates);
+  const noEffectRecord = isRecord(payload['noMeasurableEffect'])
+    ? payload['noMeasurableEffect']
+    : undefined;
+  const expectedVerdict = expectedPayloadVerdict(gates, noEffectRecord);
   addShapeMismatch(mismatches, typeof verdict === 'string' && verdict === expectedVerdict, 'payload verdict consistency');
-  addShapeMismatch(mismatches, payload['headline'] === expectedPayloadHeadline(gates), 'payload headline consistency');
+  addShapeMismatch(mismatches, payload['headline'] === expectedPayloadHeadline(gates, noEffectRecord), 'payload headline consistency');
   return mismatches;
 }
 
@@ -1307,7 +1497,15 @@ export function inspectGauntletRunMarkers(
     });
 }
 
-export function gauntletExitCode(verdict: Verdict, requireAdmit: boolean): number {
+/**
+ * NO_MEASURABLE_EFFECT is non-admit under --require-admit — the covenant's
+ * "means don't merge" — unless the run explicitly claimed no effect
+ * (`--expect-no-effect`, a re-pin), which downgrades it to the expected
+ * outcome. The verdict itself is never changed by the flag; only the exit
+ * code is, so the measurement stays honest in every report.
+ */
+export function gauntletExitCode(verdict: Verdict, requireAdmit: boolean, expectNoEffect = false): number {
+  if (verdict === 'NO_MEASURABLE_EFFECT') return requireAdmit && !expectNoEffect ? 1 : 0;
   if (requireAdmit) return verdict === 'ADMIT' ? 0 : 1;
   return verdict === 'REJECT' ? 1 : 0;
 }
