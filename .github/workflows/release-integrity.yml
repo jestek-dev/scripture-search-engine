@@ -1,0 +1,48 @@
+name: Release integrity
+
+# The at-rest tripwire for published releases (plan P2.3 / RH-2).
+#
+# sources.yml watches whether upstream still serves OUR bytes; this watches
+# whether OUR OWN published releases still serve the reviewed bytes. The
+# GitHub API exposes a per-asset sha256 digest, so the check is one API call
+# per run — no 123 MB download. Expectations live in
+# .github/scripts/release-integrity.mjs: a pinned list of already-published
+# releases (recorded digests, reviewed data) plus the committed descriptor's
+# (release.tag, databaseSha256) pair once a descriptor names a tag.
+#
+# Pre-immutability releases (v0.7.0, v0.7.1) are mutable at rest — this job
+# is their only tamper alarm. Once the immutable-releases setting is enabled
+# (RH-2/J51), it doubles as the regression check for the setting itself.
+#
+# Schedule/dispatch only, NEVER on push or PR: an at-rest anomaly must not
+# block unrelated work. The red scheduled run IS the alarm; the script's
+# failure output names both hashes and the one action a red run authorizes
+# (an investigation — never an in-place edit of a pin to green it).
+
+on:
+  schedule:
+    # Mondays, 07:20 UTC — same weekly cadence as sources.yml, offset so the
+    # two alarms are distinguishable in the Actions list.
+    - cron: '20 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  # Read-only: listing releases (drafts included, so the descriptor-named tag
+  # is verifiable in the merge-to-tag-push window).
+  contents: read
+
+jobs:
+  verify-digests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      # No npm ci: the script uses only node builtins — the check must not
+      # depend on the dependency tree being installable to raise its alarm.
+      - name: Compare API asset digests against the reviewed identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/release-integrity.mjs
