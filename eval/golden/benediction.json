@@ -5,8 +5,17 @@
     "closing blessing",
     "the lord bless you and keep you"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
+    "PROMOTED 2026-08-21 with the benediction pack (plan P4.9 / DG-9):",
+    "ontology/concepts/benediction.yaml landed fixture-first against this",
+    "fixture's failing run and flipped all three queries to a curated",
+    "concept_anchor lead. requiredReasonLabel 'Theme: Benediction' added at",
+    "promotion: G3's concept-coverage sub-check requires the exact label for",
+    "the demonstrating fixture, so the label proposal is now machine-pinned;",
+    "Jesse fixes the final wording on the doctrinal-wave batch sign-off",
+    "(label change = fixture re-cut in the same commit). Original gap",
+    "record follows.",
     "GAP FIXTURE (audit F12 / wl4; re-verified 2026-08-21 sweep). A",
     "worship-leader-core query with zero curated coverage: the hermetic run",
     "finds Num 6:24 #1 by passage_terms luck alone (the audit's 2.8-score",
@@ -24,7 +33,8 @@
     {
       "reference": "Numbers 6:24-26",
       "withinTop": 1,
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Benediction"
     }
   ],
   "expectedWithinTop": 10,
