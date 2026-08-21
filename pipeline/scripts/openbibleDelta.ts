@@ -46,6 +46,14 @@
  * stop; the date rolling is release metadata, printed but never fatal. The
  * failure direction stays conservative — a missing marker or ANY non-date
  * header change stops, including column-title churn (human eyes, then).
+ * When the old side is the subset witness (which carries no raw header),
+ * the check does NOT degrade to the marker probe alone — the marker is
+ * prefix-open ("CC-BY" is a substring of "CC-BY-NC"), so a present marker
+ * proves nothing about the grant. Instead the PINNED full header wording
+ * (PINNED_FULL_HEADERS — the wording the manifests' licenseRecord fields
+ * quote, live-verified and test-anchored) stands in as the old side, and
+ * the same date-stripped comparison runs; the report names which old side
+ * was used, so a pass never reads as more than was checked.
  *
  * The report is deterministic (stable sort orders, both halves of every
  * shift printed) so it can be attached to the re-pin PR as evidence BEFORE
@@ -63,14 +71,16 @@
  * `--old` / `--new` each accept the raw .txt, a .zip containing it, or the
  * committed `openbible-subset.json` (a WITNESS: rows cut to subscribed
  * topics / fixture-corpus verses, so adds are not measurable and the
- * license comparison is marker-only — the report states both).
+ * license comparison runs against the pinned header wording instead of a
+ * raw old header — the report states both).
  * `--concepts <dir>` / `--committed <path>` override the consumed-scope
  * inputs (defaults: `ontology/concepts`, `fixtures/openbible-subset.json`);
  * `--no-concepts` / `--no-committed` deliberately drop them, capping the
  * verdict at class (a) with a warning that (b) cannot be ruled out.
  * `--check` makes the exit code machine-readable: 0 identical, 1 any
  * movement (class a/b), 2 license STOP. Without `--check` the exit code is
- * always 0 — the report is the product.
+ * always 0 — license STOP included — because the report is the product;
+ * only `--check` runs are load-bearing for scripts and gates.
  */
 
 import { execFileSync } from 'node:child_process';
@@ -157,12 +167,34 @@ export function collectConsumedTopics(dir: string): ConsumedTopics {
 /**
  * The license markers the pinned manifests quote (licenseRecord fields of
  * pipeline/manifests/openbible-{topics,xrefs}.json), minus the embedded
- * date. If upstream drops or rewords the grant, the marker check or the
- * date-stripped comparison fires.
+ * date. The marker probe alone is deliberately NOT trusted as a pass: the
+ * xrefs marker is prefix-open ("CC-BY" is a substring of "CC-BY-NC"), so a
+ * present marker proves nothing about the grant. It exists only to name the
+ * clearest failure ("the CC-BY marker is MISSING") in the report; the
+ * operative check is always the date-stripped full-wording comparison below.
  */
 const LICENSE_MARKERS: Readonly<Record<SourceKind, string>> = {
   topics: 'CC-BY License: www.openbible.info/topics',
   xrefs: 'www.openbible.info CC-BY',
+};
+
+/**
+ * The full pinned header wording per kind — the old side of the license
+ * comparison whenever the old payload is the subset witness (which carries
+ * no raw header). The grant portions are exactly what the pinned manifests'
+ * licenseRecord fields quote ('CC-BY License: www.openbible.info/topics';
+ * 'www.openbible.info CC-BY 2026-07-27'); the full lines were live-verified
+ * against the served files on 2026-08-21 and are anchored by the test
+ * suite's header constants. Dates are stripped before comparing, so these
+ * stay valid across upstream's weekly date rolls; any GRANT rewording —
+ * including a suffix extension the prefix-open marker cannot see, e.g.
+ * CC-BY -> CC-BY-NC — differs from this wording and STOPs.
+ */
+export const PINNED_FULL_HEADERS: Readonly<Record<SourceKind, string>> = {
+  topics:
+    'Topic\tOSIS\tQuality Score (based on percentage of votes for the passage)\t' +
+    '# Generated 2026-07-27. CC-BY License: www.openbible.info/topics',
+  xrefs: 'From Verse\tTo Verse\tVotes\t#www.openbible.info CC-BY 2026-07-27',
 };
 
 const DATE_RE = /\d{4}-\d{2}-\d{2}(?:[ T]\d{2}:\d{2}(?::\d{2})?)?/g;
@@ -181,14 +213,22 @@ export interface LicenseCheck {
   readonly kind: SourceKind;
   readonly marker: string;
   readonly oldHeader: string | null;
+  /**
+   * Which old-side wording the comparison ran against: the old payload's raw
+   * header when one exists, else the pinned header wording
+   * (PINNED_FULL_HEADERS — the manifests' licenseRecord quote). The report
+   * names this so a pass never reads as more than it was.
+   */
+  readonly oldWordingSource: 'old-payload' | 'pinned-record';
   readonly newHeader: string;
   readonly markerPresent: boolean;
   /**
-   * Whether the header text changed beyond the embedded date. Null exactly
-   * when no old raw header exists (subset witness) — the comparison then
-   * honestly did not run; only the marker check did.
+   * Whether the header text changed beyond the embedded date, against the
+   * wording oldWordingSource names. The comparison ALWAYS runs — witness
+   * mode must never degrade to the prefix-open marker probe alone, or a
+   * CC-BY -> CC-BY-NC restriction would pass as "identical".
    */
-  readonly licenseTextChanged: boolean | null;
+  readonly licenseTextChanged: boolean;
   readonly stop: boolean;
   readonly oldDate: string | null;
   readonly newDate: string | null;
@@ -201,16 +241,17 @@ export function checkLicenseHeader(
 ): LicenseCheck {
   const marker = LICENSE_MARKERS[kind];
   const markerPresent = newHeader.includes(marker);
-  const licenseTextChanged =
-    oldHeader === null ? null : stripDates(oldHeader) !== stripDates(newHeader);
+  const oldWording = oldHeader ?? PINNED_FULL_HEADERS[kind];
+  const licenseTextChanged = stripDates(oldWording) !== stripDates(newHeader);
   return {
     kind,
     marker,
     oldHeader,
+    oldWordingSource: oldHeader === null ? 'pinned-record' : 'old-payload',
     newHeader,
     markerPresent,
     licenseTextChanged,
-    stop: !markerPresent || licenseTextChanged === true,
+    stop: !markerPresent || licenseTextChanged,
     oldDate: extractDate(oldHeader),
     newDate: extractDate(newHeader),
   };
@@ -262,7 +303,10 @@ export interface TopicDelta {
 }
 
 function topicKey(row: TopicAnchorRow): string {
-  return `${row.topic} ${row.startVerseId} ${row.endVerseId}`;
+  // '\t' is collision-free here: topic names come from a tab-separated file,
+  // so a topic can never contain a tab (and the other components are
+  // numbers). A visible escape, deliberately — never an invisible byte.
+  return `${row.topic}\t${row.startVerseId}\t${row.endVerseId}`;
 }
 
 function byTopicThenRange(
@@ -363,7 +407,9 @@ export function computeTopicDelta(
 // ---------------------------------------------------------------------------
 
 export function xrefKey(fromVerseId: number, toStartVerseId: number, toEndVerseId: number): string {
-  return `${fromVerseId} ${toStartVerseId} ${toEndVerseId}`;
+  // All components are numbers, so any non-digit separator is collision-free;
+  // '\t' for symmetry with topicKey. A visible escape, never an invisible byte.
+  return `${fromVerseId}\t${toStartVerseId}\t${toEndVerseId}`;
 }
 
 function xrefLabel(row: { fromVerseId: number; toStartVerseId: number; toEndVerseId: number }): string {
@@ -640,7 +686,9 @@ export function loadCommittedXrefEvidence(path: string): ReadonlySet<string> {
 // ---------------------------------------------------------------------------
 
 const OUTCOME_LINES: Readonly<Record<OpenbibleOutcome, string>> = {
-  identical: 'IDENTICAL — the candidate carries the witness\'s exact rows and the license header is intact.',
+  identical:
+    'IDENTICAL — the candidate carries the witness\'s exact rows, and the candidate\'s ' +
+    'license header matches the old-side wording the license section names (dates aside).',
   'a-outside-consumed-scope':
     '(a) movement outside consumed scope — votes moved, but no row the curated layers ' +
     'consume changed. The re-pin may proceed (docs/source-repins.md §2); the counts ' +
@@ -679,29 +727,35 @@ interface ReportContext {
 
 function licenseSection(license: LicenseCheck): string[] {
   const lines: string[] = ['', '## License header (the rights record)', ''];
-  lines.push(
-    license.oldHeader === null
-      ? '- old: (witness carries no header — the pinned manifest\'s licenseRecord is the ' +
-          'old-side witness for the full wording; only the marker check below could run)'
-      : `- old: \`${license.oldHeader}\``,
-  );
+  if (license.oldWordingSource === 'pinned-record') {
+    lines.push(
+      '- old: (witness carries no header — the PINNED header wording below, the wording ' +
+        'the pinned manifest\'s licenseRecord quotes, stood in as the old side of the ' +
+        'comparison)',
+    );
+    lines.push(`- pinned wording: \`${PINNED_FULL_HEADERS[license.kind]}\``);
+  } else {
+    lines.push(`- old: \`${license.oldHeader}\``);
+  }
   lines.push(`- new: \`${license.newHeader}\``);
+  const oldSideName =
+    license.oldWordingSource === 'pinned-record'
+      ? 'the pinned header wording'
+      : 'the old header';
   if (license.stop) {
     const reason = !license.markerPresent
       ? `the expected CC-BY marker ("${license.marker}") is MISSING from the candidate header`
-      : 'the header text changed beyond the embedded generation date';
+      : `the candidate header text differs from ${oldSideName} beyond the embedded generation date`;
     lines.push(`- verdict: **rights STOP** — ${reason}. Exit code 2 under --check.`);
-  } else if (license.licenseTextChanged === null) {
-    lines.push(
-      `- verdict: marker-only check passed — "${license.marker}" present in the candidate. ` +
-        'A full old-vs-new header comparison needs the old raw payload.',
-    );
   } else {
     const dates =
       license.oldDate && license.newDate && license.oldDate !== license.newDate
         ? `; embedded generation date moved ${license.oldDate} -> ${license.newDate} (release metadata, not a rights change)`
         : '';
-    lines.push(`- verdict: intact — CC-BY marker present and, dates aside, the header text is unchanged${dates}.`);
+    lines.push(
+      `- verdict: intact — dates aside, the candidate header matches ${oldSideName} exactly` +
+        `${dates}.`,
+    );
   }
   return lines;
 }
@@ -813,11 +867,17 @@ export function renderTopicReport(
   );
   if (delta.topicsAdded.length > 0 || delta.topicsRemoved.length > 0) {
     lines.push('', '### Topic-level changes', '');
+    // Same cap-and-count honesty as the row lists: names are already sorted,
+    // so the capped prefix is deterministic and the total is always stated.
+    const capNames = (names: readonly string[]): string =>
+      names.length > OUTSIDE_LIST_CAP
+        ? `${names.slice(0, OUTSIDE_LIST_CAP).join('; ')}; ... (${names.length - OUTSIDE_LIST_CAP} more not listed)`
+        : names.join('; ');
     if (delta.topicsAdded.length > 0) {
-      lines.push(`- topics added (${delta.topicsAdded.length}): ${delta.topicsAdded.join('; ')}`);
+      lines.push(`- topics added (${delta.topicsAdded.length}): ${capNames(delta.topicsAdded)}`);
     }
     if (delta.topicsRemoved.length > 0) {
-      lines.push(`- topics removed (${delta.topicsRemoved.length}): ${delta.topicsRemoved.join('; ')}`);
+      lines.push(`- topics removed (${delta.topicsRemoved.length}): ${capNames(delta.topicsRemoved)}`);
     }
   }
   lines.push('');
@@ -979,7 +1039,8 @@ export function runOpenbibleDelta(options: RunOptions): RunResult {
         '- witness caveat: the subset witness carries only subscribed-topic rows cut to ' +
           'the fixture corpus, so movement in unsubscribed topics and outside the fixture ' +
           'verses is invisible here; only the old FULL payload can widen the comparison. ' +
-          'The witness carries no header, so the license comparison is marker-only.',
+          'The witness carries no header, so the PINNED header wording (the manifest\'s ' +
+          'licenseRecord quote) stands in as the old side of the license comparison.',
       );
     }
     const topicDelta = computeTopicDelta(
@@ -1015,7 +1076,8 @@ export function runOpenbibleDelta(options: RunOptions): RunResult {
         '- witness caveat: the subset witness carries only edges with votes >= 1 cut to ' +
           'the fixture corpus, so adds, downvoted edges, and movement outside the fixture ' +
           'verses are invisible here; only the old FULL payload can widen the comparison. ' +
-          'The witness carries no header, so the license comparison is marker-only.',
+          'The witness carries no header, so the PINNED header wording (the manifest\'s ' +
+          'licenseRecord quote) stands in as the old side of the license comparison.',
       );
     }
     const xrefDelta = computeXrefDelta(oldPayload.xrefRows ?? [], newPayload.xrefRows ?? [], committed, {

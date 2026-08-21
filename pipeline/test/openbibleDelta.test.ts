@@ -26,9 +26,10 @@
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { afterAll, describe, expect, it } from 'vitest';
 
@@ -42,6 +43,7 @@ import {
   formatRange,
   loadCommittedXrefEvidence,
   loadOpenbiblePayload,
+  PINNED_FULL_HEADERS,
   runOpenbibleDelta,
   xrefKey,
   type ConsumedTopics,
@@ -50,6 +52,7 @@ import type { CrossReferenceRow, TopicAnchorRow } from '../src/importers/openbib
 import { scoreToWeight } from '../src/importers/openbibleImporter.js';
 import { makeVerseId } from '../src/verseId.js';
 
+const PIPELINE_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TMP = mkdtempSync(join(tmpdir(), 'openbible-delta-test-'));
 afterAll(() => rmSync(TMP, { recursive: true, force: true }));
 
@@ -282,12 +285,58 @@ describe('checkLicenseHeader', () => {
     expect(check.stop).toBe(true);
   });
 
-  it('with no old header (subset witness), the marker check still runs and the comparison is honestly null', () => {
+  it('with no old header (subset witness), the pinned wording stands in and the full comparison still runs', () => {
     const check = checkLicenseHeader('topics', null, TOPICS_HEADER_NEW);
     expect(check.stop).toBe(false);
-    expect(check.licenseTextChanged).toBeNull();
+    expect(check.oldWordingSource).toBe('pinned-record');
+    // The comparison RAN (against PINNED_FULL_HEADERS), it did not degrade
+    // to the marker probe: a date roll relative to the pinned wording is
+    // still not a change.
+    expect(check.licenseTextChanged).toBe(false);
     const missing = checkLicenseHeader('topics', null, 'Topic\tOSIS\tScore');
     expect(missing.stop).toBe(true);
+  });
+
+  it('WRONG VERDICT GUARD: a CC-BY-NC candidate under the witness (no old header) STOPs even though the prefix-open marker matches', () => {
+    // "www.openbible.info CC-BY" is a substring of "…CC-BY-NC…", so the
+    // marker probe alone would green-light a rights RESTRICTION — the exact
+    // class the STOP exists for. The pinned-wording comparison must catch it.
+    const nc = 'From Verse\tTo Verse\tVotes\t#www.openbible.info CC-BY-NC 2026-08-17';
+    const check = checkLicenseHeader('xrefs', null, nc);
+    expect(check.markerPresent).toBe(true); // the marker probe IS fooled
+    expect(check.licenseTextChanged).toBe(true);
+    expect(check.stop).toBe(true);
+    // Topics variant: a suffix appended after the (closed) topics marker.
+    const restricted = TOPICS_HEADER_NEW.replace(
+      'www.openbible.info/topics',
+      'www.openbible.info/topics (non-commercial use only)',
+    );
+    const topicsCheck = checkLicenseHeader('topics', null, restricted);
+    expect(topicsCheck.markerPresent).toBe(true);
+    expect(topicsCheck.stop).toBe(true);
+  });
+
+  it('pinned wordings mirror the manifests\' licenseRecord quotes and the live-verified headers', () => {
+    // The pinned constants are the witness-mode old side; if they drift from
+    // what the manifests record (or from the live-verified header shapes,
+    // dates aside), witness mode compares against fiction.
+    const strip = (header: string): string =>
+      header.replace(/\d{4}-\d{2}-\d{2}/g, '<date>');
+    expect(strip(PINNED_FULL_HEADERS.topics)).toBe(strip(TOPICS_HEADER_OLD));
+    expect(strip(PINNED_FULL_HEADERS.xrefs)).toBe(strip(XREFS_HEADER_OLD));
+    for (const [kind, manifest] of [
+      ['topics', 'openbible-topics.json'],
+      ['xrefs', 'openbible-xrefs.json'],
+    ] as const) {
+      const record = (
+        JSON.parse(readFileSync(join(PIPELINE_ROOT, 'manifests', manifest), 'utf8')) as {
+          licenseRecord: string;
+        }
+      ).licenseRecord;
+      const quoted = /header states: '([^']+)'/.exec(record)?.[1];
+      expect(quoted).toBeTruthy();
+      expect(strip(PINNED_FULL_HEADERS[kind])).toContain(strip(quoted!));
+    }
   });
 });
 
@@ -620,9 +669,73 @@ describe('runOpenbibleDelta (file-level CLI behavior)', () => {
     expect(result.delta.restricted).toBe(true);
     expect(result.report).toContain('subset witness');
     expect(result.report).toContain('adds are not measurable');
-    // The witness carries no raw header, so the license comparison is
-    // marker-only and the report must say so rather than claim a full check.
+    // The witness carries no raw header; the report must name the pinned
+    // wording as the old side rather than claim a raw-header comparison.
     expect(result.report).toContain('witness carries no header');
+    expect(result.report).toContain('PINNED header wording');
+  });
+
+  it('WRONG VERDICT GUARD: under the witness, a CC-BY-NC candidate is a license STOP (exit 2), never "identical"', () => {
+    const witnessPath = write(
+      'cli-witness-nc.json',
+      JSON.stringify({
+        $schema: 'openbible-subset/1',
+        topicRows: [],
+        crossReferences: [
+          { fromVerseId: GEN_1_1, toStartVerseId: PS_124_8, toEndVerseId: PS_124_8, votes: 71 },
+        ],
+      }),
+    );
+    // Same rows as the witness, but the grant is now non-commercial. The
+    // prefix-open marker ("www.openbible.info CC-BY") still matches, so the
+    // old marker-only path reported this as identical / exit 0 — the wrong
+    // verdict this test exists to keep dead.
+    const ncPath = write(
+      'cli-new-nc.txt',
+      [
+        'From Verse\tTo Verse\tVotes\t#www.openbible.info CC-BY-NC 2026-08-17',
+        'Gen.1.1\tPs.124.8\t71',
+        '',
+      ].join('\n'),
+    );
+    const result = runOpenbibleDelta({
+      kind: 'xrefs',
+      oldPath: witnessPath,
+      newPath: ncPath,
+      committedPath: null,
+      check: true,
+    });
+    expect(result.outcome).toBe('license-stop');
+    expect(result.exitCode).toBe(2);
+    expect(result.report).toContain('rights STOP');
+    expect(result.report).toContain('pinned header wording');
+    // The companion direction: an intact grant whose date rolled must still
+    // pass under the witness — the STOP must not become decoration.
+    const rolledPath = write(
+      'cli-new-rolled.txt',
+      [XREFS_HEADER_NEW, 'Gen.1.1\tPs.124.8\t71', ''].join('\n'),
+    );
+    const rolled = runOpenbibleDelta({
+      kind: 'xrefs',
+      oldPath: witnessPath,
+      newPath: rolledPath,
+      committedPath: null,
+      check: true,
+    });
+    expect(rolled.outcome).toBe('identical');
+    expect(rolled.exitCode).toBe(0);
+  });
+
+  it('caps the outside-scope topic-name lists and states the totals', () => {
+    const oldPath = write('cli-old-h.txt', [TOPICS_HEADER_OLD, 'trust\tPs.46.1\t5', ''].join('\n'));
+    const newLines = [TOPICS_HEADER_NEW, 'trust\tPs.46.1\t5'];
+    for (let v = 1; v <= 30; v += 1) newLines.push(`new topic ${String(v).padStart(2, '0')}\tPs.119.${v}\t3`);
+    const newPath = write('cli-new-h.txt', `${newLines.join('\n')}\n`);
+    const result = runOpenbibleDelta({ kind: 'topics', oldPath, newPath, conceptsDir, check: false });
+    const line = result.report.split('\n').find((row) => row.startsWith('- topics added ('));
+    expect(line).toContain('topics added (30):');
+    expect(line).toContain('(5 more not listed)');
+    expect(line!.match(/new topic \d+/g)!.length).toBe(25);
   });
 
   it('with --no-concepts the report warns that class (b) cannot be ruled out', () => {

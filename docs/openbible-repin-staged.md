@@ -81,7 +81,10 @@ scope** → proceed, counts in the PR body; **(b) consumed-scope movement** →
 the itemized list goes to Jesse (J52/A5a) before the PR merges, and the
 report is handed to the borrowables aspect (**B1**, F23 bucketed vote
 weights) as its transform-design baseline; **license STOP** → see below.
-`--check` exit codes: 0 identical, 1 class (a)/(b), 2 license STOP.
+`--check` exit codes: 0 identical, 1 class (a)/(b), 2 license STOP. Only the
+`--check` invocations are load-bearing for scripts and for §4's verification
+sequence: without `--check` every outcome — license STOP included — exits 0,
+because the report is the product.
 
 **License-header check (the rights record).** Both files carry their license
 grant in the first line, live-verified 2026-08-21: topics
@@ -94,8 +97,13 @@ going missing) is the rights STOP (`docs/source-repins.md` §2 — "that is a
 rights question, not a re-pin"); the date rolling is release metadata,
 printed but never fatal. Any non-date header change stops, column-title churn
 included — conservative by design. Against the subset witness (which carries
-no header) the check is marker-only and the report says so; the pinned
-manifests' `licenseRecord` fields are the old-side witness for the wording.
+no header) the check does **not** degrade to the CC-BY marker probe (the
+xrefs marker is prefix-open — "CC-BY" is a substring of "CC-BY-NC", so a
+present marker proves nothing about the grant): the pinned header wording —
+the manifests' `licenseRecord` quote, mirrored as the tool's test-anchored
+`PINNED_FULL_HEADERS` — stands in as the old side and the same date-stripped
+comparison runs, so a grant restriction (e.g. CC-BY → CC-BY-NC) STOPs in
+witness mode too. The report names which old side each verdict rests on.
 
 Witness honesty: the committed subset carries only subscribed-topic rows and
 votes ≥ 1 edges, cut to the fixture-corpus verses. Against it, adds are not
@@ -198,7 +206,13 @@ Template notes:
 - The xrefs `licenseRecord` quotes a dated header, so the quote is refreshed
   to the captured header verbatim — a **record update, not a rights change**;
   the delta report's license section is the evidence the wording (dates
-  aside) is identical. The topics `licenseRecord` quote is undated and stays
+  aside) is identical — on the witness path that evidence comes from the
+  pinned-wording comparison (§1), which the report names as its old side; a
+  full-payload old side strengthens it but is not required for the claim.
+  The tool's `PINNED_FULL_HEADERS` constant embeds the same grant wording,
+  so if this quote refresh ever touched more than the date, the suite's
+  manifest-anchoring test would fail before the record could drift. The
+  topics `licenseRecord` quote is undated and stays
   as-is unless the captured header's grant text differs (which would be a
   rights STOP long before this template matters).
 - Neither manifest has `contentSha256` today, and this PR deliberately does
@@ -251,7 +265,12 @@ fixture-first work, never smuggled into a re-pin — plan P2.2 §5).
 ## 4. Verification sequence (prove the alarm both ways)
 
 1. Both delta reports + the license-check record attached **before** the
-   manifest edits (§1).
+   manifest edits (§1) — from `--check` runs, the only ones whose exit codes
+   mean anything (§1). The STOP direction of the license alarm is proven by
+   the suite's named wrong-verdict tests (a CC-BY-NC candidate under the
+   witness is a license STOP / exit 2; a reworded grant STOPs in full-header
+   mode; a date roll never stops), so a green run here is a check that ran,
+   not decoration.
 2. `npm run check:drift` red for both OpenBible sources immediately before
    merge — the sentinel working while drift is live (upstream rolls weekly,
    so re-run right before merge; the pinned-vs-captured gap is expected to
