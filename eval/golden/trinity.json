@@ -36,10 +36,17 @@
     "its second honest cue, the related-edge 'Related theme: The deity of",
     "Christ' chip plus preached vocabulary; every rank above the window's",
     "edge carries a curated chip). 'father son and holy spirit' and",
-    "'triune god' both put Matt 28:19 #1 (49.65 / 40.00). The 'three in",
-    "one' single-token collapse is acknowledged in lexicon-inventory.yaml",
-    "(J12 flag) — measured: 'three days' keeps its exact-phrase rows",
-    "#1-#5 above every pack anchor."
+    "'triune god' both put Matt 28:19 #1 (49.65 / 40.00).",
+    "",
+    "REVISED 2026-08-21 (round-1 critique D-1): the worklist-mandated",
+    "phrase 'three in one' collapsed to the bare token {three} and",
+    "hijacked 'peter denied three times' at #1-#2 on both beds (John",
+    "13:38, the true verse, demoted to #3). The phrase is reworded to",
+    "'three persons one god' ({three, person, god} — no collapse), the",
+    "lexicon-inventory row is removed in the same commit, and",
+    "peter-denial-guard.json locks the healed state. This fixture's own",
+    "three queries never used 'three in one'; ranking expectations are",
+    "untouched and re-verified green after the reword."
   ],
   "expectedTop": [
     {

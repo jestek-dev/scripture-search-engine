@@ -45,10 +45,32 @@
 # holy-spirit-the-comforter, 0.20 vs deity-of-christ — both under limits.
 # Widths under the one tokenizer: "trinity" is the subject noun (one WORD,
 # not a collapse); "triune god" -> {triune, god}; "father son and holy
-# spirit" -> {father, son, holy, spirit}; "three in one" -> the SINGLE
-# token {three} — a multi-word single-token collapse, acknowledged in
-# ontology/lexicon-inventory.yaml in this same commit (J12 flag: common
-# numeric token).
+# spirit" -> {father, son, holy, spirit}; "three persons one god" ->
+# {three, person, god} — three significant tokens, no collapse, no
+# lexicon-inventory row due.
+#
+# REWORD (2026-08-21, round-1 critique D-1 — a WORKLIST DEVIATION, noted
+# for Jesse): the worklist mandated the remembered summary phrase "three
+# in one", which collapses to the bare numeric token {three} under the one
+# tokenizer. Measured on BOTH beds, the bare trigger hijacked the
+# armor-less narrative counting query "peter denied three times" at #1 AND
+# #2 (John 1:1-3 "Theme: Trinity" 13.70, Matt 28:19 11.00, the true verse
+# John 13:38 demoted to #3) and filled the hermetic tail #6-#10 of "three
+# days" with trinity anchors — the wrong-concept-#1 harm class this
+# project treats as its worst failure. Fix by removing the harm, not by
+# disclosure: the phrase is reworded to "three persons one god" (the
+# inventory row's own recorded reword suggestion), which fires on no
+# counting query (measured: "three persons one god" puts Matt 28:19 #1
+# via full containment; "peter denied three times" restores John 13:38
+# #1 with the denial narrative back in-window). HONEST TRADEOFF
+# (J12-class, named in the PR body): the literal query "three in one" no
+# longer reaches this concept at all — it returns bare token-overlap
+# rows (1 Jn 5:7 #1 by "Shared word: three"). Reaching the doctrine a
+# bit less easily is accepted; hijacking a quoted narrative is not. The
+# now-unneeded bare-`three` collapse row was removed from
+# lexicon-inventory.yaml in this same commit (G4 fails a stale
+# acknowledgment). Guard fixture peter-denial-guard.json locks the
+# healed state.
 id: trinity
 label: Trinity — Father, Son, and Spirit
 lexicon:
@@ -60,11 +82,12 @@ lexicon:
   - triune god
   # The baptismal formula's own persons, as a searcher types them.
   - father son and holy spirit
-  # The remembered summary phrase. Collapses to the single token `three`
-  # under the shared tokenizer (stopwords in/one drop out) — acknowledged
-  # in lexicon-inventory.yaml this commit, flagged for J12 because `three`
-  # is a common numeric token (see the row's note).
-  - three in one
+  # The remembered summary register ("three in one" as searchers mean it),
+  # reworded from the worklist's "three in one" per round-1 critique D-1:
+  # that form collapsed to the bare token {three} and hijacked narrative
+  # counting queries (see REWORD note above). This form keeps three
+  # significant tokens {three, person, god}.
+  - three persons one god
 anchors:
   # "Go and make disciples of all nations, baptizing them in the name of
   # the Father and of the Son and of the Holy Spirit" (WEB). The baptismal
