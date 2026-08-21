@@ -50,9 +50,31 @@
 # overlap is the G4 fork above, measured PASS). Widths under the one
 # tokenizer: "incarnation" is the subject noun (one WORD, not a
 # collapse); "word became flesh" -> {word, became, flesh}; "god became
-# man" -> {god, became, man}; "god in the flesh" -> {god, flesh}. Every
-# multi-word phrase keeps >= 2 significant tokens — ZERO single-token
-# collapses, no lexicon-inventory row due.
+# man" -> {god, became, man}; "god became flesh" -> {god, became,
+# flesh}. Every multi-word phrase keeps >= 3 significant tokens — ZERO
+# single-token collapses, no lexicon-inventory row due.
+#
+# NARROWED (2026-08-21, round-1 critique D-2 — a WORKLIST DEVIATION,
+# noted for Jesse): the worklist mandated "god in the flesh", whose
+# stopword-stripped width is the two-token containment set {god, flesh}
+# — an enormous surface ("god" is near-ubiquitous), which fired on ANY
+# query containing both tokens and demoted quoted-verse #1s, measured on
+# BOTH beds: "flesh and blood cannot inherit the kingdom of god" put
+# incarnation anchors #1-#3 over 1 Cor 15:50 (the verse being quoted,
+# #1 before this pack, demoted to #4); "my flesh and my heart may fail
+# but god is my strength" pushed Ps 73:26 #2 -> #4. Hijacking a quoted
+# verse is the wrong-scripture harm class; the phrase is narrowed to
+# "god became flesh" ({god, became, flesh}), which states the same
+# doctrine and fires on neither quote. HONEST TRADEOFF (J12-class,
+# named in the PR body): the literal query "god in the flesh" no longer
+# reaches this concept at all (measured on both beds: token-overlap
+# rows only — Rom 8:8 #1 by shared {flesh, god} — with no incarnation
+# chip anywhere in the top-10) — the
+# doctrine-seeker's mandated registers "incarnation", "the word became
+# flesh", and "god became man" all still reach it (the promoted fixture
+# is the floor and stays green). Guard fixtures
+# flesh-and-blood-quote-guard.json and psalm-73-strength-guard.json
+# lock the healed quotes.
 id: incarnation
 label: The incarnation
 lexicon:
@@ -67,8 +89,12 @@ lexicon:
   - word became flesh
   # The plain-language register a searcher types.
   - god became man
-  # The confession's phrasing ("come in the flesh") as searchers type it.
-  - god in the flesh
+  # The plainest doctrinal summary in verse-shaped words, narrowed from
+  # the worklist's "god in the flesh" per round-1 critique D-2: that
+  # form's {god, flesh} containment hijacked quoted-verse queries (see
+  # NARROWED note above). This form keeps three significant tokens
+  # {god, became, flesh}.
+  - god became flesh
 anchors:
   # "The Word became flesh and lived among us. We saw his glory, such
   # glory as of the only born Son of the Father, full of grace and truth"

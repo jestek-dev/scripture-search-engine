@@ -36,7 +36,17 @@
     "cues; every rank above the window edge carries this pack's own",
     "chip); 'the word became flesh' keeps John 1:14 #1 (102.15), now",
     "exact_phrase PLUS concept_anchor — the wrong-reason half of th6b",
-    "closes; 'god became man' puts the three anchors #1-#3."
+    "closes; 'god became man' puts the three anchors #1-#3.",
+    "",
+    "REVISED 2026-08-21 (round-1 critique D-2): the worklist-mandated",
+    "phrase 'god in the flesh' reduced to the two-token containment set",
+    "{god, flesh} and demoted quoted-verse #1s on both beds (1 Cor 15:50",
+    "#1 -> #4 under incarnation anchors; Ps 73:26 #2 -> #4). Narrowed to",
+    "'god became flesh' ({god, became, flesh}); guard fixtures",
+    "flesh-and-blood-quote-guard.json and psalm-73-strength-guard.json",
+    "lock the healed quotes. This fixture's own three queries never used",
+    "'god in the flesh'; ranking expectations are untouched and",
+    "re-verified green after the narrowing."
   ],
   "expectedTop": [
     {
