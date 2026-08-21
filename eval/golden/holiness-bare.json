@@ -1,0 +1,40 @@
+{
+  "id": "holiness-bare",
+  "query": "holiness",
+  "status": "pending",
+  "coversConcepts": [
+    "holiness"
+  ],
+  "note": [
+    "GAP FIXTURE (audit sw6b bare 'holiness'; measured 2026-08-21 during",
+    "the P4.2 promotion split). The bare-word leg the worklist directed",
+    "OUT of holiness-sanctification.json at activation now lives here as",
+    "its own pending assertion, so the split leaves no unpinned promise.",
+    "Measured on the hermetic bed at 510f676: 'holiness' returns",
+    "token_overlap/passage_terms accidents only (Heb 12:10 #1 at 4.47,",
+    "'Shared word: holiness') — no curated chip anywhere in the top 10;",
+    "1 Pet 1:15-16 (the concept's 1.0 anchor) does not surface at all.",
+    "P4.11-GATED: bare 'holiness' belongs to the bare-word inventory item",
+    "(P4.11, BLOCKED-coordination with PR #33 — same file path, divergent",
+    "lexicon-inventory schemas). This fixture stays pending until that",
+    "coordination resolves and the bare word is admitted by whichever",
+    "inventory survives; it activates with that PR, not before.",
+    "requiredReasonLabel matches the concept's current chip; if P4.11's",
+    "resolution renames or re-routes it, the label edit rides that PR",
+    "with its own note."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Peter 1:15-16",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Called to be holy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 12:14",
+    "1 Thessalonians 4:7",
+    "2 Corinthians 7:1"
+  ]
+}
