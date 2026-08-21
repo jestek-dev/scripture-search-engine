@@ -101,9 +101,20 @@
       "token_overlap's 10 and level with proximity/cross_reference, so a",
       "bag-of-stems vocabulary hint can accompany but never overrule an honest",
       "text match. The value 6 is plan-recommended pending J20 sign-off, which",
-      "rides the normal approval flow."
+      "rides the normal approval flow.",
+      "",
+      "exactPhraseFullAuthorityWords (stage 3, P3.3): the significant-word",
+      "count at which a verbatim phrase earns FULL exact_phrase authority.",
+      "Below 2 significant words a verbatim occurrence files as token_overlap",
+      "at 10 points; 2 words earn 2/3 authority (40 points, level with the",
+      "concept_anchor ceiling and above weakAggregateCap 30); 3+ earn the full",
+      "60. FIXED, not a tuning knob: raising it to 4 would push 2-word phrases",
+      "to 30, colliding with weakAggregateCap and endangering correct",
+      "remembered-phrase verbatim #1s. The value 3 is plan-recommended pending",
+      "J19 sign-off, which rides the normal approval flow."
     ],
-    "soleEvidenceMaxPoints": { "translation_variant": 6 }
+    "soleEvidenceMaxPoints": { "translation_variant": 6 },
+    "exactPhraseFullAuthorityWords": 3
   },
   "noise": {
     "$comment": "G8. Measured against the previous artifact. Exceeding any of these fails the build and names the offending probes.",

@@ -26,6 +26,7 @@ import fc from 'fast-check';
 import {
   applyBudgets as engineApplyBudgets,
   DEFAULT_BUDGETS,
+  EXACT_PHRASE_FULL_AUTHORITY_WORDS,
   isAuthoritative,
   normalizeToken as engineNormalizeToken,
   rank as engineRank,
@@ -375,6 +376,7 @@ export function reviewedConstantsCheck(signalBudgets?: unknown): GateResult {
   // stages extend this registry together with the mirror they add.
   const engineValues: Record<string, unknown> = {
     soleEvidenceMaxPoints: DEFAULT_BUDGETS.soleEvidenceMaxPoints,
+    exactPhraseFullAuthorityWords: EXACT_PHRASE_FULL_AUTHORITY_WORDS,
   };
 
   const mirroredKeys = Object.keys(mirror)

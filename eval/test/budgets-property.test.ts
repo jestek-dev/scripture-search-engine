@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
   applyBudgets,
   DEFAULT_BUDGETS,
+  EXACT_PHRASE_FULL_AUTHORITY_WORDS,
   rank,
   type Candidate,
   type RankOptions,
@@ -135,9 +136,24 @@ describe('reviewedConstantsCheck (G6 reviewed-constants half)', () => {
     });
   });
 
+  it('the committed mirror actually names the exact-phrase taper constant (stage 3)', () => {
+    expect(committedMirror()).toMatchObject({
+      exactPhraseFullAuthorityWords: EXACT_PHRASE_FULL_AUTHORITY_WORDS,
+    });
+  });
+
   it('rings on a retuned constant: mirror value differing from the engine fails', () => {
     const result = reviewedConstantsCheck({
       soleEvidenceMaxPoints: { translation_variant: 14 },
+    });
+    expect(result.status).toBe('fail');
+    expect((result.findings ?? []).some((f) => f.categoryCode === 'mirror-mismatch')).toBe(true);
+  });
+
+  it('rings on a retuned taper constant: a re-tuned exactPhraseFullAuthorityWords cannot land code-only', () => {
+    const result = reviewedConstantsCheck({
+      ...(committedMirror() as Record<string, unknown>),
+      exactPhraseFullAuthorityWords: 4,
     });
     expect(result.status).toBe('fail');
     expect((result.findings ?? []).some((f) => f.categoryCode === 'mirror-mismatch')).toBe(true);
