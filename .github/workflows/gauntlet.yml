@@ -27,6 +27,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Full history: the re-pin diff-shape derivation below needs the
+          # merge-base, the same derivation the provenance job performs.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
@@ -51,11 +55,47 @@ jobs:
       - name: Workbench browser workflow
         run: npm run test:browser --workspace workbench
 
+      - name: Derive --expect-no-effect from the re-pin diff shape
+        # A source re-pin CLAIMS no effect (docs/source-repins.md §5), so CI
+        # derives that intent deterministically from the merge-base diff: when
+        # the changed set is non-empty and EVERY path is re-pin surface
+        # (pipeline manifests, eval baselines + their approval records,
+        # docs/reviews evidence), GAUNTLET_EXTRA_ARGS carries
+        # --expect-no-effect with a single space-free reason token. No per-PR
+        # labels or marker files — and the provenance job audits the recorded
+        # flag against this same diff shape, so a flag from any other source
+        # fails the run.
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          MERGE_BASE=$(git merge-base "origin/${GITHUB_BASE_REF}" HEAD)
+          CHANGED=$(git diff --name-only "${MERGE_BASE}" HEAD)
+          if [ -z "$CHANGED" ]; then
+            echo "Empty diff — no re-pin claim to derive."
+            exit 0
+          fi
+          COUNT=0
+          while IFS= read -r path; do
+            case "$path" in
+              pipeline/manifests/*.json|eval/baselines/*|docs/reviews/*) COUNT=$((COUNT+1)) ;;
+              *) echo "Non-re-pin path changed ($path) — gauntlet runs without --expect-no-effect."; exit 0 ;;
+            esac
+          done <<< "$CHANGED"
+          echo "GAUNTLET_EXTRA_ARGS=--expect-no-effect ci-auto:re-pin-diff-shape:${COUNT}-files" >> "$GITHUB_ENV"
+          echo "Re-pin diff shape detected (${COUNT} file(s)); gauntlet runs with --expect-no-effect."
+
       - name: Admission gauntlet and baseline approval
         # Writes the Admission Report to the job summary and exits non-zero on
         # REJECT, so a failed gate blocks the merge rather than being a note
         # someone has to notice in the log.
-        run: npm run gauntlet -- --require-admit --json eval/.runs/gauntlet-report.json
+        #
+        # bash on BOTH legs, and $GAUNTLET_EXTRA_ARGS deliberately unquoted:
+        # the variable must word-split into exactly two arguments (flag +
+        # single-token reason) identically on Linux and Windows, and it
+        # expands to nothing on every non-re-pin run, leaving today's
+        # behavior unchanged.
+        shell: bash
+        run: npm run gauntlet -- --require-admit --json eval/.runs/gauntlet-report.json $GAUNTLET_EXTRA_ARGS
 
       - name: Upload machine report
         uses: actions/upload-artifact@v4
@@ -187,7 +227,13 @@ jobs:
     # changes the committed snapshot, the identity triple must have moved and
     # priorProvenance must name the ACTUAL merge-base blob — a forged prior
     # cannot survive the comparison.
+    #
+    # It also audits the --expect-no-effect claim: the verify job derives the
+    # flag from the diff shape, and this job re-checks the RECORDED flag in
+    # the uploaded machine report against the same diff — so a flag from any
+    # other source (a hand-edited workflow, a doctored report) fails here.
     if: github.event_name == 'pull_request'
+    needs: verify
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -197,6 +243,51 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
+
+      - uses: actions/download-artifact@v5
+        with:
+          name: gauntlet-machine-report-Linux
+          path: reports/linux
+
+      - name: Recorded --expect-no-effect matches the re-pin diff shape
+        run: |
+          node <<'EOF'
+          const { execFileSync } = require('node:child_process');
+          const { readFileSync } = require('node:fs');
+
+          const report = JSON.parse(readFileSync('reports/linux/gauntlet-report.json', 'utf8'));
+          const recorded = report?.identity?.flags?.expectNoEffect;
+          if (recorded === undefined) {
+            console.log('No --expect-no-effect recorded in the machine report; nothing to audit.');
+            process.exit(0);
+          }
+          const mergeBase = execFileSync(
+            'git', ['merge-base', `origin/${process.env.GITHUB_BASE_REF}`, 'HEAD'],
+            { encoding: 'utf8' },
+          ).trim();
+          const changed = execFileSync('git', ['diff', '--name-only', mergeBase, 'HEAD'], { encoding: 'utf8' })
+            .split('\n')
+            .filter(Boolean);
+          // Must mirror the verify job's derivation: manifests, baselines
+          // (approval records included), and review evidence.
+          const REPIN_SURFACE = [
+            /^pipeline\/manifests\/.+\.json$/,
+            /^eval\/baselines\/.+$/,
+            /^docs\/reviews\/.+$/,
+          ];
+          const conforming = changed.length > 0
+            && changed.every((path) => REPIN_SURFACE.some((pattern) => pattern.test(path)));
+          if (!conforming) {
+            console.error(
+              `--expect-no-effect ("${recorded}") is recorded in the machine report, but the PR diff ` +
+              `is not re-pin-shaped (${changed.length} changed file(s)). A no-effect claim outside a ` +
+              'source re-pin is exactly what this audit exists to catch.');
+            process.exit(1);
+          }
+          console.log(
+            `--expect-no-effect ("${recorded}") audited against a conforming re-pin diff ` +
+            `(${changed.length} file(s)).`);
+          EOF
 
       - name: Snapshot changes moved the identity triple and priorProvenance names the merge-base blob
         run: |
