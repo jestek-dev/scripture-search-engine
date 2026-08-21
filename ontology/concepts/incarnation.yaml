@@ -1,0 +1,103 @@
+# INCARNATION — doctrinal locator pack (Phase-4 item P4.5 / DG-6 / audit
+# th6+th6b, authored 2026-08-21 fixture-first: eval/golden/incarnation.json
+# was committed pending-and-failing before this file existed. Measured gap,
+# both beds: "incarnation" appears in no WEB verse (verified corpus-wide),
+# so the query returned only passage_terms accidents (John 1:5 #1, John
+# 1:14 chip-less below it); "the word became flesh" found John 1:14 #1 by
+# exact_phrase ALONE — right passage, wrong reason, a covenant-5 failure.)
+#
+# Design: locates where Scripture states that the Word became flesh —
+# shared-core point 3 (docs/DOCTRINAL-BASIS.md §2: "Christ — incarnation,
+# virgin birth, sinless life, atoning death, bodily resurrection"), handled
+# with maximum care: the pack locates and attributes, it never adjudicates
+# christological formulations (§4 non-criteria untouched). Label "The
+# incarnation" is a proposal riding the doctrinal-wave batch sign-off; the
+# G4 fork the worklist records ("overlap 0.40 vs deity-of-christ — the
+# fold fallback is live, not theoretical") is decided in-PR: if G4 REJECTs
+# the pack as a near-duplicate, fold these anchors into deity-of-christ
+# and put the chip-label question to Jesse. Measured at authoring: G4
+# passes with all concepts mutually distinct — the fork stays untaken.
+#
+# Attribution note (benediction/trinity precedent): all three anchors are
+# [editorial] — Torrey has NO INCARNATION topic in the verified outline
+# set (docs/research/torrey-topical/torrey-miller-topics.json, checked
+# 2026-08-21). Nearest corroborations recorded per anchor; the closest,
+# EXCELLENCY AND GLORY OF CHRIST's "As incarnate" row (John 1:14), sits
+# under a glory topic, not an incarnation outline, so claiming [torrey]
+# would overstate it (the exact-ref-in-the-topic's-own-outline rule).
+# Corpus-deferred to the re-pin payload (P4.15): Phil 2:6-8, Heb 1:3,
+# Heb 2:14-17, 1 Tim 3:16, Gal 4:4-5, Matt 1:22-23, Luke 2:10-11 (all
+# absent — "the doctrinal wave's strongest argument for item 15's chapter
+# list", worklist verbatim).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist; no
+# materialFrameKeyword appears in this id, label, or lexicon.
+#
+# SENSE-INVERSION SWEEP (2026-08-21): no anchor below denies or argues
+# against what it is anchored for; each states the doctrine affirmatively
+# in its own WEB words (texts quoted per anchor). Deliberately NOT
+# anchored: 1 John 4:2-3 — v2 confesses "Jesus Christ has come in the
+# flesh", but v3 is the spirit that does NOT confess it (the measured #10
+# proximity row for "god in the flesh" was exactly 4:3); anchoring the
+# discernment test's negative half for the doctrine it names by denial is
+# the inversion this sweep exists to forbid, and the positive half alone
+# is not worklist-mandated.
+#
+# Lexicon collision check (G4): no phrase below normalizes to an existing
+# concept's phrase. Nearest neighbor is deity-of-christ ("the word was
+# god" {word, wa-, god} vs "word became flesh" {word, became, flesh} —
+# one shared token, disjoint phrases; the pre-measured 0.40 lexicon
+# overlap is the G4 fork above, measured PASS). Widths under the one
+# tokenizer: "incarnation" is the subject noun (one WORD, not a
+# collapse); "word became flesh" -> {word, became, flesh}; "god became
+# man" -> {god, became, man}; "god in the flesh" -> {god, flesh}. Every
+# multi-word phrase keeps >= 2 significant tokens — ZERO single-token
+# collapses, no lexicon-inventory row due.
+id: incarnation
+label: The incarnation
+lexicon:
+  # The subject noun — the audit query (th6). One word, so the bare query
+  # "incarnation" fires this concept authoritatively; the word never
+  # occurs in the WEB text, so no lexical rung could reach it without
+  # this entry.
+  - incarnation
+  # John 1:14's own WEB wording (audit query th6b types it with the
+  # article: "the word became flesh" — full-containment matching reaches
+  # it from this stopword-stripped form).
+  - word became flesh
+  # The plain-language register a searcher types.
+  - god became man
+  # The confession's phrasing ("come in the flesh") as searchers type it.
+  - god in the flesh
+anchors:
+  # "The Word became flesh and lived among us. We saw his glory, such
+  # glory as of the only born Son of the Father, full of grace and truth"
+  # (WEB). THE incarnation sentence — the doctrine stated in one verse,
+  # and the pending fixture's expectedTop. Torrey corroboration (no
+  # INCARNATION outline — see attribution note): EXCELLENCY AND GLORY OF
+  # CHRIST, "As incarnate" (John 1:14); HUMAN NATURE OF CHRIST,
+  # "Partaking of flesh and blood" (John 1:14).
+  - ref: John 1:14
+    sources: [editorial]
+    weight: 1.0
+  # "In the beginning was the Word, and the Word was with God, and the
+  # Word was God" (WEB). Who it is that became flesh — v14's subject
+  # identified; the pair is one argument. Cross-concept: John 1:1 is
+  # deity-of-christ's 1.0 [torrey] anchor (CHRIST IS GOD, "As God the
+  # Word") — a different claim (the Word's deity; here, the Word who
+  # became flesh), deliberate cross-concept anchoring, Rom 8:1 precedent.
+  - ref: John 1:1
+    sources: [editorial]
+    weight: 0.9
+  # "He is the image of the invisible God... For all the fullness was
+  # pleased to dwell in him" (WEB). The fullness dwelling bodily in
+  # Christ — Colossians' statement of the same doctrine. Torrey
+  # corroboration: CHRIST IS GOD lists 1:16-17 (creator/upholder claims);
+  # EXCELLENCY AND GLORY OF CHRIST, "As the image of God" (1:15) — none
+  # an incarnation outline.
+  - ref: Colossians 1:15-19
+    sources: [editorial]
+    weight: 0.8
+related:
+  - deity-of-christ
+  - trinity
