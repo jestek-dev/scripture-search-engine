@@ -15,6 +15,11 @@ import { describe, expect, it } from 'vitest';
 
 import { describeTargetId, renderBaselineReviewPacket, reviewPacketSha256 } from '../src/baselineReviewPacket.js';
 import { canonicalJsonSha256, type Probe, type ProbeBaseline } from '../src/gates/probes.js';
+import {
+  RANK_METRICS_BASELINE_SCHEMA,
+  type RankAggregate,
+  type RankMetricsBaseline,
+} from '../src/gates/rankMetrics.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EVAL_ROOT = join(HERE, '..');
@@ -119,5 +124,84 @@ describe('baseline review packet', () => {
     // stable-probe did not change, so it renders no section of its own.
     expect(packet).not.toContain('### `stable-probe`');
     expect(packet).toContain('- Unchanged: `stable-probe`.');
+  });
+});
+
+function aggregate(overrides: Partial<Record<keyof RankAggregate, unknown>> = {}): RankAggregate {
+  return {
+    scoreableQueries: 2,
+    excludedQueries: 1,
+    ndcg10: { exact: '17/20', micro: 850000 },
+    mrr10: { exact: '1/1', micro: 1000000 },
+    goodOrBetterTop3Rate: { exact: '1/2', micro: 500000 },
+    recallAt50: { exact: '1/1', micro: 1000000 },
+    ...overrides,
+  } as RankAggregate;
+}
+
+const RANK_BEFORE: RankMetricsBaseline = {
+  schema: RANK_METRICS_BASELINE_SCHEMA,
+  engineVersion: '0.9.0-test',
+  corpusFingerprint: 'a'.repeat(64),
+  layerFingerprint: 'b'.repeat(64),
+  overall: aggregate(),
+  perCategory: { 'felt-need': aggregate() },
+};
+
+const RANK_AFTER: RankMetricsBaseline = {
+  schema: RANK_METRICS_BASELINE_SCHEMA,
+  engineVersion: '0.9.0-test',
+  corpusFingerprint: 'a'.repeat(64),
+  layerFingerprint: 'c'.repeat(64),
+  overall: aggregate({ ndcg10: { exact: '877142/1000000', micro: 877142 } }),
+  perCategory: {
+    'felt-need': aggregate({ ndcg10: { exact: null, micro: null } }),
+    adversarial: aggregate(),
+  },
+};
+
+const RANK_INPUT = {
+  before: RANK_BEFORE,
+  after: RANK_AFTER,
+  batteryQueriesSha256: '1'.repeat(64),
+  batteryJudgmentsSha256: '2'.repeat(64),
+};
+
+describe('rank-metrics movement section', () => {
+  const base = { before: BEFORE, after: AFTER, probeFile: PROBES, noise: NOISE };
+
+  it('renders nothing rank-related without a rank input, keeping the golden byte-stable', () => {
+    expect(renderBaselineReviewPacket(base)).not.toContain('Rank-metrics');
+  });
+
+  it('renders before/after deltas for every metric, overall and per category', () => {
+    const packet = renderBaselineReviewPacket({ ...base, rank: RANK_INPUT });
+    expect(packet).toContain('## Rank-metrics movement');
+    expect(packet).toContain('0.850000 → 0.877142 (+0.027142)');
+    // A category present on only one side still renders, marked as such.
+    expect(packet).toContain('| adversarial |');
+    // A metric with no scoreable queries displays n/a, never 0.
+    expect(packet).toContain('0.850000 → n/a');
+  });
+
+  it('prints exactly the digests the rank-metrics approval must bind', () => {
+    const packet = renderBaselineReviewPacket({ ...base, rank: RANK_INPUT });
+    expect(packet).toContain(`\`${canonicalJsonSha256(RANK_AFTER)}\``);
+    expect(packet).toContain(`- \`batteryQueriesSha256\`: \`${'1'.repeat(64)}\``);
+    expect(packet).toContain(`- \`batteryJudgmentsSha256\`: \`${'2'.repeat(64)}\``);
+    expect(packet).toContain(canonicalJsonSha256(RANK_BEFORE));
+  });
+
+  it('handles the bootstrap case: no prior baseline renders new values, not deltas', () => {
+    const packet = renderBaselineReviewPacket({ ...base, rank: { ...RANK_INPUT, before: null } });
+    expect(packet).toContain('(new)');
+    expect(packet).toContain('bootstrap');
+    expect(packet).not.toContain('(+');
+  });
+
+  it('is deterministic: two renders of the same input are byte-identical', () => {
+    const first = renderBaselineReviewPacket({ ...base, rank: RANK_INPUT });
+    const second = renderBaselineReviewPacket({ ...base, rank: RANK_INPUT });
+    expect(first).toBe(second);
   });
 });

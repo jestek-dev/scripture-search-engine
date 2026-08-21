@@ -26,6 +26,13 @@ import {
   type ProbeBaseline,
   type ProbeObservation,
 } from './gates/probes.js';
+import {
+  BATTERY_JUDGMENTS_PATH,
+  BATTERY_QUERIES_PATH,
+  type RankAggregate,
+  type RankMetricValue,
+  type RankMetricsBaseline,
+} from './gates/rankMetrics.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EVAL_ROOT = join(HERE, '..');
@@ -35,11 +42,22 @@ export interface ReviewPacketNoiseBudgets {
   readonly maxWeakReasonShareIncrease: number;
 }
 
+export interface ReviewPacketRankInput {
+  /** Null for the bootstrap review: no prior rank baseline exists to chain. */
+  readonly before: RankMetricsBaseline | null;
+  readonly after: RankMetricsBaseline;
+  /** Byte digests of the battery files the metrics were computed from. */
+  readonly batteryQueriesSha256: string;
+  readonly batteryJudgmentsSha256: string;
+}
+
 export interface BaselineReviewPacketInput {
   readonly before: ProbeBaseline;
   readonly after: ProbeBaseline;
   readonly probeFile: { readonly probes: readonly Probe[] };
   readonly noise: ReviewPacketNoiseBudgets;
+  /** Present only when a rank-metrics baseline move is under review (E5). */
+  readonly rank?: ReviewPacketRankInput;
 }
 
 const BOOK_NAMES = new Map(BOOKS.map((book) => [book.id, book.name]));
@@ -144,6 +162,98 @@ function probeSection(
   return lines;
 }
 
+function displayRankMicro(micro: number | null): string {
+  return micro === null ? 'n/a' : (micro / 1000000).toFixed(6);
+}
+
+/** `0.850000 → 0.877142 (+0.027142)`; a side with no value renders honestly. */
+function rankMovementCell(before: RankMetricValue | undefined, after: RankMetricValue | undefined): string {
+  const left = before === undefined ? '—' : displayRankMicro(before.micro);
+  const right = after === undefined ? '—' : displayRankMicro(after.micro);
+  if (before?.micro == null || after?.micro == null) return `${left} → ${right}`;
+  const deltaMicro = after.micro - before.micro;
+  const magnitude = (Math.abs(deltaMicro) / 1000000).toFixed(6);
+  return `${left} → ${right} (${deltaMicro < 0 ? '-' : '+'}${magnitude})`;
+}
+
+function rankMovementRows(
+  before: RankMetricsBaseline | null,
+  after: RankMetricsBaseline,
+): string[] {
+  const labels = ['overall', ...[...new Set([
+    ...Object.keys(before?.perCategory ?? {}),
+    ...Object.keys(after.perCategory),
+  ])].sort()];
+  const aggregateOf = (baseline: RankMetricsBaseline | null, label: string): RankAggregate | undefined =>
+    baseline === null ? undefined : label === 'overall' ? baseline.overall : baseline.perCategory[label];
+  if (before === null) {
+    return [
+      '| Category | nDCG@10 | MRR@10 | good-or-better@3 | Recall@50 |',
+      '|---|---|---|---|---|',
+      ...labels.map((label) => {
+        const aggregate = aggregateOf(after, label);
+        const cell = (value: RankMetricValue | undefined): string =>
+          value === undefined ? '—' : `${displayRankMicro(value.micro)} (new)`;
+        return `| ${label} | ${cell(aggregate?.ndcg10)} | ${cell(aggregate?.mrr10)} ` +
+          `| ${cell(aggregate?.goodOrBetterTop3Rate)} | ${cell(aggregate?.recallAt50)} |`;
+      }),
+    ];
+  }
+  return [
+    '| Category | nDCG@10 | MRR@10 | good-or-better@3 | Recall@50 |',
+    '|---|---|---|---|---|',
+    ...labels.map((label) => {
+      const left = aggregateOf(before, label);
+      const right = aggregateOf(after, label);
+      return `| ${label} | ${rankMovementCell(left?.ndcg10, right?.ndcg10)} ` +
+        `| ${rankMovementCell(left?.mrr10, right?.mrr10)} ` +
+        `| ${rankMovementCell(left?.goodOrBetterTop3Rate, right?.goodOrBetterTop3Rate)} ` +
+        `| ${rankMovementCell(left?.recallAt50, right?.recallAt50)} |`;
+    }),
+  ];
+}
+
+function rankSection(rank: ReviewPacketRankInput): string[] {
+  const lines: string[] = [
+    '## Rank-metrics movement',
+    '',
+  ];
+  if (rank.before === null) {
+    lines.push(
+      'This is a **bootstrap** review: no prior rank-metrics baseline exists, so the',
+      'approval\'s `priorProvenance` is null beside an explicit `bootstrap` field',
+      'documenting that fact. Values below are new, not deltas.',
+      '',
+    );
+  }
+  lines.push(...rankMovementRows(rank.before, rank.after), '');
+  lines.push(
+    '### The rank-metrics approval must bind exactly these values',
+    '',
+    'Copied into `eval/baselines/rank-metrics.approval.json` by the reviewer; the',
+    'gauntlet recomputes and compares every one of them, and thresholds in',
+    '`eval/budgets.json` `rankQuality` may flip from null only against this',
+    'approved baseline.',
+    '',
+    `- \`baselineSha256\`: \`${canonicalJsonSha256(rank.after)}\` (canonical JSON of the after rank-metrics baseline)`,
+    `- \`batteryQueriesSha256\`: \`${rank.batteryQueriesSha256}\` (bytes of \`${BATTERY_QUERIES_PATH}\`)`,
+    `- \`batteryJudgmentsSha256\`: \`${rank.batteryJudgmentsSha256}\` (bytes of \`${BATTERY_JUDGMENTS_PATH}\`)`,
+    `- \`engine.engineVersion\`: \`${rank.after.engineVersion}\``,
+    `- \`engine.corpusFingerprint\`: \`${rank.after.corpusFingerprint}\``,
+    `- \`engine.layerFingerprint\`: \`${rank.after.layerFingerprint}\``,
+    '',
+  );
+  if (rank.before !== null) {
+    lines.push(
+      `For the review record: the before rank baseline's canonical-JSON SHA-256 is`,
+      `\`${canonicalJsonSha256(rank.before)}\`; \`priorProvenance.baselineGitBlobSha1\` comes from`,
+      '`git rev-parse <before-revision>:eval/baselines/rank-metrics.json`.',
+      '',
+    );
+  }
+  return lines;
+}
+
 export function renderBaselineReviewPacket(input: BaselineReviewPacketInput): string {
   const { before, after, probeFile, noise } = input;
   const probesById = new Map(probeFile.probes.map((probe) => [probe.id, probe]));
@@ -191,6 +301,7 @@ export function renderBaselineReviewPacket(input: BaselineReviewPacketInput): st
   for (const id of changed) {
     lines.push(...probeSection(probesById.get(id), id, beforeById.get(id)!, afterById.get(id)!, noise));
   }
+  if (input.rank !== undefined) lines.push(...rankSection(input.rank));
   lines.push(
     '## The approval must bind exactly these values',
     '',
@@ -225,7 +336,7 @@ export function reviewPacketSha256(packet: string): string {
 }
 
 function parseArguments(argv: readonly string[]): Map<string, string> {
-  const known = new Set(['--before', '--after', '--probes', '--budgets', '--out']);
+  const known = new Set(['--before', '--after', '--probes', '--budgets', '--out', '--rank-before', '--rank-after']);
   const values = new Map<string, string>();
   for (let index = 0; index < argv.length; index += 2) {
     const flag = argv[index]!;
@@ -238,6 +349,9 @@ function parseArguments(argv: readonly string[]): Map<string, string> {
   if (!values.has('--before') || !values.has('--after')) {
     throw new Error('review-packet requires both --before <baseline.json> and --after <baseline.json>');
   }
+  if (values.has('--rank-before') && !values.has('--rank-after')) {
+    throw new Error('--rank-before requires --rank-after (the moved rank-metrics baseline under review)');
+  }
   return values;
 }
 
@@ -247,11 +361,28 @@ function main(): void {
   const budgets = readJson<{ noise: ReviewPacketNoiseBudgets }>(
     values.get('--budgets') ?? join(EVAL_ROOT, 'budgets.json'),
   );
+  // The battery digests the rank approval binds are byte digests of the
+  // committed battery files — the same values the machine report records.
+  const rankAfterPath = values.get('--rank-after');
+  const repoRoot = join(EVAL_ROOT, '..');
+  const batteryDigest = (relativePath: string): string =>
+    createHash('sha256').update(readFileSync(join(repoRoot, ...relativePath.split('/')))).digest('hex');
+  const rank: ReviewPacketRankInput | undefined = rankAfterPath === undefined
+    ? undefined
+    : {
+      before: values.has('--rank-before')
+        ? readJson<RankMetricsBaseline>(values.get('--rank-before')!)
+        : null,
+      after: readJson<RankMetricsBaseline>(rankAfterPath),
+      batteryQueriesSha256: batteryDigest(BATTERY_QUERIES_PATH),
+      batteryJudgmentsSha256: batteryDigest(BATTERY_JUDGMENTS_PATH),
+    };
   const packet = renderBaselineReviewPacket({
     before: readJson<ProbeBaseline>(values.get('--before')!),
     after: readJson<ProbeBaseline>(values.get('--after')!),
     probeFile: readJson<{ probes: Probe[] }>(values.get('--probes') ?? join(EVAL_ROOT, 'probes', 'probes.json')),
     noise: budgets.noise,
+    ...(rank === undefined ? {} : { rank }),
   });
   const out = values.get('--out');
   if (out === undefined) process.stdout.write(`${packet}\n`);
