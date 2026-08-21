@@ -96,13 +96,13 @@ Bed F (see ad7).
 
 | th1 | `justification` | **confirmed-open** | token_overlap (Romans 4:25) | passage_terms (Psalms 40:9) | P4.1 · DG-2 | justification-by-faith.json |
 | th1b | `justified by faith` | **confirmed-open** | exact_phrase (Galatians 3:24) | exact_phrase (Galatians 3:24) | P4.1 · DG-2 | justification-by-faith.json |
-| th2 | `propitiation` | **confirmed-open** | passage_terms (John 1:29) | passage_terms (John 1:29) | P4.2/P4.3 · DG-3/DG-4 (data half; tie mechanics are P3.5) | propitiation.json |
+| th2 | `propitiation` | **confirmed-open** | passage_terms (John 1:29) | passage_terms (John 1:29) | P4.3 · DG-4 (data half; tie mechanics are P3.5) | propitiation.json |
 | th2b | `atonement` | **closed-by-#31** | concept_anchor (Romans 5:8) | concept_anchor (Romans 5:8) | P4.3 · DG-4 (this half struck) | none — deliberately |
 | th5 | `trinity` | **confirmed-open** | passage_terms (Genesis 1:1) | passage_terms (Genesis 1:1) | P4.4 · DG-5 | trinity.json |
 | th6 | `incarnation` | **confirmed-open** | passage_terms (John 1:5) | passage_terms (John 1:5) | P4.5 · DG-6 | incarnation.json |
 | th6b | `the word became flesh` | **confirmed-open** | exact_phrase (John 1:14) | exact_phrase (John 1:14) | P4.5 · DG-6 | incarnation.json |
-| sanct1 | `sanctification` | **confirmed-open** | token_overlap (1 Thessalonians 4:3) | token_overlap (1 Thessalonians 4:3) | P4.11 · DG-11 (lexicon extension on the existing holiness pack) | holiness-sanctification.json |
-| sanct2 | `sanctify` | **confirmed-open** | token_overlap (Ephesians 5:26) | token_overlap (Ephesians 5:26) | P4.11 · DG-11 | holiness-sanctification.json |
+| sanct1 | `sanctification` | **confirmed-open** | token_overlap (1 Thessalonians 4:3) | token_overlap (1 Thessalonians 4:3) | P4.2 · DG-3 (lexicon extension on the existing holiness pack) | holiness-sanctification.json |
+| sanct2 | `sanctify` | **confirmed-open** | token_overlap (Ephesians 5:26) | token_overlap (Ephesians 5:26) | P4.2 · DG-3 | holiness-sanctification.json |
 | fn13 | `caring for a dying parent` | **confirmed-open** | concept_anchor — WRONG concept (Colossians 3:20) | concept_anchor — WRONG concept (Colossians 3:20) | P4.6 · DG-7 (FLAG #7) | caring-for-aging-parents.json |
 | fn13b | `my mother is dying` | **confirmed-open** | passage_terms (Psalms 27:10) | passage_terms (Psalms 27:10) | P4.6 · DG-7 | caring-for-aging-parents.json |
 | wl4 | `benediction` | **confirmed-open** | passage_terms (Numbers 6:24) | passage_terms (Numbers 6:24) | P4.9 · DG-9 | benediction.json |
@@ -124,6 +124,8 @@ Bed F (see ad7).
 | ad11 | `speak things into existence` | **confirmed-open** | proximity (Ephesians 5:12) | proximity (Ephesians 5:12) | P4.14 · DG-14 (J9-gated) | none until J9 |
 | ad12 | `favor of God` | **confirmed-open** | exact_phrase (Malachi 1:9) — wrong frame | translation_variant (Romans 11:7) — bed-limited leg | P4.14 · DG-14 (ruling J5; data half Psalms 90:17 corpus-blocked → P4.15) | none until J5 |
 | ph4 | `cast all your anxiety on him` | **confirmed-open** | concept_anchor (Philippians 4:6-7); quoted verse #9 | concept_anchor (Philippians 4:6-7); quoted verse #6 | P4.13 · DG-13 (FLAG #4, J8/J4) | none — the ruling decides the fixture shape |
+
+Scope note: this ledger's "every Phase-4 item" coverage means P4.1–P4.14 — P4.15 (DG-15) appears only as the corpus-blocked deferral target cited in the rows above, and P4.16 (B4, the offline curation tooling item) makes no gap claim to re-verify, so neither carries a per-query citation.
 
 ## 5. The struck gap: bare `atonement` (th2b)
 
@@ -257,7 +259,7 @@ explanation half even though the retrieval half happens to land.
 
 ### th2 · `propitiation` — **confirmed-open**
 
-Phase-4 item: P4.2/P4.3 · DG-3/DG-4 (data half; tie mechanics are P3.5). Pending fixture: propitiation.json (pending, failing).
+Phase-4 item: P4.3 · DG-4 (data half; tie mechanics are P3.5). Pending fixture: propitiation.json (pending, failing).
 
 #1 evidence family — Bed F: passage_terms (John 1:29); Bed H: passage_terms (John 1:29).
 Identity: Bed F (0.9.0 / `a757e7a0…` / `afe482cf…`), Bed H (0.9.0 / `60b7f888…` / `de60b905…`) — full fingerprints in §2.
@@ -467,7 +469,7 @@ even where the #1 is right.
 
 ### sanct1 · `sanctification` — **confirmed-open**
 
-Phase-4 item: P4.11 · DG-11 (lexicon extension on the existing holiness pack). Pending fixture: holiness-sanctification.json (pending, failing).
+Phase-4 item: P4.2 · DG-3 (lexicon extension on the existing holiness pack). Pending fixture: holiness-sanctification.json (pending, failing).
 
 #1 evidence family — Bed F: token_overlap (1 Thessalonians 4:3); Bed H: token_overlap (1 Thessalonians 4:3).
 Identity: Bed F (0.9.0 / `a757e7a0…` / `afe482cf…`), Bed H (0.9.0 / `60b7f888…` / `de60b905…`) — full fingerprints in §2.
@@ -510,7 +512,7 @@ never fires the concept. Right verse, wrong reason: still the gap.
 
 ### sanct2 · `sanctify` — **confirmed-open**
 
-Phase-4 item: P4.11 · DG-11. Pending fixture: holiness-sanctification.json (pending, failing).
+Phase-4 item: P4.2 · DG-3. Pending fixture: holiness-sanctification.json (pending, failing).
 
 #1 evidence family — Bed F: token_overlap (Ephesians 5:26); Bed H: token_overlap (Ephesians 5:26).
 Identity: Bed F (0.9.0 / `a757e7a0…` / `afe482cf…`), Bed H (0.9.0 / `60b7f888…` / `de60b905…`) — full fingerprints in §2.
