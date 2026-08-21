@@ -369,6 +369,25 @@ collapses:
     note: >-
       Bare 'cross' must reach this concept — the concept exists for exactly
       that query. (Its exact-phrase scoring is P3.3's taper, not this table.)
+  - conceptId: trinity
+    phrase: "three in one"
+    token: three
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-21"
+    note: >-
+      P4.4 pack row (added with the phrase, same commit). The worklist
+      mandates the remembered summary phrase 'three in one'; stopwords
+      drop it to the bare numeric token `three`. J12 flag, strongest in
+      this table: 'three' is a common counting word ('three days',
+      'two or three gathered'), so the bare trigger reaches far outside
+      the doctrinal register. Measured at authoring: no battery query is
+      bare 'three'; 'three days' keeps its exact-phrase rows #1-#5 above
+      every pack anchor; gathering-together's active 'where two or three
+      gather' fixture holds (Matt 18:20 #1, its own anchors #2-#4, the
+      trinity anchors below them). If J12 rules the bare trigger harmful,
+      reword to a >=2-token phrasing (e.g. 'three persons one god') in
+      the same commit as this row's removal.
   - conceptId: victory-in-christ
     phrase: "greater is he who is in you"
     token: greater

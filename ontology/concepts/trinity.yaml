@@ -1,0 +1,123 @@
+# TRINITY — doctrinal LOCATOR pack (Phase-4 item P4.4 / DG-5 / audit th5,
+# authored 2026-08-21 fixture-first: eval/golden/trinity.json was committed
+# pending-and-failing before this file existed. Measured gap, both beds:
+# "trinity" appears in no WEB verse (verified corpus-wide), so the query
+# returned only passage_terms accidents — a flat 2.85 eight-way tie on the
+# 0.9.0 beds, Eph 2:18 #1 hermetically after P3.5's PMI de-flattening — with
+# no curated chip anywhere; Matt 28:19 surfaced in neither top-10.)
+#
+# Design: a LOCATOR for the passages where Father, Son, and Holy Spirit
+# appear together — NEVER a doctrine-scorer (CLAUDE.md covenant #6; the
+# worklist's own words: "must stay a locator... never a doctrine-scorer").
+# The Trinity is shared-core point 2 (docs/DOCTRINAL-BASIS.md §2: one God in
+# three persons), so the pack locates and attributes with maximum care and
+# adjudicates nothing — no anchor is a proof-text score, and formulation
+# differences between traditions stay untouched (§4 non-criteria). Label
+# "Trinity — Father, Son, and Spirit" is the proposal the pending fixture's
+# note routes to the doctrinal-wave batch sign-off; the fixture pins the
+# family only, so any wording Jesse approves re-cuts the label without
+# breaking it.
+#
+# Attribution note (justification-by-faith / benediction precedent): all
+# five anchors are [editorial] — Torrey has NO TRINITY topic in the verified
+# outline set (docs/research/torrey-topical/torrey-miller-topics.json,
+# checked 2026-08-21), so no anchor here may carry [torrey]. Nearest
+# corroborations are recorded per anchor below; they corroborate, they do
+# not attribute. Corpus-deferred to the re-pin payload (P4.15): 2 Cor 13:14
+# (2 Corinthians 13 absent — shared want with the benediction pack).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist; no
+# materialFrameKeyword appears in this id, label, or lexicon.
+#
+# SENSE-INVERSION SWEEP (2026-08-21): no anchor below denies or argues
+# against what it is anchored for; each names Father, Son, and/or Spirit
+# affirmatively in its own WEB words (texts quoted per anchor).
+# Deliberately NOT anchored: 1 John 5:7 — the WEB (with the manuscript
+# consensus) reads "For there are three who testify" WITHOUT the Comma
+# Johanneum's heavenly-witnesses clause, so anchoring it here would claim a
+# wording this corpus's own text does not carry (it was the measured #1
+# token_overlap accident for "three in one"); and Deut 6:4 (the Shema) —
+# affirming God's oneness is not locating the three persons together, and
+# recruiting it here would blur locator into doctrine-scorer.
+#
+# Lexicon collision check (G4): no phrase below normalizes to an existing
+# concept's phrase. Pre-measured overlaps (worklist): 0.25 vs
+# holy-spirit-the-comforter, 0.20 vs deity-of-christ — both under limits.
+# Widths under the one tokenizer: "trinity" is the subject noun (one WORD,
+# not a collapse); "triune god" -> {triune, god}; "father son and holy
+# spirit" -> {father, son, holy, spirit}; "three in one" -> the SINGLE
+# token {three} — a multi-word single-token collapse, acknowledged in
+# ontology/lexicon-inventory.yaml in this same commit (J12 flag: common
+# numeric token).
+id: trinity
+label: Trinity — Father, Son, and Spirit
+lexicon:
+  # The subject noun — the audit query (th5). One word, so the bare query
+  # "trinity" fires this concept authoritatively; the word never occurs in
+  # the WEB text, so no lexical rung could ever reach it without this entry.
+  - trinity
+  # The adjective register a searcher types ("triune god").
+  - triune god
+  # The baptismal formula's own persons, as a searcher types them.
+  - father son and holy spirit
+  # The remembered summary phrase. Collapses to the single token `three`
+  # under the shared tokenizer (stopwords in/one drop out) — acknowledged
+  # in lexicon-inventory.yaml this commit, flagged for J12 because `three`
+  # is a common numeric token (see the row's note).
+  - three in one
+anchors:
+  # "Go and make disciples of all nations, baptizing them in the name of
+  # the Father and of the Son and of the Holy Spirit" (WEB). The baptismal
+  # formula — the one sentence that names all three persons under one
+  # "name"; the naming text, and the pending fixture's expectedTop.
+  # Torrey corroboration (no TRINITY outline — see attribution note):
+  # HOLY SPIRIT, THE, IS GOD, "As joined with the Father and the Son in
+  # the baptismal formula" (Matt 28:19); BAPTISM, "To be administered in
+  # the name of the Father, Son, and Holy Spirit" (Matt 28:19).
+  - ref: Matthew 28:19
+    sources: [editorial]
+    weight: 1.0
+  # "according to the foreknowledge of God the Father, in sanctification
+  # of the Spirit, that you may obey Jesus Christ and be sprinkled with
+  # his blood" (WEB). All three persons in one salutation — the Father's
+  # foreknowledge, the Spirit's sanctifying, the Son's blood.
+  # Torrey corroboration: ELECTION lists 1 Pet 1:2 twice ("According to
+  # the foreknowledge of God"; "Through sanctification of the Spirit") —
+  # an election claim, not this pairing, hence editorial.
+  - ref: 1 Peter 1:2
+    sources: [editorial]
+    weight: 0.85
+  # "This Jesus God raised up... Being therefore exalted by the right hand
+  # of God, and having received from the Father the promise of the Holy
+  # Spirit, he has poured out this which you now see and hear" (WEB).
+  # Pentecost's summary: the Father raises and exalts the Son, the Son
+  # pours out the Spirit. Torrey corroboration: ASCENSION OF CHRIST, THE,
+  # "To send the Holy Spirit" (Acts 2:33); RESURRECTION OF CHRIST, THE
+  # (Acts 2:32).
+  - ref: Acts 2:32-33
+    sources: [editorial]
+    weight: 0.8
+  # "Now he who establishes us with you in Christ and anointed us is God,
+  # who also sealed us and gave us the down payment of the Spirit in our
+  # hearts" (WEB). God, Christ, and the Spirit in one sentence of
+  # assurance. Torrey corroboration: ANOINTING OF THE HOLY SPIRIT, "Is
+  # from God" (2 Cor 1:21); SEALING OF THE HOLY SPIRIT, "Saints receive"
+  # (2 Cor 1:22).
+  - ref: 2 Corinthians 1:21-22
+    sources: [editorial]
+    weight: 0.75
+  # "In the beginning was the Word, and the Word was with God, and the
+  # Word was God... All things were made through him" (WEB). The Word WITH
+  # God and the Word AS God, from the beginning — the locator claim here
+  # is the persons-together text, kept at the pack floor because the
+  # Spirit is not named in it. John 1:1 alone is anchored at 1.0 in
+  # deity-of-christ.yaml ([torrey], CHRIST IS GOD) — a different claim
+  # (Christ's deity, not the persons located together); deliberate
+  # cross-concept anchoring, same shape as Rom 8:1 in
+  # justification-by-faith vs forgiveness-of-sins.
+  - ref: John 1:1-3
+    sources: [editorial]
+    weight: 0.7
+related:
+  - deity-of-christ
+  - holy-spirit-the-comforter

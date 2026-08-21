@@ -97,13 +97,14 @@ describe('health source semantics', () => {
   it('mirrors G3 active fixture coverage, including implicit fixture-id coverage', async () => {
     const { golden, coverage } = await readGoldenAndCoverage();
     expect(golden.filter((fixture) => fixture.status === 'active').length).toBeGreaterThan(0);
-    // 111 = 58 founding concepts + the 20 round-1 books-harvest packs +
+    // 112 = 58 founding concepts + the 20 round-1 books-harvest packs +
     // the 30 round-2 books-harvest packs (2026-08-18) + asking-in-gods-will
     // (2026-08-21 prosperity-slogan adversarial coverage) + benediction +
-    // justification-by-faith (2026-08-21 Phase-4 P4.9/P4.1 gap packs). This
+    // justification-by-faith (2026-08-21 Phase-4 P4.9/P4.1 gap packs) +
+    // trinity (2026-08-21 Phase-4 P4.4 doctrinal locator pack). This
     // mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(111);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(111);
+    expect(coverage).toHaveLength(112);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(112);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });
