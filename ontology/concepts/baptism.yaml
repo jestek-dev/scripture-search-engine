@@ -1,0 +1,124 @@
+# BAPTISM — ordinance locator pack (Phase-4 item P4.10 / DG-10 / audit sw2,
+# prior-plan 1.9 remainder; authored 2026-08-21 fixture-first:
+# eval/golden/baptism.json was committed pending-and-failing before this file
+# existed. Measured gap, both beds: "baptism" returned token_overlap /
+# passage_terms rows only — hermetic #1 Eph 4:5 @6.00 "Shared word: baptism",
+# full bed the same — no concept, no curated chip anywhere; the fixture's
+# expectedTop Romans 6:3-4 sat at #5 by lexical luck.)
+#
+# Design (worklist, quoted): "deliberately silent on mode/timing — anchors
+# state, never adjudicate" (docs/DOCTRINAL-BASIS.md §4 non-criterion: baptism
+# mode/timing is an explicit non-criterion). The pack locates the passages
+# where scripture speaks of baptism and names who says so; immersion vs
+# other modes, believer vs infant — nothing here scores or settles any of
+# it. 1 Peter 3:21 is anchored with that care (its own text supplies the
+# guard: "NOT the putting away of the filth of the flesh, but the answer of
+# a good conscience").
+#
+# Attribution: all five anchors [torrey] — Torrey's BAPTISM topic
+# (docs/research/torrey-topical/torrey-miller-topics.json, verified
+# 2026-08-21) lists every anchored ref exactly: Matt 28:19, Acts 2:38,
+# Rom 6:3 AND 6:4 (both verses of the range, the justification-by-faith
+# Rom 8:33-34 precedent), Gal 3:27, 1 Pet 3:21. Per-anchor outline rows
+# quoted below. Corpus-deferred to the re-pin payload (P4.15): Col 2:12,
+# Acts 8:36-38 (Colossians 2, Acts 8 absent — re-verified).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist; no
+# materialFrameKeyword appears in this id, label, or lexicon.
+#
+# SENSE-INVERSION SWEEP (2026-08-21): no anchor below denies or argues
+# against what it is anchored for; each speaks of baptism affirmatively in
+# its own WEB words (texts quoted per anchor). 1 Pet 3:21's internal
+# negation ("not the putting away of the filth of the flesh") negates a
+# misreading of baptism, not baptism — it is the verse's own mode/meaning
+# guard and the reason it sits at the pack floor.
+#
+# Lexicon width note (one tokenizer, verified with engine significantWords):
+# the WEB word-family stems THREE ways — "baptism" -> baptism, "baptize" ->
+# baptize, "baptized"/"baptizing" -> baptiz. Only the subject noun and one
+# two-token phrase are admitted:
+#   - "baptism" is the subject noun (the audit query sw2), one WORD, not a
+#     multi-word collapse — no lexicon-inventory row due (P3.2 register
+#     covers multi-word phrases only).
+#   - "baptized into christ" -> {baptiz, christ}, two significant tokens.
+# DELIBERATELY NOT admitted (measured 2026-08-21, both beds, BEFORE commit —
+# the P4.4b lesson applied in advance): bare "baptize"/"baptized" (token
+# baptiz/baptize). With bare baptiz in the lexicon the whole concept fires
+# on the NARRATIVE queries "jesus was baptized" (measured before-state: Acts
+# 1:22 #1 @15.54, Mark 1:9 #3 — honest John-the-Baptist rows; a 1.0 anchor
+# chip would put Romans 6:3-4 #1 over the Jordan narrative) and "john
+# baptized in the wilderness" — the wrong-concept-#1 hijack class. HONEST
+# TRADEOFF (named in the PR body): verb-form queries without "baptism" or
+# "christ" ("should i be baptized") do not reach this concept; their lexical
+# rows already surface Rom 6:3 / Gal 3:27 mid-list honestly. Quoted-verse
+# breadth for the admitted noun was probed before commit: "one lord one
+# faith one baptism" (Eph 4:5 exact-phrase armor 60.0 holds #1), "baptism
+# of john" (full bed: exact-phrase armor 40.0+ holds #1-#4), "repent and be
+# baptized" (Acts 2:38 armor 40.0 holds #1 — and it is this pack's own
+# anchor), "baptism of the holy spirit" (exact-phrase rows 34+ outscore
+# every chip here).
+#
+# Lexicon collision check (G4): no phrase below normalizes to an existing
+# concept's phrase; no other concept carries the baptism/baptiz tokens.
+# Cross-concept anchor note: Matt 28:19 is also trinity.yaml's 1.0 anchor —
+# a different claim (the three persons located together vs the ordinance
+# commanded); deliberate cross-concept anchoring, the Rom 8:1 /
+# justification-by-faith precedent, documented in both files.
+id: baptism
+label: Baptism
+lexicon:
+  # The subject noun — the audit query (sw2). One word; fires the concept
+  # on every query carrying "baptism(s)".
+  - baptism
+  # Rom 6:3 / Gal 3:27's own WEB wording ("baptized into Christ") — the
+  # union-with-Christ register; {baptiz, christ}, two significant tokens,
+  # so plain narrative baptized-queries never fire it (see width note).
+  - baptized into christ
+anchors:
+  # "Or don't you know that all of us who were baptized into Christ Jesus
+  # were baptized into his death? We were buried therefore with him through
+  # baptism into death, that just as Christ was raised from the dead through
+  # the glory of the Father, so we also might walk in newness of life."
+  # (WEB). The meaning text — buried and raised with Christ — and the
+  # pending fixture's expectedTop. Torrey BAPTISM: "Regeneration, the
+  # inward and spiritual grace of" (Rom 6:3; Rom 6:4 — both verses listed).
+  - ref: Romans 6:3-4
+    sources: [torrey]
+    weight: 1.0
+  # "Go and make disciples of all nations, baptizing them in the name of
+  # the Father and of the Son and of the Holy Spirit" (WEB). The
+  # institution — baptism commanded by the risen Christ. Torrey BAPTISM:
+  # "Appointed an ordinance of the Christian church"; "To be administered
+  # in the name of the Father, Son, and Holy Spirit" (Matt 28:19). Also
+  # trinity.yaml's 1.0 anchor — different claim; see collision note.
+  - ref: Matthew 28:19
+    sources: [torrey]
+    weight: 0.9
+  # "Repent and be baptized, every one of you, in the name of Jesus Christ
+  # for the forgiveness of sins, and you will receive the gift of the Holy
+  # Spirit." (WEB). Pentecost's call — repentance, baptism, forgiveness,
+  # the Spirit, in one sentence. Torrey BAPTISM: "Remission of sins,
+  # signified by"; "Repentance necessary to" (Acts 2:38).
+  - ref: Acts 2:38
+    sources: [torrey]
+    weight: 0.85
+  # "For as many of you as were baptized into Christ have put on Christ."
+  # (WEB). Baptized into Christ = clothed with Christ — the lexicon's own
+  # second phrase. Torrey BAPTISM: "Unity of the Church effected by"
+  # (Gal 3:27).
+  - ref: Galatians 3:27
+    sources: [torrey]
+    weight: 0.8
+  # "This is a symbol of baptism, which now saves you—not the putting away
+  # of the filth of the flesh, but the answer of a good conscience toward
+  # God—through the resurrection of Jesus Christ" (WEB). The
+  # symbol-and-conscience text; pack floor because it is the anchor most
+  # entangled with mode/meaning debates, and its own wording carries the
+  # not-the-flesh guard (see sweep note). Torrey BAPTISM: "Typified"
+  # (1 Pet 3:21, the ark).
+  - ref: 1 Peter 3:21
+    sources: [torrey]
+    weight: 0.7
+related:
+  - repentance
+  - lords-supper
