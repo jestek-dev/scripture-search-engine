@@ -94,6 +94,7 @@ import {
   type ValidatedBattery,
   type VerseRange,
 } from './gates/rankMetrics.js';
+import { budgetsPropertyGate, reviewedConstantsCheck } from './gates/budgetsProperty.js';
 import {
   orderingSnapshotGate,
   type OrderingSnapshot,
@@ -1053,11 +1054,11 @@ async function main(): Promise<void> {
       g3,
       g4,
       distinctivenessGate(distillate, budgets.distinctiveness),
-      pass(
-        'G6-signal-budgets',
-        'Signal budgets',
-        'enforced structurally inside the scoring core; verified by engine unit tests',
-      ),
+      // G6 rides one roster row like G2/G3: the reviewed-constants half is
+      // honest N/A until Phase 3 mirrors the budget constants into
+      // budgets.json; the property half needs no data, so it always runs —
+      // this row never has a fully not-applicable state.
+      mergeGateResults('Signal budgets', [reviewedConstantsCheck(), budgetsPropertyGate()]),
       correlationGate(),
       probeGates[0]!,
       saturationGate(distillate, budgets.saturation),
