@@ -179,6 +179,36 @@
       "votes": 1
     },
     {
+      "startVerseId": 1011001,
+      "endVerseId": 1011009,
+      "votes": 19
+    },
+    {
+      "startVerseId": 1011010,
+      "endVerseId": 1011025,
+      "votes": 1
+    },
+    {
+      "startVerseId": 1011010,
+      "endVerseId": 1011026,
+      "votes": 14
+    },
+    {
+      "startVerseId": 1011010,
+      "endVerseId": 1011032,
+      "votes": 4
+    },
+    {
+      "startVerseId": 1011026,
+      "endVerseId": 1011032,
+      "votes": 1
+    },
+    {
+      "startVerseId": 1011027,
+      "endVerseId": 1011032,
+      "votes": 14
+    },
+    {
       "startVerseId": 1016001,
       "endVerseId": 1016006,
       "votes": 2
@@ -2086,6 +2116,11 @@
     {
       "startVerseId": 19121001,
       "endVerseId": 19121008,
+      "votes": 12
+    },
+    {
+      "startVerseId": 19136001,
+      "endVerseId": 19136026,
       "votes": 12
     },
     {

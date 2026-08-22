@@ -909,6 +909,20 @@
         "1:4"
       ],
       "why": "P5.2/QR-3: ordinal fixture target \"3rd John 4\" — single-chapter branch resolves to 3 John 1:4, which must exist in the fixture corpus"
+    },
+    {
+      "book": "Psalms",
+      "chapters": [
+        136
+      ],
+      "why": "P5.6/CO-3: pericope-grouping-loving-kindness target — the WEB prints the refrain in all 26 verses, no curated anchor touches the psalm, and it derives as a single pericope (summed boundary vote 12 at 136:1)"
+    },
+    {
+      "book": "Genesis",
+      "chapters": [
+        11
+      ],
+      "why": "P5.6/CO-3: pericope-no-overgrouping-terah target — 11:26/11:27 carry the same verbatim phrase across the 11:10-26 / 11:27-32 pericope boundary (summed votes 19/14)"
     }
   ],
   "verses": [
@@ -1695,6 +1709,230 @@
       "chapter": 5,
       "verse": 32,
       "text": "Noah was five hundred years old, then Noah became the father of Shem, Ham, and Japheth."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 1,
+      "text": "The whole earth was of one language and of one speech."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 2,
+      "text": "As they traveled east, they found a plain in the land of Shinar, and they lived there."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 3,
+      "text": "They said to one another, “Come, let’s make bricks, and burn them thoroughly.” They had brick for stone, and they used tar for mortar."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 4,
+      "text": "They said, “Come, let’s build ourselves a city, and a tower whose top reaches to the sky, and let’s make a name for ourselves, lest we be scattered abroad on the surface of the whole earth.”"
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 5,
+      "text": "The LORD came down to see the city and the tower, which the children of men built."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 6,
+      "text": "The LORD said, “Behold, they are one people, and they all have one language, and this is what they begin to do. Now nothing will be withheld from them, which they intend to do."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 7,
+      "text": "Come, let’s go down, and there confuse their language, that they may not understand one another’s speech.”"
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 8,
+      "text": "So the LORD scattered them abroad from there on the surface of all the earth. They stopped building the city."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 9,
+      "text": "Therefore its name was called Babel, because there the LORD confused the language of all the earth. From there, the LORD scattered them abroad on the surface of all the earth."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 10,
+      "text": "This is the history of the generations of Shem: Shem was one hundred years old when he became the father of Arpachshad two years after the flood."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 11,
+      "text": "Shem lived five hundred years after he became the father of Arpachshad, and became the father of more sons and daughters."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 12,
+      "text": "Arpachshad lived thirty-five years and became the father of Shelah."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 13,
+      "text": "Arpachshad lived four hundred three years after he became the father of Shelah, and became the father of more sons and daughters."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 14,
+      "text": "Shelah lived thirty years, and became the father of Eber."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 15,
+      "text": "Shelah lived four hundred three years after he became the father of Eber, and became the father of more sons and daughters."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 16,
+      "text": "Eber lived thirty-four years, and became the father of Peleg."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 17,
+      "text": "Eber lived four hundred thirty years after he became the father of Peleg, and became the father of more sons and daughters."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 18,
+      "text": "Peleg lived thirty years, and became the father of Reu."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 19,
+      "text": "Peleg lived two hundred nine years after he became the father of Reu, and became the father of more sons and daughters."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 20,
+      "text": "Reu lived thirty-two years, and became the father of Serug."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 21,
+      "text": "Reu lived two hundred seven years after he became the father of Serug, and became the father of more sons and daughters."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 22,
+      "text": "Serug lived thirty years, and became the father of Nahor."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 23,
+      "text": "Serug lived two hundred years after he became the father of Nahor, and became the father of more sons and daughters."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 24,
+      "text": "Nahor lived twenty-nine years, and became the father of Terah."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 25,
+      "text": "Nahor lived one hundred nineteen years after he became the father of Terah, and became the father of more sons and daughters."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 26,
+      "text": "Terah lived seventy years, and became the father of Abram, Nahor, and Haran."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 27,
+      "text": "Now this is the history of the generations of Terah. Terah became the father of Abram, Nahor, and Haran. Haran became the father of Lot."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 28,
+      "text": "Haran died in the land of his birth, in Ur of the Chaldees, while his father Terah was still alive."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 29,
+      "text": "Abram and Nahor married wives. The name of Abram’s wife was Sarai, and the name of Nahor’s wife was Milcah, the daughter of Haran, who was also the father of Iscah."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 30,
+      "text": "Sarai was barren. She had no child."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 31,
+      "text": "Terah took Abram his son, Lot the son of Haran, his son’s son, and Sarai his daughter-in-law, his son Abram’s wife. They went from Ur of the Chaldees, to go into the land of Canaan. They came to Haran and lived there."
+    },
+    {
+      "book_name": "Genesis",
+      "book": 1,
+      "chapter": 11,
+      "verse": 32,
+      "text": "The days of Terah were two hundred five years. Terah died in Haran."
     },
     {
       "book_name": "Genesis",
@@ -10410,6 +10648,188 @@
       "chapter": 121,
       "verse": 8,
       "text": "The LORD will keep your going out and your coming in, from this time forward, and forever more."
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 1,
+      "text": "Give thanks to the LORD, for he is good, for his loving kindness endures forever."
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 2,
+      "text": "Give thanks to the God of gods, for his loving kindness endures forever."
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 3,
+      "text": "Give thanks to the Lord of lords, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 4,
+      "text": "to him who alone does great wonders, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 5,
+      "text": "to him who by understanding made the heavens, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 6,
+      "text": "to him who spread out the earth above the waters, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 7,
+      "text": "to him who made the great lights, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 8,
+      "text": "the sun to rule by day, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 9,
+      "text": "the moon and stars to rule by night, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 10,
+      "text": "to him who struck down the Egyptian firstborn, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 11,
+      "text": "and brought out Israel from among them, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 12,
+      "text": "with a strong hand, and with an outstretched arm, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 13,
+      "text": "to him who divided the Red Sea apart, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 14,
+      "text": "and made Israel to pass through the middle of it, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 15,
+      "text": "but overthrew Pharaoh and his army in the Red Sea, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 16,
+      "text": "to him who led his people through the wilderness, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 17,
+      "text": "to him who struck great kings, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 18,
+      "text": "and killed mighty kings, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 19,
+      "text": "Sihon king of the Amorites, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 20,
+      "text": "Og king of Bashan, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 21,
+      "text": "and gave their land as an inheritance, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 22,
+      "text": "even a heritage to Israel his servant, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 23,
+      "text": "who remembered us in our low estate, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 24,
+      "text": "and has delivered us from our adversaries, for his loving kindness endures forever;"
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 25,
+      "text": "who gives food to every creature, for his loving kindness endures forever."
+    },
+    {
+      "book_name": "Psalms",
+      "book": 19,
+      "chapter": 136,
+      "verse": 26,
+      "text": "Oh give thanks to the God of heaven, for his loving kindness endures forever."
     },
     {
       "book_name": "Psalms",

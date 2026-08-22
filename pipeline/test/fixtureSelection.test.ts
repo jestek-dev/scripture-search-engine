@@ -106,14 +106,16 @@ describe('committed WEB fixture selection', () => {
     expect(fixture.selection).toEqual(SELECTION);
   });
 
-  it('commits exactly 5,669 unique verses in canonical order for the selected chapter universe', () => {
+  it('commits exactly 5,727 unique verses in canonical order for the selected chapter universe', () => {
+    // 5,669 through P5.2; +58 at P5.6 PR 2 (Psalm 136's 26 + Genesis 11's 32,
+    // the pericope-grouping fixture targets).
     const fixture = readFixture();
     const expectedSelection = normalizeSelection(SELECTION);
     const committedSelection = normalizeSelection(fixture.selection);
     const actualSelection = actualFixtureChapters(fixture.verses);
 
-    expect(fixture.verses).toHaveLength(5669);
-    expect(new Set(fixture.verses.map((verse) => `${verse.book}:${verse.chapter}:${verse.verse}`)).size).toBe(5669);
+    expect(fixture.verses).toHaveLength(5727);
+    expect(new Set(fixture.verses.map((verse) => `${verse.book}:${verse.chapter}:${verse.verse}`)).size).toBe(5727);
     expect(committedSelection).toEqual(expectedSelection);
     expect(actualSelection).toEqual(expectedSelection);
 
