@@ -1,0 +1,42 @@
+{
+  "id": "pericope-no-overgrouping-terah",
+  "query": "became the father of abram nahor and haran",
+  "status": "pending",
+  "note": [
+    "P5.6 (CO-3) pericope grouping, PR 1 fixtures-first (2026-08-22, pending,",
+    "failing by design). The NO-OVERGROUPING guard — the one fixture of the",
+    "three that a boundary-ignoring regression genuinely fires.",
+    "",
+    "Genesis 11 tiles 11:1-9 / 11:10-26 / 11:27-32 (summed boundary votes",
+    "19/19/14 at 11:1, 11:10, 11:27 — verified against the pinned 2026-08-14",
+    "source snapshot; most print Bibles break Genesis 11 exactly at v.27,",
+    "which the boundary encodes: the genealogy of Shem ends and the account",
+    "of Terah begins). The WEB prints the phrase 'became the father of Abram,",
+    "Nahor, and Haran' VERBATIM in BOTH 11:26 and 11:27, so this query ranks",
+    "the two verses adjacently on identical exact-phrase evidence: every",
+    "merge precondition holds — consecutive in rank, verseId-consecutive —",
+    "EXCEPT pericope identity. A grouper that ignores section boundaries",
+    "merges them into one 'Genesis 11:26-27' row; then 11:26 (the merged",
+    "row's head) still satisfies its expectation but NO row in the window",
+    "carries verseId 11:27, and the second expectation fires",
+    "G3_EXPECTED_TOP_ABSENT. Two distinct expectedTop entries ARE the",
+    "assertion.",
+    "",
+    "VACUITY DISCLOSURE: Genesis 11 is absent from the fixture corpus, so on",
+    "the hermetic bed this fixture measures nothing until either Genesis 11",
+    "joins the fixture corpus or a release-artifact battery run exists —",
+    "same standing doctrine as it-is-well.json's Jer 4:10 guard. Written for",
+    "the release corpus; flip to active only in the PR 2 commit, with the",
+    "measured top-10 in the PR body."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Genesis 11:26",
+      "withinTop": 3
+    },
+    {
+      "ref": "Genesis 11:27",
+      "withinTop": 3
+    }
+  ]
+}
