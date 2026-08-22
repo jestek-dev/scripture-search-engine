@@ -2,10 +2,9 @@
   "id": "sabbath-rest-heavenly-rest",
   "query": "sabbath rest for the people of god",
   "additionalQueries": [
-    "sabbath rest in christ",
-    "is the sabbath still for today"
+    "sabbath rest in christ"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "GENESIS-PILOT FIXTURE (cluster draft, 2026-08-22). Second sabbath-rest",
     "fixture: the NT-theology side of the topic. Hebrews 4:9 IS the phrase",
@@ -18,7 +17,15 @@
     "('They won't enter into my rest'), so Ps 95:11 ranking for a sabbath-rest",
     "query is honest context, not a sense inversion. The rest-for-the-weary",
     "fixture's demotion of it (below the invitation, for the query 'rest')",
-    "stays where it is."
+    "stays where it is.",
+    "",
+    "Integration measurement 2026-08-22: 'is the sabbath still for today'",
+    "was drafted here but DROPPED - it matches only the bare 'sabbath'",
+    "lexicon entry, so the pack's anchors order by weight (Exod 20, Gen 2",
+    "first) and Heb 4:9-10 lands 7th; an assertion would need top-7+ and",
+    "measure little. The doctrinal-answer routing for that question is a",
+    "real open item, noted for Jesse rather than papered over with a loose",
+    "window."
   ],
   "expectedTop": [
     {

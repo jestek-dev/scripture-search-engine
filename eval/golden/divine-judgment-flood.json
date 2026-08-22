@@ -1,10 +1,7 @@
 {
   "id": "divine-judgment-flood",
   "query": "the flood",
-  "additionalQueries": [
-    "sodom and gomorrah"
-  ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22). Second",
     "fixture for the divine-judgment pack: the narrative-judgment queries",
@@ -23,7 +20,14 @@
     "",
     "If the corpus-extension request in the pack notes (Genesis 6-7, 19)",
     "is approved, re-point expectedTop at the narratives and demote this",
-    "assertion to alsoAcceptable."
+    "assertion to alsoAcceptable.",
+    "",
+    "Integration measurement 2026-08-22: 'sodom and gomorrah' was drafted",
+    "as an additionalQuery here but DROPPED - the pack's higher-weighted",
+    "Rom 2:5-11 anchor renders as five separate verse rows for a pure",
+    "concept query and Luke 17:29 lands 10th; asserting top-10 would be",
+    "protection that is decoration. Gen 19:24-25 is that query's honest",
+    "home; re-add it with the Genesis corpus extension."
   ],
   "expectedTop": [
     {

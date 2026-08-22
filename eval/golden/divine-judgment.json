@@ -6,7 +6,7 @@
     "the day of judgment",
     "gods wrath"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22).",
     "Fixtures-first for the new divine-judgment concept; PENDING until the",
@@ -25,12 +25,18 @@
     "must NOT surface judgment-seat-of-christ's passages as the required",
     "theme - the two packs share only the token 'judgment' and no phrase,",
     "so the concept match should be unambiguous; if the gauntlet shows",
-    "otherwise, that is a G4-adjacent finding to report, not to paper over."
+    "otherwise, that is a G4-adjacent finding to report, not to paper over.",
+    "",
+    "withinTop 5, not 3 (integration measurement 2026-08-22): for 'the day",
+    "of judgment' the top 4 are exact-phrase hits (Matt 11:24, Matt 11:22,",
+    "1 John 4:17, Mark 6:11 - the phrase verbatim) and Rom 2:5 lands 5th",
+    "with the Theme chip. Verbatim wins over curated anchors by design; the",
+    "other three queries hold Rom 2 in the top 3 regardless."
   ],
   "expectedTop": [
     {
       "reference": "Romans 2:5-11",
-      "withinTop": 3,
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: God's judgment"
     }

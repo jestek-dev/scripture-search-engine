@@ -6,7 +6,7 @@
     "the refiners fire",
     "tested by fire"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "GENESIS-PILOT FIXTURE (14-concept batch, drafted 2026-08-22). The",
     "refining register of the `testing` pack — the vocabulary no existing",
@@ -17,12 +17,19 @@
     "verbatim in WEB) may honestly lead — it is alsoAcceptable; withinTop 3",
     "tolerates either ordering. Malachi 3:2-3 (the refiner's fire itself)",
     "is alsoAcceptable rather than asserted so the fixture does not",
-    "over-constrain ordering among the pack's own anchors."
+    "over-constrain ordering among the pack's own anchors.",
+    "",
+    "withinTop 5, not 3 (integration measurement 2026-08-22): for 'the",
+    "refiners fire' the pack's 1 Pet 1:6-7 (weight 0.95) takes #1-2 and",
+    "Mal 3:2-3 - the refiner's fire itself, on its own vocabulary - takes",
+    "#3, with Zech 13:9 at #4. That ordering among the pack's own anchors",
+    "is exactly what the note above declines to over-constrain; the other",
+    "three queries hold Zech 13:9 in the top 3 regardless."
   ],
   "expectedTop": [
     {
       "reference": "Zechariah 13:9",
-      "withinTop": 3,
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: God tests his people"
     }

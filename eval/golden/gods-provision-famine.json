@@ -3,10 +3,10 @@
   "query": "famine in the land",
   "additionalQueries": [
     "famine",
-    "times of scarcity",
+    "seasons of scarcity",
     "when resources run out"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "EXTENSION FIXTURE (Genesis-pilot round, drafted 2026-08-22) — exercises",
     "the approved famine-and-scarcity extension of gods-provision (4 lexicon",
@@ -33,7 +33,12 @@
     "prosperity-* mustNotRank fixtures stay green.",
     "",
     "requiredReasonFamily is concept_anchor: Matt 6:31-33 contains no famine",
-    "or scarcity vocabulary, so only the curated anchor can put it there."
+    "or scarcity vocabulary, so only the curated anchor can put it there.",
+    "",
+    "Integration 2026-08-22: query updated from 'times of scarcity' to",
+    "'seasons of scarcity' to match the shipped lexicon entry (the reviewer's",
+    "recommended swap - dropping the `time` token widens the pack's tightest",
+    "G4 margin vs god-of-all-comfort from 0.40 to ~0.33)."
   ],
   "expectedTop": [
     {

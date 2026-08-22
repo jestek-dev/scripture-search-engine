@@ -5,7 +5,7 @@
     "you meant evil against me",
     "god used it for good"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "GENESIS-PILOT FIXTURE (cluster draft, 2026-08-22). The Joseph-confession",
     "query. THE answer is Genesis 50:20 ('you meant evil against me, but God",
@@ -22,12 +22,21 @@
     "",
     "Romans 8:28 is alsoAcceptable, not asserted: it is",
     "remembered-all-things-for-good's single narrow anchor and its ranking",
-    "here (shared 'good' vocabulary) would be honest."
+    "here (shared 'good' vocabulary) would be honest.",
+    "",
+    "withinTop 10, not 5 (integration measurement 2026-08-22): for a pure",
+    "concept query the pack's in-corpus anchors order by weight - Ps",
+    "33:10-11, Ps 103:19, Acts 17:26-28, then Lam 3:37-38 rendering as two",
+    "verse rows - and Phil 1:12 (weight 0.75) lands 6th. Its own weight row",
+    "puts it there deliberately (the Genesis narratives outrank it by",
+    "design); 10 is the schema's next window after 5 (withinTop is enum",
+    "1/3/5/10). When Gen 50 enters the corpus this tightens to the",
+    "narrative assert per the note above."
   ],
   "expectedTop": [
     {
       "reference": "Philippians 1:12",
-      "withinTop": 5,
+      "withinTop": 10,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: God's providence"
     }

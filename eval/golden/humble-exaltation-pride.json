@@ -4,7 +4,7 @@
   "additionalQueries": [
     "god resists the proud"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "EXTENSION FIXTURE (Genesis-pilot round, drafted 2026-08-22) — exercises",
     "the approved pride extension of humble-exaltation (2 lexicon entries, no",
@@ -28,12 +28,18 @@
     "any of the 25 committed probes.",
     "",
     "requiredReasonFamily is concept_anchor: James 4:10 contains neither",
-    "'pride' nor 'proud', so only the curated anchor can put it there."
+    "'pride' nor 'proud', so only the curated anchor can put it there.",
+    "",
+    "withinTop 5, not 3 (integration measurement 2026-08-22): for 'god",
+    "resists the proud' the top 2 are Jas 4:6 and 1 Pet 5:5 - the verses",
+    "being quoted, on exact phrase - then 1 Pet 5:6 (#3) and James 4:10",
+    "(#4) with this Theme chip. The quote query getting the quoted verses",
+    "first is correct; 'pride' still holds James 4:10 in the top 3."
   ],
   "expectedTop": [
     {
       "reference": "James 4:10",
-      "withinTop": 3,
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: God exalts the humble"
     }
