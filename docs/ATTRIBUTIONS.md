@@ -203,6 +203,17 @@ Underlying work public domain by age: R. A. Torrey, The New Topical Textbook, 18
 
 Topical anchors from Torrey's New Topical Textbook (1897, public domain), machine-readable edition by j86schroeder/topical-bible-search under the MIT License. The transcription's source PDF is reproducible-by-recipe rather than pinned upstream; this checksum pins the exact dataset we admitted. 620 topics vs CCEL's 628 remains unreconciled (merged/split headings suspected).
 
+### Treasury of Scripture Knowledge (CrossWire module, phrase-keyed)
+
+- **Rights:** Public domain
+- **Source:** <https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/TSK.zip>
+- **Retrieved:** 2026-08-22
+- **Checksum:** `6784c7099465995a8e66f02ead82b0bca66603c1bdeaf8332949774b7bfd4293`
+
+Public domain by age: the Treasury of Scripture Knowledge's reference chains were compiled in the 1830s (Canne, Browne, Blayney, Scott and others; the module's own About line dates the compilation 'about 1880', the era of R. A. Torrey's edition). Distributed by CrossWire as a SWORD module declaring DistributionLicense=Public Domain. The module records no TextSource, so the transcription's origin is unverified - admitted as public domain on the strength of the work's age and CrossWire's declaration, with that gap stated here rather than implied away (the same posture as the Barnes and Clarke admissions from this host). If a transcription claim ever surfaces, this manifest is where it gets recorded.
+
+NEW ADMISSION, distinct from the lineage-only `tsk` manifest: that stub pins no bytes and its review row says 're-review required before any import', so importing TSK data is a fresh admission with a fresh doctrinal-review row (J55), never a reuse. derivedFrom ['tsk'] keeps this module in ONE G7 correlation budget with openbible-xrefs, which derives from the same body of scholarship - counting them as independent evidence would inflate confidence for what is substantially one work. What is mined is TSK's native phrase-keyed structure: (verse, quoted word/phrase, reference list) triples, emitted in Phase A ONLY into the optional cross_reference_phrases capability table; no row enters cross_references until the Phase B ENGINE_VERSION-bumped PR (J26/J55). The URL is stable, not rolling (Last-Modified 2013-07-16, unchanged); a durable snapshot upload to a source-snapshots release remains an open errand of the J52 family, flagged in the admitting PR rather than silently skipped.
+
 ### World English Bible
 
 - **Rights:** Public domain

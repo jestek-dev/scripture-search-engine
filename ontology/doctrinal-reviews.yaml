@@ -231,6 +231,26 @@ reviews:
       Treasury of Scripture Knowledge (1830s); no data rows — exists to
       declare lineage with openbible-xrefs for G7. Re-review before any import.
 
+  - source: tsk-text
+    reviewedAt: "2026-08-22"
+    reviewer: "P6.3/B3 Phase A admission (see pipeline/manifests/tsk-text.json; verdict is Jesse's - J55 - and merging the PR is the review act)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §1", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      FRESH admission row the lineage-only `tsk` row demands ("Re-review
+      before any import") - that row stands unchanged as the G7 ancestor.
+      What is imported is structural: (verse, quoted phrase of that verse,
+      reference list) triples. The phrase keys are the verse's own words,
+      not commentary prose; no TSK sentence ships. The reference lists ARE
+      19th-century interpretive associations (which passages the compilers
+      connected), which is exactly why this row exists and why J55 asks
+      Jesse for the verdict rather than inheriting the lineage row: the
+      associations carry no topical framing or prose through which a §3
+      vector could enter, and the engine reports them as "TSK links these,
+      under this phrase" - attribution, never adjudication (§1). Phase A
+      ships the capability table only; no ordering is touched before the
+      Phase B PR, which cannot merge before J55.
+
   - source: web
     reviewedAt: "2026-08-15"
     reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"

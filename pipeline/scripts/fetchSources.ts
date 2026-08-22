@@ -50,6 +50,10 @@ const UNPACK: Readonly<Record<string, Unpack>> = {
   'openbible-xrefs': { kind: 'zip-flat' },
   // A bare .txt — no archive to unpack (P5.6/CO-3 pericope capability).
   'openbible-sections': { kind: 'plain' },
+  // TSK phrase re-mining (P6.3/B3): a SWORD zcom module like the expositor
+  // archives, but registered here explicitly because it is not an
+  // exposition source — its payload is reference structure, not prose.
+  'tsk-text': { kind: 'sword-module', into: 'tsk' },
   ...Object.fromEntries(
     EXPOSITION_SOURCES.filter((spec) => spec.strategy === 'sword-zcom').map((spec) => [
       spec.id,
