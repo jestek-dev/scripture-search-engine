@@ -1,0 +1,52 @@
+{
+  "id": "hymn-it-is-well",
+  "query": "it is well with my soul",
+  "status": "pending",
+  "note": [
+    "QR-6 (P5.5) curated hymn alias — the DATA half of killing the audit's last",
+    "harmful #1 (ad7). Battery/audit: 'it is well with my soul' normalizes to",
+    "`well soul`, a shape concept_lexicon structurally cannot represent, so the",
+    "query dead-ends in bag-of-words (fixture-bed #1 Psalms 139:14 via",
+    "proximity+token_overlap; measured 2026-08-22 pre-change). After 0.13.0 the",
+    "whole-query EQUALITY alias (curated_aliases, ontology/aliases/",
+    "hymn-lines.yaml) recognizes Spafford's title and answers with the curated",
+    "target concept per J10's recommendation (hope-in-god — peace-of-god and a",
+    "dedicated remembered pack are the flagged alternatives; Jesse rules J10).",
+    "The chip pins the FULL alias label so the attribution is part of the",
+    "contract: the engine reports that the LH editorial public-domain hymn",
+    "index names this hymn for this theme — it adjudicates nothing.",
+    "",
+    "additionalQueries carries the first-line register 'when peace like a",
+    "river'. The full first line 'when peace like a river attendeth my way' is",
+    "also an alias row but is asserted in eval/test/hymn-aliases.test.ts",
+    "instead: 'attendeth' is OOV and draws a QR-5 correction citation onto the",
+    "strongest chip, so its label differs from this fixture's exact pin.",
+    "",
+    "mustNotLead mirrors eval/golden/it-is-well.json's own provision verbatim",
+    "(mustNotLead, never mustNotRank — Jeremiah 4:10 is scripture and may rank,",
+    "it must simply not lead). Jeremiah 4 is absent from the fixture corpus, so",
+    "the guard is VACUOUS here until the chapter lands (P4.15 corpus-needs",
+    "territory) — enforced meanwhile on the full-corpus replay bed, where the",
+    "P5.5 log records the before/after. it-is-well.json (the guard-only twin)",
+    "stays pending per the G3 vacuous-only doctrine; this fixture is the",
+    "alias-mechanism spec and carries non-vacuous pins.",
+    "",
+    "Written fixture-first (pending, failing); promoted in the 0.13.0 flip",
+    "commit that made it pass."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Jeremiah 29:11",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Hymn: \"It Is Well with My Soul\" → Theme: Hope"
+    }
+  ],
+  "additionalQueries": ["when peace like a river"],
+  "mustNotLead": [
+    {
+      "ref": "Jeremiah 4:10",
+      "why": "divine-deception context; sense-inverted for a grieving asker (audit ad7, 2026-08-20)"
+    }
+  ]
+}

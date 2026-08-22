@@ -1,0 +1,36 @@
+{
+  "id": "hymn-how-great-thou-art",
+  "query": "how great thou art",
+  "status": "pending",
+  "note": [
+    "QR-6 (P5.5) — the plan's own motivating structural example ('how great",
+    "thou art' collapses to the single token `great`), written as the",
+    "specification it is, and DELIBERATELY NOT activated with the starter",
+    "pack: the familiar English hymn is Stuart K. Hine's translation/",
+    "paraphrase (© 1949/1953, Stuart Hine Trust) — NOT public domain. The",
+    "starter pack ships PD-only (pre-1930 US publication), so no row exists",
+    "for this hymn yet.",
+    "",
+    "This fixture activates only if Jesse rules J37 the title-only way: hymn",
+    "TITLES are not copyrightable (US Copyright Office Circular 33), so a",
+    "TITLE-ONLY alias row ('how great thou art' — nothing from Hine's verses,",
+    "no first line) would be lawful; PD-only would leave this fixture pending",
+    "until the hymn enters the public domain. Carl Boberg's Swedish original",
+    "'O store Gud' (1885) is PD, but its lines are not what English users",
+    "type. Target concept if activated: praise (J13 review; worship and",
+    "creation are the flagged alternatives — the hymn's verses survey",
+    "creation, its refrain sings praise).",
+    "",
+    "Measured gap 2026-08-22 pre-change (why the row matters): fixture-bed #1",
+    "Matthew 19:2 on the bare token 'great' (5.00) — pure noise for a hymn",
+    "quote."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Psalms 150:1-6",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Hymn: \"How Great Thou Art\" → Theme: Praise"
+    }
+  ]
+}

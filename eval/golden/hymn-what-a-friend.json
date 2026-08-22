@@ -1,0 +1,33 @@
+{
+  "id": "hymn-what-a-friend",
+  "query": "what a friend we have in jesus",
+  "status": "pending",
+  "note": [
+    "QR-6 (P5.5) curated hymn alias — Joseph M. Scriven, 'What a Friend We",
+    "Have in Jesus' (written 1855; published in Social Hymns 1865 / popularized",
+    "with Converse's tune 1868 — public domain). Measured gap 2026-08-22",
+    "pre-change: the title query led with a translation_variant accident",
+    "(John 11:3, 14.00) — no concept chip in the lead.",
+    "",
+    "Target: prayer — the hymn's substance is the privilege of carrying",
+    "everything to God in prayer ('what a privilege to carry everything to God",
+    "in prayer... take it to the Lord in prayer'); its commonly cited basis is",
+    "Philippians 4:6, a prayer anchor. Flagged J13 alternative where two fit:",
+    "friendship (John 15:13-15 'I have called you friends' fits the TITLE's",
+    "image, but the hymn's own argument is pray-about-it). The refrain line",
+    "'take it to the lord in prayer' is deliberately NOT an alias row:",
+    "measured pre-change it already leads with Theme: Prayer (1 Thess 5:16-18,",
+    "concept_anchor 21.72) — no gap; recorded as a measured-out row for J13.",
+    "",
+    "Written fixture-first (pending, failing); promoted in the 0.13.0 flip",
+    "commit that made it pass."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Matthew 6:9-13",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Hymn: \"What a Friend We Have in Jesus\" → Theme: Prayer"
+    }
+  ]
+}
