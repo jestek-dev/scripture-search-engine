@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
@@ -12,7 +13,7 @@ const studyUrl = new URL('../static/study.html', import.meta.url);
 
 describe('study.html static snapshot contract', () => {
   it('resolves as a valid single-inline snapshot', async () => {
-    const snapshot = await resolveStaticSnapshot(studyUrl.pathname);
+    const snapshot = await resolveStaticSnapshot(fileURLToPath(studyUrl));
     expect(snapshot.mode).toBe('single-inline');
     const page = snapshot.assets.get('/');
     expect(page).toBeDefined();
