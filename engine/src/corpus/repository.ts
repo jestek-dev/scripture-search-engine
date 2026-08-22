@@ -108,6 +108,21 @@ export interface PericopeRow {
   readonly sourceId: string;
 }
 
+/**
+ * One mined cross-reference phrase triple (schema v9, B3 Phase A). The
+ * `normalizedPhrase` is the tokenizer-normalized key of the TSK entry
+ * fragment under which the reference was printed — a lookup key, never
+ * displayed prose. Structural lineage only: the row says a curated source
+ * printed this link under that phrase; it scores nothing by itself.
+ */
+export interface CrossReferencePhraseRow {
+  readonly fromVerseId: number;
+  readonly normalizedPhrase: string;
+  readonly toStartVerseId: number;
+  readonly toEndVerseId: number;
+  readonly sourceId: string;
+}
+
 export interface CorpusMeta {
   readonly schemaVersion: string;
   readonly tokenizerVersion: string;
@@ -435,6 +450,66 @@ export class CorpusRepository implements ReferenceResolver {
     return spans.filter((span) =>
       unique.some((verseId) => verseId >= span.startVerseId && verseId <= span.endVerseId),
     );
+  }
+
+  /**
+   * Whether this artifact carries the mined TSK cross-reference phrase keys
+   * (schema v9, B3 Phase A). Presence-and-rows probed like pericopes: a v8
+   * artifact has no table, an emptied table reads false, and (future)
+   * phrase-labeled behavior reverts to plain cross_references output with no
+   * engine change — the probe IS the rollback story.
+   */
+  async hasCrossReferencePhrases(): Promise<boolean> {
+    try {
+      const table = await this.database.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'cross_reference_phrases'",
+      );
+      if (table.rows.length === 0) return false;
+      const rows = await this.database.execute(
+        'SELECT 1 AS present FROM cross_reference_phrases LIMIT 1',
+      );
+      return rows.rows.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * The cross-reference phrase triples whose FROM verse is one of the given
+   * verse ids, batched as ONE bounded query over the window's min..max span
+   * (G11) and filtered back to the asked-for verses. Rows come back ordered
+   * by (from, phrase, start, end) for platform-stable iteration.
+   *
+   * NO CALL SITES in discover() yet (B3 Phase A capability): the labeling
+   * and off-phrase-discount behavior that consumes this lands with the
+   * Phase B ENGINE_VERSION bump behind J26/J55.
+   */
+  async crossReferencePhrasesFor(
+    verseIds: readonly number[],
+  ): Promise<readonly CrossReferencePhraseRow[]> {
+    const unique = [...new Set(verseIds)];
+    if (unique.length === 0) return [];
+    const asked = new Set(unique);
+    const result = await this.database.execute(
+      `SELECT from_verse_id AS fromVerseId, normalized_phrase AS normalizedPhrase,
+              to_start_verse_id AS toStartVerseId, to_end_verse_id AS toEndVerseId,
+              source_id AS sourceId
+       FROM cross_reference_phrases
+       WHERE from_verse_id >= ? AND from_verse_id <= ?
+       ORDER BY from_verse_id, normalized_phrase, to_start_verse_id, to_end_verse_id`,
+      [Math.min(...unique), Math.max(...unique)],
+    );
+    // The min..max window can include from-verses nobody asked about; keep
+    // only the asked-for ones so the caller's mapping stays honest.
+    return result.rows
+      .map((row) => ({
+        fromVerseId: num(row, 'fromVerseId'),
+        normalizedPhrase: str(row, 'normalizedPhrase'),
+        toStartVerseId: num(row, 'toStartVerseId'),
+        toEndVerseId: num(row, 'toEndVerseId'),
+        sourceId: str(row, 'sourceId'),
+      }))
+      .filter((row) => asked.has(row.fromVerseId));
   }
 
   /**

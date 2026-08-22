@@ -27,6 +27,7 @@ import {
 import { buildAliasLayer, type AliasLayerResult } from './buildAliasLayer.js';
 import { derivePericopes } from './buildPericopes.js';
 import type { SectionSpanRow } from './importers/openbibleImporter.js';
+import type { CrossReferencePhraseRow } from './importers/tskImporter.js';
 import { compileHymnAliases } from './importers/aliasImporter.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import type {
@@ -48,6 +49,7 @@ const ONTOLOGY_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'concepts');
 const ALIASES_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'aliases');
 const OPENBIBLE_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-subset.json');
 const SECTIONS_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-sections-subset.json');
+const TSK_TEXT_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'tsk-text-subset.json');
 const PASSAGE_TERMS_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'passage-terms-subset.json');
 const TRANSLATION_TOKENS = join(PIPELINE_ROOT, 'fixtures', 'translation-tokens.json');
 
@@ -210,6 +212,17 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
       : [];
     const pericopes = derivePericopes(sectionRows, presentVerseIds);
 
+    // TSK phrase triples (schema v9, P6.3/B3 Phase A): the committed
+    // corpus-scoped subset of the mined module — hermetic for the same
+    // reason as every other subset above. buildConceptLayer re-applies its
+    // own presence filter, so fixture and release artifacts run the same
+    // insertion code path.
+    const crossReferencePhrases = existsSync(TSK_TEXT_SUBSET)
+      ? (JSON.parse(readFileSync(TSK_TEXT_SUBSET, 'utf8')) as {
+          rows: CrossReferencePhraseRow[];
+        }).rows
+      : [];
+
     const conceptLayer =
       ontology.concepts.length > 0
         ? buildConceptLayer(database as unknown as SqliteDatabase, {
@@ -217,6 +230,7 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
             topicRows,
             crossReferences,
             pericopes,
+            crossReferencePhrases,
             manifests: loadManifests(),
             presentVerseIds,
             verseTerms,
@@ -282,6 +296,7 @@ if (process.argv[1] && process.argv[1].endsWith('buildFixtureDb.ts')) {
           `  openbible topic anchors: ${result.conceptLayer.topicAnchors}\n` +
           `  cross references: ${result.conceptLayer.crossReferences}\n` +
           `  pericopes: ${result.conceptLayer.pericopes}\n` +
+          `  tsk phrase triples: ${result.conceptLayer.crossReferencePhrases}\n` +
           `  verse terms: ${result.conceptLayer.verseTerms}\n` +
           `  translation tokens: ${result.conceptLayer.translationTokens}\n` +
           `  dropped (outside fixture corpus): ${result.conceptLayer.droppedOutOfCorpus}\n`

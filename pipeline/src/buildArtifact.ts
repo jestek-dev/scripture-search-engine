@@ -56,7 +56,7 @@ import { buildSpellingIndex, type SqliteReadWriteDatabase } from './buildSpellin
 import { EXPOSITION_SOURCES } from './expositionSources.js';
 import { compileHymnAliases } from './importers/aliasImporter.js';
 import { compileOntology } from './importers/ontologyImporter.js';
-import { loadExposition } from './loadExpositions.js';
+import { loadExposition, readTestament } from './loadExpositions.js';
 import { fingerprintDirectory } from './provenance/contentFingerprint.js';
 import { manifestFingerprint } from './provenance/manifest.js';
 import {
@@ -65,6 +65,7 @@ import {
   importTopicScores,
 } from './importers/openbibleImporter.js';
 import { derivePericopes } from './buildPericopes.js';
+import { importTskText } from './importers/tskImporter.js';
 import { importVpl } from './importers/vplImporter.js';
 import { buildTermProfiles, type ExpositionDocument } from './stats/passageTerms.js';
 import type { DistributionTier, ManifestSet, SourceManifest } from './provenance/manifest.js';
@@ -430,6 +431,20 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
     const sections = importSectionCounts(
       readVerified(manifests, 'openbible-sections', 'bible-section-counts.txt').toString('utf8'),
     );
+    // TSK phrase re-mining (schema v9, P6.3/B3 Phase A): archive verified
+    // against the manifest, module read from its unpack directory. Phase A
+    // discipline: these rows feed ONLY cross_reference_phrases; none may
+    // reach cross_references before the Phase B bump (J26/J55).
+    readVerified(manifests, 'tsk-text', 'TSK.zip');
+    const tskDirectory = join(SOURCES, 'tsk');
+    const tsk = importTskText({
+      ot: readTestament(tskDirectory, 'ot'),
+      nt: readTestament(tskDirectory, 'nt'),
+    });
+    process.stdout.write(
+      `tsk-text : ${tsk.rows.length} phrase triples mined ` +
+        `(${tsk.rejected.length} fragments rejected-and-reported)\n`,
+    );
     process.stdout.write(
       `layer A  : ${ontology.concepts.length} concepts, ${topics.rows.length} topic rows, ` +
         `${xrefs.rows.length} cross-references, ${sections.rows.length} section spans\n`,
@@ -464,6 +479,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       topicRows: topics.rows,
       crossReferences: xrefs.rows,
       pericopes: derivePericopes(sections.rows, presentVerseIds),
+      crossReferencePhrases: tsk.rows,
       manifests,
       presentVerseIds,
       verseTerms,
@@ -472,7 +488,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
     process.stdout.write(
       `layer    : ${layer.concepts} concepts, ${layer.editorialAnchors} editorial anchors, ` +
         `${layer.topicAnchors} topic anchors, ${layer.crossReferences} xrefs, ` +
-        `${layer.pericopes} pericopes, ` +
+        `${layer.pericopes} pericopes, ${layer.crossReferencePhrases} tsk phrase triples, ` +
         `${layer.verseTerms} verse terms (${layer.droppedOutOfCorpus} dropped out of corpus)\n`,
     );
 
@@ -582,6 +598,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
         topicAnchors: layer.topicAnchors,
         crossReferences: layer.crossReferences,
         pericopes: layer.pericopes,
+        crossReferencePhrases: layer.crossReferencePhrases,
         verseTerms: layer.verseTerms,
         translationTokens: layer.translationTokens,
         spellingTerms: spelling.termCount,

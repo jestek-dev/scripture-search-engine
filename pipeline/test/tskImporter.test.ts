@@ -158,6 +158,190 @@ describe('parseTskEntryBody (golden slices, real module bytes)', () => {
   });
 });
 
+// ---- Layer wiring: insertion, per-record fingerprint feed, G1 citation, ----
+// ---- and the empty-cross_references dump proof (v9 capability) ----
+
+import { DatabaseSync } from 'node:sqlite';
+
+import { buildConceptLayer } from '../src/buildConceptLayer.js';
+import type { SqliteDatabase } from '../src/buildCorpus.js';
+import { compileOntology } from '../src/importers/ontologyImporter.js';
+import { SCHEMA_SQL } from '../src/schema.js';
+import type { ManifestSet } from '../src/provenance/manifest.js';
+
+const MANIFESTS: ManifestSet = {
+  sources: [
+    {
+      id: 'editorial',
+      label: 'LH editorial',
+      rightsClass: 'editorial',
+      licenseRecord: 'authored in-repo',
+      sourceUrl: 'https://example.invalid/editorial',
+      sha256: 'e'.repeat(64),
+      bytes: 1,
+      maxTier: 'public_distribution',
+    },
+    {
+      id: 'tsk-text',
+      label: 'Treasury of Scripture Knowledge (CrossWire module)',
+      rightsClass: 'public_domain',
+      licenseRecord: 'public domain by age',
+      sourceUrl: 'https://example.invalid/tsk',
+      sha256: 'a'.repeat(64),
+      bytes: 1,
+      maxTier: 'public_distribution',
+    },
+  ],
+};
+
+const JER_29_11 = makeVerseId(24, 29, 11);
+const ISA_55_8 = makeVerseId(23, 55, 8);
+const ISA_55_12 = makeVerseId(23, 55, 12);
+const PETER_5_7 = makeVerseId(60, 5, 7);
+
+function tinyLayer(
+  phrases: readonly CrossReferencePhraseRow[] | undefined,
+  manifests: ManifestSet = MANIFESTS,
+  present: ReadonlySet<number> = new Set([PETER_5_7, JER_29_11, ISA_55_8, ISA_55_12]),
+): {
+  fingerprint: string;
+  phraseRows: unknown[];
+  crossReferenceDump: string;
+  count: number;
+  dropped: number;
+} {
+  const { ontology, errors } = compileOntology([
+    {
+      name: 'peace.yaml',
+      contents: `id: peace-test
+label: Peace Test
+lexicon:
+  - peace
+anchors:
+  - ref: 1 Peter 5:7
+    sources: [editorial]
+    weight: 0.85
+`,
+    },
+  ]);
+  expect(errors).toEqual([]);
+  const database = new DatabaseSync(':memory:');
+  try {
+    database.exec(SCHEMA_SQL);
+    const result = buildConceptLayer(database as unknown as SqliteDatabase, {
+      ontology,
+      topicRows: [],
+      crossReferences: [],
+      ...(phrases === undefined ? {} : { crossReferencePhrases: phrases }),
+      manifests,
+      presentVerseIds: present,
+    });
+    const phraseRows = database
+      .prepare(
+        `SELECT from_verse_id, normalized_phrase, to_start_verse_id, to_end_verse_id, source_id
+         FROM cross_reference_phrases ORDER BY from_verse_id, normalized_phrase`,
+      )
+      .all();
+    const crossReferenceDump = JSON.stringify(
+      database
+        .prepare('SELECT * FROM cross_references ORDER BY from_verse_id, to_start_verse_id')
+        .all(),
+    );
+    return {
+      fingerprint: result.layerFingerprint,
+      phraseRows,
+      crossReferenceDump,
+      count: result.crossReferencePhrases,
+      dropped: result.droppedOutOfCorpus,
+    };
+  } finally {
+    database.close();
+  }
+}
+
+describe('buildConceptLayer TSK phrase wiring (P6.3/B3 Phase A, schema v9)', () => {
+  const ROW: CrossReferencePhraseRow = {
+    fromVerseId: JER_29_11,
+    normalizedPhrase: 'know',
+    toStartVerseId: ISA_55_8,
+    toEndVerseId: ISA_55_12,
+  };
+
+  it('inserts shipped rows citing tsk-text and reports the count', () => {
+    const { phraseRows, count } = tinyLayer([ROW]);
+    expect(count).toBe(1);
+    expect(phraseRows).toEqual([
+      {
+        from_verse_id: JER_29_11,
+        normalized_phrase: 'know',
+        to_start_verse_id: ISA_55_8,
+        to_end_verse_id: ISA_55_12,
+        source_id: 'tsk-text',
+      },
+    ]);
+  });
+
+  it('applies the cross_references presence filter: absent from-verse or absent target range drops the row', () => {
+    const presentFromOnly = new Set([PETER_5_7, JER_29_11]);
+    const droppedTarget = tinyLayer([ROW], MANIFESTS, presentFromOnly);
+    expect(droppedTarget.count).toBe(0);
+    expect(droppedTarget.dropped).toBe(1);
+    const presentTargetOnly = new Set([PETER_5_7, ISA_55_8]);
+    const droppedFrom = tinyLayer([ROW], MANIFESTS, presentTargetOnly);
+    expect(droppedFrom.count).toBe(0);
+    expect(droppedFrom.dropped).toBe(1);
+  });
+
+  it('feeds shipped phrases into the layer fingerprint PER-RECORD: build-twice identical, one phrase changed moves it', () => {
+    const first = tinyLayer([ROW]);
+    const second = tinyLayer([ROW]);
+    expect(second.fingerprint).toBe(first.fingerprint);
+    const perturbed = tinyLayer([{ ...ROW, normalizedPhrase: 'plan' }]);
+    expect(perturbed.fingerprint).not.toBe(first.fingerprint);
+    // A DROPPED row must not feed: filtering the target range out of the
+    // corpus yields the same fingerprint as never offering the row.
+    const presentFromOnly = new Set([PETER_5_7, JER_29_11]);
+    expect(tinyLayer([ROW], MANIFESTS, presentFromOnly).fingerprint).toBe(
+      tinyLayer([], MANIFESTS, presentFromOnly).fingerprint,
+    );
+  });
+
+  it('is insertion-order independent: the per-record feed is sorted, not caller-ordered', () => {
+    const other: CrossReferencePhraseRow = {
+      fromVerseId: JER_29_11,
+      normalizedPhrase: 'plan',
+      toStartVerseId: ISA_55_8,
+      toEndVerseId: ISA_55_8,
+    };
+    expect(tinyLayer([other, ROW]).fingerprint).toBe(tinyLayer([ROW, other]).fingerprint);
+  });
+
+  it('treats an omitted phrase input exactly as an empty one', () => {
+    expect(tinyLayer(undefined).fingerprint).toBe(tinyLayer([]).fingerprint);
+  });
+
+  it('fails closed at G1 when phrase rows would ship without the tsk-text manifest', () => {
+    const withoutTsk: ManifestSet = {
+      sources: MANIFESTS.sources.filter((source) => source.id !== 'tsk-text'),
+    };
+    expect(() => tinyLayer([ROW], withoutTsk)).toThrow(/provenance|tsk-text/);
+    // And an EMPTY phrase set must not demand the manifest.
+    expect(() => tinyLayer([], withoutTsk)).not.toThrow();
+  });
+
+  it('EMPTY cross_references dump proof: mining phrases writes NOTHING into cross_references', () => {
+    // The engine expands every cross_references row with no source filter,
+    // so a tsk-text edge there would change ordering under a Phase A
+    // capability-only framing. The dump must be byte-identical with and
+    // without the mined rows — the only difference is the new v9 table.
+    const withPhrases = tinyLayer([ROW]);
+    const withoutPhrases = tinyLayer([]);
+    expect(withPhrases.crossReferenceDump).toBe(withoutPhrases.crossReferenceDump);
+    expect(withPhrases.phraseRows).toHaveLength(1);
+    expect(withoutPhrases.phraseRows).toHaveLength(0);
+  });
+});
+
 describe('importTskText (full pinned module census)', () => {
   const available = existsSync(TSK_ZIP);
   it.skipIf(!available)(
