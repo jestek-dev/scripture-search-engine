@@ -27,7 +27,12 @@ strengthen those answers with your own judgment.
 - **Suggesting a missing passage is one small form.** Type a reference, watch the
   actual verse appear as you type so you know it's the right one, say how high it
   should rank, and add it — one verse per suggestion; if you typed a range, you pick
-  the verse out of the previewed passage with one click.
+  the verse out of the previewed passage with one click. The same pick appears when
+  you rescue a lower result that spans several verses — the record always names one
+  exact verse — and every rescue first shows you the verse and asks one confirm, so
+  a single keypress never records anything you didn't read. The blind comparison's
+  final call gets the same one-confirm guard (§3.5) — nothing permanent ever rides
+  a single keystroke.
 - **What replaces what:** the 11-tab console landing page becomes this search-first
   page. Nothing is deleted — the full engineering console stays one click away behind
   "Advanced", and the old page remains the default until you personally flip the
@@ -73,7 +78,12 @@ Binding for the implementer; deviations need a plan revision, not silent judgmen
    and the server's own `REVIEW_WINDOW = 10` snapshot truncation: full verdicts exist
    only for ranks 1–10. Ranks 11+ collapse behind a divider and carry exactly one
    action, "Should be near the top", recorded as a `missing` judgment (accepted by the
-   server because the reference sits outside the displayed top-10 window).
+   server because the reference sits outside the displayed top-10 window — and always
+   posted as a resolved single verse: the engine mints multi-verse range references
+   for collapsed anchor runs, which the server rejects, so range rows rescue through
+   the §3.1 pick rule, never as-is). Every rescue — single-verse rows included —
+   commits through the §3.1 rescue preview: read the verse, then one confirm; no
+   rescue ever posts on the first keypress (§3.1).
 8. **Undo is a superseding call.** A verdict key on an already-judged result records a
    new judgment with `supersedes`; U "reopens" locally and the UI says the earlier call
    stands until a new one is made. Nothing is deleted. Suggestions and tail rescues
@@ -94,7 +104,11 @@ Binding for the implementer; deviations need a plan revision, not silent judgmen
 11. **Compare stays.** It is in Jesse's prototype nav, it judges candidate engines as
     whole result sets — not result-vs-result pairs — and the blind-session server flow
     already exists (`GET /api/v2/candidates`). R2's anti-pairwise advice targets
-    per-result duels, which remain excluded (§2.3).
+    per-result duels, which remain excluded (§2.3). Its A/B/T/W calls are permanent
+    the instant they land (blind judgments are immutable — "This judgment is
+    immutable.", index.html:3183), so they commit through the §3.5 one-confirm layer —
+    the same slip-guard the tail rescue gets (decision 7), for the same motor-slip
+    reason.
 
 ### 2.3 Explicitly out of scope
 - Pairwise/duel voting and the `prefer` action in the main flow (R2: absolute verdicts
@@ -109,6 +123,14 @@ Binding for the implementer; deviations need a plan revision, not silent judgmen
   input previews whatever `GET /api/passage` resolves, but a multi-verse resolution
   requires picking a single verse before submit (the server records one exact verse per
   suggestion — §3.3).
+- Book-name type-ahead in the reference input (R2 §3) — declined for v1: no endpoint
+  exposes the book list (adding one would breach the two-mechanisms-only server rule,
+  §4.2), and the abbreviation aliases `GET /api/passage` already accepts ("Ps 46:1",
+  "Lam 3:22" — `pipeline/src/books.ts` abbreviations, e.g. :85/:116, compiled into the
+  artifact's `book_aliases` table and resolved via the engine's `resolveBookAlias`,
+  `engine/src/corpus/repository.ts:143–146`) plus the §3.3 live preview and
+  failed-resolution recovery copy deliver the same error-prevention with less typing
+  than full book names.
 - Blind-comparison missing-passage entry (endpoint exists; not in the new Compare v1).
 - Shipped-changelog with before/after rank diffs — **deferred with stated reasons**: a
   real diff requires persisting each judged query's full result list across artifact
@@ -137,11 +159,33 @@ the server's enums exactly (`plan-r1-repo.md` §3 + misc facts).
   light `--shadow: 0 1px 2px rgba(29,28,24,.06), 0 6px 20px rgba(29,28,24,.07)`
   (dark: `none` — borders replace shadows). Radii 6px controls / 10px panels; spacing
   4/8 scale; type scale 11/12/13/16/20/25.
+  **Two token values deviate from the prototype, fixed here and pre-approved** (D1
+  logs them in DESIGN.md's Deviations with these measured WCAG ratios, so the
+  committed token table already carries the passing values and the D5-landed
+  contrast audit is green from day one): light `--text-3: #6E695E` — the
+  prototype's #847F73 measures 3.92:1 on `--panel` and 3.85:1 on `--surface`,
+  failing AA 4.5:1 on the very tier this plan sets safety copy in (the §3.1
+  tail header and §3.3 permanence lines); the replacement measures 5.37 / 5.28 /
+  4.97:1 on panel/surface/ground. Dark `--text-3: #948E81` — replaces #8A8478
+  (4.47:1 on `--panel`); the replacement measures 5.10 / 5.35 / 5.71:1 on
+  panel/surface/ground. **`--text-faint` is reserved for WCAG-exempt text only**
+  — disabled control labels and purely decorative glyphs (light #A9A398 measures
+  2.42:1 on `--surface`; dark #67635A, 2.91:1); it never carries
+  information-bearing copy — the Advanced nav link and every hint sentence use
+  `--text-3` or better — and pairs.json lists `--text-faint` pairings under an
+  `exempt: true` field the audit's ratio check skips (D35).
 - Type: Literata (variable, regular + italic) ONLY for scripture, the done state, the
-  Compare reveal, and the signing chip; verse setting 17.5px / 1.65 / max 68ch, verse
+  Compare reveal, the signing chip, and the header wordmark — the prototype renders
+  "The Study" in Literata at 15px (dc.html:54); full stack everywhere Literata
+  appears: `"Literata", Georgia, serif` — the named serif fallback that carries the
+  fonts-404 path §4.7 promises. Verse setting 17.5px / 1.65 / max 68ch, verse
   numbers as raised sans `sup`. Chrome sans Source Sans 3, base 13px, fallback
   `-apple-system, "Segoe UI", sans-serif`. Mono `ui-monospace, "SF Mono", Consolas` —
   Advanced screen only.
+- Focus ring, verbatim from the prototype (dc.html:45): `:focus-visible { outline:
+  2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }` — this
+  outline is the affordance D35's WCAG 1.4.11 non-text check measures against every
+  background it appears over.
 - Color: hierarchy from hairlines + text tiers, not colored boxes; teal only on primary
   actions; verdict colors only on verdict elements.
 - Motion: one animated moment — toast rise, 200ms `cubic-bezier(0.16,1,0.3,1)`;
@@ -176,6 +220,28 @@ results, not a kind):
   The query stays in the search bar; no results list renders. (No "search as words"
   link — `/api/search` offers no way to bypass the engine's reference short-circuit.)
 
+**Pre-search / boot state (binding)**: on boot with no open case, the center pane
+shows the search bar over the effect-timing contract sentence and nothing else — no
+result cards, no tail, no verdict toolbar (§3.2's visibility gate), and no
+`/api/search` request fires before the first submit. With open cases, the first open
+case in the boot `GET /api/v2/cases` list (newest first — the §3.6 ordering, i.e. the
+most recently touched) loads exactly as if its queue row were clicked (§3.4 — case
+fetches + live tail search, rail header and search input synced). `study.ui.v1`'s
+`lastQuery` (§4.9) does exactly one thing: it pre-fills the search input's **value**
+on the no-open-case boot — it never auto-submits and never fetches. D5 asserts the
+boot state; D24 asserts the open-case boot.
+
+**Post-search focus handoff (binding)**: on a discovery search that returns results
+(Enter, the Search button, or a ⌘K row selection), when the results render, DOM focus
+moves from the search input to result card #1 — the roving-tabindex stop; when the
+query has an open case, to the first unjudged card — and the input keeps its value.
+Without this rule J/K fail right after the first search: browser default leaves focus
+in the input, and §3.12 suppresses single-letter shortcuts while typing in an input —
+J would insert "j" into the search bar, breaking the onboarding promise "J and K
+move". The `reference` and `invalid-reference` kinds, and a zero-result `discovery`
+(no card to move to), leave focus in the input — the reviewer's next act there is
+retyping. This mapping is a §3.12 table row, so D34's per-row audit covers it.
+
 **Results list — the long-list rule** (`plan-r2-ux.md` §2):
 - **Top block = ranks 1–10** (or all, if fewer): cards with rank badges (`#1`–`#3`
   large/high-contrast, `#4`–`#10` normal; card spacing steps down slightly after #3).
@@ -189,7 +255,30 @@ results, not a kind):
 - **The focused card** expands into the verse panel: Literata reference heading,
   "Result {i} of {n} for "{q}"" — where **n = the total number of results the engine
   returned (top block + tail) and i = the focused card's rank** — verse text with `sup`
-  verse numbers, attribution "King James Version". **Highlighting is
+  verse numbers, attribution "King James Version".
+  **Verse-body source (binding — `DiscoveryResult` carries no per-verse data, so
+  the `sup` markers need a named source)**: the verse body is fetched via
+  `GET /api/passage?ref={result.reference}` when a card gains focus — its
+  `passage.verses[]` carry `verse` numbers for the `sup` markers, and a range
+  reference resolves to all member verses, each rendered with its own `sup`. This
+  is the only source that can place the markers: a result's `excerpt` is bare
+  `verse.text` (`engine/src/createEngine.ts:362`), and for a **collapsed anchor
+  run** — `collapseAnchorRuns`, `createEngine.ts:594–677`, which merges adjacent
+  anchor-run verses anywhere in the ranked list into one result whose reference is
+  a range like "Psalm 23:1-4" — it is the run's verses joined with single spaces
+  and no boundaries (`createEngine.ts:669`). Concept-anchor runs rank high by
+  design, so this hits the top block routinely, not rarely. While the fetch is in
+  flight, the excerpt renders as the placeholder: a single-verse result shows it
+  with the reference's verse number as the one `sup` (for one verse the excerpt IS
+  the verse text, so this rendering is already complete); a multi-verse result
+  shows the joined excerpt with no `sup` markers. On fetch failure that excerpt
+  rendering simply stays — no `sup` markers on a run, the reference-derived single
+  `sup` on a single verse — with no error state (the card is still readable; §3.11
+  is not invoked). The fetch fires on every focus, uniformly — one code path, and
+  its resolution is reused by the §3.1 range-rescue detection, the §4.4 rescue
+  resolution, and the §3.3 range pre-check. Stale responses are dropped via the
+  same request-sequence counter as search (§4.3). The §3.1 highlight rule below
+  applies to the fetched verse text identically. **Highlighting is
   whole-word, punctuation-tolerant literal emphasis, never tokenization**: the
   client collects
   quoted fragments from the result's lexical reason labels — a label of exactly
@@ -222,10 +311,60 @@ results, not a kind):
   `engine/src/createEngine.ts:185–203` + `lexical.ts:50`), so the raw query string
   may legitimately match nothing. (The engine's response carries no span data —
   `DiscoveryResult` is `{targetId, reference, excerpt, score, reasons}` only.)
-- **Tail = ranks 11+**, collapsed behind one divider button: "Lower results ({n}) —
+- **Tail = ranks 11+**, collapsed behind one divider button (a disclosure: it carries
+  `aria-expanded` reflecting its state and `aria-controls` naming the tail list
+  container — asserted in D35): "Lower results ({n}) —
   most people never scroll this far. Skim them only to rescue anything that deserves
   the top." Expanded tail rows are compact (rank, reference, one-line snippet) with
-  exactly one action: "Should be near the top". No verdict buttons in the tail.
+  exactly one action, "Should be near the top", on **E or the row button — Enter
+  does nothing on a tail row**. (Enter means open/activate everywhere else in this
+  UI — divider expand, search submit, ⌘K select, picker select — so it must not
+  double as an uncorrectable commit one habitual keystroke past the divider; the
+  verse already reads in the rail, so Enter has nothing left to open. §3.12.) No
+  verdict buttons in the tail.
+  **Every rescue commits through the rescue preview layer — read, then one
+  confirm (binding)**: "Should be near the top" (E or the row button) ALWAYS opens
+  the rescue preview layer; **no tail rescue ever posts on the first keypress**.
+  The reason is a motor-slip, not a belief: the top block trains the reviewer
+  dozens of times per session that E is safe and reversible (every verdict chip
+  carries Undo), so one J past the divider the same key must not silently become
+  an uncorrectable commit — the tail header's warning sentence addresses wrong
+  beliefs, not slips of a habituated key — and whether a row is a collapsed run
+  is invisible in its compact form, so E's behavior must be uniform to be
+  predictable. Two modes, one shared component (built in D18, extended in D20):
+  - A **single-verse row** opens the preview showing its one verse (already
+    resolved via `GET /api/passage` — the §4.4 resolution, reused) with the
+    button "Confirm — should be near the top".
+  - A **range row** — a collapsed anchor run: `collapseAnchorRuns`
+    (`engine/src/createEngine.ts:594–677`) mints range references like
+    "Psalm 23:1-4" anywhere in the ranked list (it runs over limit + headroom
+    = 50 candidates before the slice to 25, `createEngine.ts:347–369`) — cannot
+    be rescued as-is: the server records one exact verse
+    (`resolveReferenceTargetId`, `server.ts:586–591`, `verses.length === 1`;
+    `judgments.ts:512–515` rejects the rest 400). Its preview is the §3.3
+    pick-chip mode, pre-filled with the row's reference (fetched via
+    `GET /api/passage`, reusing the focused-card resolution when present) and
+    with the run's **first verse — the verse the row's `targetId` addresses
+    (`createEngine.ts:653–656`) — pre-selected** as the default chip; the same
+    "Confirm — should be near the top" button commits the picked verse.
+  Confirming posts the shown/picked verse's canonical single-verse
+  `passage.reference` with `withinTop:10` (§4.4); the §3.3 pre-commit permanence
+  line renders inside the layer in **both** modes; Esc/Cancel closes the layer
+  with nothing posted (it rides the missing-form slot in the §3.12 Esc order and
+  focus contract); and the rescue receipt names the confirmed verse. Mode
+  detection is client-side: a reference containing "-" is the cheap pre-signal,
+  and the `GET /api/passage` resolution (`passage.verses.length`) is
+  authoritative. **A rescue confirm answered 400 `validation_failed` whose
+  `error.message` contains "already present in the judged result set" closes the
+  preview layer, then runs the §3.3 already-displayed recovery** — focus the
+  matching top-block card and show the same toast ("That passage is already in
+  the results — judge it there instead."); this branch is reachable only when the
+  live tail and the judging snapshot disagree (§4.6 mismatch branch): the verse
+  sits in the tail of the live list but inside the top-10 of the judging
+  snapshot, so the server's already-present check fires. Without this rule the
+  recovery would be undefined with the layer still open — "scroll to that card"
+  names no behavior for closing it — and the generic §3.11 toast would fire
+  behind a modal.
   **Read before rescue (binding)**: a rescue is uncorrectable, so the surface
   must show the reviewer the text being judged before the commit — never just
   the ellipsized snippet. Focusing a tail row (J/K or click) rebinds the
@@ -241,9 +380,13 @@ results, not a kind):
   **Permanence, disclosed before commit**: the expanded tail's header — directly
   under the divider button, in `--text-3`, visible before any rescue is taken —
   reads: "A rescue is recorded like a suggestion — it can't be taken back here." (A
-  rescue is a single click or keypress on an uncorrectable action, so the warning
-  must precede the commit, not follow it.) Rescue toast: "Noted — {ref} should rank
-  near the top for "{q}". Saved to your calls for the next reviewed update." The
+  rescue is an uncorrectable action one confirm away, so the warning must precede
+  the commit, not follow it — and the §3.3 permanence line renders again inside the
+  preview layer itself, where the reviewer's eyes are at commit time.) Rescue toast:
+  "Noted — {ref} should rank
+  near the top for "{q}". Saved to your calls for the next reviewed update." — for
+  a range rescue, {ref} is the picked verse's canonical reference, never the range
+  string. The
   rescued row's receipt chip carries the permanence sentence: "A suggestion can't be
   taken back here — you'll see it again in Finish up before anything is written, and
   a human reviews every change before it ships."
@@ -305,20 +448,46 @@ the boot `GET /api/concepts` cache. Context: `GET /api/v2/context?ref=…` (±2 
 Literata, focused verse highlighted.
 
 ### 3.2 Voting on a result
-**Verdict toolbar** (fixed bottom-center pill; hidden while an interview, suggestion
-form, bulk selection, or onboarding is open): `[E] Essential` (teal, fused with a
+**Verdict toolbar** (fixed bottom-center pill): `[E] Essential` (teal, fused with a
 "top 1 · 3 · 5 · 10" segmented picker) · `[H] Helpful` · `[X] Not relevant` (hover turns
 `--v-notrel`) · `[M] Missing passage`. Every key is a keycap chip on its button.
+- **Toolbar visibility & the M gate (binding)**: the verdict toolbar (and the M
+  shortcut) is active only while a discovery search with a non-empty query is on
+  screen — the results list or its zero-result empty state (there the
+  Missing-passage button is the live control; E/H/X are focused-card actions and no
+  card exists). The toolbar does not render in the pre-search state or on
+  `reference` / `invalid-reference` views, and it hides while an interview,
+  suggestion form, rescue preview, bulk selection, or onboarding layer is open. In
+  the states where it is absent (pre-search, `reference`, `invalid-reference`), M is
+  inert and shows the hint toast "Search words or phrases first — a suggestion
+  attaches to the search that misses it." — no form opens, nothing posts. The gate
+  is load-bearing, not cosmetic: before any search the §3.3 form title has no {q}
+  (broken copy) and its lazy case create would be rejected by the server ("Case
+  query must be non-empty text.", `workbench/src/reviewCases.ts:99–101`), surfacing
+  only the generic §3.11 toast a non-engineer cannot act on; and on a
+  `reference`-kind view ("nothing to judge here") a suggestion would attach to a
+  query the engine short-circuits away from discovery — a fixture no discovery
+  search exercises, weight without value against CLAUDE.md's own adding-data rule.
+  This mapping is two §3.12 table rows, so D34's per-row audit covers it; D20
+  asserts the inert branches directly.
 - E commits `essential` at the picker's current value (persisted, default 3). H commits
-  `helpful`. The picker is a **Tab-reachable radiogroup**: Left/Right arrows move
-  between 1/3/5/10 and Enter/Space selects; it is also clickable (both input methods
-  first-class, decision 9).
-- Commit → toast "Marked {ref} {label}" with inline "Undo [U] — your call stands until
+  `helpful`. The picker is a **Tab-reachable radiogroup**: Left/Right arrows move the
+  selection between 1/3/5/10 — selection follows focus, the standard WAI-ARIA
+  radiogroup pattern, so an arrow press alone changes the value the next E commits
+  (D12 pins this); Space also selects the focused segment; it is also clickable (both
+  input methods first-class, decision 9).
+- Commit → toast "Marked {ref} Essential (top {n})" for Essential — n = the picker
+  value that rode the POST, named in the receipt because the picker persists across
+  sessions and focus has already auto-advanced, so the toast is the only immediate
+  receipt of a possibly-stale top-N (the honest-receipt contract has no silent
+  moment) — and "Marked {ref} {label}" for Helpful / Not relevant; each with inline
+  "Undo [U] — your call stands until
   you choose a new one" (6s auto-dismiss; the truth is on the affordance itself: the
   POST has already happened, and U records nothing until a new call replaces the old);
   focus auto-advances to the next unjudged top-block row, wrapping.
 - A verdict key on an **already-judged** card records a superseding judgment (§4.5);
-  toast: "Replaced your earlier call — {ref} is now {label}."
+  toast: "Replaced your earlier call — {ref} is now {label}." — an Essential {label}
+  renders "Essential (top {n})" here too, same rule.
 - **U / Undo** (verdicts only — Essential/Helpful/Not relevant; suggestions and rescues
   show the permanence note instead, §3.3/§3.12): chip becomes "Reopened — your earlier
   call stands until you make a new one."; the row joins the **reopened count** (shown
@@ -335,6 +504,13 @@ form, bulk selection, or onboarding is open): `[E] Essential` (teal, fused with 
   passages Helpful." — with no inline Undo link (each judged card's chip carries its
   own Undo); after a bulk commit, U targets nothing and shows a hint toast "Change a
   bulk call on its card." (the honest-receipt contract has no silent moment).
+  **If any POST in the serial batch fails, the batch stops at the failure**; the
+  receipt reads "Marked {k} of {n} — the rest did not save. Try them on their
+  cards."; only the k committed rows show judged chips, and the remaining
+  checkboxes (the failed row included) stay selected. Neither the all-success
+  receipt ("Marked {n}" would overstate — n selected, k saved) nor the generic
+  §3.11 "nothing was saved" toast (k rows DID save) is honest for a partial batch,
+  so the partial receipt is its own specified state, never a fallthrough.
 
 **Not-relevant interview** (opens on X; modal over the verse panel; layer focus
 contract per §3.12):
@@ -368,8 +544,12 @@ contract per §3.12):
 
 ### 3.3 Suggestion flow (missing passage)
 Opens via M, the toolbar button, the empty-results button, or a persistent low-key
-"Missing a passage?" link pinned after the top block. Layer focus contract per §3.12
-(focus lands on the reference input on open).
+"Missing a passage?" link pinned after the top block. Every entry point exists only
+while a discovery search with a non-empty query is on screen (§3.2's toolbar gate):
+in the pre-search state and on `reference` / `invalid-reference` views no entry
+point renders and M shows the §3.2 hint toast instead of this form — so the "{q}"
+in the prompt below is always a real, non-empty discovery query. Layer focus
+contract per §3.12 (focus lands on the reference input on open).
 - Title "Add a passage that should be here". Prompt "Which passage is missing for
   "{q}"?" — input placeholder "e.g. Lamentations 3:22".
 - **Live preview**: debounced 250ms `GET /api/passage?ref=…` as you type; on resolve
@@ -404,6 +584,15 @@ Opens via M, the toolbar button, the empty-results button, or a persistent low-k
 - Submit "Add this passage to the answers" — disabled at 0.45 opacity until a single
   verse is resolved (or picked). Cancel and Escape close the form (Escape already works
   from inside the input in the prototype; keep it).
+- **Enter in the reference input** (a §3.12 table row, so D34's per-row audit covers
+  it): activates Submit only when Submit is enabled — a single verse resolved or
+  picked, so the verse has by then rendered in the preview and Enter-when-enabled is
+  always post-preview; while Submit is disabled, Enter is a no-op. The form is never a
+  native `<form>` element, so no raw browser submit can fire — Enter is the most
+  habituated key in this UI (it already submits the search bar, ⌘K, and the sign
+  input), and this is the one surface whose commit can't be taken back here, so the
+  §1 guarantee ("a single keypress never records anything you didn't read") holds by
+  construction, not by hope.
 - **Permanence, disclosed before commit**: below the Submit/Cancel row, always
   visible while the form is open, in `--text-3`: "A suggestion can't be taken back
   here — you'll see it again in Finish up before anything is written, and a human
@@ -414,12 +603,30 @@ Opens via M, the toolbar button, the empty-results button, or a persistent low-k
   disclosure.
 - Reference already displayed in the top-10 window: **client pre-check** against the
   displayed cards' canonical references → toast "That passage is already in the
-  results — judge it there instead." and focus scrolls to that card, no POST.
+  results — judge it there instead." and focus scrolls to that card, no POST. A
+  displayed card whose reference is a **range** (a collapsed anchor run, §3.1) is
+  compared by its member verses, resolved once via `GET /api/passage` on demand —
+  the focused-card resolution (§3.1) is reused when already fetched; a
+  single-verse string-compare against a range label would silently miss. The
+  server-message fallback below still catches any miss.
+  **The client pre-check also runs against the fetched tail (ranks 11+)** — the
+  client already holds it in memory (§4.3 fetches ranks 11+ on every case open and
+  on every live search): a typed reference resolving to a verse whose canonical
+  reference matches a tail row (range rows compared by member verses, same
+  resolution rule) closes the form, expands the divider if collapsed, scrolls
+  focus to that row, and toasts "That passage is already in the lower results —
+  rescue it there instead." — no POST. The server cannot catch this case: its
+  already-present check runs only against the top-10 snapshot (`reviewCases.ts:83–85`
+  slices to `REVIEW_WINDOW`; `judgments.ts:516–517`), so without this one array
+  scan the POST would succeed, recording a "missing passage" for a verse the
+  engine did return and producing a different History phrasing than the rescue
+  path for the identical intent.
   **Server-side detection**: a 400 `validation_failed` whose `error.message` contains
   "already present in the judged result set" is treated as the same already-displayed
   case (same toast + scroll); any other `validation_failed` falls through to the §3.11
   generic toast. A code comment notes this string is coupled to `judgments.ts` and
-  covered by a Playwright assertion in D20.
+  covered by Playwright assertions in D20 (form path) and D18 (rescue-confirm
+  path, §3.1).
 - After submit: a distinct **"Your suggestion"** receipt card at the end of the top
   block — no rank badge, visibly not an engine result — with reference, excerpt, and
   two lines: "Saved to your calls. It goes in for review with the next reviewed
@@ -438,6 +645,18 @@ Left rail, under the active list:
   selected) exactly like a successful search — including the live tail fetch (§4.3
   "Open existing case"). With no open cases, the queue section shows "Nothing waiting —
   search for something you would actually type."
+  **"Open case" — the one definition, used here, by §3.7's tiles and pending
+  banner, and by the §4.3 counts row**: `state ∈ {new, reviewing, judged}`. A
+  judged case stays open until its calls are compiled (the §3.7 changed-set says
+  when; v1 approximates by treating all judged cases as open, and closes the loop
+  after every successful signing: the §3.7 post-apply re-preview drops
+  fully-written cases from this queue and from the Finish-up tiles, so "Waiting"
+  never accumulates cases that are not waiting) — so a
+  just-completed case, auto-transitioned to `judged` (§4.3), still shows in the
+  queue as "{m}/{m}" and still counts in Finish up at exactly the moment the
+  reviewer goes to sign. j and m per case come from the §4.3 counts-row fetches
+  (`GET /api/v2/judgments?caseId=…` supersede-resolved → j;
+  `GET /api/v2/cases/:uuid` `review.result.results.length` → m).
 - "**Worth a look next**" (P4): up to 5 `GET /api/v2/inbox` suggestions that are not
   already open cases, each with its plain-language reason from the rename table ("From
   a routine check", "New topic to cover", "Needs a fresh look", "From real searches",
@@ -460,6 +679,21 @@ Left rail, under the active list:
   one call." Two blind lists Set A / Set B; clicking any verse loads it into a shared
   panel with "Set A says / Set B says" explanation columns. Bottom toolbar `[A] A wins
   · [B] B wins · [T] Tie · [W] Both wrong`.
+- **One confirm before the permanent record (binding)**: pressing A/B/T/W or clicking
+  its button never commits directly. A blind-comparison judgment is final the instant
+  it lands (the server records it immutably — "This judgment is immutable.",
+  index.html:3183 — and the reveal copy says so), and §3.1's rescue-preview rationale
+  applies here with more force, not less: the header disclosure "This call is final."
+  addresses wrong beliefs, while a bare single key invites slips of a habituated
+  hand — and unlike a rescue, this call is never re-reviewed in Finish up. So each
+  key/button opens a one-confirm layer under the §3.12 focus contract — title
+  "You're calling it: {label}." ({label} = A wins / B wins / Tie / Both wrong), body
+  "This call is final — it cannot be edited, only outweighed by future comparisons.",
+  buttons "Confirm — {label}" / "Cancel", **initial focus on Cancel** (the §3.12
+  exception class: a reflexive A-then-Enter double-tap must not commit), Esc or
+  Cancel closes with nothing posted. Confirm posts the session judgment and shows the
+  reveal. The layer rides the same §3.12 Esc slot as the rescue preview; under
+  read-only its Confirm is disabled like every POST-issuing control (§3.11).
 - Reveal card: "The reveal" · one of "You preferred Set A — the current engine." / "You
   preferred Set B — the candidate." / "You called it a tie." / "You sent both back." ·
   "Your preference is recorded exactly as you made it, blind. This call is final: it
@@ -474,7 +708,13 @@ Left rail, under the active list:
 - Rows: relative time + humanized text, e.g. "Marked Psalm 23:1 essential (top 1) for
   "the lord is my shepherd"" · "Added Lamentations 3:22 as a missing passage (top 3)
   for "mercy"" · "Marked Genesis 43:14 not relevant — matched words, not meaning, for
-  "mercy"". Superseded records struck-through/faint with sub-line "Replaced by a newer
+  "mercy"". A `missing` judgment this client's own session recorded as a **tail
+  rescue** renders "Rescued Psalm 88:3 from the lower results (top 10) for "{q}""
+  instead of the "Added … as a missing passage" template — a rescued verse was
+  never missing, and §3.7 already draws this distinction from the same local
+  knowledge; a prior-session `missing` record renders the generic template (the
+  rescue/suggestion distinction exists only in the client's session log — never
+  guessed). Superseded records struck-through/faint with sub-line "Replaced by a newer
   call."
 - Data: `GET /api/v2/cases` (newest first), then lazy `GET /api/v2/judgments?caseId=…`
   per case as its group expands/scrolls in; 20 most recent cases + "Show more".
@@ -486,13 +726,22 @@ Left rail, under the active list:
   answer sheet is the reviewed record of what the right results should be; the
   engineering checks hold every update to it." Four stat tiles (Essential / Helpful /
   Not relevant / Missing passages), Literata numerals in verdict colors, counted across
-  ALL open cases (prototype v2 behavior).
+  ALL open cases (prototype v2 behavior) — "open" per §3.4's one definition
+  (`new`/`reviewing`/`judged`), tallied from the §4.3 counts row's per-case fetches
+  (`GET /api/v2/judgments?caseId=…`, supersede-resolved), so a case
+  auto-transitioned to `judged` on top-10 completion never vanishes from these
+  tiles at signing time.
 - Pending banner when any open case's top block has unjudged rows: "{n} of {m} passages
   are still waiting for a call. Finish them first →" (links to Review at the first such
   case); when any calls are locally reopened it reads "{n} of {m} passages are still
   waiting for a call · {r} reopened calls unresolved. Finish them first →". Reopened
   rows are counted in {r}, never in {n} — a reopened row's earlier call is still
-  active. Pending informs; it never blocks signing.
+  active. m = the open cases' top-block sizes summed, n = their unjudged rows summed —
+  both from the §4.3 counts-row fetch pair per open case (m from
+  `review.result.results.length`, n from m minus the supersede-resolved judged
+  count); a case whose `review` comes back `null` drops out of both sums, and with
+  every case null the banner is omitted (§4.3 counts row — signing is disabled by
+  §3.11 then anyway). Pending informs; it never blocks signing.
 - "**What will be written**" — derived honestly from `POST /api/v2/compile/preview`'s
   plan. `plan.operations` is a list of **whole-file writes** `{path, beforeSha256,
   afterText}` (`compileJudgments.ts` `PlannedCompilationFile`), not per-judgment
@@ -520,11 +769,12 @@ Left rail, under the active list:
     otherwise " (added by you — not shown in the engine's top 10)"; no match, no
     suffix. Never "not in the engine's results" — that would be a false statement on
     the signing surface: tail rescues ARE engine results (ranks 11+, visible to the
-    reviewer), and a typed suggestion can also name a rank-11+ verse, because the
-    server's already-present check runs only against the top-10 snapshot
-    (`reviewCases.ts:83–85` slices to `REVIEW_WINDOW` before building
-    `context.results`; `judgments.ts:516–517`). The honest claim is about the top
-    10, not about engine output. (Compiled fixtures render `essential` and
+    reviewer), and a typed suggestion can also name a rank-11+ verse — a
+    prior-session record, or this session's when the tail fetch failed (the §3.3
+    tail pre-check redirects the common case, but the server's own already-present
+    check runs only against the top-10 snapshot: `reviewCases.ts:83–85` slices to
+    `REVIEW_WINDOW` before building `context.results`; `judgments.ts:516–517`).
+    The honest claim is about the top 10, not about engine output. (Compiled fixtures render `essential` and
     `missing` identically into `expectedTop` — the suffix is the only distinction, and
     it comes from the client's own log knowledge, never a guess.)
   - There is **no template for Helpful calls** — they write nothing (footnote below).
@@ -538,22 +788,43 @@ Left rail, under the active list:
     it)".
 - Empty changed set → "Nothing waiting to be written — every call you've made is
   already on the answer sheet." + footnote "Helpful calls stay on record and inform
-  review; they do not write fixture lines by themselves." (`operations.length === 0`
+  review; they do not write answer-sheet lines by themselves." (`operations.length === 0`
   is NOT the gate — once any compilable judgment exists the compiler always restates
   files; only the changed-bytes delta says whether anything will actually change.)
 - "**Sign to write**": "This step changes reviewed files, so it asks for a signature:
   type the code below exactly. That is deliberate friction — it means nothing is
   written by a stray click." The code chip (dashed border, Literata) shows the **first
   12 hex chars of `plan.digest`, grouped 4-4-4** (e.g. `4e7a 9c21 b0d3`). Input "Type
-  the code to sign"; button "Write {n} judgment(s) to fixture files" — **n = the count
-  of Must-rank + Must-not-rank lines rendered from the changed set** — enables only on
-  an exact, case-insensitive match. Submitting posts the FULL digest
+  the code to sign"; button "Write 1 call to the answer sheet" / "Write {n} calls to
+  the answer sheet" (real pluralization, never "(s)"; the prototype's "Write {n}
+  judgment(s) to fixture files" names an undefined engineering artifact on the very
+  surface that defines "answer sheet" — the substitution is logged in DESIGN.md's
+  Deviations next to the existing answer-sheet note, D1) — **n = the count
+  of Must-rank + Must-not-rank lines rendered from the changed set** (definition
+  unchanged) — enables only on
+  an exact, case-insensitive match. Enter in the sign input activates the Write
+  button only while it is enabled (exact match typed); while disabled it is a
+  no-op — the sign panel, like the missing form (§3.3/§3.12), is never a native
+  `<form>`, so no raw browser submit can fire. Submitting posts the FULL digest
   (`POST /api/v2/compile/apply` `{digest}` — server contract unchanged).
-- Outcomes: success → Literata "Written." · "{n} judgments are now on the answer
-  sheet. The engineering checks will pick them up on the next run." 409
+- Outcomes: success → Literata "Written." · "{n} calls are now on the answer
+  sheet. The engineering checks will pick them up on the next run." (same
+  calls-not-judgments substitution, logged with the button copy in D1). 409
   `stale_preview` → "The picture changed since this preview — reloading it now." then
   auto re-preview (new code). 409 `mutation_running`/`job_running` → "Another change
   is being written right now — try again in a moment."
+- **Post-apply re-preview (binding — the closing half of §3.4's open-case
+  approximation)**: after a successful apply renders the success card, re-run
+  `POST /api/v2/compile/preview` once and recompute the changed set. Any open case
+  whose normalized query (§4.6 normalization) contributes no changed operation is
+  locally marked compiled: it drops from the §3.4 "Waiting in your queue" list and
+  from these four stat tiles (a judged case with only Helpful calls — which write
+  nothing — drops here too, honestly: none of its calls are waiting to be written).
+  `new`/`reviewing` cases never drop — they still have judging to do. The mark is
+  session-local: a later boot lists a judged case again until the next Finish-up
+  visit recomputes the changed set — a stated v1 limit (the accumulation window is
+  one boot-to-Finish-up span), not a surprise; the full fix rides the deferred
+  diff card (§2.3).
 
 ### 3.8 Advanced door
 Nav link "Advanced" opens a summary screen: "Engineering surfaces. Nothing here
@@ -575,29 +846,63 @@ lesson." + "Skip the tour" button. The tour carries the contract sentence once
 ☀ Light / ☾ Dark / ◐ Auto cycle button; persisted `localStorage['study.theme']`;
 `data-theme` on `<html>`; Auto follows `prefers-color-scheme` via `matchMedia`. In
 Auto, a `matchMedia("(prefers-color-scheme: dark)")` **change listener** re-applies
-`data-theme` immediately — no reload. The stylesheet sets `color-scheme: light` on
+`data-theme` immediately — no reload. **First paint is theme-correct (no FOUC)**: a
+minimal inline script in the `<head>`, placed before the `<style>` block, reads
+`localStorage['study.theme']` (in try/catch) and
+`matchMedia('(prefers-color-scheme: dark)')` and stamps `data-theme` on `<html>` so
+the correct theme paints first; the main IIFE takes over theming from there.
+(Without it, a reviewer with `study.theme='dark'` — or dark-preferring Auto — sees a
+light-token flash on every load, because §4.8's main IIFE sits after the body
+skeleton. The single-inline snapshot contract joins all inline scripts —
+`staticSnapshot.ts:466` — so a second inline script is contract-valid.) The
+stylesheet sets `color-scheme: light` on
 `:root` and `color-scheme: dark` under `[data-theme="dark"]`, so native controls and
 scrollbar chrome match the theme. Selection, caret, scrollbars, focus rings themed per
 the token sheet. Dark derives from its own token column, never inversion.
 
 ### 3.11 Empty / loading / error / read-only states
 - Loading: static skeleton rows (no animation beyond the allowed toast); never
-  spinners-with-nothing.
+  spinners-with-nothing. **Async arrival is never silent to a screen reader**: the
+  results region owns a visually-hidden `aria-live="polite"` status element that
+  announces "{n} results for "{q}"" (or the §3.1 empty-state / invalid-reference
+  sentence) when a search resolves; the skeleton container sets `aria-busy="true"`
+  while loading and removes it on settle.
 - Search error (`network_error` / 5xx): inline "The engine did not answer. It may be
   restarting — try again in a moment." + Retry button.
 - **Read-only degraded** (server `startup_degraded_read_only` / GET `readOnly` flags /
   `GET /api/v2/health` machine mode): top banner, `role=status`, background
   `var(--v-missing-wash)`: "**Read-only right now.** The engine is rebuilding its data.
   You can read everything, but calls will not save. This usually clears in a minute —
-  then reload the page." Verdict/compare/sign buttons disabled; any attempted commit
+  then reload the page." **Every POST-issuing control disabled** — the verdict
+  toolbar and bulk bar, tail-rescue buttons (and the rescue preview's confirm),
+  the missing form's Submit, "Add to my queue", Compare verdicts (and the §3.5
+  confirm layer's Confirm), and Sign — not
+  just verdict/compare/sign; any attempted commit
   toasts "Read-only right now — this call was not saved." Search, ⌘K, Context, History
   (GETs) keep working. Health refetches on window focus and after any failed POST. 503
   `artifact_unavailable` gets the same toast.
 - 400 `validation_failed`: toast "Something about this call was rejected — nothing was
   saved." (details to console) — **except** the already-displayed missing rejection,
-  detected by message per §3.3, which gets the specific toast + scroll.
+  detected by message per §3.3, which gets the specific toast + scroll (from the
+  missing form, §3.3; from a rescue confirm it first closes the preview layer,
+  §3.1) — and **except** a mid-bulk failure, which gets the §3.2 partial-batch
+  receipt (k rows did save, so "nothing was saved" would be false).
 - 409 `review_snapshot_required`: silent one-shot recovery per §4.6; only if ranks
   changed does the data-changed banner appear.
+- **Unnamed failures (binding — D39's table maps every api-layer function to a §3.11
+  string, so no failure surface is ever invented at implementation time)**: any GET
+  failure not named above renders the fallback sentence in its owning surface:
+  "That part of the workbench did not load. Reload the page to try again." — a
+  failed boot fetch (`/api/meta`, `/api/concepts`, `/api/v2/health`,
+  `/api/v2/cases`) shows it once as a toast; a failed rail fetch (context, inbox)
+  shows it inline in that rail section; a failed `GET /api/passage` verse fetch
+  keeps the §3.1 excerpt rendering (already specified — no error state); a
+  `/fonts/**` failure shows nothing (the §4.7 fallback stacks carry the page). Any
+  POST failure not named above (network error / 5xx on a commit) toasts "That call
+  did not save — the engine did not answer. Try it again in a moment." — except a
+  mid-bulk failure, which gets the §3.2 partial-batch receipt; a failed
+  `POST /api/v2/cases/:uuid/state` shows nothing (bookkeeping — §4.3 ignores and
+  logs it).
 - Empty states elsewhere: History zero-calls (§3.6), empty queue rail and omitted
   Worth-a-look (§3.4), Compare empty (§3.5), search empty/invalid-reference (§3.1) —
   every empty state invites exactly one action, per the copy voice.
@@ -609,17 +914,21 @@ the token sheet. Dark derives from its own token column, never inversion.
 | E | focused top-block row | Essential at current top-N | toolbar button |
 | H | focused top-block row | Helpful | toolbar button |
 | X | focused top-block row | Open not-relevant interview | toolbar button |
-| M | Review | Open missing-passage form | toolbar button + "Missing a passage?" link |
-| ← / → | top-N picker focused | Change the top-N for Essential (Enter/Space selects) | picker segments |
-| E or Enter | focused tail row | "Should be near the top" | row button |
+| M | Review — discovery results (or their zero-result empty state) on screen | Open missing-passage form | toolbar button + "Missing a passage?" link + empty-state button |
+| M | Review — pre-search, `reference`, or `invalid-reference` view | Inert: hint toast "Search words or phrases first — a suggestion attaches to the search that misses it." — no form opens, no POST fires (§3.2 gate) | — (the toolbar is absent in these states) |
+| ← / → | top-N picker focused | Move the selection between 1/3/5/10 — selection follows focus (radiogroup pattern, §3.2), so the arrow alone changes the value the next E commits; Space also selects | picker segments |
+| E | focused tail row | "Should be near the top" — ALWAYS opens the §3.1 rescue preview (single-verse confirm mode or pick-chip mode); never posts on the first keypress | row button |
+| Enter | focused tail row | No-op — the verse already reads in the rail (§3.1); Enter never commits a rescue | — |
 | H / X / M | focused tail row | Hint toast: "Lower results take one action — "Should be near the top"." | — |
 | U | Review | Reopen toast target, else last verdict (Essential/Helpful/Not relevant only — a suggestion or rescue target shows the §3.3 permanence sentence instead, and nothing posts; after a bulk commit U targets nothing and shows the §3.2 hint toast) | chip/toast "Undo" link |
 | Space | focused top-block row | Toggle bulk checkbox (disabled on judged rows — §3.2) | checkbox |
 | Enter | Search input | Submit search | Search button |
+| Enter | Missing form — reference input | Activates Submit only when Submit is enabled (a single verse resolved or picked — the resolved verse has by then rendered in the preview, so Enter-when-enabled is always post-preview); while Submit is disabled, Enter is a no-op — the form is never a native `<form>`, so no raw browser submit can fire (§3.3) | Submit button |
+| (post-search handoff) | Discovery results just rendered | Focus moves from the search input to card #1 (first unjudged when the query has an open case); the input keeps its value; `reference` / `invalid-reference` / zero-result submits leave focus in the input (§3.1 handoff rule) | Search button and ⌘K row selection trigger the same handoff |
 | ⌘K / Ctrl+K | Everywhere | Toggle quick lookup | header "Look something up ⌘K" button |
-| A / B / T / W | Compare | A wins / B wins / Tie / Both wrong | toolbar buttons |
+| A / B / T / W | Compare | Open the §3.5 one-confirm layer for that call ("You're calling it: {label}."); only the layer's Confirm posts — the key alone never commits | toolbar buttons |
 | ? | Everywhere | Shortcut sheet (Move · Judge · Compare · Everywhere; "Esc to close") | rail-footer "all shortcuts" button |
-| Esc | Layered | Close topmost layer: interview → missing form → lookup → sheet → bulk selection | each layer's Cancel/× button |
+| Esc | Layered | Close topmost layer: interview → missing form / rescue preview / Compare confirm (one shared slot — at most one of the three is ever open) → lookup → sheet → bulk selection | each layer's Cancel/× button |
 | Tab / Shift+Tab | Everywhere | Standard traversal; roving tabindex in the results list | — |
 
 Typing in an input suppresses single-letter shortcuts (Esc still closes the layer); ⌘K
@@ -641,10 +950,20 @@ persisted toggle — "Single-key shortcuts: On / Off" (localStorage `study.short
 default On). Off disables all single-letter shortcuts (J/K/E/H/X/M/U/A/B/T/W/?); Esc,
 Enter, Tab, arrows, and ⌘K remain. Every action stays reachable by its visible button.
 
-**Layer focus contract** (shared rule for the interview, missing form, ⌘K lookup, `?`
-sheet, and onboarding): every layer is a focus trap. On open, focus moves to the
+**Layer focus contract** (shared rule for the interview, missing form, rescue
+preview, the Compare confirm (§3.5), ⌘K lookup, `?` sheet, and onboarding): every
+layer is a focus trap, and its
+dialog element carries `role=dialog`, `aria-modal="true"`, and `aria-labelledby`
+pointing at its title (asserted in D35). On open, focus moves to the
 layer's first interactive element (the reference input for the missing form, the
-search input for the lookup). Tab/Shift+Tab cycle within the layer only. On close
+search input for the lookup) — with one deliberate exception class: **the rescue
+preview's initial focus is its Cancel button in single-verse confirm mode and the
+pre-selected pick chip in pick-chip mode, and the Compare confirm's initial focus
+is its Cancel button — never a Confirm button**, so a
+reflexive E-then-Enter (or A-then-Enter) double-tap cannot commit (the exact
+motor-slip class these
+layers exist to absorb must not be reintroduced through DOM order; asserted
+in D18 and D27). Tab/Shift+Tab cycle within the layer only. On close
 (Esc, Cancel, or commit), focus returns to the element that opened it (the focused
 result card for the interview).
 
@@ -716,15 +1035,17 @@ mechanism's table:
 ### 4.3 Endpoints per interaction
 | Interaction | Calls |
 |---|---|
-| Boot | `GET /api/meta` (identity trio → localStorage compare), `GET /api/concepts` (id→label cache), `GET /api/v2/health` (read-only detection), `GET /api/v2/cases` (queue) |
+| Boot | `GET /api/meta` (identity trio → localStorage compare), `GET /api/concepts` (id→label cache), `GET /api/v2/health` (read-only detection), `GET /api/v2/cases` (queue; with open cases the first open case then loads per §3.1's boot state — with none, no further request until the first search submit) |
 | Search submit / ⌘K typing | `GET /api/search?q=…` (stale responses dropped via request sequence counter) |
 | Why-rail Context tab — driven by the focused top-block card, and by a focused tail row (§3.1 read-before-rescue binding; the rail fronts Context when focus enters the tail) | `GET /api/v2/context?ref=…` |
+| Focused-card verse body (§3.1); missing-form live preview + pick-chip re-resolve (§3.3); tail-rescue resolution + range detection (§3.1/§4.4) | `GET /api/passage?ref=…` (stale responses dropped via the same request-sequence counter) |
 | Open existing case (queue click / search matching an open case) | `GET /api/v2/cases/:uuid` → `{case, review}` (snapshot + token); `GET /api/v2/judgments?caseId=…` → judged map; `GET /api/search?q={case.query}` → tail ranks 11+ (plus the §4.6 reference-per-rank agreement check) |
 | First vote on a case-less query (verdict, suggestion, or tail rescue — decision 6) | `POST /api/v2/cases` `{query, source:'manual'}` → `{case, review:{token,…}}`, then the judgment POST, then `POST /api/v2/cases/:uuid/state` `{state:'reviewing'}` |
 | "Add to my queue" | `POST /api/v2/cases` `{query, source:'manual'}` only |
 | Any vote / suggestion / rescue / supersede | `POST /api/v2/judgments` (routing fields `caseId` + `snapshotToken` + client fields per §4.4) |
 | Top-10 completed | `POST /api/v2/cases/:uuid/state` `{state:'judged'}` (409 `invalid_case_transition` ignored, logged) |
 | Worth-a-look suggestions | `GET /api/v2/inbox` |
+| Queue counts, Finish-up tiles & pending banner (§3.4 "{j}/{m}", §3.7 four tiles + "{n} of {m}") | **"Open case" = `state ∈ {new, reviewing, judged}`** (the first three of `CASE_STATES`, `workbench/src/cases.ts:23–35`; judged stays open until its calls are compiled — the changed-set from `POST /api/v2/compile/preview` says when; v1 approximates by including all judged cases minus those the §3.7 post-apply re-preview has locally marked compiled). This matters because §4.3's own auto-transition moves a case to `judged` the moment its top-10 completes — a naive new/reviewing filter would drop a just-completed case from the Finish-up tiles at exactly the moment the reviewer goes to sign. For each open case: `GET /api/v2/judgments?caseId=…` (supersede-resolved judged map → j and the four tile tallies) and `GET /api/v2/cases/:uuid` (`review.result.results.length` — already capped server-side at `REVIEW_WINDOW`, `reviewCases.ts:83–85` — → m; reused snapshots make this cheap for recently touched cases — accept the fresh-capture cost otherwise, bounded by the LRU-128 store). When a case's `review` comes back `null` (`server.ts:1618–1628` — no stored snapshot and the engine unavailable, the degraded-with-engine-down case): m is unavailable for that case, its queue count renders "{j} judged" with no denominator, and it drops out of the pending banner's m — with every such case null the banner is omitted; signing is disabled by §3.11 anyway |
 | Compare | `GET /api/v2/candidates`; `POST /api/v2/candidates/:reviewId/blind-sessions` `{requestId}` (client `crypto.randomUUID()`, persisted per reviewId for resume); `GET …/blind-sessions/:sessionId`; `GET …/passages?queryId=…&passageId=…` (exactly those two params); `POST …/blind-sessions/:sessionId/judgments` |
 | History | `GET /api/v2/cases`, then `GET /api/v2/judgments?caseId=…` per shown case |
 | Finish up | `POST /api/v2/compile/preview` → `{plan}`; `POST /api/v2/compile/apply` `{digest: plan.digest}` |
@@ -747,7 +1068,7 @@ Every judgment POST body = `{caseId, snapshotToken}` + the client fields below (
 | Not relevant — concept step 1 "No, it doesn't" | `action:'irrelevant'`, `targetId`, `diagnosis:'wrong-anchor'`, `conceptId`*, `note` (required — the §3.2 why text; `judgments.ts:555–559` demands both the concept id and a non-empty note). **No `diagnosisInferred` key at all**: the server rejects any value other than `true` or absence (`judgments.ts:551–552` — "Omit \"diagnosisInferred\" or send diagnosisInferred: true only."), and this diagnosis is human-chosen, not inferred |
 | Not relevant — concept "Yes" → step 2 "Right — not a fit here" | `action:'irrelevant'`, `targetId`, `diagnosis:'concept-misfire'`, `conceptId`*, `note` (required, same rule). No `diagnosisInferred` key |
 | Missing passage [M] | `action:'missing'`, `reference` — **always the canonical resolved label from the `GET /api/passage` preview (`passage.reference`), never the raw input** (§3.3); the client enforces `passage.verses.length === 1` (via the pick chip when needed) before enabling submit — the server rejects multi-verse references; `withinTop`, `note?` (the phrases-people-might-type text) |
-| Tail rescue "Should be near the top" | `action:'missing'`, `reference` (the tail row's `DiscoveryResult.reference` — already canonical), `withinTop:10` |
+| Tail rescue "Should be near the top" | `action:'missing'`, `withinTop:10`, `reference` — **never the row's raw `DiscoveryResult.reference`: resolve `row.reference` via `GET /api/passage` before posting** (the focused-card resolution, §3.1, is reused when present). The engine collapses adjacent anchor-run verses into one result with a **range** reference (`collapseAnchorRuns`, `engine/src/createEngine.ts:356, 594–677` — e.g. "Psalm 46:1-3", minted as `` `${referenceLabel(first)}-${final.verse}` ``; the merged row keeps the run's first verse's `targetId`, `createEngine.ts:653–656`), and the server rejects any multi-verse `missing` reference (`resolveReferenceTargetId`, `server.ts:586–591`: `verses.length === 1`; `judgments.ts:512–515` → 400 "could not be resolved to an exact target identity"). Every rescue commits through the §3.1 rescue preview — read, then one confirm; nothing posts on the first keypress: when `passage.verses.length === 1` the preview shows that one verse and its confirm posts the canonical `passage.reference`; when > 1 the pick-chip mode opens with the run's first verse (the verse the row's `targetId` addresses) pre-selected, and the confirm posts the picked verse's canonical single-verse `passage.reference`. The rescue receipt names the confirmed verse |
 | Any change of an existing call | same fields as the new call + `supersedes:<active judgment id>` |
 
 \* When the Named-by label resolves to no id in the `/api/concepts` cache (the old UI
@@ -830,34 +1151,55 @@ fallback stacks, so the page works if fonts 404.
 ### 4.8 Single-file structure of study.html
 Ordered sections, each marked `<!-- §name -->` in markup and `// §name` at the start of
 each JS stage, so reviews and tests can address them mechanically: (1) head: protocol
-meta, title, `<style>` — tokens, then components in screen order; (2) body skeleton:
-header, nav, banner slot, screen containers (landmarks), toast + dialog slots; (3) one
-inline IIFE `'use strict'` script, in order: `// §routes` `ROUTES` constant (all
+meta, title, the §3.10 theme-stamp micro-script (its own tiny IIFE, before the
+`<style>` block so first paint is theme-correct — the snapshot validator joins all
+inline scripts, `staticSnapshot.ts:466`, so a second inline script is contract-valid),
+`<style>` — tokens, then components in screen order; (2) body skeleton:
+header, nav, banner slot, screen containers (landmarks), toast + dialog slots; (3) the
+main inline IIFE `'use strict'` script, in order: `// §routes` `ROUTES` constant (all
 `REQUIRED_INLINE_ROUTES` literals) → `// §copy` constants/copy table → `// §state`
 `state` + localStorage persistence → `// §request` `requestJson` → `// §api` api layer
 (**one named function per endpoint** — this marker-delimited list is what D39's parity
 vitest reads) → `// §stores` (cases, concepts, judged-map, health) → `// §helpers` pure
 helpers (`node()`, `clear()`, normalizeQuery, relativeTime, supersede resolution) →
 `// §render` renderers (one per screen + shared card/toast/banner) → `// §keys` single
-`onKey` handler with the layer stack → `// §boot`. No globals beyond the IIFE; no
-`eval`; no dynamic script injection.
+`onKey` handler with the layer stack → `// §boot`. No globals from either script
+(the head micro-script is an IIFE too); no `eval`; no dynamic script injection.
 
 ### 4.9 localStorage schema
 `study.theme` (`'light'|'dark'|'auto'`) · `study.onboarded` (`'1'`) · `study.withinTop`
 (`1|3|5|10`) · `study.shortcuts` (`'1'|'0'`, default `'1'` — §3.12 single-key toggle) ·
-`study.ui.v1` (JSON: `lastQuery`, `lastSeenMeta:` the identity trio,
+`study.ui.v1` (JSON: `lastQuery` — consumed in exactly one place, the §3.1 boot
+state, to pre-fill the search input's value on a no-open-case boot; it never
+auto-submits and never fetches; `lastSeenMeta:` the identity trio;
 `blindRequestIds:{[reviewId]:uuid}`). Disjoint from the old `workbench-ui-state-v3` key.
 
 ### 4.10 Old-UI preservation & the flip
 - P1–P4: old UI at `/` (default, untouched); new UI at `/study`; the new UI's Advanced
   screen links to `/` ("Open the full engineering console →").
-- Flip (D41, its own PR, merged only when Jesse says go): `study.html` content becomes
+- Flip (D41, its own PR, merged only on Jesse's go and after the pre-flip D42
+  real-server run recorded in the PR — D41 states the gate): `study.html` content
+  becomes
   `static/index.html` (served at `/`); the old page moves byte-identical to
   `static/advanced.html` (served at `/advanced` via the secondary-pages table — its
-  same-origin absolute `/api/...` fetches work unchanged); `/study` becomes a 302 →
+  same-origin absolute `/api/...` fetches work unchanged); **`static/study.html` is
+  deleted in the same commit** (the redirect entry replaces its table entry);
+  `/study` becomes a 302 →
   `/` via the table's redirect entry (§4.2); Advanced links point at `/advanced`;
-  static-contract vitest expectations and `study-p4.spec.ts`'s Advanced-link assertion
-  move in the same commit (D41 lists both).
+  static-contract vitest expectations, `study-p4.spec.ts`'s Advanced-link assertion,
+  and the four old-console Playwright specs' served-file path — each reads
+  `../static/index.html` today (`core-review.spec.ts:17`,
+  `candidate-review.spec.ts:12`, `studio-operations.spec.ts:10`,
+  `admission-publish.spec.ts:47`) and retargets to `../static/advanced.html`, a
+  path change only — all move in the same commit; **so does every study-side test
+  that reads `static/study.html` by path** — the five `study-p1..p5` specs' served
+  file, the D5/D40 study static-contract vitests, D35's `contrast.audit.test.ts`,
+  and D39's §api parity vitest all retarget to `../static/index.html` (D41 lists
+  every group and adds a stale-path sweep vitest;
+  without the old-console spec retarget those four specs would load the Study page
+  at the flip and every old-console assertion in them would fail CI, and without
+  the study-side retarget every study guard would validate a deleted or stale
+  file).
 
 ---
 
@@ -884,19 +1226,35 @@ helpers (`node()`, `clear()`, normalizeQuery, relativeTime, supersede resolution
 Every phase: its own PR for human merge; old UI stays default at `/` until D41; exit =
 demo spec green + `npm run typecheck --workspace workbench` + `npm test --workspace
 workbench` (Playwright via `npm run test:browser --workspace workbench`; fresh
-containers first run `npx playwright install chrome`). Specs follow the repo pattern:
-throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mocked via
+containers first run `npx playwright install chrome`). Every P1–P4 PR description
+states the development URL — after `npm run serve --workspace workbench`, open
+`http://127.0.0.1:8787/study` — so Jesse can reach the new page without
+out-of-band instructions (the old console at `/` is byte-untouched and cannot
+link to it). Specs follow the repo pattern:
+throwaway `http.createServer` serving `../static/study.html` — read via
+`readFile(new URL('../static/study.html', import.meta.url))` exactly as
+`core-review.spec.ts:17` reads the old page; this path is load-bearing and
+retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocked via
 `page.route`, zero console/page errors asserted.
 
 ### P1 — Shell, theme, real search (read-only) · PR "study: shell + search"
 - **D1. Commit `workbench/DESIGN.md`** — the prototype token sheet (transcribed from
-  `dc.html:14–38`, both themes — §3.0), rename tables, keyboard model, and the §3.1
+  `dc.html:14–38`, both themes, with §3.0's two pre-approved `--text-3` replacements
+  applied — the committed table carries the passing values), rename tables, keyboard
+  model, and the §3.1
   reason-pill mapping table (family → pill string, so Jesse reviews the wording
-  against the covenant's no-interpretation rule), plus a "Deviations" section (fonts
-  unsubsetted per OFL; the answer-sheet copy substitution §3.7; tokens adjusted later
-  by D35). AC: a vitest (`designTokens.test.ts`) parses the DESIGN.md token table and
+  against the covenant's no-interpretation rule), plus a "Deviations" section: fonts
+  unsubsetted per OFL; the answer-sheet copy substitution §3.7 **and, beside it, the
+  Write-button/success copy substitution ("Write {n} calls to the answer sheet" /
+  "{n} calls are now on the answer sheet." replacing the prototype's "Write {n}
+  judgment(s) to fixture files" / "…in the answer files" — §3.7)**; the two §3.0
+  `--text-3` contrast deviations with their measured ratios (light #847F73 →
+  #6E695E, dark #8A8478 → #948E81) and the `--text-faint` WCAG-exempt reservation;
+  any later token change the D35 audit forces is appended here. AC: a vitest
+  (`designTokens.test.ts`) parses the DESIGN.md token table and
   asserts every token name from the `dc.html:14–38` block appears with a value in
-  **both** the light and dark columns; that the three rename tables contain exactly
+  **both** the light and dark columns (the check is over token *names* — §3.0's two
+  deviations change values only, so it passes unchanged); that the three rename tables contain exactly
   the 7 source, 11 state, and 4 verdict entries matching the server enums —
   `REVIEW_CASE_SOURCES` and the four main-flow actions
   (`essential`/`helpful`/`irrelevant`/`missing`) in `workbench/src/judgments.ts`,
@@ -912,8 +1270,12 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   it as a Modified Version under OFL (rename per Reserved Font Name rules), and record
   the tooling + rename in DESIGN.md Deviations. Record the chosen path in
   `fonts/README.md`. AC: the font files, two `OFL.txt`, and `fonts/README.md` with
-  upstream URLs + sha256 lines + the chosen-path note exist; recomputing the recorded
-  hashes passes.
+  upstream URLs + sha256 lines + the chosen-path note exist; and a committed vitest
+  `workbench/test/fontProvenance.test.ts` reads the sha256 lines from
+  `workbench/static/fonts/README.md`, hashes each committed font file, and asserts
+  equality — so a re-vendored or silently modified font file (the exact
+  OFL-provenance risk this item controls) fails `npm test`, not review; a one-off
+  recompute at merge time is not a standing guard.
 - **D3. Server: font route** per §4.2(2). AC: vitest — GET a known font → 200,
   `content-type: font/woff2` (or `font/ttf` per D2's chosen path), etag, nosniff;
   unknown path under `/fonts/` → 404; route serves in degraded startup mode.
@@ -923,25 +1285,46 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   entry answers 302 with the mapped `Location`; `/` still serves the old page
   byte-identically.
 - **D5. study.html skeleton**: protocol meta, token sheet + theme cycler (§3.10 incl.
-  the Auto change listener and `color-scheme`), header/nav/landmarks, 3-col grid,
+  the Auto change listener, `color-scheme`, and the head theme-stamp micro-script
+  placed before the `<style>` block so first paint is theme-correct — §3.10/§4.8),
+  header/nav/landmarks, 3-col grid,
   `ROUTES` constant, `requestJson`, `node()/clear()` helpers, §4.8 section markers,
   boot fetches (§4.3 Boot row). AC: vitest — `resolveStaticSnapshot` accepts
   study.html (protocol marker + all `REQUIRED_INLINE_ROUTES` literals); Playwright —
   theme cycles auto→light→dark→auto on `data-theme`, persists across reload; dark
   paints `html`/`body` background from tokens; emulating a `prefers-color-scheme` flip
-  while in Auto updates `data-theme` without reload.
+  while in Auto updates `data-theme` without reload; with `study.theme='dark'` seeded,
+  an `addInitScript` recorder asserts
+  `document.documentElement.dataset.theme === 'dark'` already at DOMContentLoaded
+  (before the main IIFE's boot fetches) — no light-first flash; **the §3.1 boot
+  state**: with the mocked `GET /api/v2/cases` returning `[]`, the center pane shows
+  the search bar and the effect-timing contract sentence, zero result cards render,
+  and no `/api/search` request appears in the route log before the first submit;
+  with `study.ui.v1.lastQuery` seeded to "mercy", the search input's value is
+  "mercy" on load and still no `/api/search` has fired. **The contrast audit lands
+  in this item, with the token sheet**: `workbench/test/contrast.audit.test.ts` is
+  committed here with `pairs.json`'s text-tier pairings (entry shape, `minRatio`,
+  `exempt`, and compositing rules per D35's audit spec) and stays green from P1
+  on — §3.0's pre-approved `--text-3` values exist precisely so it passes from day
+  one, and the tokens are settled before any screen is built on them; D35 extends
+  the same file with the non-text (1.4.11) checks and the ARIA role assertions.
 - **D6. Real search + results (read-only)**: form → `GET /api/search`; the §3.1
-  blank-submit no-op; the full §3.1
+  blank-submit no-op; the §3.1 post-search focus handoff; the full §3.1
   four-way kind handling (discovery-with-results / discovery-empty / reference /
   invalid-reference); top-10 cards — unfocused compact form + focused verse panel
-  (Literata, sup markers, boundary-guarded punctuation-tolerant fragment
+  (Literata, verse body fetched via `GET /api/passage` on focus per §3.1's
+  verse-body-source rule — per-verse `sup` markers for ranges, excerpt
+  placeholder/fallback — boundary-guarded punctuation-tolerant fragment
   highlighting, attribution)
   per §3.1; tail
   divider + compact rows (no actions yet) with the §3.1 read-before-rescue rail
   binding; why-rail Why + Context tabs incl. the
   pill mapping and Matched binding; request-sequence stale-drop. AC: Playwright —
   mocked search renders
-  cards in exact mock order; unfocused cards each render reference + single-line
+  cards in exact mock order; after submitting a mocked search,
+  `document.activeElement` is card #1 and pressing J focuses card #2 — no character
+  is inserted into the search input (its value is asserted unchanged) — the §3.1
+  handoff at work; unfocused cards each render reference + single-line
   excerpt and exactly one expanded card exists after pressing J twice; divider shows
   "Lower results (N) —…" and expands; with a collapsed tail, J from card #10 focuses
   the divider button and Enter expands it; J then focuses tail row #11 (§3.1
@@ -973,15 +1356,27 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   reason `points` values (987.65 / 431) and those numerals appear nowhere in the
   rendered page text (no-score covenant, §5); the Matched row shows the mocked
   fragment and "—" when no lexical reason
-  exists; Context renders mocked ±2 verses; of two racing searches only the latest
+  exists; focusing a card fires `GET /api/passage` for its reference and renders
+  the mocked verses with `sup` numbers; a mocked result with reference
+  "Psalm 23:1-4" fetches `/api/passage` and renders four `sup` verse numbers
+  (mocked — every member verse numbered), while its unfocused form still shows one
+  ellipsized line; with the passage mock failing (500), the focused range card
+  keeps the joined excerpt with zero `sup` markers and zero console errors;
+  Context renders mocked ±2 verses; of two racing searches only the latest
   renders.
 - **D7. ⌘K quick lookup** per §3.12 incl. three-kind handling. AC: Playwright — Ctrl+K
   opens with focus in its input; typing ≥3 chars fires mocked `/api/search`; Enter on a
-  row closes the dialog, fills the main search bar, renders those results; a mocked
+  row closes the dialog, fills the main search bar, renders those results, and
+  `document.activeElement` is result card #1 (§3.1 handoff); a mocked
   invalid-reference response renders the §3.1 message and no rows; Esc closes and
   returns focus to the opener; footer contains "never creates a case by itself".
-- **D8. Loading / error states** per §3.11 (skeletons, search-error retry).
-  AC: Playwright — delayed mock shows skeleton then results; 500 mock shows "The engine
+- **D8. Loading / error states** per §3.11 (skeletons, search-error retry, the
+  results live region + skeleton `aria-busy`).
+  AC: Playwright — delayed mock shows skeleton then results; the skeleton container
+  carries `aria-busy="true"` during the delayed mock and no `aria-busy` after settle;
+  the results region's visually-hidden `aria-live="polite"` element receives
+  "{n} results for "{q}"" after the mocked search resolves (and the §3.1 empty-state
+  sentence for a zero-result mock); 500 mock shows "The engine
   did not answer…" and Retry refires the request.
 - **D9. P1 demo spec** `workbench/e2e/study-p1.spec.ts` covering D5–D8 end-to-end.
   AC: green with zero console/page errors; existing specs untouched and green.
@@ -1006,10 +1401,14 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   never the other's.
 - **D12. Verdict toolbar**: E/H + fused top-N picker (persisted default 3, keyboard
   radiogroup per §3.2), §3.2 visibility rules, toast + auto-advance + wrap.
-  AC: Playwright — E posts `{action:'essential',withinTop:3,targetId,…}`; clicking
-  segment "5" then E posts `withinTop:5` and survives reload; focusing the picker and
-  pressing ArrowRight then E posts the changed `withinTop`; toast "Marked {ref}
-  Essential" with the "Undo [U] — your call stands until you choose a new one" chip;
+  AC: Playwright — E posts `{action:'essential',withinTop:3,targetId,…}` and the
+  toast reads "Marked {ref} Essential (top 3)" with the "Undo [U] — your call stands
+  until you choose a new one" chip; after clicking
+  segment "5", E posts `withinTop:5`, the toast reads "Marked {ref} Essential
+  (top 5)" (the receipt names the value that rode the POST — §3.2), and the picker
+  value survives reload; focusing the picker and
+  pressing ArrowRight then E posts the changed `withinTop` (selection follows
+  focus — §3.2);
   focus advanced to next unjudged row.
 - **D13. Not-relevant interview** with fixes (§3.2, §3.13.1–2): auto + concept
   two-step, verbatim copy incl. demotion disclaimer and the no-fragment fallback, the
@@ -1047,7 +1446,13 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   (mock a zero-result search), and (c) is asserted absent from any toast after a vote.
 - **D16. Read-only degraded handling** per §3.11. AC: Playwright — mocked read-only
   health ⇒ banner verbatim with `background` resolving to the `--v-missing-wash`
-  token, verdict buttons `disabled`, E toasts "Read-only right now — this call was not
+  token; verdict buttons, tail-rescue buttons, and "Add to my queue" all
+  `disabled` (the full §3.11 control list as of this phase — the list grows, and
+  **each later §3.11 control lands with its own read-only assertion in its own work
+  item**: D17 the bulk bar, D18 the rescue preview's confirm, D20 the missing form's
+  Submit, D27 the Compare verdicts, D29 the Sign input and Write button — so no
+  POST-issuing control ever ships without a mechanical read-only check); E toasts
+  "Read-only right now — this call was not
   saved." with no POST; mocked recovery on window focus re-enables.
 - **D17. Bulk select**: Space toggles, floating bar, judged rows' checkboxes disabled
   with the §3.2 aria-label, "Mark all helpful" posts one `helpful` judgment per
@@ -1059,17 +1464,36 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   so the selected count always equals the POST count; the bulk toast renders "Marked
   2 passages Helpful." with the exact count and no inline Undo link; pressing U
   immediately after the bulk commit posts nothing and shows the hint toast "Change a
-  bulk call on its card."
-- **D18. Tail rescue**: button + E/Enter on a focused tail row →
-  `{action:'missing', reference, withinTop:10}` (the row's canonical
-  `DiscoveryResult.reference`); H/X/M on tail rows → hint toast; rescue toast + receipt
+  bulk call on its card."; with the second of three mocked judgment POSTs failing
+  (500), exactly one row shows a judged chip, the toast reads "Marked 1 of 3 — the
+  rest did not save. Try them on their cards.", the two uncommitted rows'
+  checkboxes stay selected, and no further POSTs fire after the failure (asserted
+  from the route log — the §3.2 partial-batch receipt, never the all-success or
+  "nothing was saved" copy); under mocked read-only health, the bulk bar's "Mark all
+  helpful" button is `disabled` and clicking it fires zero `/api/v2/judgments` POSTs
+  (the §3.11 bulk-bar entry, asserted where the bar is built).
+- **D18. Tail rescue**: button + E on a focused tail row (never Enter — §3.12:
+  Enter is a no-op on a tail row) ALWAYS opens the §3.1 rescue preview — no rescue
+  posts on the first keypress; confirming posts `{action:'missing', reference,
+  withinTop:10}` with `reference` resolved per §4.4 (always via `GET /api/passage`,
+  never the raw `DiscoveryResult.reference`: a single-verse row's preview shows its
+  one verse with "Confirm — should be near the top"; a range row — a collapsed
+  anchor run — shows the pick-chip mode with the run's first verse pre-selected);
+  H/X/M on tail rows → hint toast; rescue toast + receipt
   chip verbatim (§3.1, incl. permanence sentence); the §3.1 read-before-rescue
   rail binding verified on the action path (built read-only in D6, re-asserted
-  here because it is what stands between one ellipsized snippet line and an
-  uncorrectable commit). AC: Playwright — rescue posts the
+  here because it — with the preview layer — is what stands between one ellipsized
+  snippet line and an uncorrectable commit). **D18 builds the shared rescue/pick
+  preview layer specified in §3.1/§3.3** — pre-filled reference, single-verse
+  confirm mode and per-verse "Add this verse" pick-chip mode, in-layer permanence
+  line, confirm/cancel, reference input omitted; D20 extends this same component
+  with the reference input, debounced live preview, and unresolved/
+  failed-resolution copy — one component, two entry modes, so an implementer
+  reading phase order does not duplicate it. AC: Playwright — a confirmed rescue
+  posts the
   exact body and the toast reads "Noted — {ref} should rank near the top for "{q}".
-  Saved to your calls for the next reviewed update."; on a case-less query, a rescue
-  click issues POST /api/v2/cases `{query, source:'manual'}`, then POST
+  Saved to your calls for the next reviewed update."; on a case-less query, a
+  confirmed rescue issues POST /api/v2/cases `{query, source:'manual'}`, then POST
   /api/v2/judgments `{action:'missing', reference, withinTop:10}` with the returned
   snapshotToken, then POST state `{state:'reviewing'}` — same sequence and race guard
   as D10, bodies asserted; the §3.1 pre-commit line "A rescue is recorded like a
@@ -1078,9 +1502,38 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   focusing mocked tail row #11 fetches `/api/v2/context` for its reference and
   renders the mocked verses in the fronted Context tab before any rescue POST
   occurs (asserted: the context request appears in the route log before the
-  first `/api/v2/judgments` POST); rescued
+  first `/api/v2/judgments` POST); **Enter on a focused tail row fires no POST and
+  opens no layer (asserted), while E and the row button both open the rescue
+  preview (asserted: the layer is visible and zero judgment POSTs have fired)**;
+  a mocked single-verse tail row opens the preview showing its one mocked verse —
+  E alone posts nothing (asserted) — and clicking "Confirm — should be near the
+  top" posts a `reference` equal to the mocked `/api/passage` resolution's
+  canonical `passage.reference`, with the §3.3 permanence line visible inside the
+  layer before that POST; a mocked tail row with reference "Psalm 23:1-4" opens the
+  pick chips on rescue (E alone posts nothing), and confirming a picked chip posts
+  that verse's mocked single-verse canonical reference — the range string
+  "Psalm 23:1-4" appears in no POST body (asserted across the route log); a mocked
+  tail row with reference "Psalm 46:1-3", rescued with the pre-selected default
+  kept, posts reference "Psalm 46:1" — the run's first verse, mocked
+  `/api/passage` resolution asserted — never the range string, and the §3.3
+  permanence line is visible inside the rescue preview before the confirming POST;
+  **on preview open, `document.activeElement` is the Cancel button (single-verse
+  confirm mode) / the pre-selected pick chip (pick-chip mode) — never the Confirm
+  button — and pressing Enter immediately after E fires no `/api/v2/judgments`
+  POST (asserted for both modes; the §3.12 focus-contract exception)**; a mocked
+  rescue confirm answered 400 `validation_failed` whose message contains "already
+  present in the judged result set" closes the preview layer, focuses the matching
+  top-block card, and shows the §3.3 already-displayed toast — not the generic
+  §3.11 toast (asserted; the §3.1/§4.6 mismatch branch);
+  Esc in the rescue preview closes it with no POST and returns focus to the tail
+  row; under mocked read-only health the tail rescue buttons are `disabled` and E
+  opens no preview and fires no POST (the §3.11 toast shows instead), and with the
+  preview already open when a mocked health refetch (window focus, §3.11) comes
+  back read-only, the preview's confirm button is `disabled` and clicking it fires
+  no POST; rescued
   row shows a receipt chip carrying the §3.1
-  permanence sentence; pressing U while the rescue toast is visible posts nothing and
+  permanence sentence (for a range rescue the chip names the picked verse, not the
+  range); pressing U while the rescue toast is visible posts nothing and
   shows the permanence sentence; X on a tail row fires no POST and shows the hint.
 - **D19. P2 demo spec + payload contract vitest** — `study-p2.spec.ts` covering
   D10–D18 incl. every payload assertion above, plus
@@ -1092,8 +1545,12 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   `resolveReference`/`resolveReferenceTargetId`), asserting every row validates ok
   against the real server validator. AC: both green, zero console/page errors in the
   spec; a payload the server would reject fails `npm test`, not the manual smoke
-  (negative fixture: a body with `diagnosisInferred:false` is asserted to FAIL
-  validation).
+  (negative fixtures: a body with `diagnosisInferred:false` is asserted to FAIL
+  validation, and a `missing` body whose stubbed `resolveReferenceTargetId`
+  returns `null` — the multi-verse/range case, `judgments.ts:512–515` — is
+  asserted to FAIL with the "could not be resolved to an exact target identity"
+  reason, pinning the very rejection the §3.1/§4.4 range-rescue rule exists to
+  avoid).
 
 ### P3 — Suggestions · PR "study: missing passages"
 - **D20. Missing-passage form** per §3.3: all entry points, live debounced
@@ -1101,7 +1558,8 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   pre-commit permanence line, single-verse rule with pick chips,
   canonical-reference rule, disabled-until-single-verse submit, top-N picker, note
   placeholder verbatim, Esc/Cancel + focus contract, already-displayed redirect (client
-  pre-check AND server-message detection), submit → `{action:'missing', reference,
+  pre-check against the displayed top-10 AND the fetched tail — §3.3 — plus
+  server-message detection), submit → `{action:'missing', reference,
   withinTop, note?}`. AC: Playwright — the §3.3 permanence line ("A suggestion can't
   be taken back here — …") is visible on the open form **before any POST occurs**
   (asserted prior to submit); a mocked non-resolving input shows the
@@ -1115,10 +1573,26 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   submit posts the exact body incl. the typed note; on a case-less query, submit
   issues POST /api/v2/cases before POST /api/v2/judgments (bodies asserted); a ref
   matching a displayed top-10 card focuses that card and toasts §3.3 copy without
-  posting; a mocked 400 `validation_failed` whose message contains "already present in
+  posting; with a displayed top-10 card mocked as the range "Psalm 23:1-4", typing
+  "Psalm 23:2" (mocked `/api/passage` resolutions for both) triggers the
+  already-displayed toast and scrolls to that card with zero `/api/v2/judgments`
+  POSTs — the member-verse comparison, not the string compare; a typed ref matching
+  a mocked tail row's reference expands the tail, focuses that row, shows the
+  rescue-instead toast ("That passage is already in the lower results — rescue it
+  there instead."), and fires no judgment POST; a mocked 400 `validation_failed` whose message contains "already present in
   the judged result set" triggers the already-displayed toast + scroll, not the
   generic §3.11 toast; pressing U while the suggestion receipt is the toast target
-  posts nothing and shows the permanence sentence.
+  posts nothing and shows the permanence sentence; pressing Enter in the reference
+  input while Submit is disabled (unresolved input, and again with a 2-verse
+  resolution before any chip is picked) fires no `/api/v2/judgments` POST (asserted
+  from the route log); after a mocked single-verse resolution, Enter in the
+  reference input posts the same body as clicking Submit (asserted — the §3.12
+  missing-form Enter row); **pressing M before any search, and again on a mocked
+  `reference`-kind view, opens no form and fires no POST — the §3.2 hint toast
+  "Search words or phrases first — a suggestion attaches to the search that misses
+  it." renders (asserted, both states), and the verdict toolbar is absent from the
+  DOM in both** (the §3.2 M gate); under mocked read-only health
+  the form's Submit is `disabled` (§3.11's control list) and no POST fires.
 - **D21. Empty-results suggestion path** (§3.1 empty state → form pre-linked to the
   query; case lazily created on submit per decision 6). AC: Playwright — empty search
   → "Add the missing passage" → submit issues POST /cases then POST /judgments (bodies
@@ -1136,8 +1610,20 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   live-update incl. the reopened count; queue empty state. AC: Playwright — two mocked
   open cases; clicking the waiting entry flips rail header, search input value, and
   focused row, fires `GET /api/search` for that query, and renders its tail divider;
-  counts update after a judgment; with zero open cases the queue section shows
-  "Nothing waiting — search for something you would actually type."
+  **the "{j}/{m}" counts derive from the §4.3 counts-row fetches, not from
+  nowhere: one `GET /api/v2/judgments?caseId=…` and one `GET /api/v2/cases/:uuid`
+  per open case appear in the route log, j equals the supersede-resolved count of
+  the mocked judgments (a mocked superseded record does not inflate j), and m
+  equals the mocked `review.result.results.length`; a third mocked case in state
+  `merged` renders no queue entry and triggers neither fetch, while one in state
+  `judged` renders "{m}/{m}" (the §3.4 open definition, both branches asserted)**;
+  counts update after a judgment; **on boot with those two open cases mocked, the
+  first open case in the (newest-first) list loads as if its queue row were
+  clicked — its case fetches and tail `GET /api/search` appear in the route log,
+  the rail header and search input sync (the §3.1 open-case boot state)**; with
+  zero open cases the queue section shows
+  "Nothing waiting — search for something you would actually type." and no
+  `/api/search` fires on boot (§3.1 boot state, case-less half).
 - **D25. Per-query done state + next-search chaining** (§3.4 exact copy).
   AC: Playwright — judging all top-block rows shows "All {n} judged." with accent "Next
   search:…" when another open case has unjudged items; clicking switches; with
@@ -1148,23 +1634,49 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   submits that query; with an empty mocked inbox the section (header included) is
   absent.
 - **D27. Compare** (§3.5): candidates list → blind session start/resume with persisted
-  requestId, two lists, synced passage panel, A/B/T/W keys + buttons, reveal +
+  requestId, two lists, synced passage panel, A/B/T/W keys + buttons opening the
+  §3.5 one-confirm layer (initial focus on Cancel — the §3.12 exception), reveal +
   immutability copy, empty state. Session/passage field names ported from the old UI's
   compare code (index.html `:2779`, `loadComparisonReviews :3730`). AC: Playwright —
   start posts `{requestId:<uuid>}`, reused after reload; clicking a verse fetches
-  passages with exactly `queryId`+`passageId` params; A posts the session judgment and
-  shows "You preferred Set A — the current engine."; empty candidates shows §3.5 copy.
+  passages with exactly `queryId`+`passageId` params; **pressing A alone fires no
+  POST and opens the confirm layer (asserted: the layer is visible, its title reads
+  "You're calling it: A wins.", its body carries the §3.5 finality sentence, and
+  zero session-judgment POSTs have fired); on layer open `document.activeElement`
+  is its Cancel button, and pressing Enter immediately after A fires no POST (the
+  A-then-Enter slip absorbed); clicking "Confirm — A wins" posts the session
+  judgment and
+  shows "You preferred Set A — the current engine."; Esc closes the layer with zero
+  POSTs and focus returns to the toolbar button that opened it**; empty candidates
+  shows §3.5 copy;
+  under mocked read-only health (the `readOnly` flag on GET `/api/v2/candidates` and
+  mocked `/api/v2/health`), the A/B/T/W buttons are `disabled` and pressing A opens
+  no confirm layer and fires
+  no POST, toasting "Read-only right now — this call was not saved." (the §3.11
+  Compare-verdicts entry, asserted where the controls are built).
 - **D28. History** (§3.6): humanized rows, superseded strikethrough + "Replaced by a
   newer call.", zero-calls empty state, lazy per-case fetch, 20 + "Show more", no raw
   IDs. AC: Playwright — a mocked chain (A superseded by B) renders A struck with the
-  sub-line and B normal; with zero mocked cases the screen shows "Nothing on record
+  sub-line and B normal; a rescue performed in-session (via the D18 flow) then
+  shown in History renders the "Rescued … from the lower results" phrasing, while
+  a mocked prior-session `missing` record renders "Added … as a missing passage"
+  (both branches asserted); with zero mocked cases the screen shows "Nothing on record
   yet. Your first call on any search result will appear here." and its "Go to Review
   →" button navigates; a jargon regex (`[0-9a-f]{8}-` and `sha256`) finds zero matches
   in the History screen's text.
 - **D29. Finish up** (§3.7): stat tiles across all open cases, pending banner incl.
   reopened counts, what-will-be-written derived from the compile plan's changed set,
   signing gate (12-hex grouped code, exact-match enable), apply with full digest, all
-  three outcome paths, empty-changed-set state + footnote. AC: Playwright — a mocked
+  three outcome paths, empty-changed-set state + footnote. AC: Playwright — **the four
+  stat tiles and the pending banner's "{n} of {m}" tally across the mocked open
+  cases from the §4.3 counts-row fetch pair (one `GET /api/v2/judgments?caseId=…`
+  and one `GET /api/v2/cases/:uuid` per open case, asserted in the route log): each
+  tile equals the supersede-resolved mocked judgment count for its action, and m
+  equals the summed mocked `review.result.results.length`; a mocked case in state
+  `judged` with unwritten calls still contributes to the tiles (the §3.4 open
+  definition — a case auto-transitioned on top-10 completion must not vanish at
+  signing time) and a mocked case in state `merged` contributes nothing (both
+  branches asserted)**; a mocked
   plan whose operations carry real `CompiledFixture` JSON in `afterText` renders "Must
   rank: {ref} in the top {n}" per expectedTop entry and "Must not rank: {ref} — {why}"
   per mustNotRank entry, grouped under the query; an expectedTop ref matching a local
@@ -1176,14 +1688,28 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   the §3.7 plain phrases ("listed under a theme it does not speak about" / "speaks
   about the theme, but is not an answer for this query"), never the token; a
   mocked operation whose `afterText` hashes equal to its `beforeSha256` renders
-  nothing and is excluded from the "Write {n}" count; a deletion operation renders
+  nothing and is excluded from the Write button's {n} count; a deletion operation renders
   "Withdrawn: "{query}" — no calls remain to write."; mocked `proposedSelections`
   render the test-corpus line; a locally-reopened judgment's line carries the
   "(reopened — this earlier call stands unless you change it)" suffix; with an
-  all-unchanged mocked plan the empty-changed-set copy + footnote render; button
-  disabled until the shown code is typed (case-insensitivity tested); apply posts the
+  all-unchanged mocked plan the empty-changed-set copy + footnote render; **the
+  Write button's label reads "Write 1 call to the answer sheet" with a one-line
+  changed set and "Write 3 calls to the answer sheet" with three (real
+  pluralization asserted, never "(s)" — §3.7)**; button
+  disabled until the shown code is typed (case-insensitivity tested); pressing Enter
+  in the sign input before the code matches fires no `/api/v2/compile/apply` POST,
+  and with the exact code typed Enter posts the same body as clicking Write
+  (asserted — the §3.7 Enter rule); apply posts the
   FULL mocked digest; 409 `stale_preview` re-previews with a new code and the §3.7
-  line; success shows "Written." and the answer-sheet copy.
+  line; success shows "Written." and "{n} calls are now on the answer sheet…" (the
+  answer-sheet copy); **after the mocked successful apply, the follow-up
+  `POST /api/v2/compile/preview` fires exactly once (route log), and with its
+  mocked plan all-unchanged for one case's query, that case's queue row and its
+  stat-tile contributions disappear while a case with remaining changed operations
+  stays (the §3.7 post-apply drop, both branches asserted)**; under mocked read-only
+  health the Sign input and the "Write {n} calls to the answer sheet" button are
+  `disabled` and no `/api/v2/compile/apply` POST fires (the §3.11 Sign entry — the
+  highest-stakes control ships with its own mechanical read-only check).
 - **D30. Advanced summary screen** (§3.8): health/identity in mono, console link href
   `/` (pre-flip), Back to Review. AC: Playwright — the trio from mocked `/api/meta` is
   visible in mono only on this screen; the console link href is exactly `/`.
@@ -1200,15 +1726,34 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   "Single-key shortcuts" Off makes E on a focused row a no-op (no POST) while the
   toolbar button still commits, and the setting survives reload.
 - **D34. Keyboard/focus audit**: roving tabindex in the results list, Esc layer order
-  (interview → form → lookup → sheet → bulk), input typing suppression, the §3.12
+  (interview → form / rescue preview / Compare confirm → lookup → sheet → bulk),
+  input typing suppression, the §3.12
   layer focus contract on every layer, every §3.12 row implemented. AC: Playwright — a
-  scripted walk asserts each §3.12 mapping (one assertion per row) and the Esc layer
+  scripted walk asserts each §3.12 mapping (one assertion per row — the tail-row
+  Enter no-op included: Enter on a focused tail row fires no POST and opens no
+  layer; the post-search focus-handoff row included: after a mocked submit,
+  `document.activeElement` is card #1 and the search input's value is unchanged;
+  the missing-form Enter row included: Enter in the reference input with Submit
+  disabled fires no POST, Enter with a resolved single verse posts — same
+  assertions as D20's, re-walked here so the audit stays complete against the
+  table; **the two M rows included: M before any search, and again on a mocked
+  `reference`-kind view, opens no form and fires no POST while the §3.2 hint
+  toast renders (asserted — same as D20's, re-walked), and M with discovery
+  results on screen opens the form; the A/B/T/W row included: A opens the §3.5
+  confirm layer and fires no POST until its Confirm — same as D27's, re-walked**)
+  and the layer focus contract's confirm exceptions (initial focus on
+  Cancel / the pre-selected chip, per D18; Cancel on the Compare confirm, per
+  D27) and the Esc layer
   order with two layers open; with the interview open, Tab pressed repeatedly never
   leaves the dialog; Esc returns focus to the previously focused card (asserted via
   `document.activeElement`); opening the missing form focuses its reference input and
   closing it restores focus to the opener.
-- **D35. Contrast + ARIA audit**: committed vitest
-  `workbench/test/contrast.audit.test.ts` — the `.test.ts` name is load-bearing:
+- **D35. Contrast + ARIA audit**: extends the vitest
+  `workbench/test/contrast.audit.test.ts` that landed with the token sheet in D5
+  (P1) and has stayed green since — this item's audit spec is written here in
+  full because D5 builds from it; the text-contrast half plus pairs.json is D5's
+  landing, the non-text (1.4.11) checks and the ARIA/Playwright role assertions
+  below are this item's extension. The `.test.ts` name is load-bearing:
   `npm test` in workbench is `vitest run`, and `workbench/vitest.config.ts` sets no
   custom `include`, so vitest's default collects only
   `**/*.{test,spec}.?(c|m)[jt]s?(x)` — a file named `contrast.audit.ts` would never
@@ -1218,21 +1763,50 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   checks, for **both** themes: (a) WCAG AA text contrast (4.5:1 body / 3:1 for
   ≥18.66px bold or ≥24px) for every foreground/background pairing named in a committed
   `workbench/test/pairs.json` (each text tier on ground/surface/panel, verdict colors,
-  accent-on-accent-wash, on-accent-on-accent, kbd text, and highlight-over-panel), and
+  accent-on-accent-wash, on-accent-on-accent, kbd text, highlight-over-panel,
+  `--ink` and each applicable text tier over each `--v-*-wash` composited on
+  `--surface` — the read-only banner and judged chips render text over these washes,
+  §3.11/§3.1 — and each verdict color over its own wash composited on `--panel`).
+  **pairs.json entry shape (binding)**: `{fg, bg, compositeBase?, minRatio: 4.5 | 3,
+  use: "<where this pair renders>", exempt?: true}`. `minRatio` is per-entry
+  because the same color pair legitimately renders at both sizes — **a pair
+  rendered at both body and large sizes appears twice, once per threshold**:
+  verdict-color-on-panel appears with `minRatio: 3` (stat-tile numerals, 25px
+  Literata) and with `minRatio: 4.5` (chip text, 12–13px). `exempt: true` marks
+  `--text-faint` pairings only (§3.0's WCAG-exempt reservation — disabled labels
+  and decorative glyphs); the ratio check skips them but the count assertion still
+  counts them, so the tier's uses stay reviewed data.
+  **For any rgba token, the audit composites it over its named base token (listed
+  per pair in pairs.json as `compositeBase`) before computing the WCAG ratio** —
+  every wash and
+  highlight token carries alpha, and a ratio computed against raw rgba is
+  undefined, so the compositing base is part of the reviewed data, not implementer
+  guesswork. And
   (b) WCAG 1.4.11 non-text contrast (≥3:1) for the `:focus-visible` outline vs every
   background it appears over, verdict dot colors vs `--surface`, `--kbd-border` vs its
   kbd context, control borders on interactive elements (inputs, buttons —
   `--hairline-strong` vs `--surface`), and the segmented picker's selected-state
   boundary; purely decorative hairlines are exempt and listed as such in the test
   file. Each pairing is a vitest assertion that names the failing pair in its
-  message; failures are
-  fixed by adjusting the failing tier (logged in DESIGN.md Deviations). Also verify
+  message. The text-tier half has been green since P1: §3.0's pre-approved
+  `--text-3` replacements exist so that no known-failing prototype value ever
+  reaches this phase — the residual rule (a pairing some later screen adds and
+  fails is fixed by adjusting the failing tier, logged in DESIGN.md Deviations)
+  covers additions only, never a deferred redesign of the tiers every screen was
+  built on. Also verify
   roles: banner `role=status`, toast `aria-live=polite`, toolbar/tablist/dialog roles,
   radiogroup on the picker, per-button labels ("Mark {ref} essential"), 36px min row
-  height. AC: the file is collected by `vitest run` (it appears in the run's file
+  height; the tail divider button carries `aria-expanded` reflecting its state and
+  `aria-controls` naming the tail list container (§3.1); every §3.12 layer's dialog
+  element carries `aria-modal="true"` and `aria-labelledby` pointing at its title;
+  and the §3.11 results live region exists and receives its count text after a
+  mocked search — all asserted in the D35 Playwright role checks. AC: the file is
+  collected by `vitest run` (it appears in the run's file
   list) and passes for BOTH light and dark columns; deleting one pair from pairs.json
   fails the count assertion against the token
-  sheet (negative fixture); Playwright asserts the roles/labels; any token change
+  sheet (negative fixture); an entry with `minRatio` absent and no `exempt: true`
+  fails the schema validation (second negative fixture); Playwright asserts the
+  roles/labels; any token change
   appears in DESIGN.md.
 - **D36. Motion**: toast rise 200ms with the exact bezier; nothing else animates;
   `prefers-reduced-motion` disables all. AC: Playwright with reduced-motion emulation —
@@ -1261,13 +1835,24 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   surface standing in for the deferred diff card (§2.3). AC: Playwright — seeded old
   meta + different mock ⇒ card appears once with the judged-query links; clicking a
   link submits that query; reloading **without** dismissing shows the card again;
-  only dismiss+reload suppresses it; under a fingerprint-only mocked change the D28
-  jargon regex (`[0-9a-f]{8}-` and `sha256`) finds zero matches in the card's text.
+  only dismiss+reload suppresses it; seeding `lastSeenMeta` with engineVersion
+  "0.3.0" and mocking `/api/meta` engineVersion "0.4.0" renders the card text "The
+  engine was updated since your last visit (0.3.0 → 0.4.0). Searches you reviewed
+  may rank differently now." verbatim — the version-change branch, the only place a
+  version string may render — and the jargon regex finds zero matches in it; under
+  a fingerprint-only mocked change the no-codes sentence renders and the D28
+  jargon regex (`[0-9a-f]{8}-` and `sha256`) finds zero matches in the card's text
+  (both branches asserted, never one standing in for the other).
 - **D39. Error-state hardening**: commit an `ENDPOINT_FAILURES` table in
   `workbench/e2e/endpointFailures.ts` — a **plain data module with no
   `@playwright/test` import**, imported by `study-p5.spec.ts` — mapping **every
   function in the api layer** (§4.8 `// §api`: one
-  named function per endpoint) to `{mockedFailure, expectedCopyOrToast}`. (The table
+  named function per endpoint) to `{mockedFailure, expectedCopyOrToast}`. **Every
+  `expectedCopyOrToast` value must be one of §3.11's specified strings — a named
+  state's copy or §3.11's unnamed-failure fallbacks ("That part of the workbench
+  did not load…", "That call did not save…", or the specified nothing-renders
+  entries for `/fonts/**`, `/api/passage`, and case-state POSTs) — never copy
+  invented at the table.** (The table
   cannot live inside the spec: `e2e/**` is excluded from vitest, and importing a
   Playwright spec from a vitest test throws at import time — `test()` called outside
   the Playwright runner — so the parity vitest below could never read it.) The spec
@@ -1285,34 +1870,88 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   (`src=`/`href=`/`url(` values must not begin with `http`), protocol marker; old
   static* tests still green untouched. AC: named vitest files pass; the external-URL
   test demonstrably fails when a `https://fonts.googleapis.com` link is injected
-  (negative fixture inside the test).
-- **D41. THE FLIP** (separate PR, merged only on Jesse's explicit go): study.html
+  (negative fixture inside the test); and `workbench/e2e/study-p5.spec.ts` — the
+  P5 demo spec, same phase-exit role as D9/D19/D23/D31 — covers D32–D40 end-to-end
+  (including the D39 `ENDPOINT_FAILURES` loop) and is green with zero console/page
+  errors (D41–D42 carry their own ACs and are not gated on it).
+- **D41. THE FLIP** (separate PR; merged only on Jesse's explicit go **and** after
+  the D42 checklist has been run once against `/study` on a server with a real
+  artifact — Jesse's machine if the container's fetch-artifact proxy mismatch
+  persists — with each step's observed result pasted into the D41 PR description;
+  in degraded read-only mode the recorded observation is the §3.11 banner. Until
+  that run exists, the Study page has never spoken to a real server, since every
+  phase demo mocks `/api/**` — an integration surprise must land on `/study`, not
+  on the new default page): study.html
   content → `static/index.html`; old index.html byte-identical →
   `static/advanced.html`; `/study` → 302 `/` via the §4.2 table's redirect entry;
   Advanced console link → `/advanced`; static* vitest expectations retargeted;
   `study-p4.spec.ts`'s Advanced-link assertion flips from href `/` to href `/advanced`
-  in the same commit — no other Playwright assertion changes; PR states no public
+  in the same commit; the four old-console specs retarget their served file from
+  `../static/index.html` to `../static/advanced.html` in the same commit — each
+  hardcodes `readFile(new URL('../static/index.html', import.meta.url))` today
+  (`core-review.spec.ts:17`, `candidate-review.spec.ts:12`,
+  `studio-operations.spec.ts:10`, `admission-publish.spec.ts:47`; verified), so
+  without the retarget they would serve the Study page and every old-console
+  assertion would fail `npm run test:browser` — a path change only, no assertion
+  text changes (they still exercise the old console, which now lives at that
+  path). **`static/study.html` is DELETED in the same commit** (the §4.2 table's
+  `/study` redirect entry replaces its file entry), **and every test that reads
+  `static/study.html` by path retargets to `../static/index.html` in the same
+  commit**: the five `study-p1..p5` specs' served file (§6 — each reads
+  `../static/study.html` via `readFile(new URL(...))` pre-flip), the D5/D40 study
+  static-contract vitests, D35's `contrast.audit.test.ts` (it parses study.html's
+  token blocks), and D39's §api parity vitest (it parses study.html's `// §api`
+  section) — path changes only. Deleting without retargeting would turn both
+  suites red and force the unplanned judgment call §2.2 forbids; leaving
+  study.html on disk to keep tests green would make every study-page guard
+  permanently validate a stale file while the live page at `index.html` is
+  guarded by nothing — the exact CLAUDE.md "guardrail becomes decoration"
+  gate-discipline failure, at the highest-stakes step.
+  No other Playwright assertion text changes; PR states no public
   engine types, artifact schema, or consumer-pinned descriptors changed
   (implementation-plan §5 consumers unaffected) and `ENGINE_VERSION` untouched
   (nothing ordering-relevant changed). AC: vitest + both Playwright suites green;
   `GET /` serves the Study page with a valid snapshot; `GET /study` answers 302 →
   `/`; `GET /advanced` serves the old console with its 11 tabs rendering (smoke spec)
-  and its fetches still hitting `/api/...` under mocks.
-- **D42. Post-flip smoke on the real server**: a documented manual script — `npm run
+  and its fetches still hitting `/api/...` under mocks; a vitest added in the flip
+  commit asserts the literal string `static/study.html` appears nowhere under
+  `workbench/test/**` or `workbench/e2e/**` (excluding its own file, which must
+  name the string to search for it) — a stale-path sweep that keeps every
+  retarget honest; the pre-flip D42 run's observations are pasted into the PR
+  description (the merge condition above).
+- **D42. Flip smoke (pre- and post-flip) on the real server**: a documented manual
+  script — `npm run
   fetch-artifact --workspace workbench`, `npm run serve --workspace workbench`, open
-  `http://127.0.0.1:8787/`, run one search, make one call, undo it, add one suggestion
-  (a range first, to see the pick chips), open `/advanced` — checklist appended to
-  `workbench/DESIGN.md`. (This container's fetch-artifact hit a proxy sha256 mismatch,
-  `audit-runtime.md` §3 — the smoke may need Jesse's machine; in degraded read-only
-  mode the expected observation is the banner.) AC: checklist committed; each step has
-  an expected observation, incl. the degraded fallback.
+  the page, run one search, make one call, undo it, add one suggestion
+  (a range first, to see the pick chips), rescue one lower result (read the §3.1
+  preview, then confirm), open the old console — checklist appended to
+  `workbench/DESIGN.md` **in the main P5 PR, before the separate D41 flip PR it
+  gates**, and run **twice**:
+  1. **Pre-flip, against `http://127.0.0.1:8787/study`** (console step: the
+     Advanced link to `/`). This run is D41's merge gate — every phase demo runs
+     on mocked `/api/**`, so this is the first time the Study page ever talks to a
+     real server with a real artifact, and it must happen while the old page is
+     still the default. Each step's observed result is pasted into the D41 PR
+     description; in degraded read-only mode the recorded observation is the
+     §3.11 banner.
+  2. **Post-flip, against `http://127.0.0.1:8787/`** (console step: `/advanced`;
+     plus one extra line: `GET /study` answers 302 → `/`) — the same checklist
+     re-run on the new default page.
+  (This container's fetch-artifact hit a proxy sha256 mismatch,
+  `audit-runtime.md` §3 — both runs may need Jesse's machine; in degraded read-only
+  mode the expected observation is the banner.) AC: checklist committed; each step
+  has an expected observation, incl. the degraded fallback, and names both run
+  targets (`/study` pre-flip, `/` + `/advanced` + the 302 line post-flip); the
+  pre-flip run's pasted observations are D41's stated merge precondition.
 
 ---
 
 ## 7. Test plan, risks & mitigations
 ### Test plan
 - **Vitest (per phase, `workbench/test/`)**: font-route + secondary-page integration
-  tests (D3/D4); design-token/rename-table parity (D1); study.html static-contract
+  tests (D3/D4); the font-provenance hash check (`fontProvenance.test.ts`, D2 —
+  committed README sha256 lines vs the committed font files, so a re-vendored font
+  fails `npm test`); design-token/rename-table parity (D1); study.html static-contract
   suite (D5, finalized D40): protocol marker, `resolveStaticSnapshot` validation,
   `ROUTES` ⊇ `REQUIRED_INLINE_ROUTES` parity, no-external-URL scan; the api-layer /
   `ENDPOINT_FAILURES` parity check (D39, reading the plain data module
@@ -1321,9 +1960,17 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
   through `createJudgmentLog(...).submit` with stubbed snapshot context and
   `resolveReference`/`resolveReferenceTargetId`, so a payload the server would
   reject fails `npm test`, not the manual smoke; the contrast audit
-  (`contrast.audit.test.ts`, D35 — named `.test.ts` so vitest's default include
+  (`contrast.audit.test.ts` — lands in P1 with the token sheet per D5's AC, is
+  extended in D35 with the non-text and ARIA checks, and is named `.test.ts` so
+  vitest's default include
   actually collects it); the flip retargets
-  `staticSnapshot.test.ts`, `staticM4.test.ts`, `staticNotRelevant.test.ts` (D41).
+  `staticSnapshot.test.ts`, `staticM4.test.ts`, `staticNotRelevant.test.ts` (old
+  console → `static/advanced.html`) AND every study-side reader of
+  `static/study.html` — the five `study-p1..p5` specs' served file, the D5/D40
+  study static-contract vitests, D35's `contrast.audit.test.ts`, and D39's §api
+  parity vitest — to `../static/index.html`; `static/study.html` itself is deleted
+  at the flip and a stale-path sweep vitest asserts no test file still names it
+  (D41).
   Behavior stays in Playwright (the inline IIFE runs in-browser, not imported).
 - **Playwright (one spec per phase + flip smoke)**: existing repo pattern (mock all
   `/api/**`; zero console/page errors asserted in every spec). Chrome channel per
@@ -1347,7 +1994,7 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
 ### Risks & mitigations
 | # | Risk | Mitigation |
 |---|---|---|
-| 1 | Artifact unavailable in the dev container (fetch-artifact sha256 mismatch observed through the proxy) | All phase demos run on mocked APIs; degraded read-only is itself a specced, tested state (D16); real-server smoke (D42) can run on Jesse's machine. |
+| 1 | Artifact unavailable in the dev container (fetch-artifact sha256 mismatch observed through the proxy) | All phase demos run on mocked APIs; degraded read-only is itself a specced, tested state (D16); the pre-/post-flip real-server smoke (D42) can run on Jesse's machine — and D41 merges only after the pre-flip run is recorded, so a mock-shared shape assumption surfaces on `/study`, never on the new default page. |
 | 2 | Search/result field names (targetId, reason fields, concept evidence) not fully documented in R1 | Binding instruction: read the old UI's review-tab rendering and the snapshot item shape in `workbench/src/reviewCases.ts` before D6/D14; the why-rail renders only fields the engine actually returns; the highlight/Matched rule depends only on reason labels the engine mints (`lexical.ts:61`). |
 | 3 | Snapshot-token churn (process-local, LRU-128, restarts) losing votes | §4.6 one-shot silent recovery + honest banners; Playwright covers both branches (D11). |
 | 4 | `REQUIRED_INLINE_ROUTES` drift breaking the page at startup (silent fallback page) | ROUTES parity vitest (D40) fails the build before the server would degrade. |
@@ -1360,17 +2007,43 @@ throwaway `http.createServer` serving the file, all `/api/**` + `/fonts/**` mock
 | 11 | Playwright browser missing in the container | Documented install step in every phase's run instructions; channel stays `chrome` per repo config. |
 | 12 | Scope creep into admission/publish/promotion | Hard out-of-scope list (§2.3); those flows remain the old console's behind Advanced; Finish up touches only compile preview/apply. |
 | 13 | A vote recorded but its case left in a misleading state | Auto state transitions with 409-tolerant handling (D10); History and Finish up read from the log, not from case state; reopened rows carry their own display state everywhere (§3.2/§3.4/§3.7) so an active call is never shown as absent. |
-| 14 | The `judgments.ts` "already present" message string drifts | The §3.3 detection is covered by a D20 Playwright assertion and flagged by a code comment at the match site; drift fails the spec, not the user. |
+| 14 | The `judgments.ts` "already present" message string drifts | The §3.3 detection is covered by D20 (form) and D18 (rescue-confirm) Playwright assertions and flagged by a code comment at the match site; drift fails the specs, not the user. |
 
 ---
 
 *End of plan. Every quoted string is shippable copy; every D-item is mechanically
 checkable; every endpoint, field, limit, and error code above traces to
-`plan-r1-repo.md` or was re-verified against the repo (server.ts:586–591/693–723/1724–1737,
-judgments.ts:387–388/512–517/551–562/854, engine/src/types.ts:67–82,
+`plan-r1-repo.md` or was re-verified against the repo (server.ts:586–591/693–723/1724–1737/1739–1753
+(/api/passage returns `engine.passage()` verbatim),
+server.ts:1618–1628 (GET /cases/:uuid answers `{case, review}` with
+`review: {freshness, …reviewSnapshotView}` or `null` when no snapshot is stored and
+the engine is unavailable),
+judgments.ts:517 (the "already present in the judged result set" rejection string,
+verbatim),
+judgments.ts:387–388/512–517/551–562/854, engine/src/types.ts:25–44/67–82
+(`ScripturePassage.verses[]` carry per-verse `verse` numbers; `ScripturePassage.reference` is canonical),
 engine/src/reasons/types.ts:20–32, engine/src/intents/lexical.ts:50/61/81–86,
-engine/src/createEngine.ts:185–203, engine/src/corpus/repository.ts:202–207,
-reviewCases.ts:83–85/226–230, compileJudgments.ts:1–20/93–100/489–518/504–508/523–525,
+engine/src/createEngine.ts:47/185–203/347–369/362/594–677 (collapseAnchorRuns:
+call site 356 with `DEFAULT_LIMIT` 25 + `COLLAPSE_HEADROOM` 25, head `targetId`
+kept 653–656, range reference minted 657–668, excerpts joined 669),
+workbench/e2e/core-review.spec.ts:17 + candidate-review.spec.ts:12 +
+studio-operations.spec.ts:10 + admission-publish.spec.ts:47 (each reads
+`../static/index.html`), engine/src/corpus/repository.ts:143–146/202–207
+(`resolveBookAlias` over the artifact's `book_aliases` table; FTS5 phrase matching),
+reviewCases.ts:41–61/83–85/99–101/226–230 (`ReviewSnapshotView.result` carries the
+snapshot's `ResearchResult` with discovery `result.results` truncated to
+`REVIEW_WINDOW` — the §4.3 counts row's m; :99–101 is the "Case query must be
+non-empty text." rejection behind the §3.2 M gate),
+compileJudgments.ts:1–20/93–100/489–518/504–508/523–525,
 workbench/src/cases.ts:23–35, workbench/vitest.config.ts (no custom `include`),
-pipeline/src/books.ts:254–256, dc.html:14–38 at commit 5ba1096,
-index.html:1958/1966–1975/2187/2192–2197).*
+workbench/src/staticSnapshot.ts:466 (all inline scripts joined — the §3.10 head
+theme-stamp micro-script is contract-valid),
+pipeline/src/books.ts:85/116/254–256 ("Ps"/"Lam" abbreviations; the deliberate "Jud"
+ambiguity), dc.html:14–38/45/54 at commit 5ba1096 (:45 the `:focus-visible` outline
+rule §3.0 quotes verbatim; :54 the wordmark "The Study" in Literata 15px with the
+Georgia serif fallback; the §3.0 contrast deviations were computed from the :14–38
+hex values and re-verified — light `--text-3` #847F73 measures 3.92:1 on `--panel`,
+dark #8A8478 4.47:1, and the replacement values clear 4.5:1 on all three grounds in
+both themes),
+index.html:1958/1966–1975/2187/2192–2197/3183 ("This judgment is immutable." — the
+§3.5 one-confirm rationale)).*
