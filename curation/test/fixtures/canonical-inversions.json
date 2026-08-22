@@ -6,7 +6,10 @@
     "ontology edits. Each register is the output of buildRegister() at that",
     "date: concept label, lexicon phrases, and the WEB text of the anchors",
     "present in the fixture corpus. The three cases are the audit-measured",
-    "sense inversions the tool must rediscover (B4 acceptance)."
+    "sense inversions the tool must rediscover (B4 acceptance).",
+    "gods-faithfulness appended 2026-08-22 (same buildRegister(), same",
+    "tree) as the nearest-competitor register for the round-1-fix real",
+    "negative controls; the five original registers are byte-unchanged."
   ],
   "registers": {
     "holy-spirit-the-comforter": {
@@ -140,6 +143,33 @@
         "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me.",
         "The Lord GOD’s Spirit is on me, because the LORD has anointed me to preach good news to the humble. He has sent me to bind up the broken hearted, to proclaim liberty to the captives and release to those who are bound, to proclaim the year of the LORD’s favor and the day of vengeance of our God, to comfort all who mourn,",
         "For whatever things were written before were written for our learning, that through perseverance and through encouragement of the Scriptures we might have hope."
+      ]
+    },
+    "gods-faithfulness": {
+      "id": "gods-faithfulness",
+      "texts": [
+        "God's faithfulness",
+        "god is faithful",
+        "great is your faithfulness",
+        "his mercies are new every morning",
+        "god keeps his promises",
+        "faithfulness",
+        "It is because of the LORD’s loving kindnesses that we are not consumed, because his mercies don’t fail. They are new every morning. Great is your faithfulness.",
+        "Know therefore that the LORD your God himself is God, the faithful God, who keeps covenant and loving kindness to a thousand generations with those who love him and keep his commandments,",
+        "If we are faithless, he remains faithful; for he can’t deny himself.”",
+        "God is faithful, through whom you were called into the fellowship of his Son, Jesus Christ our Lord.",
+        "He who calls you is faithful, who will also do it.",
+        "let’s hold fast the confession of our hope without wavering; for he who promised is faithful.",
+        "For however many are the promises of God, in him is the “Yes.” Therefore also through him is the “Amen”, to the glory of God through us."
+      ],
+      "floorTexts": [
+        "It is because of the LORD’s loving kindnesses that we are not consumed, because his mercies don’t fail. They are new every morning. Great is your faithfulness.",
+        "Know therefore that the LORD your God himself is God, the faithful God, who keeps covenant and loving kindness to a thousand generations with those who love him and keep his commandments,",
+        "If we are faithless, he remains faithful; for he can’t deny himself.”",
+        "God is faithful, through whom you were called into the fellowship of his Son, Jesus Christ our Lord.",
+        "He who calls you is faithful, who will also do it.",
+        "let’s hold fast the confession of our hope without wavering; for he who promised is faithful.",
+        "For however many are the promises of God, in him is the “Yes.” Therefore also through him is the “Amen”, to the glory of God through us."
       ]
     }
   }

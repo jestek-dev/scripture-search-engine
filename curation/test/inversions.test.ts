@@ -13,18 +13,40 @@
 // deterministic against future ontology edits: the three cases are
 // historical measurements, not live-tree claims.
 //
+// NEGATIVE CONTROLS (round-1 fix): each is a candidate that genuinely
+// EXERCISES the flag paths — it shares a significant token with the query
+// (the gate is open), it is NOT one of the register's floorTexts (so the
+// floor comparison is a live judgment, not true by construction), and
+// competitors are passed (so the cross-claim comparison runs) — and is
+// asserted unflagged. Both controls were verified able to fail during
+// development by mutating the gates (crossClaimMargin lowered; floor
+// raised): the flags fired, then the gates were restored.
+//   - "new beginnings": Isaiah 65:17 ("I create new heavens and a new
+//     earth" — shares "new", honestly new-creation).
+//   - "caring for a dying parent": 1 Timothy 5:4 ("repay their parents" —
+//     shares "parent", honestly THIS concept, not parenting).
+// The comforter case carries NO negative control, honestly: all eight WEB
+// verses containing "comforter(s)" are laments or taunts (the Paraclete is
+// "Counselor" in the WEB), so no honest token-sharing neighbour exists for
+// that register. And not every honest "new" verse clears the floor: Isaiah
+// 43:19 (0.4507) and Revelation 21:1 (0.4468) measure just below it — a
+// flag is a prompt for a human to read the passage, never a verdict.
+//
 // Calibration record (all-MiniLM-L6-v2 quantized, revision 751bff37,
-// measured 2026-08-22 on this runner):
-//   Job 16:2   simRegister 0.3109 vs floor 0.5210  -> below-register-floor
-//   Eccl 1:9   simRegister 0.4001 vs floor 0.4716  -> below-register-floor
-//   Col 3:20-21 simRegister 0.5105, parenting 0.7919 (gap 0.2814)
-//                                              -> cross-concept-claim
-//   Honest token-sharing anchors: all >= floor; largest cross-claim gap
-//   measured 0.057 (Ezekiel 36:26 vs gods-faithfulness) — under the 0.10
-//   margin. The floor gaps (0.21 / 0.07) and claim gap (0.28 vs 0.10)
-//   leave real headroom over floating-point drift, but if a different
-//   platform's ONNX runtime flips a case, recalibrate against these
-//   numbers rather than loosening the mechanism.
+// measured 2026-08-22 on this runner, with the exact candidate batches
+// below — batch composition shifts the quantized sims by ~0.01, so these
+// are batch-specific):
+//   Job 16:2    simRegister 0.3109 vs floor 0.5290 -> below-register-floor
+//   Eccl 1:9    simRegister 0.3892 vs floor 0.4861 -> below-register-floor
+//   Isa 65:17   simRegister 0.5885 vs floor 0.4861; gods-faithfulness gap
+//               -0.2721                            -> unflagged
+//   Col 3:20-21 simRegister 0.5148, parenting 0.7895 (gap 0.2747)
+//                                                  -> cross-concept-claim
+//   1 Tim 5:4   simRegister 0.5539 vs floor 0.3225; parenting gap -0.1096
+//                                                  -> unflagged
+//   The margins leave real headroom over floating-point drift, but if a
+//   different platform's ONNX runtime flips a case, recalibrate against
+//   these numbers rather than loosening the mechanism.
 //
 // GATE DISCIPLINE: when the pinned model has not been fetched the
 // inference tests SKIP with the reason printed — they never report pass
@@ -49,12 +71,6 @@ function register(id: string): RegisterDefinition {
   return definition;
 }
 
-function floorText(definition: RegisterDefinition, index: number): string {
-  const text = definition.floorTexts[index];
-  if (!text) throw new Error(`fixture floor text missing at ${index}`);
-  return text;
-}
-
 function finding(report: { findings: readonly unknown[] }, index: number) {
   const entry = report.findings[index];
   if (!entry) throw new Error(`finding missing at ${index}`);
@@ -71,6 +87,11 @@ const ECCLESIASTES_1_9 =
   'That which has been is that which shall be; and that which has been done is that which shall be done: and there is no new thing under the sun.';
 const COLOSSIANS_3_20_21 =
   "Children, obey your parents in all things, for this pleases the Lord. Fathers, don't provoke your children, so that they won't be discouraged.";
+// Negative-control texts (WEB, from the corpus — see header):
+const ISAIAH_65_17 =
+  '“For, behold, I create new heavens and a new earth; and the former things will not be remembered, nor come into mind.';
+const FIRST_TIMOTHY_5_4 =
+  'But if any widow has children or grandchildren, let them learn first to show piety toward their own family and to repay their parents, for this is acceptable in the sight of God.';
 
 const verification = verifyLocalModel();
 
@@ -87,23 +108,20 @@ if (verification.status !== 'verified') {
     it('flags Job 16:2 for the comforter register, below the register floor', async () => {
       const embedder = await createEmbedder();
       const comforterRegister = register('holy-spirit-the-comforter');
+      // No negative control here, honestly: every WEB verse containing
+      // "comforter(s)" is a lament or taunt (the Paraclete is "Counselor"),
+      // so no honest token-sharing neighbour exists for this register. The
+      // real negative controls live in the two cases below.
       const report = await analyzeInversions(embedder, {
         query: 'comforter',
         register: comforterRegister,
-        candidates: [
-          { reference: 'Job 16:2', text: JOB_16_2 },
-          // Honest neighbours: the register's own lead anchors.
-          { reference: 'John 14:16-17', text: floorText(comforterRegister, 0) },
-          { reference: 'John 14:26', text: floorText(comforterRegister, 1) },
-        ],
+        candidates: [{ reference: 'Job 16:2', text: JOB_16_2 }],
         competingRegisters: [register('god-of-all-comfort')],
       });
-      const [job, anchor1, anchor2] = [finding(report, 0), finding(report, 1), finding(report, 2)];
+      const job = finding(report, 0);
       expect(job.flagged).toBe(true);
       expect(job.flagReasons).toContain('below-register-floor');
       expect(job.sharedTokens.length).toBeGreaterThan(0);
-      expect(anchor1.flagged).toBe(false);
-      expect(anchor2.flagged).toBe(false);
     }, 120_000);
 
     it('flags Ecclesiastes 1:9 for the new-beginnings register, below the register floor', async () => {
@@ -114,17 +132,23 @@ if (verification.status !== 'verified') {
         register: newCreationRegister,
         candidates: [
           { reference: 'Ecclesiastes 1:9', text: ECCLESIASTES_1_9 },
-          // Honest token-sharing anchors ("new creation", "new heart"):
-          { reference: '2 Corinthians 5:17', text: floorText(newCreationRegister, 0) },
-          { reference: 'Ezekiel 36:26', text: floorText(newCreationRegister, 3) },
+          // NEGATIVE CONTROL: honest, token-sharing ("new"), and NOT a
+          // floor text — the floor comparison below is a live judgment.
+          { reference: 'Isaiah 65:17', text: ISAIAH_65_17 },
         ],
+        competingRegisters: [register('gods-faithfulness')],
       });
-      const [ecclesiastes, anchor1, anchor2] = [finding(report, 0), finding(report, 1), finding(report, 2)];
+      const [ecclesiastes, isaiah] = [finding(report, 0), finding(report, 1)];
       expect(ecclesiastes.flagged).toBe(true);
       expect(ecclesiastes.flagReasons).toContain('below-register-floor');
       expect(ecclesiastes.sharedTokens).toContain('new');
-      expect(anchor1.flagged).toBe(false);
-      expect(anchor2.flagged).toBe(false);
+      // The control's flag paths are genuinely exercised: the gate is open
+      // (shared token), the candidate is outside the pinned floorTexts, and
+      // a competitor was scored — then it must come through unflagged.
+      expect(isaiah.sharedTokens).toContain('new');
+      expect(newCreationRegister.floorTexts).not.toContain(ISAIAH_65_17);
+      expect(isaiah.bestCompetitor).not.toBeNull();
+      expect(isaiah.flagged).toBe(false);
     }, 120_000);
 
     it('flags Colossians 3:20-21 for the dying-parent register as claimed by parenting (fn13)', async () => {
@@ -135,19 +159,24 @@ if (verification.status !== 'verified') {
         register: caringRegister,
         candidates: [
           { reference: 'Colossians 3:20-21', text: COLOSSIANS_3_20_21 },
-          // Honest neighbours: the comfort lead and the valley psalm.
-          { reference: '2 Corinthians 1:3-4', text: floorText(caringRegister, 0) },
-          { reference: 'Psalms 23:4', text: floorText(caringRegister, 2) },
+          // NEGATIVE CONTROL: honest, token-sharing ("parent"), NOT a floor
+          // text, and facing the same parenting competitor that claims
+          // Colossians — "repay their parents" is THIS concept's meaning.
+          { reference: '1 Timothy 5:4', text: FIRST_TIMOTHY_5_4 },
         ],
         competingRegisters: [register('parenting'), register('god-of-all-comfort')],
       });
-      const [colossians, comfort, psalm] = [finding(report, 0), finding(report, 1), finding(report, 2)];
+      const [colossians, timothy] = [finding(report, 0), finding(report, 1)];
       expect(colossians.flagged).toBe(true);
       expect(colossians.flagReasons).toContain('cross-concept-claim');
       // The flag names the claiming concept — fn13's actual diagnosis.
       expect(colossians.bestCompetitor?.id).toBe('parenting');
-      expect(comfort.flagged).toBe(false);
-      expect(psalm.flagged).toBe(false);
+      // The control's flag paths are genuinely exercised (open gate,
+      // non-floor candidate, competitors scored) — then unflagged.
+      expect(timothy.sharedTokens).toContain('parent');
+      expect(caringRegister.floorTexts).not.toContain(FIRST_TIMOTHY_5_4);
+      expect(timothy.bestCompetitor).not.toBeNull();
+      expect(timothy.flagged).toBe(false);
     }, 120_000);
   });
 }

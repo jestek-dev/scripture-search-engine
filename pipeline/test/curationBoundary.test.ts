@@ -35,10 +35,19 @@ function sourceFilesUnder(dir: string): string[] {
   return out;
 }
 
-const importPattern = /(?:from\s+|import\s*\(|require\s*\()\s*['"]([^'"]*)['"]/g;
+// Every module-specifier form the platform accepts, one alternation branch
+// each — the positive-control tests below pin one violating example PER
+// BRANCH, so a regex regression cannot pass silently:
+//   1. `from '...'`        — static value imports AND re-exports
+//   2. `import('...')`     — dynamic import
+//   3. `import '...'`      — bare side-effect import (the round-1 bypass:
+//                            it has no `from` and no paren, so the original
+//                            pattern never saw it)
+//   4. `require('...')`    — CJS require
+const importPattern =
+  /\b(?:from\s*['"]|import\s*\(\s*['"]|import\s*['"]|require\s*\(\s*['"])([^'"]*)['"]/g;
 
-function curationImportsIn(file: string): string[] {
-  const contents = readFileSync(file, 'utf8');
+function curationSpecifiersInSource(contents: string): string[] {
   const hits: string[] = [];
   for (const match of contents.matchAll(importPattern)) {
     const specifier = match[1];
@@ -52,6 +61,10 @@ function curationImportsIn(file: string): string[] {
     }
   }
   return hits;
+}
+
+function curationImportsIn(file: string): string[] {
+  return curationSpecifiersInSource(readFileSync(file, 'utf8'));
 }
 
 describe('curation/ stays outside the artifact build graph', () => {
@@ -71,6 +84,37 @@ describe('curation/ stays outside the artifact build graph', () => {
     for (const file of files) {
       expect(curationImportsIn(file), `${file} imports curation`).toEqual([]);
     }
+  });
+
+  // POSITIVE CONTROLS: the scanner itself must FLAG every forbidden import
+  // form. Round 1 proved why these exist: the original pattern missed the
+  // bare side-effect form, and the file-tree scan (all clean files) could
+  // never notice — the guard passed while a live curation import sat inside
+  // buildConceptLayer.ts. A guardrail that cannot fire is decoration; these
+  // fixtures make the scanner fail loudly if any branch of the pattern rots.
+  const violations: readonly [string, string][] = [
+    ['static value import', "import { analyzeInversions } from '../../curation/src/inversions.js';"],
+    ['bare side-effect import (round-1 bypass)', "import '../../curation/src/inversions.js';"],
+    ['side-effect import, no whitespace', 'import"../../curation/src/inversions.js";'],
+    ['dynamic import()', "const tooling = await import('../../curation/src/inversions.js');"],
+    ['require()', "const tooling = require('../../curation/src/inversions.js');"],
+    ['re-export', "export * from '../../curation/src/inversions.js';"],
+    ['package-name specifier', "import '@jestek-dev/scripture-curation';"],
+  ];
+  for (const [form, source] of violations) {
+    it(`positive control: the scanner flags a ${form}`, () => {
+      expect(curationSpecifiersInSource(source), source).not.toEqual([]);
+    });
+  }
+
+  it('positive control counterpart: allowed imports are not flagged', () => {
+    const allowed = [
+      "import { readFileSync } from 'node:fs';",
+      "import '../polyfills.js';",
+      "const path = require('node:path');",
+      "export { compileOntology } from './importers/ontologyImporter.js';",
+    ].join('\n');
+    expect(curationSpecifiersInSource(allowed)).toEqual([]);
   });
 
   it('curation is not an npm workspace of the build root', () => {

@@ -90,8 +90,16 @@ resulting guard or rephrase is fixture-first and gauntlet-verified.
 
 `test/inversions.test.ts` requires the tool to rediscover the three
 known inversions above (registers pinned as of 2026-08-22 in
-`test/fixtures/canonical-inversions.json`), and requires the honest
-token-sharing anchors beside them to stay unflagged.
+`test/fixtures/canonical-inversions.json`). Two REAL negative controls
+ride beside them — candidates that share a query token, sit outside the
+register's floor texts, and face live competitors, so every flag path
+actually runs before they are asserted unflagged: Isaiah 65:17 for "new
+beginnings" and 1 Timothy 5:4 for "caring for a dying parent" (both
+verified able to fail by gate mutation during development). The
+comforter case carries no negative control, honestly: every WEB verse
+containing "comforter(s)" is a lament or a taunt (the Paraclete is
+"Counselor" in the WEB), so no honest token-sharing neighbour exists for
+that register.
 
 ## Process line (Q6)
 
