@@ -53,6 +53,13 @@ jobs:
 
       - run: npm ci
 
+      - name: Install curation dev deps
+        # curation/ is deliberately outside the npm workspaces (runtime
+        # boundary), so root `npm ci` skips it — but `npm run verify` below
+        # runs the root typecheck, which includes `tsc` over curation/.
+        # --ignore-scripts: typecheck needs only the package files on disk.
+        run: npm ci --prefix curation --ignore-scripts
+
       - name: Refuse to release against a stale descriptor
         # `stale.blocksRelease` in the reviewed descriptor is enforced here, or
         # it is decoration. A descriptor that no longer describes what this tree

@@ -39,6 +39,14 @@ jobs:
 
       - run: npm ci
 
+      - name: Install curation dev deps
+        # curation/ is deliberately outside the npm workspaces (runtime
+        # boundary), so root `npm ci` never installs its deps — but the root
+        # typecheck gate below includes `tsc` over curation/. --ignore-scripts:
+        # typecheck needs only the package files on disk, not built native
+        # binaries or the model.
+        run: npm ci --prefix curation --ignore-scripts
+
       - name: Build engine
         # `npm ci` never runs the engine's prepack build, so a fresh checkout
         # has no engine/dist. In-process tests alias the engine SOURCE, but the
