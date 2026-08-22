@@ -92,6 +92,54 @@ describe('schema v9 artifact carries a readable phrase table', () => {
       await port.close();
     }
   });
+
+  it('ordering is engine-defined: source_id breaks ties and non-ASCII phrases sort by UTF-16 code units, never the port collation', async () => {
+    // LOW-1 hardening. Two probes in one doctored artifact:
+    // 1. exact duplicates of a committed triple under bracketing source ids
+    //    — a second phrase source tying on (from, phrase, start, end) must
+    //    come back in source_id order, never platform-unspecified;
+    // 2. U+10000 sorts BELOW U+FF01 in UTF-16 code units (surrogate range)
+    //    but ABOVE it in UTF-8 bytes, so SQLite's BINARY collation would
+    //    return the two non-ASCII rows reversed — pinning that engine code,
+    //    not the port's SQL collation, defines the phrase ordering (the
+    //    same comparison buildConceptLayer's fingerprint feed uses).
+    const doctoredPath = join(fixtureDirectory, `doctored-ordering-${process.pid}.db`);
+    copyFileSync(fixturePath, doctoredPath);
+    const doctored = new DatabaseSync(doctoredPath);
+    try {
+      const insert = doctored.prepare(
+        `INSERT INTO cross_reference_phrases(from_verse_id, normalized_phrase, to_start_verse_id,
+                                             to_end_verse_id, source_id)
+         VALUES (?, ?, ?, ?, ?)`,
+      );
+      insert.run(JER_29_11, 'know', 19_033_011, 19_033_011, 'aa-tie-source');
+      insert.run(JER_29_11, 'know', 19_033_011, 19_033_011, 'zz-tie-source');
+      insert.run(JER_29_11, '！ collation probe', 19_033_011, 19_033_011, 'tsk-text'); // U+FF01
+      insert.run(JER_29_11, '\u{10000} collation probe', 19_033_011, 19_033_011, 'tsk-text');
+    } finally {
+      doctored.close();
+    }
+    const port = openCorpus(doctoredPath);
+    const repository = new CorpusRepository(port);
+    try {
+      const rows = await repository.crossReferencePhrasesFor([JER_29_11]);
+      expect(rows.map((row) => `${row.normalizedPhrase} | ${row.sourceId}`)).toEqual([
+        'expect end heb expectation | tsk-text',
+        'know | aa-tie-source',
+        'know | tsk-text',
+        'know | zz-tie-source',
+        'know | tsk-text',
+        'know | tsk-text',
+        'thought | tsk-text',
+        'thought | tsk-text',
+        'thought | tsk-text',
+        '\u{10000} collation probe | tsk-text',
+        '！ collation probe | tsk-text', // U+FF01
+      ]);
+    } finally {
+      await port.close();
+    }
+  });
 });
 
 describe('artifact-level empty cross_references dump proof', () => {

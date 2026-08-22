@@ -478,7 +478,12 @@ export class CorpusRepository implements ReferenceResolver {
    * The cross-reference phrase triples whose FROM verse is one of the given
    * verse ids, batched as ONE bounded query over the window's min..max span
    * (G11) and filtered back to the asked-for verses. Rows come back ordered
-   * by (from, phrase, start, end) for platform-stable iteration.
+   * by (from, phrase, start, end, source) for platform-stable iteration —
+   * sorted HERE, in engine code, by UTF-16 code units (the same comparison
+   * buildConceptLayer's fingerprint feed uses), never by the port's SQL
+   * collation: SQLite's BINARY collation compares UTF-8 bytes, which
+   * disagrees with JS on some non-ASCII strings, and the ordering contract
+   * must not depend on which side compares.
    *
    * NO CALL SITES in discover() yet (B3 Phase A capability): the labeling
    * and off-phrase-discount behavior that consumes this lands with the
@@ -496,7 +501,7 @@ export class CorpusRepository implements ReferenceResolver {
               source_id AS sourceId
        FROM cross_reference_phrases
        WHERE from_verse_id >= ? AND from_verse_id <= ?
-       ORDER BY from_verse_id, normalized_phrase, to_start_verse_id, to_end_verse_id`,
+       ORDER BY from_verse_id`,
       [Math.min(...unique), Math.max(...unique)],
     );
     // The min..max window can include from-verses nobody asked about; keep
@@ -509,7 +514,18 @@ export class CorpusRepository implements ReferenceResolver {
         toEndVerseId: num(row, 'toEndVerseId'),
         sourceId: str(row, 'sourceId'),
       }))
-      .filter((row) => asked.has(row.fromVerseId));
+      .filter((row) => asked.has(row.fromVerseId))
+      // source_id joins the tie-break so two sources naming the same
+      // (from, phrase, target) triple can never come back in
+      // platform-unspecified order once a second phrase source exists.
+      .sort(
+        (a, b) =>
+          a.fromVerseId - b.fromVerseId ||
+          (a.normalizedPhrase < b.normalizedPhrase ? -1 : a.normalizedPhrase > b.normalizedPhrase ? 1 : 0) ||
+          a.toStartVerseId - b.toStartVerseId ||
+          a.toEndVerseId - b.toEndVerseId ||
+          (a.sourceId < b.sourceId ? -1 : a.sourceId > b.sourceId ? 1 : 0),
+      );
   }
 
   /**

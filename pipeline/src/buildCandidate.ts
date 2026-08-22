@@ -990,12 +990,24 @@ interface CandidatePhraseRow {
  */
 function readCrossReferencePhraseRows(database: DatabaseSync): readonly CandidatePhraseRow[] | null {
   if (!hasCrossReferencePhraseTable(database)) return null;
-  return database.prepare(
+  const rows = database.prepare(
     `SELECT from_verse_id AS fromVerseId, normalized_phrase AS normalizedPhrase,
             to_start_verse_id AS toStartVerseId, to_end_verse_id AS toEndVerseId
-     FROM cross_reference_phrases
-     ORDER BY from_verse_id, normalized_phrase, to_start_verse_id, to_end_verse_id`,
+     FROM cross_reference_phrases`,
   ).all() as unknown as CandidatePhraseRow[];
+  // Sorted HERE, in JS, with buildConceptLayer's own fingerprint-feed
+  // comparator (UTF-16 code units) — NOT by SQL ORDER BY: SQLite's BINARY
+  // collation compares UTF-8 bytes, which disagrees with JS on some
+  // non-ASCII strings, and the mirror must feed 'x' records in exactly the
+  // order the artifact's builder hashed them or a legitimate base is
+  // refused with a fingerprint mismatch.
+  return rows.sort(
+    (a, b) =>
+      a.fromVerseId - b.fromVerseId ||
+      (a.normalizedPhrase < b.normalizedPhrase ? -1 : a.normalizedPhrase > b.normalizedPhrase ? 1 : 0) ||
+      a.toStartVerseId - b.toStartVerseId ||
+      a.toEndVerseId - b.toEndVerseId,
+  );
 }
 
 /** digestRows over the shipped spelling tables, keyed like the expectation. */

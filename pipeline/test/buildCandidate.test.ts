@@ -417,6 +417,72 @@ function preV9ConceptFingerprint(
   return hash.digest('hex');
 }
 
+/**
+ * The v9-era concept-layer fingerprint feed, reimplemented verbatim from the
+ * P6.3 writer (buildConceptLayer after the TSK phrase wiring): c/l/a/r
+ * records, 'p' records, 'x' records sorted by the writer's OWN JS comparator
+ * (UTF-16 code units — NOT SQL BINARY collation, which disagrees on some
+ * non-ASCII strings), and the 6-field counts record. This is the independent
+ * expectation the mirror's readCrossReferencePhraseRows branch must
+ * reproduce byte for byte for v9 reviewed bases.
+ */
+function v9ConceptFingerprint(
+  ontology: CompiledOntology,
+  counts: {
+    topicAnchors: number;
+    crossReferences: number;
+    verseTerms: number;
+    translationTokens: number;
+    pericopes: number;
+    crossReferencePhrases: number;
+  },
+  pericopeRows: readonly { startVerseId: number; endVerseId: number; boundaryVotes: number }[],
+  phraseRows: readonly {
+    fromVerseId: number;
+    normalizedPhrase: string;
+    toStartVerseId: number;
+    toEndVerseId: number;
+  }[],
+): string {
+  const hash = createHash('sha256');
+  const feed = (parts: readonly (string | number)[]): void => {
+    const record = parts.join(' ');
+    hash.update(String(record.length));
+    hash.update(' ');
+    hash.update(record);
+  };
+  for (const concept of [...ontology.concepts].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+    feed(['c', concept.id, concept.label]);
+  }
+  for (const entry of [...ontology.lexicon].sort((a, b) =>
+    a.conceptId !== b.conceptId ? (a.conceptId < b.conceptId ? -1 : 1) : a.normalized < b.normalized ? -1 : 1)) {
+    feed(['l', entry.conceptId, entry.normalized]);
+  }
+  for (const anchor of [...ontology.anchors].sort((a, b) =>
+    a.conceptId !== b.conceptId
+      ? (a.conceptId < b.conceptId ? -1 : 1)
+      : a.startVerseId - b.startVerseId || (a.sourceId < b.sourceId ? -1 : 1))) {
+    feed(['a', anchor.conceptId, anchor.startVerseId, anchor.endVerseId, anchor.sourceId, anchor.weight]);
+  }
+  for (const edge of [...ontology.related].sort((a, b) =>
+    a.conceptId !== b.conceptId ? (a.conceptId < b.conceptId ? -1 : 1) : a.relatedId < b.relatedId ? -1 : 1)) {
+    feed(['r', edge.conceptId, edge.relatedId]);
+  }
+  for (const pericope of [...pericopeRows].sort((a, b) => a.startVerseId - b.startVerseId)) {
+    feed(['p', pericope.startVerseId, pericope.endVerseId, pericope.boundaryVotes]);
+  }
+  for (const phrase of [...phraseRows].sort((a, b) =>
+    a.fromVerseId - b.fromVerseId ||
+    (a.normalizedPhrase < b.normalizedPhrase ? -1 : a.normalizedPhrase > b.normalizedPhrase ? 1 : 0) ||
+    a.toStartVerseId - b.toStartVerseId ||
+    a.toEndVerseId - b.toEndVerseId)) {
+    feed(['x', phrase.fromVerseId, phrase.normalizedPhrase, phrase.toStartVerseId, phrase.toEndVerseId]);
+  }
+  feed(['counts', counts.topicAnchors, counts.crossReferences, counts.verseTerms,
+    counts.translationTokens, counts.pericopes, counts.crossReferencePhrases]);
+  return hash.digest('hex');
+}
+
 function request(proposal: unknown, outputName: string, snapshot = reviewedSources): CandidateBuildRequest {
   return {
     formatVersion: 1,
@@ -674,6 +740,80 @@ describe('isolated candidate builder', () => {
       baseDatabasePath: droppedOnlyPath,
       baseDescriptorPath: droppedOnlyDescriptorPath,
     })).rejects.toMatchObject({ code: 'SOURCE_SNAPSHOT_MISMATCH' });
+    expect(sha256(readFileSync(baseDatabasePath))).toBe(baseSha);
+  }, 120_000);
+
+  it('mirrors non-ASCII phrase rows in the builder\'s JS order, never SQL BINARY collation', async () => {
+    // LOW-1 hardening (P6.3/B3 Phase A): U+10000 sorts BELOW U+FF01 in
+    // UTF-16 code units (the builder's fingerprint-feed comparator) but
+    // ABOVE it in UTF-8 bytes (SQLite's BINARY collation). A mirror that
+    // let SQL ORDER BY sequence the 'x' records would feed these two rows
+    // reversed and refuse a legitimate base with a fingerprint mismatch.
+    // The expected fingerprint is reimplemented independently with the
+    // writer's own JS comparator, so the mirror's read order is checked
+    // against the builder's bytes, not against itself.
+    const collationBasePath = join(sandbox, 'v9-collation-base.db');
+    copyFileSync(baseDatabasePath, collationBasePath);
+    const database = new DatabaseSync(collationBasePath);
+    const insertPhrase = database.prepare(
+      `INSERT INTO cross_reference_phrases(from_verse_id, normalized_phrase, to_start_verse_id,
+                                           to_end_verse_id, source_id)
+       VALUES (?, ?, ?, ?, ?)`,
+    );
+    // Inserted in BINARY order on purpose so neither insertion order nor
+    // SQL collation can accidentally reproduce the UTF-16 expectation.
+    insertPhrase.run(24_029_011, '！ collation probe', 24_029_011, 24_029_011, 'tsk-text'); // U+FF01
+    insertPhrase.run(24_029_011, '\u{10000} collation probe', 24_029_011, 24_029_011, 'tsk-text');
+    const count = (sql: string): number =>
+      Number((database.prepare(sql).get() as { count: number }).count);
+    const counts = {
+      topicAnchors: count("SELECT COUNT(*) AS count FROM concept_anchors WHERE source_id = 'openbible-topics'"),
+      crossReferences: count('SELECT COUNT(*) AS count FROM cross_references'),
+      verseTerms: count('SELECT COUNT(*) AS count FROM verse_terms'),
+      translationTokens: count('SELECT COUNT(*) AS count FROM verse_translation_tokens'),
+      pericopes: count('SELECT COUNT(*) AS count FROM pericopes'),
+      crossReferencePhrases: count('SELECT COUNT(*) AS count FROM cross_reference_phrases'),
+    };
+    const pericopeRows = database
+      .prepare('SELECT start_verse_id AS startVerseId, end_verse_id AS endVerseId, boundary_votes AS boundaryVotes FROM pericopes ORDER BY start_verse_id')
+      .all() as { startVerseId: number; endVerseId: number; boundaryVotes: number }[];
+    const phraseRows = database
+      .prepare(
+        `SELECT from_verse_id AS fromVerseId, normalized_phrase AS normalizedPhrase,
+                to_start_verse_id AS toStartVerseId, to_end_verse_id AS toEndVerseId
+         FROM cross_reference_phrases`,
+      )
+      .all() as { fromVerseId: number; normalizedPhrase: string; toStartVerseId: number; toEndVerseId: number }[];
+    const compiled = compileOntology(
+      reviewedSources.files
+        .filter((file) => file.path.startsWith('ontology/concepts/'))
+        .map((file) => ({ name: file.path.split('/').pop()!, contents: file.contents })),
+    );
+    expect(compiled.errors).toEqual([]);
+    const readWrite = database as unknown as SqliteReadWriteDatabase;
+    const collationFingerprint = aliasLayerFingerprint(
+      spellingLayerFingerprint(
+        v9ConceptFingerprint(compiled.ontology, counts, pericopeRows, phraseRows),
+        assembleSpellingVocabulary(readSpellingVocabularySources(readWrite)),
+      ),
+      readCuratedAliasRows(readWrite),
+    );
+    database.prepare('INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)').run('layer_fingerprint', collationFingerprint);
+    database.close();
+    const collationDescriptorPath = join(sandbox, 'v9-collation-base.json');
+    writeFileSync(collationDescriptorPath, `${JSON.stringify({
+      ...baseDescriptor,
+      layerFingerprint: collationFingerprint,
+      databaseSha256: sha256(readFileSync(collationBasePath)),
+      databaseBytes: statSync(collationBasePath).size,
+    })}\n`);
+
+    const built = await buildCandidate({
+      ...request(lexiconProposal('collation mirror phrase'), 'v9-collation-mirror'),
+      baseDatabasePath: collationBasePath,
+      baseDescriptorPath: collationDescriptorPath,
+    });
+    expect(built.status).toBe('BUILT');
     expect(sha256(readFileSync(baseDatabasePath))).toBe(baseSha);
   }, 120_000);
 
