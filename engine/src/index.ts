@@ -21,6 +21,7 @@ export {
   MAX_CANDIDATES,
   MAX_PHRASE_LENGTH,
   type CorpusMeta,
+  type CuratedAliasRow,
   type PhraseMatch,
   type TokenMatch,
 } from './corpus/repository.js';
@@ -38,6 +39,8 @@ export {
 } from './intents/lexical.js';
 
 export {
+  aliasConceptEvidence,
+  aliasPassageEvidence,
   dedupeConceptAnchors,
   PASSAGE_TERM_PMI_HALF_SATURATION,
   sourceLabel,
@@ -55,6 +58,7 @@ export {
 } from './intents/spelling.js';
 
 export {
+  normalizedPhrase,
   normalizeToken,
   significantWords,
   significantWordsWithSurface,

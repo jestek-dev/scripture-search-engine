@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  aliasConceptEvidence,
+  aliasPassageEvidence,
   conceptAnchorEvidence,
   conceptCueEvidence,
   dedupeConceptAnchors,
@@ -364,5 +366,65 @@ describe('dedupeConceptAnchors (0.10.0 stage 6)', () => {
     for (let i = 0; i < 5; i += 1) {
       expect(JSON.stringify(dedupeConceptAnchors(rows))).toBe(once);
     }
+  });
+});
+
+describe('alias evidence (QR-6)', () => {
+  const alias = {
+    id: 1,
+    title: 'It Is Well with My Soul',
+    conceptId: 'hope-in-god',
+    conceptLabel: 'Hope',
+    startVerseId: null,
+    endVerseId: null,
+    sourceId: 'hymn-aliases',
+    weight: 0.9,
+    locator: 'Horatio G. Spafford, "It Is Well with My Soul" (1873)',
+  } as const;
+
+  it('concept arm: chip names the hymn AND the curated theme — attribution, never adjudication', () => {
+    const evidence = aliasConceptEvidence(alias, { ...anchor, conceptLabel: 'Hope', weight: 0.8 });
+    expect(evidence.family).toBe('concept_anchor');
+    expect(evidence.label).toBe('Hymn: "It Is Well with My Soul" → Theme: Hope');
+    // Strength is the alias weight TIMES the anchor weight: the alias never
+    // outranks what the concept's own curation says about a passage.
+    expect(evidence.strength).toBeCloseTo(0.9 * 0.8, 10);
+    expect(evidence.provenance.sourceId).toBe('hymn-aliases');
+    expect(evidence.provenance.label).toBe('LH editorial (public-domain hymn index)');
+    expect(evidence.provenance.locator).toBe(
+      'Horatio G. Spafford, "It Is Well with My Soul" (1873)',
+    );
+  });
+
+  it('range arm: chip carries only the hymn attribution (the reference IS the passage)', () => {
+    const rangeAlias = {
+      ...alias,
+      title: 'The Solid Rock',
+      conceptId: null,
+      conceptLabel: null,
+      startVerseId: 60002004,
+      endVerseId: 60002007,
+      weight: 1,
+      locator: 'Edward Mote, "The Solid Rock" (1834)',
+    } as const;
+    const evidence = aliasPassageEvidence(rangeAlias, {
+      verseId: 60002004,
+      translationId: 1,
+      translationCode: 'WEB',
+      bookId: 60,
+      bookName: '1 Peter',
+      chapter: 2,
+      verse: 4,
+      text: 'Come to him, a living stone...',
+    } as never);
+    expect(evidence.family).toBe('concept_anchor');
+    expect(evidence.label).toBe('Hymn: "The Solid Rock"');
+    expect(evidence.strength).toBe(1);
+    expect(evidence.provenance.sourceId).toBe('hymn-aliases');
+  });
+
+  it('clamps out-of-range weights into [0, 1] like every other evidence builder', () => {
+    const evidence = aliasConceptEvidence({ ...alias, weight: 7 }, { ...anchor, weight: 2 });
+    expect(evidence.strength).toBe(1);
   });
 });

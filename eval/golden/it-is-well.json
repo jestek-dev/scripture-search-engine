@@ -29,7 +29,18 @@
     "engine half that demotes Jer 4:10 here; the guard stays mustNotLead,",
     "not mustNotRank, per the E2 reasoning above. Its pending ranker twin",
     "is ranking-invariants-0-10.json; stage-1 battery replay on the full",
-    "corpus is the acceptance evidence."
+    "corpus is the acceptance evidence.",
+    "",
+    "2026-08-22 (0.13.0 QR-6 rider): STAYS PENDING through the alias flip,",
+    "deliberately. This fixture is guard-only, and its one guard is vacuous",
+    "on the fixture corpus (Jeremiah 4 still absent) — promoting a fixture",
+    "whose only assertion cannot fire would activate a decoration, the exact",
+    "failure the Guard-vacuity doctrine exists to prevent. The QR-6 twin",
+    "hymn-it-is-well.json is ACTIVE and carries this same Jer 4:10 mustNotLead",
+    "wording alongside non-vacuous positive pins (Jer 29:11 #1 with the",
+    "curated hymn chip), so the guard's intent is enforced by an active",
+    "fixture; this one promotes when Jeremiah 4 lands in the fixture corpus.",
+    "Flagged in notes-for-pr for Jesse."
   ],
   "mustNotLead": [
     {

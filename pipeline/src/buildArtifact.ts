@@ -49,10 +49,12 @@ import { dirname, join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { fileURLToPath } from 'node:url';
 
+import { buildAliasLayer } from './buildAliasLayer.js';
 import { buildConceptLayer, type ConceptLayerInput } from './buildConceptLayer.js';
 import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
 import { buildSpellingIndex, type SqliteReadWriteDatabase } from './buildSpellingIndex.js';
 import { EXPOSITION_SOURCES } from './expositionSources.js';
+import { compileHymnAliases } from './importers/aliasImporter.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import { loadExposition } from './loadExpositions.js';
 import { fingerprintDirectory } from './provenance/contentFingerprint.js';
@@ -68,6 +70,7 @@ const ROOT = join(HERE, '..');
 const SOURCES = join(ROOT, 'sources');
 const MANIFEST_DIR = join(ROOT, 'manifests');
 const ONTOLOGY_DIR = join(ROOT, '..', 'ontology', 'concepts');
+const ALIASES_DIR = join(ROOT, '..', 'ontology', 'aliases');
 const ARTIFACT_DIR = join(ROOT, '..', 'artifacts');
 
 function loadManifests(): ManifestSet {
@@ -458,13 +461,36 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
         `${layer.verseTerms} verse terms (${layer.droppedOutOfCorpus} dropped out of corpus)\n`,
     );
 
-    // Spelling index LAST (schema v7, QR-5): derived from rows already in
-    // this database; chains the layer fingerprint per-record.
+    // Spelling index next-to-last (schema v7, QR-5): derived from rows
+    // already in this database; chains the layer fingerprint per-record.
     const spelling = buildSpellingIndex(database as unknown as SqliteReadWriteDatabase);
     process.stdout.write(
       `spelling : ${spelling.termCount} vocabulary terms, ` +
         `${spelling.deleteRowCount} delete rows\n`,
     );
+
+    // Curated aliases LAST (QR-6, 0.13.0 — no schema bump): reviewed pack
+    // rows compiled against the ontology, chained onto the spelling
+    // fingerprint per-record. An empty pack set is a byte-level no-op.
+    const aliasFiles = existsSync(ALIASES_DIR)
+      ? readdirSync(ALIASES_DIR)
+          .filter((name) => name.endsWith('.yaml'))
+          .sort()
+          .map((name) => ({ name, contents: readFileSync(join(ALIASES_DIR, name), 'utf8') }))
+      : [];
+    const compiledAliases = compileHymnAliases(
+      aliasFiles,
+      new Set(ontology.concepts.map((concept) => concept.id)),
+    );
+    if (compiledAliases.errors.length > 0) {
+      throw new Error(`buildArtifact: alias pack errors:\n  ${compiledAliases.errors.join('\n  ')}`);
+    }
+    const aliases = buildAliasLayer(
+      database as unknown as SqliteReadWriteDatabase,
+      compiledAliases.rows,
+      manifests,
+    );
+    process.stdout.write(`aliases  : ${aliases.aliasCount} curated phrase/hymn aliases\n`);
 
     database.exec('VACUUM');
     const perTableBytes = measurePerTableBytes(database as unknown as SqliteReadable);
@@ -507,9 +533,10 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       tokenizerVersion: corpus.tokenizerVersion,
       engineVersion: readEngineVersion(),
       corpusFingerprint: corpus.corpusFingerprint,
-      // The FINAL layer identity: the spelling index chains on the concept
-      // layer's fingerprint (schema v7) and writes the result into meta.
-      layerFingerprint: spelling.layerFingerprint,
+      // The FINAL layer identity: concept layer → spelling index → curated
+      // aliases, each chaining on the last (QR-6; the alias link is a no-op
+      // when no rows ship, so pre-QR-6 identities are preserved exactly).
+      layerFingerprint: aliases.layerFingerprint,
       manifestFingerprint: manifestFingerprint(manifests),
       databaseSha256,
       databaseBytes,
@@ -540,6 +567,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
         translationTokens: layer.translationTokens,
         spellingTerms: spelling.termCount,
         spellingDeletes: spelling.deleteRowCount,
+        curatedAliases: aliases.aliasCount,
       },
       sources: manifests.sources
         .filter((source) => source.sha256)

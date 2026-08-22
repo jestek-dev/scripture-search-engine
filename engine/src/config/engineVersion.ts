@@ -28,7 +28,19 @@
 // cited (token chips + the additive `corrections` list). Substituted tokens
 // change which verses surface and how they are explained, so this bumps in
 // the same commit as the behavior and the schema.
-export const ENGINE_VERSION = '0.12.0';
+// 0.13.0 (QR-6): curated phrase/hymn aliases (no schema bump — the
+// curated_aliases table shipped EMPTY in v7 and the engine probes
+// presence-and-rows). research() discovery matches the TYPED query's
+// normalizedPhrase (stopwords kept) against curated_aliases by whole-string
+// EQUALITY — never containment — and surfaces the target concept's own
+// curated anchors (or the named verse range) under the existing
+// concept_anchor family with a full attribution chip
+// (`Hymn: "<title>" → Theme: <label>`). New evidence on alias-keyed queries
+// is results-visible, so this bumps in the same commit as the behavior;
+// non-alias queries are untouched by construction (equality matching).
+// Rollback: rebuild the artifact without alias rows (the probe reverts
+// behavior); an engine revert is a new version.
+export const ENGINE_VERSION = '0.13.0';
 
 /**
  * Bumped independently of ENGINE_VERSION when the tokenizer changes, because

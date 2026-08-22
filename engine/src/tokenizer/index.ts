@@ -203,6 +203,28 @@ export function significantWordsWithSurface(
 }
 
 /**
+ * Whole-query phrase normalization for the curated alias table
+ * (0.13.0/QR-6): lowercase, apostrophes removed, punctuation folded to
+ * spaces, whitespace collapsed — and NOTHING else. Stopwords are KEPT and no
+ * stemming, archaic folding, or lemma lookup applies, because the phrases
+ * this key serves are exactly the stopword-heavy lines the token pipeline
+ * cannot represent ("it is well with my soul" -> `well soul`). Matching is
+ * whole-string EQUALITY against curated_aliases.normalized_raw, never
+ * containment, so the minimal normalization is the safety property: the less
+ * this folds, the less an alias can accidentally swallow.
+ *
+ * This is an ADDITIVE surface over the same `rawWords` core every other
+ * tokenizer output uses — not a second tokenizer, and there is still no
+ * options parameter. The token stream is untouched (invariance-tested) and
+ * TOKENIZER_VERSION stays 1.0.0. The pipeline's alias importer imports THIS
+ * function (never a mirror), so build-side keys and query-side keys cannot
+ * drift.
+ */
+export function normalizedPhrase(text: string): string {
+  return rawWords(text).join(' ');
+}
+
+/**
  * Positional token stream: every significant occurrence, with the word index
  * it came from. Proximity scoring (intent 3) needs positions, which the
  * deduplicated form above deliberately discards. Positions are indices into

@@ -55,6 +55,21 @@ reviews:
       weight). §5 applies: each editorial pairing is signed off by PR merge;
       the audit's Part 1 §C inventories all 148 editorial anchors.
 
+  - source: hymn-aliases
+    reviewedAt: "2026-08-22"
+    reviewer: "QR-6 starter-pack curation (see ontology/aliases/hymn-lines.yaml; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §1", "DOCTRINAL-BASIS.md §5"]
+    notes: >-
+      LH's own editorial voice, same class as `editorial`: each row states
+      only that a typed query names a public-domain hymn and that the hymn's
+      scriptural basis is the row's target — attribution the §1 pattern
+      blesses (judgment human, named, cited as a source, never a hidden
+      weight). No prosperity vector: the six starter hymns are classic
+      assurance/refuge/prayer hymns; no material-frame keyword appears in any
+      phrase or target rationale. §5 applies: every row rides the J13
+      line-by-line review, and merging the PR is the review act.
+
   - source: jfb
     reviewedAt: "2026-08-15"
     reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"

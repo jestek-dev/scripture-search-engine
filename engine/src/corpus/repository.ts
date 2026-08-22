@@ -491,6 +491,27 @@ export interface CrossReferenceRow extends ScriptureVerse {
 }
 
 /**
+ * One curated phrase/hymn alias (0.13.0/QR-6): a whole-query key mapping to
+ * exactly one of a curated concept or an explicit verse range (the schema's
+ * XOR CHECK). `title` and `locator` surface verbatim in the explanation chip
+ * — the attribution IS the product here (covenant 6: the engine reports that
+ * a named source connects this phrase to this target; it adjudicates
+ * nothing).
+ */
+export interface CuratedAliasRow {
+  readonly id: number;
+  readonly title: string;
+  readonly conceptId: string | null;
+  /** Label of the target concept; null exactly when conceptId is null. */
+  readonly conceptLabel: string | null;
+  readonly startVerseId: number | null;
+  readonly endVerseId: number | null;
+  readonly sourceId: string;
+  readonly weight: number;
+  readonly locator: string | null;
+}
+
+/**
  * Concept lookup and anchor expansion — Layer A at query time.
  *
  * Kept in the repository (not the intents module) because it is SQL; the
@@ -808,6 +829,87 @@ export class ConceptRepository {
       "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='verse_terms'",
     );
     return num(result.rows[0] ?? { n: 0 }, 'n') > 0;
+  }
+
+  /**
+   * Whether this artifact carries any curated phrase/hymn aliases
+   * (0.13.0/QR-6). Presence-AND-ROWS probed, deliberately stricter than the
+   * other layer probes: schema v7 ships the table EMPTY (QR-5), and an
+   * engine that ran the alias step against an empty table would pay a query
+   * per research() call for nothing — and, more importantly, the rollback
+   * story is "rebuild without alias rows", which must restore pre-QR-6
+   * behavior exactly. No table, or an empty one, and 0.13.0 behaves as
+   * 0.12.0 did.
+   */
+  async hasCuratedAliases(): Promise<boolean> {
+    try {
+      const table = await this.database.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'curated_aliases'",
+      );
+      if (table.rows.length === 0) return false;
+      const rows = await this.database.execute('SELECT 1 AS present FROM curated_aliases LIMIT 1');
+      return rows.rows.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * The curated aliases whose whole-query key equals the given normalized
+   * phrase. EQUALITY, never containment — the line that keeps a curated
+   * phrase table from becoming a hidden second ranking system; brittleness
+   * to extra words is accepted BY DESIGN. `normalized_raw` is UNIQUE, so
+   * this returns at most one row; it is typed as a list so the caller does
+   * not encode that schema fact.
+   */
+  async matchAliases(normalizedQuery: string): Promise<readonly CuratedAliasRow[]> {
+    if (!normalizedQuery) return [];
+    const result = await this.database.execute(
+      `SELECT a.id AS id, a.title AS title, a.concept_id AS conceptId,
+              c.label AS conceptLabel,
+              a.start_verse_id AS startVerseId, a.end_verse_id AS endVerseId,
+              a.source_id AS sourceId, a.weight AS weight, a.locator AS locator
+       FROM curated_aliases a
+       LEFT JOIN concepts c ON c.id = a.concept_id
+       WHERE a.normalized_raw = ?
+       ORDER BY a.id`,
+      [normalizedQuery],
+    );
+    return result.rows.map((row) => ({
+      id: num(row, 'id'),
+      title: str(row, 'title'),
+      conceptId: typeof row['conceptId'] === 'string' ? row['conceptId'] : null,
+      conceptLabel: typeof row['conceptLabel'] === 'string' ? row['conceptLabel'] : null,
+      startVerseId: typeof row['startVerseId'] === 'number' ? row['startVerseId'] : null,
+      endVerseId: typeof row['endVerseId'] === 'number' ? row['endVerseId'] : null,
+      sourceId: str(row, 'sourceId'),
+      weight: num(row, 'weight'),
+      locator: typeof row['locator'] === 'string' ? row['locator'] : null,
+    }));
+  }
+
+  /**
+   * Verses of an explicit alias verse range (the XOR's other arm). A range
+   * absent from this corpus returns no rows — the alias then contributes
+   * nothing, honestly, rather than being guessed at.
+   */
+  async aliasRangeVerses(
+    startVerseId: number,
+    endVerseId: number,
+  ): Promise<readonly ScriptureVerse[]> {
+    const result = await this.database.execute(
+      `SELECT v.id AS id, v.verse_id AS verseId,
+              v.translation_id AS translationId, t.code AS translationCode,
+              v.book_id AS bookId, b.name AS bookName,
+              v.chapter AS chapter, v.verse AS verse, v.text AS text
+       FROM verses v
+       JOIN translations t ON t.id = v.translation_id
+       JOIN books b ON b.id = v.book_id
+       WHERE v.verse_id BETWEEN ? AND ?
+       ORDER BY v.verse_id, t.code`,
+      [startVerseId, endVerseId],
+    );
+    return result.rows.map(mapVerse);
   }
 
   async hasConceptLayer(): Promise<boolean> {

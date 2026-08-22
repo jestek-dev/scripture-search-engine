@@ -29,6 +29,8 @@ import {
   tokenEvidence,
 } from './intents/lexical.js';
 import {
+  aliasConceptEvidence,
+  aliasPassageEvidence,
   conceptAnchorEvidence,
   conceptCueEvidence,
   crossReferenceEvidence,
@@ -43,7 +45,7 @@ import {
   pickCorrection,
   spellingEditBudget,
 } from './intents/spelling.js';
-import { significantWordsWithSurface } from './tokenizer/index.js';
+import { normalizedPhrase, significantWordsWithSurface } from './tokenizer/index.js';
 import { DEFAULT_LIMIT, rank, type RankOptions } from './ranking/rank.js';
 import { pinCorrectionCitations, polishChipsForDisplay } from './reasons/display.js';
 
@@ -157,6 +159,10 @@ export async function createEngine(
   // Presence-probed like the other optional layers: a v6 artifact has no
   // spelling tables and the engine gracefully does not correct (0.12.0/QR-5).
   const hasSpellingIndex = await repository.hasSpellingIndex();
+  // Presence-AND-ROWS probed (0.13.0/QR-6): schema v7 ships curated_aliases
+  // EMPTY, and 0.13.0 over such an artifact must behave exactly as 0.12.0
+  // did. Rebuilding without alias rows IS the rollback.
+  const hasCuratedAliases = await conceptRepository.hasCuratedAliases();
   const documentCount = await repository.documentCount();
   const identity = {
     engineVersion: ENGINE_VERSION,
@@ -483,6 +489,60 @@ export async function createEngine(
                 ),
               ],
             });
+          }
+        }
+      }
+    }
+
+    // Step 5b — curated phrase/hymn aliases (0.13.0/QR-6). Whole-query
+    // EQUALITY on the TYPED query's normalizedPhrase (stopwords kept, no
+    // stemming — see tokenizer), never containment and never the
+    // spelling-corrected token stream: the alias key is a curated claim
+    // about exactly this string, and brittleness to extra words is accepted
+    // BY DESIGN. This is the shape concept_lexicon structurally cannot
+    // carry ("it is well with my soul" -> `well soul`; "how great thou art"
+    // -> `great`). A concept-target alias surfaces the target's own curated
+    // anchors — honestly weighted by the anchors' reviewed weights — under
+    // the existing concept_anchor family (no new SignalFamily; the budgets
+    // roster is untouched); a verse-range alias surfaces the named passage.
+    // Every chip names the hymn and the source; nothing is adjudicated.
+    if (hasCuratedAliases) {
+      const aliasKey = normalizedPhrase(query);
+      if (aliasKey.length > 0) {
+        for (const alias of await conceptRepository.matchAliases(aliasKey)) {
+          if (alias.conceptId !== null) {
+            const anchors = dedupeConceptAnchors(
+              await conceptRepository.anchorVerses([alias.conceptId]),
+            );
+            for (const anchor of anchors) {
+              verses.set(targetIdFor(anchor), anchor);
+              // Same span key the concept step uses, so a verse surfaced by
+              // both merges into one governing span and collapseAnchorRuns
+              // still presents the passage a human named.
+              const spans = anchorSpans.get(targetIdFor(anchor)) ?? new Set<string>();
+              spans.add(
+                `${anchor.conceptId}:${anchor.anchorStartVerseId}-${anchor.anchorEndVerseId}`,
+              );
+              anchorSpans.set(targetIdFor(anchor), spans);
+              contributions.push({
+                verse: anchor,
+                evidence: [aliasConceptEvidence(alias, anchor)],
+              });
+            }
+          } else if (alias.startVerseId !== null && alias.endVerseId !== null) {
+            for (const verse of await conceptRepository.aliasRangeVerses(
+              alias.startVerseId,
+              alias.endVerseId,
+            )) {
+              verses.set(targetIdFor(verse), verse);
+              const spans = anchorSpans.get(targetIdFor(verse)) ?? new Set<string>();
+              spans.add(`alias:${alias.id}:${alias.startVerseId}-${alias.endVerseId}`);
+              anchorSpans.set(targetIdFor(verse), spans);
+              contributions.push({
+                verse,
+                evidence: [aliasPassageEvidence(alias, verse)],
+              });
+            }
           }
         }
       }

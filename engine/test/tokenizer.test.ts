@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  normalizedPhrase,
   normalizeToken,
   significantWords,
   significantWordsWithSurface,
@@ -103,6 +104,48 @@ describe('surface pairing (significantWordsWithSurface, 0.12.0/QR-5)', () => {
   it('keeps the FIRST surface for a deduplicated token', () => {
     expect(significantWordsWithSurface('doers doing')).toEqual([
       { token: 'do', surface: 'doers' },
+    ]);
+  });
+});
+
+describe('normalizedPhrase (QR-6 alias key)', () => {
+  it('lowercases, strips apostrophes, folds punctuation to spaces, collapses whitespace', () => {
+    expect(normalizedPhrase("  It is well,  with my SOUL! ")).toBe('it is well with my soul');
+    expect(normalizedPhrase("O' soul — are you weary?")).toBe('o soul are you weary');
+  });
+
+  it('KEEPS stopwords and does NOT stem or fold archaic forms', () => {
+    // The alias key is the remembered phrase, verbatim: "it", "is", "with",
+    // "my" all survive, and "attendeth" stays "attendeth" — brittleness to
+    // wording is the design (equality matching, never containment).
+    expect(normalizedPhrase('it is well with my soul')).toBe('it is well with my soul');
+    expect(normalizedPhrase('when peace like a river attendeth my way')).toBe(
+      'when peace like a river attendeth my way',
+    );
+    // Compare: the search tokenizer would stop/stem most of this away.
+    expect(significantWords('it is well with my soul')).toEqual(['well', 'soul']);
+  });
+
+  it('distinguishes phrases the stemming tokenizer would collapse', () => {
+    expect(normalizedPhrase('hearing and doing')).not.toBe(normalizedPhrase('hearers and doers'));
+  });
+
+  it('returns the empty string for punctuation-only input', () => {
+    expect(normalizedPhrase('—— !!! ...')).toBe('');
+  });
+
+  it('is idempotent (a normalized key re-normalizes to itself)', () => {
+    const key = normalizedPhrase("A Mighty Fortress Is Our God");
+    expect(normalizedPhrase(key)).toBe(key);
+  });
+
+  it('INVARIANCE: adding normalizedPhrase changed no existing tokenizer output', () => {
+    // The additive-surface covenant made testable: the search-side outputs
+    // for a probe sentence are exactly what they were before QR-6.
+    expect(significantWords('thou shalt behold the glory unto thee')).toEqual(['glory']);
+    expect(tokenStream('hearing and doing').map((t) => `${t.token}@${t.position}`)).toEqual([
+      'hear@0',
+      'do@2',
     ]);
   });
 });

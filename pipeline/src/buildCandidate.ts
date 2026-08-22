@@ -46,6 +46,11 @@ import {
   spellingLayerFingerprint,
   type SqliteReadWriteDatabase,
 } from './buildSpellingIndex.js';
+import {
+  aliasLayerFingerprint,
+  chainAliasLayerFingerprint,
+  readCuratedAliasRows,
+} from './buildAliasLayer.js';
 import { compileOntology, parseAnchorRef, type CompiledOntology, type ConceptSource } from './importers/ontologyImporter.js';
 import {
   checkProvenance,
@@ -923,6 +928,14 @@ function hasSpellingIndex(database: DatabaseSync): boolean {
   return Number(row.present) === DERIVED_SPELLING_TABLES.length;
 }
 
+/** Presence probe for the QR-6 alias table (schema v7; absent pre-v7). */
+function hasCuratedAliasTable(database: DatabaseSync): boolean {
+  const row = database.prepare(
+    "SELECT COUNT(*) AS present FROM sqlite_master WHERE type = 'table' AND name = 'curated_aliases'",
+  ).get() as { present: number };
+  return Number(row.present) === 1;
+}
+
 /** digestRows over the shipped spelling tables, keyed like the expectation. */
 function actualSpellingTableDigests(database: DatabaseSync): Record<string, string> {
   return {
@@ -1773,9 +1786,22 @@ function inspectLayerExpectation(
       ? readSpellingVocabularySources(database as unknown as SqliteReadWriteDatabase)
       : null;
     const baseConceptFingerprint = layerFingerprint(baseOntology, layerCounts);
-    const expectedBaseFingerprint = spellingSources
-      ? spellingLayerFingerprint(baseConceptFingerprint, assembleSpellingVocabulary(spellingSources))
-      : baseConceptFingerprint;
+    // QR-6: the chain's LAST link. Alias rows are non-owned bytes a
+    // candidate never touches (byte-verified by the copied-table check), but
+    // they end the layer-fingerprint chain, so both the base check and the
+    // candidate expectation must reproduce the same links over the same
+    // rows. A rowless (or pre-v7 absent) table contributes nothing — the
+    // pre-QR-6 chains are preserved exactly.
+    const aliasRows = hasCuratedAliasTable(database)
+      ? readCuratedAliasRows(database as unknown as SqliteReadWriteDatabase)
+      : [];
+    const chainAliases = (fingerprint: string): string =>
+      aliasRows.length > 0 ? aliasLayerFingerprint(fingerprint, aliasRows) : fingerprint;
+    const expectedBaseFingerprint = chainAliases(
+      spellingSources
+        ? spellingLayerFingerprint(baseConceptFingerprint, assembleSpellingVocabulary(spellingSources))
+        : baseConceptFingerprint,
+    );
     if (expectedBaseFingerprint !== descriptor.layerFingerprint) {
       fail('SOURCE_SNAPSHOT_MISMATCH', 'reviewed ontology snapshot does not reproduce the base layer fingerprint.');
     }
@@ -1799,7 +1825,10 @@ function inspectLayerExpectation(
           candidateRows.concept_lexicon!.map((row) => row.normalized as string),
         )],
       });
-      candidateLayerFingerprint = spellingLayerFingerprint(candidateConceptFingerprint, candidateTerms);
+      candidateLayerFingerprint = spellingLayerFingerprint(
+        candidateConceptFingerprint,
+        candidateTerms,
+      );
       spellingTableDigests = {
         spelling_terms: digestRows(candidateTerms.map((row) => ({
           term: row.term, document_count: row.documentCount, origins: row.origins,
@@ -1809,6 +1838,9 @@ function inspectLayerExpectation(
         }))),
       };
     }
+    // Same alias links on the candidate side: candidates never mutate alias
+    // rows, so the candidate's chain ends over the base's own verified rows.
+    candidateLayerFingerprint = chainAliases(candidateLayerFingerprint);
     return {
       ownedRowsDigest: candidateOwnedDigest,
       layerFingerprint: candidateLayerFingerprint,
@@ -1929,6 +1961,15 @@ export async function buildCandidate(
         // top of the concept fingerprint installOwnedLayer just wrote. Runs
         // after installOwnedLayer's COMMIT — it manages its own transaction.
         buildSpellingIndex(database as unknown as SqliteReadWriteDatabase);
+      }
+      if (hasCuratedAliasTable(database)) {
+        // Re-chain the alias links LAST (QR-6): installOwnedLayer and
+        // buildSpellingIndex rewrote meta's layer_fingerprint, but the copied
+        // curated_aliases rows (non-owned, byte-verified with every other
+        // non-owned table) still end the chain in a real artifact. A rowless
+        // table is a no-op inside chainAliasLayerFingerprint, so pre-pack v7
+        // bases keep their exact pre-QR-6 identity.
+        chainAliasLayerFingerprint(database as unknown as SqliteReadWriteDatabase);
       }
       if (ownedDigest(databaseOwnedRows(database)) !== expectedLayer.ownedRowsDigest) {
         fail('CANDIDATE_INVALID', 'installed candidate rows differ from the proposal-derived rows.');
