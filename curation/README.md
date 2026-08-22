@@ -20,21 +20,34 @@ workspace, not a constraint on it.
   `pipeline/test/curationBoundary.test.ts` parses every source file under
   `engine/` and `pipeline/` (src, test, scripts, loose configs — only
   each package's top-level `dist`/`node_modules` are pruned) with the
-  TypeScript compiler's parser and reads module specifiers off the AST —
-  static and dynamic imports, re-exports, `require`/`require.resolve`,
-  `createRequire`. It proves that no **statically resolvable** specifier
-  in those trees names curation, and it **fails closed** on what it
-  cannot prove: a dynamic `import()`/`require()` whose argument is not a
-  static literal is flagged as indeterminate unless a committed allowlist
-  entry carries a written reason (that allowlist is empty — nothing in
-  the scanned trees uses a dynamic specifier at all). What it cannot see:
-  code outside the scanned trees, or a build step that generates or
-  rewrites its own code; a runtime resolve-hook check on the builders is
-  the named future hardening for that class (see the PR notes), not an
-  implemented claim. The reverse direction is allowed on purpose — this
-  tooling imports the pipeline's own ontology compiler and the engine's
-  own tokenizer (covenant #4: one tokenizer) so it reasons about exactly
-  what ships.
+  TypeScript compiler's parser. **What the scan proves:** (1) the
+  module-import graph over statically resolvable specifiers — static and
+  dynamic imports, re-exports, `require`/`require.resolve`,
+  `createRequire` — names no curation path, with specifiers checked raw,
+  path-normalized, and percent-decoded (`cur%61tion` is Node-resolvable
+  and is caught); (2) the static execution vectors beyond the import
+  graph: `child_process` calls (binding-tracked through aliases,
+  namespaces, and `require` destructuring; static commands and args
+  checked, non-static ones refused unless the command is a reviewed
+  non-JS-runner literal like `unzip`), `Worker` construction with a
+  static or computed target, `vm` code loaders, every `package.json`
+  `scripts` block in the scanned trees (a plain string scan, claimed as
+  nothing more), and symlinks (none exist; one into curation would
+  fail). Everything non-static in those positions **fails closed** —
+  flagged as indeterminate unless a committed allowlist entry names the
+  file, the exact call site, and a written reason (one entry today: a
+  reviewed `promisify(execFile)` test handle). **What remains out of
+  scope:** subprocess invocations composed dynamically beyond the flagged
+  forms, code outside the scanned trees (including shell scripts a
+  subprocess might run), builds that rewrite their own code, and
+  OS-level tricks. No static scan can close those classes — and a Node
+  resolve hook would not either, since it governs in-process module
+  resolution only and never sees a subprocess or an npm script. They
+  remain gated by the covenant's named human safeguards: the gauntlet,
+  and human PR review of every diff. The reverse direction is allowed on
+  purpose — this tooling imports the pipeline's own ontology compiler
+  and the engine's own tokenizer (covenant #4: one tokenizer) so it
+  reasons about exactly what ships.
 
 ## The model is locked
 
