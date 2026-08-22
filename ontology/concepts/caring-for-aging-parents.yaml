@@ -82,11 +82,26 @@
 # mandated phrase could fire there); `when a parent dies` and
 # `losing a parent` (both measured with the identical fn13 harm shape:
 # "Theme: Raising children" at #1-#4 for a grieving searcher, and no
-# mandated phrase reachable). Residual registers disclosed, not
+# mandated phrase reachable). A tenth phrase, `take care of your
+# parents` -> {take, care, parent}, was admitted 2026-08-22 after the
+# round-1 critique (P4.6-1) measured the same harm shape live on the
+# caregiver-advice register — see the lexicon comment for the judged
+# token-set collision. Residual registers disclosed, not
 # phrased (PR body): `death of a parent` already leads with an honest
 # "God in the valley" chip (Raising children residue at #2); `lost my
 # mother` / `my dad is dying` ("dad"/"mom" absent from WEB vocabulary)
-# stay chip-less lexical with no wrong-concept fire. Quoted-verse
+# stay chip-less lexical with no wrong-concept fire; `caring for my
+# parents` stays UNPHRASED by design ({caring, parent} is token-set
+# identical to "how to be a caring parent", a parenting-register query
+# correctly led by Raising children on both beds — any phrase reaching
+# one surface hijacks the other, so the caregiver reading stays a
+# disclosed residual); `my father died` / `my mother died` stay
+# UNPHRASED here by register ({father|mother, died} is bereavement, not
+# caregiving — this pack's chip would be the wrong reason and its
+# honoring anchors ("that your days may be long") the wrong word after
+# a death; the honest home is grief-and-loss, whose approved lexicon
+# already carries the sibling phrase `my child died` — named follow-up,
+# fixture-first, rides the PR notes). Quoted-verse
 # breadth probed on both beds before commit — see log; parenting's own
 # registers ("train up a child", "prayer for my child", "children obey
 # your parents") verified byte-identical before -> after.
@@ -112,6 +127,22 @@ lexicon:
   # unreachable by any phrase above (see width note).
   - when a parent dies
   - losing a parent
+  # Round-1 critique P4.6-1 admission (2026-08-22): the caregiver-advice
+  # phrasing, measured live with the fn13 harm shape (Raising children
+  # #1-#3 hermetic; "take care of" exact-phrase carriers lead the full
+  # bed) and unreachable by every phrase above ({take, care, parent} —
+  # three significant tokens, "of"/"your" stopwords; also covers "take
+  # care of MY parents", same token set). KNOWN TOKEN-SET COLLISION,
+  # judged and disclosed: "children take care of parents" and "parents
+  # take care of their children" tokenize identically ({children, take,
+  # care, parent}) — the engine cannot separate the two surfaces. Before
+  # this phrase BOTH got Raising-children leads (the fn13 harm for the
+  # caregiver surface); now both get this pack's comfort lead with
+  # Raising-children rows still in-window under honest chips. The
+  # caregiver surface is healed; the parental-duty surface trades to an
+  # off-intent (not wounding) lead — the reverse trade was the audit's
+  # graded harm. Guard fixture line added first (fixture-first).
+  - take care of your parents
 anchors:
   # "the Father of mercies and God of all comfort, who comforts us in
   # all our affliction, that we may be able to comfort those who are in

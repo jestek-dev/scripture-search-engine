@@ -5,7 +5,8 @@
     "aging parents",
     "caring for elderly parents",
     "when a parent dies",
-    "losing a parent"
+    "losing a parent",
+    "take care of your parents"
   ],
   "status": "active",
   "note": [
@@ -25,7 +26,13 @@
     "'losing a parent' assert the two lexicon phrases added beyond the",
     "worklist's five (dies / losing are distinct tokens under the one",
     "tokenizer — no mandated phrase could reach either register; both",
-    "measured with the identical harm shape pre-commit)."
+    "measured with the identical harm shape pre-commit).",
+    "'take care of your parents' added 2026-08-22 (round-1 critique",
+    "P4.6-1): the same fn13 harm shape measured live on the caregiver",
+    "phrasing ({take, care, parent} — no committed phrase could reach",
+    "it; Raising-children #1-#3 hermetic, both mustNotLead refs in the",
+    "leadership window). This query line was extended FIRST and measured",
+    "failing before the matching lexicon phrase existed."
   ],
   "expectedTop": [
     {
