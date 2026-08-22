@@ -23,10 +23,14 @@ export interface Book {
 // order; only total verse count differs (31,102) due to a small number of
 // verse-numbering differences within chapters, not chapter counts.
 export const BOOKS: readonly Book[] = [
+  // "Genisis" (i-for-e slip) — curated misspelling row (P5.2/QR-3 (c), J33
+  // review): unambiguous across all 66 books, not an English word.
   { id: 1, name: "Genesis", testament: "OT", chapterCount: 50, abbreviations: ["Gen", "Gn", "Genisis"] },
   { id: 2, name: "Exodus", testament: "OT", chapterCount: 40, abbreviations: ["Exod", "Exo", "Ex"] },
   { id: 3, name: "Leviticus", testament: "OT", chapterCount: 27, abbreviations: ["Lev", "Lv"] },
   { id: 4, name: "Numbers", testament: "OT", chapterCount: 36, abbreviations: ["Num", "Nm", "Nu"] },
+  // "Duetoronomy"/"Dueteronomy"/"Deutoronomy" (ue-transposition and dropped-e
+  // variants) — curated misspelling rows (J33): unambiguous, not English words.
   { id: 5, name: "Deuteronomy", testament: "OT", chapterCount: 34, abbreviations: ["Deut", "Dt", "Duetoronomy", "Dueteronomy", "Deutoronomy"] },
   { id: 6, name: "Joshua", testament: "OT", chapterCount: 24, abbreviations: ["Josh", "Jos"] },
   { id: 7, name: "Judges", testament: "OT", chapterCount: 21, abbreviations: ["Judg", "Jdg"] },
@@ -105,6 +109,8 @@ export const BOOKS: readonly Book[] = [
     name: "Ecclesiastes",
     testament: "OT",
     chapterCount: 12,
+    // "Ecclesiates" (dropped second s) — curated misspelling row (J33):
+    // unambiguous, not an English word.
     abbreviations: ["Eccles", "Eccl", "Ecc", "Ecclesiates"],
   },
   {
@@ -112,8 +118,14 @@ export const BOOKS: readonly Book[] = [
     name: "Song of Solomon",
     testament: "OT",
     chapterCount: 8,
+    // "Songs of Solomon" (battery ref8: common spoken plural form) and
+    // "Song of Soloman" (a-for-o slip) — curated misspelling rows (J33).
+    // Bare "Songs" deliberately excluded: an English word and a plausible
+    // discovery query.
     abbreviations: ["Song", "SoS", "SS", "Song of Songs", "Canticles", "Songs of Solomon", "Song of Soloman"],
   },
+  // "Isiah" (dropped a) / "Isaih" (ha-transposition) — curated misspelling
+  // rows (J33): unambiguous, not English words.
   { id: 23, name: "Isaiah", testament: "OT", chapterCount: 66, abbreviations: ["Isa", "Is", "Isiah", "Isaih"] },
   { id: 24, name: "Jeremiah", testament: "OT", chapterCount: 52, abbreviations: ["Jer", "Jr"] },
   {
@@ -132,6 +144,8 @@ export const BOOKS: readonly Book[] = [
   { id: 32, name: "Jonah", testament: "OT", chapterCount: 4, abbreviations: ["Jon"] },
   { id: 33, name: "Micah", testament: "OT", chapterCount: 7, abbreviations: ["Mic"] },
   { id: 34, name: "Nahum", testament: "OT", chapterCount: 3, abbreviations: ["Nah"] },
+  // "Habbakuk"/"Habakuk"/"Habbakkuk" (the three common b/k doublings) —
+  // curated misspelling rows (J33): unambiguous, not English words.
   { id: 35, name: "Habakkuk", testament: "OT", chapterCount: 3, abbreviations: ["Hab", "Habbakuk", "Habakuk", "Habbakkuk"] },
   {
     id: 36,
@@ -149,6 +163,8 @@ export const BOOKS: readonly Book[] = [
     abbreviations: ["Zech", "Zec"],
   },
   { id: 39, name: "Malachi", testament: "OT", chapterCount: 4, abbreviations: ["Mal"] },
+  // "Mathew" (single t) — curated misspelling row (J33): unambiguous; the
+  // given-name spelling, not an English word.
   { id: 40, name: "Matthew", testament: "NT", chapterCount: 28, abbreviations: ["Matt", "Mt", "Mathew"] },
   { id: 41, name: "Mark", testament: "NT", chapterCount: 16, abbreviations: ["Mrk", "Mk"] },
   { id: 42, name: "Luke", testament: "NT", chapterCount: 24, abbreviations: ["Lk"] },
@@ -169,6 +185,8 @@ export const BOOKS: readonly Book[] = [
     chapterCount: 13,
     abbreviations: ["2 Cor", "2Cor", "II Corinthians", "II Cor", "2Co", "2nd Corinthians", "Second Corinthians", "2nd Cor"],
   },
+  // "Galations" (o-for-a slip) — curated misspelling row (J33): unambiguous,
+  // not an English word.
   { id: 48, name: "Galatians", testament: "NT", chapterCount: 6, abbreviations: ["Gal", "Galations"] },
   { id: 49, name: "Ephesians", testament: "NT", chapterCount: 6, abbreviations: ["Eph"] },
   {
@@ -176,6 +194,9 @@ export const BOOKS: readonly Book[] = [
     name: "Philippians",
     testament: "NT",
     chapterCount: 4,
+    // "Phillipians"/"Philipians"/"Phillippians" (battery ms4: the common l/p
+    // doubling slips) — curated misspelling rows (J33): unambiguous, not
+    // English words.
     abbreviations: ["Phil", "Php", "Phillipians", "Philipians", "Phillippians"],
   },
   {
@@ -183,6 +204,8 @@ export const BOOKS: readonly Book[] = [
     name: "Colossians",
     testament: "NT",
     chapterCount: 4,
+    // "Collosians"/"Colosians"/"Collossians" (l/s doubling slips) — curated
+    // misspelling rows (J33): unambiguous, not English words.
     abbreviations: ["Col", "Collosians", "Colosians", "Collossians"],
   },
   {
@@ -190,6 +213,8 @@ export const BOOKS: readonly Book[] = [
     name: "1 Thessalonians",
     testament: "NT",
     chapterCount: 5,
+    // "1 Thesalonians" (single s) — curated misspelling row (J33):
+    // unambiguous, not an English word.
     abbreviations: ["1 Thess", "1Thess", "I Thessalonians", "1 Thes", "1Th", "1st Thessalonians", "First Thessalonians", "1st Thess", "1 Thesalonians"],
   },
   {
@@ -197,6 +222,8 @@ export const BOOKS: readonly Book[] = [
     name: "2 Thessalonians",
     testament: "NT",
     chapterCount: 3,
+    // "2 Thesalonians" (single s) — curated misspelling row (J33):
+    // unambiguous, not an English word.
     abbreviations: ["2 Thess", "2Thess", "II Thessalonians", "2 Thes", "2Th", "2nd Thessalonians", "Second Thessalonians", "2nd Thess", "2 Thesalonians"],
   },
   {
