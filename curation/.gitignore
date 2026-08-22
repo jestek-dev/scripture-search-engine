@@ -1,0 +1,4 @@
+# Model weights are fetched by lock (model.lock.json pins revision +
+# sha256), never committed. node_modules is caught by the root ignore.
+.models/
+.cache/

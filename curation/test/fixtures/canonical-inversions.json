@@ -1,0 +1,146 @@
+{
+  "$schema": "curation-canonical-inversions/1",
+  "note": [
+    "Register definitions PINNED from the committed tree on 2026-08-22 (the",
+    "Phase-4 branch) so the acceptance test is deterministic against future",
+    "ontology edits. Each register is the output of buildRegister() at that",
+    "date: concept label, lexicon phrases, and the WEB text of the anchors",
+    "present in the fixture corpus. The three cases are the audit-measured",
+    "sense inversions the tool must rediscover (B4 acceptance)."
+  ],
+  "registers": {
+    "holy-spirit-the-comforter": {
+      "id": "holy-spirit-the-comforter",
+      "texts": [
+        "The Holy Spirit, the Comforter",
+        "the comforter",
+        "comforter",
+        "counselor",
+        "helper",
+        "advocate",
+        "spirit of truth",
+        "holy spirit",
+        "filled with the spirit",
+        "be filled with the holy spirit",
+        "I will pray to the Father, and he will give you another Counselor, that he may be with you forever: the Spirit of truth, whom the world can’t receive, for it doesn’t see him and doesn’t know him. You know him, for he lives with you and will be in you.",
+        "But the Counselor, the Holy Spirit, whom the Father will send in my name, will teach you all things, and will remind you of all that I said to you.",
+        "Nevertheless I tell you the truth: It is to your advantage that I go away; for if I don’t go away, the Counselor won’t come to you. But if I go, I will send him to you.",
+        "“When the Counselor has come, whom I will send to you from the Father, the Spirit of truth, who proceeds from the Father, he will testify about me.",
+        "In the same way, the Spirit also helps our weaknesses, for we don’t know how to pray as we ought. But the Spirit himself makes intercession for us with groanings which can’t be uttered.",
+        "However, when he, the Spirit of truth, has come, he will guide you into all truth, for he will not speak from himself; but whatever he hears, he will speak. He will declare to you things that are coming.",
+        "Don’t be drunken with wine, in which is dissipation, but be filled with the Spirit,"
+      ],
+      "floorTexts": [
+        "I will pray to the Father, and he will give you another Counselor, that he may be with you forever: the Spirit of truth, whom the world can’t receive, for it doesn’t see him and doesn’t know him. You know him, for he lives with you and will be in you.",
+        "But the Counselor, the Holy Spirit, whom the Father will send in my name, will teach you all things, and will remind you of all that I said to you.",
+        "Nevertheless I tell you the truth: It is to your advantage that I go away; for if I don’t go away, the Counselor won’t come to you. But if I go, I will send him to you.",
+        "“When the Counselor has come, whom I will send to you from the Father, the Spirit of truth, who proceeds from the Father, he will testify about me.",
+        "In the same way, the Spirit also helps our weaknesses, for we don’t know how to pray as we ought. But the Spirit himself makes intercession for us with groanings which can’t be uttered.",
+        "However, when he, the Spirit of truth, has come, he will guide you into all truth, for he will not speak from himself; but whatever he hears, he will speak. He will declare to you things that are coming.",
+        "Don’t be drunken with wine, in which is dissipation, but be filled with the Spirit,"
+      ]
+    },
+    "new-creation": {
+      "id": "new-creation",
+      "texts": [
+        "A new creation",
+        "new creation",
+        "fresh start",
+        "new beginnings",
+        "starting over",
+        "Therefore if anyone is in Christ, he is a new creation. The old things have passed away. Behold, all things have become new.",
+        "Create in me a clean heart, O God. Renew a right spirit within me.",
+        "For in Christ Jesus neither is circumcision anything, nor uncircumcision, but a new creation.",
+        "He who sits on the throne said, “Behold, I am making all things new.” He said, “Write, for these words of God are faithful and true.”",
+        "“Repent therefore, and turn again, that your sins may be blotted out, so that there may come times of refreshing from the presence of the Lord,"
+      ],
+      "floorTexts": [
+        "Therefore if anyone is in Christ, he is a new creation. The old things have passed away. Behold, all things have become new.",
+        "Create in me a clean heart, O God. Renew a right spirit within me.",
+        "For in Christ Jesus neither is circumcision anything, nor uncircumcision, but a new creation.",
+        "He who sits on the throne said, “Behold, I am making all things new.” He said, “Write, for these words of God are faithful and true.”",
+        "“Repent therefore, and turn again, that your sins may be blotted out, so that there may come times of refreshing from the presence of the Lord,"
+      ]
+    },
+    "caring-for-aging-parents": {
+      "id": "caring-for-aging-parents",
+      "texts": [
+        "Caring for aging parents",
+        "dying parent",
+        "caring for aging parents",
+        "aging parents",
+        "my mother is dying",
+        "my father is dying",
+        "elderly parents",
+        "watching a parent die",
+        "when a parent dies",
+        "losing a parent",
+        "take care of your parents",
+        "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction, that we may be able to comfort those who are in any affliction, through the comfort with which we ourselves are comforted by God.",
+        "My flesh and my heart fails, but God is the strength of my heart and my portion forever.",
+        "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me.",
+        "For I am persuaded that neither death, nor life, nor angels, nor principalities, nor things present, nor things to come, nor powers, nor height, nor depth, nor any other created thing will be able to separate us from God’s love which is in Christ Jesus our Lord.",
+        "But we don’t want you to be ignorant, brothers, concerning those who have fallen asleep, so that you don’t grieve like the rest, who have no hope. For if we believe that Jesus died and rose again, even so God will bring with him those who have fallen asleep in Jesus.",
+        "“Honor your father and your mother, that your days may be long in the land which the LORD your God gives you.",
+        "“Honor your father and mother,” which is the first commandment with a promise: “that it may be well with you, and you may live long on the earth.”",
+        "Ruth said, “Don’t urge me to leave you, and to return from following you, for where you go, I will go; and where you stay, I will stay. Your people will be my people, and your God my God. Where you die, I will die, and there I will be buried. May the LORD do so to me, and more also, if anything but death parts you and me.”"
+      ],
+      "floorTexts": [
+        "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction, that we may be able to comfort those who are in any affliction, through the comfort with which we ourselves are comforted by God.",
+        "My flesh and my heart fails, but God is the strength of my heart and my portion forever.",
+        "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me.",
+        "For I am persuaded that neither death, nor life, nor angels, nor principalities, nor things present, nor things to come, nor powers, nor height, nor depth, nor any other created thing will be able to separate us from God’s love which is in Christ Jesus our Lord.",
+        "But we don’t want you to be ignorant, brothers, concerning those who have fallen asleep, so that you don’t grieve like the rest, who have no hope. For if we believe that Jesus died and rose again, even so God will bring with him those who have fallen asleep in Jesus.",
+        "“Honor your father and your mother, that your days may be long in the land which the LORD your God gives you.",
+        "“Honor your father and mother,” which is the first commandment with a promise: “that it may be well with you, and you may live long on the earth.”",
+        "Ruth said, “Don’t urge me to leave you, and to return from following you, for where you go, I will go; and where you stay, I will stay. Your people will be my people, and your God my God. Where you die, I will die, and there I will be buried. May the LORD do so to me, and more also, if anything but death parts you and me.”"
+      ]
+    },
+    "parenting": {
+      "id": "parenting",
+      "texts": [
+        "Raising children",
+        "parenting",
+        "raising children",
+        "train up a child",
+        "prayer for my child",
+        "prayer for my teenager",
+        "children obey your parents",
+        "These words, which I command you today, shall be on your heart; and you shall teach them diligently to your children, and shall talk of them when you sit in your house, and when you walk by the way, and when you lie down, and when you rise up.",
+        "You fathers, don’t provoke your children to wrath, but nurture them in the discipline and instruction of the Lord.",
+        "Children, obey your parents in all things, for this pleases the Lord. Fathers, don’t provoke your children, so that they won’t be discouraged.",
+        "My son, don’t despise the LORD’s discipline, neither be weary of his correction; for whom the LORD loves, he corrects, even as a father reproves the son in whom he delights."
+      ],
+      "floorTexts": [
+        "These words, which I command you today, shall be on your heart; and you shall teach them diligently to your children, and shall talk of them when you sit in your house, and when you walk by the way, and when you lie down, and when you rise up.",
+        "You fathers, don’t provoke your children to wrath, but nurture them in the discipline and instruction of the Lord.",
+        "Children, obey your parents in all things, for this pleases the Lord. Fathers, don’t provoke your children, so that they won’t be discouraged.",
+        "My son, don’t despise the LORD’s discipline, neither be weary of his correction; for whom the LORD loves, he corrects, even as a father reproves the son in whom he delights."
+      ]
+    },
+    "god-of-all-comfort": {
+      "id": "god-of-all-comfort",
+      "texts": [
+        "God of all comfort",
+        "comfort",
+        "god of all comfort",
+        "comfort in hard times",
+        "comfort in affliction",
+        "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction, that we may be able to comfort those who are in any affliction, through the comfort with which we ourselves are comforted by God.",
+        "Blessed are those who mourn, for they shall be comforted.",
+        "“Comfort, comfort my people,” says your God.",
+        "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me.",
+        "The Lord GOD’s Spirit is on me, because the LORD has anointed me to preach good news to the humble. He has sent me to bind up the broken hearted, to proclaim liberty to the captives and release to those who are bound, to proclaim the year of the LORD’s favor and the day of vengeance of our God, to comfort all who mourn,",
+        "For whatever things were written before were written for our learning, that through perseverance and through encouragement of the Scriptures we might have hope."
+      ],
+      "floorTexts": [
+        "Blessed be the God and Father of our Lord Jesus Christ, the Father of mercies and God of all comfort, who comforts us in all our affliction, that we may be able to comfort those who are in any affliction, through the comfort with which we ourselves are comforted by God.",
+        "Blessed are those who mourn, for they shall be comforted.",
+        "“Comfort, comfort my people,” says your God.",
+        "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me.",
+        "The Lord GOD’s Spirit is on me, because the LORD has anointed me to preach good news to the humble. He has sent me to bind up the broken hearted, to proclaim liberty to the captives and release to those who are bound, to proclaim the year of the LORD’s favor and the day of vengeance of our God, to comfort all who mourn,",
+        "For whatever things were written before were written for our learning, that through perseverance and through encouragement of the Scriptures we might have hope."
+      ]
+    }
+  }
+}

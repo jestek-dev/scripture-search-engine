@@ -1,0 +1,31 @@
+{
+  "$schema": "curation-model-lock/1",
+  "purpose": [
+    "Pins the ONE embedding model the offline curation tooling may use",
+    "(plan P4.16 / borrowable B4). The model proposes candidates and flags",
+    "sense inversions for HUMAN review; a human approves each with a",
+    "rationale, the gauntlet verifies, and only static reviewed anchors",
+    "ship. Nothing in curation/ is imported by the artifact build graph or",
+    "the engine, and no embedding, similarity score, or model output ever",
+    "reaches the shipped artifact (covenant #1: no AI at runtime)."
+  ],
+  "upstream": {
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "license": "Apache-2.0",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  },
+  "pinned": {
+    "repo": "Xenova/all-MiniLM-L6-v2",
+    "note": "ONNX conversion of the upstream model (same weights, same Apache-2.0 license), runnable offline in Node via @xenova/transformers with no Python and no remote calls.",
+    "license": "Apache-2.0",
+    "revision": "751bff37182d3f1213fa05d7196b954e230abad9",
+    "files": {
+      "config.json": "7135149f7cffa1a573466c6e4d8423ed73b62fd2332c575bf738a0d033f70df7",
+      "tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+      "tokenizer_config.json": "9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3",
+      "onnx/model_quantized.onnx": "afdb6f1a0e45b715d0bb9b11772f032c399babd23bfc31fed1c170afc848bdb1"
+    }
+  },
+  "localPath": ".models/Xenova/all-MiniLM-L6-v2",
+  "fetch": "npm run fetch-model (downloads the pinned revision, verifies every sha256 above, fails closed on any mismatch)"
+}
