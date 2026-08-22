@@ -1,0 +1,116 @@
+# GENESIS-PILOT PACK (cluster draft, 2026-08-22) — the hallowed seventh day.
+# Genesis-pilot proposal 5: "rest-for-the-weary is shaped by Matt 11:28 and
+# does not honestly cover sabbath queries; Gen 2:1-3 is the origin text."
+#
+# COLLISION DESIGN (the single most dangerous G4 pair of the 14 new packs,
+# per the scoping brief): `rest-for-the-weary` owns bare `rest`, `weary`,
+# `tired`, `exhausted`, `burnout`. This lexicon is therefore built on
+# sabbath/seventh-day phrasings and NEVER carries bare `rest`. Measured with
+# the engine's own significantWords against rest-for-the-weary (8 phrases,
+# 8 tokens): shared phrases 0/8 = 0.000 (limit 0.34); shared tokens 1 (`rest`,
+# from "sabbath rest" + "day of rest") / 8 = 0.125 (limit 0.6). Worst pair
+# anywhere in the full 108-concept scan is the-lords-discipline at token
+# 0.286 (`god`, `lord`) — everything under half the limits.
+#
+# PR #33 lexicon-inventory note (if it lands first/alongside): this concept's
+# row must ADMIT the bare word `sabbath` (the word IS the concept; one-token
+# specificity discount 0.55 keeps it humble) and SKIP `rest` with the reason
+# that rest-for-the-weary already admits it — a sabbath query that says only
+# "rest" is a weariness query, not a sabbath query.
+#
+# Distinctness argued once, here: rest-for-the-weary answers "I am tired"
+# with the invitation of Matt 11:28; this pack answers "what is the sabbath"
+# with the day God blessed and hallowed — institution (Gen 2), commandment
+# (Exod 20 / Deut 5), delight (Isa 58), Lord of the sabbath (Mark 2), and
+# the remaining sabbath rest (Heb 4). Cross-linked via related:, never via
+# shared lexicon.
+id: sabbath-rest
+label: Sabbath rest
+lexicon:
+  # Bare word, deliberate (NEEDS-JESSE §1.6d option-3 register): "sabbath"
+  # is what people type and the word IS the concept; record admitted:
+  # [sabbath] in ontology/lexicon-inventory.yaml under PR #33.
+  - sabbath
+  - remember the sabbath day
+  - keep the sabbath holy
+  - sabbath rest
+  - the seventh day
+  - day of rest
+  - god rested on the seventh day
+  - lord of the sabbath
+anchors:
+  # Torrey SABBATH, THE "Instituted by God :: Genesis 2:3" and "Grounds of
+  # its institution :: Genesis 2:2, Genesis 2:3"; editorial for carrying v1
+  # (the completed array the day crowns). "God blessed the seventh day, and
+  # made it holy, because he rested in it from all his work" (WEB). The
+  # origin text — no `sabbath` token appears in it, which is exactly why a
+  # lexical engine can never surface it for the query; this anchor is the
+  # knowledge. IN fixture corpus (Genesis 2). Editorial for the range: the
+  # outline cites 2:2 and 2:3 only; v1 is added scene-setting, and claiming
+  # [torrey] for 1-3 would overstate the outline (covenant Jer 31:31-34
+  # precedent).
+  - ref: Genesis 2:1-3
+    sources: [editorial]
+    weight: 1.0
+  # Torrey SABBATH, THE "Commanded to be sanctified :: Exodus 20:8"; "The
+  # seventh day observed as :: Exodus 20:9-11"; "God blessed/hallowed ::
+  # Exodus 20:11". "Remember the Sabbath day, to keep it holy" (WEB). The
+  # commandment itself, grounding the day in creation (v11). IN corpus.
+  # NB: the-ten-commandments anchors Exodus 20:1-17 (the containing range);
+  # honest overlap — the fixture's primary assert is Gen 2:1-3 partly so the
+  # G3 reason-label check never has to arbitrate between the two chips.
+  - ref: Exodus 20:8-11
+    sources: [torrey]
+    weight: 0.95
+  # Torrey SABBATH, THE "Made for man :: Mark 2:27" and "Christ Is Lord
+  # of :: Mark 2:28". "The Sabbath was made for man, not man for the
+  # Sabbath" (WEB wording from knowledge — Mark 2 NOT in
+  # pipeline/fixtures/web-subset.json; corpus-needs noted in notes.md).
+  # The sense-clarifying word over the whole topic.
+  - ref: Mark 2:27-28
+    sources: [torrey]
+    weight: 0.9
+  # Torrey SABBATH, THE "A type of the heavenly rest :: Hebrews 4:4,
+  # Hebrews 4:9"; editorial for the 9-11 range (v10 rest-from-works, v11
+  # the exhortation to enter). "There remains therefore a Sabbath rest for
+  # the people of God" (WEB). The NT's own theology of the day. IN corpus
+  # (Hebrews 4). Editorial because vv10-11 extend past the outline's 4:4/4:9
+  # citations (same range rule as Gen 2:1-3 above).
+  - ref: Hebrews 4:9-11
+    sources: [editorial]
+    weight: 0.85
+  # Torrey SABBATH, THE "Blessedness of honouring :: Isaiah 58:13,
+  # Isaiah 58:14". "Call the Sabbath a delight... then you shall delight
+  # yourself in the LORD" (WEB wording from knowledge — Isaiah 58 NOT in
+  # web-subset; notes.md). Sabbath as delight, not burden.
+  - ref: Isaiah 58:13-14
+    sources: [torrey]
+    weight: 0.85
+  # Torrey SABBATH, THE "God will have his goodness commemorated in the
+  # observance of :: Deuteronomy 5:15"; "Servants and cattle should be
+  # allowed to rest upon :: Deuteronomy 5:14". The second giving — sabbath
+  # grounded in redemption from slavery, mercy extended to servant and
+  # stranger. (Deuteronomy 5 NOT in web-subset; notes.md.) Editorial: the
+  # outline cites 5:14 and 5:15 only; vv12-13 (the command opener) are the
+  # editorial extension.
+  - ref: Deuteronomy 5:12-15
+    sources: [editorial]
+    weight: 0.8
+  # Torrey SABBATH, THE "A sign of the covenant :: Exodus 31:13,
+  # Exodus 31:17". Sabbath as covenant sign between God and Israel.
+  # (Exodus 31 NOT in web-subset; notes.md.)
+  - ref: Exodus 31:13-17
+    sources: [torrey]
+    weight: 0.6
+  # Torrey SABBATH, THE "God commanded, to be kept :: Leviticus 19:3,
+  # Leviticus 19:30". "You shall keep my Sabbaths. I am the LORD your God"
+  # (WEB). Low weight: the verse pairs sabbath-keeping with honoring
+  # parents, so it is a supporting witness, not a first answer. IN corpus
+  # (Leviticus 19).
+  - ref: Leviticus 19:3
+    sources: [torrey]
+    weight: 0.5
+related:
+  - rest-for-the-weary
+  - the-ten-commandments
+  - creation

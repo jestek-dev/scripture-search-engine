@@ -1,0 +1,133 @@
+# GENESIS-PILOT PACK (14-concept wave, drafted 2026-08-22) — whole-canon
+# sweep, not a Genesis-only concept. "Covenant" is the load-bearing word of
+# Genesis 6-50 and a heavy search topic ("Abrahamic covenant", "God's
+# covenant promises"); nothing in the current vocabulary answers it —
+# gods-faithfulness is keyed to faithfulness language, not covenant queries
+# (its own review note says so).
+#
+# DISTINCTION DESIGN: `gods-faithfulness` carries the promise-keeping
+# register ("god keeps his promises"); this pack carries the covenant
+# INSTITUTION texts — cutting, sign, mediator, renewal. One deliberate
+# promise-phrase only ("covenant promises"): shared tokens with
+# gods-faithfulness are {new, promises} = 2 of this pack's 6-token set
+# (0.33, limit 0.6); adding more promise-phrasings would erode that margin.
+# `lords-supper` owns "do this in remembrance of me" / communion phrasings;
+# Luke 22:20 is anchored here for its covenant clause, cross-linked below.
+#
+# Attribution: Torrey COVENANT, THE is the verified outline. Rows cited
+# exactly carry [torrey]; ranges that combine or extend outline rows carry
+# [editorial] with the corroboration in the comment (humble-exaltation
+# Ps 75:6-7 precedent).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist and
+# no materialFrameKeyword appears in this id, label, or lexicon.
+#
+# CORPUS NOTE: Gen 9/15/17, Exod 24, 2 Sam 7 are NOT in the fixture corpus
+# (Genesis chapters present: 1,2,3,5,16). Anchors stand (rest-for-the-weary
+# Exod 33:14 precedent) but cannot be fixture-asserted; the G3 coverage
+# assertion rides Jer 31:31-34 (in corpus). See notes.md for the minimal
+# corpus-extension request.
+id: covenant
+label: Covenant
+lexicon:
+  # The subject noun — one word, the query itself (benediction-pack
+  # precedent for a bare subject noun). One-token specificity discount
+  # (0.55) keeps the claim humble. Needs an admitted row in
+  # ontology/lexicon-inventory.yaml if PR #33 lands.
+  - covenant
+  # The most-searched covenant phrase; Jer 31 / Luke 22 wording.
+  - the new covenant
+  # The classic study query.
+  - abrahamic covenant
+  - covenant with abraham
+  # ONE promise-phrasing, deliberate (see header: gods-faithfulness margin).
+  - covenant promises
+  # "what does the bible say about X" register (studying-the-word precedent
+  # for the token `bible`; single shared token, no phrase overlap).
+  - covenant in the bible
+anchors:
+  # "I will make a new covenant with the house of Israel... I will put my
+  # law in their inward parts... I will forgive their iniquity" (WEB, in
+  # corpus). THE covenant-renewal text the NT builds on (Heb 8/10 quote
+  # it). Editorial for the range: Torrey COVENANT "Renewed under the
+  # gospel" lists Jer 31:31-33; v34 completes the sentence and carries the
+  # forgiveness clause, so claiming [torrey] for 31-34 would overstate the
+  # outline (benediction Num 6 precedent).
+  - ref: Jeremiah 31:31-34
+    sources: [editorial]
+    weight: 1.0
+  # Torrey COVENANT "Made with Abraham :: Genesis 15:7-18". The covenant
+  # ceremony — smoking furnace, divided pieces, "on that day the LORD made
+  # a covenant with Abram" (15:18). Out of corpus.
+  - ref: Genesis 15:7-18
+    sources: [torrey]
+    weight: 0.9
+  # Torrey COVENANT "Made with Abraham :: Genesis 17:2-14". Everlasting
+  # covenant + the sign of circumcision. Out of corpus.
+  - ref: Genesis 17:2-14
+    sources: [torrey]
+    weight: 0.85
+  # "I establish my covenant with you... the rainbow... the sign of the
+  # covenant" (WEB wording from knowledge — Gen 9 NOT in web-subset; see
+  # notes.md). The Noahic covenant with every living creature — the first
+  # explicit covenant text in Scripture. Torrey's COVENANT outline is
+  # silent on Gen 9, so editorial.
+  - ref: Genesis 9:8-17
+    sources: [editorial]
+    weight: 0.85
+  # "This cup is the new covenant in my blood, which is poured out for
+  # you" (WEB, in corpus). Anchored HERE for the covenant clause; the
+  # supper phrasings ("do this in remembrance") stay on lords-supper
+  # (related below). Torrey files 22:19-20 under his Lord's-Supper topics —
+  # honest cross-link, so editorial.
+  - ref: Luke 22:20
+    sources: [editorial]
+    weight: 0.85
+  # "Your house and your kingdom will be made sure forever" — the Davidic
+  # covenant oracle (WEB wording from knowledge — 2 Sam 7 NOT in
+  # web-subset). Torrey COVENANT lists 2 Sam 23:5 for "Made with David";
+  # 7:12-16 is the oracle itself, filed by Torrey under PROMISES OF GOD /
+  # HUMAN NATURE OF CHRIST — editorial for this range.
+  - ref: 2 Samuel 7:12-16
+    sources: [editorial]
+    weight: 0.8
+  # Torrey COVENANT "Christ, the Mediator of :: Hebrews 12:24" (with 8:6
+  # and 9:15, both out of corpus). "Jesus, the mediator of a new covenant"
+  # (WEB, in corpus).
+  - ref: Hebrews 12:24
+    sources: [torrey]
+    weight: 0.8
+  # "The promises were spoken to Abraham and to his offspring... a
+  # covenant confirmed beforehand by God in Christ" (WEB, in corpus). The
+  # Abrahamic covenant read forward to Christ — the in-corpus home for
+  # "abrahamic covenant" queries. Editorial for the range: Torrey lists
+  # 3:16 ("Made with Abraham") and 3:17 ("Confirmed in Christ") as two
+  # separate rows; 3:15-18 is the argument whole.
+  - ref: Galatians 3:15-18
+    sources: [editorial]
+    weight: 0.75
+  # "Moses took the blood and sprinkled it on the people... the blood of
+  # the covenant" (WEB wording from knowledge — Exod 24 NOT in web-subset).
+  # The Sinai ratification Luke 22:20 and Heb 12:24 echo.
+  - ref: Exodus 24:3-8
+    sources: [editorial]
+    weight: 0.75
+  # Torrey COVENANT "Is everlasting :: Hebrews 13:20" (among others).
+  # "the blood of an eternal covenant" (WEB, in corpus). NB: the p6 stack's
+  # `benediction` anchors Heb 13:20-21 for the closing-blessing register —
+  # shared passages across concepts are legal and honest here (the verse
+  # serves both registers); duplicate-anchor guard is per-concept.
+  - ref: Hebrews 13:20
+    sources: [torrey]
+    weight: 0.7
+  # Torrey COVENANT "God is faithful to :: Deuteronomy 7:9". "the faithful
+  # God, who keeps covenant and loving kindness to a thousand generations"
+  # (WEB, in corpus). The bridge to gods-faithfulness — kept low-weight so
+  # the institution texts lead.
+  - ref: Deuteronomy 7:9
+    sources: [torrey]
+    weight: 0.7
+related:
+  - gods-faithfulness
+  - lords-supper
+  - grace-not-earned

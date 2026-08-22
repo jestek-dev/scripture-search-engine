@@ -1,0 +1,53 @@
+{
+  "id": "envy-and-jealousy",
+  "query": "jealousy",
+  "additionalQueries": [
+    "envy",
+    "jealous of others",
+    "struggling with envy"
+  ],
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept batch, drafted 2026-08-22).",
+    "Fixtures-first for the new `envy-and-jealousy` concept; PENDING until",
+    "the pack lands, then flip active in the same PR.",
+    "",
+    "Proverbs 27:4 is asserted: IN the fixture corpus, carries 'jealousy'",
+    "lexically, and this pack is its only anchoring concept, so the reason",
+    "chip is unambiguous. The narrative exemplars (Gen 4, Gen 37, 1 Sam 18)",
+    "and the teaching verse Prov 14:30 are all OUT of the fixture corpus —",
+    "see the pack's corpus-needs note.",
+    "",
+    "The preferredOrder pair follows the sense-inversion-provision ruling",
+    "(Jesse, 2026-08-15): Exodus 20:5 — 'I, the LORD your God, am a jealous",
+    "God' — is an honest lexical match for the query word in its OPPOSITE",
+    "register: a searcher struggling with envy served divine covenant",
+    "jealousy. It is demoted, never forbidden; both references are in the",
+    "fixture corpus, so the pair cannot pass vacuously."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Proverbs 27:4",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Envy and jealousy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 13:4",
+    "Galatians 5:19-21",
+    "Psalms 37:1",
+    "Psalms 73:2-3",
+    "1 Peter 2:1-2"
+  ],
+  "preferredOrder": [
+    {
+      "above": "Proverbs 27:4",
+      "below": "Exodus 20:5"
+    }
+  ],
+  "coversConcepts": [
+    "envy-and-jealousy"
+  ]
+}

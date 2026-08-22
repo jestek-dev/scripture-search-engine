@@ -1,0 +1,37 @@
+{
+  "id": "hospitality-strangers",
+  "query": "welcome the stranger",
+  "additionalQueries": [
+    "welcoming strangers",
+    "entertained angels"
+  ],
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept batch, drafted 2026-08-22). The",
+    "stranger register of the `hospitality` pack.",
+    "",
+    "Hebrews 13:2 is asserted ('show hospitality to strangers... some have",
+    "entertained angels without knowing it', WEB) — in corpus, lexically",
+    "direct for all three queries, anchored only by this pack. Leviticus",
+    "19:33-34 (the Torah's stranger-love command) is the natural companion",
+    "and is alsoAcceptable rather than asserted so the fixture does not",
+    "over-constrain ordering between the two."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hebrews 13:2",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hospitality"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Leviticus 19:33-34",
+    "Romans 12:13",
+    "1 Peter 4:9"
+  ],
+  "coversConcepts": [
+    "hospitality"
+  ]
+}
