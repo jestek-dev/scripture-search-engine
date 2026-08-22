@@ -895,6 +895,20 @@
         3
       ],
       "why": "pastoral harm gates: submission passages must not answer abuse disclosures"
+    },
+    {
+      "book": "Song of Solomon",
+      "verses": [
+        "2:1"
+      ],
+      "why": "P5.2/QR-3: ref8 \"Songs of Solomon 2:1\" fixture target — the book had zero fixture verses, so the new alias row alone could not resolve (verseExists)"
+    },
+    {
+      "book": "3 John",
+      "verses": [
+        "1:4"
+      ],
+      "why": "P5.2/QR-3: ordinal fixture target \"3rd John 4\" — single-chapter branch resolves to 3 John 1:4, which must exist in the fixture corpus"
     }
   ],
   "verses": [
@@ -11600,6 +11614,13 @@
       "chapter": 3,
       "verse": 22,
       "text": "Therefore I saw that there is nothing better than that a man should rejoice in his works, for that is his portion; for who can bring him to see what will be after him?"
+    },
+    {
+      "book_name": "Song of Solomon",
+      "book": 22,
+      "chapter": 2,
+      "verse": 1,
+      "text": "I am a rose of Sharon, a lily of the valleys."
     },
     {
       "book_name": "Isaiah",
@@ -40083,6 +40104,13 @@
       "chapter": 5,
       "verse": 21,
       "text": "Little children, keep yourselves from idols."
+    },
+    {
+      "book_name": "3 John",
+      "book": 64,
+      "chapter": 1,
+      "verse": 4,
+      "text": "I have no greater joy than this: to hear about my children walking in truth."
     },
     {
       "book_name": "Revelation",
