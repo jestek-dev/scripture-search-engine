@@ -11,6 +11,7 @@
     "fetch-model": "node ../node_modules/tsx/dist/cli.mjs src/fetchModel.ts",
     "suggest": "node ../node_modules/tsx/dist/cli.mjs src/suggest.ts",
     "flag-inversions": "node ../node_modules/tsx/dist/cli.mjs src/flagInversions.ts",
+    "typecheck": "node ../node_modules/typescript/bin/tsc --noEmit",
     "test": "node ../node_modules/vitest/vitest.mjs run"
   },
   "devDependencies": {

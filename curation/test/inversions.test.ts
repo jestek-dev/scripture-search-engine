@@ -34,7 +34,8 @@
 //
 // Calibration record (all-MiniLM-L6-v2 quantized, revision 751bff37,
 // measured 2026-08-22 on this runner, with the exact candidate batches
-// below — batch composition shifts the quantized sims by ~0.01, so these
+// below — batch composition shifts the quantized sims by up to ~0.023
+// (measured: Isaiah 43:19 0.4507 -> 0.4732 across compositions), so these
 // are batch-specific):
 //   Job 16:2    simRegister 0.3109 vs floor 0.5290 -> below-register-floor
 //   Eccl 1:9    simRegister 0.3892 vs floor 0.4861 -> below-register-floor
@@ -82,12 +83,18 @@ function finding(report: { findings: readonly unknown[] }, index: number) {
   };
 }
 
+// Historical measurement constant, hand-carried from the original audit:
+// this is a near-WEB rendering — the v0.7.1 corpus reads "You are all
+// miserable comforters!" and web-subset.json lacks Job 16:2 entirely. Kept
+// byte-stable because the Job calibration numbers in the header were
+// measured against THIS text.
 const JOB_16_2 = 'I have heard many such things. Miserable comforters are you all!';
 const ECCLESIASTES_1_9 =
   'That which has been is that which shall be; and that which has been done is that which shall be done: and there is no new thing under the sun.';
 const COLOSSIANS_3_20_21 =
   "Children, obey your parents in all things, for this pleases the Lord. Fathers, don't provoke your children, so that they won't be discouraged.";
-// Negative-control texts (WEB, from the corpus — see header):
+// Negative-control texts (WEB, byte-exact from the corpus — see header;
+// the Job constant above is the one hand-carried historical exception):
 const ISAIAH_65_17 =
   '“For, behold, I create new heavens and a new earth; and the former things will not be remembered, nor come into mind.';
 const FIRST_TIMOTHY_5_4 =

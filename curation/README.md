@@ -17,11 +17,24 @@ workspace, not a constraint on it.
   npm workspace of the build root, and no file here may be imported by
   `buildArtifact.ts`, `buildConceptLayer.ts`, or anything under
   `engine/`. That boundary is executable:
-  `pipeline/test/curationBoundary.test.ts` scans every source file in
-  `engine/src` and `pipeline/src` and fails on any curation import. The
-  reverse direction is allowed on purpose — this tooling imports the
-  pipeline's own ontology compiler and the engine's own tokenizer
-  (covenant #4: one tokenizer) so it reasons about exactly what ships.
+  `pipeline/test/curationBoundary.test.ts` parses every source file under
+  `engine/` and `pipeline/` (src, test, scripts, loose configs — only
+  each package's top-level `dist`/`node_modules` are pruned) with the
+  TypeScript compiler's parser and reads module specifiers off the AST —
+  static and dynamic imports, re-exports, `require`/`require.resolve`,
+  `createRequire`. It proves that no **statically resolvable** specifier
+  in those trees names curation, and it **fails closed** on what it
+  cannot prove: a dynamic `import()`/`require()` whose argument is not a
+  static literal is flagged as indeterminate unless a committed allowlist
+  entry carries a written reason (that allowlist is empty — nothing in
+  the scanned trees uses a dynamic specifier at all). What it cannot see:
+  code outside the scanned trees, or a build step that generates or
+  rewrites its own code; a runtime resolve-hook check on the builders is
+  the named future hardening for that class (see the PR notes), not an
+  implemented claim. The reverse direction is allowed on purpose — this
+  tooling imports the pipeline's own ontology compiler and the engine's
+  own tokenizer (covenant #4: one tokenizer) so it reasons about exactly
+  what ships.
 
 ## The model is locked
 
