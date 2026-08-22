@@ -36,6 +36,8 @@ import type {
 } from './importers/openbibleImporter.js';
 import type { ManifestSet, SourceManifest } from './provenance/manifest.js';
 import { importVerseArray, type VerseArraySource } from './importers/verseArrayImporter.js';
+import { runVersificationGuard } from './versificationGuard.js';
+import { TVTMS_ENGLISH_LOCI } from './versification/tvtms.js';
 import type { TranslationImport } from './importers/types.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -199,6 +201,18 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
     }
 
     const presentVerseIds = new Set(translation.verses.map((verse) => verse.verseId));
+
+    // Versification guard (P6.4/B5 S1), fixture mode: a locus is evaluated
+    // only when every chapter it references is complete on the fixture bed —
+    // a truncated chapter is indistinguishable from a versification deviation
+    // without that reference point. Same loci, same semantics as the release
+    // build, so the guard's own regressions surface in CI, not at release.
+    const versification = runVersificationGuard(TVTMS_ENGLISH_LOCI, presentVerseIds, 'fixture');
+    if (versification.mismatches.length > 0) {
+      throw new Error(
+        `buildFixtureDatabase: versification guard failed:\n  ${versification.mismatches.join('\n  ')}`,
+      );
+    }
 
     // Pericope tiling (schema v8, CO-3 PR 1): derived from the committed
     // corpus-scoped section-counts subset — hermetic for the same reason

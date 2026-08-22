@@ -487,6 +487,13 @@ function sourceLabel(sourceId: string): string {
       // precedent). Phase B's named-phrase chip composes its own wording;
       // this is the bare provenance label.
       return 'Treasury of Scripture Knowledge (public domain)';
+    case 'stepbible-tvtms':
+      // P6.4 (B5) S1: the TVTMS versification witness. ZERO SHIPPED BYTES —
+      // nothing from it enters the artifact, so no chip can ever cite it;
+      // labeled anyway because the completeness contract is "every manifest
+      // id renders as prose", with no reachability carve-outs to reason
+      // about. CC BY attribution: credit "STEP Bible" (www.STEPBible.org).
+      return 'STEP Bible versification data (CC BY)';
     case 'web':
       return 'World English Bible (public domain)';
     case 'torrey':

@@ -156,6 +156,22 @@ reviews:
       Verse-to-verse cross-reference links carry no topical framing at all;
       correctly budgeted with TSK lineage.
 
+  - source: stepbible-tvtms
+    reviewedAt: "2026-08-22"
+    reviewer: "P6.4/B5 S1 admission (see pipeline/manifests/stepbible-tvtms.json; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      STEPBible's TVTMS versification catalogue (CC BY 4.0, credit "STEP
+      Bible" — www.STEPBible.org): structural-linguistic facts only — at
+      which loci Bible versifications differ and machine-checkable tests per
+      tradition. No topical framing, no verse text, and ZERO SHIPPED BYTES:
+      it runs as a build-time versification witness (versificationGuard.ts)
+      and nothing from it enters the artifact. J56 is flagged for Jesse's
+      own per-source verdict and to RATIFY the covenant-#1 exclusions this
+      admission applies: TIPNR (per-person descriptions "created by Claude 3
+      AI") not admitted, TBCWG excluded entirely, TTESV never pinned.
+
   - source: torrey
     reviewedAt: "2026-08-15"
     reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"

@@ -193,6 +193,17 @@ Creative Commons Attribution 4.0. The data file's own header states: 'www.openbi
 
 Cross-reference data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info/labs/cross-references/). OpenBible states this data 'draws primarily from public-domain sources, especially the Treasury of Scripture Knowledge' - hence the declared derivedFrom, which places it in one correlation budget with TSK and with any homiletical co-citation source that also derives from TSK. Counting them as independent evidence would inflate confidence for what is substantially one body of scholarship. Rolling URL with no archival versioning; this checksum is our snapshot.
 
+### STEPBible TVTMS (Translators Versification Traditions)
+
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
+- **Source:** <https://raw.githubusercontent.com/STEPBible/STEPBible-Data/efe428a0047bf7b9c3ce2624f60c252c6e435945/Versification/TVTMS%20-%20Translators%20Versification%20Traditions%20with%20Methodology%20for%20Standardisation%20for%20Eng%2BHeb%2BLat%2BGrk%2BOthers%20-%20STEPBible.org%20CC%20BY.txt>
+- **Retrieved:** 2026-08-22
+- **Checksum:** `63058e0f20201af4bdaa7d830da5be8f493455d947c5f147d84840b33db9ddf8`
+
+Creative Commons Attribution 4.0. The file's own header: 'Data created by www.STEPBible.org based on work at Tyndale House Cambridge' with a CC BY notice; the STEPBible-Data repository README states CC BY 4.0 for the datasets. Attribution required in shipped output: credit 'STEP Bible' linked to www.STEPBible.org. Soft asks honored: changes are 'recorded and made available' by committing the distillation script (pipeline/scripts/generateTvtmsDistillate.ts) and the distillate it produces, both diffable in this repository.
+
+ZERO SHIPPED BYTES (P6.4/B5 S1): TVTMS is a build-time versification witness only - pipeline/src/versificationGuard.ts checks every corpus verse-ID shape against TVTMS's English-tradition stanzas at build time, and the Admission Report line declares 'zero-row guard source: NO MEASURABLE EFFECT expected and accepted' (a declared exception class, never a silent lean). WHAT IS TAKEN: only the expanded section's structural columns (SourceType, SourceRef, StandardRef, Action, Tests), distilled to English-relevant loci; all prose/note columns are dropped at parse time. WHAT IS EXCLUDED under covenant #1, pending J56 ratification: TIPNR (its per-person descriptions are 'created by Claude 3 AI' - AI-authored content never reaches the artifact, so the dataset is not admitted at all in S1), TBCWG entirely, and TTESV (tags Crossway's copyrighted ESV - never pinned). The URL pins repository commit efe428a0047bf7b9c3ce2624f60c252c6e435945, so the checksum is reproducible; an archive-first snapshot upload to a source-snapshots release remains an open errand of the J52 family, flagged in the admitting PR.
+
 ### Torrey, The New Topical Textbook
 
 - **Rights:** Public-domain work, transcription carries a claim

@@ -68,6 +68,8 @@ import { derivePericopes } from './buildPericopes.js';
 import { importTskText } from './importers/tskImporter.js';
 import { importVpl } from './importers/vplImporter.js';
 import { buildTermProfiles, type ExpositionDocument } from './stats/passageTerms.js';
+import { declaredNullLine, runVersificationGuard } from './versificationGuard.js';
+import { TVTMS_ENGLISH_LOCI } from './versification/tvtms.js';
 import type { DistributionTier, ManifestSet, SourceManifest } from './provenance/manifest.js';
 import type { TranslationImport } from './importers/types.js';
 
@@ -474,6 +476,21 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
     }
 
     const presentVerseIds = new Set(verses.map((verse) => verse.verseId));
+
+    // Versification guard (P6.4/B5 S1): TVTMS as an independent witness that
+    // the corpus's verse-ID shape matches a recognized English-tradition
+    // stanza at every locus where versifications are known to differ. A
+    // failure here is the "concept anchored to the WRONG passage" class that
+    // no other gate can see. ZERO SHIPPED BYTES — the declared-null line
+    // below is the Admission Report's mandated disclosure.
+    const versification = runVersificationGuard(TVTMS_ENGLISH_LOCI, presentVerseIds, 'full');
+    if (versification.mismatches.length > 0) {
+      throw new Error(
+        `buildArtifact: versification guard failed:\n  ${versification.mismatches.join('\n  ')}`,
+      );
+    }
+    process.stdout.write(`${declaredNullLine(versification)}\n`);
+
     const layer = buildConceptLayer(database as unknown as SqliteDatabase, {
       ontology,
       topicRows: topics.rows,
