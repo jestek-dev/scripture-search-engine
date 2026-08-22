@@ -31,6 +31,7 @@ import type { SqliteReadWriteDatabase } from '../src/buildSpellingIndex.js';
 import { SCHEMA_SQL } from '../src/schema.js';
 
 const KNOWN_CONCEPTS = new Set(['hope-in-god', 'prayer']);
+const NO_LEXICON: readonly { conceptId: string; normalized: string }[] = [];
 
 function pack(hymnsYaml: string): { name: string; contents: string } {
   return {
@@ -52,7 +53,7 @@ const VALID_HYMN = `  - title: It Is Well with My Soul
 
 describe('compileHymnAliases', () => {
   it('compiles a valid pack: engine-normalized keys, locator format, sorted rows', () => {
-    const result = compileHymnAliases([pack(VALID_HYMN)], KNOWN_CONCEPTS);
+    const result = compileHymnAliases([pack(VALID_HYMN)], KNOWN_CONCEPTS, NO_LEXICON);
     expect(result.errors).toEqual([]);
     expect(result.rows.map((row) => row.normalizedRaw)).toEqual([
       // Code-unit sorted, and each key is normalizedPhrase's output.
@@ -80,6 +81,7 @@ describe('compileHymnAliases', () => {
 `),
       ],
       KNOWN_CONCEPTS,
+      NO_LEXICON,
     );
     expect(result.errors).toEqual([]);
     expect(result.rows[0]!.conceptId).toBeNull();
@@ -88,7 +90,7 @@ describe('compileHymnAliases', () => {
   });
 
   const rejects = (yaml: string, fragment: string) => {
-    const result = compileHymnAliases([pack(yaml)], KNOWN_CONCEPTS);
+    const result = compileHymnAliases([pack(yaml)], KNOWN_CONCEPTS, NO_LEXICON);
     expect(result.rows).toEqual([]);
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors.join('\n')).toContain(fragment);
@@ -98,6 +100,7 @@ describe('compileHymnAliases', () => {
     const result = compileHymnAliases(
       [{ name: 'p.yaml', contents: 'hymns: []\n' }],
       KNOWN_CONCEPTS,
+      NO_LEXICON,
     );
     expect(result.errors.join('\n')).toContain("missing required 'sourceId'");
   });
@@ -173,9 +176,108 @@ describe('compileHymnAliases', () => {
       name: 'z-second.yaml',
       contents: `sourceId: hymn-aliases\nhymns:\n  - title: Another\n    author: B\n    year: 1901\n    provenance: p\n    concept: prayer\n    phrases:\n      - phrase: "It is WELL — with my soul"\n`,
     };
-    const result = compileHymnAliases([a, b], KNOWN_CONCEPTS);
+    const result = compileHymnAliases([a, b], KNOWN_CONCEPTS, NO_LEXICON);
     expect(result.errors.join('\n')).toContain('duplicates the normalized key');
     expect(result.errors.join('\n')).toContain('It Is Well with My Soul (test-pack.yaml)');
+  });
+
+  it('rejects an alias phrase reaching full lexicon parity with its OWN target concept (the double-chip hazard)', () => {
+    // The critique's live-demonstrated worst case: "great is thy
+    // faithfulness" aliased to a concept whose lexicon already carries
+    // "great is your faithfulness" — thy/your are stopwords, so both
+    // collapse to the same significant tokens and one query would stack a
+    // full-parity Theme chip AND a hymn chip (80 authoritative points on
+    // one curated fact, clearing exact_phrase's 60-point ceiling).
+    const doctored = `  - title: Great Is Thy Faithfulness
+    author: Thomas O. Chisholm
+    year: 1923
+    provenance: p
+    concept: hope-in-god
+    phrases: [{phrase: great is thy faithfulness}]
+`;
+    const lexicon = [{ conceptId: 'hope-in-god', normalized: 'great faithfulness' }];
+    const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
+    expect(result.rows).toEqual([]);
+    expect(result.errors.join('\n')).toContain('double-chips concept');
+    expect(result.errors.join('\n')).toContain("'hope-in-god'");
+    expect(result.errors.join('\n')).toContain('great faithfulness');
+  });
+
+  it('the guard is order-insensitive over the token SET, not the joined string', () => {
+    const doctored = `  - title: T
+    author: A
+    year: 1900
+    provenance: p
+    concept: prayer
+    phrases: [{phrase: faithfulness so great}]
+`;
+    // Lexicon stores `great faithfulness`; the alias tokenizes to
+    // `faithfulness great`. Same set, same hazard, same rejection.
+    const lexicon = [{ conceptId: 'prayer', normalized: 'great faithfulness' }];
+    const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
+    expect(result.rows).toEqual([]);
+    expect(result.errors.join('\n')).toContain('double-chips concept');
+  });
+
+  it('accepts the same phrase when the parity is with a DIFFERENT concept', () => {
+    // Cross-concept stacking is two different claims (the engine's own
+    // dedupe rule says so); only same-concept parity is one fact twice.
+    const doctored = `  - title: Great Is Thy Faithfulness
+    author: Thomas O. Chisholm
+    year: 1923
+    provenance: p
+    concept: hope-in-god
+    phrases: [{phrase: great is thy faithfulness}]
+`;
+    const lexicon = [{ conceptId: 'prayer', normalized: 'great faithfulness' }];
+    const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
+    expect(result.errors).toEqual([]);
+    expect(result.rows).toHaveLength(1);
+  });
+
+  it('accepts a partial token overlap with the target concept — only SET EQUALITY is the hazard', () => {
+    // The lexicon phrase covers part of the alias tokens: the concept match
+    // is coverage-discounted, a graded independent claim, not the same fact
+    // at full authority twice.
+    const doctored = `  - title: T
+    author: A
+    year: 1900
+    provenance: p
+    concept: prayer
+    phrases: [{phrase: great is thy faithfulness o god}]
+`;
+    const lexicon = [{ conceptId: 'prayer', normalized: 'great faithfulness' }];
+    const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
+    expect(result.errors).toEqual([]);
+    expect(result.rows).toHaveLength(1);
+  });
+
+  it('rejects a ONE-token set equality too: a bare-word lexicon twin still stacks 40 + 22 on one fact', () => {
+    const doctored = `  - title: T
+    author: A
+    year: 1900
+    provenance: p
+    concept: prayer
+    phrases: [{phrase: the assurance}]
+`;
+    const lexicon = [{ conceptId: 'prayer', normalized: 'assurance' }];
+    const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
+    expect(result.rows).toEqual([]);
+    expect(result.errors.join('\n')).toContain('double-chips concept');
+  });
+
+  it('the guard never touches the verse-range arm: no concept, no same-concept fact to double', () => {
+    const doctored = `  - title: T
+    author: A
+    year: 1900
+    provenance: p
+    range: John 3:16
+    phrases: [{phrase: great is thy faithfulness}]
+`;
+    const lexicon = [{ conceptId: 'prayer', normalized: 'great faithfulness' }];
+    const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
+    expect(result.errors).toEqual([]);
+    expect(result.rows).toHaveLength(1);
   });
 
   it('rejects weights outside (0, 1]', () => {
@@ -191,6 +293,7 @@ describe('compileHymnAliases', () => {
 const ROWS: readonly CompiledAliasRow[] = compileHymnAliases(
   [pack(VALID_HYMN)],
   KNOWN_CONCEPTS,
+  NO_LEXICON,
 ).rows;
 
 const MANIFESTS: ManifestSet = {

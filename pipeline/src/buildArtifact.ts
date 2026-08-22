@@ -481,6 +481,9 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
     const compiledAliases = compileHymnAliases(
       aliasFiles,
       new Set(ontology.concepts.map((concept) => concept.id)),
+      // The double-chip guard needs the compiled lexicon: an alias phrase
+      // reaching full lexicon parity with its own target concept is refused.
+      ontology.lexicon,
     );
     if (compiledAliases.errors.length > 0) {
       throw new Error(`buildArtifact: alias pack errors:\n  ${compiledAliases.errors.join('\n  ')}`);

@@ -177,6 +177,87 @@ describe('scope — what aliases must NOT touch', () => {
   });
 });
 
+describe('verse-range alias arm — integration (P5.5 round-1 fix, critique defect 6)', () => {
+  // The schema XOR's other side ships with zero rows in the starter pack, so
+  // the discover() range branch, aliasRangeVerses, and the absent-range
+  // degrade path are exercised here on a doctored artifact — the same probe
+  // shape the critique ran by hand, now pinned.
+  it('a range alias surfaces the named passage collapsed, chip carrying ONLY the hymn attribution', async () => {
+    const doctoredPath = join(fixtureDirectory, `doctored-range-${process.pid}.db`);
+    copyFileSync(fixturePath, doctoredPath);
+    const doctored = new DatabaseSync(doctoredPath);
+    try {
+      // Psalms 23:1-3 — present in the fixture corpus (23:1-6 ships).
+      doctored
+        .prepare(
+          `INSERT INTO curated_aliases(title, normalized_raw, concept_id, start_verse_id,
+                                       end_verse_id, source_id, weight, locator)
+           VALUES (?, ?, NULL, ?, ?, 'hymn-aliases', ?, ?)`,
+        )
+        .run(
+          'Savior, Like a Shepherd Lead Us',
+          'savior like a shepherd lead us',
+          19023001,
+          19023003,
+          1,
+          'Attr. Dorothy A. Thrupp, "Savior, Like a Shepherd Lead Us" (1836)',
+        );
+    } finally {
+      doctored.close();
+    }
+    const rangeEngine = await createEngine(openCorpus(doctoredPath));
+    try {
+      const outcome = await rangeEngine.research('savior like a shepherd lead us');
+      if (outcome.kind !== 'discovery') throw new Error('expected discovery');
+      const top = outcome.results[0]!;
+      // The three verses share the alias span key, rank adjacently, and are
+      // verse-consecutive, so collapseAnchorRuns presents the passage.
+      expect(top.reference).toBe('Psalms 23:1-3');
+      const chip = hymnChips(top.reasons)[0]!;
+      expect(chip.family).toBe('concept_anchor');
+      // Range-arm label: hymn attribution only — the passage IS the result
+      // row's reference, and there is no concept to name.
+      expect(chip.label).toBe('Hymn: "Savior, Like a Shepherd Lead Us"');
+      expect(chip.label).not.toContain('→');
+      expect(chip.provenance?.sourceId).toBe('hymn-aliases');
+      expect(chip.provenance?.locator).toBe(
+        'Attr. Dorothy A. Thrupp, "Savior, Like a Shepherd Lead Us" (1836)',
+      );
+      expect(chip.points).toBeGreaterThan(0);
+    } finally {
+      await rangeEngine.close();
+    }
+  });
+
+  it('a range absent from the corpus degrades honestly: no crash, no chip, plain results', async () => {
+    const doctoredPath = join(fixtureDirectory, `doctored-range-absent-${process.pid}.db`);
+    copyFileSync(fixturePath, doctoredPath);
+    const doctored = new DatabaseSync(doctoredPath);
+    try {
+      // Obadiah 1:1-4 — the whole book is absent from the fixture corpus.
+      doctored
+        .prepare(
+          `INSERT INTO curated_aliases(title, normalized_raw, concept_id, start_verse_id,
+                                       end_verse_id, source_id, weight, locator)
+           VALUES (?, ?, NULL, ?, ?, 'hymn-aliases', ?, ?)`,
+        )
+        .run('Absent Range Hymn', 'a phrase for an absent range', 31001001, 31001004, 1, 'X, "Y" (1900)');
+    } finally {
+      doctored.close();
+    }
+    const absentEngine = await createEngine(openCorpus(doctoredPath));
+    try {
+      const outcome = await absentEngine.research('a phrase for an absent range');
+      if (outcome.kind !== 'discovery') throw new Error('expected discovery');
+      for (const result of outcome.results) {
+        expect(hymnChips(result.reasons)).toEqual([]);
+      }
+    } finally {
+      await absentEngine.close();
+    }
+  });
+});
+
 describe('rowless regression — 0.13.0 over an artifact with no alias rows behaves as 0.12.0', () => {
   it('presence-and-rows probe: an emptied curated_aliases table disables the step silently', async () => {
     const doctoredPath = join(fixtureDirectory, `doctored-rowless-${process.pid}.db`);

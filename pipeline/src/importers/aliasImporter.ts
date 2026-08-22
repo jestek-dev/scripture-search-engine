@@ -14,7 +14,7 @@
 
 import { parse as parseYaml } from 'yaml';
 
-import { normalizedPhrase } from '@jestek-dev/scripture-engine';
+import { normalizedPhrase, significantWords } from '@jestek-dev/scripture-engine';
 import { parseAnchorRef } from './ontologyImporter.js';
 
 export interface HymnAliasPackSource {
@@ -52,14 +52,53 @@ export interface CompiledAliases {
   readonly errors: readonly string[];
 }
 
+/**
+ * A compiled concept-lexicon phrase, as the ontology importer emits it:
+ * `normalized` is the space-joined significant-token form. Structurally
+ * compatible with `CompiledLexiconEntry`, so callers pass
+ * `ontology.lexicon` straight through.
+ */
+export interface ConceptLexiconPhrase {
+  readonly conceptId: string;
+  readonly normalized: string;
+}
+
+/** Order-insensitive significant-token-set key for the double-chip guard. */
+function tokenSetKey(tokens: readonly string[]): string {
+  return [...tokens].sort().join(' ');
+}
+
 export function compileHymnAliases(
   files: readonly { name: string; contents: string }[],
   knownConceptIds: ReadonlySet<string>,
+  conceptLexicon: readonly ConceptLexiconPhrase[],
 ): CompiledAliases {
   const errors: string[] = [];
   const rows: CompiledAliasRow[] = [];
   const citedSourceIds = new Set<string>();
   const seenKeys = new Map<string, string>();
+
+  // Alias+lexicon double-chip guard (P5.5 critique defect 1), indexed up
+  // front: for each concept, the significant-token SETS of its lexicon
+  // phrases. A query that equals an alias phrase tokenizes to
+  // significantWords(phrase); when that set equals a lexicon phrase's set
+  // for the SAME concept, the engine's full-query parity rule hands the
+  // concept its full authoritative concept_anchor chip AND the alias step
+  // files a second full-strength chip under the same family for the same
+  // curated fact — two 40-point chips on one claim, clearing exact_phrase's
+  // 60-point ceiling. The evidence hierarchy's bound must hold by
+  // construction, not by editorial memory, so such a row is refused here,
+  // fail-closed. (Static by necessity: a spelling-corrected token stream is
+  // bed-dependent and out of an importer's reach; the shipped rule covers
+  // the direct-token path the hazard was demonstrated on.)
+  const lexiconTokenSetsByConcept = new Map<string, Map<string, string>>();
+  for (const entry of conceptLexicon) {
+    const key = tokenSetKey(entry.normalized.split(' ').filter(Boolean));
+    if (key.length === 0) continue;
+    const perConcept = lexiconTokenSetsByConcept.get(entry.conceptId) ?? new Map<string, string>();
+    if (!perConcept.has(key)) perConcept.set(key, entry.normalized);
+    lexiconTokenSetsByConcept.set(entry.conceptId, perConcept);
+  }
 
   for (const file of [...files].sort((a, b) => (a.name < b.name ? -1 : 1))) {
     let parsed: HymnAliasPackSource;
@@ -147,6 +186,31 @@ export function compileHymnAliases(
               'an alias may never be a bare-word trigger',
           );
           continue;
+        }
+        // The double-chip guard (see the index above): a concept-arm phrase
+        // whose significant-token set equals a lexicon phrase of its OWN
+        // target concept stacks two authoritative chips on one fact. Any
+        // set size is refused: at >=2 tokens the lexicon match is full-query
+        // parity (40 + 40 points); at 1 token it is still an authoritative
+        // anchor chip beside the alias chip (40 + 22) — same fact, same
+        // stacking, same structural hole.
+        if (conceptId !== null) {
+          const aliasQueryKey = tokenSetKey(significantWords(phrase));
+          const lexiconPhrase =
+            aliasQueryKey.length > 0
+              ? lexiconTokenSetsByConcept.get(conceptId)?.get(aliasQueryKey)
+              : undefined;
+          if (lexiconPhrase !== undefined) {
+            errors.push(
+              `${file.name}: "${title}" phrase "${phrase}" double-chips concept ` +
+                `'${conceptId}': its significant tokens (\`${aliasQueryKey}\`) equal the ` +
+                `concept's own lexicon phrase (\`${lexiconPhrase}\`), so one query would ` +
+                'stack a full-parity Theme chip AND a hymn chip on the same curated fact ' +
+                '— breaking the evidence-hierarchy bound by construction. Drop the alias ' +
+                'phrase (the lexicon already answers it) or retarget it.',
+            );
+            continue;
+          }
         }
         const previous = seenKeys.get(normalizedRaw);
         if (previous !== undefined) {

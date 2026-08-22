@@ -220,6 +220,9 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
     const compiledAliases = compileHymnAliases(
       aliasFiles,
       new Set(ontology.concepts.map((concept) => concept.id)),
+      // The double-chip guard needs the compiled lexicon: an alias phrase
+      // reaching full lexicon parity with its own target concept is refused.
+      ontology.lexicon,
     );
     if (compiledAliases.errors.length > 0) {
       throw new Error(
