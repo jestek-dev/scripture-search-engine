@@ -62,8 +62,14 @@ export type BatteryCategoryFloors = Readonly<Record<BatteryCategory, number>>;
 
 const QUERY_FIELDS = ['id', 'query', 'category', 'status', 'addedAt', 'origin', 'retiredAt', 'retirementNote'] as const;
 const QUERIES_FILE_FIELDS = ['$schema', 'batteryVersion', 'policy', 'queries'] as const;
-const JUDGED_ROW_FIELDS = ['ref', 'grade', 'basis', 'judgedBy', 'judgedAt', 'provisional'] as const;
-const HARMFUL_ROW_FIELDS = ['ref', 'why', 'judgedBy', 'judgedAt', 'provisional'] as const;
+// voteSnapshotSha256 (P6.5/B6): the provenance mark a VOTE-SEEDED row must
+// carry — the pinned snapshot its grades were derived from. Allowed here as
+// schema; its value (and the rule that vote rows must carry it and editorial
+// rows must not) is enforced by the judgment-provenance lint
+// (gates/judgmentProvenance.ts), whose findings ride this gate's
+// instrument-findings channel.
+const JUDGED_ROW_FIELDS = ['ref', 'grade', 'basis', 'judgedBy', 'judgedAt', 'provisional', 'voteSnapshotSha256'] as const;
+const HARMFUL_ROW_FIELDS = ['ref', 'why', 'judgedBy', 'judgedAt', 'provisional', 'voteSnapshotSha256'] as const;
 const EMPTY_FIELDS = ['why', 'judgedBy', 'judgedAt'] as const;
 const JUDGMENT_ENTRY_FIELDS = ['judged', 'harmful', 'legitimatelyEmpty'] as const;
 const JUDGMENTS_FILE_FIELDS = [

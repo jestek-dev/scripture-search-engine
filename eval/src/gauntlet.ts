@@ -96,6 +96,11 @@ import {
   type ValidatedBattery,
   type VerseRange,
 } from './gates/rankMetrics.js';
+import {
+  lintJudgmentProvenance,
+  VOTE_SOURCE_MANIFESTS,
+  type PinnedVoteSnapshots,
+} from './gates/judgmentProvenance.js';
 import { budgetsPropertyGate, reviewedConstantsCheck } from './gates/budgetsProperty.js';
 import {
   orderingSnapshotGate,
@@ -617,6 +622,8 @@ interface LoadedBattery {
   readonly validated: ValidatedBattery;
   readonly queriesSha256: string;
   readonly judgmentsSha256: string;
+  /** Parsed judgments file, for the provenance lint (P6.5/B6). */
+  readonly judgmentsParsed: unknown;
 }
 
 /**
@@ -642,7 +649,31 @@ function loadBattery(floors: BatteryCategoryFloors | null): LoadedBattery {
     validated: validateBattery(queries.parsed, judgments.parsed, floors),
     queriesSha256: queries.sha256,
     judgmentsSha256: judgments.sha256,
+    judgmentsParsed: judgments.parsed,
   };
+}
+
+/**
+ * Pinned snapshot shas for the judgment-provenance lint (P6.5/B6): one per
+ * recognised vote source, read from the source's manifest. `null` marks a
+ * manifest that could not be read, which the lint fails CLOSED on for any
+ * vote-seeded row — an unverifiable snapshot mark must never verify.
+ */
+function loadPinnedVoteSnapshots(): PinnedVoteSnapshots {
+  const shaBySource = new Map<string, string | null>();
+  for (const [source, manifestPath] of VOTE_SOURCE_MANIFESTS) {
+    const path = join(REPO_ROOT, ...manifestPath.split('/'));
+    try {
+      const parsed = JSON.parse(readFileSync(path, 'utf8')) as { sha256?: unknown };
+      shaBySource.set(
+        source,
+        typeof parsed.sha256 === 'string' && parsed.sha256.length > 0 ? parsed.sha256 : null,
+      );
+    } catch {
+      shaBySource.set(source, null);
+    }
+  }
+  return { shaBySource };
 }
 
 /**
@@ -973,6 +1004,15 @@ async function main(): Promise<void> {
     });
 
     const battery = loadBattery(rankQuality.thresholds?.battery.categoryFloors ?? null);
+    // Judgment-label provenance lint (P6.5/B6): file-level reviewed-data
+    // check, run in EVERY context like the structural validation — a
+    // judgment row whose provenance is broken (or whose vote-snapshot mark
+    // does not match the pinned manifest) fails the G12 roster row on
+    // fixture CI legs too, never waiting for an artifact run.
+    const judgmentProvenanceFindings = lintJudgmentProvenance(
+      battery.judgmentsParsed,
+      loadPinnedVoteSnapshots(),
+    );
     const rankDocumentFindings = validateRankMetricsBaselineDocuments({
       baseline: rankBaselineDocument,
       approval: rankApprovalDocument,
@@ -1093,7 +1133,11 @@ async function main(): Promise<void> {
           validated: battery.validated,
           outcomes: probeRun.batteryOutcomes,
           harmfulPresence: probeRun.batteryHarmfulPresence,
-          instrumentFindings: [...rankQuality.findings, ...rankDocumentFindings],
+          instrumentFindings: [
+            ...rankQuality.findings,
+            ...rankDocumentFindings,
+            ...judgmentProvenanceFindings,
+          ],
           context: { explicitTarget: target !== null },
         });
         return probeRun.rankMetrics === null
