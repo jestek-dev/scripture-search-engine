@@ -1,7 +1,7 @@
 {
-  "corpusFingerprint": "d1b00196128f15514f1b0f9a15c4a3c1d6a1a2dbd6fc5f9b3729c2f9be6fafd5",
-  "layerFingerprint": "801693293ccb648f20e5fe4e3421071378902c77ac184f4278ee8df5e6cb2318",
-  "engineVersion": "0.13.0",
+  "corpusFingerprint": "d2846ff36ccd7ffb7a12d525cf3f26aeaf5a81427b014a96da9ff2a903a5d1fe",
+  "layerFingerprint": "cea7650f741286f2451569cc13b26bb2f6dc1fd0a7d0c3024904aae9296b34a8",
+  "engineVersion": "0.14.0",
   "observations": [
     {
       "id": "broad-love",
@@ -91,7 +91,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 0.092346,
-      "meanTopScore": 36.446548
+      "meanTopScore": 36.446547
     },
     {
       "id": "medium-fear-not",
@@ -126,8 +126,8 @@
         "WEB:43011009"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.335005,
-      "meanTopScore": 23.721899
+      "weakReasonShare": 0.335018,
+      "meanTopScore": 23.722405
     },
     {
       "id": "narrow-hearing-doing",
@@ -144,8 +144,8 @@
         "WEB:26033032"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.17694,
-      "meanTopScore": 40.713659
+      "weakReasonShare": 0.176941,
+      "meanTopScore": 40.713646
     },
     {
       "id": "narrow-doers-word",
@@ -162,8 +162,8 @@
         "WEB:43014021"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.305886,
-      "meanTopScore": 30.060394
+      "weakReasonShare": 0.305903,
+      "meanTopScore": 30.061847
     },
     {
       "id": "narrow-house-rock",
@@ -173,15 +173,15 @@
         "WEB:58010024",
         "WEB:52005011",
         "WEB:59001022",
-        "WEB:59001023",
-        "WEB:59001024",
         "WEB:40018020",
         "WEB:44002042",
-        "WEB:43013017"
+        "WEB:43013017",
+        "WEB:40016018",
+        "WEB:60002005"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.312957,
-      "meanTopScore": 24.797574
+      "weakReasonShare": 0.291208,
+      "meanTopScore": 23.985608
     },
     {
       "id": "phrase-present-help",
@@ -198,8 +198,8 @@
         "WEB:19121002"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.407236,
-      "meanTopScore": 10.122074
+      "weakReasonShare": 0.407238,
+      "meanTopScore": 10.122101
     },
     {
       "id": "adversarial-nonsense",
@@ -229,7 +229,7 @@
         "WEB:45007012",
         "WEB:40006019"
       ],
-      "resultCount": 17,
+      "resultCount": 14,
       "weakReasonShare": 1,
       "meanTopScore": 6.067331
     },
@@ -248,8 +248,8 @@
         "WEB:40007012"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.068754,
-      "meanTopScore": 50.900012
+      "weakReasonShare": 0.068757,
+      "meanTopScore": 50.900186
     },
     {
       "id": "ot-blessing",
@@ -266,8 +266,8 @@
         "WEB:23061009"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.247174,
-      "meanTopScore": 26.621881
+      "weakReasonShare": 0.247164,
+      "meanTopScore": 26.621564
     },
     {
       "id": "ot-narrative-ruth",
@@ -293,8 +293,8 @@
         "WEB:19046010"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.31381,
-      "meanTopScore": 8.743939
+      "weakReasonShare": 0.313824,
+      "meanTopScore": 8.744109
     },
     {
       "id": "ot-histories-humble",
@@ -311,8 +311,8 @@
         "WEB:45012003"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.393964,
-      "meanTopScore": 13.959568
+      "weakReasonShare": 0.393948,
+      "meanTopScore": 13.959194
     },
     {
       "id": "ot-wisdom-trust",
@@ -329,8 +329,8 @@
         "WEB:19009010"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.164274,
-      "meanTopScore": 23.866398
+      "weakReasonShare": 0.16427,
+      "meanTopScore": 23.866277
     },
     {
       "id": "ot-wisdom-time",
@@ -347,8 +347,8 @@
         "WEB:46007029"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.564872,
-      "meanTopScore": 9.192705
+      "weakReasonShare": 0.564883,
+      "meanTopScore": 9.192932
     },
     {
       "id": "ot-prophets-servant",
@@ -365,8 +365,8 @@
         "WEB:19103012"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.400348,
-      "meanTopScore": 6.670534
+      "weakReasonShare": 0.400369,
+      "meanTopScore": 6.670765
     },
     {
       "id": "ot-prophets-plans",
@@ -383,8 +383,8 @@
         "WEB:60005007"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.226428,
-      "meanTopScore": 17.690046
+      "weakReasonShare": 0.226431,
+      "meanTopScore": 17.690125
     },
     {
       "id": "ot-prophets-justly",
@@ -402,25 +402,25 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 7.896499
+      "meanTopScore": 7.821491
     },
     {
       "id": "ot-adversarial-census",
       "top": [
         "WEB:01005008",
         "WEB:01005004",
-        "WEB:01005005",
         "WEB:02020009",
         "WEB:20003002",
         "WEB:43011006",
         "WEB:43011017",
         "WEB:20003016",
         "WEB:58011030",
-        "WEB:33007015"
+        "WEB:33007015",
+        "WEB:39003004"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 4.160273
+      "meanTopScore": 4.054023
     }
   ]
 }
