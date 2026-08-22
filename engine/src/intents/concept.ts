@@ -472,6 +472,11 @@ function sourceLabel(sourceId: string): string {
       return 'OpenBible topical votes (CC BY)';
     case 'openbible-xrefs':
       return 'OpenBible cross-references (CC BY)';
+    case 'openbible-sections':
+      // P5.6 (CO-3): pericope grouping provenance. Unreachable until the
+      // PR 2 behavior emits grouped results; labeled from day one so the
+      // capability PR ships a complete display mapping.
+      return 'OpenBible section boundaries (CC BY)';
     case 'tsk':
       return 'Treasury of Scripture Knowledge (public domain)';
     case 'web':

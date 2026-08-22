@@ -48,6 +48,8 @@ const UNPACK: Readonly<Record<string, Unpack>> = {
   web: { kind: 'zip-flat', into: 'vpl' },
   'openbible-topics': { kind: 'zip-flat' },
   'openbible-xrefs': { kind: 'zip-flat' },
+  // A bare .txt — no archive to unpack (P5.6/CO-3 pericope capability).
+  'openbible-sections': { kind: 'plain' },
   ...Object.fromEntries(
     EXPOSITION_SOURCES.filter((spec) => spec.strategy === 'sword-zcom').map((spec) => [
       spec.id,

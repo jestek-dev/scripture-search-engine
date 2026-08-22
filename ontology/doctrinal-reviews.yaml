@@ -115,6 +115,19 @@ reviews:
       as data it must be re-admitted (the manifest says so itself), which
       includes a fresh row here.
 
+  - source: openbible-sections
+    reviewedAt: "2026-08-22"
+    reviewer: "P5.6/CO-3 PR 1 admission (see pipeline/manifests/openbible-sections.json; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      Section-placement counts across 20 surveyed translations — purely
+      structural, like openbible-xrefs: each row says only where translations
+      start a section and how many of them do, with no heading text, no verse
+      text, and no topical framing of any kind through which a §3 vector
+      could enter. The engine cites the summed boundary vote as a countable
+      fact, never a relevance or correctness score.
+
   - source: openbible-topics
     reviewedAt: "2026-08-15"
     reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
