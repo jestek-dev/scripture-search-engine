@@ -1,0 +1,165 @@
+# GENESIS-PILOT PACK (cluster draft, 2026-08-22) — God's unseen governance
+# of events toward his purposes ("God is in control", "God's sovereignty",
+# "God meant it for good"). Genesis-pilot proposal 11.
+#
+# WHY THIS IS NOT gods-provision, ARGUED ONCE, HERE (reviewers will ask —
+# gods-provision's Torrey source heading is literally "PROVIDENCE OF GOD,
+# THE"): provision = needs met (bread, clothing, the shepherd's care;
+# Matt 6:11/26, Ps 23); providence = governance of events (counsel standing,
+# boundaries appointed, evil overruled for good; Ps 33:10-11, Acts 17:26,
+# Gen 50:20). One Torrey outline feeds both because Torrey's topic spans
+# both senses; the two packs take DISJOINT rows of it — gods-provision took
+# "Providing for his creatures" (Matt 6:26), this pack takes "Overruling
+# wicked designs for good", "Ordering the ways of men", "Directing all
+# events". Token sets are disjoint (`providence` vs `provision` are
+# different tokens even stemmed); measured token ratio vs gods-provision is
+# 0.083 — one shared token, `god`.
+#
+# COLLISION DESIGN: remembered-all-things-for-good owns the Rom 8:28
+# phrasings ("all things work together for good" et al.) — NO "all things" /
+# "work together" wording here, and Rom 8:28 is deliberately NOT an anchor
+# (it stays that pack's single narrow anchor; cross-linked via related:).
+# Measured vs its 4-entry set: phrases 0.000, tokens {god, good} 2/6 =
+# 0.333 (limit 0.6). trust-in-god owns "trust gods plan" — this lexicon
+# carries no trust/plan vocabulary (tokens shared: {gods}, 0.111). guidance
+# owns "gods will for my life" — no my-life phrasing here (shared {gods},
+# 0.100).
+#
+# DOCTRINAL-GUARDRAIL DESIGN (docs/DOCTRINAL-BASIS.md §3): providence is a
+# prosperity MAGNET topic — "God is in control" slides into "God will make
+# it work out for my increase". This lexicon speaks NO materialFrameKeyword
+# (prosperity, wealth, success, money, favor, increase, breakthrough,
+# abundance, promotion, financial — checked token by token), and NO anchor
+# is on the ontology/flagged-pairings.yaml watchlist (checked each ref).
+# The doctrine-negative fixture providence-prosperity-guard forbids the
+# classic transactional proof-texts (Mal 3:10, Mark 11:24, Phil 4:19 — all
+# IN the fixture corpus, so the assertion cannot pass vacuously) for
+# sovereignty-register queries. Gen 39:2-5 ("Yahweh made all he did
+# prosper") was considered and left OUT of the anchors for exactly this
+# reason — see notes.md debatable list.
+#
+# PR #33 lexicon-inventory note: row must ADMIT the bare word `providence`
+# (the word IS the concept; 0.55 one-token discount applies) and SKIP
+# `control` (spans self-control's territory) and `sovereignty`-adjacent
+# bare words only if later measured useful.
+id: providence
+label: God's providence
+lexicon:
+  # Bare word, deliberate (NEEDS-JESSE §1.6d option-3 register): the
+  # classical term people actually search; record admitted: [providence]
+  # in ontology/lexicon-inventory.yaml under PR #33.
+  - providence
+  - the providence of god
+  - god is in control
+  - gods sovereignty
+  - sovereign over all
+  # The Joseph confession, the phrasing people remember (Gen 50:20).
+  - god meant it for good
+  - you meant evil against me
+  # Integration round 2026-08-22: the drafted fixture's "god used it for
+  # good" query cannot fire "god meant it for good" (token `used` vs
+  # `meant`; matching is full-token containment). Same claim register,
+  # adds only the token `used`; no shared phrase with
+  # remembered-all-things-for-good (G4 verified clean).
+  - god used it for good
+  - gods unseen hand
+  - god ordains events
+  - nothing happens outside gods control
+anchors:
+  # Torrey PROVIDENCE OF GOD, THE "Is exercised in > Overruling wicked
+  # designs for good :: Genesis 45:5-7, Genesis 50:20, Philippians 1:12".
+  # "You meant evil against me, but God meant it for good... to save many
+  # people alive" (WEB wording from knowledge — Genesis 50 NOT in
+  # pipeline/fixtures/web-subset.json; corpus extension requested in
+  # notes.md). The sentence the whole concept compresses to.
+  - ref: Genesis 50:20
+    sources: [torrey]
+    weight: 1.0
+  # Torrey PROVIDENCE OF GOD, THE — same outline row (Gen 45:5-7). "God
+  # sent me before you to preserve life... it was not you who sent me here,
+  # but God" (WEB wording from knowledge — Genesis 45 NOT in web-subset;
+  # notes.md). Joseph's own reading of twenty years of events.
+  - ref: Genesis 45:5-7
+    sources: [torrey]
+    weight: 0.95
+  # Torrey PROVIDENCE OF GOD, THE "Defeating wicked designs :: Psalms
+  # 33:10"; editorial for carrying v11, the positive half: "The counsel of
+  # the LORD stands fast forever, the thoughts of his heart to all
+  # generations" (WEB). The in-corpus spine of the pack and the fixture's
+  # primary assert. IN corpus (Psalms 33).
+  - ref: Psalms 33:10-11
+    sources: [editorial]
+    weight: 0.95
+  # Torrey PROVIDENCE OF GOD, THE "Determining the period of human life ::
+  # ... Acts 17:26"; editorial for the 26-28 range ("in him we live, move,
+  # and have our being"). "Having determined appointed seasons and the
+  # boundaries of their dwellings" (WEB) — Paul preaching providence to
+  # pagans. IN corpus (Acts 17).
+  # SIBLING NOTE (adversarial review 2026-08-22): the nations-and-peoples
+  # draft anchors the overlapping Acts 17:26-27 for the origin-of-nations
+  # frame; this row claims the governance frame. Zero shared lexicon
+  # tokens, so each query fires exactly one concept; the passage honestly
+  # carries both themes.
+  - ref: Acts 17:26-28
+    sources: [editorial]
+    weight: 0.9
+  # "The LORD has established his throne in the heavens. His kingdom rules
+  # over all" (WEB). The shortest whole statement of the theme; kept clear
+  # of Ps 103:2-5, which prayer-for-healing and restoration already anchor.
+  # IN corpus (Psalms 103).
+  - ref: Psalms 103:19
+    sources: [editorial]
+    weight: 0.9
+  # Torrey PROVIDENCE OF GOD, THE "Ordering the ways of men :: Proverbs
+  # 16:9, 19:21, 20:24". "A man's heart plans his course, but the LORD
+  # directs his steps" (WEB wording from knowledge — Proverbs 16 NOT in
+  # web-subset; notes.md).
+  - ref: Proverbs 16:9
+    sources: [torrey]
+    weight: 0.85
+  # "Who is he who says, and it comes to pass, when the Lord doesn't
+  # command it? Doesn't evil and good come out of the mouth of the Most
+  # High?" (WEB). Sovereignty confessed from inside catastrophe — the
+  # honest register for "why did God allow this". IN corpus
+  # (Lamentations 3; kept clear of 3:21-26, owned by hope-in-despair /
+  # gods-faithfulness / trust-in-god).
+  - ref: Lamentations 3:37-38
+    sources: [editorial]
+    weight: 0.8
+  # Torrey PROVIDENCE OF GOD, THE "Ordering the minutest matters ::
+  # Matthew 10:29, Matthew 10:30"; editorial for carrying v31. Sparrows and
+  # numbered hairs — providence at its smallest scale. (Matthew 10 NOT in
+  # web-subset; notes.md. Deliberately NOT Matt 6:26, which is
+  # gods-provision's Torrey anchor — the birds fed belong to provision,
+  # the sparrow's fall to providence.)
+  - ref: Matthew 10:29-31
+    sources: [editorial]
+    weight: 0.8
+  # Torrey PROVIDENCE OF GOD, THE "Overruling wicked designs for good ::
+  # ... Philippians 1:12". "The things which happened to me have turned
+  # out rather to the progress of the Good News" (WEB) — imprisonment
+  # overruled. The in-corpus witness for the meant-for-good fixture until
+  # Genesis 45/50 enter the corpus. IN corpus (Philippians 1).
+  - ref: Philippians 1:12
+    sources: [torrey]
+    weight: 0.75
+  # "In your book they were all written, the days that were ordained for
+  # me" (WEB) — providence over one life's span; Torrey's outline cites
+  # Ps 31:15 and Ps 139:1-5 in this territory, 139:16 is the editorial
+  # sharpening. Kept clear of 139:13-14 (creation / identity-in-christ /
+  # pregnancy-and-child-loss) and 139:7-10 (presence-of-god). IN corpus.
+  - ref: Psalms 139:16
+    sources: [editorial]
+    weight: 0.7
+  # "Who knows if you haven't come to the kingdom for such a time as
+  # this?" (WEB wording from knowledge — Esther NOT in web-subset;
+  # notes.md). The book that never names God is the canon's long-form
+  # study of unseen governance; editorial, and defensible only as that.
+  - ref: Esther 4:14
+    sources: [editorial]
+    weight: 0.65
+related:
+  - trust-in-god
+  - gods-provision
+  - remembered-all-things-for-good
+  - guidance
