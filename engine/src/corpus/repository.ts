@@ -369,7 +369,8 @@ export class CorpusRepository implements ReferenceResolver {
 
   /**
    * Which of the given tokens exist in the artifact's spelling vocabulary
-   * (corpus tokens ∪ book aliases ∪ lexicon tokens ∪ translation tokens).
+   * (corpus tokens ∪ book aliases ∪ lexicon tokens ∪ translation tokens ∪
+   * Layer B verse terms).
    * This is the OOV gate's second half: a token with corpus df 0 that is
    * still a known name or curated word is IN vocabulary and never corrected.
    */

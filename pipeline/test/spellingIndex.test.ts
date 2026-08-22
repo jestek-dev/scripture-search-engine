@@ -29,6 +29,7 @@ interface Seed {
   readonly aliases?: readonly string[];
   readonly lexicon?: readonly string[];
   readonly translationTokens?: readonly string[];
+  readonly verseTerms?: readonly string[];
   readonly layerFingerprint?: string;
 }
 
@@ -52,6 +53,13 @@ function seededDatabase(seed: Seed): DatabaseSync {
   for (const token of seed.translationTokens ?? []) {
     database.prepare('INSERT INTO verse_translation_tokens(verse_id, token) VALUES (1001001, ?)').run(token);
   }
+  for (const term of seed.verseTerms ?? []) {
+    database
+      .prepare(
+        "INSERT INTO verse_terms(verse_id, term, pmi, count, source_ids, author_count, min_span_verses, locator) VALUES (1001001, ?, 2.5, 1, 's', 1, 1, 'l')",
+      )
+      .run(term);
+  }
   if (seed.layerFingerprint !== undefined) {
     database.prepare("INSERT INTO meta(key, value) VALUES ('layer_fingerprint', ?)").run(seed.layerFingerprint);
   }
@@ -72,6 +80,10 @@ const BASE: Seed = {
   aliases: ['genesis', 'gen'],
   lexicon: ['salvation', 'pray'],
   translationTokens: ['prosper'],
+  // Layer B homiletical vocabulary — the fifth origin (round-2 fix): a word
+  // the engine can answer via verse_terms evidence is IN vocabulary and the
+  // OOV gate must never let it be corrected away.
+  verseTerms: ['adoration', 'pray'],
   layerFingerprint: 'a'.repeat(64),
 };
 
@@ -87,16 +99,17 @@ describe('buildSpellingIndex', () => {
       .prepare('SELECT term, document_count AS df, origins FROM spelling_terms ORDER BY term')
       .all() as { term: string; df: number; origins: string }[];
     expect(rows).toEqual([
+      { term: 'adoration', df: 0, origins: 'verse_terms' },
       { term: 'forgiveness', df: 4, origins: 'corpus' },
       { term: 'gen', df: 0, origins: 'books' },
       { term: 'genesis', df: 0, origins: 'books' },
-      { term: 'pray', df: 60, origins: 'corpus+lexicon' },
+      { term: 'pray', df: 60, origins: 'corpus+lexicon+verse_terms' },
       { term: 'prosper', df: 0, origins: 'translations' },
       { term: 'salvation', df: 0, origins: 'lexicon' },
       { term: 'sin', df: 107, origins: 'corpus' },
       { term: 'strength', df: 37, origins: 'corpus' },
     ]);
-    expect(result.termCount).toBe(8);
+    expect(result.termCount).toBe(9);
   });
 
   it('the delete table equals a recomputation from the engine-exported policy — the cross-check', () => {
@@ -106,10 +119,14 @@ describe('buildSpellingIndex', () => {
       .prepare('SELECT delete_key, term FROM spelling_deletes ORDER BY term, delete_key')
       .all() as { delete_key: string; term: string }[];
     const expected: { delete_key: string; term: string }[] = [];
-    const terms = (database.prepare('SELECT term FROM spelling_terms ORDER BY term').all() as {
+    const terms = database.prepare('SELECT term, origins FROM spelling_terms ORDER BY term').all() as {
       term: string;
-    }[]).map((row) => row.term);
-    for (const term of terms) {
+      origins: string;
+    }[];
+    for (const { term, origins } of terms) {
+      // Gate-only origins (verse_terms alone) contribute no delete rows: the
+      // word is protected FROM correction, never proposed AS one.
+      if (origins.split('+').every((origin) => origin === 'verse_terms')) continue;
       const depth = dictionaryDeleteDepth(term.length);
       if (depth === 0) continue;
       for (const key of deleteVariants(term, depth)) expected.push({ delete_key: key, term });
@@ -121,6 +138,12 @@ describe('buildSpellingIndex', () => {
     // 'sin' and 'gen' (length 3) contribute no delete rows: no in-policy
     // typed token can ever reach them.
     expect(shipped.some((row) => row.term === 'sin' || row.term === 'gen')).toBe(false);
+    // 'adoration' (verse_terms-only, length 9) is GATE-ONLY: in
+    // spelling_terms so the OOV gate protects it, but it ships no delete
+    // rows — a typo can never be corrected INTO it. 'pray' (corpus+lexicon
+    // AND verse_terms) keeps its target status through its other origins.
+    expect(shipped.some((row) => row.term === 'adoration')).toBe(false);
+    expect(shipped.some((row) => row.term === 'pray')).toBe(true);
   });
 
   it('is byte-deterministic: same rows in different insertion order, same bytes and fingerprint out', () => {
@@ -130,6 +153,7 @@ describe('buildSpellingIndex', () => {
       tokenStats: [...BASE.tokenStats!].reverse(),
       aliases: [...BASE.aliases!].reverse(),
       lexicon: [...BASE.lexicon!].reverse(),
+      verseTerms: [...BASE.verseTerms!].reverse(),
     });
     const first = buildSpellingIndex(asPort(database));
     const second = buildSpellingIndex(asPort(reversed));
@@ -162,6 +186,16 @@ describe('buildSpellingIndex', () => {
       translationTokens: ['pray'],
     });
     expect(buildSpellingIndex(asPort(swappedOrigin)).layerFingerprint).not.toBe(
+      baseResult.layerFingerprint,
+    );
+    // The fifth origin is fingerprint-visible too: the same word moving from
+    // verse_terms into the lexicon (equal counts) must move the identity.
+    const swappedVerseTermOrigin = seededDatabase({
+      ...BASE,
+      lexicon: ['salvation', 'pray', 'adoration'],
+      verseTerms: ['pray'],
+    });
+    expect(buildSpellingIndex(asPort(swappedVerseTermOrigin)).layerFingerprint).not.toBe(
       baseResult.layerFingerprint,
     );
   });

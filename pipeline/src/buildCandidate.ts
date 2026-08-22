@@ -1766,7 +1766,7 @@ function inspectLayerExpectation(
     // Schema v7 chains the spelling-vocabulary fingerprint on top of the
     // concept-layer fingerprint (buildSpellingIndex is the writer; this is
     // the independent reviewer-side recomputation). The candidate mutates the
-    // lexicon, which is one of the four vocabulary sources, so both the base
+    // lexicon, which is one of the five vocabulary sources, so both the base
     // check and the candidate expectation must reproduce the chain.
     const spellingPresent = hasSpellingIndex(database);
     const spellingSources = spellingPresent
@@ -1789,10 +1789,10 @@ function inspectLayerExpectation(
     let candidateLayerFingerprint = candidateConceptFingerprint;
     let spellingTableDigests: Readonly<Record<string, string>> | null = null;
     if (spellingSources) {
-      // The candidate vocabulary: identical corpus/books/translations sources
-      // (candidates never touch them) with the lexicon replaced by the
-      // proposal-derived rows — exactly what buildSpellingIndex will read
-      // back from the mutated copy.
+      // The candidate vocabulary: identical corpus/books/translations/
+      // verse_terms sources (candidates never touch them) with the lexicon
+      // replaced by the proposal-derived rows — exactly what
+      // buildSpellingIndex will read back from the mutated copy.
       const candidateTerms = assembleSpellingVocabulary({
         ...spellingSources,
         lexiconNormalized: [...new Set(

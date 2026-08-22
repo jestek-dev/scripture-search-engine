@@ -3,7 +3,12 @@
  * artifact whose corpus and layers are already written.
  *
  * Vocabulary = corpus tokens ∪ book aliases ∪ lexicon tokens ∪ translation
- * tokens, every row carrying its origins — read back from THIS database, so
+ * tokens ∪ verse terms (the Layer B homiletical vocabulary — a word the
+ * engine itself can answer via "Preached vocabulary" evidence must never be
+ * "corrected" away when typed correctly; verse_terms-only words are
+ * GATE-ONLY — protected from correction, never proposed as one — see
+ * GATE_ONLY_ORIGINS), every row carrying its origins — read back from THIS
+ * database, so
  * the index is a deterministic function of bytes the artifact already ships
  * (no new upstream source, no AI, nothing to admit). The delete-variant
  * table is SymSpell-style, with per-term depth DERIVED from the ONE
@@ -67,13 +72,15 @@ export interface SpellingTermRow {
   readonly origins: string;
 }
 
-/** The four vocabulary sources, before assembly. */
+/** The five vocabulary sources, before assembly. */
 export interface SpellingVocabularySources {
   readonly corpusTokens: readonly { readonly term: string; readonly documentCount: number }[];
   readonly aliasKeys: readonly string[];
   /** Normalized lexicon strings; each is split on spaces into tokens. */
   readonly lexiconNormalized: readonly string[];
   readonly translationTokens: readonly string[];
+  /** Distinct Layer B verse_terms words (single tokens by construction). */
+  readonly verseTerms: readonly string[];
 }
 
 export interface SpellingIndexResult {
@@ -83,7 +90,7 @@ export interface SpellingIndexResult {
   readonly layerFingerprint: string;
 }
 
-/** Reads the four vocabulary sources out of a built artifact database. */
+/** Reads the five vocabulary sources out of a built artifact database. */
 export function readSpellingVocabularySources(
   database: SqliteReadWriteDatabase,
 ): SpellingVocabularySources {
@@ -102,6 +109,9 @@ export function readSpellingVocabularySources(
       .all() as { normalized: string }[]).map((row) => row.normalized),
     translationTokens: (database
       .prepare('SELECT DISTINCT token AS term FROM verse_translation_tokens')
+      .all() as { term: string }[]).map((row) => row.term),
+    verseTerms: (database
+      .prepare('SELECT DISTINCT term FROM verse_terms')
       .all() as { term: string }[]).map((row) => row.term),
   };
 }
@@ -131,6 +141,12 @@ export function assembleSpellingVocabulary(
     for (const token of normalized.split(' ')) admit(token, 'lexicon');
   }
   for (const token of sources.translationTokens) admit(token, 'translations');
+  // Fifth origin (round-2 fix): Layer B homiletical vocabulary. Measured on
+  // the fixture bed before this line existed: 2,598 words lived ONLY in
+  // verse_terms, and 703 of them corrected away when typed correctly
+  // (adoration→adoption, ahimelech→abimelech, abhorrence→empty-with-claim).
+  // A word the artifact itself serves evidence for is IN vocabulary.
+  for (const term of sources.verseTerms) admit(term, 'verse_terms');
 
   return [...vocabulary.keys()].sort().map((term) => {
     const row = vocabulary.get(term)!;
@@ -143,16 +159,39 @@ export function assembleSpellingVocabulary(
 }
 
 /**
+ * Origins that protect a word from correction (the OOV gate) WITHOUT making
+ * it a correction target. verse_terms joined the vocabulary (round-2 fix) so
+ * that a preached word typed correctly is never rewritten — the conservative
+ * direction: strictly FEWER corrections, never more. Making those words
+ * correction targets as well would (a) add brand-new corrections (a typo
+ * could start landing on a df-0 homiletical word), and (b) blow the reviewed
+ * spelling_deletes budget at the next mint (measured on the v0.7.1
+ * vocabulary: 9,975 verse_terms-only words push the delete table to
+ * 20.1 MiB against the 12 MiB budget; the four-source roster sits at
+ * ~7.5 MiB). The correction-target roster therefore stays exactly the four
+ * plan-stated sources; flip a word to target status by giving it a second
+ * origin, or revisit with a reviewed budget change.
+ */
+const GATE_ONLY_ORIGINS = new Set(['verse_terms']);
+
+/** Whether a term is a correction TARGET (some origin beyond the gate-only set). */
+function isCorrectionTarget(origins: string): boolean {
+  return origins.split('+').some((origin) => !GATE_ONLY_ORIGINS.has(origin));
+}
+
+/**
  * The delete rows the policy derives for a term set: identity + deletes up
  * to dictionaryDeleteDepth(length) per term, in (term, key-sorted) insertion
  * order. Terms below length 4 contribute nothing — no in-policy typed token
- * can ever reach them.
+ * can ever reach them. Gate-only terms (verse_terms-only origins) contribute
+ * nothing either: they are protected FROM correction, never proposed AS one.
  */
 export function spellingDeleteRows(
   terms: readonly SpellingTermRow[],
 ): readonly { readonly deleteKey: string; readonly term: string }[] {
   const rows: { deleteKey: string; term: string }[] = [];
-  for (const { term } of terms) {
+  for (const { term, origins } of terms) {
+    if (!isCorrectionTarget(origins)) continue;
     const depth = dictionaryDeleteDepth(term.length);
     if (depth === 0) continue;
     for (const key of deleteVariants(term, depth)) rows.push({ deleteKey: key, term });
@@ -178,6 +217,10 @@ export function spellingLayerFingerprint(
   };
   feed(['spelling-base', previousLayerFingerprint]);
   feed(['spelling-policy', SPELLING_MIN_TOKEN_LENGTH, SPELLING_EDIT1_MAX_TOKEN_LENGTH]);
+  // The gate-only origin set is derivation policy too: it decides which
+  // vocabulary rows ship delete rows, so a change to it must move the
+  // identity exactly as an edit-policy change would.
+  feed(['spelling-gate-only', ...[...GATE_ONLY_ORIGINS].sort()]);
   for (const row of terms) feed(['s', row.term, row.documentCount, row.origins]);
   return hash.digest('hex');
 }

@@ -110,6 +110,25 @@ describe('the OOV gate — a word in ANY vocabulary is never rewritten', () => {
     }
   });
 
+  it('Layer B verse_terms vocabulary blocks correction — a preached word typed correctly is never rewritten', async () => {
+    // Round-2 fix (fifth origin). Measured before verse_terms joined the
+    // vocabulary: 2,598 fixture-bed words lived ONLY in verse_terms and 703
+    // of them corrected away when typed correctly — adoration→adoption,
+    // ahimelech→abimelech (a priest renamed to a different person),
+    // abhorrence→abhorrent (results destroyed with a correction claim),
+    // agitation→habitation, antiquity→iniquity. A word the engine itself can
+    // answer via "Preached vocabulary" evidence is IN vocabulary.
+    for (const query of ['adoration', 'ahimelech', 'abhorrence', 'agitation', 'antiquity']) {
+      const result = await engine.research(query);
+      if (result.kind !== 'discovery') throw new Error(`expected discovery for ${query}`);
+      expect(result.corrections, query).toBeUndefined();
+    }
+    // And the un-corrected word still reaches its own homiletical evidence.
+    const adoration = await engine.research('adoration');
+    if (adoration.kind !== 'discovery') throw new Error('expected discovery');
+    expect(adoration.results.length).toBeGreaterThan(0);
+  });
+
   it('archaic forms fold in the tokenizer and never reach the correction layer', async () => {
     const result = await engine.research('loveth');
     if (result.kind !== 'discovery') throw new Error('expected discovery');

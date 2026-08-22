@@ -3,7 +3,7 @@
  *
  * The pipeline precomputes a SymSpell-style delete-variant index over the
  * artifact's whole vocabulary (corpus tokens ∪ book aliases ∪ lexicon tokens
- * ∪ translation tokens); at query time an out-of-vocabulary token's own
+ * ∪ translation tokens ∪ Layer B verse terms); at query time an out-of-vocabulary token's own
  * delete variants are looked up through the port and every candidate is
  * verified with the bounded integer Damerau DP before one may substitute.
  * Everything in this module is a pure function — no I/O, no floats in

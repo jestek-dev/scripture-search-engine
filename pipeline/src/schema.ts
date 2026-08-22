@@ -253,7 +253,10 @@ CREATE INDEX idx_verse_terms_verse ON verse_terms(verse_id);
  * ---- Deterministic cited spelling correction (schema v7, QR-5) ----
  *
  * The artifact's whole known-word vocabulary: corpus tokens ∪ book aliases ∪
- * lexicon tokens ∪ translation tokens, each row carrying its origins. Doubles
+ * lexicon tokens ∪ translation tokens ∪ verse terms (Layer B; gate-only —
+ * a verse_terms-only word is protected from correction but contributes no
+ * delete rows, so it is never proposed AS a correction), each row
+ * carrying its origins. Doubles
  * as the runtime's OOV gate — a query token present here is IN vocabulary and
  * is NEVER corrected — and as the candidate roster the delete index proposes
  * from. document_count is the corpus df (summed over translations); 0 for

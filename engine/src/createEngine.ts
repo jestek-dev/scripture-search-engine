@@ -257,7 +257,8 @@ export async function createEngine(
     // Cited spelling correction (0.12.0/QR-5) runs FIRST, before any token
     // step, and only on the research() path: a typed token with corpus df 0
     // that exists in NO vocabulary (corpus tokens, book aliases, lexicon
-    // tokens, translation tokens — the OOV gate) substitutes the unique
+    // tokens, translation tokens, Layer B verse terms — the OOV gate)
+    // substitutes the unique
     // in-policy winner of the precomputed SymSpell lookup, verified by the
     // bounded integer Damerau DP under the ONE edit-policy table. Corrected
     // tokens then flow through every step below unchanged, and every
