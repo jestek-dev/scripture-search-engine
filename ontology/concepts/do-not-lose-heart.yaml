@@ -5,9 +5,25 @@
 # ("suicide", "no reason to live") with crisis-weighted anchors (2 Cor 1:8-10
 # leads, Psalm 88 enters at 0.35); "I'm discouraged" is a different pastoral
 # moment wanting Gal 6:9's keep-going word, which would be wrong served to a
-# suicidal search and is not anchored there. The two lexicons are disjoint —
-# crisis phrasings ("want to give up", "feeling hopeless") STAY on
-# hope-in-despair; this pack takes only the discouragement vocabulary.
+# suicidal search and is not anchored there.
+#
+# LEXICON BOUNDARY, revised for Phase-4 P4.7 / fn12 (2026-08-22; original
+# cluster-B design 2026-08-18 kept the two lexicons fully disjoint): the
+# give-up phrasings ("tempted to give up", "want to give up", "ready to
+# give up") are the fn12 audit register — an asker one step from quitting,
+# whose needed perseverance texts never surfaced (bare "tempted" routes to
+# remembered-a-way-of-escape by the deliberate bare-word routing; 1 Cor
+# 10:13 stays an honest neighbour, not banned). Per the plan's fn12 item,
+# those phrases now fire THIS pack too. "want to give up" is therefore
+# DELIBERATELY SHARED with hope-in-despair — the one shared phrase between
+# the two packs: the crisis pack keeps the phrase, its crisis anchors, and
+# the pastoral-despair-give-up mustNotRank gate (measured intact at
+# admission: 2 Cor 1:8-10 still leads the query on both beds, and every
+# suicide-narrative ban still holds); this pack adds the keep-going
+# register beside it, so a give-up search meets crisis comfort FIRST and
+# perseverance right behind it. The rest of the crisis vocabulary
+# ("feeling hopeless", "want to die", …) stays exclusively on
+# hope-in-despair.
 #
 # Shared anchors (Ps 42:5 with hope-in-despair; Isa 41:10/Josh 1:9 with
 # fear-not; 2 Cor 4:16-18 with serious-illness-and-dying) are deliberate:
@@ -21,10 +37,18 @@ lexicon:
   - do not lose heart
   - losing heart
   - weary in doing good
-  # "don't give up" after apostrophe-stripping; distinct phrase from
-  # hope-in-despair's "want to give up" (the crisis phrasing stays there,
-  # and the existing pastoral-despair-give-up fixture keeps owning it).
+  # "don't give up" after apostrophe-stripping.
   - dont give up
+  # Phase-4 P4.7 / fn12 admission (2026-08-22) — the give-up phrasings the
+  # audit measured unreachable (see LEXICON BOUNDARY note). Widths under
+  # the one tokenizer, verified pre-commit: {tempt, give} / {want, give} /
+  # {ready, give} — two significant tokens each ("to"/"up" are stopwords),
+  # no lexicon-inventory rows due. "want to give up" is the deliberately
+  # shared crisis/perseverance phrase; the pastoral-despair-give-up
+  # fixture's gate stays the authority on that query's crisis floor.
+  - tempted to give up
+  - want to give up
+  - ready to give up
   # Round-2 book admission 2026-08-18.
   - pressed on every side
   - dont throw away your confidence
