@@ -20,17 +20,21 @@ import { describe, expect, it } from 'vitest';
 
 import {
   computeRankMetrics,
+  evaluateBatteryAcceptance,
   evaluateRankQuality,
   validateBattery,
   validateRankMetricsBaselineDocuments,
   validateRankQualityBlock,
   withRankEvidence,
+  BATTERY_ACCEPTANCE_NULL_MARKER,
   RANK_METRICS_APPROVAL_SCHEMA_V2,
   RANK_METRICS_BASELINE_SCHEMA,
   RANK_QUALITY_NULL_MARKER,
+  type BatteryQueryOutcome,
   type RankMetricsReport,
   type RankQualityThresholds,
   type RankQueryInput,
+  type ValidatedBattery,
 } from '../src/gates/rankMetrics.js';
 import { buildReport } from '../src/report.js';
 import { canonicalJsonSha256 } from '../src/gates/probes.js';
@@ -63,6 +67,10 @@ function allNullBlock(overrides: Record<string, unknown> = {}): Record<string, u
     mrr10: null,
     goodOrBetterTop3Rate: null,
     battery: { categoryFloors: { ...FLOORS } },
+    // QR-8 acceptance criteria (P5.7): null until baselined, like every
+    // quality threshold above.
+    spelling: { noSilentEmpty: null },
+    references: { grammarCoverage: null },
     ...overrides,
   };
 }
@@ -114,6 +122,10 @@ describe('committed rankQuality block', () => {
     expect(Object.values(thresholds.ndcg10.perCategory).every((value) => value === null)).toBe(true);
     expect(thresholds.mrr10).toBeNull();
     expect(thresholds.goodOrBetterTop3Rate).toBeNull();
+    // QR-8 acceptance criteria land null at gate-landing (P5.7 Group 7);
+    // the flip is a separate reviewed PR quoting a real >=3-run history (J42).
+    expect(thresholds.spelling.noSilentEmpty).toBeNull();
+    expect(thresholds.references.grammarCoverage).toBeNull();
   });
 });
 
@@ -277,6 +289,183 @@ describe('the honoring gate — non-null thresholds enforce exactly', () => {
     );
     expect(entry?.outcome).toBe('unmeasurable');
     expect(quality.failures.map((finding) => finding.message).join('\n')).toContain('worship-leader');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// QR-8 (P5.7): the ms/ref acceptance criteria — null honesty, fail-closed
+// enforcement, and the documented mutation shape (disable OOV substitution
+// -> ms rows go bare-empty -> enforced noSilentEmpty flips the row).
+// ---------------------------------------------------------------------------
+
+function acceptanceBattery(): ValidatedBattery {
+  const query = (id: string, text: string, category: string) => ({
+    id, query: text, category: category as never, addedAt: '2026-08-22', origin: 'test',
+    judged: [], harmful: [], legitimatelyEmpty: true,
+  });
+  return {
+    batteryVersion: 1,
+    queries: [
+      query('ms1', 'forgivness', 'misspelling'),
+      query('ms2', 'stregnth', 'misspelling'),
+      query('ref1', 'John 3 16', 'reference-adjacent'),
+      query('ref2', 'psalm 23', 'reference-adjacent'),
+    ],
+    activeQueries: 4, judgedRows: 0, harmfulRows: 0, provisionalRows: 0, findings: [],
+  };
+}
+
+function discoveryOutcome(id: string, text: string, results: number): BatteryQueryOutcome {
+  return {
+    id, query: text, kind: 'discovery',
+    top: Array.from({ length: results }, (_, index) => ({
+      rank: index + 1, targetId: `WEB:6200100${index + 1}`, reference: `1 John 1:${index + 1}`,
+      score: 10 - index, families: ['concept_anchor'],
+    })),
+  };
+}
+
+function referenceOutcome(id: string, text: string, label: string): BatteryQueryOutcome {
+  return { id, query: text, kind: 'reference', top: [], passageReference: label };
+}
+
+const ACCEPTANCE_PINS = [{ query: 'John 3 16', expectedReference: 'John 3:16' }];
+
+function healthyOutcomes(): BatteryQueryOutcome[] {
+  return [
+    discoveryOutcome('ms1', 'forgivness', 3),
+    discoveryOutcome('ms2', 'stregnth', 2),
+    referenceOutcome('ref1', 'John 3 16', 'John 3:16'),
+    referenceOutcome('ref2', 'psalm 23', 'Psalms 23'),
+  ];
+}
+
+function acceptanceOf(
+  block: Record<string, unknown>,
+  outcomes: readonly BatteryQueryOutcome[],
+  established = false,
+  pins: readonly { query: string; expectedReference: string }[] | null = ACCEPTANCE_PINS,
+) {
+  return evaluateBatteryAcceptance({
+    thresholds: thresholdsOf(block, established),
+    validated: acceptanceBattery(),
+    outcomes,
+    referenceGrammarPins: pins,
+  });
+}
+
+describe('QR-8 acceptance criteria — reviewed-data validation', () => {
+  it('rings when the spelling or references sub-block is missing or misshapen', () => {
+    expect(blockFindings(allNullBlock({ spelling: undefined }))).toContain('spelling');
+    expect(blockFindings(allNullBlock({ references: {} }))).toContain('references');
+    expect(blockFindings(allNullBlock({ spelling: { noSilentEmpty: null, extra: 1 } }))).toContain('spelling');
+  });
+
+  it('rings on any value that is not null or literally true — false is a tombstone rollback, not a value', () => {
+    const text = blockFindings(allNullBlock({ spelling: { noSilentEmpty: false } }), true);
+    expect(text).toContain('noSilentEmpty');
+    expect(text).toContain('null-with-tombstone');
+    expect(blockFindings(allNullBlock({ references: { grammarCoverage: 1 } }), true)).toContain('grammarCoverage');
+  });
+
+  it('rings on a premature true while no approved rank baseline exists, and coerces it to null', () => {
+    const { thresholds, findings } = validateRankQualityBlock(
+      allNullBlock({ spelling: { noSilentEmpty: true } }),
+      { rankBaselineEstablished: false },
+    );
+    expect(findings.length).toBe(1);
+    expect(findings[0]!.message).toContain('noSilentEmpty');
+    expect(findings[0]!.message).toContain('baseline');
+    expect(thresholds!.spelling.noSilentEmpty).toBeNull();
+    // The same value with an established baseline is accepted.
+    expect(blockFindings(allNullBlock({ spelling: { noSilentEmpty: true } }), true)).toBe('');
+  });
+});
+
+describe('QR-8 acceptance criteria — null honesty', () => {
+  it('null criteria report no-threshold with the plan-stated marker, measured and reported, zero failures', () => {
+    const outcome = acceptanceOf(allNullBlock(), healthyOutcomes());
+    expect(outcome.failures).toEqual([]);
+    expect(outcome.evaluations.map((entry) => entry.outcome)).toEqual(['no-threshold', 'no-threshold']);
+    expect(outcome.evaluations[0]!.holds).toBe(true);
+    expect(outcome.evaluations[1]!.holds).toBe(true);
+    expect(BATTERY_ACCEPTANCE_NULL_MARKER).toBe('not-applicable — thresholds unset');
+  });
+
+  it('a bare-empty ms row under a NULL criterion is reported, never failed — and never passed', () => {
+    const outcomes = [...healthyOutcomes()];
+    outcomes[0] = discoveryOutcome('ms1', 'forgivness', 0);
+    const outcome = acceptanceOf(allNullBlock(), outcomes);
+    expect(outcome.failures).toEqual([]);
+    expect(outcome.evaluations[0]!.outcome).toBe('no-threshold');
+    expect(outcome.evaluations[0]!.holds).toBe(false);
+    expect(outcome.evaluations[0]!.detail).toContain('ms1');
+  });
+
+  it('withRankEvidence prints the marker on the row and never flips it on null criteria', () => {
+    const metrics = computeRankMetrics([perfectQuery('fn1', 'felt-need')]);
+    const quality = evaluateRankQuality(thresholdsOf(allNullBlock()), metrics);
+    const acceptance = acceptanceOf(allNullBlock(), healthyOutcomes());
+    const row = withRankEvidence(
+      pass('G12-battery', 'Pastoral battery', 'base'), metrics, [], quality, acceptance,
+    );
+    expect(row.status).toBe('pass');
+    expect(row.summary).toContain(BATTERY_ACCEPTANCE_NULL_MARKER);
+    expect(row.summary).toContain('spelling.noSilentEmpty');
+    expect(row.summary).toContain('references.grammarCoverage');
+    expect(row.summary).not.toMatch(/\bmet\b|\bMET\b|\bFAILED\b/);
+  });
+});
+
+describe('QR-8 acceptance criteria — fail-closed enforcement', () => {
+  it('healthy outcomes under enforced criteria report met and do not flip the row', () => {
+    const block = allNullBlock({
+      spelling: { noSilentEmpty: true }, references: { grammarCoverage: true },
+    });
+    const outcome = acceptanceOf(block, healthyOutcomes(), true);
+    expect(outcome.failures).toEqual([]);
+    expect(outcome.evaluations.map((entry) => entry.outcome)).toEqual(['met', 'met']);
+  });
+
+  it('the documented mutation shape: a bare-empty ms row fails the enforced criterion and the row', () => {
+    // Disabling OOV substitution empties the misspelling rows — exactly this
+    // outcome shape. The enforced criterion must flip the run to REJECT.
+    const outcomes = [...healthyOutcomes()];
+    outcomes[0] = discoveryOutcome('ms1', 'forgivness', 0);
+    const block = allNullBlock({ spelling: { noSilentEmpty: true } });
+    const outcome = acceptanceOf(block, outcomes, true);
+    expect(outcome.evaluations[0]!.outcome).toBe('not-met');
+    expect(outcome.failures.map((entry) => entry.message).join('\n')).toContain('ms1');
+    const metrics = computeRankMetrics([perfectQuery('fn1', 'felt-need')]);
+    const row = withRankEvidence(
+      pass('G12-battery', 'Pastoral battery', 'base'), metrics, [],
+      evaluateRankQuality(thresholdsOf(allNullBlock()), metrics), outcome,
+    );
+    expect(row.status).toBe('fail');
+  });
+
+  it('an enforced criterion that cannot be verified must not pass: unmeasurable fails loudly', () => {
+    // The battery evidence does not record suggestion presence on an
+    // invalid-reference outcome, so the enforced criterion cannot certify it.
+    const outcomes = [...healthyOutcomes()];
+    outcomes[0] = { id: 'ms1', query: 'forgivness', kind: 'invalid-reference', top: [] };
+    const block = allNullBlock({ spelling: { noSilentEmpty: true } });
+    const outcome = acceptanceOf(block, outcomes, true);
+    expect(outcome.evaluations[0]!.outcome).toBe('unmeasurable');
+    expect(outcome.failures.length).toBe(1);
+  });
+
+  it('grammarCoverage: an unresolved ref row or a pinned-label mismatch fails; missing pins are unmeasurable', () => {
+    const block = allNullBlock({ references: { grammarCoverage: true } });
+    const unresolved = [...healthyOutcomes()];
+    unresolved[2] = discoveryOutcome('ref1', 'John 3 16', 2);
+    expect(acceptanceOf(block, unresolved, true).evaluations[1]!.outcome).toBe('not-met');
+    const mislabeled = [...healthyOutcomes()];
+    mislabeled[2] = referenceOutcome('ref1', 'John 3 16', 'John 16');
+    const mislabelOutcome = acceptanceOf(block, mislabeled, true);
+    expect(mislabelOutcome.evaluations[1]!.outcome).toBe('not-met');
+    expect(mislabelOutcome.failures.map((entry) => entry.message).join('\n')).toContain('John 16');
+    expect(acceptanceOf(block, healthyOutcomes(), true, null).evaluations[1]!.outcome).toBe('unmeasurable');
   });
 });
 

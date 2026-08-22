@@ -1489,6 +1489,8 @@ const NULL_THRESHOLDS: RankQualityThresholds = {
   mrr10: null,
   goodOrBetterTop3Rate: null,
   battery: { categoryFloors: UNIT_FLOORS },
+  spelling: { noSilentEmpty: null },
+  references: { grammarCoverage: null },
 };
 
 describe('rank-quality threshold discipline', () => {
@@ -1561,6 +1563,8 @@ describe('rank-quality threshold discipline', () => {
       mrr10: null,
       goodOrBetterTop3Rate: null,
       battery: { categoryFloors: UNIT_FLOORS },
+      spelling: { noSilentEmpty: null },
+      references: { grammarCoverage: null },
     };
     const { thresholds, findings } = validateRankQualityBlock(block, { rankBaselineEstablished: false });
     expect(findings.map((f) => f.categoryCode)).toContain(g12cat('rank-quality-premature-threshold'));

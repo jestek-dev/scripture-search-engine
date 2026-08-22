@@ -183,6 +183,8 @@ const NULL_THRESHOLDS: RankQualityThresholds = {
       'worship-leader': 1,
     },
   },
+  spelling: { noSilentEmpty: null },
+  references: { grammarCoverage: null },
 };
 
 function metricsOf(overallNdcgExact: string | null, perCategoryExact: Record<string, string> = {}): RankMetricsReport {
