@@ -11,8 +11,10 @@ export { ENGINE_VERSION, TOKENIZER_VERSION } from './config/engineVersion.js';
 
 export {
   collapseAnchorRuns,
+  collapseRuns,
   createEngine,
   type EngineOptions,
+  type GroupingSpanInfo,
   type ScriptureEngine,
 } from './createEngine.js';
 
@@ -129,8 +131,10 @@ export type {
   ContentQueryResult,
   ContentScalar,
   DiscoveryResult,
+  GroupedVerse,
   ResearchOutcome,
   ResearchResult,
+  ResultGrouping,
   ResultIdentity,
   ScripturePassage,
   ScriptureVerse,

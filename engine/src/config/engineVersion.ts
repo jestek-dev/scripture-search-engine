@@ -40,7 +40,21 @@
 // non-alias queries are untouched by construction (equality matching).
 // Rollback: rebuild the artifact without alias rows (the probe reverts
 // behavior); an engine revert is a new version.
-export const ENGINE_VERSION = '0.13.0';
+// 0.14.0 (CO-3 PR 2): passage-level grouping over the schema-v8 pericope
+// tiling. discover() merges ungoverned results that are consecutive in rank,
+// verseId-consecutive, and members of ONE derived pericope into a single
+// passage row; the existing curated-anchor collapse is unchanged in its
+// merge rule but both mechanisms now EXPLAIN the merge — merged rows carry
+// additive `verses[]` (per-member evidence, uncollapsed) and a typed
+// `grouping` naming the section span and its source (anchor sources for
+// anchor runs, 'openbible-sections' + the summed boundary vote for pericope
+// runs; grouping is not a Reason and contributes zero points). Authority
+// order is fixed: an anchor-claimed verse never joins a pericope run.
+// Merged pericope rows change which rows the default page shows, so this
+// bumps in the same commit as the behavior. Rollback: rebuild the artifact
+// without pericope rows (the presence-and-rows probe reverts the pericope
+// path); an engine revert is a new version.
+export const ENGINE_VERSION = '0.14.0';
 
 /**
  * Bumped independently of ENGINE_VERSION when the tokenizer changes, because

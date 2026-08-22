@@ -15,7 +15,9 @@ import {
   ConceptRepository,
   CorpusRepository,
   searchLongestFragment,
+  type PericopeRow,
 } from './corpus/repository.js';
+import { parseVerseId } from './reference/verseId.js';
 import { ENGINE_VERSION, TOKENIZER_VERSION } from './config/engineVersion.js';
 import {
   mergeCandidates,
@@ -38,6 +40,7 @@ import {
   isThinBareWordConceptCue,
   passageTermEvidence,
   relatedConceptEvidence,
+  sourceLabel,
   translationVariantEvidence,
 } from './intents/concept.js';
 import {
@@ -61,9 +64,11 @@ import type {
   ConceptMatch,
   ContentQueryPort,
   DiscoveryResult,
+  GroupedVerse,
   PassageResult,
   RelatedResult,
   ResearchResult,
+  ResultGrouping,
   ScriptureVerse,
   SongInput,
   SpellingCorrection,
@@ -119,11 +124,12 @@ export interface ScriptureEngine {
   readonly engineVersion: string;
 }
 
-// '8' (CO-3 PR 1): the pericopes capability schema. The engine can OPEN a
-// v8 artifact and read its pericope tiling (CorpusRepository.hasPericopes /
-// pericopesContaining), but nothing in discover() calls those reads yet —
-// v8 output is bit-identical to v7 output by construction, and the grouping
-// behavior lands with the PR 2 ENGINE_VERSION bump.
+// '8' (CO-3): the pericopes schema. Since 0.14.0 (CO-3 PR 2) discover()
+// consumes the tiling — verse hits inside one derived section merge into a
+// passage-level result. Over a v7-shaped artifact (no pericopes table, or an
+// emptied one) the presence-and-rows probe reads false and behavior reverts
+// to the 0.13.0 anchor-only collapse: rebuilding without pericope rows IS
+// the rollback.
 const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5', '6', '7', '8']);
 
 /**
@@ -168,6 +174,10 @@ export async function createEngine(
   // EMPTY, and 0.13.0 over such an artifact must behave exactly as 0.12.0
   // did. Rebuilding without alias rows IS the rollback.
   const hasCuratedAliases = await conceptRepository.hasCuratedAliases();
+  // Presence-AND-ROWS probed (0.14.0/CO-3 PR 2): a v7-shaped artifact has no
+  // pericopes table and 0.14.0 over it must behave exactly as 0.13.0 did —
+  // the probe IS the rollback story, mirroring the alias precedent.
+  const hasPericopes = await repository.hasPericopes();
   const documentCount = await repository.documentCount();
   const identity = {
     engineVersion: ENGINE_VERSION,
@@ -192,6 +202,24 @@ export async function createEngine(
     const verses = new Map<string, ScriptureVerse>();
     // targetId -> the curated anchor spans that produced it.
     const anchorSpans = new Map<string, Set<string>>();
+    // span key -> the span's own extent and the source(s) that named it, so
+    // a merged row can say WHY its verses travel together (0.14.0/CO-3 PR 2:
+    // the grouping explanation is part of the contract). Sources accumulate
+    // as a set because stage-6 dedupe may deliver '+'-joined agreement.
+    const spanInfo = new Map<
+      string,
+      { startVerseId: number; endVerseId: number; sourceIds: Set<string> }
+    >();
+    const recordSpan = (
+      key: string,
+      startVerseId: number,
+      endVerseId: number,
+      sourceId: string,
+    ): void => {
+      const info = spanInfo.get(key) ?? { startVerseId, endVerseId, sourceIds: new Set() };
+      for (const id of sourceId.split('+')) info.sourceIds.add(id);
+      spanInfo.set(key, info);
+    };
     // Targets whose evidence carries a COMPLETE whole-query exact_phrase
     // match, marked for the complete-match subsumption at candidate merge
     // (0.10.0 stage 3): their token_overlap/proximity evidence restates what
@@ -409,10 +437,10 @@ export async function createEngine(
           // Remember which curated span this verse came from, so contiguous
           // verses of ONE anchor can be presented as the passage a human named.
           const spans = anchorSpans.get(targetIdFor(anchor)) ?? new Set<string>();
-          spans.add(
-            `${anchor.conceptId}:${anchor.anchorStartVerseId}-${anchor.anchorEndVerseId}`,
-          );
+          const spanKey = `${anchor.conceptId}:${anchor.anchorStartVerseId}-${anchor.anchorEndVerseId}`;
+          spans.add(spanKey);
           anchorSpans.set(targetIdFor(anchor), spans);
+          recordSpan(spanKey, anchor.anchorStartVerseId, anchor.anchorEndVerseId, anchor.sourceId);
           contributions.push({
             verse: anchor,
             evidence: [
@@ -522,13 +550,18 @@ export async function createEngine(
             for (const anchor of anchors) {
               verses.set(targetIdFor(anchor), anchor);
               // Same span key the concept step uses, so a verse surfaced by
-              // both merges into one governing span and collapseAnchorRuns
+              // both merges into one governing span and the run collapse
               // still presents the passage a human named.
               const spans = anchorSpans.get(targetIdFor(anchor)) ?? new Set<string>();
-              spans.add(
-                `${anchor.conceptId}:${anchor.anchorStartVerseId}-${anchor.anchorEndVerseId}`,
-              );
+              const spanKey = `${anchor.conceptId}:${anchor.anchorStartVerseId}-${anchor.anchorEndVerseId}`;
+              spans.add(spanKey);
               anchorSpans.set(targetIdFor(anchor), spans);
+              recordSpan(
+                spanKey,
+                anchor.anchorStartVerseId,
+                anchor.anchorEndVerseId,
+                anchor.sourceId,
+              );
               contributions.push({
                 verse: anchor,
                 evidence: [aliasConceptEvidence(alias, anchor)],
@@ -541,8 +574,10 @@ export async function createEngine(
             )) {
               verses.set(targetIdFor(verse), verse);
               const spans = anchorSpans.get(targetIdFor(verse)) ?? new Set<string>();
-              spans.add(`alias:${alias.id}:${alias.startVerseId}-${alias.endVerseId}`);
+              const spanKey = `alias:${alias.id}:${alias.startVerseId}-${alias.endVerseId}`;
+              spans.add(spanKey);
               anchorSpans.set(targetIdFor(verse), spans);
+              recordSpan(spanKey, alias.startVerseId, alias.endVerseId, alias.sourceId);
               contributions.push({
                 verse,
                 evidence: [aliasPassageEvidence(alias, verse)],
@@ -568,8 +603,27 @@ export async function createEngine(
         limit: limit + COLLAPSE_HEADROOM,
       },
     );
+    // Pericope lookup for the ranked window (0.14.0/CO-3 PR 2): ONE batched
+    // query (G11), asked only for verses NO curated anchor span governs —
+    // authority order is fixed, an anchor-claimed verse never consults the
+    // pericope path, so fetching for it would widen the window for nothing.
+    const pericopeOf = new Map<number, PericopeRow>();
+    if (hasPericopes) {
+      const ungoverned = ranked
+        .filter((result) => !anchorSpans.has(result.targetId))
+        .map((result) => verses.get(result.targetId)!.verseId);
+      if (ungoverned.length > 0) {
+        for (const row of await repository.pericopesContaining(ungoverned)) {
+          for (const verseId of ungoverned) {
+            if (verseId >= row.startVerseId && verseId <= row.endVerseId) {
+              pericopeOf.set(verseId, row);
+            }
+          }
+        }
+      }
+    }
     const results = (
-      collapseAnchorRuns(
+      collapseRuns(
         ranked.map((result) => {
           const verse = verses.get(result.targetId)!;
           return {
@@ -582,6 +636,8 @@ export async function createEngine(
         }),
         verses,
         anchorSpans,
+        spanInfo,
+        pericopeOf,
       )
         .slice(0, limit)
         // Chip display polish (0.10.0 CO-2/F22), applied LAST — after
@@ -849,10 +905,58 @@ export async function createEngine(
   };
 }
 
+/** A grouping span's own extent and the source(s) that named it. */
+export interface GroupingSpanInfo {
+  readonly startVerseId: number;
+  readonly endVerseId: number;
+  readonly sourceIds: ReadonlySet<string>;
+}
+
 /**
- * Collapse the surfaced verses of ONE curated anchor span into the single
- * passage that anchor names (0.10.0 stage 7: span MEMBERSHIP, not rank
- * adjacency).
+ * Label a section span. Uses the engine's own bbcccvvv codec (parseVerseId)
+ * — legitimate here, unlike inside the hit-label logic below, because the
+ * section's endpoints may not be surfaced verses at all: the codec is the
+ * only witness to their chapter:verse. Spans never cross books (anchor refs
+ * and pericopes are both book-scoped by construction).
+ */
+function sectionLabel(bookName: string, startVerseId: number, endVerseId: number): string {
+  const start = parseVerseId(startVerseId);
+  const end = parseVerseId(endVerseId);
+  return startVerseId === endVerseId
+    ? `${bookName} ${start.chapter}:${start.verse}`
+    : start.chapter === end.chapter
+      ? `${bookName} ${start.chapter}:${start.verse}-${end.verse}`
+      : `${bookName} ${start.chapter}:${start.verse}-${end.chapter}:${end.verse}`;
+}
+
+/**
+ * Collapse the surfaced verses of ONE grouping unit into a single
+ * passage-level row. Two mechanisms feed it, in FIXED authority order:
+ *
+ * 1. Curated anchor spans (0.10.0 stage 7 semantics, unchanged: span
+ *    MEMBERSHIP, not rank adjacency) — a passage a human named for a theme.
+ *    Checked first: a verse any anchor span claims belongs to the anchor
+ *    path and is never considered for pericope runs, so pericope provenance
+ *    can never usurp anchor provenance (the anchor-grouping-explained
+ *    fixture pins this).
+ * 2. Derived pericopes (0.14.0/CO-3 PR 2) — a structural sectioning fact
+ *    (OpenBible section counts). Deliberately MORE conservative than the
+ *    anchor path, because nobody named THIS passage for THIS query: members
+ *    must be consecutive in rank AND verseId-consecutive AND share one
+ *    pericope. A boundary is never crossed (the Terah fixture pins this),
+ *    and ±1 verse-id adjacency structurally cannot cross a chapter — the
+ *    documented v1 limitation that grouping never crosses a chapter even
+ *    when a pericope does.
+ *
+ * Since 0.14.0 a merged row also SAYS why its verses travel together: it
+ * carries `verses[]` (each member's own evidence, uncollapsed) and a typed
+ * `grouping` naming the section span and the source that drew it — for
+ * anchor runs the anchor's own source(s), for pericope runs
+ * 'openbible-sections' plus the summed boundary vote at the section's start
+ * verse, read from the same artifact row the derivation stored. Grouping
+ * contributes ZERO points: the merged score is the max of the members,
+ * never a sum — a passage must not outrank by having more mediocre verses —
+ * and the row's `reference` spans the HITS, never the whole section.
  *
  * Why this exists: a ranged anchor emits one candidate per verse, and results
  * carrying authoritative evidence are deliberately exempt from group
@@ -885,10 +989,12 @@ export async function createEngine(
  * and reasons merge strongest-per-label so the chips explain the passage
  * rather than an arbitrary one of its verses.
  */
-export function collapseAnchorRuns(
+export function collapseRuns(
   results: readonly DiscoveryResult[],
   verses: ReadonlyMap<string, ScriptureVerse>,
   anchorSpans: ReadonlyMap<string, ReadonlySet<string>>,
+  spanInfo: ReadonlyMap<string, GroupingSpanInfo>,
+  pericopeOf: ReadonlyMap<number, PericopeRow>,
 ): readonly DiscoveryResult[] {
   // Pass 1a — how many surfaced results does each span cover? Counted over
   // the results actually present, so a span mostly outside the ranked window
@@ -927,30 +1033,63 @@ export function collapseAnchorRuns(
     else members.set(chosen!, [result]);
   }
 
-  // Pass 2 — emit in rank order. The first-encountered member of a span
-  // becomes the merged passage row; later members drop and everything below
-  // shifts up.
-  const emitted = new Set<string>();
-  const output: DiscoveryResult[] = [];
-  for (const result of results) {
-    const span = governing.get(result.targetId);
-    if (span === undefined) {
-      output.push(result);
-      continue;
+  // Pass 1c — pericope runs among the UNGOVERNED results (fixed authority
+  // order: anchor membership was decided above and is never revisited). A
+  // run is a maximal sequence of results that are consecutive in rank,
+  // verseId-consecutive (±1 — which cannot cross a chapter under bbcccvvv),
+  // and members of ONE pericope. Rank adjacency is measured over the INPUT
+  // ranked list, before any merging — the conservative reading: an
+  // interloper between two section-mates keeps them apart.
+  const runOf = new Map<string, number>();
+  const runs: DiscoveryResult[][] = [];
+  {
+    let current: DiscoveryResult[] = [];
+    let currentPericope: PericopeRow | null = null;
+    const flush = (): void => {
+      if (current.length >= 2) {
+        const index = runs.length;
+        runs.push(current);
+        for (const member of current) runOf.set(member.targetId, index);
+      }
+      current = [];
+      currentPericope = null;
+    };
+    for (const result of results) {
+      const verse = verses.get(result.targetId);
+      const pericope =
+        governing.has(result.targetId) || verse === undefined
+          ? undefined
+          : pericopeOf.get(verse.verseId);
+      if (!verse || !pericope) {
+        flush();
+        continue;
+      }
+      if (
+        currentPericope !== null &&
+        pericope.startVerseId === currentPericope.startVerseId &&
+        Math.abs(verse.verseId - verses.get(current[current.length - 1]!.targetId)!.verseId) === 1
+      ) {
+        current.push(result);
+        continue;
+      }
+      flush();
+      current = [result];
+      currentPericope = pericope;
     }
-    if (emitted.has(span)) continue;
-    emitted.add(span);
+    flush();
+  }
 
-    const group = members.get(span)!;
-    if (group.length === 1) {
-      output.push(result);
-      continue;
-    }
-
-    // Canonical verse order for the label and the excerpt; rank order decides
-    // WHERE the row sits (here, at the best member) and the targetId (the
-    // best member's, so consumers can still address the passage and fixture
-    // range-matching keeps working unchanged).
+  /**
+   * Build the merged passage row for one group. Canonical verse order for
+   * the label and the excerpt; rank order decides WHERE the row sits (at the
+   * best member) and the targetId (the best member's, so consumers can still
+   * address the passage and fixture range-matching keeps working unchanged).
+   */
+  const mergeGroup = (
+    head: DiscoveryResult,
+    group: readonly DiscoveryResult[],
+    grouping: ResultGrouping | null,
+  ): DiscoveryResult => {
     const canonical = [...group].sort(
       (a, b) => verses.get(a.targetId)!.verseId - verses.get(b.targetId)!.verseId,
     );
@@ -970,8 +1109,18 @@ export function collapseAnchorRuns(
       b.points !== a.points ? b.points - a.points : a.label < b.label ? -1 : 1,
     );
 
-    output.push({
-      targetId: result.targetId,
+    // Per-verse evidence, uncollapsed (0.14.0): members are plain rows by
+    // construction, so their own fields ARE the GroupedVerse shape.
+    const memberVerses: GroupedVerse[] = canonical.map((item) => ({
+      targetId: item.targetId,
+      reference: item.reference,
+      excerpt: item.excerpt,
+      score: item.score,
+      reasons: item.reasons,
+    }));
+
+    return {
+      targetId: head.targetId,
       reference:
         first.verseId === final.verseId
           ? canonical[0]!.reference
@@ -986,8 +1135,103 @@ export function collapseAnchorRuns(
       excerpt: canonical.map((item) => item.excerpt).join(' '),
       score: Math.max(...group.map((item) => item.score)),
       reasons,
-    });
+      ...(grouping ? { verses: memberVerses, grouping } : {}),
+    };
+  };
+
+  // Pass 2 — emit in rank order. The first-encountered member of a group
+  // becomes the merged passage row; later members drop and everything below
+  // shifts up.
+  const emitted = new Set<string>();
+  const emittedRuns = new Set<number>();
+  const output: DiscoveryResult[] = [];
+  for (const result of results) {
+    const span = governing.get(result.targetId);
+    if (span === undefined) {
+      const runIndex = runOf.get(result.targetId);
+      if (runIndex === undefined) {
+        output.push(result);
+        continue;
+      }
+      if (emittedRuns.has(runIndex)) continue;
+      emittedRuns.add(runIndex);
+      const group = runs[runIndex]!;
+      const pericope = pericopeOf.get(verses.get(result.targetId)!.verseId)!;
+      output.push(
+        mergeGroup(result, group, {
+          section: {
+            reference: sectionLabel(
+              verses.get(result.targetId)!.bookName,
+              pericope.startVerseId,
+              pericope.endVerseId,
+            ),
+            startVerseId: pericope.startVerseId,
+            endVerseId: pericope.endVerseId,
+          },
+          provenance: {
+            sourceId: pericope.sourceId,
+            label: sourceLabel(pericope.sourceId),
+            boundaryVotes: pericope.boundaryVotes,
+          },
+        }),
+      );
+      continue;
+    }
+    if (emitted.has(span)) continue;
+    emitted.add(span);
+
+    const group = members.get(span)!;
+    if (group.length === 1) {
+      output.push(result);
+      continue;
+    }
+
+    // The span's own provenance explains the merge (0.14.0): the anchor's
+    // source(s), ascending-joined when several agree — the same convention
+    // the stage-6 chips use. Absent spanInfo (the legacy 3-argument entry
+    // point) the merged row keeps its exact pre-0.14.0 shape.
+    const info = spanInfo.get(span);
+    output.push(
+      mergeGroup(
+        result,
+        group,
+        info
+          ? {
+              section: {
+                reference: sectionLabel(
+                  verses.get(result.targetId)!.bookName,
+                  info.startVerseId,
+                  info.endVerseId,
+                ),
+                startVerseId: info.startVerseId,
+                endVerseId: info.endVerseId,
+              },
+              provenance: {
+                sourceId: [...info.sourceIds].sort().join('+'),
+                label: [...info.sourceIds]
+                  .sort()
+                  .map((id) => sourceLabel(id))
+                  .join(' + '),
+              },
+            }
+          : null,
+      ),
+    );
   }
 
   return output;
+}
+
+/**
+ * The 0.13.0 entry point, kept for compatibility: anchor-span collapse only,
+ * no pericope runs, merged rows in their exact pre-0.14.0 shape (no
+ * `verses`/`grouping` — those need the span provenance the 5-argument
+ * `collapseRuns` receives). `discover()` no longer calls this.
+ */
+export function collapseAnchorRuns(
+  results: readonly DiscoveryResult[],
+  verses: ReadonlyMap<string, ScriptureVerse>,
+  anchorSpans: ReadonlyMap<string, ReadonlySet<string>>,
+): readonly DiscoveryResult[] {
+  return collapseRuns(results, verses, anchorSpans, new Map(), new Map());
 }
