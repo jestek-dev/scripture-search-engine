@@ -28,7 +28,7 @@ const OUT = join(ROOT, '..', 'docs', 'ATTRIBUTIONS.md');
 
 const RIGHTS_LABEL: Readonly<Record<string, string>> = {
   public_domain: 'Public domain',
-  cc_by: 'CC BY 4.0 — **attribution required**',
+  cc_by: '[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**',
   cc_by_sa: 'CC BY-SA — attribution + share-alike',
   owned: 'Owned by Life Hope Church',
   editorial: 'Authored for this dataset',

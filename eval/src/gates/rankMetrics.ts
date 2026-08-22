@@ -1951,7 +1951,10 @@ export function evaluateBatteryAcceptance(input: {
       // Acceptable ONLY when suggestion-bearing, and the battery outcome
       // shape does not record suggestion presence — not determinable here.
       // (Extending the recorded outcome schema is part of the threshold-flip
-      // PR, which re-baselines the battery evidence anyway.)
+      // PR, which re-baselines the battery evidence anyway. That extension
+      // should record correction citations alongside suggestion presence:
+      // the "cited-correction results" arm is equally uncertifiable today —
+      // a non-empty discovery is accepted without verifying any citation.)
       indeterminate.push(query.id);
     }
   }

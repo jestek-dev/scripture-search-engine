@@ -165,7 +165,7 @@ Alignment tier 1, per-verse-heading shape: 'PSALM <roman>.' section headings wit
 
 ### OpenBible.info Bible Section Counts
 
-- **Rights:** CC BY 4.0 — **attribution required**
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/bible-section-counts.txt>
 - **Checksum:** `5e9e838d0226c6106ff8c578aa5c1cb8fa8b206f0fb83f784aa1613cc50e26e8`
 
@@ -175,7 +175,7 @@ Section-placement counts by OpenBible.info, used under CC BY 4.0. Counts ONLY: e
 
 ### OpenBible.info Topical Bible
 
-- **Rights:** CC BY 4.0 — **attribution required**
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/topic-scores.zip>
 - **Checksum:** `2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60`
 
@@ -185,7 +185,7 @@ Topical data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info
 
 ### OpenBible.info Cross References
 
-- **Rights:** CC BY 4.0 — **attribution required**
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/cross-references.zip>
 - **Checksum:** `36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829`
 

@@ -277,8 +277,10 @@ describe('compileHymnAliases', () => {
 
   it('accepts a partial token overlap that is NOT containment — the lexicon phrase must fit inside the alias to double-chip', () => {
     // The lexicon phrase carries a token the alias lacks, so it can never
-    // fully match the alias-equal query: the concept match stays a graded
-    // independent claim, not the same fact at full authority twice.
+    // fully match the alias-equal query: lexicon matching requires full
+    // containment, so that query gets NO same-concept lexicon match at all
+    // (zero second chip on the direct-token path — measured live); the
+    // phrase still matches other queries normally.
     const doctored = `  - title: T
     author: A
     year: 1900
