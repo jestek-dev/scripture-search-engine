@@ -93,6 +93,8 @@ export {
 export {
   CHIP_DISPLAY_MIN_POINTS,
   PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
+  correctionCitation,
+  pinCorrectionCitations,
   polishChipsForDisplay,
 } from './reasons/display.js';
 

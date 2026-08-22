@@ -73,6 +73,39 @@ describe('cited correction on research() discovery', () => {
     expect(chips).toContain('Shared word: believ (corrected from "beleived")');
   });
 
+  it('every result of a corrected query VISIBLY cites every correction — whatever the evidence mix', async () => {
+    // Round-2 (defect 2): the token-chip decoration only exists on results
+    // whose evidence includes the corrected token's token_overlap chip; the
+    // harm-class corrections surface rows through concept/passage evidence
+    // instead, which used to leave the visible chips silent about the
+    // rewrite. J31 says every correction is SHOWN; covenant 5 makes the
+    // explanation the contract. The display-level pin decorates the
+    // strongest chip of any result whose chips do not already carry the
+    // citation: `Theme: X (query corrected from "<typed>")`.
+    for (const query of ['forgivness', 'salvasion', 'beleived', 'gods forgivness']) {
+      const result = await engine.research(query);
+      if (result.kind !== 'discovery') throw new Error(`expected discovery for ${query}`);
+      expect(result.results.length).toBeGreaterThan(0);
+      for (const correction of result.corrections ?? []) {
+        for (const entry of result.results) {
+          expect(
+            entry.reasons.some((reason) =>
+              reason.label.includes(`corrected from "${correction.typed}"`),
+            ),
+            `${query}: ${entry.reference} must cite "${correction.typed}"`,
+          ).toBe(true);
+        }
+      }
+    }
+    // The concrete shape on a concept-anchored row (the ms1 #1):
+    const forgivness = await engine.research('forgivness');
+    if (forgivness.kind !== 'discovery') throw new Error('expected discovery');
+    const first = forgivness.results[0]!;
+    expect(first.reasons[0]!.label).toBe(
+      'Theme: God\'s forgiveness (query corrected from "forgivness")',
+    );
+  });
+
   it('requires Damerau: the gn->ng transposition corrects at distance 1', async () => {
     const result = await engine.research('stregnth');
     if (result.kind !== 'discovery') throw new Error('expected discovery');

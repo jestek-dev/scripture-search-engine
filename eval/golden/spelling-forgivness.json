@@ -5,14 +5,15 @@
   "note": [
     "QR-5 (P5.4) cited spelling correction — battery ms1, an audit F: 'forgivness' is a silent-empty discovery today (0 results, no guidance). After 0.12.0 the OOV token 'forgivness' (df 0, in no vocabulary) substitutes its unique in-policy correction 'forgiveness' (Damerau distance 1; typed length 10 -> edit budget 2 under the ONE policy table), and the correction is CITED, never silent: the token chip names the typed surface form, and the result-level corrections list is the machine-readable citation (J31 chip wording, J32 surface).",
     "Expectations pin BOTH halves of the contract: the corrected query reaches the curated concept (Theme: God's forgiveness — right passage for the right reason) AND a verse carrying the corrected token shows the exact cited chip. Chip cites the TYPED word ('forgivness'), never the stem.",
-    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass. J31/J32 ride that commit as review flags — the plan's stated defaults are implemented, nothing beyond them decided."
+    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass. J31/J32 ride that commit as review flags — the plan's stated defaults are implemented, nothing beyond them decided.",
+    "Round-2 (defect 2): every result of a corrected query now VISIBLY cites the correction. 1 John 1:9 ranks through concept-anchor evidence with no token chip, so its strongest chip carries the display-level pin (query corrected from \"forgivness\") - a citation only the machine-readable corrections field carries is not \"shown\" (J31, covenant 5). The label pin here asserts exactly that."
   ],
   "expectedTop": [
     {
       "ref": "1 John 1:9",
       "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
-      "requiredReasonLabel": "Theme: God's forgiveness"
+      "requiredReasonLabel": "Theme: God's forgiveness (query corrected from \"forgivness\")"
     },
     {
       "ref": "Ephesians 1:7",

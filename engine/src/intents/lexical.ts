@@ -8,6 +8,7 @@
  */
 
 import type { Candidate } from '../ranking/rank.js';
+import { correctionCitation } from '../reasons/display.js';
 import type { Evidence } from '../reasons/types.js';
 import { significantWords } from '../tokenizer/index.js';
 import type { TokenMatch } from '../corpus/repository.js';
@@ -191,7 +192,7 @@ export function tokenEvidence(
   // theological failure mode the feature's design forbids.
   const display = (token: string): string => {
     const typed = correctionCitations?.get(token);
-    return typed === undefined ? token : `${token} (corrected from "${typed}")`;
+    return typed === undefined ? token : `${token} (${correctionCitation(typed)})`;
   };
 
   // Coverage alone is RECALL — "did the verse contain what I asked for?" —

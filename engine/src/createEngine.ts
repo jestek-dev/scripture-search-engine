@@ -45,7 +45,7 @@ import {
 } from './intents/spelling.js';
 import { significantWordsWithSurface } from './tokenizer/index.js';
 import { DEFAULT_LIMIT, rank, type RankOptions } from './ranking/rank.js';
-import { polishChipsForDisplay } from './reasons/display.js';
+import { pinCorrectionCitations, polishChipsForDisplay } from './reasons/display.js';
 
 /**
  * Extra candidates ranked beyond the caller's limit so that collapsing a run
@@ -527,8 +527,19 @@ export async function createEngine(
         // untouched: its only chip family (cross_reference, votes >= 1
         // against the corpus maximum) cannot produce a chip below the
         // display minimum, and passage_terms never appears there.
+        //
+        // Then the correction-citation pin (0.12.0/QR-5 round-2): on a
+        // corrected query EVERY result must visibly cite every correction —
+        // a result surfaced through concept/passage evidence has no
+        // decorated token chip, and a citation only the machine-readable
+        // corrections field carries is not "shown" (J31, covenant 5). Same
+        // display seam, same guarantees: labels only, never points, scores
+        // or order.
         .map((result) => {
-          const polished = polishChipsForDisplay(result.reasons);
+          const polished = pinCorrectionCitations(
+            polishChipsForDisplay(result.reasons),
+            corrections,
+          );
           return polished === result.reasons ? result : { ...result, reasons: polished };
         })
     );
