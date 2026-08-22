@@ -33,16 +33,26 @@ import {
 /**
  * The ONE policy table, re-exported under the spelling surface so QR-5's
  * reviewers see the same numbers QR-4's did (J31 = J35's edit bounds):
- * typed length <5 → never correct; 5–8 → edit distance 1; ≥9 → edit
- * distance 2; a transposition counts as 1 (Damerau). Keyed on the TYPED
- * token's length — the stricter, safer reading.
+ * token length <5 → never correct; 5–8 → edit distance 1; ≥9 → edit
+ * distance 2; a transposition counts as 1 (Damerau).
+ *
+ * Keyed on the NORMALIZED (post-stem) token's length — the measured truth of
+ * the shipped rule, stated plainly for the J31 review (round-2 fix: earlier
+ * docs said "typed", which the code never did). It is the coherent key: the
+ * distance is computed between the normalized token and normalized dictionary
+ * terms, so budgeting by a different string's length would mix units. The
+ * practical difference is one-sided and SUPPRESSIVE — a typed word whose stem
+ * falls under 5 characters never corrects even when the surface is ≥5
+ * ("angles" stems to "angl", so angles→angels, the canonical typo, is out of
+ * policy; "sines" likewise) — i.e. strictly fewer corrections than the typed
+ * reading, never more.
  */
 export const SPELLING_MIN_TOKEN_LENGTH = SUGGESTION_MIN_KEY_LENGTH;
 export const SPELLING_EDIT1_MAX_TOKEN_LENGTH = SUGGESTION_EDIT1_MAX_KEY_LENGTH;
 
-/** Edit budget for a typed token — the same function the book did-you-mean uses. */
-export function spellingEditBudget(typedLength: number): number {
-  return editDistanceBudget(typedLength);
+/** Edit budget for a normalized token — the same function the book did-you-mean uses. */
+export function spellingEditBudget(tokenLength: number): number {
+  return editDistanceBudget(tokenLength);
 }
 
 /**
@@ -94,7 +104,7 @@ export function deleteVariants(word: string, depth: number): readonly string[] {
 /** One dictionary term surfaced by the delete-variant lookup. */
 export interface SpellingCandidate {
   readonly term: string;
-  /** Corpus document frequency; 0 for vocabulary-only origins (books, lexicon, translations). */
+  /** Corpus document frequency; 0 for vocabulary-only origins (books, lexicon, translations, verse terms). */
   readonly documentCount: number;
 }
 

@@ -44,6 +44,82 @@ describe('dictionaryDeleteDepth', () => {
     expect(dictionaryDeleteDepth(7)).toBe(2);
     expect(dictionaryDeleteDepth(14)).toBe(2);
   });
+
+  it('equals the depth brute-forced from spellingEditBudget alone — an independent derivation, not a hand pin', () => {
+    // Round-2 (critique observation 6): every other cross-check recomputed
+    // the delete table FROM dictionaryDeleteDepth itself, so a wrong
+    // derivation passed them by construction and only the hand pin above
+    // could ring. This one derives the required depth from the typed-side
+    // policy function with no reference to dictionaryDeleteDepth: a term of
+    // length m needs depth d = max budget(t) over every typed length t that
+    // can pair with it (|t − m| ≤ budget(t)). Mutating the derivation
+    // (e.g. ≥7 → 1) now fails a computed bound, not a memorized one.
+    const requiredDepth = (termLength: number): number => {
+      let depth = 0;
+      for (let typedLength = 1; typedLength <= termLength + 3; typedLength += 1) {
+        const budget = spellingEditBudget(typedLength);
+        if (budget > 0 && Math.abs(typedLength - termLength) <= budget) {
+          depth = Math.max(depth, budget);
+        }
+      }
+      return depth;
+    };
+    for (let termLength = 1; termLength <= 40; termLength += 1) {
+      expect(dictionaryDeleteDepth(termLength), `term length ${termLength}`).toBe(
+        requiredDepth(termLength),
+      );
+    }
+  });
+
+  it('brute force: every in-policy 1–2-op Damerau typo shares a delete key with its term at the derived depths', () => {
+    // The SymSpell completeness claim, checked against generated typos rather
+    // than hand-picked ones: seeded PRNG, all four op kinds (substitution,
+    // insertion, deletion, adjacent transposition), 1 and 2 ops, over terms
+    // spanning every policy band. A typed/term pair inside the typed-side
+    // budget MUST intersect delete keys at (budget(typed), depth(term)) —
+    // ED-2 pairs included, which the round-1 test never exercised.
+    let state = 0x0badf00d;
+    const random = (): number => {
+      state |= 0;
+      state = (state + 0x6d2b79f5) | 0;
+      let t = Math.imul(state ^ (state >>> 15), 1 | state);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    const letter = (): string => alphabet[Math.floor(random() * 26)]!;
+    const mutate = (word: string): string => {
+      const kind = Math.floor(random() * 4);
+      const index = Math.floor(random() * word.length);
+      if (kind === 0) return word.slice(0, index) + letter() + word.slice(index + 1);
+      if (kind === 1) return word.slice(0, index) + letter() + word.slice(index);
+      if (kind === 2) return word.length > 1 ? word.slice(0, index) + word.slice(index + 1) : word;
+      return index < word.length - 1
+        ? word.slice(0, index) + word[index + 1]! + word[index]! + word.slice(index + 2)
+        : word;
+    };
+    const terms = [
+      'pray', 'grace', 'sing', 'anoint', 'believ', 'strength', 'forgive',
+      'salvation', 'forgiveness', 'faithfulness', 'righteousness', 'lovingkindness',
+    ];
+    let checked = 0;
+    for (const term of terms) {
+      const termKeys = new Set(deleteVariants(term, dictionaryDeleteDepth(term.length)));
+      for (let round = 0; round < 400; round += 1) {
+        let typed = mutate(term);
+        if (round % 2 === 1) typed = mutate(typed); // second op → ED ≤ 2
+        const bound = spellingEditBudget(typed.length);
+        if (bound === 0) continue;
+        const distance = damerauLevenshtein(typed, term, bound);
+        if (distance === null || distance === 0) continue;
+        checked += 1;
+        const intersects = deleteVariants(typed, bound).some((key) => termKeys.has(key));
+        expect(intersects, `${typed} -> ${term} (d${distance})`).toBe(true);
+      }
+    }
+    // The drill must actually have exercised both bands, ED-2 included.
+    expect(checked).toBeGreaterThan(1000);
+  });
 });
 
 describe('deleteVariants', () => {
@@ -163,7 +239,9 @@ describe('pickCorrection', () => {
       { term: 'believe', documentCount: 60 },
       { term: 'anoint', documentCount: 21 },
     ];
-    for (const typed of ['forgivness', 'fathfulness', 'beleiv', 'annoint']) {
+    // 'forgivnes' and 'fathfulnes' REQUIRE distance 2 (two deletions from
+    // their targets) — the ED-2 path the round-1 version never exercised.
+    for (const typed of ['forgivness', 'fathfulness', 'beleiv', 'annoint', 'forgivnes', 'fathfulnes']) {
       const bound = spellingEditBudget(typed.length);
       const winner = pickCorrection(typed, dictionary, bound);
       // Simulate the SymSpell lookup: dictionary terms whose delete keys
