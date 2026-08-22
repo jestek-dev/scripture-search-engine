@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { normalizeToken, significantWords, tokenStream } from '../src/tokenizer/index.js';
+import {
+  normalizeToken,
+  significantWords,
+  significantWordsWithSurface,
+  tokenStream,
+} from '../src/tokenizer/index.js';
 
 describe('shared tokenizer', () => {
   it('drops KJV function words that would otherwise match everything', () => {
@@ -56,5 +61,48 @@ describe('shared tokenizer', () => {
   it('strips punctuation and curly apostrophes identically', () => {
     expect(significantWords("God's refuge!")).toEqual(significantWords('Gods refuge'));
     expect(significantWords('God’s refuge')).toEqual(significantWords('Gods refuge'));
+  });
+});
+
+describe('surface pairing (significantWordsWithSurface, 0.12.0/QR-5)', () => {
+  // The invariance snapshot: the token stream must be byte-identical to what
+  // significantWords always produced — the pairing is an annotation, not a
+  // second tokenizer, and TOKENIZER_VERSION stays 1.0.0 on its truth.
+  const SNAPSHOT = [
+    'hearing and doing',
+    'whosoever heareth these sayings of mine, and doeth them',
+    'thou shalt behold the glory unto thee',
+    'refuge strength refuge trouble',
+    "God's refuge!",
+    'God is our refuge and strength',
+    'beleived',
+    'forgivness and stregnth',
+    'the quick brown-fox 3 16 jumped',
+    'doers of the word not hearers only',
+  ];
+
+  it('yields byte-identical tokens to significantWords over the snapshot corpus', () => {
+    for (const text of SNAPSHOT) {
+      expect(significantWordsWithSurface(text).map((entry) => entry.token)).toEqual(
+        significantWords(text),
+      );
+    }
+  });
+
+  it('pairs each token with the raw typed word that produced it', () => {
+    expect(significantWordsWithSurface('beleived')).toEqual([
+      // Stem-divergence: the token is the stem, the surface is what was typed.
+      { token: 'beleiv', surface: 'beleived' },
+    ]);
+    expect(significantWordsWithSurface('Hearing and DOING')).toEqual([
+      { token: 'hear', surface: 'hearing' },
+      { token: 'do', surface: 'doing' },
+    ]);
+  });
+
+  it('keeps the FIRST surface for a deduplicated token', () => {
+    expect(significantWordsWithSurface('doers doing')).toEqual([
+      { token: 'do', surface: 'doers' },
+    ]);
   });
 });

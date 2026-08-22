@@ -20,7 +20,15 @@
 // through to discovery; the verse-1 range-label defect is fixed ("John 3:1-5"
 // no longer labeled "John 3"). Kind flips and label changes are
 // results-visible, so this bumps in the same commit as the behavior.
-export const ENGINE_VERSION = '0.11.0';
+// 0.12.0 (QR-5): deterministic cited spelling correction, with artifact
+// schema v7 (spelling_terms/spelling_deletes precomputed by the pipeline;
+// curated_aliases shipped empty for QR-6). research() discovery substitutes
+// the unique in-policy correction for tokens in NO vocabulary — bounded
+// integer Damerau under the ONE edit-policy table — and every substitution is
+// cited (token chips + the additive `corrections` list). Substituted tokens
+// change which verses surface and how they are explained, so this bumps in
+// the same commit as the behavior and the schema.
+export const ENGINE_VERSION = '0.12.0';
 
 /**
  * Bumped independently of ENGINE_VERSION when the tokenizer changes, because

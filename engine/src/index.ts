@@ -44,8 +44,20 @@ export {
 } from './intents/concept.js';
 
 export {
+  deleteVariants,
+  dictionaryDeleteDepth,
+  pickCorrection,
+  SPELLING_EDIT1_MAX_TOKEN_LENGTH,
+  SPELLING_MIN_TOKEN_LENGTH,
+  spellingEditBudget,
+  type PickedCorrection,
+  type SpellingCandidate,
+} from './intents/spelling.js';
+
+export {
   normalizeToken,
   significantWords,
+  significantWordsWithSurface,
   tokenStream,
   TOKENIZER_ARCHAIC_FORM_COUNT,
   TOKENIZER_STOPWORD_COUNT,
@@ -115,4 +127,5 @@ export type {
   ResultIdentity,
   ScripturePassage,
   ScriptureVerse,
+  SpellingCorrection,
 } from './types.js';

@@ -38,6 +38,14 @@ import {
 } from '@jestek-dev/scripture-engine';
 import { isAlias, parseDocument, visit } from 'yaml';
 
+import {
+  assembleSpellingVocabulary,
+  buildSpellingIndex,
+  readSpellingVocabularySources,
+  spellingDeleteRows,
+  spellingLayerFingerprint,
+  type SqliteReadWriteDatabase,
+} from './buildSpellingIndex.js';
 import { compileOntology, parseAnchorRef, type CompiledOntology, type ConceptSource } from './importers/ontologyImporter.js';
 import {
   checkProvenance,
@@ -82,6 +90,14 @@ const REQUIRED_TABLES = [
   'verse_translation_tokens',
 ] as const;
 const OWNED_TABLES = ['concepts', 'concept_lexicon', 'concept_anchors', 'concept_related'] as const;
+/**
+ * Schema-v7 tables the candidate build REGENERATES rather than copies: the
+ * spelling vocabulary includes the concept lexicon, so mutating the owned
+ * layer legitimately changes these. They are excluded from the
+ * "non-owned table unchanged" tamper check and instead verified row-for-row
+ * against an independent recomputation from the reviewed proposal.
+ */
+const DERIVED_SPELLING_TABLES = ['spelling_terms', 'spelling_deletes'] as const;
 const REQUIRED_ENGINE_META = [
   'schema_version',
   'tokenizer_version',
@@ -899,6 +915,39 @@ function combinedTableDigest(tableDigests: Readonly<Record<string, string>>): st
   return sha256Bytes(stableJson(tableDigests));
 }
 
+/** Presence probe — the same seam the engine uses for pre-v7 artifacts. */
+function hasSpellingIndex(database: DatabaseSync): boolean {
+  const row = database.prepare(
+    "SELECT COUNT(*) AS present FROM sqlite_master WHERE type = 'table' AND name IN ('spelling_terms', 'spelling_deletes')",
+  ).get() as { present: number };
+  return Number(row.present) === DERIVED_SPELLING_TABLES.length;
+}
+
+/** digestRows over the shipped spelling tables, keyed like the expectation. */
+function actualSpellingTableDigests(database: DatabaseSync): Record<string, string> {
+  return {
+    spelling_terms: digestRows(database
+      .prepare('SELECT term, document_count, origins FROM spelling_terms')
+      .all() as Record<string, unknown>[]),
+    spelling_deletes: digestRows(database
+      .prepare('SELECT delete_key, term FROM spelling_deletes')
+      .all() as Record<string, unknown>[]),
+  };
+}
+
+function assertSpellingTablesMatchExpectation(
+  database: DatabaseSync,
+  expectedDigests: Readonly<Record<string, string>>,
+  label: string,
+): void {
+  const actual = actualSpellingTableDigests(database);
+  for (const [table, digest] of Object.entries(expectedDigests)) {
+    if (actual[table] !== digest) {
+      fail('CANDIDATE_INVALID', `${label} ${table} rows do not match the proposal-derived spelling index.`);
+    }
+  }
+}
+
 function openReadOnlyPort(databasePath: string): ContentQueryPort {
   const database = new DatabaseSync(databasePath, { readOnly: true });
   return {
@@ -1485,6 +1534,7 @@ async function verifyCandidateDirectory(candidateDirectory: string, expected: {
   readonly counts: Readonly<Record<string, number>>;
   readonly baseTableDigests: Readonly<Record<string, string>>;
   readonly expectedMetaRows: readonly DatabaseMetaRow[];
+  readonly spellingTableDigests: Readonly<Record<string, string>> | null;
 }): Promise<CandidateBuildResult> {
   const databasePath = join(candidateDirectory, CANDIDATE_DATABASE);
   const descriptorPath = join(candidateDirectory, CANDIDATE_DESCRIPTOR);
@@ -1517,9 +1567,13 @@ async function verifyCandidateDirectory(candidateDirectory: string, expected: {
       fail('CANDIDATE_INVALID', 'cached candidate table inventory differs from the verified base.');
     }
     for (const [table, digest] of Object.entries(expected.baseTableDigests)) {
+      if (expected.spellingTableDigests && (DERIVED_SPELLING_TABLES as readonly string[]).includes(table)) continue;
       if (table !== 'meta' && !(OWNED_TABLES as readonly string[]).includes(table) && tables[table] !== digest) {
         fail('CANDIDATE_INVALID', `cached candidate changed non-owned table ${table}.`);
       }
+    }
+    if (expected.spellingTableDigests) {
+      assertSpellingTablesMatchExpectation(database, expected.spellingTableDigests, 'cached candidate');
     }
   } finally {
     database.close();
@@ -1692,6 +1746,8 @@ function inspectLayerExpectation(
   readonly counts: Record<string, number>;
   readonly baseTableDigests: Record<string, string>;
   readonly expectedMetaRows: readonly DatabaseMetaRow[];
+  /** null for a pre-v7 base; otherwise digestRows of the derived spelling tables. */
+  readonly spellingTableDigests: Readonly<Record<string, string>> | null;
 } {
   const database = new DatabaseSync(databasePath, { readOnly: true });
   try {
@@ -1707,7 +1763,20 @@ function inspectLayerExpectation(
       verseTerms: countRows(database, 'verse_terms'),
       translationTokens: countRows(database, 'verse_translation_tokens'),
     };
-    if (layerFingerprint(baseOntology, layerCounts) !== descriptor.layerFingerprint) {
+    // Schema v7 chains the spelling-vocabulary fingerprint on top of the
+    // concept-layer fingerprint (buildSpellingIndex is the writer; this is
+    // the independent reviewer-side recomputation). The candidate mutates the
+    // lexicon, which is one of the four vocabulary sources, so both the base
+    // check and the candidate expectation must reproduce the chain.
+    const spellingPresent = hasSpellingIndex(database);
+    const spellingSources = spellingPresent
+      ? readSpellingVocabularySources(database as unknown as SqliteReadWriteDatabase)
+      : null;
+    const baseConceptFingerprint = layerFingerprint(baseOntology, layerCounts);
+    const expectedBaseFingerprint = spellingSources
+      ? spellingLayerFingerprint(baseConceptFingerprint, assembleSpellingVocabulary(spellingSources))
+      : baseConceptFingerprint;
+    if (expectedBaseFingerprint !== descriptor.layerFingerprint) {
       fail('SOURCE_SNAPSHOT_MISMATCH', 'reviewed ontology snapshot does not reproduce the base layer fingerprint.');
     }
     const candidateRows = compiledOwnedRows(candidateOntology, present);
@@ -1716,7 +1785,30 @@ function inspectLayerExpectation(
       fail('NO_MEASURABLE_EFFECT', 'proposal does not change any result-affecting candidate table.');
     }
     const baseTableDigests = logicalTableDigests(database);
-    const candidateLayerFingerprint = layerFingerprint(candidateOntology, layerCounts);
+    const candidateConceptFingerprint = layerFingerprint(candidateOntology, layerCounts);
+    let candidateLayerFingerprint = candidateConceptFingerprint;
+    let spellingTableDigests: Readonly<Record<string, string>> | null = null;
+    if (spellingSources) {
+      // The candidate vocabulary: identical corpus/books/translations sources
+      // (candidates never touch them) with the lexicon replaced by the
+      // proposal-derived rows — exactly what buildSpellingIndex will read
+      // back from the mutated copy.
+      const candidateTerms = assembleSpellingVocabulary({
+        ...spellingSources,
+        lexiconNormalized: [...new Set(
+          candidateRows.concept_lexicon!.map((row) => row.normalized as string),
+        )],
+      });
+      candidateLayerFingerprint = spellingLayerFingerprint(candidateConceptFingerprint, candidateTerms);
+      spellingTableDigests = {
+        spelling_terms: digestRows(candidateTerms.map((row) => ({
+          term: row.term, document_count: row.documentCount, origins: row.origins,
+        }))),
+        spelling_deletes: digestRows(spellingDeleteRows(candidateTerms).map((row) => ({
+          delete_key: row.deleteKey, term: row.term,
+        }))),
+      };
+    }
     return {
       ownedRowsDigest: candidateOwnedDigest,
       layerFingerprint: candidateLayerFingerprint,
@@ -1728,6 +1820,7 @@ function inspectLayerExpectation(
       },
       baseTableDigests,
       expectedMetaRows: expectedCandidateMetaRows(database, descriptor, candidateLayerFingerprint),
+      spellingTableDigests,
     };
   } finally {
     database.close();
@@ -1797,6 +1890,7 @@ export async function buildCandidate(
     counts: expectedLayer.counts,
     baseTableDigests: expectedLayer.baseTableDigests,
     expectedMetaRows: expectedLayer.expectedMetaRows,
+    spellingTableDigests: expectedLayer.spellingTableDigests,
   } as const;
   const lock = await acquireCacheLock(request.outputDirectory, key);
   try {
@@ -1829,6 +1923,13 @@ export async function buildCandidate(
     let counts: Record<string, number>;
     try {
       counts = installOwnedLayer(database, candidateOntology);
+      if (expectedLayer.spellingTableDigests) {
+        // Rebuild the derived spelling index over the mutated lexicon via the
+        // SAME builder artifact builds use, chaining the layer fingerprint on
+        // top of the concept fingerprint installOwnedLayer just wrote. Runs
+        // after installOwnedLayer's COMMIT — it manages its own transaction.
+        buildSpellingIndex(database as unknown as SqliteReadWriteDatabase);
+      }
       if (ownedDigest(databaseOwnedRows(database)) !== expectedLayer.ownedRowsDigest) {
         fail('CANDIDATE_INVALID', 'installed candidate rows differ from the proposal-derived rows.');
       }
@@ -1845,6 +1946,9 @@ export async function buildCandidate(
       const meta = databaseMeta(readOnly);
       layerIdentity = meta.get('layer_fingerprint') ?? '';
       assertExactCandidateMeta(readOnly, expectedLayer.expectedMetaRows, 'candidate');
+      if (expectedLayer.spellingTableDigests) {
+        assertSpellingTablesMatchExpectation(readOnly, expectedLayer.spellingTableDigests, 'candidate');
+      }
       tableDigests = logicalTableDigests(readOnly);
     } finally {
       readOnly.close();
@@ -1886,6 +1990,7 @@ export async function buildCandidate(
       fail('CANDIDATE_INVALID', 'candidate table inventory differs from the verified base.');
     }
     for (const [table, digest] of Object.entries(expectedLayer.baseTableDigests)) {
+      if (expectedLayer.spellingTableDigests && (DERIVED_SPELLING_TABLES as readonly string[]).includes(table)) continue;
       if (table !== 'meta' && !(OWNED_TABLES as readonly string[]).includes(table) && tableDigests[table] !== digest) {
         fail('CANDIDATE_INVALID', `candidate changed non-owned table ${table}.`);
       }

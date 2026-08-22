@@ -51,6 +51,7 @@ import { fileURLToPath } from 'node:url';
 
 import { buildConceptLayer, type ConceptLayerInput } from './buildConceptLayer.js';
 import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
+import { buildSpellingIndex, type SqliteReadWriteDatabase } from './buildSpellingIndex.js';
 import { EXPOSITION_SOURCES } from './expositionSources.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import { loadExposition } from './loadExpositions.js';
@@ -457,6 +458,14 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
         `${layer.verseTerms} verse terms (${layer.droppedOutOfCorpus} dropped out of corpus)\n`,
     );
 
+    // Spelling index LAST (schema v7, QR-5): derived from rows already in
+    // this database; chains the layer fingerprint per-record.
+    const spelling = buildSpellingIndex(database as unknown as SqliteReadWriteDatabase);
+    process.stdout.write(
+      `spelling : ${spelling.termCount} vocabulary terms, ` +
+        `${spelling.deleteRowCount} delete rows\n`,
+    );
+
     database.exec('VACUUM');
     const perTableBytes = measurePerTableBytes(database as unknown as SqliteReadable);
     database.close();
@@ -498,7 +507,9 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       tokenizerVersion: corpus.tokenizerVersion,
       engineVersion: readEngineVersion(),
       corpusFingerprint: corpus.corpusFingerprint,
-      layerFingerprint: layer.layerFingerprint ?? null,
+      // The FINAL layer identity: the spelling index chains on the concept
+      // layer's fingerprint (schema v7) and writes the result into meta.
+      layerFingerprint: spelling.layerFingerprint,
       manifestFingerprint: manifestFingerprint(manifests),
       databaseSha256,
       databaseBytes,
@@ -527,6 +538,8 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
         crossReferences: layer.crossReferences,
         verseTerms: layer.verseTerms,
         translationTokens: layer.translationTokens,
+        spellingTerms: spelling.termCount,
+        spellingDeletes: spelling.deleteRowCount,
       },
       sources: manifests.sources
         .filter((source) => source.sha256)

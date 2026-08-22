@@ -1,10 +1,10 @@
 {
   "id": "spelling-annointing",
   "query": "annointing",
-  "status": "pending",
+  "status": "active",
   "note": [
     "QR-5 (P5.4) cited spelling correction — battery ms2, an audit F: 'annointing' is a silent-empty discovery today. The typed word stems to 'annoint' (the -ing rule) BEFORE correction, so this fixture also exercises stem-then-correct ordering: the OOV stem 'annoint' (length 7 -> edit budget 1) corrects to the corpus token 'anoint' at Damerau distance 1, and the chip cites the TYPED word 'annointing', never the stem 'annoint' (J31 wording: corrected from \"<typed>\").",
-    "Written fixture-first, pending until P5.4's deciding commit (0.12.0 + schema v7) activates it."
+    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass."
   ],
   "expectedTop": [
     {

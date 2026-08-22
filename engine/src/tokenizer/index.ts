@@ -173,13 +173,31 @@ export function normalizeToken(raw: string): string | null {
  * set form used for overlap scoring and concept-lexicon matching.
  */
 export function significantWords(text: string): string[] {
+  return significantWordsWithSurface(text).map((entry) => entry.token);
+}
+
+/**
+ * The same significant-token set, each token paired with the SURFACE form it
+ * was normalized from — the first raw word (lowercased, punctuation-stripped)
+ * that produced it. Added for the spelling-correction citation (0.12.0/QR-5):
+ * a correction chip must cite what the user actually typed ("beleived"),
+ * never the stem the tokenizer made of it ("beleiv").
+ *
+ * This is a PAIRING, not a second tokenizer: `significantWords` delegates
+ * here, the token stream is byte-identical to what it always was (invariance-
+ * tested), and there is still no options parameter. TOKENIZER_VERSION stays
+ * 1.0.0.
+ */
+export function significantWordsWithSurface(
+  text: string,
+): { token: string; surface: string }[] {
   const seen = new Set<string>();
-  const result: string[] = [];
+  const result: { token: string; surface: string }[] = [];
   for (const raw of rawWords(text)) {
     const token = normalizeToken(raw);
     if (token === null || seen.has(token)) continue;
     seen.add(token);
-    result.push(token);
+    result.push({ token, surface: raw });
   }
   return result;
 }

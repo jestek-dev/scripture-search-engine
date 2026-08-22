@@ -347,6 +347,69 @@ export class CorpusRepository implements ReferenceResolver {
     );
     return new Map(result.rows.map((row) => [str(row, 'token'), num(row, 'df')]));
   }
+
+  /**
+   * Whether this artifact carries the precomputed spelling index
+   * (schema v7, 0.12.0/QR-5). Presence-probed like the other optional
+   * layers: a v6 artifact simply has no tables, the probe returns false, and
+   * the engine gracefully does not correct — behaving exactly as the
+   * pre-spelling engine did. That probe IS the rollback story: rebuild the
+   * artifact without the tables and behavior reverts with no engine change.
+   */
+  async hasSpellingIndex(): Promise<boolean> {
+    try {
+      const result = await this.database.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'spelling_terms'",
+      );
+      return result.rows.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Which of the given tokens exist in the artifact's spelling vocabulary
+   * (corpus tokens ∪ book aliases ∪ lexicon tokens ∪ translation tokens).
+   * This is the OOV gate's second half: a token with corpus df 0 that is
+   * still a known name or curated word is IN vocabulary and never corrected.
+   */
+  async spellingTermsPresent(tokens: readonly string[]): Promise<ReadonlySet<string>> {
+    const unique = [...new Set(tokens)];
+    if (unique.length === 0) return new Set();
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `SELECT term FROM spelling_terms WHERE term IN (${placeholders})`,
+      unique,
+    );
+    return new Set(result.rows.map((row) => str(row, 'term')));
+  }
+
+  /**
+   * Dictionary terms whose precomputed delete variants intersect the given
+   * keys — the SymSpell candidate lookup (0.12.0/QR-5). Proposes only: every
+   * candidate is re-verified with the bounded Damerau DP before it may win
+   * (see intents/spelling.ts). ORDER BY term for a platform-stable row order,
+   * though the picker is proven row-order independent anyway.
+   */
+  async spellingCandidates(
+    deleteKeys: readonly string[],
+  ): Promise<readonly { term: string; documentCount: number }[]> {
+    const unique = [...new Set(deleteKeys)];
+    if (unique.length === 0) return [];
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `SELECT DISTINCT d.term AS term, t.document_count AS documentCount
+       FROM spelling_deletes d
+       JOIN spelling_terms t ON t.term = d.term
+       WHERE d.delete_key IN (${placeholders})
+       ORDER BY d.term`,
+      unique,
+    );
+    return result.rows.map((row) => ({
+      term: str(row, 'term'),
+      documentCount: num(row, 'documentCount'),
+    }));
+  }
 }
 
 /** Longest fragment length worth searching; below this, phrases are noise. */

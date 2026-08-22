@@ -73,6 +73,22 @@ export interface DiscoveryResult {
   readonly reasons: readonly Reason[];
 }
 
+/**
+ * One cited spelling correction (0.12.0/QR-5). Corrections are never silent:
+ * every substituted token is reported with the SURFACE form the user typed
+ * (never the stem the tokenizer made of it), the vocabulary term substituted,
+ * and the verified integer Damerau distance that justifies it — the same
+ * citation the token chips render as `(corrected from "<typed>")`.
+ */
+export interface SpellingCorrection {
+  /** What the user typed (lowercased surface form), e.g. "beleived". */
+  readonly typed: string;
+  /** The vocabulary term substituted, e.g. "believ". */
+  readonly corrected: string;
+  /** Verified integer Damerau–Levenshtein distance — the citation. */
+  readonly distance: number;
+}
+
 export type ResearchOutcome =
   | { readonly kind: 'reference'; readonly passage: ScripturePassage }
   | {
@@ -91,6 +107,15 @@ export type ResearchOutcome =
       readonly kind: 'discovery';
       readonly query: string;
       readonly results: readonly DiscoveryResult[];
+      /**
+       * Additive (0.12.0/QR-5): present iff `research()` substituted
+       * corrections for out-of-vocabulary tokens — the machine-readable
+       * citation consumers render (J32). Absent means nothing was corrected;
+       * a word in ANY vocabulary is never rewritten (the OOV gate).
+       * `forSong()` never corrects, so its discovery outcome never carries
+       * this field.
+       */
+      readonly corrections?: readonly SpellingCorrection[];
     };
 
 export type ResearchResult = ResearchOutcome & ResultIdentity;

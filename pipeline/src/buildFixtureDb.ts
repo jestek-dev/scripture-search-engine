@@ -19,6 +19,11 @@ import {
   type ConceptLayerResult,
 } from './buildConceptLayer.js';
 import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
+import {
+  buildSpellingIndex,
+  type SpellingIndexResult,
+  type SqliteReadWriteDatabase,
+} from './buildSpellingIndex.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import type {
   CrossReferenceRow,
@@ -74,7 +79,13 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
   readonly verseCount: number;
   readonly corpusFingerprint: string;
   readonly distinctTokenCount: number;
+  /**
+   * NOTE: conceptLayer.layerFingerprint is the PRE-spelling value; the
+   * artifact's final layer identity (meta layer_fingerprint) is
+   * spelling.layerFingerprint, which chains on it (schema v7).
+   */
   readonly conceptLayer: ConceptLayerResult | null;
+  readonly spelling: SpellingIndexResult;
   readonly ontologyErrors: readonly string[];
 } {
   const fixture = JSON.parse(readFileSync(FIXTURE_JSON, 'utf8')) as FixtureFile;
@@ -177,12 +188,18 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
           })
         : null;
 
+    // Spelling index LAST (schema v7): it reads the vocabulary back out of
+    // everything written above and chains the layer fingerprint, so the
+    // gauntlet's hermetic artifact carries the same tables a release does.
+    const spelling = buildSpellingIndex(database as unknown as SqliteReadWriteDatabase);
+
     return {
       path: targetPath,
       verseCount: result.verseCount,
       corpusFingerprint: result.corpusFingerprint,
       distinctTokenCount: result.distinctTokenCount,
       conceptLayer,
+      spelling,
       ontologyErrors: errors,
     };
   } finally {
@@ -207,6 +224,9 @@ if (process.argv[1] && process.argv[1].endsWith('buildFixtureDb.ts')) {
           `  verse terms: ${result.conceptLayer.verseTerms}\n` +
           `  translation tokens: ${result.conceptLayer.translationTokens}\n` +
           `  dropped (outside fixture corpus): ${result.conceptLayer.droppedOutOfCorpus}\n`
-        : '  concept layer: none\n'),
+        : '  concept layer: none\n') +
+      `  spelling terms: ${result.spelling.termCount}\n` +
+      `  spelling delete rows: ${result.spelling.deleteRowCount}\n` +
+      `  layer fingerprint (post-spelling): ${result.spelling.layerFingerprint}\n`,
   );
 }

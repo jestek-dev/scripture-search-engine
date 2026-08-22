@@ -38,6 +38,9 @@
       "concept_related": 4194304,
       "concepts": 4194304,
       "cross_references": 25165824,
+      "curated_aliases": 1048576,
+      "spelling_deletes": 12582912,
+      "spelling_terms": 1048576,
       "token_stats": 2097152,
       "verse_terms": 104857600,
       "verse_tokens": 20971520,
@@ -47,6 +50,16 @@
       "verses_fts_docsize": 2097152,
       "verses_fts_idx": 2097152
     },
+    "$comment_spelling": [
+      "Schema v7 (QR-5/P5.4, plan-stated values riding the J31 review):",
+      "spelling_terms 1 MiB, spelling_deletes 12 MiB, curated_aliases 1 MiB.",
+      "curated_aliases ships EMPTY at v7 (QR-6 populates it). The full-corpus",
+      "size check runs at the next mint; fixture scale is validated now. If the",
+      "ED-2 delete table busts its budget on the full corpus, the REVIEWED",
+      "mitigation ladder applies in order (each step a reviewed data change,",
+      "never a silent tweak): (1) df >= 2 floor on corpus-origin vocabulary;",
+      "(2) ED-2 depth only at term length >= 10; (3) ED 1 everywhere."
+    ],
     "$comment_perTable": [
       "Per-table byte budgets, INCLUDING each table's indexes \u2014 an index ships with",
       "its table and grows with it, so budgeting the table alone would miss two",

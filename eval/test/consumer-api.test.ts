@@ -118,6 +118,36 @@ describe('reference suggestion surface (0.11.0/QR-4)', () => {
   });
 });
 
+describe('corrections surface (0.12.0/QR-5, J32)', () => {
+  it('carries a machine-readable corrections list when an OOV token was substituted', async () => {
+    const result = await engine.research('forgivness');
+    expect(result.kind).toBe('discovery');
+    if (result.kind !== 'discovery') return;
+    expect(result.results.length).toBeGreaterThan(0);
+    // typed = the surface form as typed; distance = the verified integer
+    // Damerau distance. This is the citation all three apps render.
+    expect(result.corrections).toEqual([
+      { typed: 'forgivness', corrected: 'forgiveness', distance: 1 },
+    ]);
+  });
+
+  it('omits the field entirely when nothing was corrected — absence needs no handling', async () => {
+    const result = await engine.research('pray');
+    if (result.kind !== 'discovery') throw new Error('expected discovery');
+    expect('corrections' in result).toBe(false);
+  });
+
+  it('never rewrites a word that exists in any vocabulary (the OOV gate)', async () => {
+    // 'prey' is one edit from 'pray'; a known word must never be corrected,
+    // and a correction chip must never decorate its results.
+    const result = await engine.research('comfort');
+    if (result.kind !== 'discovery') throw new Error('expected discovery');
+    expect(result.corrections).toBeUndefined();
+    const labels = result.results.flatMap((entry) => entry.reasons.map((reason) => reason.label));
+    expect(labels.some((label) => label.includes('corrected from'))).toBe(false);
+  });
+});
+
 describe('related()', () => {
   it('reports the concepts whose curated anchors include the passage', async () => {
     const result = await engine.related('Psalm 46:1');

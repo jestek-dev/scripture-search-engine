@@ -318,6 +318,15 @@ Three design commitments a consumer can rely on:
   silently opens a guessed passage; consumers render it as a question, and
   its absence needs no handling (the field is optional on all three
   invalid-reference kinds — `research()`, `passage()`, `related()`).
+  Additive since 0.12.0 (QR-5, artifact schema v7): a `research()` discovery
+  outcome MAY carry `corrections?: [{ typed, corrected, distance }]` — the
+  machine-readable citation for deterministic spelling correction, present
+  iff an out-of-vocabulary token was substituted (J32; all three apps render
+  it). `typed` is the surface form the user typed, never the stem;
+  `distance` is the verified integer Damerau distance. A word in ANY
+  vocabulary is never rewritten, `themes()`/`forSong()` never correct, and
+  absence needs no handling. Over a pre-v7 artifact the engine simply never
+  corrects (presence-probed), so pinned pairs are unaffected until re-mint.
 - **`related()` is not similarity.** Every entry exists because a human
   recorded the link — a cross-reference edge, or a concept whose curated
   anchors include the passage. Similarity is what `research()` does, and

@@ -1,10 +1,10 @@
 {
   "id": "spelling-beleived",
   "query": "beleived",
-  "status": "pending",
+  "status": "active",
   "note": [
     "QR-5 (P5.4) cited spelling correction — the plan-named STEM-DIVERGENCE case: 'beleived' tokenizes to 'beleiv' (the -ed rule) BEFORE correction, so a naive implementation would cite the stem. This fixture pins that the corrected-from half cites the TYPED word, never the stem: the chip is 'Shared word: believ (corrected from \"beleived\")' — corrected term 'believ' (the corpus stem of believed/believes), typed surface 'beleived'. Correction key 'beleiv' (length 6 -> edit budget 1) reaches 'believ' at Damerau distance 1 (ei->ie transposition — Damerau again).",
-    "Written fixture-first, pending until P5.4's deciding commit (0.12.0 + schema v7) activates it."
+    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass."
   ],
   "expectedTop": [
     {
