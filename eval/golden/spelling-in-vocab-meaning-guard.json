@@ -1,0 +1,23 @@
+{
+  "id": "spelling-in-vocab-meaning-guard",
+  "query": "sing",
+  "status": "active",
+  "note": [
+    "QR-5 (P5.4) harm-class guard: two THEOLOGICALLY DISTANT in-vocabulary words one edit apart — 'sing' and 'sin'. If the OOV gate ever weakened (correcting or 'improving' in-vocabulary words), a worship query would surface sin-and-judgment passages: the wrong-word -> wrong-scripture failure this repo's covenants name as the worst class. The exact undecorated 'Shared word: sing' chip plus the mustNotRank on the Sin flagship verse pin both halves.",
+    "Romans 6:23 is present in the fixture corpus (it ranks #1 for the query 'sin'), so the mustNotRank guard is non-vacuous.",
+    "ACTIVE from birth — pins already-true behavior."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Psalms 13:6",
+      "withinTop": 3,
+      "requiredReasonLabel": "Shared word: sing"
+    }
+  ],
+  "mustNotRank": [
+    {
+      "ref": "Romans 6:23",
+      "why": "The wages-of-sin flagship must never surface for 'sing'. It can only get here if in-vocabulary 'sing' were spell-'corrected' toward 'sin' — the OOV gate forbids exactly that (J31: corrections fire only for words in NO vocabulary)."
+    }
+  ]
+}

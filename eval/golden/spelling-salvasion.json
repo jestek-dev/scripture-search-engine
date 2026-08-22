@@ -1,0 +1,22 @@
+{
+  "id": "spelling-salvasion",
+  "query": "salvasion",
+  "status": "pending",
+  "note": [
+    "QR-5 (P5.4) cited spelling correction — battery ms6, an audit F: 'salvasion' is a silent-empty discovery today. Typed length 9 -> edit budget 2; unique in-policy winner 'salvation' at Damerau distance 1 (s->t). The corrected token reaches the curated Salvation concept — right passage for the right reason — and a token-bearing verse shows the exact cited chip.",
+    "Written fixture-first, pending until P5.4's deciding commit (0.12.0 + schema v7) activates it."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Ephesians 2:8",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Salvation"
+    },
+    {
+      "ref": "Acts 4:12",
+      "withinTop": 5,
+      "requiredReasonLabel": "Shared word: salvation (corrected from \"salvasion\")"
+    }
+  ]
+}
