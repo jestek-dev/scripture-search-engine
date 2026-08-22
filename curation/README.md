@@ -26,8 +26,9 @@ workspace, not a constraint on it.
   `createRequire` — names no curation path, with specifiers checked raw,
   path-normalized, and percent-decoded (`cur%61tion` is Node-resolvable
   and is caught); (2) the static execution vectors beyond the import
-  graph: `child_process` calls (binding-tracked through aliases,
-  namespaces, and `require` destructuring; static commands and args
+  graph: `child_process` calls (binding-tracked through aliases and
+  namespaces, whether acquired by static import, `require`, or dynamic
+  `import()`; static commands and args
   checked, non-static ones refused unless the command is a reviewed
   non-JS-runner literal like `unzip`), `Worker` construction with a
   static or computed target, `vm` code loaders, every `package.json`

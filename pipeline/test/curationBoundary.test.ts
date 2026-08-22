@@ -36,8 +36,11 @@
  *   - child_process calls (exec, execSync, execFile, execFileSync, spawn,
  *     spawnSync, fork), recognized by tracking the local bindings each file
  *     creates from 'child_process'/'node:child_process' — named imports
- *     (aliases included), namespace/default imports, and require()
- *     destructuring — never by bare method name, so RegExp.exec and
+ *     (aliases included), namespace/default imports, and require() or
+ *     dynamic `import()` acquisitions alike (destructured bindings and
+ *     namespace handles; a runner module acquired via `await import(...)`
+ *     is tracked exactly like its require() sibling — round-4 parity fix)
+ *     — never by bare method name, so RegExp.exec and
  *     sqlite's database.exec cannot false-positive. Static command strings
  *     and static args-array elements are checked for the curation segment
  *     (percent-decoded); a NON-static command is flagged as indeterminate;
@@ -248,9 +251,9 @@ function classifyStaticText(text: string): 'curation' | 'undecodable' | 'clean' 
 /**
  * Modules whose bindings load or execute code: child_process (subprocess),
  * worker_threads (Worker), vm (code compilation). Binding-tracked so
- * aliased imports and namespace/require access are recognized while
- * unrelated methods that merely SHARE a name (RegExp.prototype.exec,
- * sqlite database.exec) are not.
+ * aliased imports, namespace access, and require()/dynamic-import()
+ * acquisitions are recognized while unrelated methods that merely SHARE a
+ * name (RegExp.prototype.exec, sqlite database.exec) are not.
  */
 const SPAWN_MODULES: Record<string, 'child_process' | 'worker_threads' | 'vm'> = {
   child_process: 'child_process',
@@ -356,10 +359,24 @@ function scanSourceText(fileName: string, contents: string): ScanFinding[] {
       const specifier = staticSpecifierText(node.moduleReference.expression);
       const moduleKind = specifier === null ? undefined : SPAWN_MODULES[specifier];
       if (moduleKind !== undefined) trackedNamespaces.set(node.name.text, moduleKind);
-    } else if (ts.isVariableDeclaration(node) && node.initializer !== undefined && ts.isCallExpression(node.initializer)) {
-      const callee = node.initializer.expression;
-      const isRequireCall = ts.isIdentifier(callee) && callee.text === 'require' && node.initializer.arguments.length === 1;
-      const specifier = isRequireCall ? staticSpecifierText(node.initializer.arguments[0]!) : null;
+    } else if (ts.isVariableDeclaration(node) && node.initializer !== undefined) {
+      // require('node:child_process') AND `await import('node:child_process')`
+      // both acquire runner-module bindings, so the tracker follows either
+      // acquisition form (round-4 parity fix: import() with a static
+      // specifier is no more dynamic than the require() sibling that was
+      // already tracked). The un-awaited `const p = import(...)` promise
+      // handle is tracked too — anything reached through it that the scan
+      // cannot judge falls to the escaped-handle rule below.
+      const initializer = ts.isAwaitExpression(node.initializer) ? node.initializer.expression : node.initializer;
+      const call = ts.isCallExpression(initializer) ? initializer : undefined;
+      const callee = call?.expression;
+      const isRequireCall =
+        call !== undefined && callee !== undefined &&
+        ts.isIdentifier(callee) && callee.text === 'require' && call.arguments.length === 1;
+      const isDynamicImportCall =
+        call !== undefined && callee !== undefined &&
+        callee.kind === ts.SyntaxKind.ImportKeyword && call.arguments.length >= 1;
+      const specifier = isRequireCall || isDynamicImportCall ? staticSpecifierText(call!.arguments[0]!) : null;
       const moduleKind = specifier === null ? undefined : SPAWN_MODULES[specifier];
       if (moduleKind !== undefined) {
         if (ts.isIdentifier(node.name)) trackedNamespaces.set(node.name.text, moduleKind);
@@ -717,6 +734,18 @@ describe('curation/ stays outside the artifact build graph', () => {
       'percent-encoded curation path in a subprocess argument',
       "import { execFileSync } from 'node:child_process';\nexecFileSync('node', ['../../cur%61tion/src/inversions.js']);",
     ],
+    [
+      'dynamic-import acquisition of execFileSync (round-4 vector)',
+      "const { execFileSync } = await import('node:child_process');\nexecFileSync('node', ['../../curation/src/inversions.js']);",
+    ],
+    [
+      'dynamic-import namespace acquisition of child_process (round-4 vector)',
+      "const cp = await import('node:child_process');\ncp.execSync('node ../../curation/src/inversions.js');",
+    ],
+    [
+      'dynamic-import acquisition of the worker_threads Worker (round-4 vector)',
+      "const { Worker } = await import('node:worker_threads');\nnew Worker('../../curation/src/inversions.js');",
+    ],
   ];
   for (const [form, source] of curationViolations) {
     it(`positive control: the scanner flags a ${form}`, () => {
@@ -765,6 +794,14 @@ describe('curation/ stays outside the artifact build graph', () => {
     [
       'undecodable percent-encoding in a specifier',
       "import '../../cur%ZZtion/src/inversions.js';",
+    ],
+    [
+      'dynamic-import-acquired spawn handle escaping through promisify (round-4)',
+      "import { promisify } from 'node:util';\nconst { execFile } = await import('node:child_process');\nconst run = promisify(execFile);",
+    ],
+    [
+      'un-awaited import() promise of a runner module escaping as a value (round-4)',
+      "const cpPromise = import('node:child_process');\nconst handle = cpPromise;",
     ],
   ];
   for (const [form, source] of nonStaticForms) {
