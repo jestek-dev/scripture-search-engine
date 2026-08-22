@@ -78,25 +78,36 @@ export function compileHymnAliases(
   const citedSourceIds = new Set<string>();
   const seenKeys = new Map<string, string>();
 
-  // Alias+lexicon double-chip guard (P5.5 critique defect 1), indexed up
-  // front: for each concept, the significant-token SETS of its lexicon
-  // phrases. A query that equals an alias phrase tokenizes to
-  // significantWords(phrase); when that set equals a lexicon phrase's set
-  // for the SAME concept, the engine's full-query parity rule hands the
-  // concept its full authoritative concept_anchor chip AND the alias step
-  // files a second full-strength chip under the same family for the same
-  // curated fact — two 40-point chips on one claim, clearing exact_phrase's
-  // 60-point ceiling. The evidence hierarchy's bound must hold by
-  // construction, not by editorial memory, so such a row is refused here,
-  // fail-closed. (Static by necessity: a spelling-corrected token stream is
-  // bed-dependent and out of an importer's reach; the shipped rule covers
-  // the direct-token path the hazard was demonstrated on.)
-  const lexiconTokenSetsByConcept = new Map<string, Map<string, string>>();
+  // Alias+lexicon double-chip guard (P5.5 critique defect 1; superset
+  // extension per the P5.6-round critique), indexed up front: for each
+  // concept, the significant-token SETS of its lexicon phrases. A query
+  // that equals an alias phrase tokenizes to significantWords(phrase); when
+  // that set CONTAINS a lexicon phrase's set for the SAME concept (equality
+  // included), the concept-match step hands the concept an authoritative
+  // concept_anchor chip — full-parity when the sets are equal (40 points),
+  // coverage-discounted when the alias tokens are a strict superset (~23–36
+  // points) — AND the alias step files a second full-strength chip under
+  // the same family for the same curated fact: 62–80 same-family points on
+  // one claim, clearing exact_phrase's 60-point ceiling either way
+  // (demonstrated live: the set-equal doctored row at 80.00, the strict-
+  // superset "great is thy faithfulness tonight" at 62.86). The evidence
+  // hierarchy's bound must hold by construction, not by editorial memory,
+  // so such a row is refused here, fail-closed. Overlap that is NOT
+  // containment (the lexicon phrase has a token the alias lacks) stays
+  // accepted: the lexicon phrase then cannot fully match the alias-equal
+  // query, so no second authoritative chip lands on the same fact. (Static
+  // by necessity: a spelling-corrected token stream is bed-dependent and
+  // out of an importer's reach; the shipped rule covers the direct-token
+  // path the hazard was demonstrated on.)
+  const lexiconTokenSetsByConcept = new Map<
+    string,
+    { readonly tokens: ReadonlySet<string>; readonly normalized: string }[]
+  >();
   for (const entry of conceptLexicon) {
-    const key = tokenSetKey(entry.normalized.split(' ').filter(Boolean));
-    if (key.length === 0) continue;
-    const perConcept = lexiconTokenSetsByConcept.get(entry.conceptId) ?? new Map<string, string>();
-    if (!perConcept.has(key)) perConcept.set(key, entry.normalized);
+    const tokens = new Set(entry.normalized.split(' ').filter(Boolean));
+    if (tokens.size === 0) continue;
+    const perConcept = lexiconTokenSetsByConcept.get(entry.conceptId) ?? [];
+    perConcept.push({ tokens, normalized: entry.normalized });
     lexiconTokenSetsByConcept.set(entry.conceptId, perConcept);
   }
 
@@ -188,26 +199,30 @@ export function compileHymnAliases(
           continue;
         }
         // The double-chip guard (see the index above): a concept-arm phrase
-        // whose significant-token set equals a lexicon phrase of its OWN
-        // target concept stacks two authoritative chips on one fact. Any
-        // set size is refused: at >=2 tokens the lexicon match is full-query
-        // parity (40 + 40 points); at 1 token it is still an authoritative
-        // anchor chip beside the alias chip (40 + 22) — same fact, same
-        // stacking, same structural hole.
+        // whose significant-token set CONTAINS a lexicon phrase of its OWN
+        // target concept stacks two authoritative chips on one fact. Set
+        // equality is the full-parity worst case (40 + 40 points); a strict
+        // superset still stacks the full-strength alias chip on top of a
+        // coverage-discounted same-family concept chip (40 + ~23–36); a
+        // one-token lexicon twin inside the alias is the same hole (40 + 22).
+        // Same fact, same stacking, same structural refusal.
         if (conceptId !== null) {
-          const aliasQueryKey = tokenSetKey(significantWords(phrase));
-          const lexiconPhrase =
-            aliasQueryKey.length > 0
-              ? lexiconTokenSetsByConcept.get(conceptId)?.get(aliasQueryKey)
+          const aliasTokens = new Set(significantWords(phrase));
+          const contained =
+            aliasTokens.size > 0
+              ? lexiconTokenSetsByConcept
+                  .get(conceptId)
+                  ?.find((entry) => [...entry.tokens].every((token) => aliasTokens.has(token)))
               : undefined;
-          if (lexiconPhrase !== undefined) {
+          if (contained !== undefined) {
+            const relation = contained.tokens.size === aliasTokens.size ? 'equal' : 'contain';
             errors.push(
               `${file.name}: "${title}" phrase "${phrase}" double-chips concept ` +
-                `'${conceptId}': its significant tokens (\`${aliasQueryKey}\`) equal the ` +
-                `concept's own lexicon phrase (\`${lexiconPhrase}\`), so one query would ` +
-                'stack a full-parity Theme chip AND a hymn chip on the same curated fact ' +
-                '— breaking the evidence-hierarchy bound by construction. Drop the alias ' +
-                'phrase (the lexicon already answers it) or retarget it.',
+                `'${conceptId}': its significant tokens (\`${tokenSetKey([...aliasTokens])}\`) ` +
+                `${relation} the concept's own lexicon phrase (\`${contained.normalized}\`), so ` +
+                'one query would stack an authoritative Theme chip AND a hymn chip on the ' +
+                'same curated fact — breaking the evidence-hierarchy bound by construction. ' +
+                'Drop the alias phrase (the lexicon already claims it) or retarget it.',
             );
             continue;
           }

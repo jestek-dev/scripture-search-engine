@@ -163,6 +163,16 @@ Alignment tier 1, per-verse-heading shape: 'PSALM <roman>.' section headings wit
 
 ## Scripture text, topical data and cross-references
 
+### OpenBible.info Bible Section Counts
+
+- **Rights:** CC BY 4.0 — **attribution required**
+- **Source:** <https://a.openbible.info/data/bible-section-counts.txt>
+- **Checksum:** `5e9e838d0226c6106ff8c578aa5c1cb8fa8b206f0fb83f784aa1613cc50e26e8`
+
+Creative Commons Attribution 4.0, the standard license OpenBible.info applies to its published datasets (announcement post and site footer; same posture as the two admitted OpenBible sources). Attribution required in shipped output.
+
+Section-placement counts by OpenBible.info, used under CC BY 4.0. Counts ONLY: each row is a candidate section span and the number of the 20 surveyed translations whose headings mark it - no heading text and no verse text of any translation is present, which is what keeps the copyrighted expression of those translations out of this file entirely. Boundary counts must be DERIVED as the sum over rows sharing a start verse (the per-row vote for one exact span is a different number and the two must never be conflated). The upstream URL is a rolling 'latest' path with no archival versioning, so this checksum IS our snapshot (verified live 2026-08-14 and re-verified byte-identical 2026-08-22); re-downloading later may produce a different file and must be re-admitted as a change. Re-verify the hash at fetch time.
+
 ### OpenBible.info Topical Bible
 
 - **Rights:** CC BY 4.0 — **attribution required**

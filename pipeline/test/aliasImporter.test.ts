@@ -235,16 +235,56 @@ describe('compileHymnAliases', () => {
     expect(result.rows).toHaveLength(1);
   });
 
-  it('accepts a partial token overlap with the target concept — only SET EQUALITY is the hazard', () => {
-    // The lexicon phrase covers part of the alias tokens: the concept match
-    // is coverage-discounted, a graded independent claim, not the same fact
-    // at full authority twice.
+  it('rejects a STRICT-SUPERSET alias too: containing the lexicon phrase still stacks ~63–76 same-family points', () => {
+    // The critique's live superset repro: "great is thy faithfulness
+    // tonight" tokenizes to a strict superset of the lexicon's
+    // `great faithfulness`, so the query stacks the full-strength hymn chip
+    // (40.00) on a coverage-discounted same-family Theme chip (22.86) —
+    // 62.86 authoritative concept_anchor points on ONE curated fact,
+    // clearing exact_phrase's 60-point ceiling. Same hole as set equality,
+    // now refused structurally.
+    const doctored = `  - title: Great Is Thy Faithfulness
+    author: Thomas O. Chisholm
+    year: 1923
+    provenance: p
+    concept: hope-in-god
+    phrases: [{phrase: great is thy faithfulness tonight}]
+`;
+    const lexicon = [{ conceptId: 'hope-in-god', normalized: 'great faithfulness' }];
+    const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
+    expect(result.rows).toEqual([]);
+    expect(result.errors.join('\n')).toContain('double-chips concept');
+    expect(result.errors.join('\n')).toContain('contain');
+    expect(result.errors.join('\n')).toContain('great faithfulness');
+  });
+
+  it('rejects the real refrain-line superset: "great is thy faithfulness lord unto me"', () => {
+    // Not contrived: the hymn's own refrain line is a strict superset of
+    // the lexicon phrase — the exact next pack row the old set-equality
+    // guard would have waved through.
+    const doctored = `  - title: Great Is Thy Faithfulness
+    author: Thomas O. Chisholm
+    year: 1923
+    provenance: p
+    concept: prayer
+    phrases: [{phrase: great is thy faithfulness lord unto me}]
+`;
+    const lexicon = [{ conceptId: 'prayer', normalized: 'great faithfulness' }];
+    const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
+    expect(result.rows).toEqual([]);
+    expect(result.errors.join('\n')).toContain('double-chips concept');
+  });
+
+  it('accepts a partial token overlap that is NOT containment — the lexicon phrase must fit inside the alias to double-chip', () => {
+    // The lexicon phrase carries a token the alias lacks, so it can never
+    // fully match the alias-equal query: the concept match stays a graded
+    // independent claim, not the same fact at full authority twice.
     const doctored = `  - title: T
     author: A
     year: 1900
     provenance: p
     concept: prayer
-    phrases: [{phrase: great is thy faithfulness o god}]
+    phrases: [{phrase: great is thy mercy}]
 `;
     const lexicon = [{ conceptId: 'prayer', normalized: 'great faithfulness' }];
     const result = compileHymnAliases([pack(doctored)], KNOWN_CONCEPTS, lexicon);
