@@ -119,7 +119,12 @@ export interface ScriptureEngine {
   readonly engineVersion: string;
 }
 
-const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5', '6', '7']);
+// '8' (CO-3 PR 1): the pericopes capability schema. The engine can OPEN a
+// v8 artifact and read its pericope tiling (CorpusRepository.hasPericopes /
+// pericopesContaining), but nothing in discover() calls those reads yet —
+// v8 output is bit-identical to v7 output by construction, and the grouping
+// behavior lands with the PR 2 ENGINE_VERSION bump.
+const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5', '6', '7', '8']);
 
 /**
  * Lyric tokens admitted to forSong(). A full lyric sheet is hundreds of

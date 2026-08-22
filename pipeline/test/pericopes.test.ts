@@ -203,3 +203,113 @@ describe('derivePericopes — real-data golden slices', () => {
     ]);
   });
 });
+
+// ---- Layer wiring: insertion, per-record fingerprint feed, G1 citation ----
+
+import { DatabaseSync } from 'node:sqlite';
+
+import { buildConceptLayer } from '../src/buildConceptLayer.js';
+import type { SqliteDatabase } from '../src/buildCorpus.js';
+import type { PericopeRow } from '../src/buildPericopes.js';
+import { compileOntology } from '../src/importers/ontologyImporter.js';
+import { SCHEMA_SQL } from '../src/schema.js';
+import type { ManifestSet } from '../src/provenance/manifest.js';
+
+const MANIFESTS: ManifestSet = {
+  sources: [
+    {
+      id: 'editorial',
+      label: 'LH editorial',
+      rightsClass: 'editorial',
+      licenseRecord: 'authored in-repo',
+      sourceUrl: 'https://example.invalid/editorial',
+      sha256: 'e'.repeat(64),
+      bytes: 1,
+      maxTier: 'public_distribution',
+    },
+    {
+      id: 'openbible-sections',
+      label: 'OpenBible.info Bible Section Counts',
+      rightsClass: 'cc_by',
+      licenseRecord: 'CC BY 4.0',
+      sourceUrl: 'https://example.invalid/sections',
+      sha256: 'a'.repeat(64),
+      bytes: 1,
+      maxTier: 'public_distribution',
+    },
+  ],
+};
+
+const PETER_5_7 = 60_005_007;
+
+function tinyLayer(
+  pericopes: readonly PericopeRow[] | undefined,
+  manifests: ManifestSet = MANIFESTS,
+): { fingerprint: string; pericopeRows: unknown[]; count: number } {
+  const { ontology, errors } = compileOntology([
+    {
+      name: 'peace.yaml',
+      contents: `id: peace-test
+label: Peace Test
+lexicon:
+  - peace
+anchors:
+  - ref: 1 Peter 5:7
+    sources: [editorial]
+    weight: 0.85
+`,
+    },
+  ]);
+  expect(errors).toEqual([]);
+  const database = new DatabaseSync(':memory:');
+  try {
+    database.exec(SCHEMA_SQL);
+    const result = buildConceptLayer(database as unknown as SqliteDatabase, {
+      ontology,
+      topicRows: [],
+      crossReferences: [],
+      ...(pericopes === undefined ? {} : { pericopes }),
+      manifests,
+      presentVerseIds: new Set([PETER_5_7]),
+    });
+    const pericopeRows = database
+      .prepare('SELECT start_verse_id, end_verse_id, boundary_votes, source_id FROM pericopes ORDER BY start_verse_id')
+      .all();
+    return { fingerprint: result.layerFingerprint, pericopeRows, count: result.pericopes };
+  } finally {
+    database.close();
+  }
+}
+
+describe('buildConceptLayer pericope wiring (CO-3 PR 1)', () => {
+  const ROW: PericopeRow = { startVerseId: PETER_5_7, endVerseId: PETER_5_7, boundaryVotes: 12 };
+
+  it('inserts derived rows citing openbible-sections and reports the count', () => {
+    const { pericopeRows, count } = tinyLayer([ROW]);
+    expect(count).toBe(1);
+    expect(pericopeRows).toEqual([
+      { start_verse_id: PETER_5_7, end_verse_id: PETER_5_7, boundary_votes: 12, source_id: 'openbible-sections' },
+    ]);
+  });
+
+  it('feeds pericopes into the layer fingerprint PER-RECORD: build-twice identical, one vote changed moves it', () => {
+    const first = tinyLayer([ROW]);
+    const second = tinyLayer([ROW]);
+    expect(second.fingerprint).toBe(first.fingerprint);
+    const perturbed = tinyLayer([{ ...ROW, boundaryVotes: 13 }]);
+    expect(perturbed.fingerprint).not.toBe(first.fingerprint);
+  });
+
+  it('treats an omitted pericope input exactly as an empty one', () => {
+    expect(tinyLayer(undefined).fingerprint).toBe(tinyLayer([]).fingerprint);
+  });
+
+  it('fails closed at G1 when pericope rows would ship without the openbible-sections manifest', () => {
+    const withoutSections: ManifestSet = {
+      sources: MANIFESTS.sources.filter((source) => source.id !== 'openbible-sections'),
+    };
+    expect(() => tinyLayer([ROW], withoutSections)).toThrow(/provenance|openbible-sections/);
+    // And an EMPTY pericope set must not demand the manifest.
+    expect(() => tinyLayer([], withoutSections)).not.toThrow();
+  });
+});

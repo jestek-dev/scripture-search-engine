@@ -25,6 +25,8 @@ import {
   type SqliteReadWriteDatabase,
 } from './buildSpellingIndex.js';
 import { buildAliasLayer, type AliasLayerResult } from './buildAliasLayer.js';
+import { derivePericopes } from './buildPericopes.js';
+import type { SectionSpanRow } from './importers/openbibleImporter.js';
 import { compileHymnAliases } from './importers/aliasImporter.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import type {
@@ -45,6 +47,7 @@ const MANIFEST_DIR = join(PIPELINE_ROOT, 'manifests');
 const ONTOLOGY_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'concepts');
 const ALIASES_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'aliases');
 const OPENBIBLE_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-subset.json');
+const SECTIONS_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-sections-subset.json');
 const PASSAGE_TERMS_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'passage-terms-subset.json');
 const TRANSLATION_TOKENS = join(PIPELINE_ROOT, 'fixtures', 'translation-tokens.json');
 
@@ -194,12 +197,26 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
     }
 
     const presentVerseIds = new Set(translation.verses.map((verse) => verse.verseId));
+
+    // Pericope tiling (schema v8, CO-3 PR 1): derived from the committed
+    // corpus-scoped section-counts subset — hermetic for the same reason
+    // as the OpenBible subset above. The derivation re-runs here rather
+    // than shipping derived rows in the fixture file, so fixture and
+    // release artifacts exercise the same code path.
+    const sectionRows = existsSync(SECTIONS_SUBSET)
+      ? (JSON.parse(readFileSync(SECTIONS_SUBSET, 'utf8')) as {
+          sectionRows: SectionSpanRow[];
+        }).sectionRows
+      : [];
+    const pericopes = derivePericopes(sectionRows, presentVerseIds);
+
     const conceptLayer =
       ontology.concepts.length > 0
         ? buildConceptLayer(database as unknown as SqliteDatabase, {
             ontology,
             topicRows,
             crossReferences,
+            pericopes,
             manifests: loadManifests(),
             presentVerseIds,
             verseTerms,
@@ -264,6 +281,7 @@ if (process.argv[1] && process.argv[1].endsWith('buildFixtureDb.ts')) {
           `  editorial anchors: ${result.conceptLayer.editorialAnchors}\n` +
           `  openbible topic anchors: ${result.conceptLayer.topicAnchors}\n` +
           `  cross references: ${result.conceptLayer.crossReferences}\n` +
+          `  pericopes: ${result.conceptLayer.pericopes}\n` +
           `  verse terms: ${result.conceptLayer.verseTerms}\n` +
           `  translation tokens: ${result.conceptLayer.translationTokens}\n` +
           `  dropped (outside fixture corpus): ${result.conceptLayer.droppedOutOfCorpus}\n`

@@ -936,6 +936,36 @@ function hasCuratedAliasTable(database: DatabaseSync): boolean {
   return Number(row.present) === 1;
 }
 
+/** Presence probe for the CO-3 pericopes table (schema v8; absent pre-v8). */
+function hasPericopeTable(database: DatabaseSync): boolean {
+  const row = database.prepare(
+    "SELECT COUNT(*) AS present FROM sqlite_master WHERE type = 'table' AND name = 'pericopes'",
+  ).get() as { present: number };
+  return Number(row.present) === 1;
+}
+
+interface CandidatePericopeRow {
+  readonly startVerseId: number;
+  readonly endVerseId: number;
+  readonly boundaryVotes: number;
+}
+
+/**
+ * Pericope rows for the independent fingerprint recomputation (schema v8).
+ * Non-owned bytes a candidate never touches — like cross_references — but
+ * they feed the concept-layer fingerprint per-record, so the reviewer-side
+ * mirror must reproduce them. `null` for a pre-v8 base whose fingerprint
+ * never carried them (its counts record is also one field shorter).
+ */
+function readPericopeRows(database: DatabaseSync): readonly CandidatePericopeRow[] | null {
+  if (!hasPericopeTable(database)) return null;
+  return database.prepare(
+    `SELECT start_verse_id AS startVerseId, end_verse_id AS endVerseId,
+            boundary_votes AS boundaryVotes
+     FROM pericopes ORDER BY start_verse_id`,
+  ).all() as unknown as CandidatePericopeRow[];
+}
+
 /** digestRows over the shipped spelling tables, keyed like the expectation. */
 function actualSpellingTableDigests(database: DatabaseSync): Record<string, string> {
   return {
@@ -1382,7 +1412,11 @@ function ownedDigest(rows: Readonly<Record<string, readonly Record<string, unkno
   return sha256Bytes(stableJson(Object.fromEntries(Object.keys(rows).sort().map((key) => [key, digestRows(rows[key] ?? [])]))));
 }
 
-function layerFingerprint(ontology: CompiledOntology, counts: Readonly<Record<string, number>>): string {
+function layerFingerprint(
+  ontology: CompiledOntology,
+  counts: Readonly<Record<string, number>>,
+  pericopes: readonly CandidatePericopeRow[] | null,
+): string {
   const hash = createHash('sha256');
   const feed = (parts: readonly (string | number)[]): void => {
     const record = parts.join(' ');
@@ -1405,7 +1439,18 @@ function layerFingerprint(ontology: CompiledOntology, counts: Readonly<Record<st
     a.conceptId !== b.conceptId ? (a.conceptId < b.conceptId ? -1 : 1) : a.relatedId < b.relatedId ? -1 : 1)) {
     feed(['r', edge.conceptId, edge.relatedId]);
   }
-  feed(['counts', counts.topicAnchors ?? 0, counts.crossReferences ?? 0, counts.verseTerms ?? 0, counts.translationTokens ?? 0]);
+  // Schema v8 (CO-3 PR 1): pericope rows feed per-record and their count
+  // widens the counts record. A pre-v8 base (pericopes === null) keeps the
+  // exact pre-v8 feed, byte for byte — the mirror reproduces whichever
+  // shape the artifact's own builder wrote.
+  if (pericopes !== null) {
+    for (const row of [...pericopes].sort((a, b) => a.startVerseId - b.startVerseId)) {
+      feed(['p', row.startVerseId, row.endVerseId, row.boundaryVotes]);
+    }
+    feed(['counts', counts.topicAnchors ?? 0, counts.crossReferences ?? 0, counts.verseTerms ?? 0, counts.translationTokens ?? 0, pericopes.length]);
+  } else {
+    feed(['counts', counts.topicAnchors ?? 0, counts.crossReferences ?? 0, counts.verseTerms ?? 0, counts.translationTokens ?? 0]);
+  }
   return hash.digest('hex');
 }
 
@@ -1444,7 +1489,7 @@ function installOwnedLayer(database: DatabaseSync, ontology: CompiledOntology): 
       );
     }
     for (const row of rows.concept_related!) insertRelated.run(row.concept_id as never, row.related_id as never);
-    const fingerprint = layerFingerprint(ontology, counts);
+    const fingerprint = layerFingerprint(ontology, counts, readPericopeRows(database));
     database.prepare('INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)').run('layer_fingerprint', fingerprint);
     database.exec('COMMIT');
     return counts;
@@ -1785,7 +1830,10 @@ function inspectLayerExpectation(
     const spellingSources = spellingPresent
       ? readSpellingVocabularySources(database as unknown as SqliteReadWriteDatabase)
       : null;
-    const baseConceptFingerprint = layerFingerprint(baseOntology, layerCounts);
+    // v8 pericope rows: non-owned, candidate-untouched, but part of the
+    // concept-layer feed — read once and applied to BOTH sides of the check.
+    const pericopeRows = readPericopeRows(database);
+    const baseConceptFingerprint = layerFingerprint(baseOntology, layerCounts, pericopeRows);
     // QR-6: the chain's LAST link. Alias rows are non-owned bytes a
     // candidate never touches (byte-verified by the copied-table check), but
     // they end the layer-fingerprint chain, so both the base check and the
@@ -1811,7 +1859,7 @@ function inspectLayerExpectation(
       fail('NO_MEASURABLE_EFFECT', 'proposal does not change any result-affecting candidate table.');
     }
     const baseTableDigests = logicalTableDigests(database);
-    const candidateConceptFingerprint = layerFingerprint(candidateOntology, layerCounts);
+    const candidateConceptFingerprint = layerFingerprint(candidateOntology, layerCounts, pericopeRows);
     let candidateLayerFingerprint = candidateConceptFingerprint;
     let spellingTableDigests: Readonly<Record<string, string>> | null = null;
     if (spellingSources) {

@@ -59,7 +59,12 @@ import { compileOntology } from './importers/ontologyImporter.js';
 import { loadExposition } from './loadExpositions.js';
 import { fingerprintDirectory } from './provenance/contentFingerprint.js';
 import { manifestFingerprint } from './provenance/manifest.js';
-import { importCrossReferences, importTopicScores } from './importers/openbibleImporter.js';
+import {
+  importCrossReferences,
+  importSectionCounts,
+  importTopicScores,
+} from './importers/openbibleImporter.js';
+import { derivePericopes } from './buildPericopes.js';
 import { importVpl } from './importers/vplImporter.js';
 import { buildTermProfiles, type ExpositionDocument } from './stats/passageTerms.js';
 import type { DistributionTier, ManifestSet, SourceManifest } from './provenance/manifest.js';
@@ -418,9 +423,16 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
     const xrefs = importCrossReferences(
       unzipSingleTextEntry(readVerified(manifests, 'openbible-xrefs', 'cross-references.zip')),
     );
+    // Pericope tiling (schema v8, CO-3 PR 1): checksum-verified full source,
+    // derived over this artifact's present verses. Same re-verify-at-read
+    // posture as the other two OpenBible sources — the URL rolls, so the
+    // pinned bytes are the admitted source, not whatever the URL serves now.
+    const sections = importSectionCounts(
+      readVerified(manifests, 'openbible-sections', 'bible-section-counts.txt').toString('utf8'),
+    );
     process.stdout.write(
       `layer A  : ${ontology.concepts.length} concepts, ${topics.rows.length} topic rows, ` +
-        `${xrefs.rows.length} cross-references\n`,
+        `${xrefs.rows.length} cross-references, ${sections.rows.length} section spans\n`,
     );
 
     // ---- Layer B ----
@@ -446,18 +458,21 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       process.stdout.write(`cross-tr : ${translationTokens.size} verses carry alternate wording\n`);
     }
 
+    const presentVerseIds = new Set(verses.map((verse) => verse.verseId));
     const layer = buildConceptLayer(database as unknown as SqliteDatabase, {
       ontology,
       topicRows: topics.rows,
       crossReferences: xrefs.rows,
+      pericopes: derivePericopes(sections.rows, presentVerseIds),
       manifests,
-      presentVerseIds: new Set(verses.map((verse) => verse.verseId)),
+      presentVerseIds,
       verseTerms,
       translationTokens,
     });
     process.stdout.write(
       `layer    : ${layer.concepts} concepts, ${layer.editorialAnchors} editorial anchors, ` +
         `${layer.topicAnchors} topic anchors, ${layer.crossReferences} xrefs, ` +
+        `${layer.pericopes} pericopes, ` +
         `${layer.verseTerms} verse terms (${layer.droppedOutOfCorpus} dropped out of corpus)\n`,
     );
 
@@ -566,6 +581,7 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
         editorialAnchors: layer.editorialAnchors,
         topicAnchors: layer.topicAnchors,
         crossReferences: layer.crossReferences,
+        pericopes: layer.pericopes,
         verseTerms: layer.verseTerms,
         translationTokens: layer.translationTokens,
         spellingTerms: spelling.termCount,

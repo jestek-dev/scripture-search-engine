@@ -88,8 +88,8 @@ const BASE: Seed = {
 };
 
 describe('buildSpellingIndex', () => {
-  it('schema is v7', () => {
-    expect(SCHEMA_VERSION).toBe('7');
+  it('schema is v8 (v7 = spelling, v8 = pericope per the version train)', () => {
+    expect(SCHEMA_VERSION).toBe('8');
   });
 
   it('builds the stated vocabulary union with origins and corpus df', () => {

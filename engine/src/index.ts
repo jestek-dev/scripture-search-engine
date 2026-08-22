@@ -22,6 +22,7 @@ export {
   MAX_PHRASE_LENGTH,
   type CorpusMeta,
   type CuratedAliasRow,
+  type PericopeRow,
   type PhraseMatch,
   type TokenMatch,
 } from './corpus/repository.js';

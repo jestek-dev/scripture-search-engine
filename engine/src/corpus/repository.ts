@@ -95,6 +95,19 @@ export interface TokenMatch extends ScriptureVerse {
   readonly distinctTokenCount: number;
 }
 
+/**
+ * One derived pericope (schema v8, CO-3 PR 1). `boundaryVotes` is the
+ * summed boundary vote at `startVerseId` — a countable structural fact
+ * (how many of the 20 surveyed translations start a section there), never
+ * a relevance score.
+ */
+export interface PericopeRow {
+  readonly startVerseId: number;
+  readonly endVerseId: number;
+  readonly boundaryVotes: number;
+  readonly sourceId: string;
+}
+
 export interface CorpusMeta {
   readonly schemaVersion: string;
   readonly tokenizerVersion: string;
@@ -365,6 +378,63 @@ export class CorpusRepository implements ReferenceResolver {
     } catch {
       return false;
     }
+  }
+
+  /**
+   * Whether this artifact carries the derived pericope tiling (schema v8,
+   * CO-3 PR 1). Presence-and-rows probed like the other optional layers: a
+   * v7 artifact has no table, an emptied table disables the (future)
+   * grouping step silently, and behavior reverts to pre-pericope output
+   * with no engine change — the probe IS the rollback story.
+   */
+  async hasPericopes(): Promise<boolean> {
+    try {
+      const table = await this.database.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'pericopes'",
+      );
+      if (table.rows.length === 0) return false;
+      const rows = await this.database.execute('SELECT 1 AS present FROM pericopes LIMIT 1');
+      return rows.rows.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * The pericopes containing any of the given verse ids, batched as ONE
+   * bounded query over the ranked window (G11): the window's min..max verse
+   * span overlaps few pericopes, and the caller maps verses to rows. Rows
+   * come back ordered by start verse for platform-stable iteration.
+   *
+   * NO CALL SITES in discover() yet (CO-3 PR 1 capability): the grouping
+   * behavior that consumes this lands with the PR 2 ENGINE_VERSION bump.
+   * boundaryVotes is the summed boundary vote at the pericope's start verse
+   * — the countable fact the artifact stores, so a future explanation and
+   * the shipped data cannot disagree.
+   */
+  async pericopesContaining(verseIds: readonly number[]): Promise<readonly PericopeRow[]> {
+    const unique = [...new Set(verseIds)];
+    if (unique.length === 0) return [];
+    const result = await this.database.execute(
+      `SELECT start_verse_id AS startVerseId, end_verse_id AS endVerseId,
+              boundary_votes AS boundaryVotes, source_id AS sourceId
+       FROM pericopes
+       WHERE end_verse_id >= ? AND start_verse_id <= ?
+       ORDER BY start_verse_id`,
+      [Math.min(...unique), Math.max(...unique)],
+    );
+    const spans = result.rows.map((row) => ({
+      startVerseId: num(row, 'startVerseId'),
+      endVerseId: num(row, 'endVerseId'),
+      boundaryVotes: num(row, 'boundaryVotes'),
+      sourceId: str(row, 'sourceId'),
+    }));
+    // The min..max window can overlap pericopes containing none of the
+    // asked-for verses; keep only real containers so the caller's mapping
+    // stays honest.
+    return spans.filter((span) =>
+      unique.some((verseId) => verseId >= span.startVerseId && verseId <= span.endVerseId),
+    );
   }
 
   /**

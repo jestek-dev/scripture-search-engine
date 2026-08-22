@@ -24,8 +24,13 @@
  *      (0.13.0, no schema bump — the concept-XOR-verse-range invariant lives
  *      in the DDL from day one). Schema slot per the 2026-08-20 plan's §2.2
  *      version-train decision: v7 = spelling, v8 = pericope.
+ * v8 — Phase 5 (CO-3 PR 1, capability only): derived pericope tiling
+ *      (pericopes table, built by buildPericopes.ts from OpenBible.info
+ *      section counts). The engine READS it but nothing in discover() calls
+ *      the read yet — ordering is bit-identical to v7 and the grouping
+ *      behavior lands with ENGINE_VERSION 0.14.0 in PR 2.
  */
-export const SCHEMA_VERSION = '7';
+export const SCHEMA_VERSION = '8';
 
 /**
  * `verses.id` (plain rowid) is the true primary key, NOT `verse_id`. The
@@ -310,6 +315,29 @@ CREATE TABLE curated_aliases (
     (concept_id IS NULL AND start_verse_id IS NOT NULL AND end_verse_id IS NOT NULL)
   )
 );
+
+/*
+ * Derived pericope tiling (schema v8, CO-3 PR 1). One row per pericope:
+ * within each book the rows are disjoint, ordered, and tile every present
+ * verse (invariants enforced by buildPericopes.ts, which derives them from
+ * OpenBible.info candidate section spans at the reviewed boundary-vote
+ * threshold plus forced book starts).
+ *
+ * boundary_votes is the SUMMED boundary vote at start_verse_id — how many of
+ * the 20 surveyed translations' section placements start here, summed over
+ * candidate spans sharing this start verse. It is a countable structural
+ * fact, NEVER a relevance score, and never the per-row vote of one exact
+ * span; it is stored so the engine's grouping explanation and the shipped
+ * data cannot disagree.
+ */
+CREATE TABLE pericopes (
+  start_verse_id INTEGER NOT NULL,
+  end_verse_id INTEGER NOT NULL,
+  boundary_votes INTEGER NOT NULL,
+  source_id TEXT NOT NULL
+);
+
+CREATE INDEX idx_pericopes_range ON pericopes(start_verse_id, end_verse_id);
 `;
 
 /**
