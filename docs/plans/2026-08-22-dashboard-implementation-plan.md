@@ -159,7 +159,7 @@ the server's enums exactly (`plan-r1-repo.md` §3 + misc facts).
   light `--shadow: 0 1px 2px rgba(29,28,24,.06), 0 6px 20px rgba(29,28,24,.07)`
   (dark: `none` — borders replace shadows). Radii 6px controls / 10px panels; spacing
   4/8 scale; type scale 11/12/13/16/20/25.
-  **Two token values deviate from the prototype, fixed here and pre-approved** (D1
+  **Four token values deviate from the prototype, fixed here and pre-approved** (D1
   logs them in DESIGN.md's Deviations with these measured WCAG ratios, so the
   committed token table already carries the passing values and the D5-landed
   contrast audit is green from day one): light `--text-3: #6E695E` — the
@@ -168,7 +168,23 @@ the server's enums exactly (`plan-r1-repo.md` §3 + misc facts).
   tail header and §3.3 permanence lines); the replacement measures 5.37 / 5.28 /
   4.97:1 on panel/surface/ground. Dark `--text-3: #948E81` — replaces #8A8478
   (4.47:1 on `--panel`); the replacement measures 5.10 / 5.35 / 5.71:1 on
-  panel/surface/ground. **`--text-faint` is reserved for WCAG-exempt text only**
+  panel/surface/ground. Light `--v-affirm: #2C734D` — the prototype's #2F7A52
+  measures 4.4966:1 over its own wash (`--v-affirm-wash` rgba(47,122,82,.10))
+  composited on `--panel`, failing AA 4.5:1 for the 12–13px judged-chip text that
+  renders on exactly that ground (D35's verdict-over-own-wash pair); the
+  replacement measures 4.94:1 over its wash, 5.63:1 on `--panel`, 5.53:1 on
+  `--surface`. Light `--v-missing: #80621B` — the prototype's #8C6C1E measures
+  4.2552:1 over its wash (rgba(140,108,30,.10)) on `--panel`, a clear fail; the
+  replacement measures 4.95:1 over its wash, 5.61:1 on `--panel`, 5.51:1 on
+  `--surface`. Light `--v-notrel` (#A6493D, 4.99:1 over its wash) and the entire
+  dark verdict column (≥5.45:1 over their washes) already pass unchanged and stay
+  verbatim. **One token is added beyond the prototype's set**: `--control-border` —
+  light `#8F897C` (3.36:1 vs `--surface`), dark `#6B6558` (3.01:1 vs `--surface`) —
+  used ONLY on text inputs (the search bar, the §3.3 reference input, the §3.7
+  sign input) and the top-N segmented picker's selected-state boundary, so those
+  interactive boundaries meet WCAG 1.4.11 (D35(b)) while `--hairline-strong`
+  stays the quiet decorative divider/card-edge line the design language calls
+  for; also logged in D1's Deviations. **`--text-faint` is reserved for WCAG-exempt text only**
   — disabled control labels and purely decorative glyphs (light #A9A398 measures
   2.42:1 on `--surface`; dark #67635A, 2.91:1); it never carries
   information-bearing copy — the Advanced nav link and every hint sentence use
@@ -224,8 +240,10 @@ results, not a kind):
 shows the search bar over the effect-timing contract sentence and nothing else — no
 result cards, no tail, no verdict toolbar (§3.2's visibility gate), and no
 `/api/search` request fires before the first submit. With open cases, the first open
-case in the boot `GET /api/v2/cases` list (newest first — the §3.6 ordering, i.e. the
-most recently touched) loads exactly as if its queue row were clicked (§3.4 — case
+case in the boot `GET /api/v2/cases` list (first in the §3.6 client-sorted order —
+most recently touched, by latest `events[].at`; the raw response is caseId-ordered,
+`cases.ts:424–426`, and must not be used as-is) loads exactly as if its queue row
+were clicked (§3.4 — case
 fetches + live tail search, rail header and search input synced). `study.ui.v1`'s
 `lastQuery` (§4.9) does exactly one thing: it pre-fills the search input's **value**
 on the no-open-case boot — it never auto-submits and never fetches. D5 asserts the
@@ -332,8 +350,9 @@ retyping. This mapping is a §3.12 table row, so D34's per-row audit covers it.
   beliefs, not slips of a habituated key — and whether a row is a collapsed run
   is invisible in its compact form, so E's behavior must be uniform to be
   predictable. Two modes, one shared component (built in D18, extended in D20):
-  - A **single-verse row** opens the preview showing its one verse (already
-    resolved via `GET /api/passage` — the §4.4 resolution, reused) with the
+  - A **single-verse row** opens the preview showing its one verse (resolved via
+    `GET /api/passage` — the §4.4 resolution, reused when already held, else
+    fired on open per the resolution-timing rule below) with the
     button "Confirm — should be near the top".
   - A **range row** — a collapsed anchor run: `collapseAnchorRuns`
     (`engine/src/createEngine.ts:594–677`) mints range references like
@@ -354,7 +373,21 @@ retyping. This mapping is a §3.12 table row, so D34's per-row audit covers it.
   focus contract); and the rescue receipt names the confirmed verse. Mode
   detection is client-side: a reference containing "-" is the cheap pre-signal,
   and the `GET /api/passage` resolution (`passage.verses.length`) is
-  authoritative. **A rescue confirm answered 400 `validation_failed` whose
+  authoritative. **Resolution timing (binding)**: pressing E (or the row button)
+  fires the row's `GET /api/passage` resolution if not already held (the §3.1
+  focused-card resolution is reused when present) and opens the preview
+  immediately — focusing a tail row fires only `/api/v2/context` (the
+  read-before-rescue binding), so at the moment the preview opens the passage
+  resolution has usually not yet run. While the resolution is in flight the layer
+  shows "Loading the passage…" with Confirm disabled. If the resolution fails, the
+  layer shows the §3.11 search-error sentence ("The engine did not answer. It may
+  be restarting — try again in a moment.") with a Retry button that refires the
+  resolution; Confirm stays disabled and Esc/Cancel still closes with nothing
+  posted. A rescue never posts an unresolved reference — the raw
+  `DiscoveryResult.reference` reaches no POST body on any branch (for a collapsed
+  run like "Psalm 46:1-3" the raw string is a range the server 400s,
+  `judgments.ts:512–515`, surfaced only as the generic §3.11 toast — the exact
+  dead end this branch spec exists to close). **A rescue confirm answered 400 `validation_failed` whose
   `error.message` contains "already present in the judged result set" closes the
   preview layer, then runs the §3.3 already-displayed recovery** — focus the
   matching top-block card and show the same toast ("That passage is already in
@@ -492,7 +525,14 @@ Literata, focused verse highlighted.
   show the permanence note instead, §3.3/§3.12): chip becomes "Reopened — your earlier
   call stands until you make a new one."; the row joins the **reopened count** (shown
   separately — §3.4 — because the earlier call is still active in the log and still
-  compiles); the next verdict posts with `supersedes`. History line (written when the
+  compiles); the next verdict posts with `supersedes`. **Binding — undo retargets
+  focus**: U — and clicking a chip's inline Undo link — moves DOM focus to the
+  reopened card (it becomes the expanded/focused card), so the next verdict
+  keypress or toolbar click applies to it; the reviewer's J/K position is
+  otherwise unchanged. (Without this rule the primary undo-then-correct journey
+  commits to the wrong verse: commit auto-advances focus to the next unjudged
+  card, so a U-then-H sequence — the exact correction the toast copy invites —
+  would mark the *advanced-to* card, not the reopened one.) History line (written when the
   replacing call lands): "Reopened {ref} — the earlier call stays on record, replaced
   by this newer one". If the session ends reopened-but-unreplaced, the old call stands
   — exactly what the chip said, and exactly what Finish up shows (§3.7).
@@ -640,7 +680,9 @@ Left rail, under the active list:
 - Active header: uppercase "Results for "{q}"" + counter chip "{n} to go" / "done";
   when any rows are locally reopened the counter reads "{n} to go · {r} reopened".
   Rows: checkbox + reference + source meta + verdict dot (three aria states, §3.1).
-- "**Waiting in your queue**": one button per other open case with judged count
+- "**Waiting in your queue**": one button per other open case, rows in the §3.6
+  client-sorted order (most recently touched first — never the server's caseId
+  order), with judged count
   "{j}/{m}"; clicking switches the active query (search bar syncs, first unjudged row
   selected) exactly like a successful search — including the live tail fetch (§4.3
   "Open existing case"). With no open cases, the queue section shows "Nothing waiting —
@@ -716,8 +758,24 @@ Left rail, under the active list:
   rescue/suggestion distinction exists only in the client's session log — never
   guessed). Superseded records struck-through/faint with sub-line "Replaced by a newer
   call."
-- Data: `GET /api/v2/cases` (newest first), then lazy `GET /api/v2/judgments?caseId=…`
-  per case as its group expands/scrolls in; 20 most recent cases + "Show more".
+- Data: `GET /api/v2/cases` — **the server returns cases in caseId (UUID) order, not
+  time order** (`validateCaseEvents` groups and sorts case buckets by caseId,
+  `workbench/src/cases.ts:424–426`; `foldCaseEvents` preserves that order,
+  `cases.ts:443`; `readCases` → the endpoint handler sends it verbatim,
+  `reviewCases.ts:109–116`, `server.ts:1512–1516`; and `CaseSnapshot` carries no
+  top-level timestamp, `cases.ts:127–139`), and that order is uncorrelated with
+  recency. **The client therefore orders cases itself (binding)**: a case's touch
+  time is the `at` of its last event — `case.events[case.events.length - 1].at`
+  (every event carries `at`, `cases.ts:69`; the validated chain is causal, with
+  `at >= parent.at` enforced, so the last event holds the case's newest timestamp;
+  the format is ISO-8601 UTC with fixed-width milliseconds, `cases.ts:149`, so
+  plain string comparison is safe) — and every recency-ordered surface sorts
+  descending on that value: "most recently touched" first. This client-sorted list
+  is the one ordering every case-list surface reads — §3.1's open-case boot pick
+  ("the first open case"), §3.4's Waiting-in-your-queue row order, and this
+  screen's "20 most recent cases" (= top 20 by this sort) + "Show more"; the raw
+  response order is never rendered. Then lazy `GET /api/v2/judgments?caseId=…` per
+  case as its group expands/scrolls in.
 - No raw IDs, digests, or fingerprints anywhere on this screen.
 
 ### 3.7 Finish up (typed-digest signing)
@@ -896,7 +954,10 @@ the token sheet. Dark derives from its own token column, never inversion.
   failed boot fetch (`/api/meta`, `/api/concepts`, `/api/v2/health`,
   `/api/v2/cases`) shows it once as a toast; a failed rail fetch (context, inbox)
   shows it inline in that rail section; a failed `GET /api/passage` verse fetch
-  keeps the §3.1 excerpt rendering (already specified — no error state); a
+  on a focused card keeps the §3.1 excerpt rendering (already specified — no
+  error state), while the same failure inside the rescue preview shows the §3.1
+  resolution-timing retry state (the search-error sentence + Retry, Confirm
+  disabled — two call sites, both driven by spec); a
   `/fonts/**` failure shows nothing (the §4.7 fallback stacks carry the page). Any
   POST failure not named above (network error / 5xx on a commit) toasts "That call
   did not save — the engine did not answer. Try it again in a moment." — except a
@@ -920,7 +981,7 @@ the token sheet. Dark derives from its own token column, never inversion.
 | E | focused tail row | "Should be near the top" — ALWAYS opens the §3.1 rescue preview (single-verse confirm mode or pick-chip mode); never posts on the first keypress | row button |
 | Enter | focused tail row | No-op — the verse already reads in the rail (§3.1); Enter never commits a rescue | — |
 | H / X / M | focused tail row | Hint toast: "Lower results take one action — "Should be near the top"." | — |
-| U | Review | Reopen toast target, else last verdict (Essential/Helpful/Not relevant only — a suggestion or rescue target shows the §3.3 permanence sentence instead, and nothing posts; after a bulk commit U targets nothing and shows the §3.2 hint toast) | chip/toast "Undo" link |
+| U | Review | Reopen toast target, else last verdict (Essential/Helpful/Not relevant only — a suggestion or rescue target shows the §3.3 permanence sentence instead, and nothing posts; after a bulk commit U targets nothing and shows the §3.2 hint toast). U — and clicking a chip's inline Undo link — moves DOM focus to the reopened card (it becomes the expanded/focused card), so the next verdict keypress or toolbar click applies to it; the reviewer's J/K position is otherwise unchanged (§3.2 binding) | chip/toast "Undo" link |
 | Space | focused top-block row | Toggle bulk checkbox (disabled on judged rows — §3.2) | checkbox |
 | Enter | Search input | Submit search | Search button |
 | Enter | Missing form — reference input | Activates Submit only when Submit is enabled (a single verse resolved or picked — the resolved verse has by then rendered in the preview, so Enter-when-enabled is always post-preview); while Submit is disabled, Enter is a no-op — the form is never a native `<form>`, so no raw browser submit can fire (§3.3) | Submit button |
@@ -1035,7 +1096,7 @@ mechanism's table:
 ### 4.3 Endpoints per interaction
 | Interaction | Calls |
 |---|---|
-| Boot | `GET /api/meta` (identity trio → localStorage compare), `GET /api/concepts` (id→label cache), `GET /api/v2/health` (read-only detection), `GET /api/v2/cases` (queue; with open cases the first open case then loads per §3.1's boot state — with none, no further request until the first search submit) |
+| Boot | `GET /api/meta` (identity trio → localStorage compare), `GET /api/concepts` (id→label cache), `GET /api/v2/health` (read-only detection), `GET /api/v2/cases` (queue — client-sorted per §3.6 by latest `events[].at` descending, since the response arrives in caseId order; with open cases the first open case then loads per §3.1's boot state — with none, no further request until the first search submit) |
 | Search submit / ⌘K typing | `GET /api/search?q=…` (stale responses dropped via request sequence counter) |
 | Why-rail Context tab — driven by the focused top-block card, and by a focused tail row (§3.1 read-before-rescue binding; the rail fronts Context when focus enters the tail) | `GET /api/v2/context?ref=…` |
 | Focused-card verse body (§3.1); missing-form live preview + pick-chip re-resolve (§3.3); tail-rescue resolution + range detection (§3.1/§4.4) | `GET /api/passage?ref=…` (stale responses dropped via the same request-sequence counter) |
@@ -1239,22 +1300,29 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
 
 ### P1 — Shell, theme, real search (read-only) · PR "study: shell + search"
 - **D1. Commit `workbench/DESIGN.md`** — the prototype token sheet (transcribed from
-  `dc.html:14–38`, both themes, with §3.0's two pre-approved `--text-3` replacements
-  applied — the committed table carries the passing values), rename tables, keyboard
+  `dc.html:14–38`, both themes, with §3.0's four pre-approved replacements applied —
+  the two `--text-3` tiers and the two light verdict colors — plus the added
+  `--control-border` token; the committed table carries the passing values), rename tables, keyboard
   model, and the §3.1
   reason-pill mapping table (family → pill string, so Jesse reviews the wording
   against the covenant's no-interpretation rule), plus a "Deviations" section: fonts
   unsubsetted per OFL; the answer-sheet copy substitution §3.7 **and, beside it, the
   Write-button/success copy substitution ("Write {n} calls to the answer sheet" /
   "{n} calls are now on the answer sheet." replacing the prototype's "Write {n}
-  judgment(s) to fixture files" / "…in the answer files" — §3.7)**; the two §3.0
-  `--text-3` contrast deviations with their measured ratios (light #847F73 →
-  #6E695E, dark #8A8478 → #948E81) and the `--text-faint` WCAG-exempt reservation;
+  judgment(s) to fixture files" / "…in the answer files" — §3.7)**; the four §3.0
+  contrast deviations with their measured ratios (light `--text-3` #847F73 →
+  #6E695E, dark `--text-3` #8A8478 → #948E81, light `--v-affirm` #2F7A52 →
+  #2C734D and light `--v-missing` #8C6C1E → #80621B — the two verdict colors that
+  failed 4.5:1 as 12–13px chip text over their own washes; light `--v-notrel` and
+  the whole dark verdict column pass unchanged), the added `--control-border`
+  token with its per-theme values and its inputs-and-picker-only usage rule
+  (§3.0/D35(b)), and the `--text-faint` WCAG-exempt reservation;
   any later token change the D35 audit forces is appended here. AC: a vitest
   (`designTokens.test.ts`) parses the DESIGN.md token table and
   asserts every token name from the `dc.html:14–38` block appears with a value in
-  **both** the light and dark columns (the check is over token *names* — §3.0's two
-  deviations change values only, so it passes unchanged); that the three rename tables contain exactly
+  **both** the light and dark columns (the check is over token *names* — §3.0's four
+  deviations change values only, and the added `--control-border` is a superset
+  entry a name-coverage check does not forbid, so it passes unchanged); that the three rename tables contain exactly
   the 7 source, 11 state, and 4 verdict entries matching the server enums —
   `REVIEW_CASE_SOURCES` and the four main-flow actions
   (`essential`/`helpful`/`irrelevant`/`missing`) in `workbench/src/judgments.ts`,
@@ -1305,7 +1373,9 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
   in this item, with the token sheet**: `workbench/test/contrast.audit.test.ts` is
   committed here with `pairs.json`'s text-tier pairings (entry shape, `minRatio`,
   `exempt`, and compositing rules per D35's audit spec) and stays green from P1
-  on — §3.0's pre-approved `--text-3` values exist precisely so it passes from day
+  on — §3.0's four pre-approved replacement values (the `--text-3` tiers and the
+  light `--v-affirm`/`--v-missing` verdict colors) exist precisely so it passes
+  from day
   one, and the tokens are settled before any screen is built on them; D35 extends
   the same file with the non-text (1.4.11) checks and the ARIA role assertions.
 - **D6. Real search + results (read-only)**: form → `GET /api/search`; the §3.1
@@ -1438,7 +1508,12 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
   H on it posts
   `supersedes:<that id>`; U flips the chip to "Reopened — your earlier call stands
   until you make a new one.", the row's queue dot aria-label becomes "Reopened — your
-  earlier call stands", and the next E posts `supersedes`; a second re-judge supersedes
+  earlier call stands", and the next E posts `supersedes`; after a commit
+  auto-advances focus to card #2, pressing U moves `document.activeElement` to the
+  reopened card #1 (asserted), and the next E posts `supersedes:<card #1's
+  judgment id>` with card #1's `targetId` — never card #2's (both body fields
+  asserted; the §3.2 undo-retargets-focus binding); clicking the chip's Undo link
+  asserts the same focus move; a second re-judge supersedes
   the newest id, not the first.
 - **D15. Effect-timing contract copy** in its three placements (results-rail footer,
   empty state, onboarding placeholder for P5). AC: Playwright — the contract string is
@@ -1524,7 +1599,12 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
   rescue confirm answered 400 `validation_failed` whose message contains "already
   present in the judged result set" closes the preview layer, focuses the matching
   top-block card, and shows the §3.3 already-displayed toast — not the generic
-  §3.11 toast (asserted; the §3.1/§4.6 mismatch branch);
+  §3.11 toast (asserted; the §3.1/§4.6 mismatch branch); with the tail row's
+  `/api/passage` mock failing (500), E opens the preview showing the retry
+  sentence ("The engine did not answer. It may be restarting — try again in a
+  moment."), Confirm is `disabled`, zero judgment POSTs fire, and Retry refires
+  the resolution and enables Confirm on success (asserted for a range row — the
+  §3.1 resolution-timing branch);
   Esc in the rescue preview closes it with no POST and returns focus to the tail
   row; under mocked read-only health the tail rescue buttons are `disabled` and E
   opens no preview and fires no POST (the §3.11 toast shows instead), and with the
@@ -1617,10 +1697,14 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
   equals the mocked `review.result.results.length`; a third mocked case in state
   `merged` renders no queue entry and triggers neither fetch, while one in state
   `judged` renders "{m}/{m}" (the §3.4 open definition, both branches asserted)**;
-  counts update after a judgment; **on boot with those two open cases mocked, the
-  first open case in the (newest-first) list loads as if its queue row were
-  clicked — its case fetches and tail `GET /api/search` appear in the route log,
-  the rail header and search input sync (the §3.1 open-case boot state)**; with
+  counts update after a judgment; **on boot with two open cases mocked whose caseId
+  lexicographic order is the REVERSE of their latest-`events[].at` order, the case
+  with the newer latest event loads as if its queue row were clicked (asserted —
+  the §3.6 client sort, not the server's UUID response order, picks the boot case:
+  the boot still loads the most recently touched case even though the response
+  lists the other case first) — its case fetches and tail `GET /api/search` appear
+  in the route log, the rail header and search input sync (the §3.1 open-case boot
+  state), and the queue rows render in the same client-sorted order**; with
   zero open cases the queue section shows
   "Nothing waiting — search for something you would actually type." and no
   `/api/search` fires on boot (§3.1 boot state, case-less half).
@@ -1660,7 +1744,10 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
   sub-line and B normal; a rescue performed in-session (via the D18 flow) then
   shown in History renders the "Rescued … from the lower results" phrasing, while
   a mocked prior-session `missing` record renders "Added … as a missing passage"
-  (both branches asserted); with zero mocked cases the screen shows "Nothing on record
+  (both branches asserted); three mocked cases whose caseId order reverses their
+  latest-event order render newest-touched first (the §3.6 client sort asserted —
+  the screen's group order matches descending last-`events[].at`, not the mocked
+  response order); with zero mocked cases the screen shows "Nothing on record
   yet. Your first call on any search result will appear here." and its "Go to Review
   →" button navigates; a jargon regex (`[0-9a-f]{8}-` and `sha256`) finds zero matches
   in the History screen's text.
@@ -1772,7 +1859,11 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
   because the same color pair legitimately renders at both sizes — **a pair
   rendered at both body and large sizes appears twice, once per threshold**:
   verdict-color-on-panel appears with `minRatio: 3` (stat-tile numerals, 25px
-  Literata) and with `minRatio: 4.5` (chip text, 12–13px). `exempt: true` marks
+  Literata) and with `minRatio: 4.5` (chip text, 12–13px). **Each
+  verdict-color-over-own-wash pair carries `minRatio: 4.5` — it renders as
+  12–13px chip text** (the judged chips and read-only banner, §3.1/§3.11; §3.0's
+  light `--v-affirm`/`--v-missing` replacements exist precisely because the
+  prototype values measured 4.4966:1 and 4.2552:1 against this threshold). `exempt: true` marks
   `--text-faint` pairings only (§3.0's WCAG-exempt reservation — disabled labels
   and decorative glyphs); the ratio check skips them but the count assertion still
   counts them, so the tier's uses stay reviewed data.
@@ -1783,13 +1874,27 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
   undefined, so the compositing base is part of the reviewed data, not implementer
   guesswork. And
   (b) WCAG 1.4.11 non-text contrast (≥3:1) for the `:focus-visible` outline vs every
-  background it appears over, verdict dot colors vs `--surface`, `--kbd-border` vs its
-  kbd context, control borders on interactive elements (inputs, buttons —
-  `--hairline-strong` vs `--surface`), and the segmented picker's selected-state
-  boundary; purely decorative hairlines are exempt and listed as such in the test
-  file. Each pairing is a vitest assertion that names the failing pair in its
-  message. The text-tier half has been green since P1: §3.0's pre-approved
-  `--text-3` replacements exist so that no known-failing prototype value ever
+  background it appears over, verdict dot colors vs `--surface`, and the
+  interactive-boundary token: **the input-border assertion measures
+  `--control-border` vs `--surface`** — the §3.0 added token (light `#8F897C`,
+  3.36:1; dark `#6B6558`, 3.01:1; logged in DESIGN.md Deviations) used only on
+  text inputs (search bar, reference input, sign input) and the segmented
+  picker's selected-state boundary, which the same assertion covers.
+  `--hairline-strong` is NOT asserted against 3:1: it stays on decorative
+  dividers and card edges and is listed in the test file's exempt set with the
+  reason "not the sole indicator — cards and buttons are identified by fill,
+  text, and the focus ring" (it measures 1.47:1 vs `--surface` in both themes, so
+  asserting it would mean either a guaranteed-red audit or darkening the design's
+  signature hairlines). There is **no** `--kbd-border` 3:1 check: it is listed
+  exempt with the reason "decorative — the keycap's text carries the information
+  (`--text-2` on `--kbd-bg` measures 6.49:1)" (the border itself measures 1.26:1
+  light). **Never leave an assertion in this audit that the committed token sheet
+  fails** — a check that cannot pass as specced is the §5 gate-discipline failure
+  in miniature; exemptions are reviewed data with stated reasons, not silent
+  skips. Each remaining pairing is a vitest assertion that names the failing pair
+  in its message. The text-tier half has been green since P1: §3.0's four
+  pre-approved replacements (`--text-3` light/dark, light
+  `--v-affirm`/`--v-missing`) exist so that no known-failing prototype value ever
   reaches this phase — the residual rule (a pairing some later screen adds and
   fails is fixed by adjusting the failing tier, logged in DESIGN.md Deviations)
   covers additions only, never a deferred redesign of the tiers every screen was
@@ -1851,8 +1956,13 @@ retargets to `../static/index.html` at D41 — all `/api/**` + `/fonts/**` mocke
   `expectedCopyOrToast` value must be one of §3.11's specified strings — a named
   state's copy or §3.11's unnamed-failure fallbacks ("That part of the workbench
   did not load…", "That call did not save…", or the specified nothing-renders
-  entries for `/fonts/**`, `/api/passage`, and case-state POSTs) — never copy
-  invented at the table.** (The table
+  entries for `/fonts/**`, `/api/passage`'s focused-card site, and case-state
+  POSTs) — never copy
+  invented at the table.** **The passage function's table entry names both
+  call-site behaviors**: focused card → no error state (the §3.1 excerpt
+  rendering stays); rescue preview → the §3.11 retry sentence with Confirm
+  disabled (the §3.1 resolution-timing branch) — the spec drives the UI to both
+  sites, and the D39 loop exercises each. (The table
   cannot live inside the spec: `e2e/**` is excluded from vitest, and importing a
   Playwright spec from a vitest test throws at import time — `test()` called outside
   the Playwright runner — so the parity vitest below could never read it.) The spec
@@ -2035,7 +2145,15 @@ snapshot's `ResearchResult` with discovery `result.results` truncated to
 `REVIEW_WINDOW` — the §4.3 counts row's m; :99–101 is the "Case query must be
 non-empty text." rejection behind the §3.2 M gate),
 compileJudgments.ts:1–20/93–100/489–518/504–508/523–525,
-workbench/src/cases.ts:23–35, workbench/vitest.config.ts (no custom `include`),
+workbench/src/cases.ts:23–35/69/127–139/149/424–426/443 (the §3.6 case-ordering
+facts, each re-read: `validateCaseEvents` sorts case buckets caseId-lexicographic
+at :424–426 and `foldCaseEvents` preserves that order at :443, flowing verbatim
+through `readCases` (reviewCases.ts:109–116) and the GET /api/v2/cases handler
+(server.ts:1512–1516); `CaseSnapshot` (:127–139) carries no top-level timestamp;
+every event carries `at` (:69) in the fixed-width ISO-8601 UTC shape (:149) with
+`at >= parent.at` enforced along the chain, so the last event's `at` is the
+case's newest and plain string comparison sorts it),
+workbench/vitest.config.ts (no custom `include`),
 workbench/src/staticSnapshot.ts:466 (all inline scripts joined — the §3.10 head
 theme-stamp micro-script is contract-valid),
 pipeline/src/books.ts:85/116/254–256 ("Ps"/"Lam" abbreviations; the deliberate "Jud"
@@ -2044,6 +2162,15 @@ rule §3.0 quotes verbatim; :54 the wordmark "The Study" in Literata 15px with t
 Georgia serif fallback; the §3.0 contrast deviations were computed from the :14–38
 hex values and re-verified — light `--text-3` #847F73 measures 3.92:1 on `--panel`,
 dark #8A8478 4.47:1, and the replacement values clear 4.5:1 on all three grounds in
-both themes),
+both themes; the verdict-wash figures likewise: light `--v-affirm` #2F7A52 over
+rgba(47,122,82,.10) composited on `--panel` #FFFDF7 measures 4.4966:1 and light
+`--v-missing` #8C6C1E over rgba(140,108,30,.10) measures 4.2552:1 — the two D35
+verdict-over-own-wash failures §3.0's #2C734D/#80621B replacements clear at
+4.94:1/4.95:1 — while light `--v-notrel` (4.99:1) and all three dark verdicts
+(5.45–6.03:1 over their washes) pass verbatim; the D35(b) figures too:
+`--hairline-strong` vs `--surface` 1.47:1 in both themes, `--kbd-border` vs
+`--kbd-bg` 1.26:1 light / 1.33:1 dark, `--text-2` on `--kbd-bg` 6.49:1 light /
+7.12:1 dark, and the added `--control-border` 3.36:1 light / 3.01:1 dark vs
+`--surface`),
 index.html:1958/1966–1975/2187/2192–2197/3183 ("This judgment is immutable." — the
 §3.5 one-confirm rationale)).*
