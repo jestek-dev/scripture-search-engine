@@ -311,7 +311,13 @@ Three design commitments a consumer can rely on:
 
 - **Invalid input is a typed kind, never an exception.** Consumers render the
   invalid-reference case; throwing would make every caller wrap a try/catch
-  around something the type system already expresses.
+  around something the type system already expresses. Additive since 0.11.0
+  (QR-4): an invalid-reference outcome MAY carry `suggestion?: { book,
+  reference, distance }` — a cited did-you-mean for a near-miss book name
+  ("did you mean Philippians 4:13?"). Suggestion only: the engine never
+  silently opens a guessed passage; consumers render it as a question, and
+  its absence needs no handling (the field is optional on all three
+  invalid-reference kinds — `research()`, `passage()`, `related()`).
 - **`related()` is not similarity.** Every entry exists because a human
   recorded the link — a cross-reference edge, or a concept whose curated
   anchors include the passage. Similarity is what `research()` does, and

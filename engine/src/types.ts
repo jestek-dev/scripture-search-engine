@@ -10,6 +10,7 @@
  */
 
 import type { Reason } from './reasons/types.js';
+import type { ReferenceSuggestion } from './reference/reference.js';
 
 export type ContentScalar = string | number | boolean | null | ArrayBuffer | ArrayBufferView;
 
@@ -74,7 +75,18 @@ export interface DiscoveryResult {
 
 export type ResearchOutcome =
   | { readonly kind: 'reference'; readonly passage: ScripturePassage }
-  | { readonly kind: 'invalid-reference'; readonly query: string }
+  | {
+      readonly kind: 'invalid-reference';
+      readonly query: string;
+      /**
+       * Additive (0.11.0/QR-4): a cited did-you-mean on the dead end — the
+       * unique in-policy near-miss book, the validated reference it implies,
+       * and the edit distance that justifies the guess. Suggestion only:
+       * the engine NEVER silently opens a guessed passage; consumers render
+       * it as a question ("did you mean Philippians 4:13?").
+       */
+      readonly suggestion?: ReferenceSuggestion;
+    }
   | {
       readonly kind: 'discovery';
       readonly query: string;
@@ -95,7 +107,12 @@ export interface ConceptMatch {
 /** `engine.passage()` — a lookup, with invalid references typed rather than thrown. */
 export type PassageResult =
   | ({ readonly kind: 'passage'; readonly passage: ScripturePassage } & ResultIdentity)
-  | ({ readonly kind: 'invalid-reference'; readonly query: string } & ResultIdentity);
+  | ({
+      readonly kind: 'invalid-reference';
+      readonly query: string;
+      /** Additive (0.11.0/QR-4): see ResearchOutcome's invalid-reference. */
+      readonly suggestion?: ReferenceSuggestion;
+    } & ResultIdentity);
 
 /**
  * `engine.related()` — what a curated source connects to a passage.
@@ -112,7 +129,12 @@ export type RelatedResult =
       readonly concepts: readonly ConceptMatch[];
       readonly results: readonly DiscoveryResult[];
     } & ResultIdentity)
-  | ({ readonly kind: 'invalid-reference'; readonly query: string } & ResultIdentity);
+  | ({
+      readonly kind: 'invalid-reference';
+      readonly query: string;
+      /** Additive (0.11.0/QR-4): see ResearchOutcome's invalid-reference. */
+      readonly suggestion?: ReferenceSuggestion;
+    } & ResultIdentity);
 
 /**
  * Multi-field input for `engine.forSong()`.

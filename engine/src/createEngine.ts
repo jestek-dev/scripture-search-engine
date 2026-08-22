@@ -455,7 +455,11 @@ export async function createEngine(
       const trimmed = reference.trim();
       const attempt = await repository.resolveReference(trimmed);
       if (attempt.kind !== 'resolved') {
-        return { kind: 'invalid-reference', query: trimmed, ...identity };
+        // Same posture as passage(): lookups never fall through, and the
+        // did-you-mean citation travels when one validated.
+        return attempt.kind === 'invalid-reference' && attempt.suggestion
+          ? { kind: 'invalid-reference', query: trimmed, suggestion: attempt.suggestion, ...identity }
+          : { kind: 'invalid-reference', query: trimmed, ...identity };
       }
       const resolved = attempt.reference;
 
@@ -548,7 +552,23 @@ export async function createEngine(
         };
       }
       if (attempt.kind === 'invalid-reference') {
-        return { kind: 'invalid-reference', query: trimmed, ...identity };
+        // Bare-number shapes with no resolving book and no citable
+        // suggestion fall through to discovery (0.11.0/QR-4, J36):
+        // "plans 29 11" is a Jeremiah 29:11 memory query, and dead-ending it
+        // served nobody. Explicit-separator queries state reference intent
+        // and stay typed invalid, carrying the did-you-mean when one
+        // validated (suggestion only — never a silently opened guess, J35).
+        if (attempt.fallthroughToDiscovery) {
+          return {
+            kind: 'discovery',
+            query: trimmed,
+            results: await discover(trimmed),
+            ...identity,
+          };
+        }
+        return attempt.suggestion
+          ? { kind: 'invalid-reference', query: trimmed, suggestion: attempt.suggestion, ...identity }
+          : { kind: 'invalid-reference', query: trimmed, ...identity };
       }
 
       return { kind: 'discovery', query: trimmed, results: await discover(trimmed), ...identity };
@@ -604,7 +624,11 @@ export async function createEngine(
           ...identity,
         };
       }
-      return { kind: 'invalid-reference', query: trimmed, ...identity };
+      // A lookup has nothing to fall through to, so every non-resolution is
+      // typed invalid here — but the did-you-mean citation still travels.
+      return attempt.kind === 'invalid-reference' && attempt.suggestion
+        ? { kind: 'invalid-reference', query: trimmed, suggestion: attempt.suggestion, ...identity }
+        : { kind: 'invalid-reference', query: trimmed, ...identity };
     },
 
     related: relatedFor,

@@ -52,11 +52,17 @@ export {
 } from './tokenizer/index.js';
 
 export {
+  damerauLevenshtein,
+  editDistanceBudget,
   normalizeBookAlias,
   resolveReference,
   resolveReferenceAttempt,
+  SUGGESTION_EDIT1_MAX_KEY_LENGTH,
+  SUGGESTION_MIN_KEY_LENGTH,
+  type BookAliasEntry,
   type ReferenceResolutionAttempt,
   type ReferenceResolver,
+  type ReferenceSuggestion,
   type ResolvedBook,
   type ResolvedReference,
 } from './reference/reference.js';

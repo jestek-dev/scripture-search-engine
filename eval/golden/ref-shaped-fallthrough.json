@@ -1,6 +1,6 @@
 {
   "id": "ref-shaped-fallthrough",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Policy fixture for the bare-number over-capture (audit overview root cause 2): \"plans 29 11\" — Jeremiah 29:11's most famous phrase — and \"plans 29\" both dead-end as INVALID-REFERENCE today because the grammar captures bare-number shapes with no resolving book. Recorded here so the behavior flip is auditable.",
     "Stays PENDING until QR-4: the fallthrough policy (bare-number shapes with no resolving book and no unique suggestion fall through to discovery) is decided and ratified there, not here. This fixture transcribes the plan's recommended outcome and is activated only by QR-4's deciding commit."

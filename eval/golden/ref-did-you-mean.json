@@ -1,6 +1,6 @@
 {
   "id": "ref-did-you-mean",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Cited did-you-mean fixture for QR-4 (P5.3): an un-curated book misspelling must dead-end WITH guidance, never empty-handed. The suggestion is a citation on the invalid-reference outcome — suggestion only, NEVER a silently opened guessed passage (J35): curated aliases auto-resolve, edit-distance matches only suggest.",
     "\"filipians\" is the plan-named example: distance 2 from QR-3's curated \"Philipians\" row under the ONE edit-policy table (key length 9 -> ED 2) — one more reason QR-3 landed first. Pinned in both the colon form and QR-4's space-separated form.",

@@ -1,6 +1,6 @@
 {
   "id": "ref-bare-number-fallthrough",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Companion to ref-shaped-fallthrough for the J36 bare-number flip (QR-4/P5.3): bare-number shapes with no resolving book and no unique in-policy suggestion fall through to discovery instead of dead-ending as invalid-reference. This fixture pins the two shapes ref-shaped-fallthrough does not cover.",
     "\"3 16\" — an all-numeric pair with no book text at all — is invalid-reference today; after the flip it must reach discovery and must NEVER be captured as a resolved reference (there is no book to resolve; a machine-guessed book here would be the exact harm J35 forbids).",

@@ -10,6 +10,7 @@
 import {
   normalizeBookAlias,
   resolveReferenceAttempt,
+  type BookAliasEntry,
   type ReferenceResolver,
   type ResolvedBook,
   type ResolvedReference,
@@ -112,6 +113,16 @@ export interface CorpusMeta {
 export class CorpusRepository implements ReferenceResolver {
   constructor(private readonly database: ContentQueryPort) {}
 
+  /**
+   * The alias vocabulary for the reference did-you-mean (0.11.0/QR-4),
+   * fetched through the port once per repository instance and cached: ~270
+   * rows that cannot change under a running engine (the artifact is
+   * immutable), so re-reading them per query would be waste, and caching
+   * keeps the engine's no-I/O covenant intact — the ONE read still goes
+   * through ContentQueryPort.
+   */
+  private bookAliasCache: readonly BookAliasEntry[] | null = null;
+
   async close(): Promise<void> {
     await this.database.close();
   }
@@ -168,6 +179,23 @@ export class CorpusRepository implements ReferenceResolver {
       [bookId, chapter, verse],
     );
     return result.rows.length > 0;
+  }
+
+  async listBookAliases(): Promise<readonly BookAliasEntry[]> {
+    if (this.bookAliasCache) return this.bookAliasCache;
+    const result = await this.database.execute(
+      `SELECT a.alias_key AS aliasKey, b.id AS bookId, b.name AS bookName,
+              b.chapter_count AS chapterCount
+       FROM book_aliases a JOIN books b ON b.id = a.book_id
+       ORDER BY a.alias_key`,
+    );
+    this.bookAliasCache = result.rows.map((row) => ({
+      aliasKey: str(row, 'aliasKey'),
+      bookId: num(row, 'bookId'),
+      bookName: str(row, 'bookName'),
+      chapterCount: num(row, 'chapterCount'),
+    }));
+    return this.bookAliasCache;
   }
 
   async resolveReference(input: string) {
