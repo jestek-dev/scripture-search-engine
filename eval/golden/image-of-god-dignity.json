@@ -1,0 +1,42 @@
+{
+  "id": "image-of-god-dignity",
+  "query": "human dignity",
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22). Second",
+    "fixture for the image-of-god pack: the ethical register ('human",
+    "dignity') that the doctrine grounds - a query no current concept",
+    "answers (identity-in-christ is the believer's self-worth register,",
+    "deliberately distinct; the Genesis review split them).",
+    "",
+    "The sharpest dignity proof-text is Gen 9:6 ('for God made man in his",
+    "own image' as the ground of the bloodshed prohibition) - OUTSIDE the",
+    "fixture corpus, so it cannot be asserted; corpus-extension request in",
+    "the pack notes (Genesis 9). Until then the charter text carries the",
+    "assertion. withinTop 5 because the query has no lexical overlap with",
+    "the passage - the ranking is pure concept-anchor work, competing with",
+    "whatever ranks lexically for 'human'/'dignity' tokens.",
+    "",
+    "'value of human life' was considered as an additionalQuery and left",
+    "out: it shares only the token 'human' with the lexicon entry, so",
+    "whether it fires the concept depends on matcher semantics this draft",
+    "has not measured - add it only after a gauntlet run shows it reaches",
+    "the anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 1:26-27",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Made in God's image"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Genesis 5:1-3",
+    "Colossians 3:10"
+  ],
+  "coversConcepts": [
+    "image-of-god"
+  ]
+}

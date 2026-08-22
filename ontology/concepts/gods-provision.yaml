@@ -33,6 +33,25 @@ lexicon:
   - give us this day our daily bread
   - my god shall supply all your needs
   - seek first the kingdom of god
+  # Famine/scarcity extension (Genesis-pilot round, 2026-08-22). The
+  # Genesis doc: "gods-provision covers the answer but not the situation
+  # query." Genesis famine refs (26:1; 41:53-57; 42:5; 47:13) are outside
+  # the fixture corpus; the situation queries ride the existing in-corpus
+  # anchors (Matt 6 / Ps 23 / Ps 34). WATCHLIST DISCIPLINE (this pack
+  # anchors Phil 4:19): none of these entries speaks a
+  # materialFrameKeyword — famine/scarcity/resources are situation words,
+  # not wealth-frame words; verified against the §3 keyword list and the
+  # ten prosperity-* fixture queries (zero shared tokens).
+  # "seasons of scarcity" (not "times of...") on review evidence: dropping
+  # the `time` token cuts the batch-tightest G4 ratio vs god-of-all-comfort
+  # from 0.40 to ~0.33.
+  - famine in the land
+  - seasons of scarcity
+  - when resources run out
+  # Bare subject word, deliberate (rest-for-the-weary precedent: the word
+  # IS the situation; "famine in the bible" and bare "famine" are how
+  # people search it). One-token discount applies.
+  - famine
 anchors:
   # "But seek first God's Kingdom and his righteousness; and all these
   # things will be given to you as well." — read with 6:25-32: food and

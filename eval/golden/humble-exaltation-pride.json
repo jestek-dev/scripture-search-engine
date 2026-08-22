@@ -1,0 +1,53 @@
+{
+  "id": "humble-exaltation-pride",
+  "query": "pride",
+  "additionalQueries": [
+    "god resists the proud"
+  ],
+  "status": "active",
+  "note": [
+    "EXTENSION FIXTURE (Genesis-pilot round, drafted 2026-08-22) — exercises",
+    "the approved pride extension of humble-exaltation (2 lexicon entries, no",
+    "anchor changes). PENDING per fixtures-first; flip active with the patch.",
+    "",
+    "Measured gap: 'pride' has no curated target today. In-corpus lexical",
+    "hits for the token are descriptive scatter (Ps 10:4, Ps 73:6,",
+    "Ezek 33:28) — no teaching chip; and the teaching verses (Jas 4:6,",
+    "1 Pet 5:5 'God resists the proud') tokenize to `proud`, which the query",
+    "token `pride` cannot reach lexically. Only the concept rung closes this.",
+    "",
+    "Guard (same as humility-word.json): sense-inversion-promotion.json must",
+    "keep 1 Pet 5:6 top for 'promotion' — this patch adds no anchors and",
+    "changes no weights, and neither new entry shares a token with that",
+    "query, so the firing set for 'promotion' is unchanged.",
+    "",
+    "G8 guard (the pack's own history): the dropped walk-humbly entries died",
+    "on the ot-prophets-justly probe ('do justly love mercy walk humbly').",
+    "Verified with the engine tokenizer 2026-08-22: neither 'pride' {pride}",
+    "nor 'god resists the proud' {god, resist, proud} fires on that probe or",
+    "any of the 25 committed probes.",
+    "",
+    "requiredReasonFamily is concept_anchor: James 4:10 contains neither",
+    "'pride' nor 'proud', so only the curated anchor can put it there.",
+    "",
+    "withinTop 5, not 3 (integration measurement 2026-08-22): for 'god",
+    "resists the proud' the top 2 are Jas 4:6 and 1 Pet 5:5 - the verses",
+    "being quoted, on exact phrase - then 1 Pet 5:6 (#3) and James 4:10",
+    "(#4) with this Theme chip. The quote query getting the quoted verses",
+    "first is correct; 'pride' still holds James 4:10 in the top 3."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 4:10",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God exalts the humble"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 5:6",
+    "Micah 6:8",
+    "Romans 12:3"
+  ]
+}
