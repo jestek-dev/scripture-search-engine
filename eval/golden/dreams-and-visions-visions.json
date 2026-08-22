@@ -1,0 +1,45 @@
+{
+  "id": "dreams-and-visions-visions",
+  "query": "visions",
+  "additionalQueries": [
+    "dreams and visions"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept round, drafted 2026-08-22). Second",
+    "fixture for dreams-and-visions: the visions register. PENDING until the",
+    "pack lands.",
+    "",
+    "The preferredOrder entry follows the sense-inversion-provision ruling",
+    "(Jesse, 2026-08-15): Zechariah 13:4 — 'the prophets will each be ashamed",
+    "of his vision when he prophesies' — is an honest lexical match for the",
+    "query in its OPPOSITE frame: the purging of false vision-claims. It is",
+    "demoted, never forbidden; it may rank (and its presence is part of the",
+    "pack's doctrinal honesty — Scripture's own counter-witness against",
+    "manufactured visions), just never above the Joel promise. Both",
+    "references are in the fixture corpus, so the pair cannot pass vacuously.",
+    "",
+    "Acts 16:9 is asserted without a reason requirement at withinTop 5: it",
+    "matches 'vision' lexically twice (16:9, 16:10) AND carries the Torrey",
+    "VISIONS anchor, and the fixture should not dictate which rung serves it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 2:17",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Dreams and visions"
+    },
+    {
+      "reference": "Acts 16:9",
+      "withinTop": 5
+    }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "Acts 2:17",
+      "below": "Zechariah 13:4"
+    }
+  ]
+}

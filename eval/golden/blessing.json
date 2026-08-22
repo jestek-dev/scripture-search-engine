@@ -1,0 +1,46 @@
+{
+  "id": "blessing",
+  "query": "gods blessing",
+  "additionalQueries": [
+    "what does it mean to be blessed",
+    "blessed to be a blessing"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22).",
+    "Fixtures-first for the new blessing concept; PENDING until the pack",
+    "lands, then flip active in the same PR (pending fixtures do not count",
+    "for G3 coverage). Intended path: eval/golden/blessing.json.",
+    "",
+    "The pack's weight-1.0 anchor (Gen 12:2-3) is outside the fixture",
+    "corpus, so the coverage assertion rides Eph 1:3 (weight 0.95, in",
+    "corpus). requiredReasonFamily is concept_anchor: Eph 1:3 contains",
+    "'blessed'/'blessing' lexically, so the assertion must be that the",
+    "curated anchor put it there.",
+    "",
+    "Known risk, recorded: identity-in-christ also anchors Eph 1:3 (its",
+    "'every spiritual blessing' lexicon entry shares the token 'blessing'",
+    "with this query). If both concepts fire and the reason chip reports",
+    "the other theme, this assertion fails honestly - that is a real",
+    "explanation bug to fix, not a fixture to loosen (CLAUDE.md rule 5)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 1:3",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Blessing"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 5:3-12",
+    "Psalms 1:1-3",
+    "Galatians 3:8-9",
+    "Psalms 34:8",
+    "Genesis 1:28"
+  ],
+  "coversConcepts": [
+    "blessing"
+  ]
+}

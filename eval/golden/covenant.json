@@ -1,0 +1,43 @@
+{
+  "id": "covenant",
+  "query": "the new covenant",
+  "additionalQueries": [
+    "what is a covenant",
+    "covenant promises",
+    "covenant in the bible"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22).",
+    "Fixtures-first for the new covenant concept; PENDING until the pack",
+    "lands, then flip active in the same PR (pending fixtures do not count",
+    "for G3 coverage). Intended path: eval/golden/covenant.json.",
+    "",
+    "requiredReasonFamily is concept_anchor: Jer 31:31 contains 'new",
+    "covenant' lexically, so the assertion must be that the curated anchor",
+    "put it there, not token luck.",
+    "",
+    "Corpus note: the Genesis covenant texts (Gen 9, 15, 17) are outside",
+    "the fixture corpus, so the coverage assertion rides the in-corpus",
+    "renewal text. See the pack notes for the corpus-extension request."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 31:31-34",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Covenant"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 22:20",
+    "Hebrews 12:24",
+    "Hebrews 13:20",
+    "Galatians 3:15-18",
+    "Deuteronomy 7:9"
+  ],
+  "coversConcepts": [
+    "covenant"
+  ]
+}

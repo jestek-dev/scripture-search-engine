@@ -1,0 +1,52 @@
+{
+  "id": "gods-provision-famine",
+  "query": "famine in the land",
+  "additionalQueries": [
+    "famine",
+    "times of scarcity",
+    "when resources run out"
+  ],
+  "status": "pending",
+  "note": [
+    "EXTENSION FIXTURE (Genesis-pilot round, drafted 2026-08-22) — exercises",
+    "the approved famine-and-scarcity extension of gods-provision (4 lexicon",
+    "entries, no anchor changes). PENDING per fixtures-first; flip active",
+    "with the patch.",
+    "",
+    "Measured gap (the Genesis doc's own words): gods-provision covers the",
+    "answer but not the situation query. Today 'famine in the land' reaches",
+    "Ruth 1:1 and Ps 37:19 lexically — honest narrative/promise hits — but",
+    "no curated provision teaching. The Genesis famine refs (26:1, 41:53-57,",
+    "42:5, 47:13) are all out of the fixture corpus, so the assertion rides",
+    "the pack's existing in-corpus anchors.",
+    "",
+    "Ruth 1:1 ('there was a famine in the land') is EXPECTED to rank high on",
+    "its exact phrase — that is honest and this fixture neither forbids nor",
+    "demotes it: a famine narrative is not an inverted frame. withinTop 5,",
+    "not 3, leaves it room to lead.",
+    "",
+    "DOCTRINAL GUARD (the pack anchors watchlisted Phil 4:19): verified that",
+    "none of the four new entries speaks a materialFrameKeyword (prosperity,",
+    "wealth, success, money, favor, increase, breakthrough, abundance,",
+    "promotion, financial), and no prosperity-* fixture query shares a token",
+    "with them — the G4 pairing scan stays at zero flags and the",
+    "prosperity-* mustNotRank fixtures stay green.",
+    "",
+    "requiredReasonFamily is concept_anchor: Matt 6:31-33 contains no famine",
+    "or scarcity vocabulary, so only the curated anchor can put it there."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 6:31-33",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God provides"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 34:10",
+    "Psalms 23:1",
+    "Matthew 6:26"
+  ]
+}

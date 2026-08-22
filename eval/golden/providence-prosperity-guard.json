@@ -1,0 +1,43 @@
+{
+  "id": "providence-prosperity-guard",
+  "query": "gods plan in my circumstances",
+  "additionalQueries": [
+    "god is in control of my situation",
+    "why did god allow this to happen"
+  ],
+  "status": "pending",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family; Genesis-pilot cluster",
+    "draft, 2026-08-22). Providence is a prosperity MAGNET topic: 'God is in",
+    "control of my circumstances' is one step from 'God will engineer my",
+    "increase'. The mustNotRank list is the point — each entry is the classic",
+    "transactional proof-text a prosperity frame would recruit for a",
+    "sovereignty query, and every forbidden verse IS in the fixture corpus",
+    "(Malachi 3, Mark 11, Philippians 4 chapters all present), precisely so",
+    "the assertion can fail. A mustNotRank against an absent verse passes",
+    "vacuously. The verses are Scripture and rank honestly elsewhere",
+    "(tithing; prayer; gods-provision anchors Phil 4:19 in its honest frame);",
+    "what is forbidden is the query-to-verse pairing. Criteria:",
+    "docs/DOCTRINAL-BASIS.md section 3.",
+    "",
+    "No expectedTop: this fixture guards, the two sibling providence fixtures",
+    "assert. The providence pack itself speaks no materialFrameKeyword and",
+    "anchors no watchlist ref, so the G4 pairing scan stays at zero flags;",
+    "this fixture is the G3 backstop for the query side."
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Malachi 3:10",
+      "why": "Tithe-transaction proof-text: 'bring the whole tithe ... I will pour out a blessing' recruited as the mechanism by which God's plan for my circumstances is unlocked — the seed-faith frame DOCTRINAL-BASIS.md section 3 excludes. The verse ranks honestly for tithing queries."
+    },
+    {
+      "reference": "Mark 11:24",
+      "why": "'Whatever you ask believing, you will receive' recruited as a claim-it lever over circumstances — sovereignty repackaged as a technique the searcher operates. DOCTRINAL-BASIS.md section 3: God's power is not a technique."
+    },
+    {
+      "reference": "Philippians 4:19",
+      "why": "'My God will supply every need of yours' recruited as an unconditional circumstances-will-improve guarantee for a why-is-this-happening query. Honest as God-supplies-needs (gods-provision anchors it in that frame); forbidden as an outcome guarantee (DOCTRINAL-BASIS.md section 3)."
+    }
+  ]
+}

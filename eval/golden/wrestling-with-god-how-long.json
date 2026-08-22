@@ -1,0 +1,39 @@
+{
+  "id": "wrestling-with-god-how-long",
+  "query": "how long o lord",
+  "additionalQueries": [
+    "angry at god",
+    "when god is silent"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept round, drafted 2026-08-22). Second",
+    "fixture for wrestling-with-god: the lament-opener and dark-night",
+    "registers. PENDING until the pack lands.",
+    "",
+    "'how long o lord' is Psalm 13:1's own wording (WEB: 'How long, LORD?'),",
+    "so the verse should rank lexically regardless; the assertion is that the",
+    "curated chip carries the reason — a wrestler typing the lament opener",
+    "must see the theme named, not just a text hit (CLAUDE.md #5:",
+    "explanations are part of the contract).",
+    "",
+    "'angry at god' and 'when god is silent' have NO honest lexical rung in",
+    "the corpus; they reach the complaint psalms only through this concept.",
+    "Psalms 88:13-14 in alsoAcceptable, not expectedTop: hope-in-despair's",
+    "precedent holds its weight at the validation level (0.6), and this",
+    "fixture must not force the darkest psalm to lead."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 13:1-2",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Wrestling with God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 88:13-14",
+    "Psalms 73:16-17"
+  ]
+}

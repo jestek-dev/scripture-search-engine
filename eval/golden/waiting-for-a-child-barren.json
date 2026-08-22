@@ -1,0 +1,41 @@
+{
+  "id": "waiting-for-a-child-barren",
+  "query": "barren",
+  "additionalQueries": [
+    "childless"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept batch, drafted 2026-08-22). The",
+    "text's own vocabulary for the ache ('barren', 'childless' — bare-word",
+    "entries in the pack, one-token discount applies).",
+    "",
+    "Isaiah 54:1 is asserted: IN the fixture corpus and lexically direct",
+    "('Sing, barren, you who didn't give birth!'). Its anchor comment and",
+    "the pack header carry the guardrail: the barren one addressed is Zion",
+    "(Paul reads it of the Jerusalem above, Gal 4:27), so the comfort is",
+    "real but does not run through promised conception — the only shape of",
+    "comfort this pack may give. The anchor weight is deliberately low",
+    "(0.65) so the narrative anchors lead once the corpus extension lands;",
+    "this fixture asserts presence in the top, not the pack's #1.",
+    "",
+    "Isa 54's deserted-wife verses (54:5-6, 54:10) belong to",
+    "betrayal-and-marriage-crisis; the chapter is shared honestly and this",
+    "fixture asserts nothing against those rows."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 54:1",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Waiting for a child"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Genesis 16:1-2"
+  ],
+  "coversConcepts": [
+    "waiting-for-a-child"
+  ]
+}

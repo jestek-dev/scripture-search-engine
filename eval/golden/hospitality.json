@@ -1,0 +1,42 @@
+{
+  "id": "hospitality",
+  "query": "hospitality",
+  "additionalQueries": [
+    "be hospitable",
+    "practice hospitality"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept batch, drafted 2026-08-22).",
+    "Fixtures-first for the new `hospitality` concept; PENDING until the",
+    "pack lands, then flip active in the same PR.",
+    "",
+    "Romans 12:13 is asserted: IN the fixture corpus, carries 'hospitality'",
+    "verbatim in WEB ('given to hospitality'), and only this pack anchors",
+    "it. requiredReasonFamily is concept_anchor: because the word is",
+    "lexically present, the assertion must be that the curated anchor put",
+    "it there with this pack's reason, not token overlap.",
+    "",
+    "The command trio (Rom 12:13, Heb 13:2, 1 Pet 4:9) plus Lev 19:33-34",
+    "and Job 31:32 are all in corpus; only the narratives (Gen 18, Matt 25,",
+    "3 John, Luke 14, Isa 58) are not — see the pack's corpus-needs note."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 12:13",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hospitality"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 13:2",
+    "1 Peter 4:9",
+    "Leviticus 19:33-34",
+    "Job 31:32"
+  ],
+  "coversConcepts": [
+    "hospitality"
+  ]
+}

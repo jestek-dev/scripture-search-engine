@@ -1,0 +1,47 @@
+{
+  "id": "testing",
+  "query": "testing of your faith",
+  "additionalQueries": [
+    "god is testing me",
+    "why does god test us"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept batch, drafted 2026-08-22).",
+    "Fixtures-first for the new `testing` concept; PENDING until the pack",
+    "lands, then flip active in the same PR (pending fixtures do not count",
+    "for G3 coverage).",
+    "",
+    "1 Peter 1:6-7 is the asserted anchor because the concept's namesake",
+    "text (Genesis 22) is NOT in the fixture corpus — see the pack's",
+    "corpus-needs note (minimal extension request: Genesis 22). WEB Jas 1:3",
+    "reads 'the testing of your faith' verbatim, so James 1:2-4 may honestly",
+    "rank alongside (remembered-joy-in-trials' anchor); it is alsoAcceptable,",
+    "never displaced. requiredReasonFamily is concept_anchor: 1 Pet 1:7",
+    "contains 'tested' lexically, so the assertion must be that the curated",
+    "anchor put it there, with this pack's reason.",
+    "",
+    "suffering-for-christ also anchors 1 Pet 1:6-7 (fiery-trial register),",
+    "but none of these queries fires that concept's lexicon, so the",
+    "concept_anchor reason for 'Theme: God tests his people' must be present."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Peter 1:6-7",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God tests his people"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "James 1:2-4",
+    "Zechariah 13:9",
+    "Malachi 3:2-3",
+    "Hebrews 11:17",
+    "Job 1:8-12"
+  ],
+  "coversConcepts": [
+    "testing"
+  ]
+}

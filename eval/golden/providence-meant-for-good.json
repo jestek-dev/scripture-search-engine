@@ -1,0 +1,43 @@
+{
+  "id": "providence-meant-for-good",
+  "query": "god meant it for good",
+  "additionalQueries": [
+    "you meant evil against me",
+    "god used it for good"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (cluster draft, 2026-08-22). The Joseph-confession",
+    "query. THE answer is Genesis 50:20 ('you meant evil against me, but God",
+    "meant it for good'), which is NOT in the fixture corpus — Genesis 45 and",
+    "50 are requested as a minimal corpus extension in the pack's notes.md.",
+    "Asserting it today would be an assertion against an absent verse.",
+    "",
+    "Until the extension lands, the assert rides Philippians 1:12 — the same",
+    "Torrey outline row ('Overruling wicked designs for good :: Gen 45:5-7,",
+    "Gen 50:20, Php 1:12') and the same shape of claim: hostile events turned",
+    "to good. When Gen 50 enters the corpus, move the primary assert to",
+    "Genesis 50:20 and drop Phil 1:12 to alsoAcceptable, in the same PR as",
+    "the corpus change.",
+    "",
+    "Romans 8:28 is alsoAcceptable, not asserted: it is",
+    "remembered-all-things-for-good's single narrow anchor and its ranking",
+    "here (shared 'good' vocabulary) would be honest."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 1:12",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's providence"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 8:28",
+    "Psalms 33:10-11"
+  ],
+  "coversConcepts": [
+    "providence"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "sabbath-rest",
+  "query": "sabbath",
+  "additionalQueries": [
+    "what is the sabbath",
+    "remember the sabbath",
+    "day of rest"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (cluster draft, 2026-08-22). Fixtures-first for the",
+    "new sabbath-rest concept; PENDING until the pack lands, then flip active",
+    "in the same PR (pending fixtures do not count for G3 coverage).",
+    "",
+    "The primary assert is Genesis 2:1-3, deliberately: the WEB text of Gen 2",
+    "says 'seventh day', never 'sabbath', so no lexical rung can put the origin",
+    "text in front of this query — only the curated anchor can, which is what",
+    "requiredReasonFamily: concept_anchor asserts. It also avoids reason-label",
+    "arbitration on Exodus 20:8-11, which sits inside the-ten-commandments'",
+    "Exodus 20:1-17 anchor range; Exod 20 stays alsoAcceptable.",
+    "",
+    "'day of rest' is the one query here sharing the token `rest` with",
+    "rest-for-the-weary's territory; its Matt 11:28-30 ranking for that query",
+    "would be honest, hence no mustNotRank — the assert is only that the",
+    "sabbath texts surface too."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 2:1-3",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Sabbath rest"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Exodus 20:8-11",
+    "Hebrews 4:9-11",
+    "Leviticus 19:3"
+  ],
+  "coversConcepts": [
+    "sabbath-rest"
+  ]
+}

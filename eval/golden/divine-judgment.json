@@ -1,0 +1,48 @@
+{
+  "id": "divine-judgment",
+  "query": "gods judgment on sin",
+  "additionalQueries": [
+    "gods judgment",
+    "the day of judgment",
+    "gods wrath"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22).",
+    "Fixtures-first for the new divine-judgment concept; PENDING until the",
+    "pack lands, then flip active in the same PR (pending fixtures do not",
+    "count for G3 coverage). Intended path:",
+    "eval/golden/divine-judgment.json.",
+    "",
+    "Rom 2:5-11 is the pack's highest-weighted IN-CORPUS anchor (the",
+    "narrative texts - Gen 6, 18, 19 - are outside the corpus, so the",
+    "coverage assertion rides the righteous-judgment principle text).",
+    "requiredReasonFamily is concept_anchor: the passage contains",
+    "'judgment'/'wrath' lexically, so the assertion must be that the",
+    "curated anchor put it there.",
+    "",
+    "Register check: 'the day of judgment' rides as additionalQuery and",
+    "must NOT surface judgment-seat-of-christ's passages as the required",
+    "theme - the two packs share only the token 'judgment' and no phrase,",
+    "so the concept match should be unambiguous; if the gauntlet shows",
+    "otherwise, that is a G4-adjacent finding to report, not to paper over."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 2:5-11",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's judgment"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 17:30-31",
+    "Nahum 1:2-6",
+    "Psalms 9:7-8",
+    "Luke 17:26-30"
+  ],
+  "coversConcepts": [
+    "divine-judgment"
+  ]
+}

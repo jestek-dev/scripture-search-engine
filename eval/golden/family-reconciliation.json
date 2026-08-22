@@ -1,0 +1,42 @@
+{
+  "id": "family-reconciliation",
+  "query": "estranged from my family",
+  "additionalQueries": [
+    "family estrangement",
+    "healing a broken family",
+    "broken family relationships"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (cluster draft, 2026-08-22). Fixtures-first for",
+    "the new family-reconciliation concept; PENDING until the pack lands,",
+    "then flip active in the same PR (pending fixtures do not count for G3",
+    "coverage).",
+    "",
+    "Primary assert Luke 15:11-32: the WEB parable text contains no",
+    "estrangement vocabulary ('estranged', 'family' do not appear in it), so",
+    "no lexical rung reaches it for these queries — only the curated anchor",
+    "can, which is what requiredReasonFamily: concept_anchor asserts.",
+    "",
+    "The Genesis reconciliation scenes (33:4, 45:1-15, 50:15-21) are the",
+    "pack's other defining anchors but are NOT in the fixture corpus —",
+    "asserting them would be vacuous; the corpus extension is requested in",
+    "the pack's notes.md and this fixture should gain a Genesis",
+    "alsoAcceptable entry in the same PR that extends the corpus."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 15:11-32",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Family reconciliation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 5:23-24"
+  ],
+  "coversConcepts": [
+    "family-reconciliation"
+  ]
+}

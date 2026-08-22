@@ -1,0 +1,42 @@
+{
+  "id": "blessing-family",
+  "query": "bless my family",
+  "additionalQueries": [
+    "fathers blessing"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22). Second",
+    "fixture for the blessing pack: the family register the Genesis pilot",
+    "named ('bless my family', 'father's blessing').",
+    "",
+    "The honest top for this register is Gen 48:15-16 (Jacob blessing",
+    "Ephraim and Manasseh) - OUTSIDE the fixture corpus, so it cannot be",
+    "asserted. The in-corpus anchors that fire for the concept are the",
+    "general blessing texts; Gen 1:28 ('God blessed them... be fruitful,",
+    "multiply') is the in-corpus anchor nearest the family register, but at",
+    "weight 0.8 it sits under Eph 1:3 / Matt 5 / Ps 1, so the assertion",
+    "rides Eph 1:3 withinTop 5 with the family texts in the corpus-",
+    "extension request (pack notes: Genesis 48).",
+    "",
+    "If the Genesis 48 extension is approved, re-point expectedTop at",
+    "Genesis 48:15-16 and move Eph 1:3 to alsoAcceptable."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 1:3",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Blessing"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Genesis 1:28",
+    "Psalms 1:1-3",
+    "Matthew 5:3-12"
+  ],
+  "coversConcepts": [
+    "blessing"
+  ]
+}

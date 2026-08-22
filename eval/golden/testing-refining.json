@@ -1,0 +1,38 @@
+{
+  "id": "testing-refining",
+  "query": "refined by fire",
+  "additionalQueries": [
+    "refining",
+    "the refiners fire",
+    "tested by fire"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept batch, drafted 2026-08-22). The",
+    "refining register of the `testing` pack — the vocabulary no existing",
+    "concept speaks. Zechariah 13:9 is asserted: it is IN the fixture corpus",
+    "and carries refine + test + fire lexically, so the assertion must be",
+    "that the curated anchor (not mere token overlap) put it top with this",
+    "pack's reason. For 'tested by fire', 1 Pet 1:7 ('tested by fire'",
+    "verbatim in WEB) may honestly lead — it is alsoAcceptable; withinTop 3",
+    "tolerates either ordering. Malachi 3:2-3 (the refiner's fire itself)",
+    "is alsoAcceptable rather than asserted so the fixture does not",
+    "over-constrain ordering among the pack's own anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Zechariah 13:9",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God tests his people"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Malachi 3:2-3",
+    "1 Peter 1:6-7"
+  ],
+  "coversConcepts": [
+    "testing"
+  ]
+}

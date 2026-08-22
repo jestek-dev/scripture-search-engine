@@ -1,0 +1,52 @@
+{
+  "id": "waiting-for-a-child",
+  "query": "struggling to conceive",
+  "additionalQueries": [
+    "waiting for a baby",
+    "infertility",
+    "praying for a baby"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept batch, drafted 2026-08-22).",
+    "Fixtures-first for the new `waiting-for-a-child` concept; PENDING",
+    "until the pack lands, then flip active in the same PR.",
+    "",
+    "Genesis 16:1-2 is asserted because it is the pack's only realistic",
+    "in-corpus anchor for these queries: the concept's true comfort texts",
+    "(1 Sam 1 Hannah, Ps 113:9, Gen 25:21, Gen 21:1-7, Luke 1) are ALL",
+    "outside the fixture corpus — see the corpus-needs request (minimal:",
+    "1 Samuel 1 + Psalm 113). Asserting the situation text is honest: the",
+    "searcher's first need is to find their ache IN the text at all.",
+    "",
+    "PASTORAL GUARD — the mustNotRank is the point. Mark 11:24 ('whatever",
+    "you pray and ask for, believe that you have received them') recruited",
+    "for an infertility query is the claim-a-baby guarantee this pack's",
+    "header forbids (DOCTRINAL-BASIS.md §3: God's power is not a",
+    "technique) — and 'praying for a baby' shares the pray token, so the",
+    "pairing is a live lexical risk, not a decoration. The verse is IN the",
+    "fixture corpus, so the guard cannot pass vacuously; it ranks honestly",
+    "for prayer queries, where the `prayer` concept anchors it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 16:1-2",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Waiting for a child"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 54:1"
+  ],
+  "mustNotRank": [
+    {
+      "reference": "Mark 11:24",
+      "why": "'Whatever you pray and ask for, believe that you have received them' recruited as a claim-it guarantee of a child for an infertility query — the prosperity-shaped wrong comfort DOCTRINAL-BASIS.md §3 excludes. Scripture records that God heard Hannah and Rachel; it nowhere promises every waiting couple a child. The verse ranks honestly for prayer queries."
+    }
+  ],
+  "coversConcepts": [
+    "waiting-for-a-child"
+  ]
+}

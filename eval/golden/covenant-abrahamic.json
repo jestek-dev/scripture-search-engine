@@ -1,0 +1,43 @@
+{
+  "id": "covenant-abrahamic",
+  "query": "abrahamic covenant",
+  "additionalQueries": [
+    "covenant with abraham"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22). Second",
+    "fixture for the covenant pack: the classic study query.",
+    "",
+    "The honest expectedTop for this query is Genesis 15 or 17 — both",
+    "OUTSIDE the fixture corpus (Genesis chapters present: 1,2,3,5,16), so",
+    "asserting them would fail structurally, and a mustNotRank on them",
+    "would pass vacuously. Galatians 3:15-18 is the in-corpus anchor that",
+    "reads the Abrahamic covenant forward ('the promises were spoken to",
+    "Abraham... a covenant confirmed beforehand by God in Christ') — a",
+    "defensible top for the query on this corpus. withinTop 5 because the",
+    "pack's higher-weighted anchors (Jer 31:31-34, Luke 22:20) also fire",
+    "for any covenant-concept query and may legitimately sit above it.",
+    "",
+    "If the corpus-extension request in the pack notes (Genesis 15 + 17)",
+    "is approved, re-point expectedTop at Genesis 15:7-18 and demote this",
+    "assertion to alsoAcceptable."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Galatians 3:15-18",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Covenant"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jeremiah 31:31-34",
+    "Deuteronomy 7:9",
+    "Hebrews 12:24"
+  ],
+  "coversConcepts": [
+    "covenant"
+  ]
+}

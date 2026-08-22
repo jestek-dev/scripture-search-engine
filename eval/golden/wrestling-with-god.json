@@ -1,0 +1,46 @@
+{
+  "id": "wrestling-with-god",
+  "query": "wrestling with god",
+  "additionalQueries": [
+    "struggling with god",
+    "jacob wrestling with the angel"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept round, drafted 2026-08-22).",
+    "Fixtures-first for the new wrestling-with-god concept; PENDING until the",
+    "pack lands, then flip active in the same PR (pending fixtures do not",
+    "count for G3 coverage).",
+    "",
+    "Measured gap: 'wrestling with god' has no lexical rung in the corpus at",
+    "all (Genesis 32 is not in web-subset and no in-corpus verse carries the",
+    "wrestle vocabulary in this sense) and no concept owns the intent.",
+    "",
+    "The concept's naming text (Gen 32:24-30, weight 1.0, Torrey PRAYER,",
+    "ANSWERS TO) is OUT of corpus — see notes.md for the minimal extension",
+    "request (Genesis 32:22-32). Until it lands, the G3 assertion rides the",
+    "highest-weighted IN-corpus anchor: Psalms 13:1-2, the canonical",
+    "complaint opener. When Gen 32 enters the corpus, add it to expectedTop",
+    "(withinTop 3) in the same PR rather than replacing this assertion.",
+    "",
+    "requiredReasonFamily is concept_anchor and must be: no lexical overlap",
+    "exists between the query and Psalm 13, so only the curated anchor can",
+    "put it there — this fixture measures the pack's entire effect."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 13:1-2",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Wrestling with God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 73:16-17",
+    "Psalms 88:13-14"
+  ],
+  "coversConcepts": [
+    "wrestling-with-god"
+  ]
+}

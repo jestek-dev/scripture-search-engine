@@ -1,0 +1,49 @@
+{
+  "id": "nations-and-peoples-all-nations",
+  "query": "all nations",
+  "additionalQueries": [
+    "every tribe and tongue",
+    "nations in the bible"
+  ],
+  "status": "pending",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept round, drafted 2026-08-22). Second",
+    "fixture for nations-and-peoples: the bare-word register ('all nations'",
+    "collapses to the single token `nation` under the tokenizer). PENDING",
+    "until the pack lands.",
+    "",
+    "The preferredOrder entry follows the sense-inversion-provision ruling",
+    "(Jesse, 2026-08-15): Psalms 9:17 — 'The wicked shall be turned back to",
+    "Sheol, even all the nations that forget God' — is an honest lexical",
+    "match for the query in its OPPOSITE frame: a nations-seeker served an",
+    "oath of judgment first. It is demoted, never forbidden; it may rank,",
+    "just never above the commission. Both references are in the fixture",
+    "corpus, so the pair cannot pass vacuously.",
+    "",
+    "Matthew 28:19 carries the assertion: 'make disciples of all nations' is",
+    "the strongest in-corpus pairing of lexical match and curated anchor for",
+    "this query. withinTop 5, not 3 — 'all nations' appears in many honest",
+    "verses (Ps 86:9 among them) and this fixture must not force a brittle",
+    "ordering between them."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 28:19",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Nations and peoples"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 86:9",
+    "Acts 17:26-27",
+    "Revelation 21:24-26"
+  ],
+  "preferredOrder": [
+    {
+      "above": "Matthew 28:19",
+      "below": "Psalms 9:17"
+    }
+  ]
+}
