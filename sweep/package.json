@@ -13,7 +13,9 @@
     "universe-freshness": "tsx src/universe/freshnessCli.ts",
     "derive-ring2": "tsx src/perturb/ring2Cli.ts",
     "select-seeds": "tsx src/paraphrase/seedsCli.ts",
-    "grade-l1": "tsx src/grade/layer1Cli.ts"
+    "grade-l1": "tsx src/grade/layer1Cli.ts",
+    "plan-episode": "tsx scripts/planEpisode.ts",
+    "agreement-report": "tsx scripts/agreementReport.ts"
   },
   "dependencies": {
     "@jestek-dev/scripture-artifact-client": "*",
