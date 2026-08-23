@@ -1,0 +1,108 @@
+# JUSTIFIED BY FAITH — doctrinal locator pack (Phase-4 item P4.1 / DG-2 /
+# audit th1+th1b, authored 2026-08-21 fixture-first:
+# eval/golden/justification-by-faith.json was committed pending-and-failing
+# before this file existed. Measured gap, both beds: bare "justification"
+# returned only passage_terms accidents in a flat 2.85 tie (Ps 40:9 leading
+# hermetically); "justified by faith" found the right verses by exact_phrase
+# alone — right passage, wrong reason, a covenant-5 failure. No concept
+# named the doctrine anywhere among 110.)
+#
+# Design: locates where Scripture states justification by faith and says
+# which source pairs each passage with the doctrine. It never adjudicates
+# between traditions' formulations (DOCTRINAL-BASIS §2 point 5 is the shared
+# core all three anchor congregations confess; §4 non-criteria untouched).
+# Label "Justified by faith" is the proposal riding the doctrinal-wave batch
+# sign-off (the fixture pins "Theme: Justified by faith"; a wording change
+# re-cuts the fixture in the same commit).
+#
+# Attribution rule applied (worklist P4.1): [torrey] ONLY where the verified
+# JUSTIFICATION BEFORE GOD outline (docs/research/torrey-topical/
+# torrey-miller-topics.json) lists the exact ref; everything else is
+# [editorial], with the outline's nearest corroboration noted where one
+# exists. Corpus-deferred to the re-pin payload (P4.15): Rom 3:21-26,
+# Rom 3:28, Rom 4:5, Gal 2:16 (Romans 3-4, Galatians 2 absent — re-verified).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist; no
+# materialFrameKeyword appears in this id, label, or lexicon.
+#
+# Lexicon collision check (G4): no phrase below normalizes to an existing
+# concept's phrase. Nearest neighbor is faith-and-works' "justified by
+# works" ({justifi, work} vs this pack's {justifi, faith}) — one shared
+# token, disjoint phrases, and the works DEBATE deliberately stays that
+# pack's. Every phrase is >= 2 significant tokens except the subject noun
+# "justification" (one WORD — not a multi-word collapse, so no
+# lexicon-inventory row is due under the P3.2 register).
+id: justification-by-faith
+label: Justified by faith
+lexicon:
+  # The doctrine's own summary phrase — audit query th1b, and Rom 5:1's
+  # exact wording (tokens: justifi, faith).
+  - justified by faith
+  # The subject noun — audit query th1. One word, so the bare query
+  # "justification" fires this concept authoritatively.
+  - justification
+  # The forensic phrasing modern translations and teaching use.
+  - declared righteous
+  # The plain-language register ("made right with God").
+  - made right with god
+  # The stopword-stripped form of the felt question "how can I be right
+  # with God" (tokens: right, god). Needed as its own entry: matching is
+  # full containment under the one shared tokenizer, and the question's
+  # tokens do not contain "made", so the fuller phrase above can never
+  # reach it (same surface-form doubling the asking-in-gods-will pack
+  # documents for "ask amiss"/"asking amiss").
+  - right with god
+anchors:
+  # "Being therefore justified by faith, we have peace with God through our
+  # Lord Jesus Christ" (WEB). The doctrine's summary sentence — the verse a
+  # searcher typing any of these phrasings should meet first.
+  # Torrey: JUSTIFICATION BEFORE GOD, "Is by faith alone."
+  - ref: Romans 5:1
+    sources: [torrey]
+    weight: 1.0
+  # "There is therefore now no condemnation to those who are in Christ
+  # Jesus" (WEB). What justification settles, in Romans' own summary. Also
+  # anchored in forgiveness-of-sins.yaml (editorial, the guilt-searcher
+  # register); here the claim is the doctrinal statement itself — two
+  # concepts, two different claims, deliberate cross-concept anchoring.
+  # Torrey lists 8:1 under CONDEMNATION, not the JUSTIFICATION outline, so
+  # this pairing is editorial per the attribution rule.
+  - ref: Romans 8:1
+    sources: [editorial]
+    weight: 0.9
+  # "Who could bring a charge against God's chosen ones? It is God who
+  # justifies. Who is he who condemns?" (WEB). The courtroom scene itself.
+  # Torrey: JUSTIFICATION BEFORE GOD, "Is the act of God" (8:33) and
+  # "Frees from condemnation" (8:33; 8:34) — both verses listed.
+  - ref: Romans 8:33-34
+    sources: [torrey]
+    weight: 0.85
+  # "the law has become our tutor to bring us to Christ, that we might be
+  # justified by faith" (WEB). The law's purpose stated against
+  # works-justification. Torrey lists Gal 3:24 under LAW OF GOD ("Designed
+  # to lead to Christ"), not the JUSTIFICATION outline — editorial pairing.
+  - ref: Galatians 3:24
+    sources: [editorial]
+    weight: 0.8
+  # "not by works of righteousness which we did ourselves... that being
+  # justified by his grace, we might be made heirs according to the hope of
+  # eternal life" (WEB). Not-by-works, regeneration, justification, and
+  # inheritance in one sentence. Torrey's JUSTIFICATION BEFORE GOD lists
+  # only v7 ("Entitles to an inheritance"), a subset of this 5-7 range, so
+  # the range pairing is editorial (same range-coverage rule the
+  # benediction pack records). Titus 3:5 alone is anchored in
+  # grace-not-earned.yaml — different claim (grace, not earning), untouched.
+  - ref: Titus 3:5-7
+    sources: [editorial]
+    weight: 0.8
+  # "For with the heart one believes resulting in righteousness" (WEB) —
+  # faith's result named as righteousness; the believing-unto register.
+  # Torrey lists 10:10 under CONFESSING CHRIST / SALVATION, not the
+  # JUSTIFICATION outline — editorial pairing.
+  - ref: Romans 10:10
+    sources: [editorial]
+    weight: 0.7
+related:
+  - grace-not-earned
+  - faith
+  - forgiveness-of-sins

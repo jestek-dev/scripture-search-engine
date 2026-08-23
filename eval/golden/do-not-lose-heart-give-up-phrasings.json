@@ -5,7 +5,7 @@
     "want to give up",
     "ready to give up"
   ],
-  "status": "pending",
+  "status": "active",
   "coversConcepts": [
     "do-not-lose-heart"
   ],
@@ -22,7 +22,25 @@
     "honest neighbour; the assertion is that the perseverance anchors",
     "lead. Folds into the active do-not-lose-heart.json / ",
     "pastoral-despair-give-up.json family as additionalQueries when the",
-    "item lands; this file then retires."
+    "item lands; this file then retires.",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-22 (P4.7 fn12 leg). Promoted in place",
+    "rather than retired-and-folded: the fold target named above as",
+    "'do-not-lose-heart.json' does not exist (the concept's active",
+    "fixture is discouragement.json, whose own note deliberately",
+    "excludes the give-up register), and folding 'want to give up' into",
+    "pastoral-despair-give-up.json would move a Gal 6:9 assertion into",
+    "the crisis fixture that exists to gate that query's crisis floor.",
+    "Keeping this file keeps one instrument per register; the",
+    "consolidation question rides the PR for Jesse. Measured on the",
+    "fixture bed at promotion (full bed same shape): 'tempted to give",
+    "up' Gal 6:9 #2 @40 under Ps 42:5 #1 @41.58 (1 Cor 10:13 stays #8,",
+    "the honest neighbour); 'want to give up' Ps 42:5 #1 @73.20 (both",
+    "packs' anchor - 'Why are you in despair, my soul? Hope in God!'),",
+    "2 Cor 1:8-10 #2 (the crisis floor holds), Gal 6:9 #3; 'ready to",
+    "give up' 1 Pet 3:15 #1 @49.44 (its own exact-phrase armor), Ps",
+    "42:5 #2, Gal 6:9 #3. pastoral-despair-give-up's expectedTop and",
+    "every mustNotRank ban re-verified passing at the same admission."
   ],
   "expectedTop": [
     {

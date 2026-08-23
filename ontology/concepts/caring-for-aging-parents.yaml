@@ -1,0 +1,237 @@
+# CARING FOR AGING PARENTS — pastoral pack + parenting over-match guard
+# (Phase-4 item P4.6 / DG-7; audit fn13, FLAG-FOR-JESSE #7. Authored
+# 2026-08-22 fixture-first: eval/golden/caring-for-aging-parents.json was
+# committed pending-and-failing before this file existed. Measured gap,
+# both beds: "caring for a dying parent" returned "Theme: Raising
+# children" anchors at #1-#4 — Col 3:20-21, Eph 6:4, Deut 6:6-7,
+# Prov 3:11-12 — child-discipline and child-training verses for a person
+# watching a parent die. The audit's one confidently-WRONG concept fire:
+# parenting.yaml's bare `parenting` cue stems to `parent`, every
+# parent-word query fired it, and no caregiving concept competed.)
+#
+# THE FIX IS COMPETITION, NOT SURGERY: parenting.yaml is untouched
+# (correct for its own register). Every phrase below matches >= 2
+# significant tokens, so when this concept fires its conceptSpecificity
+# beats parenting's single bare-token cue deterministically — the
+# worklist's stated mechanism ("beat the hijack ... without touching
+# parenting.yaml at all").
+#
+# TONE (highest pastoral stakes in the wave): the searcher is grieving or
+# care-burdened. Comfort must lead — 2 Cor 1:3-4 (the God of all comfort)
+# at 1.0, then strength-in-failing (Ps 73:26), presence in the valley
+# (Ps 23:4), the unbreakable love (Rom 8:38-39), and grief with hope
+# (1 Thess 4:13-14). The honoring register (Ex 20:12, Eph 6:2-3, Ruth
+# 1:16-17) is kept — a "caring for aging parents" asker is also asking
+# what faithfulness looks like — but every honoring weight sits BELOW the
+# comfort floor so the first word a grieving child reads is mercy, never
+# duty.
+#
+# Ps 116:15 ("Precious in the LORD's sight is the death of his saints")
+# STAYS OUT per its standing global gate (2026-08-15 ruling; the
+# pastoral-cancer fixture's mustNotRank states the policy: globally
+# excluded from illness and grief queries). Not anchored here unless
+# Jesse reverses the gate — the question rides the PR (A2 shape).
+#
+# Corpus-deferred candidates for the re-pin payload (P4.15) — verified
+# absent from the pinned subset 2026-08-22: Isa 46:4 ("even to old age...
+# and to gray hairs I will carry you" — the register's true 1.0 per the
+# worklist), Ps 71:9,18 (the aging psalmist: "don't forsake me when I am
+# old"), 1 Tim 5:4 + 5:8 (the NT's direct charge to care for parents and
+# household — the honoring register's true lead), Prov 23:22 ("don't
+# despise your mother when she is old"), John 19:26-27 (Jesus providing
+# for his mother from the cross), and the Prov 22:6 guard leg named in
+# the pending fixture.
+#
+# Attribution note (cornerstone/doubt precedent): ALL anchors are
+# [editorial] — Torrey has NO caring-for-aging-parents / aged-parents
+# topic in the verified outline set (docs/research/torrey-topical/
+# torrey-miller-topics.json, checked 2026-08-22; his PARENTS topic is the
+# parents'-duty-to-children identity, and CHILDREN / CHILDREN, GOOD file
+# the honoring texts under the child's-duty identity). Nearest
+# corroborations recorded per anchor below; they corroborate under other
+# topic identities, they do not attribute. No new source => no
+# doctrinal-reviews.yaml row due.
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist;
+# no materialFrameKeyword appears in this id, label, or lexicon.
+#
+# SENSE-INVERSION SWEEP (2026-08-22): 1 Thess 4:13 ("that you don't
+# grieve like the rest, who have no hope") does not rebuke grief — it
+# grounds grieving WITH hope; anchored as the comfort it is. Eph 6:2-3 is
+# anchored as 6:2-3 ONLY — verse 1 ("Children, obey your parents") is
+# deliberately excluded so the chip never reads adult caregiving as
+# child-obedience, and 6:4 belongs to parenting.yaml (the guarded
+# concept). Ruth 1:16-17's "Where you die, I will die" is Ruth binding
+# herself to aging Naomi — devotion, not a death wish. Nothing inverted.
+#
+# Lexicon width note (one tokenizer, verified with engine
+# significantWords BEFORE commit): every phrase yields >= 2 significant
+# tokens — `dying parent` -> {dying, parent}; `caring for aging parents`
+# -> {caring, aging, parent}; `aging parents` -> {aging, parent}; `my
+# mother is dying` -> {mother, dying}; `my father is dying` -> {father,
+# dying}; `elderly parents` -> {elderly, parent}; `watching a parent die`
+# -> {watch, parent, die}; `when a parent dies` -> {parent, dies};
+# `losing a parent` -> {losing, parent}. NO single-token collapses; no
+# lexicon-inventory rows due. Four phrases extend the worklist's five,
+# each closing a miss MEASURED on the beds before commit under the one
+# tokenizer (die / dies / dying / death and losing / lost are all
+# DISTINCT tokens — the light stemmer conflates none of them):
+# `aging parents` (the audit query itself — `caring for aging parents`
+# is three tokens and can never fire on the two-token query);
+# `watching a parent die` (the pending fixture's own query — no
+# mandated phrase could fire there); `when a parent dies` and
+# `losing a parent` (both measured with the identical fn13 harm shape:
+# "Theme: Raising children" at #1-#4 for a grieving searcher, and no
+# mandated phrase reachable). A tenth phrase, `take care of your
+# parents` -> {take, care, parent}, was admitted 2026-08-22 after the
+# round-1 critique (P4.6-1) measured the same harm shape live on the
+# caregiver-advice register — see the lexicon comment for the judged
+# token-set collision. Residual registers disclosed, not
+# phrased (PR body): `death of a parent` already leads with an honest
+# "God in the valley" chip (Raising children residue at #2); `lost my
+# mother` / `my dad is dying` ("dad"/"mom" absent from WEB vocabulary)
+# stay chip-less lexical with no wrong-concept fire; `caring for my
+# parents` stays UNPHRASED by design ({caring, parent} is token-set
+# identical to "how to be a caring parent", a parenting-register query
+# correctly led by Raising children on both beds — any phrase reaching
+# one surface hijacks the other, so the caregiver reading stays a
+# disclosed residual); `my father died` / `my mother died` stay
+# UNPHRASED here by register ({father|mother, died} is bereavement, not
+# caregiving — this pack's chip would be the wrong reason and its
+# honoring anchors ("that your days may be long") the wrong word after
+# a death; the honest home is grief-and-loss, whose approved lexicon
+# already carries the sibling phrase `my child died` — named follow-up,
+# fixture-first, rides the PR notes. The residual today is worse than
+# junk: `my father died` hermetic #2 is 2 Samuel 17:23 — Ahithophel
+# sets his house in order and hangs himself — a suicide narrative
+# served to a bereaved asker, the same verse the crisis fixtures ban
+# elsewhere; the follow-up's grief-of-losing-a-parent fixture must ban
+# 2 Sam 17:23 from day one). Quoted-verse
+# breadth probed on both beds before commit — see log; parenting's own
+# registers ("train up a child", "prayer for my child", "children obey
+# your parents") verified byte-identical before -> after.
+id: caring-for-aging-parents
+label: Caring for aging parents
+lexicon:
+  # The felt-need registers a grieving or care-burdened adult child
+  # actually types. Multi-word by design (the fn13 mechanism — see
+  # header); >= 2 significant tokens each.
+  - dying parent
+  - caring for aging parents
+  # The two-token audit register; `caring for aging parents` (3 tokens)
+  # cannot fire on it — measured miss, closed here (see width note).
+  - aging parents
+  - my mother is dying
+  - my father is dying
+  - elderly parents
+  # The pending fixture's fifth query; `die` != `dying` under the one
+  # tokenizer, so no other phrase can reach it (see width note).
+  - watching a parent die
+  # Both measured pre-commit with the identical fn13 harm shape
+  # (Raising children #1-#4); `dies` and `losing` are their own tokens,
+  # unreachable by any phrase above (see width note).
+  - when a parent dies
+  - losing a parent
+  # Round-1 critique P4.6-1 admission (2026-08-22): the caregiver-advice
+  # phrasing, measured live with the fn13 harm shape (Raising children
+  # #1-#3 hermetic; "take care of" exact-phrase carriers lead the full
+  # bed) and unreachable by every phrase above ({take, care, parent} —
+  # three significant tokens, "of"/"your" stopwords; also covers "take
+  # care of MY parents", same token set). KNOWN TOKEN-SET COLLISION,
+  # judged and disclosed: "children take care of parents" and "parents
+  # take care of their children" tokenize identically ({children, take,
+  # care, parent}) — the engine cannot separate the two surfaces. Before
+  # this phrase BOTH got Raising-children leads (the fn13 harm for the
+  # caregiver surface); now both get this pack's comfort lead with
+  # Raising-children rows still in-window under honest chips. The
+  # caregiver surface is healed; the parental-duty surface trades to an
+  # off-intent (not wounding) lead — the reverse trade was the audit's
+  # graded harm. Guard fixture line added first (fixture-first).
+  - take care of your parents
+anchors:
+  # "the Father of mercies and God of all comfort, who comforts us in
+  # all our affliction, that we may be able to comfort those who are in
+  # any affliction" (WEB). The first word to a grieving child: comfort
+  # received, then given — the caregiver's own economy. The pending
+  # fixture's expectedTop; also god-of-all-comfort's 1.0 anchor —
+  # different claim (this pack locates comfort FOR the dying-parent
+  # register), documented in both files (Matt 28:19 precedent). Torrey
+  # corroboration (no aging-parents outline — see attribution note):
+  # AFFLICTION, CONSOLATION UNDER, "God is the author and Giver of"
+  # (2 Cor 1:3); AFFLICTED, SAINTS, "God comforts" (2 Cor 1:4).
+  - ref: 2 Corinthians 1:3-4
+    sources: [editorial]
+    weight: 1.0
+  # "My flesh and my heart fails, but God is the strength of my heart
+  # and my portion forever" (WEB). The verse for the one watching a
+  # body fail — and for the caregiver whose own strength is gone.
+  # Torrey corroboration: ASSURANCE, "Comfort in affliction"
+  # (Ps 73:26); PRIVILEGES OF SAINTS, "Portion" (Ps 73:26).
+  - ref: Psalms 73:26
+    sources: [editorial]
+    weight: 0.9
+  # "Even though I walk through the valley of the shadow of death, I
+  # will fear no evil, for you are with me" (WEB). Presence inside the
+  # valley — the walk a dying parent and their child are on. Torrey
+  # corroboration: AFFLICTION, CONSOLATION UNDER, "In prospect of
+  # death" (Ps 23:4); DEATH OF SAINTS, THE, "God is with them in"
+  # (Ps 23:4).
+  - ref: Psalms 23:4
+    sources: [editorial]
+    weight: 0.85
+  # "neither death, nor life ... will be able to separate us from God's
+  # love which is in Christ Jesus our Lord" (WEB). What death cannot do.
+  # Torrey corroboration: ASSURANCE, "The unalienable love of God"
+  # (Rom 8:38 AND 8:39 — both verses of the range).
+  - ref: Romans 8:38-39
+    sources: [editorial]
+    weight: 0.8
+  # "we don't want you to be ignorant ... concerning those who have
+  # fallen asleep, so that you don't grieve like the rest, who have no
+  # hope. For if we believe that Jesus died and rose again, even so God
+  # will bring with him those who have fallen asleep in Jesus" (WEB).
+  # Grief with hope — not a rebuke of grief (see sweep note). Torrey
+  # corroboration: DEATH OF SAINTS, THE, "Survivors consoled for"
+  # (1 Thess 4:13-18 spans both verses); AFFLICTION, CONSOLATION UNDER,
+  # "In prospect of death" (1 Thess 4:14).
+  - ref: 1 Thessalonians 4:13-14
+    sources: [editorial]
+    weight: 0.7
+  # --- honoring register: every weight below the comfort floor (see
+  # TONE note) ---
+  # "Honor your father and your mother, that your days may be long in
+  # the land which the LORD your God gives you" (WEB). The commandment
+  # itself, addressed to adult Israel — honoring does not end when the
+  # child grows up; it matures into care. Torrey corroboration (child's-
+  # duty identity, not this pack's): CHILDREN, "To honour their
+  # parents" (Ex 20:12).
+  - ref: Exodus 20:12
+    sources: [editorial]
+    weight: 0.65
+  # "'Honor your father and mother,' which is the first commandment
+  # with a promise: 'that it may be well with you...'" (WEB). The NT
+  # restatement. Range is 6:2-3 ONLY — verse 1's "Children, obey your
+  # parents" is excluded so the chip never frames adult caregiving as
+  # child-obedience (see sweep note), and 6:4 is parenting.yaml's.
+  # Torrey corroboration: CHILDREN, GOOD, "Shall be blessed" (Eph 6:2
+  # AND 6:3 — both verses, but under the child's-duty identity).
+  - ref: Ephesians 6:2-3
+    sources: [editorial]
+    weight: 0.6
+  # "Don't urge me to leave you ... where you go, I will go ... Where
+  # you die, I will die" (WEB). Ruth binding herself to aging, widowed
+  # Naomi — Scripture's narrative embodiment of costly loyalty to an
+  # elder (see sweep note). Floor weight: narrative example, not
+  # command. Torrey corroboration: LOVE TO MAN, "Ruth" (Ruth 1:16 AND
+  # 1:17 — both verses).
+  - ref: Ruth 1:16-17
+    sources: [editorial]
+    weight: 0.55
+related:
+  # Chosen on the TONE rule: when this concept fires, the related chips
+  # a griever sees should be comfort and grief-with-hope — NOT
+  # `parenting` (a related edge there would put "Related theme: Raising
+  # children" rows back into a griever's tail, re-opening fn13 by the
+  # side door).
+  - god-of-all-comfort
+  - grief-and-loss

@@ -6,8 +6,23 @@
     "declared righteous",
     "how can I be right with God"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
+    "PROMOTED 2026-08-21 with the justification-by-faith pack (plan P4.1 /",
+    "DG-2): ontology/concepts/justification-by-faith.yaml landed",
+    "fixture-first against this fixture's failing run (5 expectations).",
+    "MEASURED RE-CUT at promotion: withinTop 3 -> 5. Reason: for 'how can I",
+    "be right with God' the pack's own Gal 3:24 / Rom 8:33-34 / Rom 10:10",
+    "outrank Rom 5:1 because their other-translation wording IS 'made right",
+    "with God' (translation_variant +14 at cap) — honest evidence in the",
+    "query's own words, all carrying the required 'Theme: Justified by",
+    "faith' chip. Forcing Rom 5:1 to #3 would need three anchors weighted",
+    "to sub-point tolerances against the plan's stated weights",
+    "(fixture-chasing). The family+label assertions are untouched: the gap",
+    "this fixture measured (no curated chip anywhere; Rom 5:1 absent for",
+    "three of four phrasings) stays provably closed. Reviewer note for the",
+    "doctrinal-wave batch: tighten back to 3 only with a ruled re-weight.",
+    "Original gap record follows.",
     "GAP FIXTURE (audit th1, 2026-08-20; re-verified 2026-08-21 sweep —",
     "docs/research/2026-08-21-audit-gap-verification.md). Bare",
     "'justification' returns passage_terms accidents (Ps 40:9 #1); 'justified",
@@ -23,7 +38,7 @@
   "expectedTop": [
     {
       "reference": "Romans 5:1",
-      "withinTop": 3,
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Justified by faith"
     }

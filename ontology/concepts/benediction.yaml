@@ -1,0 +1,82 @@
+# BENEDICTION — worship-leader locator pack (Phase-4 item P4.9 / DG-9 / audit
+# wl4, authored 2026-08-21 fixture-first: eval/golden/benediction.json was
+# committed pending-and-failing before this file existed; the 2026-08-21
+# re-verification sweep measured the gap on both beds — Num 6:24 at #1 by
+# passage_terms luck alone, the whole top-10 a flat 2.85 tie, zero curated
+# coverage for a worship-leader-core query).
+#
+# Design: a LOCATOR for the scripture benedictions a worship leader reaches
+# for when closing a service — the Aaronic blessing and the New Testament
+# closing blessings. The pack states where the benedictions are and who says
+# so; it never adjudicates liturgy. WHICH benediction should lead is flagged
+# as an optional liturgical-preference question on the doctrinal-wave batch
+# sign-off (per the fixture's own note); Num 6:24-26 leads here as the text
+# every tradition shares.
+#
+# Attribution note (docs/DOCTRINAL-BASIS.md §1 pattern — judgment human,
+# named, cited): all four anchors are [editorial]. Torrey has no BENEDICTION
+# topic; his PEACE, SPIRITUAL outline does carry the row "The benediction of
+# ministers should be" citing Numbers 6:26 — corroboration for the lead
+# anchor, but only verse 26 of the 24-26 range, so claiming [torrey] for the
+# whole Aaronic blessing would overstate the outline (the god-of-all-comfort
+# precedent labels torrey only where the outline covers the anchored range).
+# Corpus-deferred to the re-pin payload (P4.15): 2 Cor 13:14, Jude 24-25,
+# Rev 22:21 (all absent from the pinned corpus — re-verified).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist, and
+# no materialFrameKeyword appears in this id, label, or lexicon ("blessing"
+# is not on that reviewed list; the register here is liturgical, not
+# material-return).
+#
+# Lexicon collision check (G4): no phrase below normalizes to an existing
+# concept's phrase; shared single tokens are {bless} (generosity,
+# identity-in-christ, thanksgiving), {lord} (guidance et al.), {keep}
+# (obedience-to-the-word) — every phrase here is >= 2 significant tokens
+# except the subject noun itself, so no single-token collapse rows are due
+# ("benediction" is one WORD, not a multi-word collapse; the P3.2 register
+# covers multi-word phrases only).
+id: benediction
+label: Benediction
+lexicon:
+  # The subject noun — the query the audit measured (wl4). One word, so the
+  # bare query "benediction" fires this concept authoritatively.
+  - benediction
+  # The service-closing register a worship leader actually types.
+  - closing blessing
+  # Num 6:24's own WEB wording (tokens: lord, bless, keep) — the remembered
+  # first line of the Aaronic blessing.
+  - the lord bless you and keep you
+  # The blessing's traditional name.
+  - aaronic blessing
+anchors:
+  # "The LORD bless you, and keep you. The LORD make his face to shine on
+  # you... and give you peace." (WEB). THE benediction — the one text every
+  # liturgical tradition shares, and the passage the measured query was
+  # already finding by accident; this anchor gives it its honest reason.
+  # Torrey corroboration: PEACE, SPIRITUAL, "The benediction of ministers
+  # should be" (Num 6:26) — see attribution note above.
+  - ref: Numbers 6:24-26
+    sources: [editorial]
+    weight: 1.0
+  # "Now may the God of peace... make you complete in every good work to do
+  # his will" (WEB). The fullest NT benediction: doxology and equipping in
+  # one sentence, the classic sending blessing.
+  - ref: Hebrews 13:20-21
+    sources: [editorial]
+    weight: 0.9
+  # "Now may the God of hope fill you with all joy and peace in believing"
+  # (WEB). Paul's benediction of hope — a complete closing blessing in one
+  # verse.
+  - ref: Romans 15:13
+    sources: [editorial]
+    weight: 0.85
+  # "May the God of peace himself sanctify you completely... He who calls
+  # you is faithful, who will also do it." (WEB). The letter-closing
+  # blessing form, with the promise that grounds it.
+  - ref: 1 Thessalonians 5:23-24
+    sources: [editorial]
+    weight: 0.8
+related:
+  - worship
+  - peace-of-god
+  - gods-protection

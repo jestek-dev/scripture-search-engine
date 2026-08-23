@@ -4,7 +4,10 @@
   "additionalQueries": [
     "cornerstone"
   ],
-  "status": "pending",
+  "status": "active",
+  "coversConcepts": [
+    "christ-the-cornerstone"
+  ],
   "note": [
     "GAP FIXTURE (prior-plan 1.9 remainder; re-verified 2026-08-21 sweep).",
     "No concept, no fixture; the hermetic run answers 'cornerstone' with",
@@ -17,13 +20,29 @@
     "building-on-the-rock stays clean (the prior plan's explicit guard).",
     "requiredReasonLabel absent until the label is approved.",
     "Corpus-deferred: Ps 118:22, Isa 28:16, Matt 21:42 (Psalms 118,",
-    "Isaiah 28, Matthew 21 absent — re-pin payload)."
+    "Isaiah 28, Matthew 21 absent — re-pin payload).",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-21 (P4.10b). One GATE-FORCED edit (the",
+    "trinity/incarnation precedent): the authored note above deferred",
+    "requiredReasonLabel to the batch sign-off, but G3's coverage check",
+    "requires the active demonstrating fixture to assert the exact label,",
+    "so the proposed wording 'Theme: Christ the cornerstone' is now",
+    "pinned. If Jesse's batch sign-off changes the wording, the label",
+    "re-cuts in the same commit as the yaml change. Measured on the",
+    "fixture bed at promotion: 'christ the cornerstone' puts 1 Pet 2:4-7",
+    "#1 (54.00, anchor + translation_variant), Eph 2:19-22 #2, Acts 4:11",
+    "#3; bare 'cornerstone' the same ladder (24.50 / 21.70 / 16.50). The",
+    "foundation/rock exclusion held: 'wise and foolish builders' and",
+    "'build your house on the rock' are byte-identical before->after",
+    "(building-on-the-rock's parable anchors keep #1-#2, no cornerstone",
+    "chip anywhere in their top-10)."
   ],
   "expectedTop": [
     {
       "reference": "1 Peter 2:4-7",
       "withinTop": 3,
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Christ the cornerstone"
     }
   ],
   "expectedWithinTop": 10,

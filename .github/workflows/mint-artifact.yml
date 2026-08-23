@@ -45,6 +45,13 @@ jobs:
 
       - run: npm ci
 
+      - name: Install curation dev deps
+        # curation/ is deliberately outside the npm workspaces (runtime
+        # boundary), so root `npm ci` skips it — but `npm run verify` below
+        # runs the root typecheck, which includes `tsc` over curation/.
+        # --ignore-scripts: typecheck needs only the package files on disk.
+        run: npm ci --prefix curation --ignore-scripts
+
       - name: Validate the requested tag
         # Same rule the build CLI enforces, applied before anything slow runs:
         # the tag lands in URLs and gh invocations, so anything outside this

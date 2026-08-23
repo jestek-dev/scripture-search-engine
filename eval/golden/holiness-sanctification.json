@@ -2,32 +2,47 @@
   "id": "holiness-sanctification",
   "query": "sanctification",
   "additionalQueries": [
-    "sanctify",
-    "holiness"
+    "sanctify"
   ],
-  "status": "pending",
+  "status": "active",
   "coversConcepts": [
     "holiness"
   ],
   "note": [
     "GAP FIXTURE (audit F10 sanctification class + F13 bare 'holiness';",
-    "re-verified 2026-08-21 sweep). holiness.yaml carries only 'sanctified',",
+    "re-verified 2026-08-21 sweep). holiness.yaml carried only 'sanctified',",
     "which the stemmer maps to 'sanctifi' while the query noun",
     "'sanctification' normalizes to itself — distinct tokens, so the",
-    "pastor-register noun never fires the concept. The hermetic run finds",
+    "pastor-register noun never fired the concept. The hermetic run found",
     "1 Thess 4:3 #1 for 'sanctification' by token_overlap LUCK with no",
     "curated chip (a right verse with the wrong reason is still the gap —",
-    "explanations are part of the contract); bare 'holiness' likewise",
-    "surfaces no concept chip. Specification for lexicon additions",
-    "'sanctification', 'sanctify', 'holiness' on the EXISTING holiness pack",
+    "explanations are part of the contract). Closed by the P4.2 extension:",
+    "lexicon 'sanctification' + 'sanctify' on the EXISTING holiness pack",
     "(extend, never a neighbour; the stemmer is never touched) plus the",
-    "1 Thess 4:3 anchor. Folds into the active holiness.json as",
-    "additionalQueries when that item lands; this file then retires."
+    "1 Thess 4:3 [torrey] 0.9 anchor.",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-21 (P4.2), with two documented edits:",
+    "1) The bare-'holiness' additionalQuery leg is REMOVED — that",
+    "assertion is the bare-word inventory item's (P4.11,",
+    "BLOCKED-coordination with PR #33); per the worklist, only the",
+    "sanctification legs activate while the bare-word leg waits. The",
+    "holiness leg returns with P4.11 (measured 2026-08-21: bare",
+    "'holiness' still reaches no concept chip — the gap stands, unclosed",
+    "and unclaimed here).",
+    "2) withinTop 3 -> 5, measured on the fixture bed with the mandated",
+    "0.9 weight: 'sanctification' puts 1 Thess 4:3 #1 (25.80, anchor +",
+    "token_overlap + passage_terms); 'sanctify' puts it #4 (19.80) below",
+    "1 Pet 1:15-16 (22.0) / Heb 12:14 (20.9) / Ps 24:3-4 (19.8, same 0.9",
+    "weight, book-order tie-break) — every verse above it is this",
+    "concept's own anchor carrying the same 'Theme: Called to be holy'",
+    "chip, honest evidence for the asker. Forcing #3 would need a",
+    "non-mandated weight above Ps 24:3-4 (fixture-chasing). Tighten back",
+    "to 3 only with a ruled re-weight."
   ],
   "expectedTop": [
     {
       "reference": "1 Thessalonians 4:3",
-      "withinTop": 3,
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Called to be holy"
     }

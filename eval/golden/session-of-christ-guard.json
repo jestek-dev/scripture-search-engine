@@ -1,0 +1,50 @@
+{
+  "id": "session-of-christ-guard",
+  "query": "seated at the right hand of God",
+  "status": "active",
+  "note": [
+    "GUARD FIXTURE (P4.1 round-1 critique watch-item D-2, 2026-08-21).",
+    "justification-by-faith's lexicon carries 'right with god' ({right,",
+    "god} under the one tokenizer) because the fuller 'made right with",
+    "god' can never reach the fixture's own felt-need query 'how can I be",
+    "right with God' (full-containment matching). The cost, measured on",
+    "both beds: session-of-Christ phrasings also contain {right, god}, so",
+    "justification anchors ride the long tail of this query at #2-#7.",
+    "Measured current state (fixture bed, 2026-08-21): Luke 22:69 #1 at",
+    "55.20 (exact_phrase 45 - the verse contains the phrase), Romans",
+    "8:33-34 #2 at 26.21. This guard asserts the honest lock: the quoted",
+    "session verse keeps #1 by exact phrase, and no justification anchor",
+    "may LEAD the query. mustNotLead window 1 is the honest current",
+    "state - the anchors legitimately occupy #2-#7 today, below every",
+    "exact-phrase competitor, with honest chips; banning them from the",
+    "window would be suppressing scripture, not guarding it.",
+    "Companion measurement with no machine-checkable guard: 'God make it",
+    "right' (a restoration-register phrasing) currently returns pack",
+    "anchors at #1-#6 - adjacent but arguably off-intent; no instrument",
+    "registers harm (battery 83/84 unchanged, G4 0 flags, no G8 finding).",
+    "Named for the doctrinal-wave PR body per the critique; a guard here",
+    "would fail on the honest current state, so the routing is Jesse's."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 22:69",
+      "withinTop": 1,
+      "requiredReasonFamily": "exact_phrase"
+    }
+  ],
+  "expectedWithinTop": 1,
+  "mustNotLead": [
+    {
+      "reference": "Romans 8:33-34",
+      "why": "justification-by-faith anchor reached only via the 'right with god' containment breadth (critique D-2); a session-of-Christ quote's #1 belongs to the verse that says it, not a doctrine pack's anchor list"
+    },
+    {
+      "reference": "Romans 8:1",
+      "why": "same D-2 breadth class as Romans 8:33-34 - may rank on the long tail with its honest chip, must never lead this quote"
+    },
+    {
+      "reference": "Romans 5:1",
+      "why": "the pack's 1.0 anchor; same D-2 breadth class - must never lead a session-of-Christ quote"
+    }
+  ]
+}

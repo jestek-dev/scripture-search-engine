@@ -1,7 +1,10 @@
 {
   "id": "baptism",
   "query": "baptism",
-  "status": "pending",
+  "status": "active",
+  "coversConcepts": [
+    "baptism"
+  ],
   "note": [
     "GAP FIXTURE (audit F13 / sw2, prior-plan 1.9 remainder; re-verified",
     "2026-08-21 sweep). 'baptism' is lexical-only on the hermetic bed:",
@@ -13,13 +16,28 @@
     "DOCTRINAL-BASIS non-criterion, and 1 Pet 3:21 is anchored with that",
     "care. requiredReasonLabel absent until the label is approved.",
     "Corpus-deferred: Col 2:12, Acts 8:36-38 (Colossians 2, Acts 8 absent",
-    "— re-pin payload)."
+    "— re-pin payload).",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-21 (P4.10a). One GATE-FORCED edit (the",
+    "trinity/incarnation precedent): the authored note above deferred",
+    "requiredReasonLabel to the batch sign-off, but G3's coverage check",
+    "requires the active demonstrating fixture to assert the exact label,",
+    "so the proposed wording 'Theme: Baptism' is now pinned. If Jesse's",
+    "batch sign-off changes the wording, the label re-cuts in the same",
+    "commit as the yaml change. Measured on the fixture bed at promotion:",
+    "'baptism' puts Romans 6:3-4 #1 (25.81, anchor + lexical), Acts 2:38",
+    "#2, Matt 28:19 #3, 1 Pet 3:21 #4, Gal 3:27 #5 — the whole ladder",
+    "carries the pack's own chip. Bare 'baptize'/'baptized' are",
+    "deliberately NOT in the lexicon (measured narrative-hijack risk on",
+    "'jesus was baptized'; see the yaml width note), so verb-form queries",
+    "stay lexical — an honest tradeoff named in the PR body."
   ],
   "expectedTop": [
     {
       "reference": "Romans 6:3-4",
       "withinTop": 3,
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Baptism"
     }
   ],
   "expectedWithinTop": 10,
