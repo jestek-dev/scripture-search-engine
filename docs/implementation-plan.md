@@ -327,6 +327,25 @@ Three design commitments a consumer can rely on:
   vocabulary is never rewritten, `themes()`/`forSong()` never correct, and
   absence needs no handling. Over a pre-v7 artifact the engine simply never
   corrects (presence-probed), so pinned pairs are unaffected until re-mint.
+  Additive since 0.14.0 (CO-3, artifact schema v8): a discovery result MAY
+  carry `verses?: GroupedVerse[]` and `grouping?: ResultGrouping` — present
+  exactly when the row is a merged passage-level result. `verses[]` is the
+  member verses in canonical order, each with its own uncollapsed evidence;
+  `grouping` says WHY they travel together: `section` (the full grouping
+  span — the row's own `reference` spans only the surfaced hits) and
+  `provenance` (`sourceId`/`label`, plus `boundaryVotes` on pericope groups
+  — the summed section-boundary vote at the section's start verse, read
+  from the artifact row itself so explanation and data cannot disagree).
+  Grouping is a typed field, deliberately NOT a reason chip: it contributes
+  zero points, and a merged row's score is the max of its members, never a
+  sum. Two mechanisms produce groups in fixed authority order — curated
+  anchor spans first (the pre-0.14.0 collapse, now explained, citing the
+  anchor's own source), then derived pericopes (OpenBible section counts,
+  citing 'openbible-sections'); a verse claimed by an anchor span never
+  joins a pericope group. Over a pre-v8 artifact (or one whose pericopes
+  table is empty) the pericope arm simply never fires (presence-probed),
+  so pinned pairs are unaffected until re-mint; anchor groups then still
+  carry `verses`/`grouping`.
 - **`related()` is not similarity.** Every entry exists because a human
   recorded the link — a cross-reference edge, or a concept whose curated
   anchors include the passage. Similarity is what `research()` does, and

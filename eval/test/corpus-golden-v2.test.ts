@@ -564,7 +564,15 @@ describe('G3 requiredGroupingSourceId (P5.6 PR 1 capability — fail-closed unti
   ): DiscoveryResult =>
     ({
       ...johnVerse(verse),
-      grouping: { section: `John 3:${verse}`, provenance: { sourceId } },
+      // The PR 2 typed shape (ResultGrouping): section span + provenance.
+      grouping: {
+        section: {
+          reference: `John 3:${verse}`,
+          startVerseId: 43_003_000 + verse,
+          endVerseId: 43_003_000 + verse,
+        },
+        provenance: { sourceId, label: sourceId },
+      },
     }) as DiscoveryResult;
 
   it('FAILS an active fixture whose hit carries no grouping — the field can never pass vacuously', async () => {

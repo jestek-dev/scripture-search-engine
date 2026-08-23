@@ -185,6 +185,15 @@ export const SELECTION: readonly {
   // for P5.2 is "small explained df shift from the two added verses".
   { book: 'Song of Solomon', verses: ['2:1'], why: 'P5.2/QR-3: ref8 "Songs of Solomon 2:1" fixture target — the book had zero fixture verses, so the new alias row alone could not resolve (verseExists)' },
   { book: '3 John', verses: ['1:4'], why: 'P5.2/QR-3: ordinal fixture target "3rd John 4" — single-chapter branch resolves to 3 John 1:4, which must exist in the fixture corpus' },
+
+  // --- Pericope-grouping fixture targets, added 2026-08-22 (P5.6/CO-3 PR 2) ---
+  // The two golden fixtures that only the pericope path can satisfy name
+  // chapters the fixture corpus did not carry; without them the fixtures are
+  // vacuous on the hermetic bed (their own notes disclose this). Same rule as
+  // the pastoral packs: an assertion for a verse outside the fixture corpus
+  // is vacuous protection, so target chapters and fixtures arrive together.
+  { book: 'Psalms', chapters: [136], why: 'P5.6/CO-3: pericope-grouping-loving-kindness target — the WEB prints the refrain in all 26 verses, no curated anchor touches the psalm, and it derives as a single pericope (summed boundary vote 12 at 136:1)' },
+  { book: 'Genesis', chapters: [11], why: 'P5.6/CO-3: pericope-no-overgrouping-terah target — 11:26/11:27 carry the same verbatim phrase across the 11:10-26 / 11:27-32 pericope boundary (summed votes 19/14)' },
 ];
 
 /**

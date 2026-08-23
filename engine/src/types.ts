@@ -65,12 +65,81 @@ export interface ResultIdentity {
   readonly layerFingerprint: string;
 }
 
+/**
+ * One member verse of a grouped (merged) result, its evidence uncollapsed
+ * (0.14.0/CO-3 PR 2). The merged row's reasons are strongest-per-label across
+ * the group; this is where a consumer finds what EACH verse contributed —
+ * "every verse's own evidence still visible" is part of the grouping design,
+ * not an optional nicety.
+ */
+export interface GroupedVerse {
+  readonly targetId: string;
+  readonly reference: string;
+  readonly excerpt: string;
+  readonly score: number;
+  readonly reasons: readonly Reason[];
+}
+
+/**
+ * Why a merged result's verses travel together (0.14.0/CO-3 PR 2). A typed
+ * field, deliberately NOT a `Reason`: reasons must correspond to scoring
+ * evidence, and grouping contributes ZERO points — the merged row's score is
+ * the max of its members, never a sum. The grouping cites a countable fact
+ * and names its source; nothing theological is adjudicated (covenant 6).
+ */
+export interface ResultGrouping {
+  /**
+   * The full span of the grouping unit — the curated anchor span, the alias
+   * verse range, or the derived pericope. The result row's own `reference`
+   * spans only the verses that actually surfaced (the hits), which may be a
+   * subset of this section.
+   */
+  readonly section: {
+    /** Label of the full section span, e.g. "Psalms 136:1-26". */
+    readonly reference: string;
+    readonly startVerseId: number;
+    readonly endVerseId: number;
+  };
+  readonly provenance: {
+    /**
+     * Manifest source id the grouping stands on: the anchor's own source(s)
+     * for an anchor-span merge ('+'-joined ascending when several agree,
+     * e.g. 'editorial'), 'hymn-aliases' for an alias verse range, or
+     * 'openbible-sections' for the pericope path. Authority order is fixed:
+     * an anchor span is checked first, so pericope provenance never usurps
+     * anchor provenance.
+     */
+    readonly sourceId: string;
+    /** Human-facing attribution, e.g. "OpenBible section boundaries (CC BY)". */
+    readonly label: string;
+    /**
+     * Pericope groups only: the summed boundary vote at the section's start
+     * verse — the exact number the artifact stores (how many of the 20
+     * surveyed translations start a section there). A countable structural
+     * fact, never a relevance score; the explanation and the shipped data
+     * cannot disagree because this is read from the same row.
+     */
+    readonly boundaryVotes?: number;
+  };
+}
+
 export interface DiscoveryResult {
   readonly targetId: string;
   readonly reference: string;
   readonly excerpt: string;
   readonly score: number;
   readonly reasons: readonly Reason[];
+  /**
+   * Additive (0.14.0/CO-3 PR 2): present exactly when this row is a merged
+   * passage-level result — the member verses in canonical order, each with
+   * its own uncollapsed evidence. Absent on single-verse rows.
+   */
+  readonly verses?: readonly GroupedVerse[];
+  /**
+   * Additive (0.14.0/CO-3 PR 2): present exactly when `verses` is — why the
+   * members travel together, citing the source that drew the boundary.
+   */
+  readonly grouping?: ResultGrouping;
 }
 
 /**
