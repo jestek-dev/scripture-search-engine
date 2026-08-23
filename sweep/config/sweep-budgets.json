@@ -1,0 +1,46 @@
+{
+  "$comment": [
+    "Sweep numbers block (plan MS-14 names the shape; J43 signs the values).",
+    "Reviewed data like eval/budgets.json: every value here is NULL until",
+    "Jesse ratifies it - a null means MEASURED AND REPORTED, never pass,",
+    "never fail, and every tool that needs one reports",
+    "'not-applicable - threshold unset (J43)' rather than guessing",
+    "(CLAUDE.md gate discipline). The plan's RECOMMENDED defaults are",
+    "recorded in the comments so the eventual flip PR quotes them; writing",
+    "them into the values below without J43 would be inventing a threshold.",
+    "",
+    "Plan-recommended defaults awaiting J43:",
+    "  graderTrust: weightedKappa >= 0.75; harmfulRecall >= 0.95;",
+    "    excellentVsHarmfulInversions = 0; canaryAccuracy >= 0.90",
+    "  ringFloors: ring1Committed 40000, ring1Grammar 15000,",
+    "    ring1Paraphrase 25000, ring2Derived 100000",
+    "  perturbK: grammar 2, paraphrase 3",
+    "  graderWorkload: ceilingRowsPerEpisode 3000, tierBSample 400",
+    "  maxPromotedFixtures: 250",
+    "  exit: the MS-14 clause set (Ring-0 A/S per J41; Ring-1 anchor",
+    "    agreement >= 98%/90%; Ring-2 correction oracle >= 99%,",
+    "    L1 defect rate < 0.5%, harmful bound <= 0.2%)"
+  ],
+  "graderTrust": {
+    "weightedKappa": null,
+    "harmfulRecall": null,
+    "excellentVsHarmfulInversions": null,
+    "canaryAccuracy": null
+  },
+  "ringFloors": {
+    "ring1Committed": null,
+    "ring1Grammar": null,
+    "ring1Paraphrase": null,
+    "ring2Derived": null
+  },
+  "perturbK": {
+    "grammar": null,
+    "paraphrase": null
+  },
+  "graderWorkload": {
+    "ceilingRowsPerEpisode": null,
+    "tierBSample": null
+  },
+  "maxPromotedFixtures": null,
+  "exit": null
+}

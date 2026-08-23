@@ -1,0 +1,15 @@
+# reference-specimens.yaml — MS-4 (plan P8.4). The battery's
+# reference-adjacent and reference-shaped-misspelling specimens, VERBATIM
+# (ref1–ref8 + ms4), so Ring 2 always carries the rows the battery already
+# graded and the tiers.referenceGrammar pins. Expected labels follow the
+# corpus book names exactly (Psalms, Song of Solomon).
+rows:
+  - { text: 'John 3 16', expectedReference: 'John 3:16', batteryId: ref1 }
+  - { text: 'psalm 23', expectedReference: 'Psalms 23', batteryId: ref2 }
+  - { text: '1cor13', expectedReference: '1 Corinthians 13', batteryId: ref3 }
+  - { text: 'Jn 3:16', expectedReference: 'John 3:16', batteryId: ref4 }
+  - { text: 'Phil 4:6-7', expectedReference: 'Philippians 4:6-7', batteryId: ref5 }
+  - { text: 'psalms 91', expectedReference: 'Psalms 91', batteryId: ref6 }
+  - { text: '1 corinthians 13 4', expectedReference: '1 Corinthians 13:4', batteryId: ref7 }
+  - { text: 'Songs of Solomon 2:1', expectedReference: 'Song of Solomon 2:1', batteryId: ref8 }
+  - { text: 'Phillipians 4:13', expectedReference: 'Philippians 4:13', batteryId: ms4 }
