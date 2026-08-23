@@ -55,6 +55,8 @@ import { recoverMutationJournals } from './applyJournal.js';
 import { applyFixturePromotion, previewFixturePromotion } from './fixturePromotion.js';
 import { createJobRunner, JOB_IDS, type JobId, type JobRecord } from './jobRunner.js';
 import { resolveStaticSnapshot, StaticSnapshotError, type StaticAsset } from './staticSnapshot.js';
+import { loadFontAssets } from './fontAssets.js';
+import { loadSecondaryPages, SECONDARY_PAGES, writeSecondaryResponse } from './secondaryPages.js';
 import {
   StartupListenError,
   issue as startupIssue,
@@ -363,6 +365,12 @@ async function main(): Promise<void> {
       snapshotError?.details,
     ));
   }
+
+  // The two additive static mechanisms (plan §4.2). Both load independently
+  // of preflight and serve in degraded startup mode; a missing secondary
+  // file or font directory is not a startup issue.
+  const secondaryPages = await loadSecondaryPages(path.join(repoRoot, 'workbench'), SECONDARY_PAGES);
+  const fontAssets = await loadFontAssets(path.join(repoRoot, 'workbench', 'static', 'fonts'));
 
   let descriptor: ArtifactDescriptor | null = null;
   let artifactFailure = 'The reviewed artifact is unavailable.';
@@ -1718,6 +1726,28 @@ async function main(): Promise<void> {
           'x-content-type-options': 'nosniff',
         });
         response.end(staticAsset.body);
+        return;
+      }
+
+      const secondaryPage = secondaryPages.get(url.pathname);
+      if (secondaryPage !== undefined) {
+        writeSecondaryResponse(response, secondaryPage);
+        return;
+      }
+
+      if (url.pathname.startsWith('/fonts/')) {
+        const font = fontAssets.get(url.pathname);
+        if (font === undefined) {
+          sendError(response, 404, 'Not found.');
+          return;
+        }
+        response.writeHead(200, {
+          'content-type': font.contentType,
+          etag: `"${font.sha256}"`,
+          'cache-control': 'no-cache',
+          'x-content-type-options': 'nosniff',
+        });
+        response.end(font.body);
         return;
       }
 
