@@ -1,0 +1,37 @@
+{
+  "name": "@jestek-dev/scripture-conformance-kit",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Consumer-runtime conformance kit: replay the pinned query slice on Hermes/JSC over OP-SQLite and byte-compare orderings + reasons against the identity-matched expected slice.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jestek-dev/scripture-search-engine.git",
+    "directory": "conformance"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "npm run build",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "generate": "tsx scripts/generateExpected.ts"
+  },
+  "devDependencies": {
+    "@jestek-dev/scripture-engine": "*",
+    "@types/node": "24.10.1",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}

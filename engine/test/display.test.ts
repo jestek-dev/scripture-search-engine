@@ -16,8 +16,8 @@ import {
   PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
   pinCorrectionCitations,
   polishChipsForDisplay,
-} from '../src/index.js';
-import type { Reason, SpellingCorrection } from '../src/index.js';
+} from '../src/internal.js';
+import type { Reason, SpellingCorrection } from '../src/internal.js';
 
 const chip = (family: Reason['family'], points: number, label = `${family} chip`): Reason => ({
   family,

@@ -28,7 +28,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { significantWords, tokenStream } from '@jestek-dev/scripture-engine';
+import { significantWords, tokenStream } from '@jestek-dev/scripture-engine/internal';
 
 // Point at a directory of caption/transcript files. Overridable so this is
 // not bound to one machine's download folder.

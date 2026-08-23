@@ -42,7 +42,7 @@ import {
   type RankOptions,
   type SignalBudgets,
   type SignalFamily,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 
 import { fail, pass, notApplicable, type GateFinding, type GateResult } from './types.js';
 

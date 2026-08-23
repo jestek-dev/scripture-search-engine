@@ -29,7 +29,7 @@ import {
   SUGGESTION_EDIT1_MAX_KEY_LENGTH,
   SUGGESTION_MIN_KEY_LENGTH,
   type ScriptureEngine,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 
 import { openCorpus } from '../src/nodeSqlitePort.js';

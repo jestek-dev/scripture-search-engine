@@ -14,7 +14,7 @@
 
 import { parse as parseYaml } from 'yaml';
 
-import { normalizedPhrase, significantWords } from '@jestek-dev/scripture-engine';
+import { normalizedPhrase, significantWords } from '@jestek-dev/scripture-engine/internal';
 import { parseAnchorRef } from './ontologyImporter.js';
 
 export interface HymnAliasPackSource {

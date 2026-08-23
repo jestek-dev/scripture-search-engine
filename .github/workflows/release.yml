@@ -73,6 +73,18 @@ jobs:
             exit 1
           fi
 
+      - name: Refuse to release an unchangelogged version
+        # P7.1 (CO-4): a tagged version whose entry nobody wrote cannot ship.
+        # The script checks the version engine/package.json is about to
+        # publish has a `## <version>` entry in engine/CHANGELOG.md (format
+        # documented there), and — on a tag push — that the tag names that
+        # same version and is itself changelogged. Fail-closed: a missing or
+        # unreadable changelog is a refusal, never a pass. Runs on tagless
+        # dispatch too, so the gate is exercisable without minting a tag.
+        # Refusal logic is unit-tested with seeded violations in
+        # eval/test/changelog-guard.test.ts.
+        run: node .github/scripts/changelog-guard.mjs
+
       # The gauntlet gates the CODE against the committed fixture. It runs here
       # too: a release cut from code that cannot pass admission is not a
       # release, it is an accident with a version number on it.

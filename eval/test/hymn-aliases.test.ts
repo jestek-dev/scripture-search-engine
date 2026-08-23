@@ -28,7 +28,7 @@ import {
   normalizedPhrase,
   type Reason,
   type ScriptureEngine,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 
 import { openCorpus } from '../src/nodeSqlitePort.js';

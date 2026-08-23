@@ -188,3 +188,72 @@ vanishes reads as never having existed.
   If he wants `reviewer` retained, the change is confined to the v2 shapes in
   `eval/src/gates/probes.ts` / `eval/src/gates/orderingSnapshot.ts` and their
   tests.
+
+---
+
+# Explanation-faithfulness audit (E7) — PROTOCOL DRAFT, pending J45
+
+**Status: DRAFT. Nothing below is in force until Jesse approves the protocol
+and the sample size, and names the auditor (himself or a designee) — that is
+J45's whole content. The sampler tool exists and is tested; no audit has been
+executed, and none may be executed under this draft.**
+
+Covenant #5 makes the explanation part of the contract; fixtures pin specific
+labels, but between fixtures nothing measured whether the chips a release
+shows say what the underlying data says. E7 closes that with a per-release
+human audit over a deterministic sample.
+
+## The sample (mechanical, not discretionary)
+
+`eval/src/faithfulnessSample.ts` builds the audit packet; the construction is
+fully specified so the same identity triple yields byte-identical packets on
+any machine (tested in `eval/test/faithfulness-sample.test.ts`):
+
+- seed = sha256 of the newline-joined identity triple
+  `(engineVersion, corpusFingerprint, layerFingerprint)`;
+- a sha256-counter uint32 stream (`sha256(seed:counter)`, 8 big-endian words
+  per digest);
+- candidate pool = every actually-existing `(query, rank)` pair over the
+  ACTIVE battery queries in file order (zero-result and non-discovery
+  outcomes contribute no pairs);
+- unbiased rejection sampling without replacement down to the sample size;
+  a pool smaller than the request is taken whole with the **shortfall
+  recorded, never padded**.
+
+Sample size **defaults to 50** (the plan's number) and is a CLI parameter
+(`--sample-size`) because the number is Jesse's to adjust — the tool does not
+decide it. Generate a packet with:
+
+    npm run faithfulness-sample --workspace eval -- \
+      --database <release-candidate content.db> \
+      --out docs/reviews/<YYYY-MM-DD>-faithfulness-<engineVersion>.json
+
+## The audit (human, J45-gated)
+
+1. The auditor (Jesse or his named designee) opens the packet. Every chip
+   carries its rendered label, points, provenance, and the underlying
+   evidence rows fetched through the same `ContentQueryPort` (anchor rows,
+   cross-reference edges, verse-term profiles, translation-token stems; for
+   the lexical families the verse text itself is the evidence).
+2. For EACH chip the auditor replaces `verdict: null` with `"FAITHFUL"` or
+   `"MISSTATED"`. The tool never pre-fills a verdict; a packet with any
+   remaining `null` is an unfinished audit, not a passing one.
+3. The marked packet is committed under `docs/reviews/` in a reviewed PR,
+   with the auditor named in the PR description.
+4. **Any MISSTATED chip is a G3-class defect**: it is fixed WITH a
+   label-pinning fixture in the fixing PR (right rank + wrong reason = G3
+   failure, covenant #5), and the audit is re-run for the fixed identity.
+5. E6's S3 criterion reads the record: S3 is MET only when a committed audit
+   for the CURRENT release identity exists with zero misstated (or all
+   misstatements fixed and re-audited). No record → NOT EVALUABLE, which
+   never satisfies.
+
+## Open decisions — Jesse (J45)
+
+- Approve or amend this protocol and the sample size (50 is the plan
+  default, deliberately parameterized).
+- Name the auditor: you, or a designee (the designee must be able to read a
+  chip and its evidence rows; independence rules from the baseline review
+  above do NOT automatically apply here — that is your call too).
+- First execution target: the plan's DoD is one full audit on the terminus
+  release candidate (P7.6) — sequencing is yours.

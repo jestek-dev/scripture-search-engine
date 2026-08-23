@@ -11,7 +11,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { collapseAnchorRuns, collapseRuns, type GroupingSpanInfo } from '../src/index.js';
+import { collapseAnchorRuns, collapseRuns, type GroupingSpanInfo } from '../src/internal.js';
 import type { PericopeRow } from '../src/corpus/repository.js';
 import type { DiscoveryResult, ScriptureVerse } from '../src/types.js';
 

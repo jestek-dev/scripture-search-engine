@@ -29,7 +29,7 @@ import {
   CorpusRepository,
   createEngine,
   type ResearchResult,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 
 import { openCorpus } from '../src/nodeSqlitePort.js';

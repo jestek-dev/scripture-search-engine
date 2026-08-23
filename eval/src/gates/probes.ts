@@ -24,7 +24,7 @@
 import { createHash } from 'node:crypto';
 
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
-import { isAuthoritative } from '@jestek-dev/scripture-engine';
+import { isAuthoritative } from '@jestek-dev/scripture-engine/internal';
 
 import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
 import type { ProbeOrderedResults } from './orderingSnapshot.js';

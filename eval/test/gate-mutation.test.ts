@@ -101,7 +101,7 @@ import {
   type RankedResult,
   type ResearchResult,
   type ScriptureEngine,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 
 import { parseAnchorRef } from '../../pipeline/src/importers/ontologyImporter.js';
 import { collisionGate, lexiconInventoryCheck, singleTokenCollapses } from '../src/gates/collision.js';

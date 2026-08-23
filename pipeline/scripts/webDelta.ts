@@ -59,7 +59,7 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { tokenStream } from '@jestek-dev/scripture-engine';
+import { tokenStream } from '@jestek-dev/scripture-engine/internal';
 
 import { BOOKS, findBook } from '../src/books.js';
 import { importVpl } from '../src/importers/vplImporter.js';

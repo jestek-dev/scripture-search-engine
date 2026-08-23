@@ -12,6 +12,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      // The subpath alias must come FIRST: Vite string aliases also match
+      // 'key/…' prefixes, so the bare-package entry would otherwise rewrite
+      // '…/internal' to '…/index.ts/internal'.
+      '@jestek-dev/scripture-engine/internal': fileURLToPath(new URL('../engine/src/internal.ts', import.meta.url)),
+      '@jestek-dev/scripture-artifact-client': fileURLToPath(new URL('../artifact-client/src/index.ts', import.meta.url)),
       '@jestek-dev/scripture-engine': fileURLToPath(new URL('../engine/src/index.ts', import.meta.url)),
     },
   },

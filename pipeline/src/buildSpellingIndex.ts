@@ -48,7 +48,7 @@ import {
   dictionaryDeleteDepth,
   SPELLING_EDIT1_MAX_TOKEN_LENGTH,
   SPELLING_MIN_TOKEN_LENGTH,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 
 /**
  * Minimal read-write SQLite surface. Unlike buildCorpus's write-only shape,

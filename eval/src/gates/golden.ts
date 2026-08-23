@@ -12,7 +12,7 @@
  * collation.
  */
 
-import { rank, type Candidate, type Evidence } from '@jestek-dev/scripture-engine';
+import { rank, type Candidate, type Evidence } from '@jestek-dev/scripture-engine/internal';
 
 import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
 
