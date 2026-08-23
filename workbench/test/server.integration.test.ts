@@ -82,7 +82,10 @@ describe('v2 fixture compilation HTTP contracts', () => {
     expect(overlappingApply.status).toBe(409);
 
     let job = startedBody.data.job;
-    for (let attempt = 0; attempt < 300 && !['passed', 'failed', 'timed-out', 'cancelled'].includes(job.state); attempt += 1) {
+    // 1100 x 100ms = 110s inside the 120s test timeout: the job runs a real
+    // `npm run typecheck`, which under concurrent-suite load can exceed the
+    // previous 30s poll budget (a load-marginal flake that passed solo).
+    for (let attempt = 0; attempt < 1100 && !['passed', 'failed', 'timed-out', 'cancelled'].includes(job.state); attempt += 1) {
       await new Promise((resolve) => setTimeout(resolve, 100));
       let response: Response;
       try { response = await fetch(`http://127.0.0.1:${port}/api/v2/jobs/${runId}`); }
@@ -97,7 +100,7 @@ describe('v2 fixture compilation HTTP contracts', () => {
     expect(job.state, JSON.stringify(job, null, 2)).toBe('passed');
     expect(job.command).toBe(process.execPath);
     expect(job.args[0]).toMatch(/npm-cli\.js$/);
-  }, 60_000);
+  }, 120_000);
 
   it('stops admission before draining an active check during SIGTERM shutdown', async () => {
     const port = await unusedPort();
