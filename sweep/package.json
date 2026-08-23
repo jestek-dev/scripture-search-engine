@@ -16,6 +16,7 @@
     "grade-l1": "tsx src/grade/layer1Cli.ts"
   },
   "dependencies": {
+    "@jestek-dev/scripture-artifact-client": "*",
     "@jestek-dev/scripture-engine": "*",
     "yaml": "2.8.1"
   },
