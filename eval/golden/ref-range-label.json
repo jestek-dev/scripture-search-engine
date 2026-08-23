@@ -1,0 +1,20 @@
+{
+  "id": "ref-range-label",
+  "status": "pending",
+  "note": [
+    "Policy fixture for the live verse-1 range-label defect (audit overview root cause 4): \"John 3:1-5\" resolves to the right passage today but is LABELED \"John 3\" — labelFor renders Book C for any same-chapter range starting at verse 1 without checking the chapter end. A result that ranks correctly but carries the wrong reason is a contract failure (working agreement 5), so the wrong label is pinned as a failure, not tolerated as cosmetic.",
+    "Both grammars carry the exact expected label so the fixture pins right-passage AND right-label for each: the colon form needs QR-4's labelFor fix, the space form needs QR-4's grammar. Activated in QR-4's commit."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "John 3:1-5",
+      "expectedKind": "reference",
+      "expectedPassage": "John 3:1-5"
+    },
+    {
+      "query": "John 3 1-5",
+      "expectedKind": "reference",
+      "expectedPassage": "John 3:1-5"
+    }
+  ]
+}

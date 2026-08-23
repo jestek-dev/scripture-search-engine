@@ -22,6 +22,13 @@
     "why this must be a concept lexicon fix, not a token fix: the searcher's",
     "word is not in the translation's text.",
     "",
+    "E2 SEED GUARD (2026-08-21): the preferredOrder pair above only fires",
+    "when John 14:26 is present in the window; Jesse's ruling ('may rank,",
+    "just never lead') is unconditional. The mustNotLead guard encodes the",
+    "ruling exactly. Job 16 is still absent from the fixture corpus, so the",
+    "Guard vacuity report names this guard VACUOUS — deliberately visible,",
+    "never a silent pass — until the corpus re-pin lands the chapter (F34).",
+    "",
     "Pending per fixtures-first; flip active in the PR that lands",
     "holy-spirit-the-comforter.yaml."
   ],
@@ -48,6 +55,12 @@
     {
       "above": "John 14:26",
       "below": "Job 16:2"
+    }
+  ],
+  "mustNotLead": [
+    {
+      "ref": "Job 16:2",
+      "why": "'miserable comforters' — the query word in its opposite frame; demoted, never forbidden (Jesse's 2026-08-15 audit ruling)"
     }
   ],
   "alsoAcceptable": [

@@ -1,0 +1,15 @@
+{
+  "id": "ref-songs-of-solomon",
+  "status": "pending",
+  "note": [
+    "Battery row ref8 (search-quality audit 2026-08-20): \"Songs of Solomon 2:1\" — a common spoken form of the book name with no book_aliases row — is INVALID-REFERENCE today. Written fixture-first; activated by QR-3's alias coverage.",
+    "The fixture corpus carries zero Song of Solomon verses this revision (the book row and its aliases exist; the chapter is empty). QR-3's PR adds Song of Solomon 2:1 to web-subset.json in the same change that adds the alias row — the pending status is what keeps that gap structurally honest here."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "Songs of Solomon 2:1",
+      "expectedKind": "reference",
+      "expectedPassage": "Song of Solomon 2:1"
+    }
+  ]
+}

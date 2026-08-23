@@ -13,10 +13,26 @@
 import type { ScriptureEngine } from '@jestek-dev/scripture-engine';
 
 import { parseAnchorRef } from '../../../pipeline/src/importers/ontologyImporter.js';
-import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
+import { mergeGateResults } from './merge.js';
+import { fail, notApplicable, pass, warn, type GateFinding, type GateResult } from './types.js';
 
 export const WITHIN_TOP_VALUES = [1, 3, 5, 10] as const;
 export type WithinTop = (typeof WITHIN_TOP_VALUES)[number];
+
+/**
+ * mustNotLead measures leadership, not presence, so its window is narrow by
+ * construction: rank 1 (the default) or the top 3. A wider ban is what
+ * mustNotRank is for.
+ */
+export const MUST_NOT_LEAD_WINDOWS = [1, 3] as const;
+export type MustNotLeadWindow = (typeof MUST_NOT_LEAD_WINDOWS)[number];
+
+/**
+ * Machine-report category for a guard whose reference resolves to no verse
+ * in the running corpus. Semantic (not G3_*-coded) because vacuity rides a
+ * warn sub-result through report generation on honest runs.
+ */
+export const GUARD_VACUOUS_CATEGORY = 'sse.gauntlet.v1.finding.g3-golden.guard-vacuous';
 
 export interface CorpusExpectation {
   /** Canonical Milestone 2 spelling. */
@@ -34,6 +50,49 @@ export interface PreferredOrder {
   readonly withinTop?: WithinTop;
 }
 
+/**
+ * The missing middle between preferredOrder (needs a named counterpart
+ * present in the window) and mustNotRank (a total ban from the window): the
+ * reference MAY rank — it is scripture, and suppressing it is forbidden —
+ * but must not LEAD the fixture's query. `why` is required: every guard is
+ * an attributed human judgment, and the finding must be able to say whose
+ * reasoning it enforces.
+ */
+export interface MustNotLead {
+  readonly ref?: string;
+  readonly reference?: string;
+  readonly why?: string;
+  readonly withinTop?: MustNotLeadWindow;
+}
+
+export const REFERENCE_EXPECTATION_KINDS = ['reference', 'invalid-reference', 'discovery'] as const;
+export type ReferenceExpectationKind = (typeof REFERENCE_EXPECTATION_KINDS)[number];
+
+/**
+ * One reference-intent assertion: this exact query must produce this
+ * `research()` outcome kind. Per-query entries rather than one fixture-level
+ * pair, because a single fixture may cover queries resolving to different
+ * passages (one ordinal fixture pinning both "1st Corinthians 13" and
+ * "2nd Timothy 1:7").
+ */
+export interface ReferenceExpectation {
+  readonly query: string;
+  readonly expectedKind: ReferenceExpectationKind;
+  /**
+   * Required with kind `reference`, forbidden otherwise: the exact
+   * `passage.reference` label. A kind-only "it resolved" assertion is a
+   * hollow guard — every reference pin names the label it must produce.
+   */
+  readonly expectedPassage?: string;
+  /**
+   * Valid only with kind `invalid-reference`: the canonical book name the
+   * result's `suggestion.book` must cite. Until the engine carries a
+   * suggestion field, an entry asserting this fails — keep such fixtures
+   * pending; they are the specification for the unlanded work.
+   */
+  readonly expectedSuggestion?: string;
+}
+
 export interface CorpusFixture {
   readonly id: string;
   readonly status: 'active' | 'pending';
@@ -47,7 +106,14 @@ export interface CorpusFixture {
   readonly preferredOrder?: readonly PreferredOrder[];
   readonly additionalQueries?: readonly string[];
   readonly mustNotRank?: readonly { reference?: string; ref?: string; why?: string }[];
+  readonly mustNotLead?: readonly MustNotLead[];
   readonly coversConcepts?: readonly string[];
+  /**
+   * Reference-intent form: mutually exclusive with every discovery-measuring
+   * field above. A fixture measures either reference resolution or discovery
+   * ranking, never both, so no combination is ever half-defined.
+   */
+  readonly referenceExpectations?: readonly ReferenceExpectation[];
   /** Informational fields accepted by the existing hand-written fixtures. */
   readonly note?: readonly string[];
   readonly alsoAcceptable?: readonly string[];
@@ -80,7 +146,14 @@ interface NormalizedCorpusFixture {
   readonly preferredOrder: readonly NormalizedPreferredOrder[];
   readonly additionalQueries: readonly string[];
   readonly mustNotRank: readonly { ref: string; why?: string; range: { start: number; end: number } }[];
+  readonly mustNotLead: readonly {
+    ref: string;
+    why: string;
+    withinTop: MustNotLeadWindow;
+    range: { start: number; end: number };
+  }[];
   readonly coversConcepts?: readonly string[];
+  readonly referenceExpectations: readonly ReferenceExpectation[];
 }
 
 interface FixtureValidation {
@@ -97,10 +170,29 @@ const FIXTURE_FIELDS = new Set([
   'preferredOrder',
   'additionalQueries',
   'mustNotRank',
+  'mustNotLead',
   'coversConcepts',
   'note',
   'alsoAcceptable',
   'generatedBy',
+  'referenceExpectations',
+]);
+/** The discovery-measuring fields a reference-intent fixture may not carry. */
+const DISCOVERY_ONLY_FIELDS = [
+  'query',
+  'additionalQueries',
+  'expectedTop',
+  'expectedWithinTop',
+  'preferredOrder',
+  'mustNotRank',
+  'mustNotLead',
+  'coversConcepts',
+] as const;
+const REFERENCE_EXPECTATION_FIELDS = new Set([
+  'query',
+  'expectedKind',
+  'expectedPassage',
+  'expectedSuggestion',
 ]);
 const EXPECTATION_FIELDS = new Set([
   'ref',
@@ -111,6 +203,7 @@ const EXPECTATION_FIELDS = new Set([
 ]);
 const PREFERRED_ORDER_FIELDS = new Set(['above', 'below', 'withinTop']);
 const MUST_NOT_RANK_FIELDS = new Set(['ref', 'reference', 'why']);
+const MUST_NOT_LEAD_FIELDS = new Set(['ref', 'reference', 'why', 'withinTop']);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -118,6 +211,10 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isWithinTop(value: unknown): value is WithinTop {
   return typeof value === 'number' && (WITHIN_TOP_VALUES as readonly number[]).includes(value);
+}
+
+function isReferenceExpectationKind(value: unknown): value is ReferenceExpectationKind {
+  return typeof value === 'string' && (REFERENCE_EXPECTATION_KINDS as readonly string[]).includes(value);
 }
 
 function rangesOverlap(
@@ -199,7 +296,9 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
     'expectedWithinTop' in input ||
     'preferredOrder' in input ||
     'mustNotRank' in input ||
-    'additionalQueries' in input;
+    'mustNotLead' in input ||
+    'additionalQueries' in input ||
+    'referenceExpectations' in input;
   if (!isCorpusFixture) return { findings: [] };
 
   const fixtureId = typeof input.id === 'string' && input.id.trim() ? input.id.trim() : '<unknown>';
@@ -387,6 +486,165 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
     }
   }
 
+  const mustNotLead: NormalizedCorpusFixture['mustNotLead'][number][] = [];
+  const leadGuardRanges = new Set<string>();
+  if (input.mustNotLead !== undefined && !Array.isArray(input.mustNotLead)) {
+    findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'mustNotLead must be an array'));
+  } else {
+    for (const [index, guard] of (input.mustNotLead ?? []).entries()) {
+      const location = `mustNotLead[${index}]`;
+      if (!isRecord(guard)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must be an object`));
+        continue;
+      }
+      findings.push(...unknownFieldFindings(fixtureId, guard, MUST_NOT_LEAD_FIELDS, location));
+      const hasRef = guard.ref !== undefined;
+      const hasReference = guard.reference !== undefined;
+      if (hasRef === hasReference) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must contain exactly one of "ref" or legacy "reference"`));
+        continue;
+      }
+      const parsed = parsedRef(fixtureId, hasRef ? guard.ref : guard.reference, location, findings);
+      if (!parsed) continue;
+      if (typeof guard.why !== 'string' || !guard.why.trim()) {
+        // Unlike mustNotRank's legacy-optional why: a leadership demotion is
+        // always a human ruling, and the finding must be able to cite it.
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.why is required: name the human judgment this guard enforces`));
+        continue;
+      }
+      if (guard.withinTop !== undefined
+          && !(MUST_NOT_LEAD_WINDOWS as readonly number[]).includes(guard.withinTop as number)) {
+        findings.push(
+          fixtureFinding(
+            fixtureId,
+            'G3_FIXTURE_INVALID_WINDOW',
+            `${location}.withinTop must be 1 or 3 — mustNotLead measures leadership, not presence`,
+          ),
+        );
+        continue;
+      }
+      const rangeKey = `${parsed.range.start}:${parsed.range.end}`;
+      if (leadGuardRanges.has(rangeKey)) {
+        findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_DUPLICATE_EXPECTATION', `${location} duplicates a mustNotLead reference range`, { ref: parsed.ref }));
+        continue;
+      }
+      leadGuardRanges.add(rangeKey);
+      mustNotLead.push({
+        ref: parsed.ref,
+        why: guard.why,
+        withinTop: (guard.withinTop as MustNotLeadWindow | undefined) ?? 1,
+        range: parsed.range,
+      });
+    }
+  }
+
+  const referenceExpectations: ReferenceExpectation[] = [];
+  if (input.referenceExpectations !== undefined) {
+    const mixed = DISCOVERY_ONLY_FIELDS.filter((field) => field in input);
+    if (mixed.length > 0) {
+      findings.push(
+        fixtureFinding(
+          fixtureId,
+          'G3_FIXTURE_MALFORMED',
+          `referenceExpectations cannot be combined with ${mixed.join(', ')} — a fixture ` +
+            'measures reference resolution or discovery ranking, never both',
+          { fields: mixed },
+        ),
+      );
+    }
+    if (!Array.isArray(input.referenceExpectations)) {
+      findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'referenceExpectations must be an array'));
+    } else if (input.referenceExpectations.length === 0) {
+      // An empty list would be an active fixture asserting nothing — the
+      // vacuous pass this schema exists to make impossible.
+      findings.push(
+        fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', 'referenceExpectations must contain at least one entry'),
+      );
+    } else {
+      const seenQueries = new Set<string>();
+      for (const [index, entry] of input.referenceExpectations.entries()) {
+        const location = `referenceExpectations[${index}]`;
+        if (!isRecord(entry)) {
+          findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location} must be an object`));
+          continue;
+        }
+        findings.push(...unknownFieldFindings(fixtureId, entry, REFERENCE_EXPECTATION_FIELDS, location));
+        if (typeof entry.query !== 'string' || entry.query.trim().length === 0) {
+          findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.query must be a non-empty string`));
+          continue;
+        }
+        if (!isReferenceExpectationKind(entry.expectedKind)) {
+          findings.push(
+            fixtureFinding(
+              fixtureId,
+              'G3_FIXTURE_MALFORMED',
+              `${location}.expectedKind must be "reference", "invalid-reference", or "discovery"`,
+            ),
+          );
+          continue;
+        }
+        if (entry.expectedKind === 'reference') {
+          if (typeof entry.expectedPassage !== 'string' || entry.expectedPassage.trim().length === 0) {
+            // Kind alone is a hollow guard: "it resolved to SOME passage"
+            // admits every mis-resolution. Each reference pin names its label.
+            findings.push(
+              fixtureFinding(
+                fixtureId,
+                'G3_FIXTURE_MALFORMED',
+                `${location}.expectedPassage is required with expectedKind "reference": ` +
+                  'name the exact passage label the query must resolve to',
+              ),
+            );
+            continue;
+          }
+        } else if (entry.expectedPassage !== undefined) {
+          findings.push(
+            fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.expectedPassage is only valid with expectedKind "reference"`),
+          );
+          continue;
+        }
+        if (entry.expectedKind === 'invalid-reference') {
+          if (entry.expectedSuggestion !== undefined &&
+            (typeof entry.expectedSuggestion !== 'string' || entry.expectedSuggestion.trim().length === 0)) {
+            findings.push(
+              fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.expectedSuggestion must be a non-empty canonical book name`),
+            );
+            continue;
+          }
+        } else if (entry.expectedSuggestion !== undefined) {
+          findings.push(
+            fixtureFinding(
+              fixtureId,
+              'G3_FIXTURE_MALFORMED',
+              `${location}.expectedSuggestion is only valid with expectedKind "invalid-reference"`,
+            ),
+          );
+          continue;
+        }
+        // Deterministic engine, one query, one outcome: a second entry for
+        // the same query is either redundant or contradictory.
+        if (seenQueries.has(entry.query)) {
+          findings.push(
+            fixtureFinding(
+              fixtureId,
+              'G3_FIXTURE_DUPLICATE_EXPECTATION',
+              `${location} duplicates the query "${entry.query}"`,
+              { query: entry.query },
+            ),
+          );
+          continue;
+        }
+        seenQueries.add(entry.query);
+        referenceExpectations.push({
+          query: entry.query,
+          expectedKind: entry.expectedKind,
+          ...(typeof entry.expectedPassage === 'string' ? { expectedPassage: entry.expectedPassage } : {}),
+          ...(typeof entry.expectedSuggestion === 'string' ? { expectedSuggestion: entry.expectedSuggestion } : {}),
+        });
+      }
+    }
+  }
+
   if (findings.length > 0 || fixtureId === '<unknown>' || (input.status !== 'active' && input.status !== 'pending')) {
     return { findings };
   }
@@ -401,7 +659,9 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
       preferredOrder,
       additionalQueries: (input.additionalQueries as readonly string[] | undefined) ?? [],
       mustNotRank,
+      mustNotLead,
       ...(Array.isArray(input.coversConcepts) ? { coversConcepts: input.coversConcepts as readonly string[] } : {}),
+      referenceExpectations,
     },
   };
 }
@@ -547,8 +807,12 @@ export async function runCorpusFixture(
 ): Promise<string[]> {
   const validated = normaliseCorpusFixture(fixture);
   if (!validated.fixture) return validated.findings.map((finding) => finding.message);
-  if (!validated.fixture.query) return [];
+  if (!isRunnable(validated.fixture)) return [];
   return (await runNormalisedFixture(engine, validated.fixture)).map((finding) => finding.message);
+}
+
+function isRunnable(fixture: NormalizedCorpusFixture): boolean {
+  return Boolean(fixture.query) || fixture.referenceExpectations.length > 0;
 }
 
 async function runNormalisedFixture(
@@ -556,8 +820,113 @@ async function runNormalisedFixture(
   fixture: NormalizedCorpusFixture,
 ): Promise<GateFinding[]> {
   const findings: GateFinding[] = [];
-  for (const query of [fixture.query!, ...fixture.additionalQueries]) {
-    findings.push(...(await runOneQuery(engine, fixture, query)));
+  // The two fixture forms are structurally exclusive, so exactly one loop runs.
+  for (const expectation of fixture.referenceExpectations) {
+    findings.push(...(await runOneReferenceQuery(engine, fixture.id, expectation)));
+  }
+  if (fixture.query) {
+    for (const query of [fixture.query, ...fixture.additionalQueries]) {
+      findings.push(...(await runOneQuery(engine, fixture, query)));
+    }
+    findings.push(...(await guardVacuityFindings(engine, fixture, findings)));
+  }
+  return findings;
+}
+
+/**
+ * A guard that never fires has two very different explanations: the corpus
+ * behaved, or the corpus does not contain the guarded passage at all. The
+ * second is a decoration wearing a guard's name — the F34 finding — so it is
+ * reported as VACUOUS, named, at warn level. Never as a pass.
+ */
+async function guardVacuityFindings(
+  engine: ScriptureEngine,
+  fixture: NormalizedCorpusFixture,
+  observed: readonly GateFinding[],
+): Promise<GateFinding[]> {
+  const violatedRefs = new Set(
+    observed
+      .filter(
+        (finding) =>
+          finding.categoryCode === 'G3_MUST_NOT_RANK' || finding.categoryCode === 'G3_MUST_NOT_LEAD',
+      )
+      .map((finding) => finding.params?.['ref'])
+      .filter((ref): ref is string => typeof ref === 'string'),
+  );
+  const findings: GateFinding[] = [];
+  const guards: readonly { readonly field: string; readonly ref: string }[] = [
+    ...fixture.mustNotRank.map((guard) => ({ field: 'mustNotRank', ref: guard.ref })),
+    ...fixture.mustNotLead.map((guard) => ({ field: 'mustNotLead', ref: guard.ref })),
+  ];
+  for (const guard of guards) {
+    // A ref observed in the results is definitionally present; the violation
+    // finding already rings and must not be contradicted by a vacuity claim.
+    if (violatedRefs.has(guard.ref)) continue;
+    const passage = await engine.passage(guard.ref);
+    const present = passage.kind === 'passage' && passage.passage.verses.length > 0;
+    if (present) continue;
+    findings.push({
+      message:
+        `${fixture.id}${fixture.status === 'pending' ? ' (pending)' : ''}: ${guard.field} guard ` +
+        `"${guard.ref}" is VACUOUS — the reference resolves to no verse in the running corpus, so ` +
+        'the guard cannot protect anything until the corpus carries it',
+      subjects: [fixture.id],
+      categoryCode: GUARD_VACUOUS_CATEGORY,
+      params: { field: guard.field, ref: guard.ref, fixtureStatus: fixture.status },
+    });
+  }
+  return findings;
+}
+
+async function runOneReferenceQuery(
+  engine: ScriptureEngine,
+  fixtureId: string,
+  expectation: ReferenceExpectation,
+): Promise<GateFinding[]> {
+  const { query, expectedKind } = expectation;
+  const result = await engine.research(query);
+  if (result.kind !== expectedKind) {
+    return [
+      fixtureFinding(
+        fixtureId,
+        'G3_REFERENCE_KIND',
+        `expected "${query}" to resolve as ${expectedKind}, but the engine returned ${result.kind}`,
+        { query, expectedKind, actualKind: result.kind },
+      ),
+    ];
+  }
+  const findings: GateFinding[] = [];
+  if (result.kind === 'reference' && expectation.expectedPassage !== undefined &&
+    result.passage.reference !== expectation.expectedPassage) {
+    findings.push(
+      fixtureFinding(
+        fixtureId,
+        'G3_REFERENCE_PASSAGE_LABEL',
+        `"${query}" resolves to "${result.passage.reference}", expected exactly ` +
+          `"${expectation.expectedPassage}". The label is part of the contract: the right ` +
+          'passage under the wrong name is still a failure.',
+        { query, expectedPassage: expectation.expectedPassage, actualPassage: result.passage.reference },
+      ),
+    );
+  }
+  if (result.kind === 'invalid-reference' && expectation.expectedSuggestion !== undefined) {
+    // The suggestion field is unlanded engine work; read it structurally so
+    // the assertion fails honestly against its absence instead of the runner
+    // passing vacuously or refusing the fixture.
+    const suggestion = (result as { readonly suggestion?: { readonly book?: unknown } }).suggestion;
+    const book = typeof suggestion?.book === 'string' ? suggestion.book : undefined;
+    if (book !== expectation.expectedSuggestion) {
+      findings.push(
+        fixtureFinding(
+          fixtureId,
+          'G3_REFERENCE_SUGGESTION',
+          `"${query}" is invalid-reference but ` +
+            (book === undefined ? 'carries no suggestion' : `suggests the book "${book}"`) +
+            `; expected the suggestion book "${expectation.expectedSuggestion}"`,
+          { query, expectedSuggestion: expectation.expectedSuggestion, actualSuggestion: book ?? '' },
+        ),
+      );
+    }
   }
   return findings;
 }
@@ -644,6 +1013,23 @@ async function runOneQuery(
     }
   }
 
+  for (const guard of fixture.mustNotLead) {
+    const window = results.slice(0, guard.withinTop);
+    const offender = window.find((entry) => hitInRange(entry, guard.range));
+    if (offender) {
+      findings.push(
+        fixtureFinding(
+          fixture.id,
+          'G3_MUST_NOT_LEAD',
+          `${guard.ref} must not lead "${query}" but appears at position ` +
+            `${window.indexOf(offender) + 1} of the top ${guard.withinTop}. ${guard.why} ` +
+            '(It may rank below the leadership window — scripture is demoted here, never suppressed.)',
+          { query, ref: guard.ref, withinTop: guard.withinTop },
+        ),
+      );
+    }
+  }
+
   for (const preference of fixture.preferredOrder) {
     const pairWindow = results.slice(0, preference.withinTop);
     const above = pairWindow.find((entry) => hitInRange(entry, preference.aboveRange));
@@ -677,51 +1063,146 @@ export async function corpusGoldenGate(
 ): Promise<GateResult> {
   const validated = fixtures.map(normaliseCorpusFixture);
   const runnable = validated.flatMap((result) => result.fixture ? [result.fixture] : []);
-  const active = runnable.filter((fixture) => fixture.status === 'active' && fixture.query);
-  const pending = runnable.filter((fixture) => fixture.status === 'pending' && fixture.query);
+  const active = runnable.filter((fixture) => fixture.status === 'active' && isRunnable(fixture));
+  const pending = runnable.filter((fixture) => fixture.status === 'pending' && isRunnable(fixture));
+  const isVacuous = (finding: GateFinding): boolean =>
+    finding.categoryCode === GUARD_VACUOUS_CATEGORY;
+
+  const activeRun: GateFinding[] = [];
+  for (const fixture of active) {
+    activeRun.push(...(await runNormalisedFixture(engine, fixture)));
+  }
+  const findings: GateFinding[] = [
+    ...validated.flatMap((result) => result.findings),
+    ...activeRun.filter((finding) => !isVacuous(finding)),
+  ];
+  const vacuousFindings: GateFinding[] = activeRun.filter(isVacuous);
+
   const metrics = {
     activeCorpusFixtures: active.length,
     pendingCorpusFixtures: pending.length,
     expectedTopAssertions: runnable.reduce((count, fixture) => count + fixture.expectedTop.length, 0),
     preferredOrderAssertions: runnable.reduce((count, fixture) => count + fixture.preferredOrder.length, 0),
+    mustNotLeadAssertions: runnable.reduce((count, fixture) => count + fixture.mustNotLead.length, 0),
     fixtureValidationFailures: validated.reduce((count, result) => count + result.findings.length, 0),
   };
 
-  const findings: GateFinding[] = validated.flatMap((result) => result.findings);
-  for (const fixture of active) {
-    findings.push(...(await runNormalisedFixture(engine, fixture)));
-  }
-
   if (findings.length > 0) {
-    return fail(
+    const failure = fail(
       'G3-golden',
       'Golden regression (corpus)',
       `${findings.length} corpus fixture expectation(s) failed`,
       findings,
       metrics,
     );
+    // Vacuity stays visible even beside real failures — a red run must not
+    // hide which of its guards were decorations all along.
+    return vacuousFindings.length > 0
+      ? mergeGateResults('Golden regression (corpus)', [
+          failure,
+          guardVacuityResult(vacuousFindings),
+        ])
+      : failure;
   }
 
   // Pending fixtures are RUN even though they cannot fail the build, because
-  // a pending fixture that has started passing is exactly the signal that it
-  // should be promoted — and nobody would notice if it were never executed.
+  // both of their states carry a signal nobody would notice otherwise: one
+  // that has started passing is exactly the promotion trigger, and one that
+  // still fails is the live specification for unlanded engine work — its
+  // current failure detail must be visible, not just "now passing".
   const nowPassing: string[] = [];
+  const stillFailing: GateFinding[] = [];
+  let vacuousOnlyPending = 0;
   for (const fixture of pending) {
-    const pendingFindings = await runNormalisedFixture(engine, fixture);
-    if (pendingFindings.length === 0) nowPassing.push(fixture.id);
+    const allPendingFindings = await runNormalisedFixture(engine, fixture);
+    const pendingFindings = allPendingFindings.filter((finding) => !isVacuous(finding));
+    const pendingVacuous = allPendingFindings.filter(isVacuous);
+    vacuousFindings.push(...pendingVacuous);
+    if (allPendingFindings.length === 0) {
+      nowPassing.push(fixture.id);
+      continue;
+    }
+    if (pendingFindings.length === 0) {
+      // Only vacuous guards: nothing failed, but nothing was measured either.
+      // Not a promotion candidate — promoting it would activate a decoration.
+      vacuousOnlyPending += 1;
+      continue;
+    }
+    const preview = pendingFindings
+      .slice(0, 2)
+      .map((finding) => {
+        const ref = finding.params?.['ref'];
+        return typeof ref === 'string' ? `${finding.categoryCode} ${ref}` : `${finding.categoryCode}`;
+      })
+      .join(', ');
+    stillFailing.push({
+      message:
+        `pending fixture ${fixture.id}: currently fails ${pendingFindings.length} ` +
+        `expectation(s): ${preview}; full detail in machine report`,
+      subjects: [fixture.id],
+      // Semantic (machine-report) form, unlike the G3_* codes above: this
+      // finding rides a warn gate through report generation on every honest
+      // run, so it must satisfy the machine report's category pattern.
+      categoryCode: 'sse.gauntlet.v1.finding.g3-golden.pending-still-failing',
+      params: { failedExpectationMessages: pendingFindings.map((finding) => finding.message) },
+      metrics: { failedExpectations: pendingFindings.length },
+    });
   }
 
   const promote =
     nowPassing.length > 0
       ? ` — PENDING FIXTURES NOW PASSING, promote to active: ${nowPassing.join(', ')}`
       : '';
-  return {
+  const corpusResult: GateResult = {
     ...pass(
     'G3-golden',
     'Golden regression (corpus)',
     `${active.length} corpus fixture(s) hold; ${pending.length} pending${promote}`,
-    metrics,
+    { ...metrics, vacuousGuards: vacuousFindings.length },
     ),
     promotionCandidates: nowPassing,
   };
+  // Warn, never fail: a pending fixture specifies unlanded work, so its
+  // failing state is outside the change under review. The warn status flips
+  // the verdict to ADMIT_WITH_WARNINGS through the normal status path —
+  // findings alone cannot change a verdict.
+  const pendingStatus =
+    stillFailing.length > 0
+      ? warn(
+          'G3-golden',
+          'Pending fixture status',
+          `Pending fixture status: ${stillFailing.length} of ${pending.length} still failing`,
+          stillFailing,
+          { pendingFailures: stillFailing.length },
+        )
+      : pass(
+          'G3-golden',
+          'Pending fixture status',
+          pending.length === 0
+            ? 'Pending fixture status: no pending fixtures'
+            : vacuousOnlyPending > 0
+              ? `Pending fixture status: ${pending.length} pending, ` +
+                `${vacuousOnlyPending} vacuous-guarded (see Guard vacuity), none failing`
+              : `Pending fixture status: ${pending.length} pending, all currently passing`,
+          { pendingFailures: 0 },
+        );
+  return mergeGateResults('Golden regression (corpus)', [
+    corpusResult,
+    pendingStatus,
+    ...(vacuousFindings.length > 0 ? [guardVacuityResult(vacuousFindings)] : []),
+  ]);
+}
+
+/**
+ * The vacuity sub-result: warn-level, named refs, merged into G3 so an
+ * unmeasurable guard flips the verdict to ADMIT_WITH_WARNINGS instead of
+ * passing silently. S-tier declares zero vacuous guards a requirement.
+ */
+function guardVacuityResult(vacuousFindings: readonly GateFinding[]): GateResult {
+  return warn(
+    'G3-golden',
+    'Guard vacuity',
+    `Guard vacuity: ${vacuousFindings.length} guard(s) name references absent from this corpus`,
+    vacuousFindings,
+  );
 }

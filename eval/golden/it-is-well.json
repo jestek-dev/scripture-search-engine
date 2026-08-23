@@ -1,0 +1,40 @@
+{
+  "id": "it-is-well",
+  "query": "it is well with my soul",
+  "status": "pending",
+  "note": [
+    "HARMFUL-#1 GUARD (E2 seed; audit ad7). The 2026-08-20 search-quality",
+    "audit found the hymn-quote query 'it is well with my soul' answered",
+    "FIRST, on the release artifact, by Jeremiah 4:10 — 'you have greatly",
+    "deceived this people' — a grieving person quoting Spafford handed a",
+    "verse about divine deception. This fixture is the specification for the",
+    "ranking/data fix that must move it: mustNotLead, never mustNotRank —",
+    "Jeremiah 4:10 is scripture and may rank, it must simply not lead.",
+    "",
+    "The positive expectations for this query live as battery judgments",
+    "(eval/battery/judgments.json ad7: Ps 42:11, Ps 62:1-2, Ps 103:1-5,",
+    "provisional pending J17); this fixture deliberately carries only the",
+    "guard, so the two instruments cannot drift into asserting different",
+    "answers. The battery's harmful row (Jer 4:10, ad7) is the artifact-run",
+    "twin of this guard; its ratification timing is Jesse's J18 call.",
+    "",
+    "Jeremiah 4 is not in the fixture corpus, so the Guard vacuity report",
+    "names this guard VACUOUS on fixture runs — expected and honest until",
+    "the chapter lands (corpus-needs territory). Pending per fixtures-first;",
+    "promote with the fix that demotes Jer 4:10 on the artifact it ships on.",
+    "",
+    "2026-08-21 (0.10.0 PR-1 rider): this guard is also plan P3.1's stage-1",
+    "corpus obligation — the sole-evidence floor (translation_variant alone",
+    "capped below any honest text match; the cap value is J20's) is the",
+    "engine half that demotes Jer 4:10 here; the guard stays mustNotLead,",
+    "not mustNotRank, per the E2 reasoning above. Its pending ranker twin",
+    "is ranking-invariants-0-10.json; stage-1 battery replay on the full",
+    "corpus is the acceptance evidence."
+  ],
+  "mustNotLead": [
+    {
+      "ref": "Jeremiah 4:10",
+      "why": "divine-deception context; sense-inverted for a grieving asker (audit ad7, 2026-08-20)"
+    }
+  ]
+}

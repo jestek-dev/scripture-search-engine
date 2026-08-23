@@ -64,6 +64,10 @@ gauntlet recomputes and compares every one of them.
 - `engine.corpusFingerprint`: `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`
 - `engine.layerFingerprint`: `cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc`
 
+A v2 approval also quotes `reviewPacketSha256`: the SHA-256 of this packet
+file exactly as written. The tool prints it on stderr when it generates the
+packet, and `sha256sum` on the saved packet reproduces it.
+
 For the review record: the before baseline's canonical-JSON SHA-256 is
 `13144662fb2c09884fc16ccd1f4df3ed97e4d3e4e1ad9412c90cd79e84c2f9c0`; `priorProvenance.baselineGitBlobSha1` comes from
 `git rev-parse <before-revision>:eval/baselines/probes.json`.

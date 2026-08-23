@@ -16,6 +16,14 @@
     "vacuous until the selection is extended — corpus-needs.md marks",
     "Ecclesiastes 1 REQUIRED.",
     "",
+    "E2 SEED GUARD (2026-08-21): the preferredOrder pair only fires when",
+    "2 Corinthians 5:17 is present in the window; the ruling ('must simply",
+    "never lead a fresh-start query') is unconditional, and the mustNotLead",
+    "guard encodes it exactly. Ecclesiastes 1 is still absent from the",
+    "fixture corpus, so the Guard vacuity report names this guard VACUOUS —",
+    "deliberately visible, never a silent pass — until the corpus re-pin",
+    "lands the chapter (F34).",
+    "",
     "The bare query 'creation' is NOT asserted here — that is creation.yaml",
     "territory; this pack's lexicon deliberately has no bare single word.",
     "Ezekiel 36:26 is an anchor but unasserted (Ezekiel 36 absent from the",
@@ -40,6 +48,12 @@
     {
       "above": "2 Corinthians 5:17",
       "below": "Ecclesiastes 1:9"
+    }
+  ],
+  "mustNotLead": [
+    {
+      "ref": "Ecclesiastes 1:9",
+      "why": "'no new thing under the sun' — a searcher reaching for a fresh start told there is none; demoted, never forbidden (sense-inversion pattern)"
     }
   ],
   "alsoAcceptable": [

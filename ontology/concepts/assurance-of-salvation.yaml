@@ -25,6 +25,16 @@ lexicon:
   - never snatch them out of my hand
   # Round-2 book admission 2026-08-18.
   - the lord knows those who are his
+  # Bare word added 2026-08-20 (lexicon-concepts PR 2) to close a MEASURED
+  # gap: bare "assurance" fired no concept (every phrase in both assurance
+  # packs is multi-token). This pack is the word's honest home per the
+  # SENSE DISCIPLINE note above — remembered-faith-as-assurance is the
+  # Heb 11:1 faith-DEFINITION sense and stays phrasing-only (its inventory
+  # row records the skip). The 2026-08-08 audit deferred the bare word only
+  # because this concept did not exist yet
+  # (assurance-of-salvation.json additionalQueries failing run is the
+  # evidence). Decision recorded in ontology/lexicon-inventory.yaml.
+  - assurance
 anchors:
   # "These things I have written to you who believe… that you may KNOW that
   # you have eternal life" (WEB). The letter's own stated purpose is

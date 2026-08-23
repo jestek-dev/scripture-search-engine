@@ -1,0 +1,133 @@
+# GENESIS-PILOT PACK (14-concept batch, drafted 2026-08-22) — envy,
+# jealousy, sibling rivalry. No current concept carries these queries; the
+# pilot doc names contentment as the nearest neighbor "but money/
+# circumstance-shaped."
+#
+# BOUNDARY DESIGN — `contentment` owns the comparison vocabulary
+# ("comparison", "comparing yourself") and keeps it: this lexicon speaks no
+# comparison token. Hand-computed G4 ratios vs contentment: shared phrases 0,
+# shared tokens {love} only (from "love does not envy" vs "love of money"),
+# ratio 0.10 — far under limits. Worst pair in the full 108-concept sweep is
+# love-not-the-world at token ratio 0.25 ({love}); phrase overlap is zero
+# everywhere.
+#
+# HUMAN ENVY, NOT DIVINE JEALOUSY. "I, the LORD your God, am a jealous God"
+# (Exod 20:5, IN corpus) is an honest lexical match for "jealousy" in the
+# opposite register — the searcher struggling with envy should not be served
+# God's covenant jealousy at #1. Demoted, never forbidden, per the
+# sense-inversion-provision ruling (Jesse, 2026-08-15) — see the
+# preferredOrder pair in envy-and-jealousy.json.
+#
+# No theology scores: the pack reports that Torrey ENVY and LH editorial
+# name these passages; it never adjudicates the searcher's heart.
+id: envy-and-jealousy
+label: Envy and jealousy
+lexicon:
+  # Bare single-token entries, deliberate (NEEDS-JESSE §1.6d option-3
+  # precedent; one-token discount 0.55). These ARE what people type, no
+  # other concept claims them, and each is this pack's own subject word.
+  # "jealous" and "jealousy" stem to different tokens (jealou / jealousy),
+  # so both are listed.
+  - envy
+  - jealousy
+  - jealous
+  # "jealous of others" was drafted and DROPPED: "of others" normalizes
+  # away entirely (hand-checked with the engine tokenizer), so the entry
+  # would duplicate bare "jealous" exactly. The query still matches
+  # through the bare word.
+  # "envious of others" likewise collapses to the single token "envious" —
+  # it functions as a fourth bare-word entry (one-token discount applies)
+  # and is recorded as admitted: envious in the inventory-row proposal.
+  - envious of others
+  - envy in my heart
+  - struggling with envy
+  # The Genesis register (Cain/Abel, Joseph and his brothers, Rachel and
+  # Leah) and a live modern query. "rivalry" appears verbatim in WEB
+  # Gal 5:20 ("rivalries").
+  - sibling rivalry
+  # Remembered phrasing of 1 Cor 13:4 ("Love doesn't envy", WEB). Shares
+  # only the token "love" with loving-others' 8-entry lexicon (ratio 0.10);
+  # the passage claim is narrow — v4's envy clause, not the love poem.
+  - love does not envy
+anchors:
+  # "The life of the body is a heart at peace, but envy rots the bones"
+  # (WEB wording from knowledge — Proverbs 14 NOT in
+  # pipeline/fixtures/web-subset.json; see corpus-needs note). Torrey ENVY
+  # "Hurtful to the envious :: Proverbs 14:30". The single teaching verse a
+  # struggling searcher most needs.
+  - ref: Proverbs 14:30
+    sources: [torrey]
+    weight: 1.0
+  # Cain: the offering regarded and not regarded, anger, sin crouching at
+  # the door, murder (WEB from knowledge — Genesis 4 NOT in web-subset).
+  # Torrey ENVY "Exemplified — Cain :: Genesis 4:5"; editorial for the
+  # narrative range. Genesis-pilot seed ref.
+  - ref: Genesis 4:3-8
+    sources: [editorial]
+    weight: 0.9
+  # "his brothers envied him" (37:11, WEB from knowledge — Genesis 37 NOT
+  # in web-subset). The robe, the dreams, the hatred. Torrey ENVY
+  # "Exemplified — Joseph's brethren :: Genesis 37:11"; editorial for the
+  # range. Genesis-pilot seed ref.
+  - ref: Genesis 37:3-11
+    sources: [editorial]
+    weight: 0.9
+  # "For where jealousy and selfish ambition are, there is confusion and
+  # every evil deed" (WEB from knowledge — James 3 NOT in web-subset).
+  # Torrey ENVY "Inconsistent with the gospel :: Jas 3:14" and "Leads to
+  # every evil work :: Jas 3:16"; editorial because v15 (the sentence
+  # between the outline's two refs) completes the unit.
+  - ref: James 3:14-16
+    sources: [editorial]
+    weight: 0.9
+  # "Saul eyed David from that day and forward" after the women's song
+  # (WEB from knowledge — 1 Samuel 18 NOT in web-subset). Torrey ENVY
+  # "Exemplified — Saul :: 1 Samuel 18:8"; editorial for the range.
+  - ref: 1 Samuel 18:6-9
+    sources: [editorial]
+    weight: 0.85
+  # "Wrath is cruel, and anger is overwhelming; but who is able to stand
+  # before jealousy?" (WEB). Torrey ENVY "None can stand before ::
+  # Proverbs 27:4". IN corpus — this pack's G3 assert.
+  - ref: Proverbs 27:4
+    sources: [torrey]
+    weight: 0.85
+  # "Love is patient and is kind. Love doesn't envy." (WEB). The positive
+  # counter-text. loving-others anchors 13:4-8 for the love frame; this row
+  # claims only the envy clause of v4 — dual claim on the passage is honest
+  # and legal. Not in the Torrey ENVY outline; editorial. IN corpus.
+  - ref: 1 Corinthians 13:4
+    sources: [editorial]
+    weight: 0.8
+  # "...idolatry, sorcery, hatred, strife, jealousies, outbursts of anger,
+  # rivalries... envy..." (WEB). Torrey ENVY "A work of the flesh ::
+  # Gal 5:21"; editorial because the works-of-the-flesh list runs 19-21.
+  # IN corpus. (remembered-fruit-of-the-spirit holds 5:22-23 — adjacent,
+  # not overlapping.)
+  - ref: Galatians 5:19-21
+    sources: [editorial]
+    weight: 0.75
+  # "Don't fret because of evildoers, neither be envious against those who
+  # work unrighteousness" (WEB). Torrey ENVY "Prosperity of the wicked
+  # should not excite :: Ps 37:1". IN corpus. peace-of-god also anchors
+  # 37:1 (fret register); dual claim is honest — the verse is both.
+  - ref: Psalms 37:1
+    sources: [torrey]
+    weight: 0.7
+  # "For I was envious of the arrogant, when I saw the prosperity of the
+  # wicked" (WEB) — the psalmist's own confession, with his near-stumble
+  # (v2). Torrey lists 73:3 (same outline point as Ps 37:1); editorial for
+  # the range. IN corpus.
+  - ref: Psalms 73:2-3
+    sources: [editorial]
+    weight: 0.7
+  # "Putting away therefore... all deceit, hypocrisies, envies..." (WEB).
+  # Torrey ENVY "Hinders growth in grace :: 1 Pet 2:1, 1 Pet 2:2". IN
+  # corpus. Supporting weight only.
+  - ref: 1 Peter 2:1-2
+    sources: [torrey]
+    weight: 0.6
+related:
+  - contentment
+  - loving-others
+  - harmony-with-others

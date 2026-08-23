@@ -1,0 +1,41 @@
+{
+  "id": "holiness-sanctification",
+  "query": "sanctification",
+  "additionalQueries": [
+    "sanctify",
+    "holiness"
+  ],
+  "status": "pending",
+  "coversConcepts": [
+    "holiness"
+  ],
+  "note": [
+    "GAP FIXTURE (audit F10 sanctification class + F13 bare 'holiness';",
+    "re-verified 2026-08-21 sweep). holiness.yaml carries only 'sanctified',",
+    "which the stemmer maps to 'sanctifi' while the query noun",
+    "'sanctification' normalizes to itself — distinct tokens, so the",
+    "pastor-register noun never fires the concept. The hermetic run finds",
+    "1 Thess 4:3 #1 for 'sanctification' by token_overlap LUCK with no",
+    "curated chip (a right verse with the wrong reason is still the gap —",
+    "explanations are part of the contract); bare 'holiness' likewise",
+    "surfaces no concept chip. Specification for lexicon additions",
+    "'sanctification', 'sanctify', 'holiness' on the EXISTING holiness pack",
+    "(extend, never a neighbour; the stemmer is never touched) plus the",
+    "1 Thess 4:3 anchor. Folds into the active holiness.json as",
+    "additionalQueries when that item lands; this file then retires."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Thessalonians 4:3",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Called to be holy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 1:15-16",
+    "1 Thessalonians 4:7",
+    "Hebrews 12:14"
+  ]
+}

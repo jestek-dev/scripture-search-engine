@@ -1,0 +1,2521 @@
+{
+  "$schema": "scripture-search-engine/battery-judgments/v1",
+  "batteryVersion": 1,
+  "gradeMeanings": {
+    "3": "a primary passage a pastor would name for this query",
+    "2": "good, on-theme",
+    "1": "acceptable/related",
+    "0": "irrelevant (or wrong direction) for this query"
+  },
+  "harmfulMeaning": "a sense-inverted or negative-context result presented for a pastoral query (search-quality-report-2026-08-20 definition; criterion ratification is J15). A hard-fail flag consumed at ranks - never a negative gain and never a theology score.",
+  "provisionalPolicy": "Every seeded judgment ships provisional: true until Jesse ratifies (J17; merge of the seeding PR = ratification, flags drop only for rows he affirms). The seven FLAG-FOR-JESSE queries (fn3, fn14, ad8, ph4, ad12, fn6, fn13) stay provisional until his individual rulings (J1-J7) land. Provisional rows are loaded and reported but excluded from every failing check and every aggregate.",
+  "judgments": {
+    "fn1": {
+      "judged": [
+        {
+          "ref": "Philippians 4:6-7",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20: excellent in both configs; primary anxiety passage",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Peter 5:7",
+          "grade": 3,
+          "basis": "primary anxiety passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 6:25-34",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn2": {
+      "judged": [
+        {
+          "ref": "Psalms 34:18",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: 'Ps 34:18, John 11:35 in top-3 - the pastoral pack at its best'",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Revelation 21:4",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: config top-1 graded excellent",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 5:4",
+          "grade": 3,
+          "basis": "primary mourning beatitude; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 11:35",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 §2: named in the excellent top-3",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "2 Corinthians 1:3-4",
+          "grade": 2,
+          "basis": "on-theme comfort passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn3": {
+      "judged": [
+        {
+          "ref": "1 John 1:9",
+          "grade": 3,
+          "basis": "J1 plan default applied (assurance leads a penitent); provisional pending Jesse's J1 ruling",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 103:12",
+          "grade": 2,
+          "basis": "assurance of forgiveness; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 8:1",
+          "grade": 2,
+          "basis": "assurance of forgiveness; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Ephesians 4:32",
+          "grade": 1,
+          "basis": "search-quality-report-2026-08-20 FLAG #1: forgive-others direction - defensible as related, not the catered answer",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 6:14-15",
+          "grade": 1,
+          "basis": "search-quality-report-2026-08-20 FLAG #1: conditional-forgiveness direction - related, not the catered answer",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn4": {
+      "judged": [
+        {
+          "ref": "Deuteronomy 31:6",
+          "grade": 3,
+          "basis": "primary never-forsaken promise; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 139:7-10",
+          "grade": 2,
+          "basis": "on-theme presence psalm; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 28:20",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 27:10",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn5": {
+      "judged": [
+        {
+          "ref": "Philippians 4:6",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: Config B top-1 graded excellent",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 6:26",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 §2: named in the catered Config B answer",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Timothy 6:6-9",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 §2: named in the catered Config B answer",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Luke 22:5",
+          "grade": 0,
+          "basis": "search-quality-report-2026-08-20 §2: Judas's betrayal payment - Config A junk top-1",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn6": {
+      "judged": [
+        {
+          "ref": "Psalms 34:18",
+          "grade": 2,
+          "basis": "crisis-comfort direction; provisional pending Jesse's J6 emphasis ruling",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Corinthians 13:4-7",
+          "grade": 2,
+          "basis": "mutually-addressed love passage; provisional pending J6",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Colossians 3:12-14",
+          "grade": 2,
+          "basis": "mutually-addressed; provisional pending J6",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Ephesians 4:2-3",
+          "grade": 2,
+          "basis": "mutually-addressed; provisional pending J6",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn7": {
+      "judged": [
+        {
+          "ref": "Matthew 11:28-30",
+          "grade": 3,
+          "basis": "seeded from golden fixture rest-for-the-weary expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 62:1-2",
+          "grade": 1,
+          "basis": "seeded from golden fixture rest-for-the-weary alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 40:31",
+          "grade": 1,
+          "basis": "seeded from golden fixture rest-for-the-weary alsoAcceptable; search-quality-report-2026-08-20 §2 Config B top-1 graded excellent",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 55:22",
+          "grade": 1,
+          "basis": "seeded from golden fixture rest-for-the-weary alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn8": {
+      "judged": [
+        {
+          "ref": "Hebrews 2:15",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: 'exact phrase lands the single best verse'",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 23:4",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 §2: Config B #2",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Corinthians 15:55-57",
+          "grade": 2,
+          "basis": "on-theme resurrection hope; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 11:25-26",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn9": {
+      "judged": [
+        {
+          "ref": "Psalms 42:11",
+          "grade": 3,
+          "basis": "primary hope-in-God psalm; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Lamentations 3:21-24",
+          "grade": 3,
+          "basis": "primary hope passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 15:13",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn10": {
+      "judged": [
+        {
+          "ref": "Psalms 42:1-11",
+          "grade": 3,
+          "basis": "seeded from golden fixture pastoral-depression-word expectedTop; search-quality-report-2026-08-20 graded excellent in both configs",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 34:18",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Lamentations 3:21-24",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn11": {
+      "judged": [
+        {
+          "ref": "Romans 8:1",
+          "grade": 3,
+          "basis": "primary no-condemnation passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 103:12",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 John 1:9",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 61:7",
+          "grade": 1,
+          "basis": "related (shame reversed); seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn12": {
+      "judged": [
+        {
+          "ref": "Galatians 6:9",
+          "grade": 3,
+          "basis": "primary do-not-grow-weary passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 40:31",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "2 Corinthians 4:16-18",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Hebrews 12:1-3",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn13": {
+      "judged": [
+        {
+          "ref": "Isaiah 46:4",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 FLAG #7: named for the missing aging/dying-parent concept; provisional pending J7",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "2 Corinthians 1:3-4",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 FLAG #7: named; provisional pending J7",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 71:9",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 FLAG #7: named; provisional pending J7",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 116:15",
+          "grade": 1,
+          "basis": "search-quality-report-2026-08-20 FLAG #7: named; Ps 116:15 gating is Jesse's standing 2026-07-31 decision (J7iii)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Deuteronomy 6:7",
+          "grade": 0,
+          "basis": "search-quality-report-2026-08-20 §2: child-raising direction - graded wrong for this query",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Ephesians 6:4",
+          "grade": 0,
+          "basis": "search-quality-report-2026-08-20 §2: child-raising direction - graded wrong for this query",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Proverbs 22:6",
+          "grade": 0,
+          "basis": "search-quality-report-2026-08-20 §2: child-raising direction - graded wrong for this query",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "fn14": {
+      "judged": [
+        {
+          "ref": "1 John 1:9",
+          "grade": 3,
+          "basis": "J2 plan default applied (restoration-first); provisional pending Jesse's J2 ruling",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Proverbs 24:16",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 FLAG #2: named restoration passage; provisional pending J2",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 7:15-25",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 FLAG #2: named (Rom 7-8); provisional pending J2",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 8:1-2",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 FLAG #2: named (Rom 7-8); provisional pending J2",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 6:23",
+          "grade": 1,
+          "basis": "search-quality-report-2026-08-20 FLAG #2: conviction-first direction some pastors want; provisional pending J2",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw1": {
+      "judged": [
+        {
+          "ref": "Psalms 95:6",
+          "grade": 3,
+          "basis": "seeded from golden fixture worship expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 4:23-24",
+          "grade": 1,
+          "basis": "seeded from golden fixture worship alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 86:9",
+          "grade": 1,
+          "basis": "seeded from golden fixture worship alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Hebrews 10:19-22",
+          "grade": 1,
+          "basis": "seeded from golden fixture worship alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw2": {
+      "judged": [
+        {
+          "ref": "Matthew 28:19",
+          "grade": 3,
+          "basis": "primary baptism command; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Acts 2:38",
+          "grade": 3,
+          "basis": "primary; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 6:3-4",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw3": {
+      "judged": [
+        {
+          "ref": "Ephesians 2:8-9",
+          "grade": 3,
+          "basis": "seeded from golden fixture grace-not-earned expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 3:23-24",
+          "grade": 1,
+          "basis": "seeded from golden fixture grace-not-earned alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Titus 3:5",
+          "grade": 1,
+          "basis": "seeded from golden fixture grace-not-earned alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw4": {
+      "judged": [
+        {
+          "ref": "Jeremiah 29:11",
+          "grade": 3,
+          "basis": "seeded from golden fixture hope-in-god expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Hebrews 6:19",
+          "grade": 1,
+          "basis": "seeded from golden fixture hope-in-god alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 15:13",
+          "grade": 1,
+          "basis": "seeded from golden fixture hope-in-god alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 5:5",
+          "grade": 1,
+          "basis": "seeded from golden fixture hope-in-god alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Peter 1:3",
+          "grade": 1,
+          "basis": "seeded from golden fixture hope-in-god alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Colossians 1:5",
+          "grade": 1,
+          "basis": "seeded from golden fixture hope-in-god alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw5": {
+      "judged": [
+        {
+          "ref": "1 Corinthians 10:13",
+          "grade": 3,
+          "basis": "seeded from golden fixture remembered-a-way-of-escape expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 26:41",
+          "grade": 1,
+          "basis": "seeded from golden fixture remembered-a-way-of-escape alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "James 1:13-14",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Hebrews 4:15-16",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw6": {
+      "judged": [
+        {
+          "ref": "James 5:14-16",
+          "grade": 3,
+          "basis": "primary healing-prayer passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 103:2-3",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 53:5",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Jeremiah 17:14",
+          "grade": 1,
+          "basis": "related; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw7": {
+      "judged": [
+        {
+          "ref": "1 Corinthians 11:23-26",
+          "grade": 3,
+          "basis": "seeded from golden fixture lords-supper expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Luke 22:19-20",
+          "grade": 3,
+          "basis": "seeded from golden fixture lords-supper expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 26:26-28",
+          "grade": 1,
+          "basis": "seeded from golden fixture lords-supper alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Corinthians 10:16",
+          "grade": 1,
+          "basis": "seeded from golden fixture lords-supper alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Acts 2:42",
+          "grade": 1,
+          "basis": "seeded from golden fixture lords-supper alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw8": {
+      "judged": [
+        {
+          "ref": "Romans 5:8",
+          "grade": 3,
+          "basis": "seeded from golden fixture gods-love expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 3:16",
+          "grade": 3,
+          "basis": "seeded from golden fixture gods-love expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 8:38-39",
+          "grade": 3,
+          "basis": "seeded from golden fixture gods-love expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Corinthians 13:4-7",
+          "grade": 2,
+          "basis": "the love chapter; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 John 4:9-10",
+          "grade": 1,
+          "basis": "seeded from golden fixture gods-love alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Jeremiah 31:3",
+          "grade": 1,
+          "basis": "seeded from golden fixture gods-love alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 John 3:1",
+          "grade": 1,
+          "basis": "seeded from golden fixture gods-love alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw9": {
+      "judged": [
+        {
+          "ref": "Psalms 103:12",
+          "grade": 3,
+          "basis": "seeded from golden fixture forgiveness-of-sins expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 John 1:9",
+          "grade": 3,
+          "basis": "seeded from golden fixture forgiveness-of-sins expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 1:18",
+          "grade": 1,
+          "basis": "seeded from golden fixture forgiveness-of-sins alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 43:25",
+          "grade": 1,
+          "basis": "seeded from golden fixture forgiveness-of-sins alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Micah 7:18",
+          "grade": 1,
+          "basis": "seeded from golden fixture forgiveness-of-sins alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 32:5",
+          "grade": 1,
+          "basis": "seeded from golden fixture forgiveness-of-sins alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw10": {
+      "judged": [
+        {
+          "ref": "Philippians 4:6-7",
+          "grade": 3,
+          "basis": "seeded from golden fixture peace-of-god expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 14:27",
+          "grade": 3,
+          "basis": "seeded from golden fixture peace-of-god expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 26:3",
+          "grade": 1,
+          "basis": "seeded from golden fixture peace-of-god alsoAcceptable; search-quality-report-2026-08-20 §2 Config B top-1 graded excellent",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 16:33",
+          "grade": 1,
+          "basis": "seeded from golden fixture peace-of-god alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Peter 5:7",
+          "grade": 1,
+          "basis": "seeded from golden fixture peace-of-god alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Colossians 3:15",
+          "grade": 1,
+          "basis": "seeded from golden fixture peace-of-god alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw11": {
+      "judged": [
+        {
+          "ref": "Nehemiah 8:10",
+          "grade": 3,
+          "basis": "seeded from golden fixture joy-in-the-lord expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Philippians 4:4",
+          "grade": 1,
+          "basis": "seeded from golden fixture joy-in-the-lord alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 16:11",
+          "grade": 1,
+          "basis": "seeded from golden fixture joy-in-the-lord alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 30:5",
+          "grade": 1,
+          "basis": "seeded from golden fixture joy-in-the-lord alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 15:11",
+          "grade": 1,
+          "basis": "seeded from golden fixture joy-in-the-lord alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "sw12": {
+      "judged": [
+        {
+          "ref": "Malachi 3:10",
+          "grade": 3,
+          "basis": "seeded from golden fixture tithing expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Malachi 3:8",
+          "grade": 1,
+          "basis": "seeded from golden fixture tithing alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Proverbs 3:9-10",
+          "grade": 1,
+          "basis": "seeded from golden fixture tithing alsoAcceptable; search-quality-report-2026-08-20 §2 Config B top-1 graded excellent",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Luke 18:12",
+          "grade": 0,
+          "basis": "search-quality-report-2026-08-20 §2: the Pharisee's boast - a sense slip as a leading result",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph1": {
+      "judged": [
+        {
+          "ref": "Psalms 46:10",
+          "grade": 3,
+          "basis": "seeded from golden fixture be-still-and-know expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 46:1-3",
+          "grade": 1,
+          "basis": "seeded from golden fixture be-still-and-know alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph2": {
+      "judged": [
+        {
+          "ref": "Jeremiah 29:11",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: the verse being quoted; J4 plan default applied (quoted verse leads); provisional pending J4",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 15:13",
+          "grade": 1,
+          "basis": "search-quality-report-2026-08-20 §2: on-theme but not the quoted verse",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph3": {
+      "judged": [
+        {
+          "ref": "Philippians 4:13",
+          "grade": 3,
+          "basis": "the quoted verse; J4 plan default applied; provisional pending J4",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph4": {
+      "judged": [
+        {
+          "ref": "1 Peter 5:7",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 FLAG #4: the quoted verse; J4 plan default applied (quoted verse leads); provisional pending J4/J8",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Philippians 4:6-7",
+          "grade": 2,
+          "basis": "seeded from golden fixture peace-of-god expectedTop; on-theme beside the quoted verse",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 14:27",
+          "grade": 2,
+          "basis": "seeded from golden fixture peace-of-god expectedTop; on-theme beside the quoted verse",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph5": {
+      "judged": [
+        {
+          "ref": "Romans 8:28",
+          "grade": 3,
+          "basis": "seeded from golden fixture remembered-all-things-for-good expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph6": {
+      "judged": [
+        {
+          "ref": "Psalms 23:1",
+          "grade": 3,
+          "basis": "the quoted verse; J4 plan default applied; provisional pending J4",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 10:11",
+          "grade": 1,
+          "basis": "related shepherd passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph7": {
+      "judged": [
+        {
+          "ref": "Isaiah 9:6",
+          "grade": 3,
+          "basis": "the quoted verse; J4 plan default applied; provisional pending J4",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph8": {
+      "judged": [
+        {
+          "ref": "Philippians 4:6-7",
+          "grade": 3,
+          "basis": "seeded from golden fixture remembered-anxious-for-nothing expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph9": {
+      "judged": [
+        {
+          "ref": "John 3:16",
+          "grade": 3,
+          "basis": "the quoted verse; J4 plan default applied; provisional pending J4",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph10": {
+      "judged": [
+        {
+          "ref": "Proverbs 3:5-6",
+          "grade": 3,
+          "basis": "the quoted verse; J4 plan default applied; provisional pending J4",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph11": {
+      "judged": [
+        {
+          "ref": "Matthew 11:28-29",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: Config B top-1 graded excellent (the quoted verse)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Luke 18:5",
+          "grade": 0,
+          "basis": "search-quality-report-2026-08-20 §2: 'this widow wears me out' - Config A wrong top-1",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ph12": {
+      "judged": [
+        {
+          "ref": "Isaiah 54:17",
+          "grade": 3,
+          "basis": "the quoted verse; J4 plan default applied; provisional pending J4",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "th1": {
+      "judged": [
+        {
+          "ref": "Romans 5:1",
+          "grade": 3,
+          "basis": "primary justification-by-faith passage (J11 pack lead); seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 3:28",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Galatians 2:16",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "th2": {
+      "judged": [
+        {
+          "ref": "Romans 3:25",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: 'the verse a theologian would name'; th2 ordering measurement reserved to J23",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 John 2:2",
+          "grade": 2,
+          "basis": "on-theme propitiation passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 John 4:10",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Exodus 25:17",
+          "grade": 1,
+          "basis": "search-quality-report-2026-08-20 §2: mercy-seat background - related; ordering vs Rom 3:25 reserved to J23",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "th3": {
+      "judged": [
+        {
+          "ref": "1 Thessalonians 4:3",
+          "grade": 3,
+          "basis": "primary sanctification passage (J11); seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Thessalonians 5:23",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 17:17",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "th4": {
+      "judged": [
+        {
+          "ref": "1 John 2:2",
+          "grade": 3,
+          "basis": "primary atonement passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 53:5-6",
+          "grade": 3,
+          "basis": "primary; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 5:11",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Leviticus 16:30",
+          "grade": 2,
+          "basis": "day-of-atonement institution; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "th5": {
+      "judged": [
+        {
+          "ref": "Matthew 28:19",
+          "grade": 3,
+          "basis": "names the three together (J11: locator pack, no formulation encoded); seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "2 Corinthians 13:14",
+          "grade": 2,
+          "basis": "names the three together; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "th6": {
+      "judged": [
+        {
+          "ref": "John 1:14",
+          "grade": 3,
+          "basis": "primary incarnation passage (J11 pack lead); seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Philippians 2:6-8",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Galatians 4:4",
+          "grade": 1,
+          "basis": "related; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "th7": {
+      "judged": [
+        {
+          "ref": "Romans 8:29-30",
+          "grade": 3,
+          "basis": "primary predestination passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Ephesians 1:4-5",
+          "grade": 3,
+          "basis": "primary; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Ephesians 1:11",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "th8": {
+      "judged": [
+        {
+          "ref": "Acts 3:19",
+          "grade": 3,
+          "basis": "seeded from golden fixture repentance expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 John 1:9",
+          "grade": 3,
+          "basis": "seeded from golden fixture repentance expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 51:10-17",
+          "grade": 1,
+          "basis": "seeded from golden fixture repentance alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "2 Corinthians 7:10",
+          "grade": 1,
+          "basis": "seeded from golden fixture repentance alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Acts 2:38",
+          "grade": 1,
+          "basis": "seeded from golden fixture repentance alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ref1": {
+      "judged": [
+        {
+          "ref": "John 3:16",
+          "grade": 3,
+          "basis": "the referenced verse (space-separated grammar, J34)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ref2": {
+      "judged": [
+        {
+          "ref": "Psalms 23",
+          "grade": 3,
+          "basis": "the referenced chapter",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ref3": {
+      "judged": [
+        {
+          "ref": "1 Corinthians 13",
+          "grade": 3,
+          "basis": "the referenced chapter",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ref4": {
+      "judged": [
+        {
+          "ref": "John 3:16",
+          "grade": 3,
+          "basis": "the referenced verse",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ref5": {
+      "judged": [
+        {
+          "ref": "Philippians 4:6-7",
+          "grade": 3,
+          "basis": "the referenced range",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ref6": {
+      "judged": [
+        {
+          "ref": "Psalms 91",
+          "grade": 3,
+          "basis": "the referenced chapter",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ref7": {
+      "judged": [
+        {
+          "ref": "1 Corinthians 13:4",
+          "grade": 3,
+          "basis": "the referenced verse (space-separated grammar, J34)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ref8": {
+      "judged": [
+        {
+          "ref": "Song of Solomon 2:1",
+          "grade": 3,
+          "basis": "the referenced verse (colloquial book name)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ms1": {
+      "judged": [
+        {
+          "ref": "1 John 1:9",
+          "grade": 3,
+          "basis": "intended query 'forgiveness'; seeded from golden fixture forgiveness-of-sins expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 103:12",
+          "grade": 3,
+          "basis": "intended query 'forgiveness'; seeded from golden fixture forgiveness-of-sins expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ms2": {
+      "judged": [
+        {
+          "ref": "James 5:14",
+          "grade": 3,
+          "basis": "intended query 'anointing'; primary anointing-prayer verse; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Samuel 16:13",
+          "grade": 2,
+          "basis": "intended query 'anointing'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 23:5",
+          "grade": 2,
+          "basis": "intended query 'anointing'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ms3": {
+      "judged": [
+        {
+          "ref": "Romans 3:22",
+          "grade": 3,
+          "basis": "intended query 'righteousness'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "2 Corinthians 5:21",
+          "grade": 3,
+          "basis": "intended query 'righteousness'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 6:33",
+          "grade": 2,
+          "basis": "intended query 'righteousness'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ms4": {
+      "judged": [
+        {
+          "ref": "Philippians 4:13",
+          "grade": 3,
+          "basis": "intended reference 'Philippians 4:13' (book-misspelling, J33)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ms5": {
+      "judged": [
+        {
+          "ref": "Isaiah 40:31",
+          "grade": 3,
+          "basis": "intended query 'strength'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Philippians 4:13",
+          "grade": 3,
+          "basis": "intended query 'strength'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 46:1",
+          "grade": 2,
+          "basis": "intended query 'strength'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ms6": {
+      "judged": [
+        {
+          "ref": "Romans 10:9",
+          "grade": 3,
+          "basis": "intended query 'salvation'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Ephesians 2:8-9",
+          "grade": 3,
+          "basis": "intended query 'salvation'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Acts 4:12",
+          "grade": 2,
+          "basis": "intended query 'salvation'; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad1": {
+      "judged": [
+        {
+          "ref": "James 4:3",
+          "grade": 2,
+          "basis": "corrective on asking wrongly; provisional pending J9 corrective-stance ruling",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 6:33",
+          "grade": 2,
+          "basis": "corrective; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 John 5:14",
+          "grade": 2,
+          "basis": "asking according to his will; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad2": {
+      "judged": [
+        {
+          "ref": "1 Timothy 6:9-10",
+          "grade": 3,
+          "basis": "primary corrective; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Hebrews 13:5",
+          "grade": 2,
+          "basis": "contentment corrective; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 6:19-21",
+          "grade": 2,
+          "basis": "treasure corrective; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Philippians 4:11-13",
+          "grade": 2,
+          "basis": "contentment; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad3": {
+      "judged": [
+        {
+          "ref": "2 Corinthians 9:6-8",
+          "grade": 2,
+          "basis": "the giving passage the slogan borrows - cheerful giver, no transaction; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Acts 8:18-20",
+          "grade": 2,
+          "basis": "Simon Magus corrective - the gift of God cannot be bought; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 6:1-4",
+          "grade": 1,
+          "basis": "related giving-in-secret teaching; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad4": {
+      "judged": [
+        {
+          "ref": "3 John 1:2",
+          "grade": 1,
+          "basis": "the proof-text the slogan rests on - related, not a catered answer; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 1:1-3",
+          "grade": 2,
+          "basis": "on-theme flourishing psalm; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Joshua 1:8",
+          "grade": 2,
+          "basis": "on-theme; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Philippians 4:11-13",
+          "grade": 2,
+          "basis": "contentment corrective; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad5": {
+      "judged": [
+        {
+          "ref": "2 Corinthians 5:17",
+          "grade": 3,
+          "basis": "seeded from golden fixture new-creation expectedTop; search-quality-report-2026-08-20 §2 Config B top-1 graded excellent",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 51:10",
+          "grade": 1,
+          "basis": "seeded from golden fixture new-creation alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Galatians 6:15",
+          "grade": 1,
+          "basis": "seeded from golden fixture new-creation alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Revelation 21:5",
+          "grade": 1,
+          "basis": "seeded from golden fixture new-creation alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Acts 3:19",
+          "grade": 1,
+          "basis": "seeded from golden fixture new-creation alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ],
+      "harmful": [
+        {
+          "ref": "Ecclesiastes 1:9",
+          "why": "'no new thing under the sun' - sense inversion for a hope-seeking query (search-quality-report-2026-08-20 §2, prior-audit confirmed)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad6": {
+      "judged": [
+        {
+          "ref": "John 14:16-17",
+          "grade": 3,
+          "basis": "seeded from golden fixture holy-spirit-the-comforter expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 14:26",
+          "grade": 3,
+          "basis": "seeded from golden fixture holy-spirit-the-comforter expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 15:26",
+          "grade": 1,
+          "basis": "seeded from golden fixture holy-spirit-the-comforter alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 16:7",
+          "grade": 1,
+          "basis": "seeded from golden fixture holy-spirit-the-comforter alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 8:26",
+          "grade": 1,
+          "basis": "seeded from golden fixture holy-spirit-the-comforter alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ],
+      "harmful": [
+        {
+          "ref": "Job 16:2",
+          "why": "'miserable comforters are you all' - sense inversion for a comfort-seeking query (search-quality-report-2026-08-20 §2)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad7": {
+      "judged": [
+        {
+          "ref": "Psalms 42:11",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: named as the pastoral answer missing from top-10",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 62:1-2",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 §2: named (Ps 62)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 103:1-5",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 §2: named (Ps 103)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 46:1-3",
+          "grade": 1,
+          "basis": "related stillness-under-trouble psalm; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ],
+      "harmful": [
+        {
+          "ref": "Jeremiah 4:10",
+          "why": "'you have greatly deceived this people' - a grieving person quoting Spafford's hymn gets divine deception (search-quality-report-2026-08-20 §2; the audit's one unfixed harmful #1; ratification timing is J18)",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad8": {
+      "judged": [
+        {
+          "ref": "1 Corinthians 11:23-26",
+          "grade": 3,
+          "basis": "seeded from golden fixture lords-supper expectedTop; 1 Cor 11:20's own grade is reserved to J3 and deliberately not seeded",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Luke 22:19-20",
+          "grade": 3,
+          "basis": "seeded from golden fixture lords-supper expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 26:26-28",
+          "grade": 1,
+          "basis": "seeded from golden fixture lords-supper alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Corinthians 10:16",
+          "grade": 1,
+          "basis": "seeded from golden fixture lords-supper alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad9": {
+      "judged": [
+        {
+          "ref": "Mark 9:24",
+          "grade": 3,
+          "basis": "'I believe; help my unbelief' - the doubter's prayer; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Jude 1:22",
+          "grade": 2,
+          "basis": "mercy on doubters; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 11:2-6",
+          "grade": 1,
+          "basis": "John the Baptist's doubt met gently; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad10": {
+      "judged": [
+        {
+          "ref": "Psalms 46:1",
+          "grade": 2,
+          "basis": "catered corrective named in J9's example routing; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Proverbs 3:5-6",
+          "grade": 2,
+          "basis": "catered corrective (the slogan is not scripture); provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad11": {
+      "judged": [
+        {
+          "ref": "Romans 4:17",
+          "grade": 1,
+          "basis": "the verse the slogan misapplies (about God, not the speaker); provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "James 3:2-10",
+          "grade": 1,
+          "basis": "tongue corrective - related; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 33:9",
+          "grade": 1,
+          "basis": "God's word creates - related; provisional pending J9",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad12": {
+      "judged": [
+        {
+          "ref": "Psalms 90:17",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 FLAG #5: the catered answer; J5 plan default applied (catered answer leads); provisional pending J5",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Proverbs 3:3-4",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 FLAG #5: the catered answer; provisional pending J5",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Luke 2:52",
+          "grade": 1,
+          "basis": "related favor passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad13": {
+      "judged": [
+        {
+          "ref": "1 Thessalonians 4:16-17",
+          "grade": 3,
+          "basis": "seeded from golden fixture rapture expectedTop; search-quality-report-2026-08-20 §2 Config B top-1 graded excellent",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Corinthians 15:51-52",
+          "grade": 1,
+          "basis": "seeded from golden fixture rapture alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "ad14": {
+      "judged": [
+        {
+          "ref": "John 10:28-29",
+          "grade": 3,
+          "basis": "primary perseverance passage; battery grades topical relevance only - the doctrine is not adjudicated; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 8:38-39",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Philippians 1:6",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Hebrews 6:4-6",
+          "grade": 2,
+          "basis": "the warning passage both traditions weigh - on-topic, not adjudicated; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "mc1": {
+      "judged": [
+        {
+          "ref": "James 2:17",
+          "grade": 3,
+          "basis": "primary faith-and-works passage; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Ephesians 2:8-10",
+          "grade": 3,
+          "basis": "grace-faith-works joined; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "James 2:26",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "mc2": {
+      "judged": [
+        {
+          "ref": "1 Peter 4:13",
+          "grade": 3,
+          "basis": "search-quality-report-2026-08-20 §2: Config B top-1 graded excellent - 'genuinely joins both concepts'",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 8:17",
+          "grade": 2,
+          "basis": "search-quality-report-2026-08-20 §2: named beside it",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 5:3-5",
+          "grade": 3,
+          "basis": "suffering producing hope - the join verse; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 15:13",
+          "grade": 1,
+          "basis": "search-quality-report-2026-08-20 §2: hope-only - misses the suffering half",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "mc3": {
+      "judged": [
+        {
+          "ref": "John 1:14",
+          "grade": 3,
+          "basis": "grace and truth came through the Word; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 1:17",
+          "grade": 3,
+          "basis": "the join verse; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Ephesians 4:15",
+          "grade": 2,
+          "basis": "speaking truth in love - related; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "mc4": {
+      "judged": [
+        {
+          "ref": "Psalms 56:3",
+          "grade": 3,
+          "basis": "'when I am afraid I will trust' - the join verse; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Isaiah 41:10",
+          "grade": 3,
+          "basis": "fear-not with trust grounds; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Proverbs 3:5-6",
+          "grade": 2,
+          "basis": "trust half; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "mc5": {
+      "judged": [
+        {
+          "ref": "Matthew 5:44",
+          "grade": 3,
+          "basis": "love your enemies command; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Luke 6:27-28",
+          "grade": 2,
+          "basis": "parallel; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 18:21-22",
+          "grade": 2,
+          "basis": "forgiveness half; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 12:20",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "mc6": {
+      "judged": [
+        {
+          "ref": "1 Corinthians 15:20-22",
+          "grade": 3,
+          "basis": "death and resurrection joined; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "John 11:25-26",
+          "grade": 3,
+          "basis": "the join verse; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Romans 6:5",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "1 Corinthians 15:54-57",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "wl1": {
+      "judged": [
+        {
+          "ref": "Lamentations 3:22-23",
+          "grade": 3,
+          "basis": "great-is-thy-faithfulness source text; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 100:5",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 36:5",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Deuteronomy 7:9",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "wl2": {
+      "judged": [
+        {
+          "ref": "1 Corinthians 11:23-26",
+          "grade": 3,
+          "basis": "seeded from golden fixture lords-supper expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Luke 22:19-20",
+          "grade": 2,
+          "basis": "seeded from golden fixture lords-supper expectedTop",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Matthew 26:26-28",
+          "grade": 2,
+          "basis": "seeded from golden fixture lords-supper alsoAcceptable",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "wl3": {
+      "judged": [
+        {
+          "ref": "Psalms 95:1-7",
+          "grade": 3,
+          "basis": "the classic call to worship; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 100:1-5",
+          "grade": 3,
+          "basis": "the classic call to worship; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Psalms 96:1-9",
+          "grade": 2,
+          "basis": "on-theme; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    },
+    "wl4": {
+      "judged": [
+        {
+          "ref": "Numbers 6:24-26",
+          "grade": 3,
+          "basis": "the Aaronic benediction (J11: lead unless Jesse prefers another); seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "2 Corinthians 13:14",
+          "grade": 2,
+          "basis": "apostolic benediction; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Jude 1:24-25",
+          "grade": 2,
+          "basis": "doxology-benediction; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        },
+        {
+          "ref": "Hebrews 13:20-21",
+          "grade": 2,
+          "basis": "benediction; seeded without artifact replay (release artifact unreproducible at seeding time, report §5.1); pastoral commonplace pending J17 ratification",
+          "judgedBy": "battery-seeding (unratified)",
+          "judgedAt": "2026-08-20",
+          "provisional": true
+        }
+      ]
+    }
+  }
+}

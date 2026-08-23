@@ -4,20 +4,28 @@
  * snapshot's digest-bound approval was rewritten to say so. These tests walk
  * the gate's 7-rule decision table and the approval validator it shares with
  * the gauntlet, including the rule-6 tripwire that closes the
- * regenerate-without-bump hole.
+ * regenerate-without-bump hole. Approvals here are schema v2; the committed
+ * v1 record stays valid only through the fingerprint-identity grandfather.
  */
+
+import { createHash } from 'node:crypto';
 
 import { describe, expect, it } from 'vitest';
 
 import {
   ORDERING_SNAPSHOT_APPROVAL_SCHEMA,
+  ORDERING_SNAPSHOT_APPROVAL_SCHEMA_V2,
   orderingSnapshotGate,
   probeListsSha256,
   validateOrderingSnapshotApproval,
   type OrderingSnapshot,
   type ProbeOrderedResults,
 } from '../src/gates/orderingSnapshot.js';
-import { canonicalJsonSha256 } from '../src/gates/probes.js';
+import {
+  APPROVAL_V1_SUNSET_DATE,
+  GRANDFATHERED_V1_APPROVAL_IDENTITIES,
+  canonicalJsonSha256,
+} from '../src/gates/probes.js';
 import { parseGauntletOptions } from '../src/gauntletMachineReport.js';
 
 const ENGINE = {
@@ -43,16 +51,23 @@ const PROBES: readonly ProbeOrderedResults[] = [
 
 const SNAPSHOT: OrderingSnapshot = { ...ENGINE, probes: PROBES };
 
+const EVIDENCE_SHA256 = createHash('sha256')
+  .update('# Ordering snapshot review record\n\nAccepted.\n')
+  .digest('hex');
+
 function approval(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
-    schema: ORDERING_SNAPSHOT_APPROVAL_SCHEMA,
+    schema: ORDERING_SNAPSHOT_APPROVAL_SCHEMA_V2,
     snapshotSha256: canonicalJsonSha256(SNAPSHOT),
     probeListsSha256: probeListsSha256(SNAPSHOT.probes),
     engine: { ...ENGINE },
-    reviewer: 'independent ordering snapshot reviewer',
-    reviewedAt: '2026-08-17',
-    rationale: 'Bootstrap ordering snapshot for the test identity.',
-    priorProvenance: null,
+    reviewerName: 'Genuinely Independent Reviewer',
+    reviewerContact: 'reviewer@example.test',
+    independence: 'I did not author the snapshot regeneration or the change that motivated it.',
+    evidence: { path: 'docs/reviews/2026-08-21-ordering-snapshot-review.md', sha256: EVIDENCE_SHA256 },
+    reviewedAt: '2026-08-21',
+    rationale: 'Ordering snapshot for the test identity.',
+    priorProvenance: priorProvenance(),
     ...overrides,
   };
 }
@@ -66,13 +81,22 @@ function priorProvenance(overrides: Record<string, unknown> = {}): Record<string
   };
 }
 
-function validate(document: unknown) {
+function validate(
+  document: unknown,
+  evidenceSha256: string | null = EVIDENCE_SHA256,
+  snapshot: OrderingSnapshot = SNAPSHOT,
+) {
   return validateOrderingSnapshotApproval({
-    snapshot: SNAPSHOT,
+    snapshot,
     approval: document,
-    snapshotSha256: canonicalJsonSha256(SNAPSHOT),
-    probeListsSha256: probeListsSha256(SNAPSHOT.probes),
-    engine: ENGINE,
+    snapshotSha256: canonicalJsonSha256(snapshot),
+    probeListsSha256: probeListsSha256(snapshot.probes),
+    engine: {
+      engineVersion: snapshot.engineVersion,
+      corpusFingerprint: snapshot.corpusFingerprint,
+      layerFingerprint: snapshot.layerFingerprint,
+    },
+    evidenceSha256,
   });
 }
 
@@ -81,12 +105,19 @@ function categories(findings: readonly { categoryCode?: string }[]): string[] {
 }
 
 describe('ordering snapshot approval validator', () => {
-  it('validates a complete bootstrap approval with null priorProvenance', () => {
+  it('validates a complete v2 approval with matching evidence bytes', () => {
     expect(validate(approval())).toEqual([]);
   });
 
-  it('validates a successor approval with full priorProvenance', () => {
-    expect(validate(approval({ priorProvenance: priorProvenance() }))).toEqual([]);
+  it('accepts a v2 bootstrap: null priorProvenance beside a documented reason', () => {
+    expect(validate(approval({
+      priorProvenance: null,
+      bootstrap: 'First snapshot for this identity: no prior snapshot exists to chain.',
+    }))).toEqual([]);
+    const bare = validate(approval({ priorProvenance: null }));
+    expect(categories([...bare])).toEqual(['ordering-approval-malformed']);
+    expect(bare[0]!.message).toContain('priorProvenance');
+    expect(bare[0]!.message).toContain('bootstrap');
   });
 
   it('reports a missing approval as its own named finding', () => {
@@ -94,17 +125,32 @@ describe('ordering snapshot approval validator', () => {
   });
 
   it('rejects an unrecognized schema outright', () => {
-    expect(categories([...validate(approval({ schema: 'scripture-search-engine/ordering-snapshot-approval/v2' }))]))
+    expect(categories([...validate(approval({ schema: 'scripture-search-engine/ordering-snapshot-approval/v3' }))]))
       .toEqual(['ordering-approval-malformed']);
   });
 
-  it('rejects a blank reviewer, a missing field, or an extra key as malformed', () => {
-    expect(categories([...validate(approval({ reviewer: '   ' }))]))
-      .toEqual(['ordering-approval-malformed']);
+  it('rejects a v2 document with a blank, missing, or extra field, naming the field', () => {
+    const smuggled = validate(approval({ reviewer: 'free-text role' }));
+    expect(categories([...smuggled])).toEqual(['ordering-approval-malformed']);
+    expect(smuggled[0]!.message).toContain('"reviewer"');
     const { rationale: _dropped, ...withoutRationale } = approval();
-    expect(categories([...validate(withoutRationale)])).toEqual(['ordering-approval-malformed']);
-    expect(categories([...validate(approval({ smuggled: true }))]))
-      .toEqual(['ordering-approval-malformed']);
+    const missing = validate(withoutRationale);
+    expect(categories([...missing])).toEqual(['ordering-approval-malformed']);
+    expect(missing[0]!.message).toContain('"rationale"');
+  });
+
+  it('names a blank reviewer identity or independence attestation', () => {
+    expect(categories([...validate(approval({ reviewerName: '  ' }))]))
+      .toEqual(['ordering-approval-reviewer-unidentified']);
+    expect(categories([...validate(approval({ independence: '' }))]))
+      .toEqual(['ordering-approval-independence-missing']);
+  });
+
+  it('fails closed on missing or mismatching evidence bytes', () => {
+    expect(categories([...validate(approval(), null)]))
+      .toEqual(['ordering-approval-evidence-mismatch']);
+    expect(categories([...validate(approval(), '0'.repeat(64))]))
+      .toEqual(['ordering-approval-evidence-mismatch']);
   });
 
   it('rejects a priorProvenance that is present but incomplete', () => {
@@ -131,42 +177,100 @@ describe('ordering snapshot approval validator', () => {
   });
 });
 
+describe('ordering approval v1 grandfather and sunset', () => {
+  const GRANDFATHERED_ENGINE = GRANDFATHERED_V1_APPROVAL_IDENTITIES[0]!;
+  const GRANDFATHERED_SNAPSHOT: OrderingSnapshot = { ...GRANDFATHERED_ENGINE, probes: PROBES };
+
+  function v1Approval(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+    return {
+      schema: ORDERING_SNAPSHOT_APPROVAL_SCHEMA,
+      snapshotSha256: canonicalJsonSha256(GRANDFATHERED_SNAPSHOT),
+      probeListsSha256: probeListsSha256(GRANDFATHERED_SNAPSHOT.probes),
+      engine: { ...GRANDFATHERED_ENGINE },
+      reviewer: 'project owner (bootstrap ordering snapshot, approved by merging PR-A)',
+      reviewedAt: '2026-08-17',
+      rationale: 'Bootstrap ordering snapshot: no prior snapshot exists, so priorProvenance is null.',
+      priorProvenance: null,
+      ...overrides,
+    };
+  }
+
+  it('still validates the committed v1 bootstrap record: grandfathered identity, pre-sunset date', () => {
+    expect(validate(v1Approval(), null, GRANDFATHERED_SNAPSHOT)).toEqual([]);
+  });
+
+  it('rejects a v1 approval dated after the sunset', () => {
+    const retired = validate(v1Approval({ reviewedAt: '2026-08-21' }), null, GRANDFATHERED_SNAPSHOT);
+    expect(categories([...retired])).toEqual(['ordering-approval-v1-retired']);
+    expect(retired[0]!.message).toContain(APPROVAL_V1_SUNSET_DATE);
+  });
+
+  it('rejects a v1 approval for any identity outside the grandfathered records', () => {
+    const findings = validate(v1Approval({
+      snapshotSha256: canonicalJsonSha256(SNAPSHOT),
+      probeListsSha256: probeListsSha256(SNAPSHOT.probes),
+      engine: { ...ENGINE },
+    }), null);
+    expect(categories([...findings])).toEqual(['ordering-approval-v1-not-grandfathered']);
+    expect(findings[0]!.message).toContain('v2');
+  });
+
+  it('keeps every original v1 check: blank reviewer, missing field, or extra key is still malformed', () => {
+    expect(categories([...validate(v1Approval({ reviewer: '   ' }), null, GRANDFATHERED_SNAPSHOT)]))
+      .toEqual(['ordering-approval-malformed']);
+    const { rationale: _dropped, ...withoutRationale } = v1Approval();
+    expect(categories([...validate(withoutRationale, null, GRANDFATHERED_SNAPSHOT)]))
+      .toEqual(['ordering-approval-malformed']);
+    expect(categories([...validate(v1Approval({ smuggled: true }), null, GRANDFATHERED_SNAPSHOT)]))
+      .toEqual(['ordering-approval-malformed']);
+  });
+});
+
 describe('ordering snapshot gate decision table', () => {
   const observed = (probes: readonly ProbeOrderedResults[] = PROBES, identity = ENGINE) => ({
     identity,
     probes,
   });
 
+  function gate(options: {
+    snapshot?: OrderingSnapshot | null;
+    approval?: unknown;
+    observed: ReturnType<typeof observed> | null;
+    evidenceSha256?: string | null;
+  }) {
+    return orderingSnapshotGate({
+      snapshot: options.snapshot === undefined ? SNAPSHOT : options.snapshot,
+      approval: options.approval === undefined ? approval() : options.approval,
+      evidenceSha256: options.evidenceSha256 === undefined ? EVIDENCE_SHA256 : options.evidenceSha256,
+      observed: options.observed,
+    });
+  }
+
   it('rule 7: passes when snapshot, approval, identity, and orderings all agree', () => {
-    const result = orderingSnapshotGate({ snapshot: SNAPSHOT, approval: approval(), observed: observed() });
+    const result = gate({ observed: observed() });
     expect(result.status).toBe('pass');
     expect(result.summary).toContain('byte-identical');
   });
 
   it('rule 1: fails closed when the committed snapshot is missing', () => {
-    const result = orderingSnapshotGate({ snapshot: null, approval: approval(), observed: observed() });
+    const result = gate({ snapshot: null, observed: observed() });
     expect(result.status).toBe('fail');
     expect(categories([...(result.findings ?? [])])).toEqual(['ordering-snapshot-missing']);
     expect(result.findings?.[0]?.message).toContain('--update-ordering-snapshot');
   });
 
-  it('rules 2-3: fails when the approval is absent or does not bind the snapshot', () => {
-    expect(orderingSnapshotGate({ snapshot: SNAPSHOT, approval: null, observed: observed() }).status).toBe('fail');
-    const tampered = orderingSnapshotGate({
-      snapshot: SNAPSHOT,
-      approval: approval({ snapshotSha256: '0'.repeat(64) }),
-      observed: observed(),
-    });
+  it('rules 2-3: fails when the approval is absent, unbound, or missing its evidence', () => {
+    expect(gate({ approval: null, observed: observed() }).status).toBe('fail');
+    const tampered = gate({ approval: approval({ snapshotSha256: '0'.repeat(64) }), observed: observed() });
     expect(tampered.status).toBe('fail');
     expect(categories([...(tampered.findings ?? [])])).toContain('ordering-approval-snapshot-mismatch');
+    const unreadableEvidence = gate({ observed: observed(), evidenceSha256: null });
+    expect(unreadableEvidence.status).toBe('fail');
+    expect(categories([...(unreadableEvidence.findings ?? [])])).toContain('ordering-approval-evidence-mismatch');
   });
 
   it('rule 4: fails when the engine identity moved but the snapshot was not regenerated', () => {
-    const result = orderingSnapshotGate({
-      snapshot: SNAPSHOT,
-      approval: approval(),
-      observed: observed(PROBES, { ...ENGINE, engineVersion: '0.10.0-test' }),
-    });
+    const result = gate({ observed: observed(PROBES, { ...ENGINE, engineVersion: '0.10.0-test' }) });
     expect(result.status).toBe('fail');
     expect(categories([...(result.findings ?? [])])).toEqual(['ordering-snapshot-stale-identity']);
     expect(result.findings?.[0]?.message).toContain('--update-ordering-snapshot');
@@ -181,7 +285,7 @@ describe('ordering snapshot gate decision table', () => {
       },
       PROBES[1]!,
     ];
-    const result = orderingSnapshotGate({ snapshot: SNAPSHOT, approval: approval(), observed: observed(reordered) });
+    const result = gate({ observed: observed(reordered) });
     expect(result.status).toBe('fail');
     expect(categories([...(result.findings ?? [])])).toEqual(['ordering-changed-without-version-bump']);
     const message = result.findings?.[0]?.message ?? '';
@@ -199,17 +303,13 @@ describe('ordering snapshot gate decision table', () => {
       },
       PROBES[1]!,
     ];
-    const result = orderingSnapshotGate({ snapshot: SNAPSHOT, approval: approval(), observed: observed(rescored) });
+    const result = gate({ observed: observed(rescored) });
     expect(result.status).toBe('fail');
     expect(categories([...(result.findings ?? [])])).toEqual(['ordering-changed-without-version-bump']);
   });
 
   it('rule 5: a probe missing from either side is named rather than skipped', () => {
-    const result = orderingSnapshotGate({
-      snapshot: SNAPSHOT,
-      approval: approval(),
-      observed: observed([PROBES[0]!]),
-    });
+    const result = gate({ observed: observed([PROBES[0]!]) });
     expect(result.status).toBe('fail');
     expect(result.findings?.[0]?.subjects).toEqual(['adversarial-silence']);
     expect(result.findings?.[0]?.message).toContain('probe absent from this run');
@@ -220,8 +320,7 @@ describe('ordering snapshot gate decision table', () => {
     // approval were BOTH rewritten, so digests bind and observed orderings
     // match — but priorProvenance shows the same engine produced different
     // lists, which is a reordering without a version bump.
-    const result = orderingSnapshotGate({
-      snapshot: SNAPSHOT,
+    const result = gate({
       approval: approval({
         priorProvenance: priorProvenance({ probeListsSha256: '0'.repeat(64), engine: { ...ENGINE } }),
       }),
@@ -233,8 +332,7 @@ describe('ordering snapshot gate decision table', () => {
   });
 
   it('rule 6: a legitimate regeneration — identity moved with the lists — does not trip', () => {
-    const result = orderingSnapshotGate({
-      snapshot: SNAPSHOT,
+    const result = gate({
       approval: approval({ priorProvenance: priorProvenance({ probeListsSha256: '0'.repeat(64) }) }),
       observed: observed(),
     });
@@ -242,12 +340,11 @@ describe('ordering snapshot gate decision table', () => {
   });
 
   it('explicit target runs verify document integrity and the tripwire, never the orderings', () => {
-    const clean = orderingSnapshotGate({ snapshot: SNAPSHOT, approval: approval(), observed: null });
+    const clean = gate({ observed: null });
     expect(clean.status).toBe('pass');
     expect(clean.summary).toContain('explicit target run');
 
-    const tripped = orderingSnapshotGate({
-      snapshot: SNAPSHOT,
+    const tripped = gate({
       approval: approval({
         priorProvenance: priorProvenance({ probeListsSha256: '0'.repeat(64), engine: { ...ENGINE } }),
       }),
@@ -258,8 +355,7 @@ describe('ordering snapshot gate decision table', () => {
   });
 
   it('reports the approval problem and the ordering change together, not one at a time', () => {
-    const result = orderingSnapshotGate({
-      snapshot: SNAPSHOT,
+    const result = gate({
       approval: approval({ probeListsSha256: '0'.repeat(64) }),
       observed: observed([PROBES[0]!, { id: 'adversarial-silence', results: [{ targetId: 'WEB:1', score: 1 }] }]),
     });

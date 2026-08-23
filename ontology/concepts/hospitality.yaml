@@ -1,0 +1,123 @@
+# GENESIS-PILOT PACK (14-concept batch, drafted 2026-08-22) — welcoming and
+# providing for strangers. Genesis stages hospitality as a hinge (Mamre,
+# Sodom's gate, Rebekah's well); it is a live topical query; and the pilot
+# doc rules the nearest neighbor out: "`generosity` (cheerful giving) is
+# adjacent but not the same intent."
+#
+# BOUNDARY DESIGN — hand-computed G4 ratios: vs generosity shared phrases 0,
+# shared tokens {give} only ("given to hospitality" vs "more blessed to
+# give"), ratio 0.13. Worst pair in the full 108-concept sweep is
+# faith-and-works at token ratio 0.33 ({show, without} — from "show
+# hospitality" / "hospitality without grumbling" vs "faith without works" /
+# "show me your faith") — under the 0.6 limit with margin; phrase overlap is
+# zero everywhere.
+#
+# Unusually rich IN-CORPUS anchor coverage: the three NT command verses
+# (Rom 12:13, Heb 13:2, 1 Pet 4:9), the Torah's stranger-love command
+# (Lev 19:33-34), and Job's self-defense (Job 31:32) are all in
+# web-subset — only the narratives are not.
+id: hospitality
+label: Hospitality
+lexicon:
+  # Bare single-token entry, deliberate (NEEDS-JESSE §1.6d option-3
+  # precedent; one-token discount 0.55): the word IS the concept, appears
+  # verbatim in WEB Rom 12:13, and no other concept speaks it.
+  - hospitality
+  - welcoming strangers
+  - welcome the stranger
+  # Collapses to the single token "hospitable" under the shared tokenizer
+  # ("be" is a stopword) — functionally a second bare-word entry
+  # (one-token discount applies; recorded as admitted: hospitable in the
+  # inventory-row proposal).
+  - be hospitable
+  # WEB Rom 12:13 verbatim ("given to hospitality").
+  - given to hospitality
+  # NIV Rom 12:13 remembered phrasing.
+  - practice hospitality
+  # ESV/NIV Heb 13:2 remembered phrasing ("do not neglect to show
+  # hospitality").
+  - show hospitality
+  - entertain strangers
+  # The Heb 13:2 hook everyone remembers.
+  - entertained angels
+  # WEB Matt 25:35 verbatim — the remembered phrasing of the sheep-and-
+  # goats welcome. The anchor for it is below; Matt 25 is not yet in the
+  # fixture corpus, so no fixture rides on this entry.
+  - i was a stranger and you took me in
+  # 1 Pet 4:9 phrasing (WEB "Be hospitable... without grumbling").
+  - hospitality without grumbling
+anchors:
+  # "contributing to the needs of the saints, and given to hospitality"
+  # (WEB). Torrey HOSPITALITY "Commanded :: Romans 12:13". IN corpus —
+  # this pack's G3 assert.
+  - ref: Romans 12:13
+    sources: [torrey]
+    weight: 1.0
+  # "Don't forget to show hospitality to strangers, for in doing so, some
+  # have entertained angels without knowing it" (WEB) — the NT's own echo
+  # of Genesis 18-19. Torrey HOSPITALITY "Specially to be shown to —
+  # Strangers :: Heb 13:2" and "Encouragement to :: Heb 13:2". IN corpus.
+  - ref: Hebrews 13:2
+    sources: [torrey]
+    weight: 0.95
+  # "Be hospitable to one another without grumbling" (WEB). Torrey
+  # HOSPITALITY "Commanded :: 1 Pet 4:9". IN corpus.
+  - ref: 1 Peter 4:9
+    sources: [torrey]
+    weight: 0.95
+  # Abraham at the oaks of Mamre: runs to meet three strangers, water for
+  # feet, the calf, "so you have come to your servant" (WEB from
+  # knowledge — Genesis 18 NOT in pipeline/fixtures/web-subset.json; see
+  # corpus-needs note). Torrey HOSPITALITY "Exemplified — Abraham ::
+  # Gen 18:3-8"; editorial because vv1-2 set the scene the outline's range
+  # assumes. Genesis-pilot seed ref. The narrative Heb 13:2 points back to.
+  - ref: Genesis 18:1-8
+    sources: [editorial]
+    weight: 0.9
+  # "The stranger who lives as a foreigner with you shall be to you as the
+  # native-born among you, and you shall love him as yourself; for you
+  # lived as foreigners in the land of Egypt" (WEB). Torrey LOVE TO MAN
+  # "Should be exhibited toward — Strangers :: Lev 19:34"; editorial
+  # because v33 is the opening half of the same command sentence.
+  # IN corpus.
+  - ref: Leviticus 19:33-34
+    sources: [editorial]
+    weight: 0.9
+  # "I was a stranger and you took me in" (WEB from knowledge — Matthew 25
+  # NOT in web-subset; corpus-needs note). The welcome rendered to Christ
+  # himself. Not in the Torrey HOSPITALITY outline; editorial.
+  - ref: Matthew 25:35
+    sources: [editorial]
+    weight: 0.85
+  # Gaius: "you do a faithful work in whatever you accomplish for those
+  # who are brothers and strangers... we ought to receive such" (WEB from
+  # knowledge — 3 John NOT in web-subset). Torrey HOSPITALITY "Exemplified
+  # — Gaius :: 3 John 1:5, 1:6"; editorial for extending through v8, the
+  # "therefore" that turns the example into the church's duty.
+  - ref: 3 John 1:5-8
+    sources: [editorial]
+    weight: 0.8
+  # "when you make a feast, ask the poor, the maimed, the lame, or the
+  # blind; and you will be blessed, because they don't have the resources
+  # to repay you" (WEB from knowledge — Luke 14 NOT in web-subset). Torrey
+  # HOSPITALITY lists 14:13 ("Specially to be shown to — The poor") and
+  # 14:14 ("Encouragement to"); editorial because v12 opens the saying.
+  - ref: Luke 14:12-14
+    sources: [editorial]
+    weight: 0.75
+  # "Isn't it to share your bread with the hungry, and that you bring the
+  # poor who are cast out to your house?" (WEB from knowledge — Isaiah 58
+  # NOT in web-subset). Torrey HOSPITALITY "Specially to be shown to —
+  # The poor :: Isa 58:7".
+  - ref: Isaiah 58:7
+    sources: [torrey]
+    weight: 0.7
+  # "the foreigner has not camped in the street, but I have opened my
+  # doors to the traveler" (WEB) — Job's integrity oath. Torrey
+  # HOSPITALITY "Exemplified — Job :: Job 31:17, 31:32". IN corpus.
+  - ref: Job 31:32
+    sources: [torrey]
+    weight: 0.6
+related:
+  - generosity
+  - loving-others

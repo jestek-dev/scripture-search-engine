@@ -192,7 +192,7 @@ function trustedGauntletLoader() {
             '--candidate-database', expectation.databasePath],
         },
       },
-      report: buildReport({ gates: GAUNTLET_GATE_ROSTER.map((gate) => pass(gate.id, gate.title, 'Trusted approval-test gate passed.')) }),
+      report: buildReport({ gates: GAUNTLET_GATE_ROSTER.map((gate) => pass(gate.id, gate.title, 'Trusted approval-test gate passed.', undefined, { explicitTarget: true })) }),
     });
     return Buffer.from(`${JSON.stringify(machineReport, null, 2)}\n`);
   };

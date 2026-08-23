@@ -48,6 +48,10 @@ import {
   FLAGGED_PAIRINGS_PATH,
 } from './gates/doctrinalGuardrail.js';
 import {
+  lexiconInventoryCheck,
+  LEXICON_INVENTORY_PATH,
+} from './gates/lexiconInventory.js';
+import {
   correlationGroups,
   isFileUrl,
   retrievalUrls,
@@ -67,6 +71,35 @@ import {
 } from './gates/probes.js';
 import { openCorpus } from './nodeSqlitePort.js';
 import {
+  batteryGate,
+  buildBatterySection,
+  buildRankMetricsBaseline,
+  computeRankMetrics,
+  deriveGoldenRankJudgments,
+  detectNoMeasurableEffect,
+  evaluateRankQuality,
+  probeHarmfulRefPresence,
+  runBattery,
+  validateBattery,
+  validateRankMetricsBaselineDocuments,
+  validateRankQualityBlock,
+  verseRangeOfTargetId,
+  withRankEvidence,
+  BATTERY_JUDGMENTS_PATH,
+  BATTERY_QUERIES_PATH,
+  RANK_METRICS_APPROVAL_PATH,
+  RANK_METRICS_BASELINE_PATH,
+  type BatteryCategoryFloors,
+  type BatteryQueryOutcome,
+  type BatteryReportSection,
+  type NoEffectDetection,
+  type RankMetricsReport,
+  type RankQueryInput,
+  type ValidatedBattery,
+  type VerseRange,
+} from './gates/rankMetrics.js';
+import { budgetsPropertyGate, reviewedConstantsCheck } from './gates/budgetsProperty.js';
+import {
   orderingSnapshotGate,
   type OrderingSnapshot,
 } from './gates/orderingSnapshot.js';
@@ -76,6 +109,7 @@ import {
   pass,
   fail,
   warn,
+  type GateFinding,
   type GateResult,
 } from './gates/types.js';
 import { mergeGateResults } from './gates/merge.js';
@@ -97,6 +131,13 @@ import {
   type GauntletOptions,
   type ResolvedGauntletTarget,
 } from './gauntletMachineReport.js';
+import {
+  computeTierReport,
+  validateFlagship,
+  validateTiersBlock,
+  FLAGSHIP_PATH,
+  type TierReportSection,
+} from './tierReport.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const EVAL_ROOT = join(HERE, '..');
@@ -106,6 +147,10 @@ interface Budgets {
   readonly provenance?: {
     readonly acknowledgedUnarchivedRollingSources?: readonly string[];
   };
+  /** Validated at runtime by validateRankQualityBlock — reviewed data, never trusted shapes. */
+  readonly rankQuality?: unknown;
+  /** Validated at runtime by validateTiersBlock (E6) — reviewed data, never trusted shapes. */
+  readonly tiers?: unknown;
   readonly latency: { readonly p95Ms: number };
   readonly noise: {
     readonly maxTop10ChurnRatio: number;
@@ -552,6 +597,7 @@ const ORDERING_SNAPSHOT_APPROVAL_PATH = join(EVAL_ROOT, 'baselines', 'ordering.s
  * validator turns null into a fail-closed evidence-mismatch finding on the
  * v2 branch; the byte-read happens here because eval does I/O and the gate
  * stays pure. A v1 approval declares no evidence and gets null harmlessly.
+ * Serves both the probe-baseline and the ordering-snapshot approvals.
  */
 function approvalEvidenceSha256(approval: unknown): string | null {
   if (approval === null || typeof approval !== 'object' || Array.isArray(approval)) return null;
@@ -566,6 +612,55 @@ function approvalEvidenceSha256(approval: unknown): string | null {
   }
 }
 const DISTILLATE_PATH = join(REPO_ROOT, 'pipeline', 'fixtures', 'passage-terms-subset.json');
+
+interface LoadedBattery {
+  readonly validated: ValidatedBattery;
+  readonly queriesSha256: string;
+  readonly judgmentsSha256: string;
+}
+
+/**
+ * G12 inputs. Missing or unparsable files surface as structural findings on
+ * the gate rather than a loader throw, so the roster row stays honest.
+ */
+function loadBattery(floors: BatteryCategoryFloors | null): LoadedBattery {
+  const read = (relativePath: string): { parsed: unknown; sha256: string } => {
+    const path = join(REPO_ROOT, ...relativePath.split('/'));
+    if (!existsSync(path)) return { parsed: undefined, sha256: '' };
+    const bytes = readFileSync(path);
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(bytes.toString('utf8')) as unknown;
+    } catch {
+      parsed = undefined;
+    }
+    return { parsed, sha256: createHash('sha256').update(bytes).digest('hex') };
+  };
+  const queries = read(BATTERY_QUERIES_PATH);
+  const judgments = read(BATTERY_JUDGMENTS_PATH);
+  return {
+    validated: validateBattery(queries.parsed, judgments.parsed, floors),
+    queriesSha256: queries.sha256,
+    judgmentsSha256: judgments.sha256,
+  };
+}
+
+/**
+ * Rank-instrument reviewed documents (E5): the rank baseline pair is read on
+ * EVERY run — an unapproved committed baseline must fail the fixture CI legs
+ * too, not wait for an artifact run — and the file is distinguished from a
+ * parse failure so "absent" (the honest pre-protocol state) never aliases
+ * "unreadable".
+ */
+function readRankDocument(relativePath: string): unknown {
+  const path = join(REPO_ROOT, ...relativePath.split('/'));
+  if (!existsSync(path)) return null;
+  try {
+    return JSON.parse(readFileSync(path, 'utf8')) as unknown;
+  } catch {
+    return 'unparsable';
+  }
+}
 
 function loadDistillate(): DistillateFile | null {
   return existsSync(DISTILLATE_PATH) ? readJson<DistillateFile>(DISTILLATE_PATH) : null;
@@ -582,10 +677,22 @@ async function runProbeGates(
   budgets: Budgets,
   options: GauntletOptions,
   target: ResolvedGauntletTarget | null,
+  battery: LoadedBattery,
 ): Promise<{
   readonly gates: readonly GateResult[];
   readonly identity: EngineIdentity;
   readonly builtArtifactBytes: number;
+  /** null on fixture-database runs: the battery measures a real artifact. */
+  readonly batteryOutcomes: readonly BatteryQueryOutcome[] | null;
+  /** Corpus presence per harmful guard; null whenever the battery did not run. */
+  readonly batteryHarmfulPresence: ReadonlyMap<string, boolean> | null;
+  /** Rank metrics over battery + golden-derived judgments; null without a battery run. */
+  readonly rankMetrics: RankMetricsReport | null;
+  /** NO_MEASURABLE_EFFECT detection outcome; null on fixture-database runs. */
+  readonly noEffect: {
+    readonly detection: NoEffectDetection;
+    readonly findings: readonly GateFinding[];
+  } | null;
 }> {
   const probeFile = JSON.parse(readFileSync(join(EVAL_ROOT, 'probes', 'probes.json'), 'utf8')) as {
     probes: Probe[];
@@ -689,6 +796,7 @@ async function runProbeGates(
       const ordering = orderingSnapshotGate({
         snapshot: orderingSnapshot,
         approval: orderingApproval,
+        evidenceSha256: approvalEvidenceSha256(orderingApproval),
         // An explicit candidate/release target intentionally differs from the
         // fixture identity the snapshot pins; only document integrity and the
         // tripwire apply on those runs, and the fixture-based CI legs keep
@@ -701,10 +809,119 @@ async function runProbeGates(
       const corpusFixtures = loadFixtures() as unknown as CorpusFixture[];
       const corpusGolden = await corpusGoldenGate(engine, corpusFixtures);
 
+      // Battery execution is explicit-target only, and only over a battery
+      // that validated structurally — a malformed battery already fails G12
+      // without an engine run.
+      const batteryOutcomes = target !== null && battery.validated.findings.length === 0
+        ? await runBattery(engine, battery.validated)
+        : null;
+      // Probed against the same engine instance the battery ran on, so a
+      // guard is called vacuous only about the exact corpus it measured.
+      const batteryHarmfulPresence = batteryOutcomes === null
+        ? null
+        : await probeHarmfulRefPresence(engine, battery.validated);
+
+      // Rank metrics (E3): battery + golden-derived judgments against the
+      // same artifact the battery measured. Recall@50 needs a second engine
+      // instance at limit 50 — read-only, used for this metric alone.
+      let rankMetrics: RankMetricsReport | null = null;
+      if (batteryOutcomes !== null) {
+        const engine50 = await createEngine(openCorpus(databasePath), { rankOptions: { limit: 50 } });
+        try {
+          const rangesOf = (results: readonly { targetId: string }[], limit: number): VerseRange[] =>
+            results.slice(0, limit)
+              .map((entry) => verseRangeOfTargetId(entry.targetId))
+              .filter((range): range is VerseRange => range !== null);
+          const top50For = async (queryText: string): Promise<VerseRange[]> => {
+            const result = await engine50.research(queryText);
+            return result.kind === 'discovery' ? rangesOf(result.results, 50) : [];
+          };
+          const inputs: RankQueryInput[] = [];
+          const outcomesById = new Map(batteryOutcomes.map((outcome) => [outcome.id, outcome]));
+          for (const batteryQuery of battery.validated.queries) {
+            const outcome = outcomesById.get(batteryQuery.id);
+            inputs.push({
+              id: batteryQuery.id,
+              category: batteryQuery.category,
+              judged: batteryQuery.judged,
+              top10: outcome?.kind === 'discovery' ? rangesOf(outcome.top, 10) : [],
+              top50: await top50For(batteryQuery.query),
+            });
+          }
+          for (const golden of deriveGoldenRankJudgments(corpusFixtures)) {
+            const result = await engine.research(golden.query);
+            inputs.push({
+              id: golden.id,
+              category: 'golden',
+              judged: golden.judged,
+              top10: result.kind === 'discovery' ? rangesOf(result.results, 10) : [],
+              top50: await top50For(golden.query),
+            });
+          }
+          rankMetrics = computeRankMetrics(inputs);
+        } finally {
+          await engine50.close();
+        }
+      }
+
+      // NO_MEASURABLE_EFFECT detection runs on every explicit-target run.
+      // Fixture runs are structurally out of scope: metrics need the
+      // battery, and the G12 row there is not-applicable, which cannot
+      // carry the skip findings honestly.
+      const rankBaselinePath = join(REPO_ROOT, ...RANK_METRICS_BASELINE_PATH.split('/'));
+      const noEffect = target === null
+        ? null
+        : detectNoMeasurableEffect({
+          run: {
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          },
+          metrics: rankMetrics,
+          rankBaseline: existsSync(rankBaselinePath)
+            ? JSON.parse(readFileSync(rankBaselinePath, 'utf8')) as unknown
+            : null,
+          orderingApproval,
+          currentProbeListsSha256: canonicalJsonSha256(orderedResults),
+          probeBaseline: baseline === null
+            ? null
+            : {
+              corpusFingerprint: baseline.corpusFingerprint,
+              observationsSha256: canonicalJsonSha256(baseline.observations),
+            },
+          currentObservationsSha256: canonicalJsonSha256(observations),
+          expectNoEffect: options.expectNoEffect ?? null,
+        });
+
+      // Same discipline as the other update flags: this writes only the
+      // candidate baseline; the approval beside it is the reviewer's act
+      // and no code path here may write it.
+      if (options.updateRankBaseline) {
+        if (rankMetrics === null) {
+          throw new Error('--update-rank-baseline needs a structurally valid battery; fix the battery findings and re-run.');
+        }
+        const next = buildRankMetricsBaseline(
+          {
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          },
+          rankMetrics,
+        );
+        writeFileSync(rankBaselinePath, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
+        process.stderr.write(
+          `Rank-metrics baseline updated: ${rankBaselinePath}. The machine never writes the ` +
+            'approval — an independent reviewer hand-authors it under the threshold protocol.\n',
+        );
+      }
+
       return {
         gates: [noise, latencyGate(latenciesMs, budgets.latency.p95Ms), corpusGolden, ordering],
         identity: evaluatedIdentity,
         builtArtifactBytes,
+        batteryOutcomes,
+        batteryHarmfulPresence,
+        rankMetrics,
+        noEffect,
       };
     } finally {
       await engine.close();
@@ -735,8 +952,37 @@ async function main(): Promise<void> {
     const doctrinalReviewsContents = existsSync(reviewsPath) ? readFileSync(reviewsPath, 'utf8') : null;
     const flaggedPairingsContents = existsSync(watchlistPath) ? readFileSync(watchlistPath, 'utf8') : null;
 
+    // Bare-word inventory (ontology/lexicon-inventory.yaml) — same
+    // contents-or-null discipline: the check itself reports a missing file,
+    // and it fails closed rather than warning, because the inventory IS the
+    // mechanism that makes a bare-word decision mandatory.
+    const inventoryPath = join(REPO_ROOT, ...LEXICON_INVENTORY_PATH.split('/'));
+    const lexiconInventoryContents = existsSync(inventoryPath) ? readFileSync(inventoryPath, 'utf8') : null;
+
     const distillate = loadDistillate();
-    const probeRun = await runProbeGates(budgets, options, target);
+
+    // rankQuality thresholds and the rank-baseline approval pair (E5) are
+    // file-level reviewed data, checked on every run. The premature-threshold
+    // guard needs to know whether an approved baseline exists, so the pair is
+    // read before the block is validated.
+    const rankBaselineDocument = readRankDocument(RANK_METRICS_BASELINE_PATH);
+    const rankApprovalDocument = readRankDocument(RANK_METRICS_APPROVAL_PATH);
+    const rankQuality = validateRankQualityBlock(budgets.rankQuality, {
+      rankBaselineEstablished: rankBaselineDocument !== null && rankApprovalDocument !== null,
+    });
+
+    const battery = loadBattery(rankQuality.thresholds?.battery.categoryFloors ?? null);
+    const rankDocumentFindings = validateRankMetricsBaselineDocuments({
+      baseline: rankBaselineDocument,
+      approval: rankApprovalDocument,
+      batteryQueriesSha256: battery.queriesSha256,
+      batteryJudgmentsSha256: battery.judgmentsSha256,
+      evidenceSha256: approvalEvidenceSha256(rankApprovalDocument),
+    });
+    const probeRun = await runProbeGates(budgets, options, target, battery);
+    const rankQualityOutcome = probeRun.rankMetrics !== null && rankQuality.thresholds !== null
+      ? evaluateRankQuality(rankQuality.thresholds, probeRun.rankMetrics)
+      : null;
     const probeGates = probeRun.gates;
     const g3 = mergeGateResults('Golden regression', [
       goldenGate(fixtures),
@@ -807,6 +1053,23 @@ async function main(): Promise<void> {
               ontologyCompiled: ontologyErrors.length === 0,
               watchlistFileContents: flaggedPairingsContents,
             }),
+            // The bare-word inventory rides G4 like the pairing watchlist —
+            // it grades the compiled ontology — but BLOCKS: a concept
+            // cannot ship without an explicit bare-word decision ("a pack
+            // with no fixtures is rejected structurally", applied to bare
+            // words). Skipped when the ontology failed to compile: the rows
+            // key by compiled concept id, and grading them against a
+            // half-compiled ontology would report phantom findings.
+            ontologyErrors.length > 0
+              ? notApplicable(
+                  'G4-collision',
+                  'Lexicon bare-word inventory',
+                  'ontology failed to compile; the inventory check needs compiled concept ids',
+                )
+              : lexiconInventoryCheck({
+                  concepts,
+                  inventoryFileContents: lexiconInventoryContents,
+                }),
           ]);
     // G2 is the determinism contract: the in-process replay AND the committed
     // ordering snapshot ride one roster row via mergeGateResults, the same way
@@ -819,16 +1082,39 @@ async function main(): Promise<void> {
       g3,
       g4,
       distinctivenessGate(distillate, budgets.distinctiveness),
-      pass(
-        'G6-signal-budgets',
-        'Signal budgets',
-        'enforced structurally inside the scoring core; verified by engine unit tests',
-      ),
+      // G6 rides one roster row like G2/G3: the reviewed-constants half is
+      // honest N/A until Phase 3 mirrors the budget constants into
+      // budgets.json; the property half needs no data, so it always runs —
+      // this row never has a fully not-applicable state.
+      mergeGateResults('Signal budgets', [reviewedConstantsCheck(), budgetsPropertyGate()]),
       correlationGate(),
       probeGates[0]!,
       saturationGate(distillate, budgets.saturation),
       sizeGate(budgets, probeRun.builtArtifactBytes),
       probeGates[1]!,
+      // 13th row, its own row by design: merging G12 into G3 would let
+      // mergeGateResults swallow a not-applicable battery beside passing
+      // sub-results into a green row. Rank metrics ride this row (measured
+      // and reported, no thresholds), together with any no-effect skip
+      // findings, via withRankEvidence — which preserves the row's
+      // explicit-target applicability where mergeGateResults would not.
+      (() => {
+        const g12 = batteryGate({
+          validated: battery.validated,
+          outcomes: probeRun.batteryOutcomes,
+          harmfulPresence: probeRun.batteryHarmfulPresence,
+          instrumentFindings: [...rankQuality.findings, ...rankDocumentFindings],
+          context: { explicitTarget: target !== null },
+        });
+        return probeRun.rankMetrics === null
+          ? g12
+          : withRankEvidence(
+              g12,
+              probeRun.rankMetrics,
+              probeRun.noEffect?.findings ?? [],
+              rankQualityOutcome ?? undefined,
+            );
+      })(),
     ];
 
     const finishedAt = new Date().toISOString();
@@ -841,14 +1127,58 @@ async function main(): Promise<void> {
       return;
     }
 
-    const report = buildReport({ gates });
+    const report = buildReport({
+      gates,
+      ...(probeRun.rankMetrics === null ? {} : { rankMetrics: probeRun.rankMetrics }),
+      ...(rankQualityOutcome === null ? {} : { rankQuality: rankQualityOutcome.evaluations }),
+      ...(probeRun.noEffect === null ? {} : { noMeasurableEffect: probeRun.noEffect.detection }),
+    });
     process.stdout.write(`${report.markdown}\n`);
 
     if (options.jsonPath) {
       const identity = captureRunIdentity(REPO_ROOT, options, probeRun.identity, startIdentity, target?.identity);
+      const batterySection: BatteryReportSection | undefined = probeRun.batteryOutcomes === null
+        ? undefined
+        : buildBatterySection({
+          queriesSha256: battery.queriesSha256,
+          judgmentsSha256: battery.judgmentsSha256,
+          validated: battery.validated,
+          outcomes: probeRun.batteryOutcomes,
+        });
+      // Tier attainment (E6) rides the report exactly when the battery
+      // evidence does. Computed from the same raw inputs the standalone
+      // tier-report tool recomputes from, so the embedded section is a
+      // cross-checkable claim, never the only record.
+      const tiersSection: TierReportSection | undefined = probeRun.batteryOutcomes === null
+        ? undefined
+        : computeTierReport({
+          tiersConfig: validateTiersBlock(budgets.tiers).config,
+          flagship: validateFlagship(
+            existsSync(join(REPO_ROOT, ...FLAGSHIP_PATH.split('/')))
+              ? JSON.parse(readFileSync(join(REPO_ROOT, ...FLAGSHIP_PATH.split('/')), 'utf8')) as unknown
+              : undefined,
+          ).queries,
+          battery: battery.validated,
+          thresholds: rankQuality.thresholds,
+          fixtures: fixtures as unknown as CorpusFixture[],
+          evidence: {
+            batteryResults: probeRun.batteryOutcomes,
+            gates,
+            rankMetrics: probeRun.rankMetrics,
+          },
+        });
       writeMachineReportAtomically(
         resolveMachineReportPath(REPO_ROOT, options.jsonPath),
-        buildMachineReport({ startedAt, finishedAt, identity, report }),
+        buildMachineReport({
+          startedAt,
+          finishedAt,
+          identity,
+          report,
+          ...(batterySection === undefined ? {} : { battery: batterySection }),
+          ...(probeRun.rankMetrics === null ? {} : { rankMetrics: probeRun.rankMetrics }),
+          ...(probeRun.noEffect === null ? {} : { noMeasurableEffect: probeRun.noEffect.detection }),
+          ...(tiersSection === undefined ? {} : { tiers: tiersSection }),
+        }),
       );
     }
 
@@ -862,7 +1192,11 @@ async function main(): Promise<void> {
       }
     }
 
-    process.exitCode = gauntletExitCode(report.verdict, options.requireAdmit);
+    process.exitCode = gauntletExitCode(
+      report.verdict,
+      options.requireAdmit,
+      options.expectNoEffect !== undefined,
+    );
   } finally {
     removeGauntletRunMarker(markerPath);
   }
@@ -871,7 +1205,7 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  if (error instanceof Error && /(?:Unknown gauntlet argument|Duplicate --|requires (?:a path|both)|mutually exclusive|--update-(?:baseline|ordering-snapshot) cannot)/.test(error.message)) {
+  if (error instanceof Error && /(?:Unknown gauntlet argument|Duplicate --|requires (?:a path|both|a reason)|mutually exclusive|space-free token|--update-(?:baseline|ordering-snapshot|rank-baseline) (?:cannot|requires))/.test(error.message)) {
     process.stderr.write(`${error.message}\n`);
     process.exitCode = 2;
   } else {

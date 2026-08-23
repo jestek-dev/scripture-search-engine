@@ -1,0 +1,31 @@
+{
+  "id": "ref-ordinal-1st-corinthians-13",
+  "status": "pending",
+  "note": [
+    "Ordinal book forms (\"1st Corinthians\", \"First Corinthians\", \"2nd Timothy\", \"3rd John\") — untested in the battery but the same defect class as ms4/ref8: no ordinal book_aliases rows, so every form is INVALID-REFERENCE today. Written fixture-first; activated by QR-3's alias coverage.",
+    "\"1 Corinthians 13\" is the whole-chapter label labelFor renders today and after QR-4's label fix (which keys the Book C form on an explicit whole-chapter flag rather than verse-1 anchoring).",
+    "\"3rd John 4\" exercises the single-chapter branch: chapterCount 1 + bare number resolves to chapter 1 verse 4, and labelFor renders the chapter explicitly — the pinned label is \"3 John 1:4\", not \"3 John 4\". Its target verse is one of QR-3's two web-subset.json additions (3 John has zero fixture-corpus verses this revision)."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "1st Corinthians 13",
+      "expectedKind": "reference",
+      "expectedPassage": "1 Corinthians 13"
+    },
+    {
+      "query": "First Corinthians 13",
+      "expectedKind": "reference",
+      "expectedPassage": "1 Corinthians 13"
+    },
+    {
+      "query": "2nd Timothy 1:7",
+      "expectedKind": "reference",
+      "expectedPassage": "2 Timothy 1:7"
+    },
+    {
+      "query": "3rd John 4",
+      "expectedKind": "reference",
+      "expectedPassage": "3 John 1:4"
+    }
+  ]
+}

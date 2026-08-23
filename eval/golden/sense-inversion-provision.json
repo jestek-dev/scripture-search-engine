@@ -31,7 +31,16 @@
     "When this fixture starts passing, the Admission Report names it for",
     "promotion to active.",
     "Window note (2026-08-18 gauntlet iteration): with the pack live, the top of 'provision' is the pack's own Matthew 6:31-33 range (provision for the anxious, subordinated to the Kingdom) with Matt 6:11 third and Phil 4:19 fifth — the inversion is gone (Rom 13:14 no longer ranks in the top 10 at all). Phil 4:19 is asserted within the top 5 with its anchor chip rather than forced above the Kingdom-first answers; promoting a watchlisted verse over them would be the wrong fix.",
-    "Round-2 book admission 2026-08-18: gods-provision gained Ps 34:10, weighted below the Matt 6 / Phil 4:19 leads so this fixture's expectedTop holds."
+    "Round-2 book admission 2026-08-18: gods-provision gained Ps 34:10, weighted below the Matt 6 / Phil 4:19 leads so this fixture's expectedTop holds.",
+    "",
+    "PRECISION UPGRADE (E2, 2026-08-21, flagged strictness change — revert",
+    "this fixture's mustNotLead alone to undo): the preferredOrder pair only",
+    "fires when Matt 6:11 is present in the window, but the ruling ('may",
+    "rank, just at low priority, never leading') is unconditional. The",
+    "mustNotLead guard encodes the ruling exactly: Rom 13:14 must not be #1",
+    "for this fixture's queries regardless of which counterpart ranks. Both",
+    "references verified in the fixture corpus, so the guard is live, not",
+    "vacuous."
   ],
   "expectedTop": [
     {
@@ -46,6 +55,12 @@
     {
       "above": "Matthew 6:11",
       "below": "Romans 13:14"
+    }
+  ],
+  "mustNotLead": [
+    {
+      "ref": "Romans 13:14",
+      "why": "'make no provision for the flesh' — the query word in its opposite frame; demoted, never forbidden (Jesse's 2026-08-15 audit ruling)"
     }
   ],
   "additionalQueries": [
