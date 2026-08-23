@@ -176,17 +176,61 @@ function verseIdOf(targetId: string): number {
   return Number.parseInt(raw, 10);
 }
 
-async function fetchEvidence(
+type EvidenceRow = Readonly<Record<string, ContentScalar>>;
+
+function numColumn(row: EvidenceRow, column: string): number {
+  return Number(row[column]);
+}
+
+function stringColumn(row: EvidenceRow, column: string): string {
+  return String(row[column]);
+}
+
+/**
+ * Total order over EVERY selected cross_references column, applied in JS —
+ * never left to SQL — for the same reason as the engine's 2dad545 hardening:
+ * the previous `ORDER BY from_verse_id, source_id, votes` left the target
+ * span untied, so two edges from the same verse/source/votes with different
+ * spans covering the audited verse came back in query-plan-dependent order;
+ * and SQLite's BINARY collation compares source_id as UTF-8 bytes, which
+ * disagrees with JS UTF-16 code units on some non-ASCII strings. The packet
+ * promises "the same bytes on any machine", so the comparison happens here.
+ */
+export function compareCrossReferenceEvidenceRows(a: EvidenceRow, b: EvidenceRow): number {
+  const aSource = stringColumn(a, 'source_id');
+  const bSource = stringColumn(b, 'source_id');
+  return (
+    numColumn(a, 'from_verse_id') - numColumn(b, 'from_verse_id') ||
+    (aSource < bSource ? -1 : aSource > bSource ? 1 : 0) ||
+    numColumn(a, 'votes') - numColumn(b, 'votes') ||
+    numColumn(a, 'to_start_verse_id') - numColumn(b, 'to_start_verse_id') ||
+    numColumn(a, 'to_end_verse_id') - numColumn(b, 'to_end_verse_id')
+  );
+}
+
+/**
+ * Fetch the underlying rows for one chip family (exported for the ordering
+ * tests — the packet builder is the only production caller).
+ */
+export async function fetchChipEvidence(
   port: ContentQueryPort,
   family: Reason['family'],
   verseId: number,
 ): Promise<ChipEvidence | undefined> {
-  const capped = async (source: string, sql: string, params: readonly ContentScalar[]) => {
+  const capped = async (
+    source: string,
+    sql: string,
+    params: readonly ContentScalar[],
+    // Applied BEFORE the row cap: which rows survive a truncation must
+    // follow the pinned total order, not the fetch order.
+    sortRows?: (a: EvidenceRow, b: EvidenceRow) => number,
+  ) => {
     const { rows } = await port.execute(sql, params);
+    const ordered = sortRows === undefined ? rows : [...rows].sort(sortRows);
     return {
       source,
-      rows: rows.slice(0, EVIDENCE_ROW_CAP),
-      ...(rows.length > EVIDENCE_ROW_CAP ? { truncatedTo: EVIDENCE_ROW_CAP } : {}),
+      rows: ordered.slice(0, EVIDENCE_ROW_CAP),
+      ...(ordered.length > EVIDENCE_ROW_CAP ? { truncatedTo: EVIDENCE_ROW_CAP } : {}),
     };
   };
   switch (family) {
@@ -215,13 +259,15 @@ async function fetchEvidence(
       );
     case 'cross_reference':
     case 'co_citation':
+      // No SQL ORDER BY: the total (from, source, votes, to_start, to_end)
+      // order is applied in JS by compareCrossReferenceEvidenceRows above.
       return capped(
         'cross_references (edges into this verse)',
         `SELECT from_verse_id, to_start_verse_id, to_end_verse_id, source_id, votes
            FROM cross_references
-          WHERE to_start_verse_id <= ? AND to_end_verse_id >= ?
-          ORDER BY from_verse_id, source_id, votes`,
+          WHERE to_start_verse_id <= ? AND to_end_verse_id >= ?`,
         [verseId, verseId],
+        compareCrossReferenceEvidenceRows,
       );
     case 'passage_terms':
       return capped(
@@ -303,7 +349,7 @@ export async function buildFaithfulnessSample(
     const verseId = verseIdOf(result.targetId);
     const chips: AuditedChip[] = [];
     for (const reason of result.reasons) {
-      const evidence = await fetchEvidence(port, reason.family, verseId);
+      const evidence = await fetchChipEvidence(port, reason.family, verseId);
       chips.push({
         family: reason.family,
         label: reason.label,
