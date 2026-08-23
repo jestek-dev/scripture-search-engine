@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="workbench-static-protocol" content="1">
+<title>The Study</title>
+<!-- §theme-stamp: first paint is theme-correct (no FOUC). This tiny IIFE runs
+     before the stylesheet below; the main IIFE takes over theming from here. -->
+<script>
+(function () {
+  'use strict';
+  var mode = 'auto';
+  try {
+    var stored = localStorage.getItem('study.theme');
+    if (stored === 'light' || stored === 'dark' || stored === 'auto') mode = stored;
+  } catch (error) { /* storage unavailable: stay on auto */ }
+  var dark = mode === 'dark';
+  if (mode === 'auto') {
+    try { dark = window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (error) { dark = false; }
+  }
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+})();
+</script>
+<!-- §style -->
+<style>
+/* §tokens — reviewed values in workbench/DESIGN.md; guarded by
+   workbench/test/contrast.audit.test.ts. */
+:root{
+  --ground:#F6F4EF; --surface:#FCFBF8; --panel:#FFFDF7;
+  --hairline:#E5E1D8; --hairline-strong:#D6D1C6;
+  --ink:#1D1C18; --text-2:#57534A; --text-3:#6E695E; --text-faint:#A9A398;
+  --accent:#0D5C58; --accent-hover:#094744; --on-accent:#F1FAF9; --accent-wash:rgba(13,92,88,.08);
+  --v-affirm:#2C734D; --v-notrel:#A6493D; --v-missing:#80621B;
+  --v-affirm-wash:rgba(44,115,77,.10); --v-notrel-wash:rgba(166,73,61,.09); --v-missing-wash:rgba(128,98,27,.10);
+  --highlight:rgba(228,176,58,.30);
+  --kbd-bg:#EFECE4; --kbd-border:#D8D3C8;
+  --sel-bg:rgba(13,92,88,.16); --caret:#0D5C58;
+  --shadow:0 1px 2px rgba(29,28,24,.06),0 6px 20px rgba(29,28,24,.07);
+  --r-ctl:6px; --r-panel:10px;
+  --control-border:#8F897C;
+  color-scheme: light;
+}
+[data-theme="dark"]{
+  --ground:#131311; --surface:#1A1A17; --panel:#211E18;
+  --hairline:#2E2B25; --hairline-strong:#3B372F;
+  --ink:#EBE7DE; --text-2:#B4AEA1; --text-3:#948E81; --text-faint:#67635A;
+  --accent:#43A8A0; --accent-hover:#5CBEB5; --on-accent:#0A2422; --accent-wash:rgba(67,168,160,.12);
+  --v-affirm:#6FBE8C; --v-notrel:#DE8B7C; --v-missing:#D2A94F;
+  --v-affirm-wash:rgba(111,190,140,.12); --v-notrel-wash:rgba(222,139,124,.10); --v-missing-wash:rgba(210,169,79,.12);
+  --highlight:rgba(212,163,62,.20);
+  --kbd-bg:#24231F; --kbd-border:#3B372F;
+  --sel-bg:rgba(67,168,160,.28); --caret:#43A8A0;
+  --shadow:none;
+  --control-border:#6B6558;
+  color-scheme: dark;
+}
+
+/* §fonts — self-hosted, unmodified upstream variable woff2 (see
+   static/fonts/README.md); the named fallbacks carry the page if /fonts 404s. */
+@font-face{font-family:'Literata';font-style:normal;font-weight:200 900;font-display:swap;src:url('/fonts/literata/Literata-Variable.woff2') format('woff2');}
+@font-face{font-family:'Literata';font-style:italic;font-weight:200 900;font-display:swap;src:url('/fonts/literata/Literata-Italic-Variable.woff2') format('woff2');}
+@font-face{font-family:'Source Sans 3';font-style:normal;font-weight:200 900;font-display:swap;src:url('/fonts/source-sans-3/SourceSans3VF-Upright.ttf.woff2') format('woff2');}
+@font-face{font-family:'Source Sans 3';font-style:italic;font-weight:200 900;font-display:swap;src:url('/fonts/source-sans-3/SourceSans3VF-Italic.ttf.woff2') format('woff2');}
+
+/* §base — dark painted at document level, never an inner div. */
+html,body{margin:0;padding:0;background:var(--ground);}
+body{color:var(--ink);font-family:'Source Sans 3',-apple-system,'Segoe UI',sans-serif;font-size:13px;line-height:1.45;}
+a{color:var(--accent);} a:hover{color:var(--accent-hover);}
+::selection{background:var(--sel-bg);}
+input,textarea{caret-color:var(--caret);}
+*{scrollbar-width:thin;scrollbar-color:var(--hairline-strong) transparent;box-sizing:border-box;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+button{font:inherit;}
+.serif{font-family:'Literata',Georgia,serif;}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+@keyframes toastUp{from{opacity:0;transform:translate(-50%,10px);}to{opacity:1;transform:translate(-50%,0);}}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+
+/* §header */
+.app-header{height:48px;display:flex;align-items:center;gap:24px;padding:0 16px;border-bottom:1px solid var(--hairline);background:var(--surface);position:sticky;top:0;z-index:30;}
+.wordmark{font-family:'Literata',Georgia,serif;font-size:15px;letter-spacing:0.01em;}
+.app-nav{display:flex;gap:4px;height:100%;}
+.nav-item{border:0;background:none;cursor:pointer;padding:0 10px;height:100%;display:flex;align-items:center;position:relative;color:var(--text-3);font-size:13px;}
+.nav-item[aria-current="page"]{color:var(--ink);font-weight:600;}
+.nav-item[aria-current="page"]::after{content:'';position:absolute;left:8px;right:8px;bottom:-1px;height:2px;background:var(--accent);border-radius:2px 2px 0 0;}
+.nav-item[aria-disabled="true"]{cursor:default;}
+.header-spacer{flex:1;}
+.header-btn{display:flex;align-items:center;gap:8px;padding:5px 10px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--text-2);cursor:pointer;}
+.header-btn:hover{border-color:var(--text-3);}
+.advanced-link{padding:5px 10px;border:0;background:none;color:var(--text-3);font-size:12px;text-decoration:none;}
+.advanced-link:hover{color:var(--text-2);}
+.kbd{display:inline-block;min-width:14px;padding:1px 5px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:4px;background:var(--kbd-bg);font-size:11px;color:var(--text-2);text-align:center;}
+
+/* §banner */
+.banner{padding:9px 16px;border-bottom:1px solid var(--hairline);background:var(--v-missing-wash);color:var(--text-2);}
+.banner strong{color:var(--ink);}
+
+/* §review layout */
+.review-grid{display:grid;grid-template-columns:300px minmax(0,1fr) 320px;height:calc(100vh - 48px);}
+.review-grid.with-banner{height:calc(100vh - 48px - 37px);}
+.queue-rail{border-right:1px solid var(--hairline);background:var(--surface);overflow-y:auto;display:flex;flex-direction:column;}
+.queue-body{flex:1;}
+.rail-label{padding:14px 16px 6px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;}
+.rail-label .label-text{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rail-label .label-count{color:var(--text-3);white-space:nowrap;}
+.queue-row{display:flex;align-items:center;gap:10px;min-height:36px;padding:0 16px 0 12px;cursor:pointer;background:none;border:0;border-left:2px solid transparent;width:100%;text-align:left;color:var(--text-2);}
+.queue-row:hover{background:var(--accent-wash);}
+.queue-row.current{background:var(--accent-wash);border-left-color:var(--accent);color:var(--ink);font-weight:600;}
+.queue-row .row-ref{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.queue-dot{width:7px;height:7px;border-radius:50%;flex:none;background:none;border:1.5px solid var(--hairline-strong);}
+.queue-section-title{padding:18px 16px 4px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);border-top:1px solid var(--hairline);margin-top:12px;}
+.waiting-row{display:flex;width:100%;align-items:baseline;justify-content:space-between;gap:8px;border:0;background:none;text-align:left;padding:8px 16px;cursor:pointer;font:inherit;color:var(--text-2);}
+.waiting-row:hover{background:var(--accent-wash);}
+.waiting-row .q{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rail-empty{padding:8px 16px;color:var(--text-3);}
+.rail-footer{padding:14px 16px;color:var(--text-3);font-size:12px;border-top:1px solid var(--hairline);margin-top:10px;}
+
+/* §center */
+.center-pane{overflow-y:auto;padding:28px 32px 60px;display:flex;flex-direction:column;align-items:center;}
+.search-form{width:100%;max-width:680px;margin-bottom:28px;}
+.search-box{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--control-border);border-radius:var(--r-panel);box-shadow:var(--shadow);padding:6px 6px 6px 18px;}
+.search-box svg{flex:none;color:var(--text-faint);}
+.search-input{flex:1;min-width:0;border:0;background:none;outline:none;font:inherit;font-size:17px;color:var(--ink);padding:8px 0;}
+.btn-primary{padding:8px 18px;border:1px solid var(--accent);border-radius:var(--r-ctl);background:var(--accent);color:var(--on-accent);cursor:pointer;font-weight:600;}
+.btn-primary:hover{background:var(--accent-hover);}
+.btn-quiet{padding:7px 14px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);cursor:pointer;}
+.btn-quiet:hover{border-color:var(--text-3);}
+.contract-line{color:var(--text-3);max-width:52ch;text-align:center;margin-top:6px;}
+.center-message{width:100%;max-width:680px;color:var(--text-2);}
+.center-message .headline{font-family:'Literata',Georgia,serif;font-size:20px;color:var(--ink);margin:0 0 8px;}
+.results-list{width:100%;max-width:680px;display:flex;flex-direction:column;}
+.result-card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-panel);padding:10px 16px;margin-bottom:8px;cursor:pointer;}
+.result-card.after-three{margin-bottom:6px;}
+.result-card .card-line{display:flex;align-items:baseline;gap:10px;min-height:20px;}
+.rank-badge{flex:none;font-size:11px;color:var(--text-3);border:1px solid var(--hairline-strong);border-radius:4px;padding:1px 5px;min-width:24px;text-align:center;}
+.rank-badge.top{font-size:12px;font-weight:700;color:var(--ink);border-color:var(--text-3);}
+.card-ref{flex:none;font-size:13px;font-weight:600;color:var(--ink);}
+.card-excerpt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-2);}
+.result-card.expanded{background:var(--panel);border-color:var(--hairline);box-shadow:var(--shadow);padding:34px 44px 30px;cursor:default;}
+.verse-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px;}
+.verse-ref{font-family:'Literata',Georgia,serif;font-size:20px;font-weight:600;margin:0;}
+.verse-pos{color:var(--text-3);font-size:12px;white-space:nowrap;}
+.verse-body{font-family:'Literata',Georgia,serif;font-size:17.5px;line-height:1.65;max-width:68ch;margin:14px 0 0;text-wrap:pretty;}
+.verse-body sup{font-family:'Source Sans 3',-apple-system,'Segoe UI',sans-serif;font-size:0.6em;color:var(--text-3);margin:0 3px 0 1px;letter-spacing:0.02em;}
+.verse-body mark{background:var(--highlight);color:inherit;border-radius:2px;padding:0 2px;box-decoration-break:clone;}
+.attribution{margin-top:14px;color:var(--text-3);font-size:12px;}
+.reason-pill{display:inline-block;margin-top:12px;padding:3px 10px;border:1px solid var(--hairline-strong);border-radius:99px;color:var(--text-2);font-size:12px;}
+.tail-divider{width:100%;max-width:680px;margin:12px 0 8px;text-align:left;border:1px dashed var(--hairline-strong);border-radius:var(--r-ctl);background:none;color:var(--text-3);padding:8px 12px;cursor:pointer;}
+.tail-divider:hover{color:var(--text-2);border-color:var(--text-3);}
+.tail-list{width:100%;max-width:680px;}
+.tail-row{display:flex;align-items:baseline;gap:10px;padding:7px 12px;border-bottom:1px solid var(--hairline);cursor:pointer;background:none;border-left:2px solid transparent;}
+.tail-row.focused{background:var(--accent-wash);border-left-color:var(--accent);}
+.tail-row .rank-badge{border:0;padding-left:0;}
+.tail-row .card-excerpt{color:var(--text-3);}
+.skeleton-row{height:40px;border:1px solid var(--hairline);border-radius:var(--r-panel);background:var(--surface);margin-bottom:8px;}
+.error-box{width:100%;max-width:680px;border:1px solid var(--hairline-strong);border-radius:var(--r-panel);background:var(--surface);padding:16px 18px;color:var(--text-2);display:flex;align-items:center;gap:14px;justify-content:space-between;}
+
+/* §why-rail */
+.why-rail{border-left:1px solid var(--hairline);background:var(--surface);overflow-y:auto;padding:0 0 24px;}
+.rail-tabs{display:flex;gap:2px;padding:10px 16px 0;border-bottom:1px solid var(--hairline);}
+.rail-tab{border:0;background:none;cursor:pointer;padding:6px 8px 10px;color:var(--text-3);position:relative;}
+.rail-tab[aria-selected="true"]{color:var(--ink);font-weight:600;}
+.rail-tab[aria-selected="true"]::after{content:'';position:absolute;left:6px;right:6px;bottom:-1px;height:2px;background:var(--accent);}
+.why-row{padding:10px 0;border-bottom:1px solid var(--hairline);}
+.why-key{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;}
+.why-val{color:var(--ink);overflow-wrap:anywhere;}
+.rail-pad{padding:16px;}
+.rail-note{margin-top:16px;color:var(--text-3);font-size:12px;max-width:36ch;}
+.context-verse{font-family:'Literata',Georgia,serif;font-size:15px;line-height:1.65;margin:0 0 10px;color:var(--text-2);}
+.context-verse.focus{color:var(--ink);background:var(--highlight);border-radius:2px;padding:0 2px;}
+.context-verse sup{font-family:'Source Sans 3',-apple-system,'Segoe UI',sans-serif;font-size:0.6em;color:var(--text-3);margin:0 3px 0 1px;}
+
+/* §toast */
+.toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);z-index:40;display:flex;gap:12px;align-items:center;padding:9px 16px;border:1px solid var(--hairline-strong);border-radius:99px;background:var(--surface);box-shadow:var(--shadow);animation:toastUp 0.2s cubic-bezier(0.16,1,0.3,1);}
+
+/* §lookup */
+.overlay{position:fixed;inset:0;background:rgba(20,19,16,.35);z-index:50;display:flex;justify-content:center;align-items:flex-start;padding-top:12vh;}
+.lookup-dialog{width:600px;max-width:92vw;background:var(--surface);border:1px solid var(--hairline-strong);border-radius:var(--r-panel);box-shadow:var(--shadow);overflow:hidden;}
+.lookup-input{width:100%;padding:14px 18px;border:0;border-bottom:1px solid var(--hairline);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;outline:none;}
+.lookup-results{max-height:46vh;overflow-y:auto;}
+.lookup-row{display:block;width:100%;text-align:left;padding:10px 18px;border:0;border-bottom:1px solid var(--hairline);background:none;cursor:pointer;color:var(--ink);}
+.lookup-row.sel{background:var(--accent-wash);}
+.lookup-row .row-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.lookup-row .row-ref{font-weight:600;}
+.lookup-row .row-action{color:var(--accent);font-size:12px;white-space:nowrap;}
+.lookup-row .row-snippet{font-family:'Literata',Georgia,serif;font-size:14.5px;color:var(--text-2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lookup-empty{padding:16px 18px;color:var(--text-3);}
+.lookup-footer{display:flex;gap:14px;padding:8px 18px;border-top:1px solid var(--hairline);color:var(--text-3);font-size:11px;}
+.lookup-footer .spacer{flex:1;}
+</style>
+</head>
+<body>
+<!-- §skeleton -->
+<header class="app-header">
+  <div class="wordmark">The Study</div>
+  <nav class="app-nav" aria-label="Workbench views">
+    <button type="button" class="nav-item" data-nav="review" aria-current="page">Review</button>
+    <button type="button" class="nav-item" data-nav="compare" aria-disabled="true" title="Coming in a later phase">Compare</button>
+    <button type="button" class="nav-item" data-nav="history" aria-disabled="true" title="Coming in a later phase">History</button>
+    <button type="button" class="nav-item" data-nav="finish" aria-disabled="true" title="Coming in a later phase">Finish up</button>
+  </nav>
+  <div class="header-spacer"></div>
+  <button type="button" class="header-btn" id="lookup-open" aria-label="Quick lookup">
+    <span>Look something up</span><span class="kbd">⌘K</span>
+  </button>
+  <button type="button" class="header-btn" id="theme-cycle" aria-label="Theme"></button>
+  <a class="advanced-link" href="/">Advanced</a>
+</header>
+<div id="banner-slot"></div>
+<main class="review-grid" id="review-grid">
+  <aside class="queue-rail" aria-label="Queue">
+    <div class="queue-body" id="queue-body"></div>
+    <div class="rail-footer" id="rail-footer" hidden></div>
+  </aside>
+  <section class="center-pane" aria-label="Passage">
+    <form class="search-form" id="search-form" role="search">
+      <div class="search-box">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"></circle><line x1="13.5" y1="13.5" x2="18" y2="18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></line></svg>
+        <input type="search" class="search-input" id="search-input" aria-label="Search the scriptures" placeholder="Search the scriptures…" autocomplete="off">
+        <button type="submit" class="btn-primary">Search</button>
+      </div>
+    </form>
+    <div id="results-status" class="visually-hidden" role="status" aria-live="polite"></div>
+    <div id="center-body" style="width:100%;display:flex;flex-direction:column;align-items:center;"></div>
+  </section>
+  <aside class="why-rail" aria-label="Why this ranked" id="why-rail"></aside>
+</main>
+<div id="toast-slot"></div>
+<div id="dialog-slot"></div>
+<script>
+(function () {
+  'use strict';
+
+  // §routes — copied verbatim from workbench/src/staticSnapshot.ts
+  // REQUIRED_INLINE_ROUTES (the single-inline snapshot contract requires
+  // every one of these literals present in the inline JS).
+  const ROUTES = [
+    '/api/v2/health',
+    '/api/v2/cases',
+    '/api/v2/inbox',
+    '/api/v2/judgments',
+    '/api/v2/compile/preview',
+    '/api/v2/compile/apply',
+    '/api/v2/checks',
+    '/api/v2/context',
+    '/api/v2/jobs/',
+    '/api/v2/candidates',
+    '/api/v2/sessions',
+    '/api/v2/quality',
+    '/api/v2/audits/preview',
+    '/api/v2/audits/apply',
+    '/api/v2/audits/close',
+    '/complete-item',
+    '/skip-item',
+    '/complete-session',
+    '/blind-sessions',
+    '/missing-passages',
+    '/passages',
+    '/promotion/preview',
+    '/promotion/apply',
+    '/cancel',
+  ];
+  void ROUTES;
+
+  // §copy
+  const COPY = {
+    contract: 'Your calls are saved the moment you make them. They change search results only in the next reviewed update — never while you work.',
+    referenceKind: 'That’s a direct passage lookup — nothing to judge here. Search words or phrases to judge results.',
+    invalidReference: (q) => '“' + q + '” looks like a verse reference, but no passage matches it — check the book name, chapter, and verse (e.g. “Psalm 46:1”).',
+    emptyTitle: (q) => 'No results for “' + q + '”.',
+    emptyInvite: 'Know a passage that should answer this? Add it.',
+    emptyButton: 'Add the missing passage',
+    searchError: 'The engine did not answer. It may be restarting — try again in a moment.',
+    bootFetchFailed: 'That part of the workbench did not load. Reload the page to try again.',
+    tailDivider: (n) => 'Lower results (' + n + ') — most people never scroll this far. Skim them only to rescue anything that deserves the top.',
+    readOnlyStrong: 'Read-only right now.',
+    readOnlyRest: ' The engine is rebuilding its data. You can read everything, but calls will not save. This usually clears in a minute — then reload the page.',
+    attribution: 'King James Version',
+    namedByNone: 'No theme names this verse — it matched on wording alone',
+    whyFooter: 'This explains the engine’s reasoning. Your call decides whether it was right.',
+    queueEmpty: 'Nothing waiting — search for something you would actually type.',
+    lookupPlaceholder: 'Type words or a reference — “mercy”, “Psalm 46”…',
+    lookupEmpty: 'Nothing yet — try a word from the verse, or a reference like “Psalm 46:1”.',
+    lookupAction: 'Review results for this search ↵',
+    lookupNoCase: 'Looking something up never creates a case by itself.',
+    resultsAnnounce: (n, q) => n + ' results for “' + q + '”',
+  };
+  const PILL_BY_FAMILY = {
+    concept_anchor: 'Matched the meaning',
+    exact_phrase: 'Shares key words',
+    token_overlap: 'Shares key words',
+    proximity: 'Shares key words',
+    concept_lexicon: 'Close in meaning',
+    translation_variant: 'Close in meaning',
+    passage_terms: 'Close in meaning',
+    cross_reference: 'Close in meaning',
+    co_citation: 'Close in meaning',
+  };
+  const SOURCE_LABELS = {
+    manual: 'You looked this up',
+    gauntlet: 'From a routine check',
+    coverage: 'New topic to cover',
+    'stale-judgment': 'Needs a fresh look',
+    telemetry: 'From real searches',
+    calibration: 'Spot check',
+    regression: 'Used to rank differently',
+  };
+  const TOP_WINDOW = 10;
+
+  // §state
+  const state = {
+    themeMode: 'auto',
+    health: null,
+    meta: null,
+    concepts: [],
+    cases: [],
+    search: { status: 'idle', query: '', kind: null, results: [], passage: null },
+    searchSeq: 0,
+    focus: 0,            // index into the roving stops (cards, divider, tail rows)
+    expandedIndex: 0,    // which top-block card renders expanded
+    inTail: false,       // whether focus currently sits on a tail row
+    tailExpanded: false,
+    railTab: 'why',
+    passages: Object.create(null),  // ref -> {status:'loading'|'done'|'failed', passage}
+    contexts: Object.create(null),  // ref -> {status, data}
+    passageSeq: 0,
+    lookup: null,        // {q, kind, results, sel, opener, seq}
+    toastTimer: null,
+  };
+
+  function readUiState() {
+    try {
+      const raw = localStorage.getItem('study.ui.v1');
+      if (raw === null) return {};
+      const parsed = JSON.parse(raw);
+      return typeof parsed === 'object' && parsed !== null ? parsed : {};
+    } catch (error) { return {}; }
+  }
+  function writeUiState(patch) {
+    try {
+      localStorage.setItem('study.ui.v1', JSON.stringify(Object.assign(readUiState(), patch)));
+    } catch (error) { /* storage unavailable */ }
+  }
+
+  // §request
+  async function requestJson(url, options) {
+    let response;
+    try {
+      response = await fetch(url, options);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Network request failed.';
+      throw { status: 0, code: 'network_error', message };
+    }
+    let body = null;
+    try { body = await response.json(); } catch (error) { body = null; }
+    if (!response.ok) {
+      const isRecord = (v) => typeof v === 'object' && v !== null && !Array.isArray(v);
+      const message = body && isRecord(body) && isRecord(body.error) && typeof body.error.message === 'string'
+        ? body.error.message
+        : body && isRecord(body) && typeof body.error === 'string'
+          ? body.error
+          : response.status + ' ' + response.statusText;
+      const code = body && isRecord(body) && isRecord(body.error) && typeof body.error.code === 'string'
+        ? body.error.code
+        : 'request_failed';
+      throw { status: response.status, code, message, body };
+    }
+    if (body && typeof body === 'object' && body.ok === true && 'data' in body) return body.data;
+    return body;
+  }
+
+  // §api — one named function per endpoint.
+  function apiMeta() { return requestJson('/api/meta'); }
+  function apiConcepts() { return requestJson('/api/concepts'); }
+  function apiHealth() { return requestJson('/api/v2/health'); }
+  function apiCases() { return requestJson('/api/v2/cases'); }
+  function apiSearch(query) { return requestJson('/api/search?q=' + encodeURIComponent(query)); }
+  function apiPassage(reference) { return requestJson('/api/passage?ref=' + encodeURIComponent(reference)); }
+  function apiContext(reference) { return requestJson('/api/v2/context?ref=' + encodeURIComponent(reference)); }
+
+  // §stores
+  function openCases() {
+    const open = state.cases.filter((c) => c && (c.state === 'new' || c.state === 'reviewing' || c.state === 'judged'));
+    // The raw response arrives in caseId order; the queue is most recently
+    // touched first (latest events[].at descending).
+    const touched = (c) => {
+      let latest = '';
+      for (const event of Array.isArray(c.events) ? c.events : []) {
+        if (event && typeof event.at === 'string' && event.at > latest) latest = event.at;
+      }
+      return latest;
+    };
+    return open.slice().sort((a, b) => touched(b) < touched(a) ? -1 : touched(b) > touched(a) ? 1 : 0);
+  }
+  function degradedReadOnly() {
+    const h = state.health;
+    return !!(h && h.startup && h.startup.degraded === true);
+  }
+
+  // §helpers
+  function node(tag, className, text) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+  function clear(element) {
+    while (element.firstChild) element.removeChild(element.firstChild);
+  }
+  function normalizeQuery(query) {
+    return query.trim().replace(/\s+/g, ' ').toLowerCase();
+  }
+  function escapeRegExp(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+  // The §3.1 highlight rule: quoted fragments from the result's lexical
+  // reason labels. "Exact phrase" contributes the query itself; a label
+  // matching `Contains "{fragment}"` contributes the fragment.
+  function lexicalFragments(result, query) {
+    const fragments = [];
+    for (const reason of Array.isArray(result.reasons) ? result.reasons : []) {
+      if (!reason || typeof reason.label !== 'string') continue;
+      if (reason.label === 'Exact phrase') fragments.push(query);
+      else {
+        const match = /^Contains "(.+)"$/.exec(reason.label);
+        if (match !== null) fragments.push(match[1]);
+      }
+    }
+    return fragments;
+  }
+  // Whole-word, punctuation-tolerant literal emphasis — never tokenization.
+  function fragmentRegex(fragment) {
+    const words = fragment.trim().split(/\s+/).filter(Boolean).map(escapeRegExp);
+    if (words.length === 0) return null;
+    const pattern = '(?<![\\p{L}\\p{N}])' + words.join('[^\\p{L}\\p{N}]+') + '(?![\\p{L}\\p{N}])';
+    try { return new RegExp(pattern, 'giu'); } catch (error) { return null; }
+  }
+  // Appends `text` to `target` with <mark> around every fragment match.
+  // Zero regex matches means zero highlights, never a guess.
+  function appendHighlighted(target, text, fragments) {
+    const ranges = [];
+    for (const fragment of fragments) {
+      const regex = fragmentRegex(fragment);
+      if (regex === null) continue;
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        if (match[0].length === 0) { regex.lastIndex += 1; continue; }
+        ranges.push([match.index, match.index + match[0].length]);
+      }
+    }
+    ranges.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    let cursor = 0;
+    for (const [start, end] of ranges) {
+      if (start < cursor) continue; // overlapping match already marked
+      if (start > cursor) target.appendChild(document.createTextNode(text.slice(cursor, start)));
+      target.appendChild(node('mark', '', text.slice(start, end)));
+      cursor = end;
+    }
+    if (cursor < text.length) target.appendChild(document.createTextNode(text.slice(cursor)));
+  }
+  function topReason(result) {
+    let best = null;
+    for (const reason of Array.isArray(result.reasons) ? result.reasons : []) {
+      if (!reason || typeof reason.points !== 'number') continue;
+      if (best === null || reason.points > best.points) best = reason; // ties: first wins
+    }
+    return best;
+  }
+  function conceptNames(result) {
+    const names = [];
+    for (const reason of Array.isArray(result.reasons) ? result.reasons : []) {
+      if (!reason || reason.family !== 'concept_anchor' || typeof reason.label !== 'string') continue;
+      const label = reason.label.replace(/^Theme cue: /, '').replace(/^Related theme: /, '').replace(/^Theme: /, '');
+      if (names.indexOf(label) === -1) names.push(label);
+    }
+    return names;
+  }
+  function parseReference(reference) {
+    const match = /^(.+) (\d+):(\d+)(?:-(\d+))?$/.exec(reference);
+    if (match === null) return null;
+    return {
+      book: match[1],
+      chapter: Number(match[2]),
+      start: Number(match[3]),
+      end: match[4] === undefined ? Number(match[3]) : Number(match[4]),
+    };
+  }
+  function isRangeReference(reference) {
+    return reference.indexOf('-') !== -1;
+  }
+
+  // §theme
+  function systemPrefersDark() {
+    try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (error) { return false; }
+  }
+  function applyTheme() {
+    const dark = state.themeMode === 'dark' || (state.themeMode === 'auto' && systemPrefersDark());
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    const button = document.getElementById('theme-cycle');
+    button.textContent = state.themeMode === 'auto' ? '◐ Auto' : state.themeMode === 'light' ? '☀ Light' : '☾ Dark';
+    button.title = 'Theme: ' + (state.themeMode === 'auto' ? 'Auto (follows your system)' : state.themeMode === 'light' ? 'Light' : 'Dark');
+  }
+  function cycleTheme() {
+    state.themeMode = state.themeMode === 'auto' ? 'light' : state.themeMode === 'light' ? 'dark' : 'auto';
+    try { localStorage.setItem('study.theme', state.themeMode); } catch (error) { /* storage unavailable */ }
+    applyTheme();
+  }
+
+  // §toast
+  function showToast(message) {
+    const slot = document.getElementById('toast-slot');
+    clear(slot);
+    const toast = node('div', 'toast');
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    toast.appendChild(node('span', '', message));
+    slot.appendChild(toast);
+    if (state.toastTimer !== null) clearTimeout(state.toastTimer);
+    state.toastTimer = setTimeout(() => { clear(slot); state.toastTimer = null; }, 6000);
+  }
+
+  // §render — banner
+  function renderBanner() {
+    const slot = document.getElementById('banner-slot');
+    clear(slot);
+    const grid = document.getElementById('review-grid');
+    if (degradedReadOnly()) {
+      const banner = node('div', 'banner');
+      banner.setAttribute('role', 'status');
+      const strong = node('strong', '', COPY.readOnlyStrong);
+      banner.appendChild(strong);
+      banner.appendChild(document.createTextNode(COPY.readOnlyRest));
+      slot.appendChild(banner);
+      grid.classList.add('with-banner');
+    } else {
+      grid.classList.remove('with-banner');
+    }
+  }
+
+  // §render — queue rail
+  function renderQueue() {
+    const body = document.getElementById('queue-body');
+    clear(body);
+    const footer = document.getElementById('rail-footer');
+    const hasResults = state.search.status === 'results';
+
+    if (hasResults) {
+      const label = node('div', 'rail-label');
+      label.appendChild(node('span', 'label-text', 'Results for “' + state.search.query + '”'));
+      const topCount = Math.min(state.search.results.length, TOP_WINDOW);
+      label.appendChild(node('span', 'label-count', topCount + ' to go'));
+      body.appendChild(label);
+      state.search.results.slice(0, TOP_WINDOW).forEach((result, index) => {
+        const row = node('button', 'queue-row' + (index === state.expandedIndex ? ' current' : ''));
+        row.type = 'button';
+        row.appendChild(node('span', 'row-ref', result.reference));
+        const dot = node('span', 'queue-dot');
+        dot.setAttribute('role', 'img');
+        dot.setAttribute('aria-label', 'Not judged yet');
+        row.appendChild(dot);
+        row.addEventListener('click', () => { focusStop(index); });
+        body.appendChild(row);
+      });
+    }
+
+    const waiting = openCases();
+    body.appendChild(node('div', 'queue-section-title', 'Waiting in your queue'));
+    if (waiting.length === 0) {
+      body.appendChild(node('div', 'rail-empty', COPY.queueEmpty));
+    } else {
+      for (const record of waiting) {
+        const row = node('button', 'waiting-row');
+        row.type = 'button';
+        row.appendChild(node('span', 'q', '“' + record.query + '”'));
+        const source = SOURCE_LABELS[record.source];
+        if (source !== undefined) row.appendChild(node('span', '', source));
+        row.addEventListener('click', () => {
+          document.getElementById('search-input').value = record.query;
+          void submitSearch(record.query);
+        });
+        body.appendChild(row);
+      }
+    }
+
+    if (hasResults) {
+      footer.hidden = false;
+      footer.textContent = COPY.contract;
+    } else {
+      footer.hidden = true;
+      footer.textContent = '';
+    }
+  }
+
+  // §render — center pane
+  function announce(text) {
+    document.getElementById('results-status').textContent = text;
+  }
+
+  function renderCenter() {
+    const body = document.getElementById('center-body');
+    clear(body);
+    const search = state.search;
+
+    if (search.status === 'idle') {
+      body.appendChild(node('div', 'contract-line', COPY.contract));
+      return;
+    }
+    if (search.status === 'loading') {
+      const skeleton = node('div', 'results-list');
+      skeleton.id = 'results-skeleton';
+      skeleton.setAttribute('aria-busy', 'true');
+      for (let i = 0; i < 5; i += 1) skeleton.appendChild(node('div', 'skeleton-row'));
+      body.appendChild(skeleton);
+      return;
+    }
+    if (search.status === 'error') {
+      const box = node('div', 'error-box');
+      box.appendChild(node('span', '', COPY.searchError));
+      const retry = node('button', 'btn-quiet', 'Retry');
+      retry.type = 'button';
+      retry.addEventListener('click', () => { void submitSearch(search.query); });
+      box.appendChild(retry);
+      body.appendChild(box);
+      return;
+    }
+    if (search.status === 'reference') {
+      const message = node('div', 'center-message');
+      message.appendChild(node('p', '', COPY.referenceKind));
+      if (search.passage && Array.isArray(search.passage.verses)) {
+        const head = node('h1', 'verse-ref serif', search.passage.reference);
+        message.appendChild(head);
+        const versesEl = node('p', 'verse-body');
+        for (const verse of search.passage.verses) {
+          versesEl.appendChild(node('sup', '', String(verse.verse)));
+          versesEl.appendChild(document.createTextNode(verse.text + ' '));
+        }
+        message.appendChild(versesEl);
+        message.appendChild(node('div', 'attribution', COPY.attribution));
+      }
+      body.appendChild(message);
+      return;
+    }
+    if (search.status === 'invalid') {
+      const message = node('div', 'center-message');
+      message.appendChild(node('p', '', COPY.invalidReference(search.query)));
+      body.appendChild(message);
+      return;
+    }
+    if (search.status === 'empty') {
+      const message = node('div', 'center-message');
+      message.appendChild(node('p', 'headline', COPY.emptyTitle(search.query)));
+      message.appendChild(node('p', '', COPY.emptyInvite));
+      const addButton = node('button', 'btn-primary', COPY.emptyButton);
+      addButton.type = 'button';
+      // The suggestion form lands in a later phase (plan D20/D21); the
+      // entry point renders here so the empty state invites its one action.
+      message.appendChild(addButton);
+      message.appendChild(node('div', 'contract-line', COPY.contract));
+      body.appendChild(message);
+      return;
+    }
+    // status === 'results'
+    renderResults(body);
+  }
+
+  function renderResults(body) {
+    const search = state.search;
+    const results = search.results;
+    const top = results.slice(0, TOP_WINDOW);
+    const tail = results.slice(TOP_WINDOW);
+    const list = node('div', 'results-list');
+    list.id = 'results-list';
+
+    top.forEach((result, index) => {
+      list.appendChild(renderCard(result, index, results.length));
+    });
+    body.appendChild(list);
+
+    if (tail.length > 0) {
+      const divider = node('button', 'tail-divider', COPY.tailDivider(tail.length));
+      divider.type = 'button';
+      divider.id = 'tail-divider';
+      divider.setAttribute('aria-expanded', state.tailExpanded ? 'true' : 'false');
+      divider.setAttribute('aria-controls', 'tail-list');
+      divider.tabIndex = state.focus === top.length ? 0 : -1;
+      divider.addEventListener('click', () => {
+        state.tailExpanded = !state.tailExpanded;
+        state.focus = top.length;
+        renderAll({ focus: true });
+      });
+      divider.addEventListener('focus', () => { state.focus = top.length; state.inTail = false; });
+      list.appendChild(divider);
+
+      const tailList = node('div', 'tail-list');
+      tailList.id = 'tail-list';
+      if (!state.tailExpanded) tailList.hidden = true;
+      if (state.tailExpanded) {
+        tail.forEach((result, tailIndex) => {
+          const stopIndex = top.length + 1 + tailIndex;
+          const row = node('button', 'tail-row' + (state.focus === stopIndex ? ' focused' : ''));
+          row.type = 'button';
+          row.dataset.stop = String(stopIndex);
+          row.tabIndex = state.focus === stopIndex ? 0 : -1;
+          row.appendChild(node('span', 'rank-badge', '#' + (TOP_WINDOW + tailIndex + 1)));
+          row.appendChild(node('span', 'card-ref', result.reference));
+          row.appendChild(node('span', 'card-excerpt', result.excerpt));
+          row.addEventListener('click', () => { focusStop(stopIndex); });
+          row.addEventListener('focus', () => { onTailRowFocused(stopIndex); });
+          tailList.appendChild(row);
+        });
+      }
+      list.appendChild(tailList);
+    }
+  }
+
+  function renderCard(result, index, totalCount) {
+    const expanded = index === state.expandedIndex;
+    const card = node('article', 'result-card' + (expanded ? ' expanded' : '') + (index >= 3 ? ' after-three' : ''));
+    card.dataset.stop = String(index);
+    card.dataset.reference = result.reference;
+    card.tabIndex = state.focus === index ? 0 : -1;
+    card.addEventListener('focus', () => { onCardFocused(index); });
+    card.addEventListener('click', () => { focusStop(index); });
+
+    if (!expanded) {
+      const line = node('div', 'card-line');
+      line.appendChild(node('span', 'rank-badge' + (index < 3 ? ' top' : ''), '#' + (index + 1)));
+      line.appendChild(node('span', 'card-ref', result.reference));
+      line.appendChild(node('span', 'card-excerpt', result.excerpt));
+      card.appendChild(line);
+      return card;
+    }
+
+    const head = node('div', 'verse-head');
+    const heading = node('h1', 'verse-ref', result.reference);
+    head.appendChild(heading);
+    head.appendChild(node('span', 'verse-pos', 'Result ' + (index + 1) + ' of ' + totalCount + ' for “' + state.search.query + '”'));
+    card.appendChild(head);
+    const badge = node('div', '');
+    badge.appendChild(node('span', 'rank-badge' + (index < 3 ? ' top' : ''), '#' + (index + 1)));
+    card.appendChild(badge);
+
+    card.appendChild(renderVerseBody(result));
+    card.appendChild(node('div', 'attribution', COPY.attribution));
+
+    const best = topReason(result);
+    const pillLabel = best !== null && PILL_BY_FAMILY[best.family] !== undefined ? PILL_BY_FAMILY[best.family] : null;
+    if (pillLabel !== null) card.appendChild(node('span', 'reason-pill', pillLabel));
+    return card;
+  }
+
+  function renderVerseBody(result) {
+    const fragments = lexicalFragments(result, state.search.query);
+    const versesEl = node('p', 'verse-body');
+    const cached = state.passages[result.reference];
+    if (cached !== undefined && cached.status === 'done') {
+      for (const verse of cached.passage.verses) {
+        versesEl.appendChild(node('sup', '', String(verse.verse)));
+        appendHighlighted(versesEl, verse.text, fragments);
+        versesEl.appendChild(document.createTextNode(' '));
+      }
+      return versesEl;
+    }
+    // Placeholder (fetch in flight or failed): the excerpt. A single verse
+    // shows the reference's verse number as its one sup — for one verse the
+    // excerpt IS the verse text, so this rendering is already complete. A
+    // multi-verse run shows the joined excerpt with no sup markers.
+    if (!isRangeReference(result.reference)) {
+      const parsed = parseReference(result.reference);
+      if (parsed !== null) versesEl.appendChild(node('sup', '', String(parsed.start)));
+    }
+    appendHighlighted(versesEl, result.excerpt, fragments);
+    return versesEl;
+  }
+
+  // §render — why rail
+  function focusedResult() {
+    const search = state.search;
+    if (search.status !== 'results') return null;
+    const top = search.results.slice(0, TOP_WINDOW);
+    if (state.focus < top.length) return search.results[state.focus] ?? null;
+    if (state.focus > top.length) {
+      const tailIndex = state.focus - top.length - 1;
+      return search.results[TOP_WINDOW + tailIndex] ?? null;
+    }
+    // Focus on the divider: the rail keeps following the expanded card.
+    return search.results[state.expandedIndex] ?? null;
+  }
+
+  function renderRail() {
+    const rail = document.getElementById('why-rail');
+    clear(rail);
+    const result = focusedResult();
+    if (result === null) return;
+
+    const tabs = node('div', 'rail-tabs');
+    tabs.setAttribute('role', 'tablist');
+    tabs.setAttribute('aria-label', 'Explanation');
+    const whyTab = node('button', 'rail-tab', 'Why this ranked');
+    whyTab.type = 'button';
+    whyTab.setAttribute('role', 'tab');
+    whyTab.setAttribute('aria-selected', state.railTab === 'why' ? 'true' : 'false');
+    whyTab.addEventListener('click', () => { state.railTab = 'why'; renderRail(); });
+    const ctxTab = node('button', 'rail-tab', 'Context');
+    ctxTab.type = 'button';
+    ctxTab.setAttribute('role', 'tab');
+    ctxTab.setAttribute('aria-selected', state.railTab === 'context' ? 'true' : 'false');
+    ctxTab.addEventListener('click', () => {
+      state.railTab = 'context';
+      ensureContext(result.reference);
+      renderRail();
+    });
+    tabs.appendChild(whyTab);
+    tabs.appendChild(ctxTab);
+    rail.appendChild(tabs);
+
+    const pad = node('div', 'rail-pad');
+    rail.appendChild(pad);
+
+    if (state.railTab === 'why') {
+      const addRow = (key, value) => {
+        const row = node('div', 'why-row');
+        row.appendChild(node('div', 'why-key', key));
+        row.appendChild(node('div', 'why-val', value));
+        pad.appendChild(row);
+      };
+      addRow('Search', '“' + state.search.query + '”');
+      const names = conceptNames(result);
+      addRow('Named by', names.length > 0 ? names.join(' · ') : COPY.namedByNone);
+      const fragments = lexicalFragments(result, state.search.query);
+      addRow('Matched', fragments.length > 0 ? fragments.map((f) => '“' + f + '”').join(' · ') : '—');
+      const best = topReason(result);
+      addRow('Came from', best !== null && best.provenance && typeof best.provenance.label === 'string' ? best.provenance.label : '—');
+      const pillLabel = best !== null && PILL_BY_FAMILY[best.family] !== undefined ? PILL_BY_FAMILY[best.family] : null;
+      if (pillLabel !== null) {
+        const pillWrap = node('div', '');
+        pillWrap.style.paddingTop = '12px';
+        pillWrap.appendChild(node('span', 'reason-pill', pillLabel));
+        pad.appendChild(pillWrap);
+      }
+      pad.appendChild(node('div', 'rail-note', COPY.whyFooter));
+      return;
+    }
+
+    // Context tab
+    const cached = state.contexts[result.reference];
+    if (cached === undefined || cached.status === 'loading') {
+      pad.appendChild(node('div', 'rail-note', 'Loading the passage…'));
+      return;
+    }
+    if (cached.status === 'failed') {
+      pad.appendChild(node('div', 'rail-note', 'That part of the workbench did not load. Reload the page to try again.'));
+      return;
+    }
+    const context = cached.data.context;
+    const focusRange = parseReference(result.reference);
+    for (const verse of context.passage.verses) {
+      const inFocus = focusRange !== null && verse.verse >= focusRange.start && verse.verse <= focusRange.end;
+      const verseEl = node('p', 'context-verse' + (inFocus ? ' focus' : ''));
+      verseEl.appendChild(node('sup', '', String(verse.verse)));
+      verseEl.appendChild(document.createTextNode(verse.text));
+      pad.appendChild(verseEl);
+    }
+  }
+
+  function ensureContext(reference) {
+    if (state.contexts[reference] !== undefined) return;
+    state.contexts[reference] = { status: 'loading', data: null };
+    apiContext(reference).then((data) => {
+      state.contexts[reference] = { status: 'done', data };
+      renderRail();
+    }).catch(() => {
+      state.contexts[reference] = { status: 'failed', data: null };
+      renderRail();
+    });
+  }
+
+  function ensurePassage(reference) {
+    const cached = state.passages[reference];
+    if (cached !== undefined && (cached.status === 'done' || cached.status === 'loading')) return;
+    // The fetch fires on every focus, uniformly — one code path. Stale
+    // responses are dropped via the request-sequence counter.
+    const seq = ++state.passageSeq;
+    state.passages[reference] = { status: 'loading', passage: null };
+    apiPassage(reference).then((outcome) => {
+      if (seq !== state.passageSeq && state.passages[reference] === undefined) return;
+      if (outcome && outcome.kind === 'passage' && outcome.passage && Array.isArray(outcome.passage.verses)) {
+        state.passages[reference] = { status: 'done', passage: outcome.passage };
+      } else {
+        state.passages[reference] = { status: 'failed', passage: null };
+      }
+      renderAll({ focus: false });
+    }).catch(() => {
+      state.passages[reference] = { status: 'failed', passage: null };
+      // Failure keeps the excerpt rendering; no error state.
+      renderAll({ focus: false });
+    });
+  }
+
+  // §focus — roving tabindex over cards, divider, expanded tail rows.
+  function stopCount() {
+    const search = state.search;
+    if (search.status !== 'results') return 0;
+    const top = Math.min(search.results.length, TOP_WINDOW);
+    const tail = search.results.length - top;
+    if (tail <= 0) return top;
+    return state.tailExpanded ? top + 1 + tail : top + 1;
+  }
+  function topCount() {
+    return Math.min(state.search.results.length, TOP_WINDOW);
+  }
+  function onCardFocused(index) {
+    state.focus = index;
+    state.inTail = false;
+    if (state.expandedIndex !== index) {
+      state.expandedIndex = index;
+      renderAll({ focus: true });
+      return;
+    }
+    renderQueue();
+    renderRail();
+  }
+  function onTailRowFocused(stopIndex) {
+    state.focus = stopIndex;
+    // When focus first enters the tail, the rail fronts the Context tab;
+    // J/K within the tail keeps whichever tab the reviewer chose.
+    if (!state.inTail) state.railTab = 'context';
+    state.inTail = true;
+    const result = focusedResult();
+    if (result !== null) ensureContext(result.reference);
+    renderTailFocusClasses();
+    renderRail();
+  }
+  function renderTailFocusClasses() {
+    const rows = document.querySelectorAll('.tail-row');
+    rows.forEach((row) => {
+      row.classList.toggle('focused', row.dataset.stop === String(state.focus));
+      row.tabIndex = row.dataset.stop === String(state.focus) ? 0 : -1;
+    });
+  }
+  function focusStop(index) {
+    state.focus = index;
+    if (index < topCount()) {
+      if (state.expandedIndex !== index) state.expandedIndex = index;
+      renderAll({ focus: true });
+      return;
+    }
+    renderAll({ focus: true });
+  }
+  function focusCurrentStop() {
+    const list = document.getElementById('results-list');
+    if (list === null) return;
+    const target = state.focus < topCount()
+      ? list.querySelector('[data-stop="' + state.focus + '"]')
+      : state.focus === topCount()
+        ? document.getElementById('tail-divider')
+        : list.querySelector('.tail-row[data-stop="' + state.focus + '"]');
+    if (target !== null) target.focus();
+  }
+  function moveFocus(delta) {
+    const total = stopCount();
+    if (total === 0) return;
+    const next = state.focus + delta;
+    // Plain J/K navigation never wraps.
+    if (next < 0 || next >= total) return;
+    focusStop(next);
+  }
+
+  // §render — everything
+  function renderAll(options) {
+    // Re-rendering replaces the results DOM: when the focused element lived
+    // there (or focus already fell back to body after an earlier rebuild),
+    // restore it, so an async re-render never strands keyboard focus.
+    const active = document.activeElement;
+    const focusWasInResults = active !== null && typeof active.closest === 'function'
+      && active.closest('#center-body') !== null;
+    renderBanner();
+    renderQueue();
+    renderCenter();
+    renderRail();
+    if (state.search.status === 'results') {
+      const focused = state.focus < topCount() ? state.search.results[state.focus] : null;
+      if (focused) ensurePassage(focused.reference);
+      if ((options && options.focus) || focusWasInResults) focusCurrentStop();
+    }
+  }
+
+  // §search
+  async function submitSearch(rawQuery) {
+    const query = rawQuery.trim();
+    if (query === '') return; // A blank or whitespace-only submit is a client no-op.
+    const seq = ++state.searchSeq;
+    state.search = { status: 'loading', query, kind: null, results: [], passage: null };
+    renderAll({});
+    let outcome;
+    try {
+      outcome = await apiSearch(query);
+    } catch (error) {
+      if (seq !== state.searchSeq) return; // stale
+      state.search = { status: 'error', query, kind: null, results: [], passage: null };
+      renderAll({});
+      return;
+    }
+    if (seq !== state.searchSeq) return; // stale: only the latest search renders
+    writeUiState({ lastQuery: query });
+    if (outcome.kind === 'reference') {
+      state.search = { status: 'reference', query, kind: 'reference', results: [], passage: outcome.passage };
+      announce(COPY.referenceKind);
+      renderAll({});
+      return;
+    }
+    if (outcome.kind === 'invalid-reference') {
+      state.search = { status: 'invalid', query, kind: 'invalid-reference', results: [], passage: null };
+      announce(COPY.invalidReference(query));
+      renderAll({});
+      return;
+    }
+    const results = Array.isArray(outcome.results) ? outcome.results : [];
+    if (results.length === 0) {
+      state.search = { status: 'empty', query, kind: 'discovery', results: [], passage: null };
+      announce(COPY.emptyTitle(query));
+      renderAll({});
+      return;
+    }
+    state.search = { status: 'results', query, kind: 'discovery', results, passage: null };
+    state.focus = 0;
+    state.expandedIndex = 0;
+    state.tailExpanded = false;
+    state.railTab = 'why';
+    announce(COPY.resultsAnnounce(results.length, query));
+    // Post-search focus handoff: DOM focus moves from the search input to
+    // result card #1; the input keeps its value. The reference,
+    // invalid-reference, and zero-result branches above leave focus in the
+    // input — the reviewer's next act there is retyping.
+    renderAll({ focus: true });
+  }
+
+  // §lookup (⌘K)
+  let lookupDebounce = null;
+  function openLookup(opener) {
+    if (state.lookup !== null) { closeLookup(); return; }
+    state.lookup = { q: '', kind: null, results: [], sel: 0, opener: opener || document.activeElement, seq: 0 };
+    renderLookup();
+    const input = document.getElementById('lookup-input');
+    if (input !== null) input.focus();
+  }
+  function closeLookup() {
+    const lookup = state.lookup;
+    state.lookup = null;
+    if (lookupDebounce !== null) { clearTimeout(lookupDebounce); lookupDebounce = null; }
+    clear(document.getElementById('dialog-slot'));
+    if (lookup !== null && lookup.opener && typeof lookup.opener.focus === 'function') lookup.opener.focus();
+  }
+  function lookupType(value) {
+    const lookup = state.lookup;
+    if (lookup === null) return;
+    lookup.q = value;
+    if (lookupDebounce !== null) clearTimeout(lookupDebounce);
+    if (value.trim().length < 3) {
+      lookup.kind = null;
+      lookup.results = [];
+      lookup.sel = 0;
+      renderLookupResults();
+      return;
+    }
+    lookupDebounce = setTimeout(() => {
+      lookupDebounce = null;
+      const seq = ++lookup.seq;
+      apiSearch(value.trim()).then((outcome) => {
+        if (state.lookup !== lookup || seq !== lookup.seq) return;
+        lookup.kind = outcome.kind;
+        if (outcome.kind === 'discovery') lookup.results = Array.isArray(outcome.results) ? outcome.results : [];
+        else if (outcome.kind === 'reference') lookup.results = [{ reference: outcome.passage.reference, excerpt: outcome.passage.verses.map((v) => v.text).join(' ') }];
+        else lookup.results = [];
+        lookup.sel = 0;
+        renderLookupResults();
+      }).catch(() => {
+        if (state.lookup !== lookup || seq !== lookup.seq) return;
+        lookup.kind = 'error';
+        lookup.results = [];
+        renderLookupResults();
+      });
+    }, 300);
+  }
+  function lookupSelect() {
+    const lookup = state.lookup;
+    if (lookup === null || lookup.results.length === 0) return;
+    const query = lookup.q.trim();
+    closeLookup();
+    document.getElementById('search-input').value = query;
+    void submitSearch(query);
+  }
+  function renderLookup() {
+    const slot = document.getElementById('dialog-slot');
+    clear(slot);
+    const overlay = node('div', 'overlay');
+    overlay.addEventListener('mousedown', (event) => { if (event.target === overlay) closeLookup(); });
+    const dialog = node('div', 'lookup-dialog');
+    dialog.setAttribute('role', 'dialog');
+    dialog.setAttribute('aria-modal', 'true');
+    dialog.setAttribute('aria-label', 'Quick lookup');
+    const input = node('input', 'lookup-input');
+    input.id = 'lookup-input';
+    input.type = 'text';
+    input.placeholder = COPY.lookupPlaceholder;
+    input.setAttribute('aria-label', 'Quick lookup');
+    input.addEventListener('input', () => { lookupType(input.value); });
+    dialog.appendChild(input);
+    const resultsEl = node('div', 'lookup-results');
+    resultsEl.id = 'lookup-results';
+    dialog.appendChild(resultsEl);
+    const footer = node('div', 'lookup-footer');
+    footer.appendChild(node('span', '', '↑↓ Navigate'));
+    footer.appendChild(node('span', '', '↵ Select'));
+    footer.appendChild(node('span', '', 'Esc Close'));
+    footer.appendChild(node('span', 'spacer', ''));
+    footer.appendChild(node('span', '', COPY.lookupNoCase));
+    dialog.appendChild(footer);
+    overlay.appendChild(dialog);
+    slot.appendChild(overlay);
+    renderLookupResults();
+  }
+  function renderLookupResults() {
+    const lookup = state.lookup;
+    if (lookup === null) return;
+    const resultsEl = document.getElementById('lookup-results');
+    if (resultsEl === null) return;
+    clear(resultsEl);
+    if (lookup.kind === 'invalid-reference') {
+      resultsEl.appendChild(node('div', 'lookup-empty', COPY.invalidReference(lookup.q.trim())));
+      return;
+    }
+    if (lookup.kind === 'error') {
+      resultsEl.appendChild(node('div', 'lookup-empty', COPY.searchError));
+      return;
+    }
+    if (lookup.kind !== null && lookup.results.length === 0) {
+      resultsEl.appendChild(node('div', 'lookup-empty', COPY.lookupEmpty));
+      return;
+    }
+    lookup.results.forEach((result, index) => {
+      const row = node('button', 'lookup-row' + (index === lookup.sel ? ' sel' : ''));
+      row.type = 'button';
+      const head = node('div', 'row-head');
+      head.appendChild(node('span', 'row-ref', result.reference));
+      if (index === lookup.sel) head.appendChild(node('span', 'row-action', COPY.lookupAction));
+      row.appendChild(head);
+      row.appendChild(node('div', 'row-snippet', result.excerpt));
+      row.addEventListener('click', () => { lookup.sel = index; lookupSelect(); });
+      resultsEl.appendChild(row);
+    });
+  }
+
+  // §keys — one handler, layers first.
+  function isTypingTarget(target) {
+    if (!(target instanceof HTMLElement)) return false;
+    const tag = target.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target.isContentEditable;
+  }
+  document.addEventListener('keydown', (event) => {
+    // ⌘K works everywhere, inputs included.
+    if ((event.metaKey || event.ctrlKey) && (event.key === 'k' || event.key === 'K')) {
+      event.preventDefault();
+      openLookup(document.activeElement);
+      return;
+    }
+    if (state.lookup !== null) {
+      if (event.key === 'Escape') { event.preventDefault(); closeLookup(); return; }
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const lookup = state.lookup;
+        if (lookup.results.length > 0) {
+          lookup.sel = Math.max(0, Math.min(lookup.results.length - 1, lookup.sel + (event.key === 'ArrowDown' ? 1 : -1)));
+          renderLookupResults();
+        }
+        return;
+      }
+      if (event.key === 'Enter') { event.preventDefault(); lookupSelect(); return; }
+      if (event.key === 'Tab') {
+        // Focus trap: the input and the rows cycle within the dialog.
+        const dialog = document.querySelector('.lookup-dialog');
+        if (dialog !== null) {
+          const focusables = dialog.querySelectorAll('input, button');
+          if (focusables.length > 0) {
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+          }
+        }
+      }
+      return;
+    }
+    // Typing in an input suppresses single-letter shortcuts.
+    if (isTypingTarget(event.target)) return;
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    if (event.key === 'j' || event.key === 'J' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      moveFocus(1);
+      return;
+    }
+    if (event.key === 'k' || event.key === 'K' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      moveFocus(-1);
+      return;
+    }
+  });
+
+  // §boot
+  document.getElementById('theme-cycle').addEventListener('click', cycleTheme);
+  document.getElementById('lookup-open').addEventListener('click', (event) => { openLookup(event.currentTarget); });
+  document.getElementById('search-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    void submitSearch(document.getElementById('search-input').value);
+  });
+
+  try {
+    const stored = localStorage.getItem('study.theme');
+    if (stored === 'light' || stored === 'dark' || stored === 'auto') state.themeMode = stored;
+  } catch (error) { /* storage unavailable */ }
+  applyTheme();
+  try {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = () => { if (state.themeMode === 'auto') applyTheme(); };
+    if (typeof media.addEventListener === 'function') media.addEventListener('change', onChange);
+    else if (typeof media.addListener === 'function') media.addListener(onChange);
+  } catch (error) { /* matchMedia unavailable */ }
+
+  // lastQuery pre-fills the search input's VALUE on the no-open-case boot;
+  // it never auto-submits and never fetches.
+  const uiState = readUiState();
+  if (typeof uiState.lastQuery === 'string' && uiState.lastQuery !== '') {
+    document.getElementById('search-input').value = uiState.lastQuery;
+  }
+
+  renderAll({});
+
+  let bootToastShown = false;
+  const bootFailed = () => {
+    if (bootToastShown) return;
+    bootToastShown = true;
+    showToast(COPY.bootFetchFailed);
+  };
+  apiHealth().then((health) => { state.health = health; renderBanner(); }).catch(bootFailed);
+  apiMeta().then((meta) => {
+    state.meta = meta;
+    writeUiState({ lastSeenMeta: { engineVersion: meta.engineVersion, corpusFingerprint: meta.corpusFingerprint, layerFingerprint: meta.layerFingerprint } });
+  }).catch(bootFailed);
+  apiConcepts().then((concepts) => { state.concepts = Array.isArray(concepts) ? concepts : []; }).catch(bootFailed);
+  apiCases().then((data) => {
+    state.cases = data && Array.isArray(data.cases) ? data.cases : [];
+    renderQueue();
+  }).catch(bootFailed);
+})();
+</script>
+</body>
+</html>
