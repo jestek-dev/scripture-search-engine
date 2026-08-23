@@ -194,6 +194,11 @@ the PROPOSED marker stands until Jesse ratifies (J49):*
 > inherits this text verbatim — never forks it. On Jesse's sign-off, drop the
 > PROPOSED marker and this becomes the fourth commitment above.
 
+*(Copy-editor's note, outside the inherited text: "the pastoral-crisis
+requirements below" reflects this block's position in §5, where it is
+canonical; in this document those requirements appear in the section
+above.)*
+
 Practically: ship an attributions/licenses screen reachable from wherever
 search results appear, listing the entries in `docs/ATTRIBUTIONS.md` for your
 pinned artifact. The obligation travels with the data, not with the engine
