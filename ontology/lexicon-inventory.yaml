@@ -455,13 +455,30 @@ concepts:
     admitted: [abide, remain]
 
   - id: assurance-of-salvation
-    # Added 2026-08-20 (this PR) to close a measured gap: bare "assurance"
-    # fired no concept. This pack is the word's honest home per its own
-    # SENSE DISCIPLINE note; the Heb 11:1 pack keeps the definition sense
-    # phrasing-only (see remembered-faith-as-assurance's skip). The
-    # 2026-08-08 audit deferred the word only because this concept did not
-    # exist yet.
-    admitted: [assurance]
+    # 2026-08-20 (PR #33) admitted bare `assurance` here to close a measured
+    # gap (the word fired no concept; this pack is its honest home per its
+    # SENSE DISCIPLINE note — the Heb 11:1 pack stays phrasing-only, see
+    # remembered-faith-as-assurance's skip). REVERSED to a skip at the
+    # 2026-08-23 stack merge: this pack also carries the reviewed P5.5 hymn
+    # aliases "blessed assurance" / "blessed assurance jesus is mine" — the
+    # kill of the harmful-hymn class — and the P5.6 superset double-chip
+    # guard structurally refuses a concept holding BOTH a bare `assurance`
+    # lexicon entry and hymn phrases whose tokens contain it (one query
+    # would stack an authoritative Theme chip AND a hymn chip on the same
+    # curated fact). The hymn mapping's reviewed behavior is preserved; the
+    # bare word steps back. Revert path: one commit restoring `- assurance`
+    # to the pack lexicon + this row's admitted form, and dropping the two
+    # hymn phrases.
+    skipped:
+      - token: assurance
+        reason: >-
+          Admitting the bare word alongside the P5.5 "blessed assurance"
+          hymn phrases double-chips the concept (P5.6 superset guard,
+          fail-closed at build). The hymn mapping is the reviewed kill of
+          the harmful-hymn class and is preserved; the #33 bare-word
+          admission is deferred until the double-chip question is
+          re-adjudicated. The 2026-08-20 gap measurement stands recorded
+          in this row's comment.
 
   - id: betrayal-and-marriage-crisis
     skipped:
@@ -1029,9 +1046,11 @@ concepts:
       - token: assurance
         reason: >-
           This pack is the Heb 11:1 faith-DEFINITION sense and stays
-          phrasing-only; bare "assurance" routes to assurance-of-salvation
-          (2026-08-20, this PR), resolving the 2026-08-08 deferral that
-          existed only because that concept had not been built yet.
+          phrasing-only. (2026-08-20, PR #33, routed bare "assurance" to
+          assurance-of-salvation; the 2026-08-23 stack merge reversed that
+          admission to preserve the P5.5 hymn mapping under the double-chip
+          guard — see assurance-of-salvation's skip. Either way this pack
+          never takes the bare word.)
 
   - id: remembered-faith-like-a-mustard-seed
     skipped:
