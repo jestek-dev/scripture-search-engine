@@ -19,7 +19,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { normalizeBookAlias } from '@jestek-dev/scripture-engine';
+import { normalizeBookAlias } from '@jestek-dev/scripture-engine/internal';
 
 import { BOOKS, bookAliasRows } from '../../pipeline/src/books.js';
 import { normalizeBookKey } from '../../pipeline/src/normalize.js';

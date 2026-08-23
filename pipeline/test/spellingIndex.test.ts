@@ -19,7 +19,7 @@ import { DatabaseSync } from 'node:sqlite';
 import {
   deleteVariants,
   dictionaryDeleteDepth,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 
 import { buildSpellingIndex, type SqliteReadWriteDatabase } from '../src/buildSpellingIndex.js';
 import { SCHEMA_SQL, SCHEMA_VERSION } from '../src/schema.js';

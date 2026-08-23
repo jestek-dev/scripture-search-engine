@@ -116,7 +116,7 @@ import {
   type GateResult,
 } from './gates/types.js';
 import { mergeGateResults } from './gates/merge.js';
-import { DEFAULT_BUDGETS } from '@jestek-dev/scripture-engine';
+import { DEFAULT_BUDGETS } from '@jestek-dev/scripture-engine/internal';
 import { buildReport } from './report.js';
 import {
   buildMachineReport,

@@ -17,7 +17,7 @@ import { describe, expect, it } from 'vitest';
 
 import { DatabaseSync } from 'node:sqlite';
 
-import { normalizedPhrase } from '@jestek-dev/scripture-engine';
+import { normalizedPhrase } from '@jestek-dev/scripture-engine/internal';
 
 import {
   aliasLayerFingerprint,

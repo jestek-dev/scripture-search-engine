@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { sourceLabel } from '@jestek-dev/scripture-engine';
+import { sourceLabel } from '@jestek-dev/scripture-engine/internal';
 
 import { EXPOSITION_SOURCES } from '../../pipeline/src/expositionSources.js';
 

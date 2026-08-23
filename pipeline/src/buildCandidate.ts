@@ -35,7 +35,7 @@ import {
   type ContentQueryPort,
   type ContentQueryResult,
   type ContentScalar,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 import { isAlias, parseDocument, visit } from 'yaml';
 
 import {

@@ -18,7 +18,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { significantWords } from '@jestek-dev/scripture-engine';
+import { significantWords } from '@jestek-dev/scripture-engine/internal';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_LIST_PATH = join(HERE, '..', '..', 'telemetry', 'sensitive-categories.json');

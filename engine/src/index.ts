@@ -1,143 +1,50 @@
 /**
- * Public API for @jestek-dev/scripture-engine.
+ * PUBLIC API for @jestek-dev/scripture-engine — the stable tier consumers
+ * pin (plan P7.2 / CO-5; docs/COMPATIBILITY.md is the compatibility matrix).
  *
- * Phase 0 exports the pure core that later phases build on: the shared
- * tokenizer, the reference parser, the typed reason vocabulary, the signal
- * budgets, and the deterministic ranker. The intent ladder (Phase 1) and the
- * concept layer (Phase 2) attach to these without changing their contracts.
+ * This entry is deliberately small: `createEngine` over a `ContentQueryPort`,
+ * the five methods on `ScriptureEngine` (`research`, `themes`, `passage`,
+ * `related`, `forSong`), the result types they return — including the
+ * additive `suggestion` (0.11.0) and `corrections` (0.12.0) citation fields
+ * and the `verses`/`grouping` fields (0.14.0) — and the version constants.
+ * Invalid input is a typed kind, never an exception (§5 of
+ * docs/implementation-plan.md, restated in docs/COMPATIBILITY.md).
+ *
+ * Everything else — the tokenizer, the ranker, repository internals, the
+ * reviewed constants eval mirrors — lives behind
+ * `@jestek-dev/scripture-engine/internal` and carries no stability promise.
+ * The exact public surface is pinned by eval/test/public-surface.test.ts;
+ * widening it is a §5 consumer-contract change, not a convenience edit.
  */
 
 export { ENGINE_VERSION, TOKENIZER_VERSION } from './config/engineVersion.js';
 
-export {
-  collapseAnchorRuns,
-  collapseRuns,
-  createEngine,
-  type EngineOptions,
-  type GroupingSpanInfo,
-  type ScriptureEngine,
-} from './createEngine.js';
+export { createEngine, type EngineOptions, type ScriptureEngine } from './createEngine.js';
 
-export {
-  CorpusRepository,
-  MAX_CANDIDATES,
-  MAX_PHRASE_LENGTH,
-  type CorpusMeta,
-  type CrossReferencePhraseRow,
-  type CuratedAliasRow,
-  type PericopeRow,
-  type PhraseMatch,
-  type TokenMatch,
-} from './corpus/repository.js';
-
-export {
-  EXACT_PHRASE_FULL_AUTHORITY_WORDS,
-  groupIdFor,
-  mergeCandidates,
-  phraseEvidence,
-  queryIdfTotal,
-  referenceLabel,
-  subsumeCompletePhraseRestatements,
-  targetIdFor,
-  tokenEvidence,
-} from './intents/lexical.js';
-
-export {
-  aliasConceptEvidence,
-  aliasPassageEvidence,
-  dedupeConceptAnchors,
-  PASSAGE_TERM_PMI_HALF_SATURATION,
-  sourceLabel,
-} from './intents/concept.js';
-
-export {
-  deleteVariants,
-  dictionaryDeleteDepth,
-  pickCorrection,
-  SPELLING_EDIT1_MAX_TOKEN_LENGTH,
-  SPELLING_MIN_TOKEN_LENGTH,
-  spellingEditBudget,
-  type PickedCorrection,
-  type SpellingCandidate,
-} from './intents/spelling.js';
-
-export {
-  normalizedPhrase,
-  normalizeToken,
-  significantWords,
-  significantWordsWithSurface,
-  tokenStream,
-  TOKENIZER_ARCHAIC_FORM_COUNT,
-  TOKENIZER_STOPWORD_COUNT,
-} from './tokenizer/index.js';
-
-export {
-  damerauLevenshtein,
-  editDistanceBudget,
-  normalizeBookAlias,
-  resolveReference,
-  resolveReferenceAttempt,
-  SUGGESTION_EDIT1_MAX_KEY_LENGTH,
-  SUGGESTION_MIN_KEY_LENGTH,
-  type BookAliasEntry,
-  type ReferenceResolutionAttempt,
-  type ReferenceResolver,
-  type ReferenceSuggestion,
-  type ResolvedBook,
-  type ResolvedReference,
-} from './reference/reference.js';
-
-export { makeVerseId, parseVerseId, type VerseLocation } from './reference/verseId.js';
-
-export {
-  AUTHORITATIVE_FAMILIES,
-  isAuthoritative,
-  type Evidence,
-  type Provenance,
-  type Reason,
-  type SignalFamily,
-} from './reasons/types.js';
-
-export {
-  CHIP_DISPLAY_MIN_POINTS,
-  PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
-  correctionCitation,
-  pinCorrectionCitations,
-  polishChipsForDisplay,
-} from './reasons/display.js';
-
-export {
-  applyBudgets,
-  DEFAULT_BUDGETS,
-  type BudgetedScore,
-  type FamilyBudget,
-  type SignalBudgets,
-} from './ranking/budgets.js';
-
-export {
-  DEFAULT_LIMIT,
-  DEFAULT_MAX_PER_GROUP,
-  rank,
-  type Candidate,
-  type RankedResult,
-  type RankOptions,
-} from './ranking/rank.js';
+// Types reachable from the five methods' signatures and results. `Reason` is
+// the chip every result carries; `ReferenceSuggestion` is the shape of the
+// `suggestion` field; `RankOptions`/`SignalBudgets`/`FamilyBudget` close the
+// `EngineOptions` type. Type-only: none of these add runtime surface.
+export type { Evidence, Provenance, Reason, SignalFamily } from './reasons/types.js';
+export type { ReferenceSuggestion } from './reference/reference.js';
+export type { FamilyBudget, SignalBudgets } from './ranking/budgets.js';
+export type { RankOptions } from './ranking/rank.js';
 
 export type {
   ConceptMatch,
-  PassageResult,
-  RelatedResult,
-  SongInput,
   ContentQueryPort,
   ContentQueryResult,
   ContentScalar,
   DiscoveryResult,
   GroupedVerse,
+  PassageResult,
+  RelatedResult,
   ResearchOutcome,
   ResearchResult,
   ResultGrouping,
   ResultIdentity,
   ScripturePassage,
   ScriptureVerse,
+  SongInput,
   SpellingCorrection,
 } from './types.js';

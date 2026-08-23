@@ -9,7 +9,7 @@ import {
   rank,
   type Candidate,
   type RankOptions,
-} from '@jestek-dev/scripture-engine';
+} from '@jestek-dev/scripture-engine/internal';
 
 import {
   budgetsPropertyGate,

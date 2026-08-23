@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import nodePath from 'node:path';
 
-import { significantWords } from '@jestek-dev/scripture-engine';
+import { significantWords } from '@jestek-dev/scripture-engine/internal';
 import { validateCorpusFixture } from '../../eval/src/gates/corpusGolden.js';
 import { findBook } from '../../pipeline/src/books.js';
 import { parseAnchorRef } from '../../pipeline/src/importers/ontologyImporter.js';

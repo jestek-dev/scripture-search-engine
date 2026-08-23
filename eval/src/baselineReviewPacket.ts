@@ -17,7 +17,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import { parseVerseId } from '@jestek-dev/scripture-engine';
+import { parseVerseId } from '@jestek-dev/scripture-engine/internal';
 
 import { BOOKS } from '../../pipeline/src/books.js';
 import {

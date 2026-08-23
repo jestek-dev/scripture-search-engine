@@ -22,7 +22,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import { createEngine, targetIdFor, type ContentQueryPort } from '@jestek-dev/scripture-engine';
+import { createEngine, targetIdFor, type ContentQueryPort } from '@jestek-dev/scripture-engine/internal';
 
 import { databasePath, readDescriptor, repoRoot, type ArtifactDescriptor } from './descriptor.js';
 import { aggregateHealth, identityOfDescriptor } from './health.js';

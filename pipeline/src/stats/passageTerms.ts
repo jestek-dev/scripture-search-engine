@@ -32,7 +32,7 @@
  * the same word inherited from a whole-psalm essay at query time.
  */
 
-import { significantWords, tokenStream } from '@jestek-dev/scripture-engine';
+import { significantWords, tokenStream } from '@jestek-dev/scripture-engine/internal';
 
 import { isBlockedTerm } from './ocrBlocklist.js';
 

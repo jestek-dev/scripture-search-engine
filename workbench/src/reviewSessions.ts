@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import { significantWords } from '@jestek-dev/scripture-engine';
+import { significantWords } from '@jestek-dev/scripture-engine/internal';
 
 /**
  * Deterministic review-session planning and event folding (Milestone 12).

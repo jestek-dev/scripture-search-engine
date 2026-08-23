@@ -17,7 +17,7 @@
  * "cannot check" and "checked" stay different evidence sets.
  */
 
-import { significantWords, type ScriptureEngine } from '@jestek-dev/scripture-engine';
+import { significantWords, type ScriptureEngine } from '@jestek-dev/scripture-engine/internal';
 
 import type { SensitiveMatcher } from './categories.js';
 import type {

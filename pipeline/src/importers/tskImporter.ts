@@ -43,7 +43,7 @@
  *   synopsis prose can never masquerade as a phrase key.
  */
 
-import { significantWords } from '@jestek-dev/scripture-engine';
+import { significantWords } from '@jestek-dev/scripture-engine/internal';
 
 import { BOOKS } from '../books.js';
 import { KJV_VERSES_PER_CHAPTER } from '../versification/kjv.js';

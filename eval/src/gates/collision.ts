@@ -12,7 +12,7 @@
  * detected" without a suggested move just moves the guesswork.
  */
 
-import { significantWords } from '@jestek-dev/scripture-engine';
+import { significantWords } from '@jestek-dev/scripture-engine/internal';
 
 import {
   collapseAcknowledgmentKey,

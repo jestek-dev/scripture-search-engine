@@ -15,7 +15,7 @@
 
 import { parse as parseYaml } from 'yaml';
 
-import { significantWords } from '@jestek-dev/scripture-engine';
+import { significantWords } from '@jestek-dev/scripture-engine/internal';
 import { findBook } from '../books.js';
 import { makeVerseId } from '../verseId.js';
 
