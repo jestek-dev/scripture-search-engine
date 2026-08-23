@@ -10,7 +10,8 @@
     "gauntlet": "tsx src/gauntlet.ts",
     "tier-report": "tsx src/tierReport.ts",
     "battery:check": "tsx src/batteryJobCheck.ts",
-    "review-packet": "tsx src/baselineReviewPacket.ts"
+    "review-packet": "tsx src/baselineReviewPacket.ts",
+    "faithfulness-sample": "tsx src/faithfulnessSampleCli.ts"
   },
   "dependencies": {
     "@jestek-dev/scripture-engine": "*"
