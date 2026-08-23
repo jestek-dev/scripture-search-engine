@@ -1,0 +1,48 @@
+{
+  "id": "tsk-off-phrase-discount",
+  "query": "for I know the plans I have for you",
+  "status": "pending",
+  "note": [
+    "P6.3 (B3) TSK phrase-level re-mining, fixtures-first (2026-08-22,",
+    "pending, written BEFORE Phase A and ASSERTING PHASE B BEHAVIOR -",
+    "stated openly: in Phase A no tsk-text edge enters cross_references,",
+    "TSK-only targets score nothing at all, and asserting a discount",
+    "against Phase A would be vacuous. Flip to active in the Phase B PR",
+    "(ENGINE_VERSION bump + edges + phrase consultation), after J26/J55.",
+    "",
+    "THE CONTRACT (the negative fixture the plan names): a tsk-text edge",
+    "whose phrase key shares NO significant token with the query is",
+    "OFF-PHRASE and scores only its DISCOUNTED contribution (candidate",
+    "factor x0.5 - a J26 weight call, not a decided constant). An",
+    "undiscounted votes=1 TSK edge firing off-phrase would be precisely",
+    "the indiscriminate stacking (P3/F3) this item exists to cut.",
+    "",
+    "GROUNDED IN THE PINNED BYTES (TSK.zip sha256 6784c709...93): the TSK",
+    "entry at Jeremiah 29:11 keys the phrase 'expected end. Heb. end and",
+    "expectation.' to 'La 3:26'. No significant token of that phrase key",
+    "appears in this query, so under Phase B the Jer 29:11 -> Lam 3:26",
+    "edge is OFF-PHRASE. Lamentations 3 IS present in the fixture bed and",
+    "Jeremiah 29 is present, so this fixture is hermetically measurable",
+    "the day Phase B lands.",
+    "",
+    "ASSERTION SHAPE: preferredOrder rather than a score literal - the",
+    "quoted verse (already pinned #1 by the ACTIVE shared ph2 fixture,",
+    "hope-plans.json, landed with P3.4's J22 FULL same-concept",
+    "suppression) must stay above the off-phrase TSK target. If Lam 3:26",
+    "does not surface in the window at all, the discount did its work and",
+    "the pair holds trivially. The Phase B PR carries the score-level",
+    "evidence (an off-phrase edge's contribution = discounted strength",
+    "inside the TSK-family G7 correlation budget shared with",
+    "openbible-xrefs via derivedFrom ['tsk']).",
+    "",
+    "J-GATES: J26 (the x0.5 factor itself - candidate until signed), J55",
+    "(tsk-text doctrinal verdict). Nothing here merges as decided."
+  ],
+  "preferredOrder": [
+    {
+      "above": "Jeremiah 29:11",
+      "below": "Lamentations 3:26",
+      "withinTop": 10
+    }
+  ]
+}

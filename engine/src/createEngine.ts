@@ -130,7 +130,13 @@ export interface ScriptureEngine {
 // emptied one) the presence-and-rows probe reads false and behavior reverts
 // to the 0.13.0 anchor-only collapse: rebuilding without pericope rows IS
 // the rollback.
-const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5', '6', '7', '8']);
+// '9' (B3 Phase A): the TSK cross-reference-phrases schema. Capability only —
+// NO discover() code path reads the table yet, so a v9 artifact ranks
+// byte-identically to a v8 one; the behavior that consumes the phrase keys
+// (named-phrase labels, off-phrase discount) lands with the Phase B
+// ENGINE_VERSION bump behind J26/J55. Rebuilding without phrase rows (or
+// dropping the table) IS the rollback, same presence-and-rows probe story.
+const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5', '6', '7', '8', '9']);
 
 /**
  * Lyric tokens admitted to forSong(). A full lyric sheet is hundreds of

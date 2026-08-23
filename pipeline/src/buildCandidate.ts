@@ -966,6 +966,50 @@ function readPericopeRows(database: DatabaseSync): readonly CandidatePericopeRow
   ).all() as unknown as CandidatePericopeRow[];
 }
 
+/** Presence probe for the P6.3 phrase table (schema v9; absent pre-v9). */
+function hasCrossReferencePhraseTable(database: DatabaseSync): boolean {
+  const row = database.prepare(
+    "SELECT COUNT(*) AS present FROM sqlite_master WHERE type = 'table' AND name = 'cross_reference_phrases'",
+  ).get() as { present: number };
+  return Number(row.present) === 1;
+}
+
+interface CandidatePhraseRow {
+  readonly fromVerseId: number;
+  readonly normalizedPhrase: string;
+  readonly toStartVerseId: number;
+  readonly toEndVerseId: number;
+}
+
+/**
+ * TSK phrase rows for the independent fingerprint recomputation (schema
+ * v9). Non-owned bytes a candidate never touches — like pericopes — but
+ * they feed the concept-layer fingerprint per-record, so the reviewer-side
+ * mirror must reproduce them. `null` for a pre-v9 base whose fingerprint
+ * never carried them (its counts record is also one field shorter).
+ */
+function readCrossReferencePhraseRows(database: DatabaseSync): readonly CandidatePhraseRow[] | null {
+  if (!hasCrossReferencePhraseTable(database)) return null;
+  const rows = database.prepare(
+    `SELECT from_verse_id AS fromVerseId, normalized_phrase AS normalizedPhrase,
+            to_start_verse_id AS toStartVerseId, to_end_verse_id AS toEndVerseId
+     FROM cross_reference_phrases`,
+  ).all() as unknown as CandidatePhraseRow[];
+  // Sorted HERE, in JS, with buildConceptLayer's own fingerprint-feed
+  // comparator (UTF-16 code units) — NOT by SQL ORDER BY: SQLite's BINARY
+  // collation compares UTF-8 bytes, which disagrees with JS on some
+  // non-ASCII strings, and the mirror must feed 'x' records in exactly the
+  // order the artifact's builder hashed them or a legitimate base is
+  // refused with a fingerprint mismatch.
+  return rows.sort(
+    (a, b) =>
+      a.fromVerseId - b.fromVerseId ||
+      (a.normalizedPhrase < b.normalizedPhrase ? -1 : a.normalizedPhrase > b.normalizedPhrase ? 1 : 0) ||
+      a.toStartVerseId - b.toStartVerseId ||
+      a.toEndVerseId - b.toEndVerseId,
+  );
+}
+
 /** digestRows over the shipped spelling tables, keyed like the expectation. */
 function actualSpellingTableDigests(database: DatabaseSync): Record<string, string> {
   return {
@@ -1416,6 +1460,7 @@ function layerFingerprint(
   ontology: CompiledOntology,
   counts: Readonly<Record<string, number>>,
   pericopes: readonly CandidatePericopeRow[] | null,
+  phrases: readonly CandidatePhraseRow[] | null,
 ): string {
   const hash = createHash('sha256');
   const feed = (parts: readonly (string | number)[]): void => {
@@ -1447,10 +1492,21 @@ function layerFingerprint(
     for (const row of [...pericopes].sort((a, b) => a.startVerseId - b.startVerseId)) {
       feed(['p', row.startVerseId, row.endVerseId, row.boundaryVotes]);
     }
-    feed(['counts', counts.topicAnchors ?? 0, counts.crossReferences ?? 0, counts.verseTerms ?? 0, counts.translationTokens ?? 0, pericopes.length]);
-  } else {
-    feed(['counts', counts.topicAnchors ?? 0, counts.crossReferences ?? 0, counts.verseTerms ?? 0, counts.translationTokens ?? 0]);
   }
+  // Schema v9 (P6.3/B3 Phase A): TSK phrase rows feed per-record after the
+  // pericopes and their count widens the counts record once more. A pre-v9
+  // base (phrases === null) keeps the exact earlier feed shape, byte for
+  // byte — and a pre-v8 base keeps ITS shape — the mirror reproduces
+  // whichever record the artifact's own builder wrote.
+  if (phrases !== null) {
+    for (const row of phrases) {
+      feed(['x', row.fromVerseId, row.normalizedPhrase, row.toStartVerseId, row.toEndVerseId]);
+    }
+  }
+  const base = [counts.topicAnchors ?? 0, counts.crossReferences ?? 0, counts.verseTerms ?? 0, counts.translationTokens ?? 0];
+  if (pericopes !== null) base.push(pericopes.length);
+  if (phrases !== null) base.push(phrases.length);
+  feed(['counts', ...base]);
   return hash.digest('hex');
 }
 
@@ -1489,7 +1545,12 @@ function installOwnedLayer(database: DatabaseSync, ontology: CompiledOntology): 
       );
     }
     for (const row of rows.concept_related!) insertRelated.run(row.concept_id as never, row.related_id as never);
-    const fingerprint = layerFingerprint(ontology, counts, readPericopeRows(database));
+    const fingerprint = layerFingerprint(
+      ontology,
+      counts,
+      readPericopeRows(database),
+      readCrossReferencePhraseRows(database),
+    );
     database.prepare('INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)').run('layer_fingerprint', fingerprint);
     database.exec('COMMIT');
     return counts;
@@ -1833,7 +1894,8 @@ function inspectLayerExpectation(
     // v8 pericope rows: non-owned, candidate-untouched, but part of the
     // concept-layer feed — read once and applied to BOTH sides of the check.
     const pericopeRows = readPericopeRows(database);
-    const baseConceptFingerprint = layerFingerprint(baseOntology, layerCounts, pericopeRows);
+    const phraseRows = readCrossReferencePhraseRows(database);
+    const baseConceptFingerprint = layerFingerprint(baseOntology, layerCounts, pericopeRows, phraseRows);
     // QR-6: the chain's LAST link. Alias rows are non-owned bytes a
     // candidate never touches (byte-verified by the copied-table check), but
     // they end the layer-fingerprint chain, so both the base check and the
@@ -1859,7 +1921,7 @@ function inspectLayerExpectation(
       fail('NO_MEASURABLE_EFFECT', 'proposal does not change any result-affecting candidate table.');
     }
     const baseTableDigests = logicalTableDigests(database);
-    const candidateConceptFingerprint = layerFingerprint(candidateOntology, layerCounts, pericopeRows);
+    const candidateConceptFingerprint = layerFingerprint(candidateOntology, layerCounts, pericopeRows, phraseRows);
     let candidateLayerFingerprint = candidateConceptFingerprint;
     let spellingTableDigests: Readonly<Record<string, string>> | null = null;
     if (spellingSources) {

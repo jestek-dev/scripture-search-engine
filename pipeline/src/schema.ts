@@ -29,8 +29,18 @@
  *      section counts). The engine READS it but nothing in discover() calls
  *      the read yet — ordering is bit-identical to v7 and the grouping
  *      behavior lands with ENGINE_VERSION 0.14.0 in PR 2.
+ * v9 — Phase 6 (P6.3/B3 Phase A, capability only): TSK phrase-keyed
+ *      cross-reference evidence (cross_reference_phrases table, mined by
+ *      tskImporter.ts from the CrossWire module). Genuinely bit-identical:
+ *      NO row enters cross_references (the engine expands ALL xref rows
+ *      with no source filter, so TSK edges there would change ordering
+ *      under a capability-only framing) and nothing at query time reads
+ *      the new table. Edge emission + phrase consultation land with the
+ *      Phase B ENGINE_VERSION bump, gated on J26/J55. Schema slot per the
+ *      2026-08-20 plan: v9 = TSK phrases, v10 reserved for B5-S3 lemma
+ *      anchors (conditional on J57).
  */
-export const SCHEMA_VERSION = '8';
+export const SCHEMA_VERSION = '9';
 
 /**
  * `verses.id` (plain rowid) is the true primary key, NOT `verse_id`. The
@@ -338,6 +348,31 @@ CREATE TABLE pericopes (
 );
 
 CREATE INDEX idx_pericopes_range ON pericopes(start_verse_id, end_verse_id);
+
+/*
+ * TSK phrase-keyed cross-reference evidence (schema v9, P6.3/B3 Phase A).
+ * One row per mined (verse, phrase, target-range) triple: WHICH words of
+ * from_verse the reference list is about. normalized_phrase is the phrase
+ * key as the ONE shared tokenizer renders it (may be empty where TSK keyed
+ * a list to a function word — an honest record; such a key can never
+ * token-match a query).
+ *
+ * CAPABILITY ONLY at v9: nothing at query time reads this table, and no
+ * tsk-text row exists in cross_references — the Phase B ENGINE_VERSION
+ * bump (gated on J26/J55) lands the edges and the phrase consultation
+ * together, as one honestly-framed ordering change. The rows are
+ * structural facts with a named source (TSK's own quoted verse words),
+ * never a relevance or correctness score.
+ */
+CREATE TABLE cross_reference_phrases (
+  from_verse_id INTEGER NOT NULL,
+  normalized_phrase TEXT NOT NULL,
+  to_start_verse_id INTEGER NOT NULL,
+  to_end_verse_id INTEGER NOT NULL,
+  source_id TEXT NOT NULL
+);
+
+CREATE INDEX idx_cross_reference_phrases_from ON cross_reference_phrases(from_verse_id);
 `;
 
 /**

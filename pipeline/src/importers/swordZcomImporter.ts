@@ -141,6 +141,15 @@ export interface SwordImportOptions {
    * a handful can be genuine editorial quirks.
    */
   readonly mismatchTolerance?: number;
+  /**
+   * Return each entry's raw markup instead of stripped plain text. The
+   * expositor path wants tokens and strips everything; the TSK path
+   * (P6.3/B3) needs the ThML structure — phrase keys alternate with
+   * `<scripRef>` reference lists, and stripping the tags destroys exactly
+   * the (verse, phrase, refs) association the re-mining exists to recover.
+   * Default false: every existing caller keeps its behavior byte-for-byte.
+   */
+  readonly preserveMarkup?: boolean;
 }
 
 function readTestament(
@@ -193,7 +202,8 @@ function readTestament(
     if (length === 0) return '';
     const blockIndex = bzv.readUInt32LE(base);
     const offset = bzv.readUInt32LE(base + 4);
-    return stripOsis(block(blockIndex).subarray(offset, offset + length).toString('utf8'));
+    const raw = block(blockIndex).subarray(offset, offset + length).toString('utf8');
+    return options.preserveMarkup ? raw : stripOsis(raw);
   };
 
   let empty = 0;

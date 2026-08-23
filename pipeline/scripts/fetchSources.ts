@@ -50,6 +50,14 @@ const UNPACK: Readonly<Record<string, Unpack>> = {
   'openbible-xrefs': { kind: 'zip-flat' },
   // A bare .txt — no archive to unpack (P5.6/CO-3 pericope capability).
   'openbible-sections': { kind: 'plain' },
+  // TSK phrase re-mining (P6.3/B3): a SWORD zcom module like the expositor
+  // archives, but registered here explicitly because it is not an
+  // exposition source — its payload is reference structure, not prose.
+  'tsk-text': { kind: 'sword-module', into: 'tsk' },
+  // TVTMS versification witness (P6.4/B5 S1): a bare tab-separated .txt.
+  // Fetched only to (re)generate the committed distillate
+  // (src/versification/tvtms.ts) — builds never read the raw file.
+  'stepbible-tvtms': { kind: 'plain' },
   ...Object.fromEntries(
     EXPOSITION_SOURCES.filter((spec) => spec.strategy === 'sword-zcom').map((spec) => [
       spec.id,
@@ -82,6 +90,10 @@ function fileNameFor(manifest: SourceManifest): string {
     // Clarke.zip sat right there.
     return spec.strategy === 'sword-zcom' ? `${spec.file}.zip` : spec.file;
   }
+  // TVTMS's upstream basename is a 130-character percent-encoded sentence;
+  // saved under the manifest id so generateTvtmsDistillate.ts (and a human)
+  // can find it.
+  if (manifest.id === 'stepbible-tvtms') return 'stepbible-tvtms.txt';
   const last = manifest.sourceUrl.split('/').pop() ?? manifest.id;
   return last.includes('.') ? last : `${manifest.id}.bin`;
 }

@@ -120,7 +120,7 @@
 
 import { lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, posix, relative, sep } from 'node:path';
+import { basename, join, posix, relative, sep } from 'node:path';
 
 import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
@@ -609,7 +609,8 @@ describe('curation/ stays outside the artifact build graph', () => {
   it('nothing under engine/ imports from curation/ (statically or indeterminately)', () => {
     const files = sourceFilesUnder(join(REPO_ROOT, 'engine'), PRUNE);
     // Coverage witnesses: src AND test trees are both in the scanned set.
-    const names = files.map((file) => file.split('/').pop());
+    // (basename, not split('/'): the walk emits OS-native separators.)
+    const names = files.map((file) => basename(file));
     expect(names).toContain('createEngine.ts');
     expect(names).toContain('tokenizer.test.ts');
     for (const file of files) {
@@ -619,7 +620,7 @@ describe('curation/ stays outside the artifact build graph', () => {
 
   it('nothing under pipeline/ (buildArtifact.ts and buildConceptLayer.ts included) imports from curation/', () => {
     const files = sourceFilesUnder(join(REPO_ROOT, 'pipeline'), PRUNE);
-    const names = files.map((file) => file.split('/').pop());
+    const names = files.map((file) => basename(file));
     // The named builders must actually be in the scanned set — a scan that
     // silently misses them would be decoration, not a guardrail. So must
     // the scripts tree, the loose config, and this very test file.

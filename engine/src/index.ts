@@ -23,6 +23,7 @@ export {
   MAX_CANDIDATES,
   MAX_PHRASE_LENGTH,
   type CorpusMeta,
+  type CrossReferencePhraseRow,
   type CuratedAliasRow,
   type PericopeRow,
   type PhraseMatch,

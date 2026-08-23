@@ -51,6 +51,7 @@
       "concept_lexicon": 4194304,
       "concept_related": 4194304,
       "concepts": 4194304,
+      "cross_reference_phrases": 25165824,
       "cross_references": 25165824,
       "curated_aliases": 1048576,
       "pericopes": 1048576,
@@ -65,6 +66,16 @@
       "verses_fts_docsize": 2097152,
       "verses_fts_idx": 2097152
     },
+    "$comment_tsk_phrases": [
+      "Schema v9 (P6.3/B3 Phase A): cross_reference_phrases 24 MiB, indexes",
+      "included - MEASURED, not guessed: the full pinned TSK module",
+      "(sha256 6784c709..., 31,090 non-empty entries) mines to 381,553",
+      "phrase-keyed triples, which simulate to ~15.6 MiB of table plus",
+      "~5.6 MiB of from-verse index (~21.2 MiB total) in a scratch build;",
+      "24 MiB matches the sibling cross_references budget and leaves ~13%",
+      "headroom. Phase A ships the table as pure capability (nothing reads",
+      "it at query time; NO row enters cross_references)."
+    ],
     "$comment_spelling": [
       "Schema v7 (QR-5/P5.4, plan-stated values riding the J31 review):",
       "spelling_terms 1 MiB, spelling_deletes 12 MiB, curated_aliases 1 MiB.",

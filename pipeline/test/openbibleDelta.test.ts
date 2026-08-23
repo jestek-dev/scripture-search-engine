@@ -25,11 +25,11 @@
  */
 
 import { createHash } from 'node:crypto';
-import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { crc32 } from 'node:zlib';
 
 import { afterAll, describe, expect, it } from 'vitest';
 
@@ -410,6 +410,59 @@ describe('classification', () => {
   });
 });
 
+/**
+ * Minimal single-entry STORED (no compression) zip, built in-process so the
+ * fixture needs no `zip` CLI — windows-latest runners ship `unzip` (Git's
+ * usr/bin) but not `zip`, and shelling out for a ~100-byte fixture is not
+ * worth a platform dependency. Layout per APPNOTE.TXT §4.3: local file
+ * header + entry bytes + central directory record + end-of-central-directory
+ * record, with a fixed DOS timestamp (1980-01-01 00:00) so the bytes are
+ * deterministic. The production reader (`unzip` inside loadOpenbiblePayload)
+ * extracts it like any other zip — the code path under test is unchanged.
+ */
+function storedZipWithSingleEntry(entryName: string, contents: string): Buffer {
+  const name = Buffer.from(entryName, 'utf8');
+  const data = Buffer.from(contents, 'utf8');
+  const crc = crc32(data) >>> 0;
+  const DOS_DATE_1980_01_01 = 0x0021; // (year-1980)<<9 | month<<5 | day
+
+  const local = Buffer.alloc(30);
+  local.writeUInt32LE(0x04034b50, 0); // local file header signature
+  local.writeUInt16LE(20, 4); // version needed to extract (2.0)
+  // flags (6) and compression method (8) stay 0: unencrypted, STORED
+  // mod time (10) stays 0 (00:00:00)
+  local.writeUInt16LE(DOS_DATE_1980_01_01, 12);
+  local.writeUInt32LE(crc, 14);
+  local.writeUInt32LE(data.length, 18); // compressed size (= raw, stored)
+  local.writeUInt32LE(data.length, 22); // uncompressed size
+  local.writeUInt16LE(name.length, 26);
+  // extra field length (28) stays 0
+
+  const central = Buffer.alloc(46);
+  central.writeUInt32LE(0x02014b50, 0); // central directory signature
+  central.writeUInt16LE(20, 4); // version made by
+  central.writeUInt16LE(20, 6); // version needed to extract
+  // flags (8), method (10), mod time (12) mirror the local header's zeros
+  central.writeUInt16LE(DOS_DATE_1980_01_01, 14);
+  central.writeUInt32LE(crc, 16);
+  central.writeUInt32LE(data.length, 20);
+  central.writeUInt32LE(data.length, 24);
+  central.writeUInt16LE(name.length, 28);
+  // extra (30) / comment (32) lengths, disk number (34), internal (36) and
+  // external (38) attributes, and local header offset (42) all stay 0
+
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0); // end-of-central-directory signature
+  // disk numbers (4, 6) stay 0
+  eocd.writeUInt16LE(1, 8); // entries on this disk
+  eocd.writeUInt16LE(1, 10); // entries total
+  eocd.writeUInt32LE(46 + name.length, 12); // central directory size
+  eocd.writeUInt32LE(30 + name.length + data.length, 16); // its offset
+  // comment length (20) stays 0
+
+  return Buffer.concat([local, name, data, central, name, eocd]);
+}
+
 describe('payload loading', () => {
   function write(name: string, contents: string): string {
     const path = join(TMP, name);
@@ -459,14 +512,14 @@ describe('payload loading', () => {
   });
 
   it('loads a zip by extracting its single text entry', () => {
-    const dir = join(TMP, 'zip-src');
-    mkdirSync(dir, { recursive: true });
-    writeFileSync(
-      join(dir, 'topic-scores.txt'),
-      [TOPICS_HEADER_NEW, 'trust\tPs.46.1\t5', ''].join('\n'),
-    );
     const zipPath = join(TMP, 'topics.zip');
-    execFileSync('zip', ['-j', '-q', zipPath, join(dir, 'topic-scores.txt')]);
+    writeFileSync(
+      zipPath,
+      storedZipWithSingleEntry(
+        'topic-scores.txt',
+        [TOPICS_HEADER_NEW, 'trust\tPs.46.1\t5', ''].join('\n'),
+      ),
+    );
     const payload = loadOpenbiblePayload(zipPath, 'topics');
     expect(payload.kind).toBe('zip');
     expect(payload.topicRows).toHaveLength(1);

@@ -106,7 +106,13 @@ function collapseRepeatedBodies(
  */
 const BLOCK_PREFIXES = ['b', 'c', 'v'] as const;
 
-function readTestament(directory: string, prefix: string): SwordTestamentFiles | undefined {
+/**
+ * Exported for buildArtifact's tsk-text read (P6.3/B3): the TSK module is
+ * unpacked into sources/tsk by the same sword-module rule as the
+ * expositors, and this is the one reader that knows the block-size letter
+ * dance.
+ */
+export function readTestament(directory: string, prefix: string): SwordTestamentFiles | undefined {
   const found = BLOCK_PREFIXES.map((letter) => ({
     letter,
     path: join(directory, `${prefix}.${letter}zs`),

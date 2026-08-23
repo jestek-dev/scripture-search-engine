@@ -15,6 +15,7 @@ import type { CrossReferenceRow, TopicAnchorRow } from './importers/openbibleImp
 import { scoreToWeight } from './importers/openbibleImporter.js';
 import type { SqliteDatabase } from './buildCorpus.js';
 import type { PericopeRow } from './buildPericopes.js';
+import type { CrossReferencePhraseRow } from './importers/tskImporter.js';
 
 export interface ConceptLayerInput {
   readonly ontology: CompiledOntology;
@@ -28,6 +29,14 @@ export interface ConceptLayerInput {
    * consumer must be able to tell that happened.
    */
   readonly pericopes?: readonly PericopeRow[];
+  /**
+   * TSK phrase-keyed triples (schema v9, P6.3/B3 Phase A) for the
+   * cross_reference_phrases capability table ONLY. Load-bearing restriction:
+   * none of these rows may reach cross_references in Phase A — the engine
+   * expands ALL xref rows with no source filter, so a tsk-text edge there
+   * would change ordering under a capability-only framing.
+   */
+  readonly crossReferencePhrases?: readonly CrossReferencePhraseRow[];
   readonly manifests: ManifestSet;
   /** Verse ids present in this artifact; anything outside is dropped. */
   readonly presentVerseIds: ReadonlySet<number>;
@@ -56,6 +65,7 @@ export interface ConceptLayerResult {
   readonly topicAnchors: number;
   readonly crossReferences: number;
   readonly pericopes: number;
+  readonly crossReferencePhrases: number;
   readonly verseTerms: number;
   readonly translationTokens: number;
   readonly droppedOutOfCorpus: number;
@@ -95,6 +105,7 @@ export function buildConceptLayer(
   const topicCited = input.ontology.topicSubscriptions.length > 0 ? ['openbible-topics'] : [];
   const xrefCited = input.crossReferences.length > 0 ? ['openbible-xrefs'] : [];
   const pericopeCited = (input.pericopes ?? []).length > 0 ? ['openbible-sections'] : [];
+  const phraseCited = (input.crossReferencePhrases ?? []).length > 0 ? ['tsk-text'] : [];
   const termCited = [
     ...new Set((input.verseTerms ?? []).flatMap((term) => term.sourceIds.split('+'))),
   ];
@@ -105,6 +116,7 @@ export function buildConceptLayer(
       ...topicCited,
       ...xrefCited,
       ...pericopeCited,
+      ...phraseCited,
       ...termCited,
     ],
     tier: 'public_distribution',
@@ -140,11 +152,21 @@ export function buildConceptLayer(
     `INSERT INTO pericopes(start_verse_id, end_verse_id, boundary_votes, source_id)
      VALUES (?, ?, ?, ?)`,
   );
+  const insertPhrase = database.prepare(
+    `INSERT INTO cross_reference_phrases(from_verse_id, normalized_phrase, to_start_verse_id,
+                                         to_end_verse_id, source_id)
+     VALUES (?, ?, ?, ?, ?)`,
+  );
 
   let editorialAnchors = 0;
   let topicAnchors = 0;
   let crossReferences = 0;
   let pericopes = 0;
+  let crossReferencePhrases = 0;
+  // The rows that actually shipped, for the per-record fingerprint feed —
+  // feeding the unfiltered input would hash evidence the artifact does not
+  // carry.
+  const shippedPhrases: CrossReferencePhraseRow[] = [];
   let verseTerms = 0;
   let translationTokens = 0;
   let dropped = 0;
@@ -236,6 +258,28 @@ export function buildConceptLayer(
       );
       pericopes += 1;
     }
+    // TSK phrase triples (v9 capability): same presence filtering as the
+    // cross_references they will one day gate — a phrase row whose verses
+    // this artifact does not carry is dead weight in a size-budgeted file.
+    for (const phrase of input.crossReferencePhrases ?? []) {
+      if (!input.presentVerseIds.has(phrase.fromVerseId)) {
+        dropped += 1;
+        continue;
+      }
+      if (!rangeIsPresent(phrase.toStartVerseId, phrase.toEndVerseId, input.presentVerseIds)) {
+        dropped += 1;
+        continue;
+      }
+      insertPhrase.run(
+        phrase.fromVerseId,
+        phrase.normalizedPhrase,
+        phrase.toStartVerseId,
+        phrase.toEndVerseId,
+        'tsk-text',
+      );
+      shippedPhrases.push(phrase);
+      crossReferencePhrases += 1;
+    }
     for (const term of input.verseTerms ?? []) {
       if (!input.presentVerseIds.has(term.verseId)) {
         dropped += 1;
@@ -318,12 +362,28 @@ export function buildConceptLayer(
   )) {
     feed(['p', pericope.startVerseId, pericope.endVerseId, pericope.boundaryVotes]);
   }
+  // TSK phrase rows join per-record (P6.3/B3 Phase A) for the same reason
+  // pericopes do: today nothing reads them, but the Phase B behavior will
+  // consult exactly these rows, and a consumer must be able to tell the
+  // shipped evidence changed. Sorted here so the fingerprint never depends
+  // on the caller's ordering; only rows that actually shipped feed.
+  for (const phrase of [...shippedPhrases].sort((a, b) =>
+    a.fromVerseId - b.fromVerseId ||
+    (a.normalizedPhrase < b.normalizedPhrase ? -1 : a.normalizedPhrase > b.normalizedPhrase ? 1 : 0) ||
+    a.toStartVerseId - b.toStartVerseId ||
+    a.toEndVerseId - b.toEndVerseId,
+  )) {
+    feed(['x', phrase.fromVerseId, phrase.normalizedPhrase, phrase.toStartVerseId, phrase.toEndVerseId]);
+  }
   // translationTokens joins the fingerprint because it changes RESULTS:
   // admitting another translation's vocabulary makes verses reachable that
   // were not before, and a consumer must be able to tell that happened.
   // The pericope count joined in the same move (CO-3 PR 1) — this widening
   // moves EVERY layer fingerprint once, sanctioned and baselined in-train.
-  feed(['counts', topicAnchors, crossReferences, verseTerms, translationTokens, pericopes]);
+  // The phrase count joined in the v9 move — this widening moves EVERY
+  // layer fingerprint once, sanctioned and baselined in-train (the exact
+  // pericope-count precedent).
+  feed(['counts', topicAnchors, crossReferences, verseTerms, translationTokens, pericopes, crossReferencePhrases]);
   const layerFingerprint = hash.digest('hex');
 
   // Written with REPLACE because the corpus build already populated meta.
@@ -339,6 +399,7 @@ export function buildConceptLayer(
     topicAnchors,
     crossReferences,
     pericopes,
+    crossReferencePhrases,
     verseTerms,
     translationTokens,
     droppedOutOfCorpus: dropped,
