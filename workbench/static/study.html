@@ -1690,7 +1690,15 @@ button{font:inherit;}
   }
   function closeLayerDialog(opener) {
     clear(document.getElementById('dialog-slot'));
-    if (opener && typeof opener.focus === 'function' && document.contains(opener)) opener.focus();
+    // Focus returns to the element that opened the layer (§3.12). Re-renders
+    // replace DOM nodes, so a stale opener is re-found by id or by the
+    // roving-focus position (the focused card / tail row).
+    if (opener && typeof opener.focus === 'function' && document.contains(opener)) { opener.focus(); return; }
+    if (opener && typeof opener.id === 'string' && opener.id !== '') {
+      const byId = document.getElementById(opener.id);
+      if (byId !== null) { byId.focus(); return; }
+    }
+    if (state.search.status === 'results') focusCurrentStop();
   }
 
   // §interview — the not-relevant interview (§3.2, fixes §3.13.1–2).
@@ -1857,6 +1865,7 @@ button{font:inherit;}
     state.rescue = {
       stopIndex,
       rowReference: result.reference,
+      rowTargetId: result.targetId,
       status: 'loading',
       passage: null,
       mode: null,
@@ -1906,12 +1915,19 @@ button{font:inherit;}
       renderRescue();
       return;
     }
-    // A collapsed anchor run: pick-chip mode, the run's first verse — the
-    // verse the row's targetId addresses — pre-selected (§3.1).
+    // A collapsed anchor run: pick-chip mode with the verse the row's
+    // targetId addresses pre-selected (§3.1) — the merged row keeps its
+    // best-ranked member's targetId (BBCCCVVV-decodable, so the verse number
+    // is its last three digits); when that verse is not in the resolved
+    // passage, fall back to the range's first verse.
     rescue.mode = 'pick';
+    const decoded = /^[A-Z][A-Z0-9]*:(\d{7,8})$/.exec(rescue.rowTargetId ?? '');
+    const targetVerse = decoded !== null ? Number(decoded[1]) % 1000 : null;
     const parsed = parseReference(passage.reference);
-    const first = parsed !== null ? parsed.start : passage.verses[0].verse;
-    void resolveRescuePick(first);
+    const preferred = targetVerse !== null && passage.verses.some((verse) => verse.verse === targetVerse)
+      ? targetVerse
+      : parsed !== null ? parsed.start : passage.verses[0].verse;
+    void resolveRescuePick(preferred);
   }
   // Picking re-resolves that verse alone so the submitted reference is a
   // canonical single-verse label (§3.3 canonical-reference rule).

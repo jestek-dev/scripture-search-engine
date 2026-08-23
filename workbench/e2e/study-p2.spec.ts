@@ -94,6 +94,16 @@ const mercyResults: MockResult[] = [
   filler(13), filler(14),
 ];
 
+// 11 results for "shelter": top block of 10 fillers + one range tail row
+// whose targetId addresses the run's SECOND verse (the engine keeps the
+// best-ranked member's targetId on a merged run — WEB:19091002 = verse 2).
+const shelterResults: MockResult[] = [
+  filler(4), filler(5), filler(6), filler(7), filler(8), filler(9), filler(10), filler(11), filler(12), filler(13),
+  result('WEB:19091002', 'Psalms 91:1-2', 'He who dwells in the secret place of the Most High will rest in the shadow of the Almighty.', [
+    { family: 'concept_anchor', label: 'Theme: shelter', points: 431 },
+  ]),
+];
+
 const passages: Record<string, { reference?: string; verses: { verse: number; text: string }[] }> = {
   'Psalm 85:10': { verses: [{ verse: 10, text: 'mercy, and truth are met together; righteousness and peace have kissed each other.' }] },
   'Psalm 23:1-4': {
@@ -116,6 +126,13 @@ const passages: Record<string, { reference?: string; verses: { verse: number; te
   },
   'Psalm 46:1': { verses: [{ verse: 1, text: 'God is our refuge and strength, a very present help in trouble.' }] },
   'Psalm 46:2': { verses: [{ verse: 2, text: 'Therefore will not we fear, though the earth be removed.' }] },
+  'Psalms 91:1-2': {
+    verses: [
+      { verse: 1, text: 'He who dwells in the secret place of the Most High will rest in the shadow of the Almighty.' },
+      { verse: 2, text: 'I will say of Yahweh, “He is my refuge and my fortress; my God, in whom I trust.”' },
+    ],
+  },
+  'Psalms 91:2': { verses: [{ verse: 2, text: 'I will say of Yahweh, “He is my refuge and my fortress; my God, in whom I trust.”' }] },
   'Lamentations 3:22': { verses: [{ verse: 22, text: 'It is of the LORD’s mercies that we are not consumed, because his compassions fail not.' }] },
   'Lamentations 3:22-23': {
     verses: [
@@ -171,7 +188,9 @@ function makeMock(options: Partial<MockState> = {}): MockState {
 }
 
 function liveTop10(query: string): MockResult[] {
-  return query === 'mercy' ? mercyResults.slice(0, 10) : [];
+  if (query === 'mercy') return mercyResults.slice(0, 10);
+  if (query === 'shelter') return shelterResults.slice(0, 10);
+  return [];
 }
 
 async function installRoutes(page: Page, mock: MockState): Promise<void> {
@@ -289,6 +308,10 @@ async function installRoutes(page: Page, mock: MockState): Promise<void> {
       const q = url.searchParams.get('q') ?? '';
       if (q === 'mercy') {
         await route.fulfill(plain({ kind: 'discovery', query: q, results: mercyResults, ...identity }));
+        return;
+      }
+      if (q === 'shelter') {
+        await route.fulfill(plain({ kind: 'discovery', query: q, results: shelterResults, ...identity }));
         return;
       }
       if (q === 'Psalm 46') {
@@ -984,6 +1007,43 @@ test('D18: a range tail row rescues through pick chips — the range string reac
   }
   // The receipt chip names the picked verse, never the range.
   await expect(page.locator('.receipt-chip')).toContainText('Psalm 46:1');
+  expect(errors).toEqual([]);
+});
+
+test('D18: a merged run keeping a non-first member’s targetId pre-selects THAT verse, not the range’s first', async ({ page }) => {
+  // The engine keeps the best-ranked member's targetId on a collapsed run
+  // (mergeGroup targetId = head.targetId), so "Psalms 91:1-2" can carry
+  // WEB:19091002 — verse 2. §3.1 binds the pre-selection to "the verse the
+  // row's targetId addresses", which is decoded, not parsed from the range.
+  const errors = collectErrors(page);
+  const mock = makeMock();
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await submit(page, 'shelter');
+  await expect(page.locator('.result-card[data-stop="0"]')).toBeFocused();
+  await page.click('#tail-divider');
+  await page.locator('.tail-row[data-stop="11"]').focus();
+  await expect(page.locator('.tail-row[data-stop="11"]')).toContainText('Psalms 91:1-2');
+
+  await page.keyboard.press('e');
+  await expect(page.locator('#rescue-dialog .pick-chip')).toHaveCount(2);
+  const preselected = page.locator('#rescue-dialog .pick-chip[data-verse="2"]');
+  await expect(preselected).toHaveAttribute('aria-pressed', 'true');
+  await expect(preselected).toBeFocused();
+  expect(judgmentPosts(mock)).toHaveLength(0);
+
+  // Confirming the default posts the targetId-addressed verse's canonical
+  // single-verse reference; the range string reaches no POST body.
+  await expect(page.locator('#rescue-confirm')).toBeEnabled();
+  await page.click('#rescue-confirm');
+  await expect(page.locator('#toast-slot .toast')).toContainText('Noted — Psalms 91:2 should rank near the top for “shelter”.');
+  const posts = judgmentPosts(mock);
+  expect(posts).toHaveLength(1);
+  expect(posts[0]!.body).toMatchObject({ action: 'missing', reference: 'Psalms 91:2', withinTop: 10 });
+  for (const call of mock.calls.filter((entry) => entry.body !== null)) {
+    expect(JSON.stringify(call.body)).not.toContain('Psalms 91:1-2');
+  }
+  assertPayloadAllowlist(mock);
   expect(errors).toEqual([]);
 });
 
