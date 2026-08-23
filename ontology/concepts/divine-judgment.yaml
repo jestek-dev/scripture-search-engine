@@ -1,0 +1,146 @@
+# GENESIS-PILOT PACK (14-concept wave, drafted 2026-08-22) — whole-canon
+# sweep. God's judgment on evil: the flood, Babel and Sodom are among the
+# most-searched judgment narratives, and the day of judgment itself has no
+# home — `hell` is the destiny vocabulary, `judgment-seat-of-christ` is
+# deliberately only the two passages that name that seat.
+#
+# COLLISION DESIGN vs `judgment-seat-of-christ` (4-entry lexicon —
+# "judgment seat of christ" / "the judgment seat" / "bema seat" / "give
+# account of himself to god"): the shared token is {judgment} (+{god/gods}
+# worst case) = 2 of its 7-token set (0.29, limit 0.6); NO phrase below
+# contains "seat", "bema", or "account", so the phrase ratio is 0. That
+# pack keeps the believer-accountability register; this pack carries
+# narrative and day-of-the-LORD judgment. vs `hell`: zero shared tokens
+# (no fire/darkness vocabulary here). vs `sin`: shared {sin} = 1 of its
+# 5-token set (0.2).
+#
+# NEUTRALITY DESIGN (mirrors judgment-seat-of-christ's header;
+# DOCTRINAL-BASIS.md §4 — millennial schemas are non-criteria): this
+# concept encodes NO judgment timetable. It locates the narrative
+# judgments and the texts that announce a day of righteous judgment;
+# whether Rev 20:11-15 and the bema are one event or two is exactly the
+# kind of question the engine never answers. The pack reports that curated
+# sources name these passages for God's judgment; it renders no verdicts
+# ("no theology scores" — the engine states, never adjudicates).
+#
+# Attribution: Torrey JUDGMENT, THE and JUDGMENTS are the verified
+# outlines (plus ANGER OF GOD, THE for Nahum 1 and JUSTICE OF GOD, THE for
+# Gen 18:25). Exact rows carry [torrey]; combined/extended ranges carry
+# [editorial] with corroboration in the comment.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: divine-judgment
+label: God's judgment
+lexicon:
+  - gods judgment
+  - the day of judgment
+  - gods judgment on sin
+  - gods wrath
+  # The two most-searched judgment narratives, by name. "the flood"
+  # collapses to the single significant token `flood` — deliberate
+  # (§1.6d option-3 register: the word IS the query), kept humble by the
+  # one-token specificity discount; needs an admitted row in
+  # ontology/lexicon-inventory.yaml if PR #33 lands.
+  - the flood
+  - sodom and gomorrah
+anchors:
+  # "you are treasuring up for yourself wrath in the day of wrath,
+  # revelation, and of the righteous judgment of God, who 'will pay back
+  # to everyone according to their works'" (WEB, in corpus). The NT's
+  # fullest statement of the righteous-judgment principle — impartial, by
+  # works, on the day. Editorial for the range: Torrey JUDGMENT, THE
+  # cites 2:5 ("Day of wrath") and 2:16 ("A day appointed") singly; 2:5-11
+  # is the sentence's whole argument.
+  - ref: Romans 2:5-11
+    sources: [editorial]
+    weight: 0.95
+  # "The LORD saw that the wickedness of man was great... The LORD said,
+  # 'I will destroy man whom I have created'" (WEB wording from knowledge —
+  # Gen 6 NOT in web-subset; see notes.md). The flood decree: judgment
+  # grounded in seen evil, with grief, not caprice. Torrey corroboration:
+  # JUDGMENTS "Upon nations - Exemplified: The old world :: Gen 6:7; 6:17"
+  # — editorial for the 6:5-7 range (the outline cites 6:7 within it).
+  - ref: Genesis 6:5-7
+    sources: [editorial]
+    weight: 0.9
+  # "he has appointed a day in which he will judge the world in
+  # righteousness by the man whom he has ordained" (WEB, in corpus).
+  # Editorial for the range: Torrey JUDGMENT, THE "A day appointed for ::
+  # Acts 17:31"; v30 is the sentence's summons ("commands that all people
+  # everywhere should repent") — judgment preached as a reason to repent,
+  # which is how this pack expects to be searched.
+  - ref: Acts 17:30-31
+    sources: [editorial]
+    weight: 0.9
+  # "the great white throne... the dead were judged out of the things
+  # which were written in the books" (WEB wording from knowledge — Rev 20
+  # NOT in web-subset; see notes.md). The final-judgment scene. Torrey
+  # corroboration: JUDGMENT, THE cites 20:12 ("Small and great") and 20:13
+  # ("Shall be of all Actions") — editorial for the full 11-15 vision.
+  # No timetable claim (see header).
+  - ref: Revelation 20:11-15
+    sources: [editorial]
+    weight: 0.9
+  # "The LORD is a jealous God and avenges... slow to anger, and great in
+  # power, and will by no means leave the guilty unpunished... Who can
+  # stand before his indignation?" (WEB, in corpus). The prophets' doctrine
+  # of judgment in miniature — vengeance AND slowness to anger in one
+  # oracle. Editorial for the range: Torrey ANGER OF GOD, THE cites 1:2,
+  # 1:3 ("Against the wicked", "Is slow") and 1:6 ("Cannot be resisted")
+  # singly.
+  - ref: Nahum 1:2-6
+    sources: [editorial]
+    weight: 0.85
+  # "it rained fire and sulfur from the sky and destroyed them all" (WEB
+  # wording from knowledge — Gen 19 NOT in web-subset; see notes.md).
+  # Sodom's overthrow — the judgment narrative Scripture itself keeps
+  # citing. Torrey corroboration: JUDGMENTS "Upon nations - Exemplified:
+  # Sodom :: Gen 19:24" — editorial for the 24-25 pair.
+  - ref: Genesis 19:24-25
+    sources: [editorial]
+    weight: 0.85
+  # Torrey JUSTICE OF GOD, THE "Exhibited in His judgments :: Genesis
+  # 18:25". "Shall not the Judge of all the earth do right?" (WEB wording
+  # from knowledge — Gen 18 NOT in web-subset). Abraham's intercession —
+  # the text that binds judgment to justice, and the pack's answer to the
+  # "how is judgment fair" searcher.
+  - ref: Genesis 18:25
+    sources: [torrey]
+    weight: 0.8
+  # Torrey JUDGMENT, THE "Called the Day of judgment and perdition of
+  # ungodly men :: 2 Peter 3:7". (WEB wording from knowledge — 2 Peter NOT
+  # in web-subset; see notes.md.) The day named, with the flood as its
+  # precedent two verses earlier (3:5-6).
+  - ref: 2 Peter 3:7
+    sources: [torrey]
+    weight: 0.8
+  # "As it was in the days of Noah... the flood came and destroyed them
+  # all. Likewise, even as it was in the days of Lot... it rained fire and
+  # sulfur from the sky" (WEB, in corpus). Jesus citing BOTH narrative
+  # judgments as patterns of the coming day — the in-corpus bridge from
+  # "the flood" / "sodom and gomorrah" queries to the theme. Torrey files
+  # the parallel (Matt 24:37-39) under SECOND COMING ("The wicked shall be
+  # surprised by") — honest cross-link to second-coming, so editorial.
+  - ref: Luke 17:26-30
+    sources: [editorial]
+    weight: 0.75
+  # "But the LORD reigns forever. He has prepared his throne for
+  # judgment. He will judge the world in righteousness" (WEB, in corpus).
+  # Editorial for the range: Torrey JUDGMENT, THE "Predicted in the Old
+  # Testament :: ...Psalms 9:7..."; v8 completes the couplet.
+  - ref: Psalms 9:7-8
+    sources: [editorial]
+    weight: 0.7
+  # "So the LORD scattered them abroad from there on the surface of all
+  # the earth" (WEB wording from knowledge — Gen 11 NOT in web-subset on
+  # main; the p6 stack ADDS Genesis 11 to the corpus — see notes.md).
+  # Babel: judgment as scattering. Torrey's outlines do not cite 11:8-9
+  # under judgment; editorial, seed ref.
+  - ref: Genesis 11:8-9
+    sources: [editorial]
+    weight: 0.6
+related:
+  - hell
+  - judgment-seat-of-christ
+  - second-coming
+  - sin

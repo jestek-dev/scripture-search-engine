@@ -1,0 +1,44 @@
+{
+  "id": "nations-and-peoples",
+  "query": "where did the nations come from",
+  "additionalQueries": [
+    "table of nations",
+    "origin of the nations"
+  ],
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept round, drafted 2026-08-22).",
+    "Fixtures-first for the new nations-and-peoples concept; PENDING until the",
+    "pack lands, then flip active in the same PR (pending fixtures do not",
+    "count for G3 coverage).",
+    "",
+    "Measured gap: the Genesis review found Genesis 10 supports no honest tag",
+    "and 'table of nations' queries reach nothing curated. The table itself",
+    "(Gen 10:32) and Babel (Gen 11:8-9) are anchored but OUT of the fixture",
+    "corpus on main (the p6 stack adds Genesis 11 — if the stacks co-land,",
+    "Gen 11:8-9 becomes assertable here). The G3 assertion therefore rides",
+    "Acts 17:26-27 — the canon's own one-sentence answer to this exact query",
+    "('He made from one blood every nation of men... having determined",
+    "appointed seasons and the boundaries of their dwellings'), IN corpus.",
+    "",
+    "requiredReasonFamily is concept_anchor: Acts 17:26 contains 'nation'",
+    "lexically, so the assertion must be that the curated anchor put it there."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 17:26-27",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Nations and peoples"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 86:9",
+    "Revelation 21:24-26",
+    "Matthew 28:19"
+  ],
+  "coversConcepts": [
+    "nations-and-peoples"
+  ]
+}

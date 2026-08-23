@@ -407,3 +407,1186 @@ collapses:
     reviewedBy: pending-J12
     date: "2026-08-21"
     note: "Bare 'exalt' belongs here; distinctive."
+
+  # --- 2026-08-23 stack-merge transcriptions: the six Genesis-pilot
+  # collapses below (PR #41 packs, now live under this branch's P3.2
+  # deny-list) were already decided in this file's bare-word register
+  # (concepts: section rows for blessing, divine-judgment,
+  # envy-and-jealousy, hospitality, nations-and-peoples, providence —
+  # #33's format, #41-era notes). The rows here mechanically transcribe
+  # those standing decisions so the acknowledgment register and the live
+  # lexicon agree; no new judgment is made. reviewedBy pending Jesse's
+  # merge-time ratification (J12 chain).
+  - conceptId: blessing
+    phrase: blessed to be a blessing
+    token: bless
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the blessing bare-word row: KEPT-WITH-RESERVATION
+      2026-08-22 (PR #41 merge) — the pack file does not mark the collapse
+      deliberate, but `bless` is the concept's own subject stem, so
+      plausibly right; recorded because it fires today. Deny-list review
+      candidate if it proves broad.
+  - conceptId: divine-judgment
+    phrase: the flood
+    token: flood
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the divine-judgment bare-word row: PR #41
+      (2026-08-22 Genesis pilot) — deliberate per the pack's in-file
+      comment (§1.6d option-3 register: the word IS the query),
+      fixture-backed (divine-judgment-flood.json).
+  - conceptId: envy-and-jealousy
+    phrase: envious of others
+    token: enviou
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the envy-and-jealousy bare-word row: PR #41
+      (2026-08-22 Genesis pilot) — deliberate per the pack's in-file
+      comments; "envious of others" collapses to bare "envious" (stem
+      `enviou`) and the pack comment records it as a fourth bare-word
+      entry alongside envy/jealousy/jealous.
+  - conceptId: hospitality
+    phrase: be hospitable
+    token: hospitable
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the hospitality bare-word row: PR #41 (2026-08-22
+      Genesis pilot) — "be hospitable" collapses to bare "hospitable" and
+      the pack comment records it as admitted in its inventory-row
+      proposal; fixture-backed (hospitality.json).
+  - conceptId: nations-and-peoples
+    phrase: all nations
+    token: nation
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the nations-and-peoples bare-word row: PR #41
+      (2026-08-22 Genesis pilot) — "all nations" collapses to the bare
+      token `nation` ("all" is a stopword), deliberate per the pack's
+      in-file comment; fixture-backed
+      (nations-and-peoples-all-nations.json).
+  - conceptId: providence
+    phrase: sovereign over all
+    token: sovereign
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the providence bare-word row: KEPT-WITH-RESERVATION
+      (PR #41 merge, 2026-08-22) — "sovereign over all" collapses to the
+      bare token ("over all" are stopwords); attribute language in the
+      gods-faithfulness register, plausibly right, but the pack file does
+      not mark the collapse deliberate; recorded because it fires today.
+      Deny-list review candidate if it proves broad.
+
+# Bare-word inventory — reviewed data, one row per compiled concept id.
+#
+# Every concept carries an explicit single-word decision: `admitted` bare
+# words MUST fire the concept (a lexicon phrase normalizes to exactly that
+# significant token), `skipped` bare words MUST NOT, and every skip records
+# the reason a human gave. The gauntlet enforces both directions with the
+# engine's own tokenizer (eval/src/gates/lexiconInventory.ts, merged into
+# G4), so the 2026-08-08 accident class — bare-word behaviour nobody decided
+# — cannot silently recur, and a future concept cannot ship without a row.
+#
+# Rows are keyed by compiled concept **id**, never by filename: the healing
+# concept's id is `prayer-for-healing` though its file is
+# `pastoral-prayer-for-healing.yaml`. Backfilled 2026-08-20 from:
+#   - the 2026-08-08 single-token audit's decision table and its
+#     post-adversarial-review correction table
+#     (docs/research/2026-08-08-single-token-lexicon-audit.md §4);
+#   - the in-file rulings those cite (gods-love.yaml 2026-08-08;
+#     walking-in-the-light 2026-07-29);
+#   - NEEDS-JESSE §1.6d option 3 for the pastoral packs' deliberate modern
+#     single words;
+#   - the 2026-08-18 books-harvest admissions (PR #31), whose in-file
+#     comments are transcribed here as the provenance of each harvest-era
+#     bare word;
+#   - this PR's three measured gap closures (holiness, healing, assurance).
+#
+# KEPT-WITH-RESERVATION rows: a handful of admitted words are accidental
+# stopword collapses of multi-word phrases (e.g. "the will of the lord" →
+# bare `lord`) that shipped with the harvest. They are admitted here because
+# they DO fire today — the inventory records behaviour, not intention — but
+# each carries a comment naming the reservation, and the 2026-08-20 battery's
+# proposed G4 deny-list is the follow-up that would retire the bad ones.
+# Rephrasing or deleting a collapsing lexicon entry and its admitted token
+# together is a one-commit, gauntlet-verified change.
+#
+# Merging the PR that adds or edits a row is the review act (repo
+# precedent). An `admitted` word describes behaviour, not intention: the
+# gate rejects an admitted word that does not fire. Adding a NEW bare word
+# therefore stays fixture-first — golden fixture, failing run as gap
+# evidence, lexicon entry, inventory row, all in one reviewed change.
+
+concepts:
+  - id: abiding-in-christ
+    # 2026-08-08 correction table: collapses of "abide in me" / "remain in
+    # me" — exactly the bare words someone would type; kept deliberately.
+    admitted: [abide, remain]
+
+  - id: asking-in-gods-will
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. Every phrase
+    # is multi-word BY DESIGN per the pack's own comments — the pack
+    # answers the movement slogan ("name it and claim it") with the
+    # canon's teaching on asking (James 4:3 in both its WEB and KJV
+    # registers), and its doctrine-negative sibling fixture depends on
+    # proof-texts staying below the leading window. No width-1 phrase
+    # exists, so no bare word fires today.
+    skipped:
+      - token: asking
+        reason: >-
+          Bare "ask"/"asking" is the canon's whole asking language
+          (prayer, petition, narrative) and must never fire a pack built
+          to answer one movement's slogan vocabulary; the slogan and the
+          James 4:3 phrase forms carry the concept. (Note the pack's own
+          width note: "asking" does not stem to "ask" under the one
+          tokenizer, so the two registers are distinct tokens — both
+          stay phrase-bound.)
+
+  - id: assurance-of-salvation
+    # 2026-08-20 (PR #33) admitted bare `assurance` here to close a measured
+    # gap (the word fired no concept; this pack is its honest home per its
+    # SENSE DISCIPLINE note — the Heb 11:1 pack stays phrasing-only, see
+    # remembered-faith-as-assurance's skip). REVERSED to a skip at the
+    # 2026-08-23 stack merge: this pack also carries the reviewed P5.5 hymn
+    # aliases "blessed assurance" / "blessed assurance jesus is mine" — the
+    # kill of the harmful-hymn class — and the P5.6 superset double-chip
+    # guard structurally refuses a concept holding BOTH a bare `assurance`
+    # lexicon entry and hymn phrases whose tokens contain it (one query
+    # would stack an authoritative Theme chip AND a hymn chip on the same
+    # curated fact). The hymn mapping's reviewed behavior is preserved; the
+    # bare word steps back. Revert path: one commit restoring `- assurance`
+    # to the pack lexicon + this row's admitted form, and dropping the two
+    # hymn phrases.
+    skipped:
+      - token: assurance
+        reason: >-
+          Admitting the bare word alongside the P5.5 "blessed assurance"
+          hymn phrases double-chips the concept (P5.6 superset guard,
+          fail-closed at build). The hymn mapping is the reviewed kill of
+          the harmful-hymn class and is preserved; the #33 bare-word
+          admission is deferred until the double-chip question is
+          re-adjudicated. The 2026-08-20 gap measurement stands recorded
+          in this row's comment.
+
+  - id: baptism
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (the audit query sw2): it fires the concept on every query
+    # carrying "baptism(s)". "baptized into christ" keeps two
+    # significant tokens ({baptiz, christ}) so plain narrative
+    # baptized-queries never fire the concept (pack width note).
+    admitted: [baptism]
+
+  - id: benediction
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (the audit query wl4): the bare query "benediction" fires the
+    # concept authoritatively. The service-register phrases ("closing
+    # blessing", "aaronic blessing", Num 6:24's own wording) all keep
+    # two or more significant tokens.
+    admitted: [benediction]
+
+  - id: betrayal-and-marriage-crisis
+    skipped:
+      - token: betrayed
+        reason: >-
+          Spans the Passion narratives (Judas) and marital betrayal; this
+          pastoral pack answers the marital-crisis phrasings and must not
+          fire on Holy Week queries. The multi-word crisis phrasings carry
+          it.
+
+  - id: blessing
+    # KEPT-WITH-RESERVATION 2026-08-22 (PR #41 merge): "blessed to be a
+    # blessing" collapses to the bare stem `bless` ("to be a" are
+    # stopwords; blessed/blessing/bless share the stem), so bare
+    # "blessing" fires the pack. The pack file does not mark this
+    # deliberate, but it is the concept's own subject word, so plausibly
+    # right; recorded because it fires today. Deny-list review candidate
+    # if it proves broad.
+    admitted: [blessing]
+
+  - id: building-on-the-rock
+    skipped:
+      - token: rock
+        reason: >-
+          2026-08-08 decision table: spans metaphor and terrain; "firm
+          foundation" already carries the concept.
+
+  - id: caring-for-aging-parents
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. Every phrase
+    # is multi-word BY DESIGN per the pack's own comments (the fn13
+    # felt-need mechanism): the registers a grieving or care-burdened
+    # adult child actually types, each >= 2 significant tokens. No
+    # width-1 phrase exists, so no bare word fires today.
+    skipped:
+      - token: parent
+        reason: >-
+          Bare "parent(s)" is raising-children / honor-your-father-and-
+          mother territory across the canon and must never fire a
+          death-and-caregiving felt-need pack; the multi-word crisis
+          phrasings ("dying parent", "aging parents", "when a parent
+          dies", ...) carry the concept — that width discipline is the
+          pack's documented fn13 design.
+
+  - id: caught-up-together
+    # 2026-08-18 harvest, §1.6d option 3: "rapture" appears nowhere in the
+    # WEB text, so no lexical rung can serve the query, and the word IS the
+    # concept.
+    admitted: [rapture]
+
+  - id: christ-the-cornerstone
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (the audit query): every WEB occurrence of "cornerstone" is a
+    # cornerstone text, so the bare trigger is safe (pack width note).
+    # The remembered registers ("the stone the builders rejected",
+    # "head of the corner") stay multi-token.
+    admitted: [cornerstone]
+
+  - id: contentment
+    # 2026-08-18 harvest, all deliberate per the in-file comments:
+    # contentment/content are the concept's own subject words; wealth,
+    # money, finances, debt are the designed prosperity-register triggers
+    # (the WEB says "Mammon", so "money" only reaches Matt 6:24 / 1 Tim
+    # 6:10 through curation); comparison/comparing are the
+    # greener-grass register.
+    admitted: [contentment, content, wealth, money, finances, debt, comparison, comparing]
+
+  - id: covenant
+    # PR #41 (2026-08-22 Genesis pilot): deliberate bare subject-noun
+    # entry per the in-file comment (benediction-pack precedent), which
+    # itself asks for this admitted row. "what is a covenant" (covenant
+    # fixture) normalizes to the bare token, so the admission is
+    # fixture-backed.
+    admitted: [covenant]
+
+  - id: creation
+    # 2026-08-08 decision table: names the doctrine, not a general word.
+    admitted: [creation]
+
+  - id: deity-of-christ
+    skipped:
+      - token: deity
+        reason: >-
+          Nobody types the theological register word alone expecting verses;
+          the question phrasings ("is jesus god", "jesus is god") carry the
+          concept. Plausible future admission, deferred pending a measured
+          gap.
+
+  - id: delight-in-the-word
+    skipped:
+      - token: meditation
+        reason: >-
+          Plausible future admission ("meditate"/"meditation" is real search
+          language), deferred pending a measured gap — the word also carries
+          a contemporary-practice sense the pack does not answer. The
+          "meditate on ..." phrase forms carry it today.
+
+  - id: disputable-matters
+    skipped:
+      - token: doubtful
+        reason: >-
+          "doubtful things" carries the concept; the bare adjective spans
+          doubt-about-faith queries, which belong to a future doubt concept
+          (plan §7.7 PR 4), not to Romans 14 liberty questions.
+
+  - id: divine-judgment
+    # PR #41 (2026-08-22 Genesis pilot): "the flood" collapses to the
+    # single token `flood` — deliberate per the in-file comment (§1.6d
+    # option-3 register: the word IS the query), fixture-backed
+    # (divine-judgment-flood.json queries the bare phrase).
+    admitted: [flood]
+    skipped:
+      - token: judgment
+        reason: >-
+          Spans final judgment, church discipline, and discernment senses
+          across the canon (the same ruling recorded on
+          judgment-seat-of-christ's row); the "gods judgment" / "day of
+          judgment" phrase forms carry this concept. Pending curation
+          review before any bare admission.
+
+  - id: do-not-lose-heart
+    # 2026-08-18 harvest: deliberate bare entries — the felt-need words
+    # people actually type.
+    admitted: [discouraged, discouragement]
+
+  - id: doubt
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (the audit query); it is also the stem of doubts/doubted/doubting,
+    # so every inflection reaches the concept. Mark 9:24's "help my
+    # unbelief" keeps two significant tokens.
+    admitted: [doubt]
+
+  - id: dreams-and-visions
+    # PR #41 (2026-08-22 Genesis pilot): bare subject words, deliberate
+    # per the in-file comment; both are fixture-backed ("dreams" is an
+    # additionalQuery of dreams-and-visions.json, "visions" is the
+    # primary query of dreams-and-visions-visions.json).
+    admitted: [dreams, visions]
+
+  - id: envy-and-jealousy
+    # PR #41 (2026-08-22 Genesis pilot): all deliberate per the in-file
+    # comments (§1.6d option-3 precedent; the pack's own subject words).
+    # "jealous" and "jealousy" stem to different tokens, so both are
+    # listed; "envious of others" collapses to bare "envious" and the
+    # pack comment records it as a fourth bare-word entry. envy/jealousy/
+    # jealous are fixture-backed (envy-and-jealousy.json; "jealous of
+    # others" normalizes to the bare token).
+    admitted: [envy, jealousy, jealous, envious]
+
+  - id: faith
+    # 2026-08-18 harvest: deliberate bare entry ("the query people type;
+    # one-token discount"). faith-and-works records the matching skip.
+    admitted: [faith]
+
+  - id: faith-and-works
+    skipped:
+      - token: faith
+        reason: >-
+          Bare "faith" routes to the `faith` concept (2026-08-18 harvest,
+          deliberate bare entry there); this concept stays on its
+          James-2 phrase forms.
+      - token: works
+        reason: >-
+          2026-08-08 decision table: `work` was the accidental bare trigger
+          removed from grace-not-earned in the same audit. work-and-diligence
+          now owns bare "work" (2026-08-18, deliberate); the faith-vs-works
+          doctrine pack must not also fire on it.
+
+  - id: family-reconciliation
+    # PR #41 (2026-08-22 Genesis pilot): a phrase-forms pack — no lexicon
+    # entry collapses to a single significant token.
+    skipped:
+      - token: reconciliation
+        reason: >-
+          The bare noun spans reconciliation-with-God doctrine
+          (2 Cor 5) and the family register this pack answers; the
+          "family reconciliation" / "reconciling with my brother" phrase
+          forms carry it. Pending curation review before any bare
+          admission.
+
+  - id: fear-not
+    # 2026-08-08 correction table: collapses of "do not be afraid" /
+    # "fear not" / "be not dismayed"; the bare words users type.
+    admitted: [fear, afraid, dismayed]
+
+  - id: forgiveness-of-sins
+    # forgiveness: 2026-08-08 decision table (distinct from
+    # forgiving-others, which owns the verb). guilt/guilty/condemnation:
+    # 2026-08-18 harvest inner-life aliases, deliberate per the in-file
+    # comment ("shame" stays deliberately absent — a distinct sense).
+    admitted: [forgiveness, guilt, guilty, condemnation]
+
+  - id: forgiving-others
+    # 2026-08-08 correction table: collapse of "forgive others"; the verb
+    # belongs to this concept as forgiveness-of-sins owns the noun.
+    # KEPT-WITH-RESERVATION 2026-08-20: the 84-query battery showed the
+    # bare verb hijacking receiving-forgiveness queries ("does God forgive
+    # me" fires THIS concept). The routing split (verb here, noun there) is
+    # still the recorded decision; the battery's fix belongs to
+    # ranking/alias work, not to silently dropping the word. Flagged for
+    # Jesse in the PR body.
+    admitted: [forgive]
+
+  - id: freedom-from-bondage
+    # NEEDS-JESSE §1.6d option 3: distinctive modern words absent from the
+    # WEB text, where the word IS the concept.
+    admitted: [addiction, addicted, alcoholism, overdose]
+
+  - id: friendship
+    # 2026-08-18 harvest: deliberate bare entries (precedent: prayer).
+    admitted: [friendship, friends]
+
+  - id: gathering-together
+    # KEPT-WITH-RESERVATION: "build each other up" (2026-08-18 round-2
+    # admission) collapses to bare `build` — an accidental stopword
+    # collapse, not a designed trigger; bare "build" spans construction
+    # narratives. Recorded because it fires today; deny-list candidate
+    # (2026-08-20 battery follow-up), flagged for Jesse in the PR body.
+    admitted: [build]
+    skipped:
+      - token: gather
+        reason: >-
+          Generic verb (crowds gather, storms gather, harvests are
+          gathered); "where two or three gather" carries the concept.
+      - token: fellowship
+        reason: >-
+          Shared vocabulary with walking-in-the-light ("fellowship with one
+          another"); ambiguous between the two concepts, so neither takes
+          the bare word.
+
+  - id: generosity
+    # 2026-08-18 harvest: deliberate bare entry — the concept's own subject
+    # noun.
+    admitted: [generosity]
+
+  - id: god-of-all-comfort
+    # 2026-08-18 harvest: deliberate bare entry — closes the 2026-08-13
+    # audit's "comforter"/"comfort" reachability gap on the comfort side
+    # (holy-spirit-the-comforter owns "comforter").
+    admitted: [comfort]
+
+  - id: god-sees-my-suffering
+    skipped:
+      - token: suffering
+        reason: >-
+          Routed to suffering-for-christ (2026-08-18 harvest, deliberate
+          bare entry there); this pack answers the "does God see me"
+          phrasings, not the topic word.
+
+  - id: godly-marriage
+    # 2026-08-18 harvest: deliberate bare entries — the words people
+    # actually type for marriage teaching and spousal prayer.
+    admitted: [marriage, husbands, wives]
+
+  - id: gods-faithfulness
+    # 2026-08-08 decision table: attribute language, rarely generic.
+    admitted: [faithfulness]
+
+  - id: gods-love
+    # Jesse's call 2026-08-08, recorded in gods-love.yaml: the bare word
+    # defaults HERE; loving-others stays reachable by "love one another" /
+    # "love your neighbor" and surfaces as a related theme.
+    admitted: [love]
+
+  - id: gods-protection
+    # 2026-08-18 harvest: deliberate bare entries per the in-file comment.
+    admitted: [protection, protect]
+
+  - id: gods-provision
+    # provision: 2026-08-18 harvest — deliberate bare entry, the
+    # concept's own subject noun. famine: PR #41 (2026-08-22 Genesis
+    # pilot) — deliberate bare entry per the in-file comment
+    # (rest-for-the-weary precedent: the word IS the situation),
+    # fixture-backed (gods-provision-famine.json).
+    admitted: [provision, famine]
+
+  - id: grace-not-earned
+    # 2026-08-08 decision table: theologically specific.
+    admitted: [grace]
+
+  - id: grief-and-loss
+    # grief/grieving per the pack's design; overdose is deliberately shared
+    # with freedom-from-bondage (NEEDS-JESSE §1.8: both senses are real
+    # pastoral queries). bereavement (§1.6d — the word IS the concept) and
+    # sorrow (phillips "Sorrow" register) are 2026-08-18 harvest
+    # admissions, deliberate per the in-file comments.
+    admitted: [grief, grieving, overdose, bereavement, sorrow]
+    skipped:
+      - token: loss
+        reason: >-
+          Generic ("infant loss" belongs to pregnancy-and-child-loss;
+          financial loss is out of scope); the phrase forms carry it.
+
+  - id: guidance
+    # guidance/direction/guide: 2026-08-18 harvest, deliberate per the
+    # in-file comments ("the words people actually type").
+    # lord: KEPT-WITH-RESERVATION — an accidental stopword collapse: "the
+    # will of the lord" (round-2 admission) normalizes to the single token
+    # `lord` because "will" is a stopword, so the entry can NEVER match its
+    # intended phrase and instead fires this concept for any query carrying
+    # the commonest divine title in the product. Recorded because it fires
+    # today; it is the TOP deny-list candidate (2026-08-20 battery
+    # follow-up) and the PR body recommends deleting the lexicon entry and
+    # this token together. Flagged for Jesse.
+    admitted: [guidance, direction, guide, lord]
+
+  - id: harmony-with-others
+    # Collapse of "harmony with others" ("with others" are stopwords) — the
+    # concept's own subject noun; kept deliberately.
+    admitted: [harmony]
+
+  - id: heavenly-reward
+    # 2026-08-18 harvest: "crowns" is a deliberate bare entry (the reward
+    # vocabulary of the anchor passages).
+    admitted: [crowns]
+
+  - id: hell
+    # 2026-08-18 harvest, §1.6d option 3: "hell" appears nowhere in the WEB
+    # text (Gehenna/Hades/Sheol), so the word IS the concept; "gehenna"
+    # makes the query fire the whole curated set.
+    admitted: [hell, gehenna]
+
+  - id: holiness
+    # holy/sanctified are 2026-08-08 correction-table collapses ("be holy",
+    # "sanctified"). purity: 2026-08-18 round-2 admission (deliberate —
+    # sexual-purity keeps its multi-word phrases; the bare token's honest
+    # home is the general call to holiness). holiness: added 2026-08-20
+    # (this PR) to close the measured gap — the concept's own subject noun
+    # never fired because "holiness" does not stem to "holy"
+    # (holiness.json additionalQueries failing run is the PR-body
+    # evidence).
+    # sanctification/sanctify: 2026-08-23 stack merge — the branch's
+    # Phase-4 P4.2 extension (audit sanct1/sanct2) added both as
+    # deliberate one-word entries: 'sanctified' stems to `sanctifi`, but
+    # the pastor-register nouns normalize to themselves, so neither
+    # query could ever fire the concept without the entries (the pack's
+    # in-file comment; extending the stemmer was explicitly rejected
+    # there in favor of the deterministic lexicon fix).
+    admitted: [holy, sanctified, purity, holiness, sanctification, sanctify]
+
+  - id: holy-spirit-the-comforter
+    # 2026-08-18 harvest: deliberate bare entries — the Paraclete titles
+    # people type. Closes the 2026-08-13 audit's harmful "comforter" →
+    # Job 16:2 inversion (verified fixed by the 2026-08-20 battery).
+    admitted: [comforter, counselor, helper, advocate]
+
+  - id: honesty
+    # 2026-08-18 harvest: honesty/lying deliberate bare entries; "lie" is
+    # the collapse of "do not lie" — kept, it is the bare word people type
+    # ("lies", "lie").
+    admitted: [honesty, lying, lie]
+
+  - id: hope-in-despair
+    # NEEDS-JESSE §1.6d option 3 single words. "cutting" is the collapse of
+    # "cutting myself" ("myself" is a stopword); kept deliberately — in this
+    # product's pastoral register the self-harm sense is the query the pack
+    # exists for.
+    admitted: [suicide, suicidal, depression, depressed, cutting]
+
+  - id: hope-in-god
+    # 2026-08-08 decision table: the concept is scoped to hope itself.
+    admitted: [hope]
+
+  - id: hospitality
+    # PR #41 (2026-08-22 Genesis pilot): "hospitality" is a deliberate
+    # bare entry per the in-file comment (§1.6d option 3 — the word IS
+    # the concept, verbatim in WEB Rom 12:13); "be hospitable" collapses
+    # to bare "hospitable" and the pack comment records it as admitted in
+    # its inventory-row proposal. Both are fixture-backed
+    # (hospitality.json).
+    admitted: [hospitality, hospitable]
+
+  - id: humble-exaltation
+    # 2026-08-18 harvest: promotion and humility are deliberate bare
+    # entries; "humble" is the collapse of "humble yourselves" — kept, the
+    # bare word people type. (The round-2 "walk humbly" entries were
+    # dropped by the integrator on G8 evidence — see the pack comment.)
+    # pride: PR #41 (2026-08-22 Genesis pilot) — deliberate bare entry
+    # per the in-file comment (§1.6d option-3 precedent; the teaching
+    # verses tokenize to `proud`, unreachable from the query token
+    # `pride`), fixture-backed (humble-exaltation-pride.json).
+    admitted: [promotion, humility, humble, pride]
+
+  - id: hunger-for-god
+    skipped:
+      - token: hunger
+        reason: >-
+          Spans literal famine and bread narratives across the canon; the
+          "hunger for god" / "thirst for god" phrase forms and the dry-season
+          phrasings carry the concept.
+
+  - id: identity-in-christ
+    # 2026-08-18 harvest, §1.6d option-3 pattern: a distinctive modern word
+    # absent from the WEB text, and the bare word IS this concept.
+    admitted: [identity]
+
+  - id: image-of-god
+    # PR #41 (2026-08-22 Genesis pilot): a phrase-forms pack — no lexicon
+    # entry collapses to a single significant token.
+    skipped:
+      - token: image
+        reason: >-
+          Generic across the canon (graven images, idol language, the
+          king's image on coins); the "image of god" / "imago dei" /
+          "made in gods image" phrase forms carry the doctrine. Pending
+          curation review before any bare admission.
+
+  - id: incarnation
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (audit query th6): "incarnation" never occurs in the WEB text, so
+    # no lexical rung could reach the doctrine without this entry —
+    # §1.6d option-3 shape, the word IS the concept. The verse-shaped
+    # registers ("word became flesh", "god became man/flesh") keep
+    # multiple significant tokens.
+    admitted: [incarnation]
+
+  - id: joy-in-the-lord
+    # 2026-08-08 decision table.
+    admitted: [joy]
+
+  - id: judgment-seat-of-christ
+    skipped:
+      - token: judgment
+        reason: >-
+          Spans final judgment, church discipline, and discernment senses
+          across the canon; the "judgment seat" / "bema seat" phrase forms
+          carry this concept's specific referent.
+
+  - id: justification-by-faith
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (audit query th1): the bare query "justification" fires the
+    # concept authoritatively. "justified by faith" is Rom 5:1's exact
+    # wording and keeps two significant tokens ({justifi, faith} — a
+    # different stem than the noun), as do the forensic and
+    # plain-language registers.
+    admitted: [justification]
+
+  - id: loneliness
+    # 2026-08-18 harvest: deliberate bare entries — the felt-need words.
+    admitted: [loneliness, lonely]
+
+  - id: lords-supper
+    # "communion" is a literal one-word entry (pre-2026-08-08);
+    # "remembrance" is the correction-table collapse of "do this in
+    # remembrance of me" — kept, it is the word users type.
+    admitted: [communion, remembrance]
+
+  - id: love-not-the-world
+    # 2026-08-18 harvest: deliberate bare entry — the doctrine's own name
+    # for the disposition.
+    admitted: [worldliness]
+
+  - id: loving-others
+    skipped:
+      - token: love
+        reason: >-
+          Jesse's call 2026-08-08 (gods-love.yaml): bare "love" defaults to
+          gods-love; two concepts firing equally on the commonest word in
+          the product is how anchors dilute. This concept stays on "love one
+          another" / "love your neighbor".
+
+  - id: marriage-divorce-teaching
+    skipped:
+      - token: divorce
+        reason: >-
+          Plausible future admission, deferred pending a measured gap
+          (fixture first — never add data because it exists); the pack is
+          reachable today by its question phrasings. Bare "marriage" belongs
+          to godly-marriage (2026-08-18).
+
+  - id: nations-and-peoples
+    # PR #41 (2026-08-22 Genesis pilot): "all nations" collapses to the
+    # bare token `nation` ("all" is a stopword) — deliberate per the
+    # in-file comment, fixture-backed (nations-and-peoples-all-nations
+    # .json queries "all nations", which normalizes to the bare token).
+    admitted: [nations]
+
+  - id: near-to-the-brokenhearted
+    skipped:
+      - token: brokenhearted
+        reason: >-
+          Plausible future admission, deferred pending a measured gap; the
+          phrase forms ("near to the brokenhearted", "broken heart") carry
+          it today.
+
+  - id: new-creation
+    # KEPT-WITH-RESERVATION: "starting over" (2026-08-18 harvest) collapses
+    # to bare `start` ("over" is a stopword). The felt-need register
+    # ("starting over", "start over") is exactly this pack's charter, so
+    # the collapse is plausibly right — but bare "start" is generic, so it
+    # is recorded here rather than silently. Deny-list review candidate.
+    admitted: [starting]
+
+  - id: new-heaven-and-earth
+    skipped:
+      - token: heaven
+        reason: >-
+          Spans the whole heavenly vocabulary (heavenly-reward,
+          second-coming adjacency, and the canon's pervasive usage); the
+          "new heaven(s)" and "new jerusalem" phrase forms carry this
+          concept.
+
+  - id: obedience-to-the-word
+    # 2026-08-08 decision table: the concept's own subject.
+    admitted: [obedience]
+
+  - id: parenting
+    # 2026-08-18 harvest: deliberate bare entry — the concept's own subject
+    # noun ("parenting" and "parents" share the stem).
+    admitted: [parenting]
+
+  - id: peace-of-god
+    # peace: 2026-08-08 decision table. anxious: correction-table collapse
+    # of "do not be anxious" — kept, exactly the bare word someone types
+    # (remembered-anxious-for-nothing owns the noun "anxiety").
+    # worry/worried/stress/fret: 2026-08-18 harvest inner-life aliases,
+    # deliberate per the in-file comment (routed here and not to the
+    # remembered pack because the worry answer set is this concept's anchor
+    # set).
+    admitted: [peace, anxious, worry, worried, stress, fret]
+
+  - id: pleasing-god-not-people
+    # 2026-08-18 harvest: deliberate per the in-file comment — "approval"
+    # is the modern vocabulary of this struggle, and "approval of others"
+    # normalizes to the bare token anyway.
+    admitted: [approval]
+
+  - id: praise
+    # 2026-08-08 decision table: previously reachable only via
+    # "hallelujah", itself a deliberate one-word entry.
+    admitted: [praise, hallelujah]
+
+  - id: prayer
+    # prayer: 2026-08-08 decision table. pray: correction-table collapse of
+    # "how to pray" — kept. intercession: deliberate one-word entry.
+    admitted: [prayer, pray, intercession]
+
+  - id: prayer-for-healing
+    # "healing" added 2026-08-20 (this PR) to close the measured gap: the
+    # pack's own subject noun never fired (pastoral-healing.json
+    # additionalQueries failing run is the PR-body evidence; the 2026-08-20
+    # battery flagged the same reachability gap). Extends the NEEDS-JESSE
+    # §1.6d single-word exception to the pack's own subject noun — called
+    # out in the PR body. Stems to "heal", so heal/heals/healed also fire.
+    admitted: [healing]
+    skipped:
+      - token: sick
+        reason: >-
+          Generic ("healing for the sick" carries the concept); bare "sick"
+          reaches narrative sickness accounts the pack must not claim.
+
+  - id: praying-for-leaders
+    # 2026-08-18 harvest, §1.6d option 3: "government" appears nowhere in
+    # the WEB text, so no lexical rung can serve the query, and the word is
+    # how people search this topic.
+    admitted: [government]
+
+  - id: pregnancy-and-child-loss
+    # NEEDS-JESSE §1.6d option 3 single words.
+    admitted: [miscarriage, stillbirth]
+
+  - id: presence-of-god
+    # 2026-08-08: "presence" was already an entry in its own right ("in
+    # your presence"); only the accidental "god" collapse was removed.
+    admitted: [presence]
+    skipped:
+      - token: god
+        reason: >-
+          The 2026-08-08 audit's motivating accident: "god with us"
+          collapsed to the bare token "god" and fired this concept on
+          anything mentioning God. Removed then; recorded here so it cannot
+          return.
+
+  - id: providence
+    # providence: PR #41 (2026-08-22 Genesis pilot) — deliberate bare
+    # entry per the in-file comment (§1.6d option-3 register: the
+    # classical term people actually search), which itself asks for this
+    # admitted row; fixture-backed (providence.json additionalQueries).
+    # sovereign: KEPT-WITH-RESERVATION — "sovereign over all" collapses
+    # to the bare token ("over all" are stopwords). Attribute language
+    # in the gods-faithfulness register, so plausibly right, but the
+    # pack file does not mark the collapse deliberate; recorded because
+    # it fires today. Deny-list review candidate if it proves broad.
+    admitted: [providence, sovereign]
+
+  - id: refuge-and-justice-for-the-oppressed
+    # NEEDS-JESSE §1.6d option 3 single words ("abused" and "raped" stem
+    # differently from their base forms, so both surface forms are listed).
+    admitted: [abuse, abused, rape, raped, incest, molestation]
+
+  - id: refuge-in-trouble
+    # 2026-08-08 decision table: strongly scriptural register.
+    admitted: [refuge]
+
+  - id: relapse-and-restoration
+    # relapse/relapsed per the pack's design. "failed" is the collapse of
+    # "failed again" ("again" is a stopword); kept deliberately — "I
+    # failed" is the pastoral query this pack exists for.
+    admitted: [relapse, relapsed, failed]
+
+  - id: remembered-a-way-of-escape
+    # 2026-08-18 (books-harvest PR #31): deliberate, commented exception to
+    # the pack's phrasing-only design — its one narrow anchor
+    # (1 Cor 10:13) is exactly what the bare word wants. Precedent:
+    # "anxiety" in remembered-anxious-for-nothing.
+    admitted: [temptation, tempted]
+
+  - id: remembered-all-things-for-good
+    skipped:
+      - token: good
+        reason: >-
+          Catastrophically generic; the remembered Romans 8:28 phrasings
+          ("all things work together for good") carry the concept.
+
+  - id: remembered-anxious-for-nothing
+    # "anxiety" is a deliberate one-word entry (2026-08-08 remembered-
+    # phrasings pass); peace-of-god owns the adjective "anxious".
+    admitted: [anxiety]
+
+  - id: remembered-faith-as-assurance
+    skipped:
+      - token: assurance
+        reason: >-
+          This pack is the Heb 11:1 faith-DEFINITION sense and stays
+          phrasing-only. (2026-08-20, PR #33, routed bare "assurance" to
+          assurance-of-salvation; the 2026-08-23 stack merge reversed that
+          admission to preserve the P5.5 hymn mapping under the double-chip
+          guard — see assurance-of-salvation's skip. Either way this pack
+          never takes the bare word.)
+
+  - id: remembered-faith-like-a-mustard-seed
+    skipped:
+      - token: mustard
+        reason: >-
+          Phrasing-only pack; the parable's noun, not a theme word — it
+          would claim every mustard-seed parable for one remembered
+          phrasing.
+
+  - id: remembered-fruit-of-the-spirit
+    skipped:
+      - token: fruit
+        reason: >-
+          Catastrophically broad in scripture (vineyard, harvest, offspring
+          language throughout the canon); the phrase forms carry the
+          concept.
+
+  - id: remembered-full-armor-of-god
+    skipped:
+      - token: armor
+        reason: >-
+          Phrasing-only pack; bare "armor" reaches Ephesians 6 lexically
+          already and also matches battle narratives the pack must not
+          claim.
+
+  - id: remembered-joy-in-trials
+    # patience/perseverance: 2026-08-18 round-2 admissions, deliberate per
+    # the in-file comment (one-token discount; the fruit-of-the-spirit
+    # lexicon shares only the token "patience" inside one longer entry,
+    # hand-checked under G4 ratios).
+    admitted: [patience, perseverance]
+    skipped:
+      - token: trials
+        reason: >-
+          Spans legal proceedings and testing; joy-in-the-lord owns bare
+          "joy", and this pack is the James 1 phrasing specifically.
+
+  - id: remembered-looking-to-jesus
+    skipped:
+      - token: jesus
+        reason: >-
+          The most common name in the product cannot route to one narrow
+          anchor; phrasing-only by design.
+
+  - id: remembered-transformed-not-conformed
+    skipped:
+      - token: transformed
+        reason: >-
+          Plausible future admission, deferred pending a measured gap; the
+          remembered Romans 12:2 phrasings carry it today.
+
+  - id: remembered-work-as-for-the-lord
+    # job: KEPT-WITH-RESERVATION — the 2026-08-18 life-situation aliases
+    # ("my job", "new job") collapse to bare `job` ("my" is a stopword).
+    # The felt-need routing is plausibly right, but the bare token also
+    # collides with the book of Job's surface form. Recorded because it
+    # fires today; deny-list review candidate, flagged for Jesse.
+    admitted: [job]
+    skipped:
+      - token: work
+        reason: >-
+          The accidental bare trigger the 2026-08-08 audit removed from
+          grace-not-earned; work-and-diligence now owns bare "work"
+          (2026-08-18, deliberate, with the in-file comment here explicitly
+          declining it for this one-anchor pack).
+
+  - id: repentance
+    # 2026-08-08 decision table: doctrinal term.
+    admitted: [repentance]
+
+  - id: resisting-the-devil
+    # 2026-08-18 harvest: satan is a deliberate bare entry; "devil" is the
+    # collapse of "the devil" — kept, the bare words people type for this
+    # topic.
+    admitted: [satan, devil]
+
+  - id: rest-for-the-weary
+    # 2026-08-18 harvest: deliberate bare entries per the pack's header
+    # comment — the exhaustion register people actually type.
+    admitted: [rest, weary, tired, exhausted, burnout]
+
+  - id: restoration
+    # 2026-08-18 harvest: "restoration" deliberate bare entry; restore/renew
+    # are the collapses of "restore me" / "renew me" — kept, the bare verbs
+    # people type in this register.
+    admitted: [restoration, restore, renew]
+
+  - id: resurrection
+    # resurrection: 2026-08-08 decision table. risen: correction-table
+    # collapse of "he is risen" — kept, working by accident all along and
+    # exactly right.
+    admitted: [resurrection, risen]
+
+  - id: sabbath-rest
+    # PR #41 (2026-08-22 Genesis pilot): deliberate bare entry per the
+    # in-file comment (§1.6d option-3 register: the word IS the concept
+    # and is what people type), which itself asks for this admitted row;
+    # fixture-backed (sabbath-rest.json queries bare "sabbath").
+    # rest-for-the-weary keeps bare "rest" (2026-08-18) — no collision:
+    # this pack's entries all normalize to multi-token phrases except
+    # "sabbath" itself.
+    admitted: [sabbath]
+
+  - id: salvation
+    # salvation/saved: 2026-08-08 decision table and correction table.
+    # born: collapse of "you must be born again", recorded 2026-08-08 WITH
+    # RESERVATION — broad enough to fire on nativity queries ("jesus was
+    # born in bethlehem"); kept deliberately rather than silently, revisit
+    # with a measured fixture.
+    admitted: [salvation, saved, born]
+
+  - id: second-coming
+    # "maranatha" is a literal one-word entry (pre-2026-08-08).
+    admitted: [maranatha]
+    skipped:
+      - token: coming
+        reason: >-
+          Generic motion word; "the second coming" and the remembered
+          phrasings carry the concept.
+
+  - id: self-control
+    skipped:
+      - token: discipline
+        reason: >-
+          Ambiguous between self-discipline and the-lords-discipline (God's
+          fatherly chastening) — two live concepts with opposite subjects;
+          neither takes the bare word. "self control" / "self discipline"
+          phrase forms carry this one.
+
+  - id: self-deception
+    # Correction-table collapse of "deceiving yourselves" → token "deceiv"
+    # ("deceived"/"deceiving" reach it; the bare stem is what matching
+    # uses). Kept — the audit called it actively good.
+    admitted: [deceived]
+
+  - id: serious-illness-and-dying
+    # cancer/hospice: NEEDS-JESSE §1.6d option 3 single words. death:
+    # 2026-08-18 round-2 admission, deliberate per the in-file comment (the
+    # death-of-a-believer register lands here because this pack already
+    # carries the dying-pastoral anchors).
+    admitted: [cancer, hospice, death]
+    skipped:
+      - token: dying
+        reason: >-
+          Plausible future admission, deferred pending a measured gap; the
+          phrase forms ("dying of cancer", "facing death") carry it today.
+
+  - id: sexual-purity
+    # NEEDS-JESSE §1.6d option 3 single words. (Bare "purity" routes to
+    # holiness — 2026-08-18 round-2 ruling recorded there.)
+    admitted: [pornography, porn]
+    skipped:
+      - token: lust
+        reason: >-
+          Plausible future admission, deferred pending a measured gap;
+          "struggling with lust" carries it today.
+
+  - id: sharing-your-faith
+    # 2026-08-18 harvest: deliberate bare entries — "witnessing" and
+    # "evangelism" are the topic's own vocabulary.
+    admitted: [witnessing, evangelism]
+
+  - id: sin
+    # 2026-08-18 harvest: deliberate bare entry — the doctrine's own name;
+    # reviewed and admitted with the pack (broad by nature, kept humble by
+    # the one-token discount).
+    admitted: [sin]
+
+  - id: spiritual-gifts
+    # KEPT-WITH-RESERVATION: "what are my gifts" (2026-08-18 harvest)
+    # collapses to bare `gift` ("what are my" are stopwords). Plausibly the
+    # right home for bare "gifts" in a scripture engine, but it also spans
+    # magi-style giving language; recorded rather than silent. Deny-list
+    # review candidate.
+    admitted: [gifts]
+
+  - id: spiritual-growth
+    skipped:
+      - token: growth
+        reason: >-
+          Generic (agricultural and numeric growth across the canon); the
+          "spiritual growth" / "grow in christ" phrase forms carry it.
+
+  - id: stewardship-of-days
+    # 2026-08-18 harvest, §1.6d pattern: a distinctive modern word absent
+    # from the WEB text; the word IS the concept.
+    admitted: [procrastination]
+
+  - id: strength-in-weakness
+    skipped:
+      - token: weakness
+        reason: >-
+          Plausible future admission, deferred pending a measured gap; the
+          phrase forms ("strength in weakness", "my grace is sufficient")
+          carry it today.
+
+  - id: studying-the-word
+    skipped:
+      - token: study
+        reason: >-
+          Generic verb; the "study the bible" / "study scripture" phrase
+          forms carry the concept. Plausible future admission, deferred
+          pending a measured gap.
+
+  - id: suffering-for-christ
+    # 2026-08-18 harvest: "suffering" is a deliberate bare entry (the
+    # pack's own subject word; god-sees-my-suffering records the matching
+    # skip); persecution/persecuted deliberate bare entries.
+    admitted: [suffering, persecution, persecuted]
+
+  - id: surrender-to-god
+    # surrender: 2026-08-08 decision table (devotional register). deny:
+    # collapse of "deny yourself", recorded 2026-08-08 WITH RESERVATION —
+    # broad generally; kept deliberately rather than silently. lordship:
+    # 2026-08-18 round-2 admission, deliberate bare entry.
+    admitted: [surrender, deny, lordship]
+
+  - id: taming-the-tongue
+    # 2026-08-18 harvest: deliberate bare entry — the speech-sin register's
+    # own word.
+    admitted: [gossip]
+
+  - id: testing
+    # PR #41 (2026-08-22 Genesis pilot): "refining" is a deliberate bare
+    # entry per the in-file comment (§1.6d option-3 precedent —
+    # distinctive vocabulary no other concept speaks), fixture-backed
+    # (testing-refining.json).
+    admitted: [refining]
+    skipped:
+      - token: testing
+        reason: >-
+          Deliberately NOT admitted per the pack's own lexicon comment:
+          too many non-devotional senses. "testing" and "test" share the
+          stem `test`, so this one decision covers both surface forms;
+          the "testing of your faith" / "god is testing me" phrase forms
+          carry the concept.
+
+  - id: thanksgiving
+    # thanksgiving: 2026-08-08 decision table (distinct from the verb "give
+    # thanks"). gratitude: deliberate one-word entry.
+    admitted: [thanksgiving, gratitude]
+
+  - id: the-cross
+    # the cross: 2026-08-08 decision table ("the token `cross` in a
+    # scripture engine is unambiguous"). atonement: deliberate one-word
+    # entry.
+    # propitiation: 2026-08-23 stack merge — the branch's Phase-4 P4.3
+    # extension (audit th2) added it as a deliberate one-word entry: the
+    # WEB never contains "propitiation" (verified corpus-wide in the
+    # pack's in-file comment), so no lexical rung can ever reach it —
+    # only the curated entry can; 'atoning sacrifice' is the WEB's own
+    # wording at 1 John 2:2 / 4:10.
+    admitted: [cross, atonement, propitiation]
+
+  - id: the-lords-discipline
+    # 2026-08-18 harvest: "chastening" deliberate bare entry (the KJV-family
+    # register people quote; bare "discipline" is skipped on self-control's
+    # row for the two-concept ambiguity).
+    admitted: [chastening]
+
+  - id: the-ten-commandments
+    # 2026-08-18 harvest: deliberate bare entry — the technical name, fully
+    # unambiguous.
+    admitted: [decalogue]
+
+  - id: those-who-never-heard
+    skipped:
+      - token: revelation
+        reason: >-
+          "general revelation" carries the doctrine; the bare word collides
+          with the book of Revelation's name and would claim apocalypse
+          queries for a theology-of-the-unreached pack.
+
+  - id: tithing
+    # 2026-08-18 harvest: deliberate bare entries — the practice's own
+    # vocabulary.
+    admitted: [tithing, tithe, firstfruits]
+
+  - id: trinity
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (audit query th5): "trinity" never occurs in the WEB text, so no
+    # lexical rung could ever reach the doctrine without this entry —
+    # §1.6d option-3 shape, the word IS the concept. The other registers
+    # ("triune god", "father son and holy spirit", "three persons one
+    # god" — reworded from "three in one" precisely to AVOID a bare
+    # {three} collapse, pack REWORD note) keep multiple significant
+    # tokens.
+    admitted: [trinity]
+
+  - id: trust-in-god
+    # trust: 2026-08-08 decision table. confidence: 2026-08-18 round-2
+    # admission, deliberate ("the Confidence topics' register").
+    admitted: [trust, confidence]
+
+  - id: victory-in-christ
+    # victory: 2026-08-08 decision table. conqueror: kept collapse of "more
+    # than conquerors". overcomes: collapse of "he who overcomes"
+    # (2026-08-18) — the bare verb people type ("overcome"), plausibly
+    # right. greater: KEPT-WITH-RESERVATION — accidental collapse of
+    # "greater is he who is in you" (everything else is stopwords); a bare
+    # comparative is generic. Recorded because it fires today; deny-list
+    # review candidate, flagged for Jesse.
+    admitted: [victory, conqueror, overcomes, greater]
+
+  - id: waiting-for-a-child
+    # PR #41 (2026-08-22 Genesis pilot): all deliberate per the in-file
+    # comment (§1.6d option-3 precedent): "infertility" is a distinctive
+    # modern word absent from the WEB text where the word IS the concept
+    # (burnout/cancer precedent); "barren" and "childless" are the
+    # text's own words for it and no other concept claims them.
+    # barren/childless are fixture-backed (waiting-for-a-child-barren
+    # .json).
+    admitted: [infertility, barren, childless]
+
+  - id: walking-in-the-light
+    skipped:
+      - token: light
+        reason: >-
+          Jesse's 2026-07-29 ruling scoped this concept to the ethical sense
+          precisely because "light" spans both senses; admitting the bare
+          token would undo that decision (2026-08-08 decision table).
+
+  - id: wisdom-from-god
+    # 2026-08-18 harvest: deliberate bare entries per the in-file comment
+    # ("discernment" is the prayer books' own topic word).
+    admitted: [wisdom, discernment]
+
+  - id: work-and-diligence
+    # 2026-08-18 harvest: deliberate bare entries. NOTE: bare "work" was
+    # the accidental trigger the 2026-08-08 audit removed from
+    # grace-not-earned; here it is the concept's own subject, admitted with
+    # the pack in PR #31 (remembered-work-as-for-the-lord's row records the
+    # explicit decline on its side).
+    admitted: [work, diligence, diligent]
+
+  - id: worship
+    # worship: 2026-08-08 decision table — the case that prompted the
+    # audit. bow/exalt: correction-table collapses of "bow down before
+    # him" / "we exalt you" — kept, they are the bare words users type.
+    admitted: [worship, bow, exalt]
+
+  - id: wrestling-with-god
+    # PR #41 (2026-08-22 Genesis pilot): a phrase-forms pack — no lexicon
+    # entry collapses to a single significant token.
+    skipped:
+      - token: wrestling
+        reason: >-
+          Spans the literal Gen 32 narrative (already reachable
+          lexically) and non-devotional senses; the "wrestling with god"
+          / "struggling with god" phrase forms carry the concept.
+          Pending curation review before any bare admission.

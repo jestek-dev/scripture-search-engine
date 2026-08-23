@@ -1,0 +1,45 @@
+{
+  "id": "dreams-and-visions",
+  "query": "dreams in the bible",
+  "additionalQueries": [
+    "god speaking through dreams",
+    "what do dreams mean",
+    "dreams"
+  ],
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept round, drafted 2026-08-22).",
+    "Fixtures-first for the new dreams-and-visions concept; PENDING until the",
+    "pack lands, then flip active in the same PR (pending fixtures do not",
+    "count for G3 coverage).",
+    "",
+    "Measured gap: the Genesis review found dreams load-bearing in 6+ chapters",
+    "of Genesis with no concept at all; 'dreams in the bible' reaches nothing",
+    "curated today (guidance is keyed to direction-for-my-life queries).",
+    "",
+    "The narrative dream anchors (Gen 28/37/40/41/46, Dan 2, Matt 1:20,",
+    "Acts 10) are ALL out of the fixture corpus on main — see notes.md corpus",
+    "request. The G3 assertion rides Acts 2:17, IN corpus: 'Your young men",
+    "will see visions. Your old men will dream dreams.' — the NT's own frame",
+    "for the theme, which is also the doctrinally honest lead (the promise as",
+    "the text's claim, not an endorsement of private revelation).",
+    "",
+    "requiredReasonFamily is concept_anchor: Acts 2:17 contains 'dream'",
+    "lexically, so the assertion must be that the curated anchor put it there."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 2:17",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Dreams and visions"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 16:9"
+  ],
+  "coversConcepts": [
+    "dreams-and-visions"
+  ]
+}

@@ -25,6 +25,14 @@ lexicon:
   - never snatch them out of my hand
   # Round-2 book admission 2026-08-18.
   - the lord knows those who are his
+  # Bare `assurance` was added 2026-08-20 (lexicon-concepts PR 2) to close
+  # a measured gap, then REMOVED at the 2026-08-23 stack merge: this pack's
+  # P5.5 hymn aliases ("blessed assurance" / "blessed assurance jesus is
+  # mine" — the reviewed kill of the harmful-hymn class) token-contain the
+  # bare word, and the P5.6 superset double-chip guard refuses that
+  # combination fail-closed at build. The hymn mapping is preserved; the
+  # bare-word admission is deferred. Decision + revert path recorded in
+  # ontology/lexicon-inventory.yaml (assurance-of-salvation row).
 anchors:
   # "These things I have written to you who believe… that you may KNOW that
   # you have eternal life" (WEB). The letter's own stated purpose is

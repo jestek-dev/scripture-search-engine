@@ -1,0 +1,110 @@
+# GENESIS-PILOT PACK (14-concept wave, drafted 2026-08-22) — whole-canon
+# sweep. Humanity made in God's image; human dignity. The Genesis review
+# removed the Gen-1 identity-in-christ tag because that concept covers this
+# "only partially and awkwardly" (NT-specific) and proposed this concept as
+# the honest home.
+#
+# COLLISION DESIGN vs `identity-in-christ`: that pack owns "identity",
+# "self worth", "gods workmanship" — the personal-worth register. NEITHER
+# "identity" NOR "self worth" appears below (G4 would flag them, and the
+# Genesis review's split is exactly this: imago dei is a claim about
+# humanity, identity-in-christ about the believer). Shared tokens with it:
+# {gods/god} only. vs `creation`: "fearfully and wonderfully made" and
+# "in the beginning" stay there; shared tokens {god, made} = 2 of this
+# pack's 8 (0.25).
+#
+# ARC DESIGN: the pack carries the whole canonical arc — image conferred
+# (Gen 1), transmitted (Gen 5), grounding dignity (Gen 9:6, Jas 3:9),
+# perfectly borne by Christ (Col 1:15), and restored in the believer
+# (Col 3:10, Rom 8:29, 2 Cor 3:18). The engine reports which source names
+# each passage; it never adjudicates between image-doctrine schools
+# (substantive/relational/functional — DOCTRINAL-BASIS.md §4 spirit).
+#
+# Attribution: Torrey has NO image-of-god/imago-dei topic. His exact rows
+# are cited where his outline names a passage FOR the image point (Col
+# 1:15, Col 3:10, Rom 8:29); Gen 9:6 sits in his MURDER outline — honest
+# cross-file, so editorial (Matt 7:21 obedience-pack precedent).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: image-of-god
+label: Made in God's image
+lexicon:
+  - image of god
+  - made in gods image
+  # Teaching-circles shorthand (Latin: image of God); the phrase appears
+  # nowhere in the WEB text, so without this entry the query is
+  # unreachable (bema-seat precedent in judgment-seat-of-christ).
+  - imago dei
+  # The ethical register the doctrine grounds — live topical query.
+  - human dignity
+  # Gen 1:26 / 5:1's own second term.
+  - likeness of god
+anchors:
+  # "God said, 'Let's make man in our image, after our likeness'... God
+  # created man in his own image. In God's image he created him; male and
+  # female he created them." (WEB, in corpus). The charter text.
+  - ref: Genesis 1:26-27
+    sources: [editorial]
+    weight: 1.0
+  # "Whoever sheds man's blood, his blood will be shed by man, for God
+  # made man in his own image" (WEB wording from knowledge — Gen 9 NOT in
+  # web-subset; see notes.md). The image as the ground of human dignity
+  # and the bloodshed prohibition. Torrey cites 9:6 under MURDER ("Why
+  # forbidden by God") — the outline's filing IS the image rationale, but
+  # claiming [torrey] for an image-of-god concept would relabel his topic;
+  # editorial with the cross-file noted (Matt 7:21 precedent).
+  - ref: Genesis 9:6
+    sources: [editorial]
+    weight: 0.9
+  # "In the day that God created man, he made him in God's likeness...
+  # Adam... became the father of a son in his own likeness, after his
+  # image" (WEB, in corpus). Image restated after Eden and transmitted
+  # through generations — v3 kept deliberately: the likeness passes to
+  # Seth, which is how the doctrine reaches every reader.
+  - ref: Genesis 5:1-3
+    sources: [editorial]
+    weight: 0.85
+  # Torrey EXCELLENCY AND GLORY OF CHRIST, THE "As the image of God ::
+  # Colossians 1:15". "He is the image of the invisible God, the firstborn
+  # of all creation" (WEB, in corpus). The image perfectly borne — where
+  # the theme lands christologically.
+  - ref: Colossians 1:15
+    sources: [torrey]
+    weight: 0.8
+  # "What is man, that you think of him?... you have crowned him with
+  # glory and honor. You make him ruler over the works of your hands"
+  # (WEB wording from knowledge — Psalm 8 NOT in web-subset; see
+  # notes.md). The Psalter's commentary on Gen 1:26-28.
+  - ref: Psalms 8:4-6
+    sources: [editorial]
+    weight: 0.75
+  # Torrey NEW BIRTH, THE "Produces Likeness to God :: Colossians 3:10".
+  # "the new man, who is being renewed in knowledge after the image of his
+  # Creator" (WEB, in corpus). The image renewed in the believer.
+  - ref: Colossians 3:10
+    sources: [torrey]
+    weight: 0.75
+  # "With it we bless our God and Father, and with it we curse men, who
+  # are made in the image of God" (WEB wording from knowledge — James 3
+  # NOT in web-subset; see notes.md). The NT's ethical use of the imago:
+  # how you speak of image-bearers matters.
+  - ref: James 3:9
+    sources: [editorial]
+    weight: 0.7
+  # Torrey CHRIST, CHARACTER OF "Saints are conformed to :: Romans 8:29"
+  # (also EXAMPLE OF CHRIST, "Saints predestinated to follow"). "predestined
+  # to be conformed to the image of his Son" (WEB, in corpus). The image's
+  # destination.
+  - ref: Romans 8:29
+    sources: [torrey]
+    weight: 0.7
+  # "we all... are transformed into the same image from glory to glory"
+  # (WEB wording from knowledge — 2 Cor 3 NOT in web-subset; see
+  # notes.md). Transformation into the image as present-tense process.
+  - ref: 2 Corinthians 3:18
+    sources: [editorial]
+    weight: 0.65
+related:
+  - creation
+  - identity-in-christ
+  - new-creation
