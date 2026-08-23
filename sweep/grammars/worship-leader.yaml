@@ -1,0 +1,18 @@
+# MS-3: worship-leader class (battery category with a B- history). One cell
+# per concept; templates are service-planning phrasings distinct from
+# concept-register's two worship templates. Expectation: curated anchors.
+id: worship-planning
+category: worship-leader
+source: concepts
+perTemplateCap: 2
+templates:
+  - text: 'songs about {label}'
+    register: worship-leader
+  - text: 'setlist theme {lexicon}'
+    register: worship-leader
+  - text: 'benediction on {label}'
+    register: worship-leader
+  - text: 'opening scripture for a service on {lexicon}'
+    register: worship-leader
+  - text: 'responsive reading about {label}'
+    register: worship-leader

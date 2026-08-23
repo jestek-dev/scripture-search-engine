@@ -1,0 +1,17 @@
+# MS-3: theological-term class (battery C history). Cells from the committed
+# ~150-term glossary (words/theological-glossary.yaml). Rows naming a live
+# concept expect its anchors; rows with NO concept mapping compile with
+# expectation `none` — that residue IS the measured-gap feed back to
+# curation (never a silent pass, a recorded gap).
+id: theological-term
+category: theological-term
+source: list
+listRef: theological-glossary
+perTemplateCap: 1
+templates:
+  - text: '{label}'
+    register: church-member
+  - text: 'what is {label}'
+    register: church-member
+  - text: 'define {label} biblically'
+    register: pastor

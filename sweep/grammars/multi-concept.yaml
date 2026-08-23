@@ -1,0 +1,17 @@
+# MS-3: multi-concept class. One cell per CURATED related-link pair (each
+# concept pack's own related: list — the compiler never invents a topical
+# combination). Expectation: union of both packs' anchors, second concept
+# alsoAcceptable.
+id: multi-concept
+category: multi-concept
+source: concept-pairs
+perTemplateCap: 1
+templates:
+  - text: '{label} and {label2}'
+    register: church-member
+  - text: 'verses about {label} and {label2}'
+    register: church-member
+  - text: 'how does {label} relate to {label2}'
+    register: church-member
+  - text: 'sermon connecting {label} and {label2}'
+    register: pastor

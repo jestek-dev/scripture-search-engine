@@ -13,7 +13,8 @@
     "conformance",
     "pipeline",
     "eval",
-    "workbench"
+    "workbench",
+    "sweep"
   ],
   "scripts": {
     "build:engine": "npm run build --workspace engine",

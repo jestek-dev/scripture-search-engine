@@ -1,0 +1,20 @@
+# misspelling-rules.yaml — MS-4 (plan P8.4). Curated phonetic misspelling
+# rules for Ring-2 typo perturbation, patterned on the battery's real
+# specimens (forgivness ms1, annointing ms2, rightousness ms3, stregnth
+# ms5, salvasion ms6). Each rule rewrites the FIRST occurrence of `from`
+# in a token to `to`. Raw-string perturbation pre-engine: the tokenizer is
+# never touched (covenant #4).
+rules:
+  - { from: eness, to: ness } # forgiveness -> forgivness
+  - { from: eous, to: ous } # righteousness -> rightousness
+  - { from: tion, to: sion } # salvation -> salvasion
+  - { from: gth, to: ght } # (inverse of stregnth family)
+  - { from: ngth, to: gnth } # strength -> stregnth
+  - { from: noin, to: nnoin } # anointing -> annointing
+  - { from: ie, to: ei } # believe -> beleive
+  - { from: ei, to: ie } # receive -> recieve
+  - { from: ph, to: f } # prophesy -> profesy
+  - { from: ance, to: ence } # repentance -> repentence
+  - { from: ence, to: ance } # patience -> patiance
+  - { from: ous, to: ouse } # righteous -> righteouse
+  - { from: al, to: el } # eternal -> eternel

@@ -1,0 +1,133 @@
+/**
+ * Deterministic paraphrase seed selector (MS-5). Pure function of committed
+ * inputs — anyone can re-derive the exact seed list from the repo alone.
+ *
+ * Strata, per the plan's derivation table:
+ *   (a) cell — one deterministic pick per concept×register×template-family
+ *       cell of the compiled grammar universe;
+ *   (b) frame — every felt-need frame topic verbatim;
+ *   (c) curated — every battery query and every golden-fixture query
+ *       verbatim (the lines whose behavior is already graded or pinned).
+ */
+import { sha256Hex } from '../canonical.js';
+import { decisionStream } from '../prng.js';
+import type { ConceptCell, FeltNeedFrame, GoldenCell } from '../universe/compile.js';
+import { validateFeltNeedFrames } from '../universe/compile.js';
+import type { Expectation, Register, UniverseLine } from '../universe/types.js';
+
+export type SeedStratum = 'cell' | 'frame' | 'curated';
+
+export interface ParaphraseSeed {
+  readonly seedId: string;
+  readonly query: string;
+  readonly stratum: SeedStratum;
+  readonly register?: Register;
+  readonly category?: string;
+  /** Inherited by every paraphrase at confidence 'inherited'. */
+  readonly expectation: Expectation;
+  readonly crisisAdjacent?: true;
+}
+
+export interface SelectSeedsInput {
+  readonly seed: string;
+  readonly ring1Lines: readonly UniverseLine[];
+  readonly frames: readonly FeltNeedFrame[];
+  readonly concepts: readonly ConceptCell[];
+  readonly batteryQueries: readonly { id: string; query: string; category: string }[];
+  readonly golden: readonly GoldenCell[];
+}
+
+function seedIdFor(query: string): string {
+  return `seed:${sha256Hex(query).slice(0, 16)}`;
+}
+
+export function selectSeeds(input: SelectSeedsInput): ParaphraseSeed[] {
+  const byId = new Map<string, ParaphraseSeed>();
+  const add = (candidate: ParaphraseSeed): void => {
+    if (!byId.has(candidate.seedId)) byId.set(candidate.seedId, candidate);
+  };
+
+  // (a) One pick per concept×register×template-family cell.
+  const cells = new Map<string, UniverseLine[]>();
+  for (const line of input.ring1Lines) {
+    const conceptId =
+      line.expectation.kind === 'concept-anchors' ? line.expectation.conceptId : 'none';
+    const key = `${conceptId}\u0000${line.register ?? 'none'}\u0000${line.generator}`;
+    const bucket = cells.get(key) ?? [];
+    bucket.push(line);
+    cells.set(key, bucket);
+  }
+  for (const [key, bucket] of [...cells.entries()].sort(([a], [b]) => (a < b ? -1 : 1))) {
+    const sorted = [...bucket].sort((a, b) => (a.queryId < b.queryId ? -1 : 1));
+    const picked = decisionStream(input.seed, 'seed-cell', key).pick(sorted);
+    add({
+      seedId: seedIdFor(picked.query),
+      query: picked.query,
+      stratum: 'cell',
+      ...(picked.register !== undefined ? { register: picked.register } : {}),
+      ...(picked.category !== undefined ? { category: picked.category } : {}),
+      expectation: picked.expectation,
+      ...(picked.crisisAdjacent === true ? { crisisAdjacent: true as const } : {}),
+    });
+  }
+
+  // (b) Every felt-need frame topic verbatim (validated fail-closed).
+  validateFeltNeedFrames(input.frames, input.concepts);
+  const conceptsById = new Map(input.concepts.map((concept) => [concept.id, concept]));
+  for (const frame of [...input.frames].sort((a, b) => (a.topic < b.topic ? -1 : 1))) {
+    const primary = conceptsById.get(frame.expectedConcepts[0]!)!;
+    add({
+      seedId: seedIdFor(frame.topic),
+      query: frame.topic,
+      stratum: 'frame',
+      register: 'church-member',
+      category: 'felt-need',
+      expectation: {
+        kind: 'concept-anchors',
+        conceptId: primary.id,
+        anchors: [
+          ...new Set(frame.expectedConcepts.flatMap((id) => conceptsById.get(id)!.anchors)),
+        ],
+        ...(frame.expectedConcepts.length > 1
+          ? { alsoAcceptable: frame.expectedConcepts.slice(1) }
+          : {}),
+      },
+      ...(frame.crisisAdjacent === true ? { crisisAdjacent: true as const } : {}),
+    });
+  }
+
+  // (c) Curated lines verbatim: all battery queries + all golden queries.
+  for (const row of [...input.batteryQueries].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+    add({
+      seedId: seedIdFor(row.query),
+      query: row.query,
+      stratum: 'curated',
+      category: row.category,
+      expectation: { kind: 'none' },
+    });
+  }
+  for (const fixture of [...input.golden].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+    for (const query of fixture.queries) {
+      add({
+        seedId: seedIdFor(query),
+        query,
+        stratum: 'curated',
+        category: 'golden',
+        expectation:
+          fixture.anchors.length > 0
+            ? {
+                kind: 'concept-anchors',
+                conceptId: fixture.conceptId ?? fixture.id,
+                anchors: fixture.anchors,
+              }
+            : { kind: 'none' },
+      });
+    }
+  }
+
+  return [...byId.values()].sort((a, b) => (a.seedId < b.seedId ? -1 : 1));
+}
+
+export function serializeSeeds(seeds: readonly ParaphraseSeed[]): string {
+  return seeds.map((seed) => JSON.stringify(seed)).join('\n') + '\n';
+}

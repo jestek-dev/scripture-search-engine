@@ -1,0 +1,633 @@
+{
+  "adversarial": [
+    {
+      "queryId": "adversarial:013bd722e5338ac4",
+      "query": "where two or three are gathered god must answer",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "asking-in-gods-will"
+    },
+    {
+      "queryId": "adversarial:0a6fed86b9cdac03",
+      "query": "all religions lead to god",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "salvation"
+    },
+    {
+      "queryId": "adversarial:0e9a050c8d5e3fc7",
+      "query": "jeremiah 29 11 promise for my career",
+      "register": "church-member",
+      "expectationKind": "none"
+    },
+    {
+      "queryId": "adversarial:14c2e833c9de5fe0",
+      "query": "good people go to heaven",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "grace-not-earned"
+    },
+    {
+      "queryId": "adversarial:15016538fe600db5",
+      "query": "god just wants me to be happy",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "joy-in-the-lord"
+    },
+    {
+      "queryId": "adversarial:1e3ec2d1728869e1",
+      "query": "does god accept any offering i bring",
+      "register": "church-member",
+      "expectationKind": "none"
+    },
+    {
+      "queryId": "adversarial:2122f7c248366864",
+      "query": "bible says comforters are miserable",
+      "register": "church-member",
+      "expectationKind": "none"
+    },
+    {
+      "queryId": "adversarial:265fbc0c95dd3ba3",
+      "query": "you are enough on your own",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "identity-in-christ"
+    },
+    {
+      "queryId": "adversarial:32b5d2dbb853d2f7",
+      "query": "your best life now",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "heavenly-reward"
+    },
+    {
+      "queryId": "adversarial:33240f381031c8a8",
+      "query": "i am a good person so i am fine",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "grace-not-earned"
+    }
+  ],
+  "bare-word": [
+    {
+      "queryId": "bare-word:00e13ed7af55b276",
+      "query": "work",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "faith-and-works"
+    },
+    {
+      "queryId": "bare-word:010c46db14982d6b",
+      "query": "pant",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "hunger-for-god"
+    },
+    {
+      "queryId": "bare-word:018fa96a44715c90",
+      "query": "white",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "forgiveness-of-sins"
+    },
+    {
+      "queryId": "bare-word:0209442e115ad7bc",
+      "query": "travel",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "gods-protection"
+    },
+    {
+      "queryId": "bare-word:0282d9b79f42c74c",
+      "query": "face",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "remembered-joy-in-trials"
+    },
+    {
+      "queryId": "bare-word:02d036ed6295e00d",
+      "query": "miscarriage",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "pregnancy-and-child-loss"
+    },
+    {
+      "queryId": "bare-word:04b447783afe5bfd",
+      "query": "opportunity",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "stewardship-of-days"
+    },
+    {
+      "queryId": "bare-word:04efaf080f5a3e74",
+      "query": "four",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "serious-illness-and-dying"
+    },
+    {
+      "queryId": "bare-word:056dc4cc3470ead9",
+      "query": "addiction",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "freedom-from-bondage"
+    },
+    {
+      "queryId": "bare-word:063bffb4b52b2315",
+      "query": "ways",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "relapse-and-restoration"
+    }
+  ],
+  "concept-register": [
+    {
+      "queryId": "concept-register:0004db823933b9e3",
+      "query": "what does the bible say about wise and foolish builders",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "building-on-the-rock"
+    },
+    {
+      "queryId": "concept-register:001c8355d9cb195c",
+      "query": "verses to memorize about growing spiritually",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "spiritual-growth"
+    },
+    {
+      "queryId": "concept-register:001ddb2ef2017759",
+      "query": "help me understand praying for leaders and the nation",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "praying-for-leaders"
+    },
+    {
+      "queryId": "concept-register:00397aac5fec4c4c",
+      "query": "sermon text on dreams and visions",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "dreams-and-visions"
+    },
+    {
+      "queryId": "concept-register:0044ffdab2ec7c66",
+      "query": "primary text for a lesson on propitiation",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "the-cross"
+    },
+    {
+      "queryId": "concept-register:0062e2fdc6c6ed7e",
+      "query": "key passages on abused",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "refuge-and-justice-for-the-oppressed"
+    },
+    {
+      "queryId": "concept-register:006ed4e163e21997",
+      "query": "bible verses about all things god works for the good",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "remembered-all-things-for-good"
+    },
+    {
+      "queryId": "concept-register:0072fffbe92e0dc0",
+      "query": "primary text for a lesson on remain in me",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "abiding-in-christ"
+    },
+    {
+      "queryId": "concept-register:00a863582965ebfb",
+      "query": "verses on god of all comfort",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "god-of-all-comfort"
+    },
+    {
+      "queryId": "concept-register:00ad060f4688a3b4",
+      "query": "scripture about struggling with god",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "wrestling-with-god"
+    }
+  ],
+  "felt-need": [
+    {
+      "queryId": "felt-need:009e36d67fce3094",
+      "query": "comfort when i compare myself to others constantly",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "envy-and-jealousy"
+    },
+    {
+      "queryId": "felt-need:0106ea7567c0fd75",
+      "query": "scripture for when i am so tired of everything",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "rest-for-the-weary"
+    },
+    {
+      "queryId": "felt-need:01197db0793f1a13",
+      "query": "passage for counseling someone when i cannot stop saying things i regret",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "taming-the-tongue"
+    },
+    {
+      "queryId": "felt-need:01bba3e812d97788",
+      "query": "is there hope when i am burned out",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "rest-for-the-weary"
+    },
+    {
+      "queryId": "felt-need:01e14f39bd798898",
+      "query": "encouragement when i feel worthless",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "identity-in-christ"
+    },
+    {
+      "queryId": "felt-need:0249a9e12935921f",
+      "query": "verses for a member when i am afraid to share my faith",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "sharing-your-faith"
+    },
+    {
+      "queryId": "felt-need:027724ef22660a01",
+      "query": "scripture for when i am struggling with lust",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "sexual-purity"
+    },
+    {
+      "queryId": "felt-need:02a27ab213fc2444",
+      "query": "encouragement when my faith feels dry and dead",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "hunger-for-god"
+    },
+    {
+      "queryId": "felt-need:02a3fc9f1d7475aa",
+      "query": "what should i read when i am overwhelmed by everything on me",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "rest-for-the-weary"
+    },
+    {
+      "queryId": "felt-need:0304a77ea640b769",
+      "query": "what should i read when i was treated unjustly and no one cares",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "refuge-and-justice-for-the-oppressed"
+    }
+  ],
+  "golden-verbatim": [
+    {
+      "queryId": "golden-verbatim:0163977d087e5919",
+      "query": "covenant promises",
+      "expectationKind": "concept-anchors",
+      "conceptId": "covenant"
+    },
+    {
+      "queryId": "golden-verbatim:02d036ed6295e00d",
+      "query": "miscarriage",
+      "expectationKind": "concept-anchors",
+      "conceptId": "pregnancy-and-child-loss"
+    },
+    {
+      "queryId": "golden-verbatim:0328d327bc29789d",
+      "query": "favor of God",
+      "expectationKind": "concept-anchors",
+      "conceptId": "favor-of-god"
+    },
+    {
+      "queryId": "golden-verbatim:03408cb352aec917",
+      "query": "you meant evil against me",
+      "expectationKind": "concept-anchors",
+      "conceptId": "providence"
+    },
+    {
+      "queryId": "golden-verbatim:03cbd63b6a3a2208",
+      "query": "pray for our leaders",
+      "expectationKind": "concept-anchors",
+      "conceptId": "praying-for-leaders"
+    },
+    {
+      "queryId": "golden-verbatim:0417928ae0601fd7",
+      "query": "parenting",
+      "expectationKind": "concept-anchors",
+      "conceptId": "parenting"
+    },
+    {
+      "queryId": "golden-verbatim:054d503938ede98d",
+      "query": "wages of sin",
+      "expectationKind": "concept-anchors",
+      "conceptId": "sin"
+    },
+    {
+      "queryId": "golden-verbatim:055dc61ef01a4246",
+      "query": "image of god",
+      "expectationKind": "concept-anchors",
+      "conceptId": "image-of-god"
+    },
+    {
+      "queryId": "golden-verbatim:057dd4ff1dc1834c",
+      "query": "the lord bless you and keep you",
+      "expectationKind": "concept-anchors",
+      "conceptId": "benediction"
+    },
+    {
+      "queryId": "golden-verbatim:06603df273b5e65e",
+      "query": "famine in the land",
+      "expectationKind": "concept-anchors",
+      "conceptId": "gods-provision-famine"
+    }
+  ],
+  "multi-concept": [
+    {
+      "queryId": "multi-concept:0055c27c520da1d1",
+      "query": "sermon connecting refuge in trouble and victory in christ",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "refuge-in-trouble"
+    },
+    {
+      "queryId": "multi-concept:00651d67be6913c1",
+      "query": "how does prayer relate to the presence of god",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "prayer"
+    },
+    {
+      "queryId": "multi-concept:0067b6243e1bade7",
+      "query": "verses about identity in christ and made in god's image",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "identity-in-christ"
+    },
+    {
+      "queryId": "multi-concept:0076292a1bd24ac6",
+      "query": "how does the incarnation relate to trinity — father, son, and spirit",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "incarnation"
+    },
+    {
+      "queryId": "multi-concept:007db8f28e5b9cce",
+      "query": "sermon connecting hell and repentance",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "hell"
+    },
+    {
+      "queryId": "multi-concept:009e376cb0e9e185",
+      "query": "sermon connecting the deity of christ and salvation",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "deity-of-christ"
+    },
+    {
+      "queryId": "multi-concept:0146bea567de0732",
+      "query": "sermon connecting god's guidance and wisdom from god",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "guidance"
+    },
+    {
+      "queryId": "multi-concept:0170d965bebede44",
+      "query": "sermon connecting god of all comfort and loneliness",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "god-of-all-comfort"
+    },
+    {
+      "queryId": "multi-concept:018384a69a1ff1b1",
+      "query": "sermon connecting the deity of christ and the incarnation",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "deity-of-christ"
+    },
+    {
+      "queryId": "multi-concept:019c4fd3e2a1ec65",
+      "query": "how does do not be afraid relate to god's protection",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "fear-not"
+    }
+  ],
+  "remembered-phrase": [
+    {
+      "queryId": "remembered-phrase:076cc931ea7e4698",
+      "query": "where does the bible say trust in the lord with all your heart",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "trust-in-god"
+    },
+    {
+      "queryId": "remembered-phrase:08b3c2d673158ffd",
+      "query": "where does the bible say be still and know that i am god",
+      "register": "church-member",
+      "expectationKind": "none"
+    },
+    {
+      "queryId": "remembered-phrase:09ab5f0036d15e14",
+      "query": "come to me all who are weary",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "rest-for-the-weary"
+    },
+    {
+      "queryId": "remembered-phrase:0b95b3d1ddd1add6",
+      "query": "verse that says ask and it will be given",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "asking-in-gods-will"
+    },
+    {
+      "queryId": "remembered-phrase:0f1c12583fb4158e",
+      "query": "where does the bible say perfect love casts out fear",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "fear-not"
+    },
+    {
+      "queryId": "remembered-phrase:113ed18710acf65c",
+      "query": "where does the bible say they that wait upon the lord shall renew their strength",
+      "register": "church-member",
+      "expectationKind": "none"
+    },
+    {
+      "queryId": "remembered-phrase:1a992816e8aec766",
+      "query": "where does the bible say love joy peace patience kindness",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "remembered-fruit-of-the-spirit"
+    },
+    {
+      "queryId": "remembered-phrase:1ac86e7b1d50a799",
+      "query": "where does the bible say faith is the assurance of things hoped for",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "remembered-faith-as-assurance"
+    },
+    {
+      "queryId": "remembered-phrase:1be60ce269b001f3",
+      "query": "all things work together for good",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "remembered-all-things-for-good"
+    },
+    {
+      "queryId": "remembered-phrase:1d9db90adf0a828d",
+      "query": "fear not for i am with you",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "fear-not"
+    }
+  ],
+  "theological-term": [
+    {
+      "queryId": "theological-term:00438aa2044edc33",
+      "query": "define omniscience biblically",
+      "register": "pastor",
+      "expectationKind": "none"
+    },
+    {
+      "queryId": "theological-term:016b4d9ea899f7a0",
+      "query": "communion of saints",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "gathering-together"
+    },
+    {
+      "queryId": "theological-term:03fdbd1682442380",
+      "query": "define surrender biblically",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "surrender-to-god"
+    },
+    {
+      "queryId": "theological-term:04b792b2869751c8",
+      "query": "define jubilee biblically",
+      "register": "pastor",
+      "expectationKind": "none"
+    },
+    {
+      "queryId": "theological-term:04f88e0a70fd088d",
+      "query": "missions",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "nations-and-peoples"
+    },
+    {
+      "queryId": "theological-term:055dc61ef01a4246",
+      "query": "image of god",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "image-of-god"
+    },
+    {
+      "queryId": "theological-term:05be7097ab0beaea",
+      "query": "what is wisdom literature",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "wisdom-from-god"
+    },
+    {
+      "queryId": "theological-term:0667bd893799ba7a",
+      "query": "covenant",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "covenant"
+    },
+    {
+      "queryId": "theological-term:072db1f90e7ba066",
+      "query": "define renewal biblically",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "restoration"
+    },
+    {
+      "queryId": "theological-term:0790c7f1b5685b4d",
+      "query": "define omnipresence biblically",
+      "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "presence-of-god"
+    }
+  ],
+  "worship-planning": [
+    {
+      "queryId": "worship-planning:0032812301ef1379",
+      "query": "responsive reading about hearing and doing",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "obedience-to-the-word"
+    },
+    {
+      "queryId": "worship-planning:0250d083ba1179f1",
+      "query": "opening scripture for a service on fell back into sin",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "relapse-and-restoration"
+    },
+    {
+      "queryId": "worship-planning:0270f50fb20394aa",
+      "query": "opening scripture for a service on rest",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "rest-for-the-weary"
+    },
+    {
+      "queryId": "worship-planning:02c01416d99b32a3",
+      "query": "songs about walking in the light",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "walking-in-the-light"
+    },
+    {
+      "queryId": "worship-planning:03444d8711201a70",
+      "query": "setlist theme nations in the bible",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "nations-and-peoples"
+    },
+    {
+      "queryId": "worship-planning:03829e2cf6a77fff",
+      "query": "setlist theme grow in christ",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "spiritual-growth"
+    },
+    {
+      "queryId": "worship-planning:0383ce9fc81bc023",
+      "query": "responsive reading about hope in despair",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "hope-in-despair"
+    },
+    {
+      "queryId": "worship-planning:038e79f50aee7341",
+      "query": "setlist theme comparison",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "contentment"
+    },
+    {
+      "queryId": "worship-planning:03b2b66bd3149be2",
+      "query": "responsive reading about the presence of god",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "presence-of-god"
+    },
+    {
+      "queryId": "worship-planning:03b51854a825f694",
+      "query": "songs about god tests his people",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "testing"
+    }
+  ]
+}
