@@ -78,7 +78,10 @@ version cannot ship.
 
 - **Ordering + result shape: deterministic cited spelling correction.** A
   typed token found in NO vocabulary (corpus tokens, book aliases, lexicon
-  tokens, translation tokens) is corrected via a precomputed delete-variant
+  tokens, translation tokens, Layer B verse terms — the last is gate-only:
+  a verse-terms-only word is IN vocabulary and never rewritten, but is never
+  proposed AS a correction; correction targets are exactly the first four
+  origins) is corrected via a precomputed delete-variant
   lookup verified by bounded Damerau-Levenshtein, under the one edit-policy
   table shared with reference did-you-mean: normalized tokens under 5
   characters never correct; 5–8 allow distance 1; 9+ allow distance 2; a
