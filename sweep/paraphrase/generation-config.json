@@ -1,0 +1,16 @@
+{
+  "$comment": [
+    "Offline paraphrase batch configuration (MS-5). The generation script",
+    "refuses to run without --confirm-network and --j63-acknowledged: using",
+    "AI to write test queries at all is Jesse's J63 confirmation, and no",
+    "batch is submitted before it. paraphrasesPerSeed 12 and the two-step",
+    "shortfall lever (supplemental +6/seed with exclusions, then widen",
+    "stratum (a)) are the plan's stated mechanism; maxUsd is the hard cost",
+    "refusal ceiling (plan estimate ~$30, <=$45 with the lever)."
+  ],
+  "modelId": "claude-opus-5",
+  "paraphrasesPerSeed": 12,
+  "maxUsd": 45,
+  "pricingPerMTokUsd": { "input": 5.0, "output": 25.0 },
+  "batchDiscount": 0.5
+}
