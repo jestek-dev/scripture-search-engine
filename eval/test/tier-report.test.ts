@@ -746,10 +746,14 @@ describe('S2', () => {
 // ---------------------------------------------------------------------------
 
 describe('S3 and S5', () => {
-  it('S3 is NOT EVALUABLE until the explanation-faithfulness audit (E7) exists', () => {
+  it('S3 is NOT EVALUABLE until an executed E7 audit record exists (the sampler alone is not an audit)', () => {
     const row = criterion(computeTierReport(input({})), 'S3');
     expect(row.status).toBe('NOT_EVALUABLE');
     expect(row.detail).toMatch(/E7|explanation/i);
+    // The reason is load-bearing: it must not claim the tool is unbuilt
+    // (it is, since P7.4) — what is missing is the executed, J45-gated audit.
+    expect(row.detail).not.toMatch(/audit \(E7\) is not yet built/);
+    expect(row.detail).toMatch(/no executed audit|no audited sample/);
   });
 
   it('S5a needs every per-category threshold non-null and met', () => {

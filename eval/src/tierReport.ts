@@ -701,8 +701,9 @@ function s2c(input: TierComputationInput): TierCriterionResult {
 
 function s3(): TierCriterionResult {
   return crit('S3', 'S3', 'Explanation-faithfulness audit: zero misstated reasons for this identity', 'NOT_EVALUABLE',
-    'the explanation-faithfulness audit (E7) is not yet built — no audited sample exists in docs/reviews/ for ' +
-    'this release identity');
+    'the explanation-faithfulness sampler (E7) is built, but no executed audit exists — the protocol, sample ' +
+    'size, and designee are J45-gated (undecided) and docs/reviews/ holds no audited sample for this release ' +
+    'identity');
 }
 
 function s5a(input: TierComputationInput): TierCriterionResult {
