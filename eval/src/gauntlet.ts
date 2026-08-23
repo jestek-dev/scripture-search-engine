@@ -48,6 +48,10 @@ import {
   FLAGGED_PAIRINGS_PATH,
 } from './gates/doctrinalGuardrail.js';
 import {
+  lexiconInventoryCheck,
+  LEXICON_INVENTORY_PATH,
+} from './gates/lexiconInventory.js';
+import {
   correlationGroups,
   isFileUrl,
   retrievalUrls,
@@ -735,6 +739,13 @@ async function main(): Promise<void> {
     const doctrinalReviewsContents = existsSync(reviewsPath) ? readFileSync(reviewsPath, 'utf8') : null;
     const flaggedPairingsContents = existsSync(watchlistPath) ? readFileSync(watchlistPath, 'utf8') : null;
 
+    // Bare-word inventory (ontology/lexicon-inventory.yaml) — same
+    // contents-or-null discipline: the check itself reports a missing file,
+    // and it fails closed rather than warning, because the inventory IS the
+    // mechanism that makes a bare-word decision mandatory.
+    const inventoryPath = join(REPO_ROOT, ...LEXICON_INVENTORY_PATH.split('/'));
+    const lexiconInventoryContents = existsSync(inventoryPath) ? readFileSync(inventoryPath, 'utf8') : null;
+
     const distillate = loadDistillate();
     const probeRun = await runProbeGates(budgets, options, target);
     const probeGates = probeRun.gates;
@@ -807,6 +818,23 @@ async function main(): Promise<void> {
               ontologyCompiled: ontologyErrors.length === 0,
               watchlistFileContents: flaggedPairingsContents,
             }),
+            // The bare-word inventory rides G4 like the pairing watchlist —
+            // it grades the compiled ontology — but BLOCKS: a concept
+            // cannot ship without an explicit bare-word decision ("a pack
+            // with no fixtures is rejected structurally", applied to bare
+            // words). Skipped when the ontology failed to compile: the rows
+            // key by compiled concept id, and grading them against a
+            // half-compiled ontology would report phantom findings.
+            ontologyErrors.length > 0
+              ? notApplicable(
+                  'G4-collision',
+                  'Lexicon bare-word inventory',
+                  'ontology failed to compile; the inventory check needs compiled concept ids',
+                )
+              : lexiconInventoryCheck({
+                  concepts,
+                  inventoryFileContents: lexiconInventoryContents,
+                }),
           ]);
     // G2 is the determinism contract: the in-process replay AND the committed
     // ordering snapshot ride one roster row via mergeGateResults, the same way

@@ -13,6 +13,12 @@ lexicon:
   # Bare word (one-token discount): sexual-purity keeps its multi-word
   # phrases — the bare token's honest home is the general call to holiness.
   - purity
+  # Bare word added 2026-08-20 (lexicon-concepts PR 2) to close a MEASURED
+  # gap: "holiness" does not stem to "holy" under the light stemmer, so the
+  # concept's own subject noun never fired and the bare query bypassed
+  # Layer A (holiness.json additionalQueries failing run is the evidence).
+  # Decision recorded in ontology/lexicon-inventory.yaml.
+  - holiness
 anchors:
   - ref: 1 Peter 1:15-16
     sources: [editorial]

@@ -9,7 +9,11 @@
     "the right passage for the wrong reason is still a failure.",
     "Be holy, for I am holy. Deliberately the believer's calling, not God's own holiness (Isaiah 6:3) - a different sense wearing the same word, deferred to a later wave.",
     "PROMOTED TO ACTIVE 2026-08-06, in the admission that made it pass: the concept layer supplies concept_anchor evidence and the gauntlet itself flagged the fixture as passing-while-pending.",
-    "Round-2 book admission 2026-08-18: holiness gained 1 Jn 3:3 and the bare 'purity' token (sexual-purity keeps its multi-word phrases)."
+    "Round-2 book admission 2026-08-18: holiness gained 1 Jn 3:3 and the bare 'purity' token (sexual-purity keeps its multi-word phrases).",
+    "2026-08-20 bare-word strengthening (lexicon-concepts PR 2): the concept's own subject noun 'holiness' is asserted as an additional query. Measured before the lexicon addition, the bare query reached no curated passage - 'holiness' does not stem to 'holy' under the light stemmer, so no lexicon entry fired and Layer A was bypassed. The failing run is the gap evidence in the PR body; the same PR adds the '- holiness' lexicon entry and the lexicon-inventory row that keeps the decision explicit."
+  ],
+  "additionalQueries": [
+    "holiness"
   ],
   "expectedTop": [
     {
