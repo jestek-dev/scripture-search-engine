@@ -162,10 +162,13 @@ throughout** (one version bump for the whole train):
   floor derived from the admission floor; a result always keeps at least its
   strongest chip.
 
-## 0.9.0 — unreleased (publishes when tag v0.9.0 is pushed; date set then)
+## 0.9.0 — 2026-08-08 — never published
 
-First published version since 0.7.1. **Includes the unpublished 0.8.0
-breaking change below — read that entry before upgrading from 0.7.x.**
+Never published: no v0.9.0 tag or package exists, and none will — nothing
+between 0.7.1 and the terminus was ever tagged (`docs/COMPATIBILITY.md`), so
+anyone upgrading from 0.7.x crosses this version inside a later release.
+**Includes the unpublished 0.8.0 breaking change below — read that entry
+before upgrading from 0.7.x.**
 
 - **BREAKING (ordering + result shape):** bare `love` now defaults to the
   *God's love* concept, with the neighbor-love sense surfaced through the
@@ -184,12 +187,13 @@ breaking change below — read that entry before upgrading from 0.7.x.**
   schema-6 artifact by design — a pinned `(0.7.1, v0.7.1 descriptor)` pair
   keeps working; upgrading is an explicit re-pin of both halves.
 - Every provenance source is labeled; reason completeness is enforced in eval.
-- Release channel (ships with, not in, the package): v0.9.0 is the first
-  release whose artifact is CI-minted and promoted without a rebuild, and the
-  first whose descriptor names its own `release.tag` — closing the v0.7.1
-  asset/descriptor split forward (decision record:
+- Release channel (ships with, not in, the package): this version's window
+  landed the promote-only release flow — the artifact is CI-minted and
+  promoted without a rebuild, and the descriptor names its own `release.tag`
+  — closing the v0.7.1 asset/descriptor split forward (decision record:
   `docs/reviews/2026-08-21-ship-forward-v090.md`; v0.7.1's published assets
-  stay untouched). The artifact embeds OpenBible.info data (CC BY 4.0);
+  stay untouched). With 0.9.0 itself never tagged, the first release
+  actually published under that flow is the terminus release. The artifact embeds OpenBible.info data (CC BY 4.0);
   consumer apps surface the attribution per `docs/ATTRIBUTIONS.md`.
 
 ## 0.8.0 — 2026-08-08 — BREAKING, never published

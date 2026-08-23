@@ -36,7 +36,7 @@ describe('hasChangelogEntry', () => {
     '## 0.14.0 — 2026-08-22 — unreleased',
     '- something true',
     '',
-    '## 0.9.0 — unreleased (publishes when tag v0.9.0 is pushed; date set then)',
+    '## 0.9.0 — 2026-08-08 — never published',
     '- mentions 0.10.0 mid-prose, which must not count as an entry for it',
     '',
     '## 0.7.1 — 2026-07-31',
