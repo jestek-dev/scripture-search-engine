@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400..700;1,7..72,400..600&amp;family=Source+Sans+3:ital,wght@0,400..700;1,400..600&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#F6F4EF; --surface:#FCFBF8; --panel:#FFFDF7;
+  --hairline:#E5E1D8; --hairline-strong:#D6D1C6;
+  --ink:#1D1C18; --text-2:#57534A; --text-3:#847F73; --text-faint:#A9A398;
+  --accent:#0D5C58; --accent-hover:#094744; --on-accent:#F1FAF9; --accent-wash:rgba(13,92,88,.08);
+  --v-affirm:#2F7A52; --v-notrel:#A6493D; --v-missing:#8C6C1E;
+  --v-affirm-wash:rgba(47,122,82,.10); --v-notrel-wash:rgba(166,73,61,.09); --v-missing-wash:rgba(140,108,30,.10);
+  --highlight:rgba(228,176,58,.30);
+  --kbd-bg:#EFECE4; --kbd-border:#D8D3C8;
+  --sel-bg:rgba(13,92,88,.16); --caret:#0D5C58;
+  --shadow:0 1px 2px rgba(29,28,24,.06),0 6px 20px rgba(29,28,24,.07);
+  --r-ctl:6px; --r-panel:10px;
+}
+[data-theme="dark"]{
+  --ground:#131311; --surface:#1A1A17; --panel:#211E18;
+  --hairline:#2E2B25; --hairline-strong:#3B372F;
+  --ink:#EBE7DE; --text-2:#B4AEA1; --text-3:#8A8478; --text-faint:#67635A;
+  --accent:#43A8A0; --accent-hover:#5CBEB5; --on-accent:#0A2422; --accent-wash:rgba(67,168,160,.12);
+  --v-affirm:#6FBE8C; --v-notrel:#DE8B7C; --v-missing:#D2A94F;
+  --v-affirm-wash:rgba(111,190,140,.12); --v-notrel-wash:rgba(222,139,124,.10); --v-missing-wash:rgba(210,169,79,.12);
+  --highlight:rgba(212,163,62,.20);
+  --kbd-bg:#24231F; --kbd-border:#3B372F;
+  --sel-bg:rgba(67,168,160,.28); --caret:#43A8A0;
+  --shadow:none;
+}
+html,body{margin:0;padding:0;}
+body{background:var(--ground);}
+a{color:var(--accent);} a:hover{color:var(--accent-hover);}
+::selection{background:var(--sel-bg);}
+input,textarea{caret-color:var(--caret);}
+*{scrollbar-width:thin;scrollbar-color:var(--hairline-strong) transparent;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+button{font:inherit;}
+@keyframes toastUp{from{opacity:0;transform:translate(-50%,10px);}to{opacity:1;transform:translate(-50%,0);}}
+@keyframes rowSettle{from{opacity:.4;}to{opacity:1;}}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</helmet>
+<div data-theme="{{themeAttr}}" data-screen-label="Workbench" style="min-height:100vh;background:var(--ground);color:var(--ink);font-family:'Source Sans 3',-apple-system,'Segoe UI',sans-serif;font-size:13px;line-height:1.45;">
+  <header style="height:48px;display:flex;align-items:center;gap:24px;padding:0 16px;border-bottom:1px solid var(--hairline);background:var(--surface);position:sticky;top:0;z-index:30;">
+    <div style="font-family:'Literata',Georgia,serif;font-size:15px;letter-spacing:0.01em;">The Study</div>
+    <nav aria-label="Workbench views" style="display:flex;gap:4px;height:100%;">
+      <sc-for list="{{navTabs}}" as="tab" hint-placeholder-count="4">
+        <button onClick="{{tab.go}}" aria-current="{{tab.aria}}" style="border:0;background:none;cursor:pointer;padding:0 10px;height:100%;display:flex;align-items:center;position:relative;color:{{tab.color}};font-weight:{{tab.weight}};font-size:13px;" style-hover="color:var(--ink)">
+          <span>{{tab.label}}</span>
+          <sc-if value="{{tab.active}}" hint-placeholder-val="{{false}}"><span style="position:absolute;left:8px;right:8px;bottom:-1px;height:2px;background:var(--accent);border-radius:2px 2px 0 0;"></span></sc-if>
+        </button>
+      </sc-for>
+    </nav>
+    <div style="flex:1;"></div>
+    <button onClick="{{openLookup}}" aria-label="Quick lookup" style="display:flex;align-items:center;gap:8px;padding:5px 10px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--text-3);cursor:pointer;" style-hover="border-color:var(--text-3);color:var(--text-2)">
+      <span>Look something up</span>
+      <span style="display:inline-block;padding:1px 5px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:4px;background:var(--kbd-bg);font-size:11px;color:var(--text-2);">⌘K</span>
+    </button>
+    <button onClick="{{cycleTheme}}" aria-label="Theme" title="{{themeTitle}}" style="padding:5px 10px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--text-2);cursor:pointer;" style-hover="border-color:var(--text-3)">{{themeLabel}}</button>
+    <button onClick="{{goAdvanced}}" style="padding:5px 10px;border:0;background:none;color:{{advColor}};cursor:pointer;font-size:12px;" style-hover="color:var(--text-2)">Advanced</button>
+  </header>
+
+  <sc-if value="{{readOnly}}" hint-placeholder-val="{{false}}">
+    <div role="status" style="display:flex;gap:10px;align-items:baseline;padding:8px 16px;border-bottom:1px solid var(--hairline);background:var(--v-missing-wash);color:var(--ink);">
+      <strong style="font-weight:600;">Read-only right now.</strong>
+      <span style="color:var(--text-2);">The engine is rebuilding its data. You can read everything, but calls will not save. This usually clears in a minute — then reload the page.</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isReview}}" hint-placeholder-val="{{true}}">
+    <main data-screen-label="Review" style="display:grid;grid-template-columns:300px minmax(0,1fr) 320px;height:calc(100vh - 48px);">
+      <aside aria-label="Queue" style="border-right:1px solid var(--hairline);background:var(--surface);overflow-y:auto;padding-bottom:96px;">
+        <div style="padding:14px 16px 6px;display:flex;align-items:baseline;justify-content:space-between;">
+          <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);">This week</span>
+          <span style="color:var(--text-3);">{{remainingLabel}}</span>
+        </div>
+        <sc-for list="{{groups}}" as="grp" hint-placeholder-count="2">
+          <div>
+            <div style="padding:10px 16px 4px;display:flex;justify-content:space-between;align-items:baseline;">
+              <span style="font-weight:600;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-right:8px;">“{{grp.q}}”</span>
+              <span style="color:var(--text-faint);font-size:12px;">{{grp.count}}</span>
+            </div>
+            <sc-for list="{{grp.rows}}" as="row" hint-placeholder-count="3">
+              <div onClick="{{row.select}}" role="button" tabIndex="0" onKeyDown="{{row.keySelect}}" style="display:flex;align-items:center;gap:10px;height:36px;padding:0 16px 0 12px;cursor:pointer;background:{{row.bg}};border-left:2px solid {{row.edge}};" style-hover="background:var(--accent-wash)">
+                <input type="checkbox" checked="{{row.checked}}" onClick="{{row.toggle}}" aria-label="Select {{row.ref}}" style="width:13px;height:13px;accent-color:var(--accent);margin:0;flex:none;" />
+                <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{row.refColor}};font-weight:{{row.refWeight}};">{{row.ref}}</span>
+                <span style="font-size:11px;color:var(--text-faint);white-space:nowrap;">{{row.meta}}</span>
+                <span aria-label="{{row.dotLabel}}" style="width:7px;height:7px;border-radius:50%;flex:none;background:{{row.dotBg}};border:1.5px solid {{row.dotBorder}};"></span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="padding:14px 16px;color:var(--text-faint);font-size:12px;border-top:1px solid var(--hairline);margin-top:10px;">J and K move · one letter judges · <button onClick="{{openHelp}}" style="border:0;background:none;color:var(--text-3);cursor:pointer;padding:0;text-decoration:underline;">all shortcuts</button></div>
+      </aside>
+
+      <section aria-label="Passage" style="overflow-y:auto;padding:40px 32px 140px;display:flex;flex-direction:column;align-items:center;">
+        <sc-if value="{{allJudged}}" hint-placeholder-val="{{false}}">
+          <div style="max-width:520px;margin-top:18vh;text-align:center;">
+            <div style="font-family:'Literata',Georgia,serif;font-size:26px;margin-bottom:10px;">All {{totalCount}} judged.</div>
+            <div style="color:var(--text-2);margin-bottom:24px;">Every result this week has your call on it. Well done.</div>
+            <button onClick="{{goFinish}}" style="padding:9px 16px;border:1px solid var(--accent);border-radius:var(--r-ctl);background:var(--accent);color:var(--on-accent);cursor:pointer;font-weight:600;" style-hover="background:var(--accent-hover)">Review what you decided →</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{hasCurrent}}" hint-placeholder-val="{{true}}">
+          <article style="width:100%;max-width:680px;background:var(--panel);border:1px solid var(--hairline);border-radius:var(--r-panel);box-shadow:var(--shadow);padding:44px 52px 40px;">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px;">
+              <h1 style="font-family:'Literata',Georgia,serif;font-size:20px;font-weight:600;margin:0;">{{curRef}}</h1>
+              <span style="color:var(--text-faint);font-size:12px;">Result {{curPos}} of {{curTotal}} for “{{curQuery}}”</span>
+            </div>
+            <sc-if value="{{curJudged}}" hint-placeholder-val="{{false}}">
+              <div style="display:inline-flex;align-items:center;gap:8px;margin:4px 0 8px;padding:3px 10px;border:1px solid var(--hairline-strong);border-radius:99px;background:{{curCallWash}};font-size:12px;color:var(--text-2);">
+                <span style="width:6px;height:6px;border-radius:50%;background:{{curCallColor}};"></span>
+                <span>Your call: {{curCallLabel}}</span>
+                <button onClick="{{undoCurrent}}" style="border:0;background:none;color:var(--accent);cursor:pointer;padding:0;">Undo</button>
+              </div>
+            </sc-if>
+            <p style="font-family:'Literata',Georgia,serif;font-size:17.5px;line-height:1.65;max-width:68ch;margin:14px 0 0;text-wrap:pretty;">
+              <sc-for list="{{verseSegs}}" as="seg" hint-placeholder-count="4"><sc-if value="{{seg.isNum}}" hint-placeholder-val="{{false}}"><sup style="font-family:'Source Sans 3',sans-serif;font-size:0.6em;color:var(--text-3);margin:0 3px 0 1px;letter-spacing:0.02em;">{{seg.text}}</sup></sc-if><sc-if value="{{seg.isHl}}" hint-placeholder-val="{{false}}"><span style="background:var(--highlight);border-radius:2px;padding:0 2px;box-decoration-break:clone;">{{seg.text}}</span></sc-if><sc-if value="{{seg.isTx}}" hint-placeholder-val="{{true}}"><span>{{seg.text}}</span></sc-if></sc-for>
+            </p>
+            <div style="margin-top:14px;color:var(--text-faint);font-size:12px;">King James Version</div>
+
+            <sc-if value="{{interviewOpen}}" hint-placeholder-val="{{false}}">
+              <div style="margin-top:24px;border:1px solid var(--hairline-strong);border-radius:var(--r-panel);background:var(--surface);padding:18px 20px;">
+                <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;">Not relevant — one quick question</div>
+                <div style="font-size:14px;margin-bottom:14px;max-width:52ch;">{{interviewQ}}</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <button onClick="{{interviewYes}}" style="padding:7px 14px;border:1px solid var(--accent);border-radius:var(--r-ctl);background:var(--accent);color:var(--on-accent);cursor:pointer;font-weight:600;" style-hover="background:var(--accent-hover)">{{interviewYesLabel}}</button>
+                  <button onClick="{{interviewNo}}" style="padding:7px 14px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);cursor:pointer;" style-hover="border-color:var(--text-3)">{{interviewNoLabel}}</button>
+                </div>
+                <div style="margin-top:12px;color:var(--text-3);font-size:12px;max-width:56ch;">If you mark it not relevant, it is demoted out of the top results for this query only — the verse stays in the corpus and every other search.</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{missingOpen}}" hint-placeholder-val="{{false}}">
+              <div style="margin-top:24px;border:1px solid var(--hairline-strong);border-radius:var(--r-panel);background:var(--surface);padding:18px 20px;">
+                <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;">Add a passage that should be here</div>
+                <label for="missing-ref" style="display:block;color:var(--text-2);margin-bottom:6px;">Which passage is missing for “{{curQuery}}”?</label>
+                <input id="missing-ref" type="text" value="{{missingRef}}" onInput="{{onMissingRef}}" placeholder="e.g. Lamentations 3:22" style="width:100%;max-width:320px;padding:7px 10px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--panel);color:var(--ink);font:inherit;box-sizing:border-box;" />
+                <sc-if value="{{missingHasPreview}}" hint-placeholder-val="{{false}}">
+                  <p style="font-family:'Literata',Georgia,serif;font-size:16px;line-height:1.65;max-width:64ch;margin:14px 0 4px;padding:12px 16px;background:var(--panel);border:1px solid var(--hairline);border-radius:var(--r-ctl);">
+                    <sc-for list="{{missingSegs}}" as="seg" hint-placeholder-count="2"><sc-if value="{{seg.isNum}}" hint-placeholder-val="{{false}}"><sup style="font-family:'Source Sans 3',sans-serif;font-size:0.6em;color:var(--text-3);margin:0 3px 0 1px;">{{seg.text}}</sup></sc-if><sc-if value="{{seg.isTx}}" hint-placeholder-val="{{true}}"><span>{{seg.text}}</span></sc-if></sc-for>
+                  </p>
+                </sc-if>
+                <sc-if value="{{missingNoPreview}}" hint-placeholder-val="{{true}}">
+                  <div style="margin:12px 0 4px;color:var(--text-faint);font-size:12px;">The passage appears here as you type, so you can check it is the right one.</div>
+                </sc-if>
+                <div style="display:flex;align-items:center;gap:8px;margin:12px 0;">
+                  <span style="color:var(--text-3);font-size:12px;">Should show in top</span>
+                  <sc-for list="{{missingTops}}" as="t" hint-placeholder-count="4">
+                    <button onClick="{{t.pick}}" style="min-width:30px;padding:3px 8px;border:1px solid {{t.border}};border-radius:var(--r-ctl);background:{{t.bg}};color:{{t.color}};cursor:pointer;font-size:12px;" style-hover="border-color:var(--text-3)">{{t.n}}</button>
+                  </sc-for>
+                </div>
+                <input type="text" value="{{missingNote}}" onInput="{{onMissingNote}}" placeholder="Optional note" style="width:100%;max-width:420px;padding:7px 10px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--panel);color:var(--ink);font:inherit;box-sizing:border-box;margin-bottom:12px;" />
+                <div style="display:flex;gap:8px;">
+                  <button onClick="{{missingSubmit}}" disabled="{{missingDisabled}}" style="padding:7px 14px;border:1px solid var(--accent);border-radius:var(--r-ctl);background:var(--accent);color:var(--on-accent);cursor:pointer;font-weight:600;opacity:{{missingOpacity}};" style-hover="background:var(--accent-hover)">Add this passage to the answers</button>
+                  <button onClick="{{missingCancel}}" style="padding:7px 14px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);cursor:pointer;">Cancel</button>
+                </div>
+              </div>
+            </sc-if>
+          </article>
+        </sc-if>
+      </section>
+
+      <aside aria-label="Why this ranked" style="border-left:1px solid var(--hairline);background:var(--surface);overflow-y:auto;padding:0 0 96px;">
+        <div role="tablist" aria-label="Explanation" style="display:flex;gap:2px;padding:10px 16px 0;border-bottom:1px solid var(--hairline);">
+          <button role="tab" aria-selected="{{whyTabSel}}" onClick="{{showWhy}}" style="border:0;background:none;cursor:pointer;padding:6px 8px 10px;color:{{whyTabColor}};font-weight:{{whyTabWeight}};position:relative;">Why this ranked<sc-if value="{{whyTab}}" hint-placeholder-val="{{true}}"><span style="position:absolute;left:6px;right:6px;bottom:-1px;height:2px;background:var(--accent);"></span></sc-if></button>
+          <button role="tab" aria-selected="{{ctxTabSel}}" onClick="{{showCtx}}" style="border:0;background:none;cursor:pointer;padding:6px 8px 10px;color:{{ctxTabColor}};font-weight:{{ctxTabWeight}};position:relative;">Context<sc-if value="{{ctxTab}}" hint-placeholder-val="{{false}}"><span style="position:absolute;left:6px;right:6px;bottom:-1px;height:2px;background:var(--accent);"></span></sc-if></button>
+        </div>
+        <sc-if value="{{whyTab}}" hint-placeholder-val="{{true}}">
+          <div style="padding:16px;">
+            <sc-for list="{{whyRows}}" as="w" hint-placeholder-count="3">
+              <div style="padding:10px 0;border-bottom:1px solid var(--hairline);">
+                <div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;">{{w.k}}</div>
+                <div style="color:var(--ink);">{{w.v}}</div>
+              </div>
+            </sc-for>
+            <div style="padding:12px 0 0;">
+              <span style="display:inline-block;padding:3px 10px;border:1px solid var(--hairline-strong);border-radius:99px;color:var(--text-2);font-size:12px;">{{curReason}}</span>
+            </div>
+            <div style="margin-top:16px;color:var(--text-faint);font-size:12px;max-width:36ch;">This explains the engine’s reasoning. Your call decides whether it was right.</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ctxTab}}" hint-placeholder-val="{{false}}">
+          <div style="padding:16px;color:var(--text-2);font-size:13px;line-height:1.6;max-width:40ch;">{{curContext}}</div>
+        </sc-if>
+      </aside>
+    </main>
+
+    <sc-if value="{{verdictBarShown}}" hint-placeholder-val="{{true}}">
+      <div role="toolbar" aria-label="Verdict" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:25;display:flex;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--hairline-strong);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);">
+        <div style="display:flex;flex:none;align-items:stretch;border:1px solid var(--accent);border-radius:var(--r-ctl);overflow:hidden;">
+          <button onClick="{{markEssential}}" disabled="{{readOnly}}" aria-label="Mark {{curRef}} essential" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:0;background:var(--accent);color:var(--on-accent);cursor:pointer;font-weight:600;" style-hover="background:var(--accent-hover)">
+            <span style="display:inline-block;min-width:14px;padding:1px 5px;border:1px solid rgba(255,255,255,.35);border-bottom-width:2px;border-radius:4px;font-size:11px;text-align:center;">E</span>
+            <span>Essential</span>
+          </button>
+          <div style="display:flex;align-items:center;gap:2px;padding:0 8px;background:var(--accent-wash);align-self:stretch;">
+            <span style="font-size:11px;color:var(--text-3);margin-right:2px;">top</span>
+            <sc-for list="{{withinTops}}" as="t" hint-placeholder-count="4">
+              <button onClick="{{t.pick}}" aria-label="Within top {{t.n}}" style="min-width:24px;padding:2px 5px;border:1px solid {{t.border}};border-radius:4px;background:{{t.bg}};color:{{t.color}};cursor:pointer;font-size:11px;">{{t.n}}</button>
+            </sc-for>
+          </div>
+        </div>
+        <button onClick="{{markHelpful}}" disabled="{{readOnly}}" aria-label="Mark {{curRef}} helpful" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);cursor:pointer;" style-hover="border-color:var(--text-3)">
+          <span style="display:inline-block;min-width:14px;padding:1px 5px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:4px;background:var(--kbd-bg);font-size:11px;color:var(--text-2);text-align:center;">H</span>
+          <span>Helpful</span>
+        </button>
+        <button onClick="{{markNotRelevant}}" disabled="{{readOnly}}" aria-label="Mark {{curRef}} not relevant" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);cursor:pointer;" style-hover="border-color:var(--v-notrel);color:var(--v-notrel)">
+          <span style="display:inline-block;min-width:14px;padding:1px 5px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:4px;background:var(--kbd-bg);font-size:11px;color:var(--text-2);text-align:center;">X</span>
+          <span>Not relevant</span>
+        </button>
+        <button onClick="{{openMissing}}" disabled="{{readOnly}}" aria-label="Record a missing passage" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);cursor:pointer;" style-hover="border-color:var(--text-3)">
+          <span style="display:inline-block;min-width:14px;padding:1px 5px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:4px;background:var(--kbd-bg);font-size:11px;color:var(--text-2);text-align:center;">M</span>
+          <span>Missing passage</span>
+        </button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{bulkShown}}" hint-placeholder-val="{{false}}">
+      <div style="position:fixed;left:50%;bottom:76px;transform:translateX(-50%);z-index:26;display:flex;gap:10px;align-items:center;padding:8px 14px;border:1px solid var(--hairline-strong);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);">
+        <span style="color:var(--text-2);">{{bulkCount}} selected</span>
+        <button onClick="{{bulkHelpful}}" style="padding:5px 10px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);cursor:pointer;" style-hover="border-color:var(--text-3)">Mark all helpful</button>
+        <button onClick="{{bulkClear}}" style="padding:5px 10px;border:0;background:none;color:var(--text-3);cursor:pointer;">Clear</button>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{isCompare}}" hint-placeholder-val="{{false}}">
+    <main data-screen-label="Compare" style="max-width:1080px;margin:0 auto;padding:28px 24px 160px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;">
+        <h1 style="font-size:16px;font-weight:600;margin:0;">Which set answers “{{cmpQuery}}” better?</h1>
+        <span style="color:var(--text-3);font-size:12px;">You are not told which engine is which. This call is final.</span>
+      </div>
+      <div style="color:var(--text-3);margin-bottom:20px;">Read both lists, click any verse to read it below, then make one call.</div>
+      <sc-if value="{{cmpRevealed}}" hint-placeholder-val="{{false}}">
+        <div style="max-width:560px;margin:40px auto;text-align:center;border:1px solid var(--hairline-strong);border-radius:var(--r-panel);background:var(--panel);box-shadow:var(--shadow);padding:36px 40px;">
+          <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;">The reveal</div>
+          <div style="font-family:'Literata',Georgia,serif;font-size:22px;margin-bottom:8px;">{{cmpRevealTitle}}</div>
+          <div style="color:var(--text-2);max-width:44ch;margin:0 auto 20px;">{{cmpRevealBody}}</div>
+          <button onClick="{{goReviewBtn}}" style="padding:8px 14px;border:1px solid var(--accent);border-radius:var(--r-ctl);background:var(--accent);color:var(--on-accent);cursor:pointer;font-weight:600;" style-hover="background:var(--accent-hover)">Back to Review</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{cmpNotRevealed}}" hint-placeholder-val="{{true}}">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <sc-for list="{{cmpSides}}" as="side" hint-placeholder-count="2">
+            <div style="border:1px solid var(--hairline);border-radius:var(--r-panel);background:var(--surface);overflow:hidden;">
+              <div style="padding:10px 14px;border-bottom:1px solid var(--hairline);font-weight:600;color:var(--text-2);">Set {{side.name}}</div>
+              <sc-for list="{{side.rows}}" as="row" hint-placeholder-count="4">
+                <div onClick="{{row.select}}" role="button" tabIndex="0" style="display:flex;gap:10px;align-items:center;height:36px;padding:0 14px;cursor:pointer;background:{{row.bg}};border-left:2px solid {{row.edge}};" style-hover="background:var(--accent-wash)">
+                  <span style="color:var(--text-faint);font-size:12px;width:14px;">{{row.n}}</span>
+                  <span style="color:{{row.color}};font-weight:{{row.weight}};">{{row.ref}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <article style="margin-top:20px;background:var(--panel);border:1px solid var(--hairline);border-radius:var(--r-panel);box-shadow:var(--shadow);padding:32px 44px;">
+          <h2 style="font-family:'Literata',Georgia,serif;font-size:18px;font-weight:600;margin:0 0 10px;">{{cmpSelRef}}</h2>
+          <p style="font-family:'Literata',Georgia,serif;font-size:17px;line-height:1.65;max-width:68ch;margin:0;text-wrap:pretty;">{{cmpSelVerse}}</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;padding-top:14px;border-top:1px solid var(--hairline);">
+            <div><div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;">Set A says</div><div style="color:var(--text-2);">{{cmpSelWhyA}}</div></div>
+            <div><div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-bottom:3px;">Set B says</div><div style="color:var(--text-2);">{{cmpSelWhyB}}</div></div>
+          </div>
+        </article>
+      </sc-if>
+    </main>
+    <sc-if value="{{cmpNotRevealed}}" hint-placeholder-val="{{true}}">
+      <div role="toolbar" aria-label="Comparison verdict" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:25;display:flex;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--hairline-strong);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);">
+        <sc-for list="{{cmpButtons}}" as="b" hint-placeholder-count="4">
+          <button onClick="{{b.go}}" disabled="{{readOnly}}" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);cursor:pointer;" style-hover="border-color:var(--accent);color:var(--accent)">
+            <span style="display:inline-block;min-width:14px;padding:1px 5px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:4px;background:var(--kbd-bg);font-size:11px;color:var(--text-2);text-align:center;">{{b.kbd}}</span>
+            <span>{{b.label}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{isHistory}}" hint-placeholder-val="{{false}}">
+    <main data-screen-label="History" style="max-width:720px;margin:0 auto;padding:28px 24px 80px;">
+      <h1 style="font-size:16px;font-weight:600;margin:0 0 4px;">What you have decided</h1>
+      <div style="color:var(--text-3);margin-bottom:20px;">Every call stays on record. An undo does not erase a call — a newer one replaces it.</div>
+      <sc-for list="{{historyRows}}" as="h" hint-placeholder-count="5">
+        <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--hairline);">
+          <span style="color:var(--text-faint);font-size:12px;width:80px;flex:none;padding-top:2px;">{{h.when}}</span>
+          <div style="min-width:0;">
+            <div style="color:{{h.color}};text-decoration:{{h.deco}};">{{h.text}}</div>
+            <sc-if value="{{h.hasSub}}" hint-placeholder-val="{{false}}"><div style="color:var(--text-3);font-size:12px;margin-top:2px;">{{h.sub}}</div></sc-if>
+          </div>
+        </div>
+      </sc-for>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{isFinish}}" hint-placeholder-val="{{false}}">
+    <main data-screen-label="Finish up" style="max-width:760px;margin:0 auto;padding:28px 24px 80px;">
+      <h1 style="font-size:16px;font-weight:600;margin:0 0 4px;">Finish up</h1>
+      <div style="color:var(--text-3);margin-bottom:24px;">Your reviewed calls leave the workbench here and become part of the search’s answer files.</div>
+      <sc-if value="{{signedDone}}" hint-placeholder-val="{{false}}">
+        <div style="max-width:520px;margin:40px auto;text-align:center;border:1px solid var(--hairline-strong);border-radius:var(--r-panel);background:var(--panel);padding:36px 40px;box-shadow:var(--shadow);">
+          <div style="font-family:'Literata',Georgia,serif;font-size:22px;margin-bottom:8px;">Written.</div>
+          <div style="color:var(--text-2);max-width:42ch;margin:0 auto;">{{signedSummary}} The engineering checks will pick them up on the next run.</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{notSignedDone}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;gap:0;border:1px solid var(--hairline);border-radius:var(--r-panel);background:var(--surface);overflow:hidden;margin-bottom:20px;">
+          <sc-for list="{{finishStats}}" as="s" hint-placeholder-count="4">
+            <div style="flex:1;padding:16px 18px;border-right:1px solid var(--hairline);">
+              <div style="font-size:22px;font-family:'Literata',Georgia,serif;color:{{s.color}};">{{s.n}}</div>
+              <div style="color:var(--text-3);font-size:12px;">{{s.label}}</div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{hasPending}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;gap:10px;align-items:baseline;padding:10px 14px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--v-missing-wash);margin-bottom:20px;">
+            <span>{{pendingCount}} still waiting for a call.</span>
+            <button onClick="{{goReviewBtn}}" style="border:0;background:none;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline;">Finish them first →</button>
+          </div>
+        </sc-if>
+        <h2 style="font-size:13px;font-weight:600;color:var(--text-2);margin:0 0 8px;">What will be written</h2>
+        <sc-for list="{{fixtureFiles}}" as="f" hint-placeholder-count="2">
+          <div style="border:1px solid var(--hairline);border-radius:var(--r-ctl);background:var(--surface);margin-bottom:12px;overflow:hidden;">
+            <div style="padding:8px 14px;border-bottom:1px solid var(--hairline);color:var(--text-2);font-weight:600;">Answers for “{{f.q}}”</div>
+            <sc-for list="{{f.rows}}" as="r" hint-placeholder-count="2">
+              <div style="display:flex;gap:10px;padding:6px 14px;border-bottom:1px solid var(--hairline);">
+                <span style="color:var(--v-affirm);width:12px;flex:none;">+</span>
+                <span style="color:var(--text-2);">{{r.text}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="border:1px solid var(--hairline-strong);border-radius:var(--r-panel);background:var(--panel);box-shadow:var(--shadow);padding:24px 28px;margin-top:28px;">
+          <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:8px;">Sign to write</div>
+          <div style="max-width:56ch;color:var(--text-2);margin-bottom:14px;">This step changes reviewed files, so it asks for a signature: type the code below exactly. That is deliberate friction — it means nothing is written by a stray click.</div>
+          <div style="display:inline-block;font-family:'Literata',Georgia,serif;font-size:15px;letter-spacing:0.04em;padding:6px 14px;border:1px dashed var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);margin-bottom:12px;">{{signDigest}}</div>
+          <div>
+            <label for="sign-input" style="display:block;color:var(--text-3);font-size:12px;margin-bottom:4px;">Type the code to sign</label>
+            <input id="sign-input" type="text" value="{{signTyped}}" onInput="{{onSignTyped}}" style="width:100%;max-width:340px;padding:8px 12px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);font:inherit;box-sizing:border-box;" />
+          </div>
+          <button onClick="{{signSubmit}}" disabled="{{signDisabled}}" style="margin-top:14px;padding:9px 16px;border:1px solid var(--accent);border-radius:var(--r-ctl);background:var(--accent);color:var(--on-accent);cursor:pointer;font-weight:600;opacity:{{signOpacity}};" style-hover="background:var(--accent-hover)">{{signButtonLabel}}</button>
+        </div>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{isAdvanced}}" hint-placeholder-val="{{false}}">
+    <main data-screen-label="Advanced" style="max-width:920px;margin:0 auto;padding:28px 24px 80px;font-size:12.5px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2px;">
+        <h1 style="font-size:15px;font-weight:600;margin:0;">Advanced</h1>
+        <button onClick="{{goReviewBtn}}" style="border:0;background:none;color:var(--accent);cursor:pointer;padding:0;">← Back to Review</button>
+      </div>
+      <div style="color:var(--text-3);margin-bottom:22px;">Engineering surfaces. Nothing here interrupts the review flow.</div>
+      <sc-for list="{{advSections}}" as="sec" hint-placeholder-count="4">
+        <section style="border:1px solid var(--hairline);border-radius:var(--r-ctl);background:var(--surface);margin-bottom:14px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:9px 14px;border-bottom:1px solid var(--hairline);">
+            <span style="font-weight:600;color:var(--text-2);">{{sec.title}}</span>
+            <span style="color:{{sec.badgeColor}};font-size:11px;">{{sec.badge}}</span>
+          </div>
+          <sc-for list="{{sec.rows}}" as="r" hint-placeholder-count="3">
+            <div style="display:flex;gap:14px;padding:6px 14px;border-bottom:1px solid var(--hairline);">
+              <span style="color:var(--text-3);width:170px;flex:none;">{{r.k}}</span>
+              <span style="font-family:{{r.font}};color:var(--text-2);word-break:break-all;">{{r.v}}</span>
+            </div>
+          </sc-for>
+        </section>
+      </sc-for>
+      <section style="border:1px solid var(--hairline);border-radius:var(--r-ctl);background:var(--surface);overflow:hidden;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:9px 14px;border-bottom:1px solid var(--hairline);">
+          <span style="font-weight:600;color:var(--text-2);">Job runner</span>
+          <span style="color:var(--text-3);font-size:11px;">last run 14 min ago</span>
+        </div>
+        <div style="padding:12px 14px;font-family:ui-monospace,'SF Mono',Consolas,monospace;font-size:11.5px;line-height:1.7;color:var(--text-2);background:var(--ground);">
+          <div>$ npm run verify</div>
+          <div style="color:var(--text-3);">typecheck · 0 errors (4.2s)</div>
+          <div style="color:var(--text-3);">test · 214 passed (31.8s)</div>
+          <div style="color:var(--text-3);">gauntlet · 96 queries, 0 regressions (58.1s)</div>
+          <div style="color:var(--v-affirm);">verify complete — clean</div>
+        </div>
+      </section>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{toastShown}}" hint-placeholder-val="{{false}}">
+    <div role="status" aria-live="polite" style="position:fixed;left:50%;bottom:78px;transform:translateX(-50%);z-index:40;display:flex;gap:12px;align-items:center;padding:9px 16px;border:1px solid var(--hairline-strong);border-radius:99px;background:var(--surface);box-shadow:var(--shadow);animation:toastUp 0.2s cubic-bezier(0.16,1,0.3,1);">
+      <span>{{toastMsg}}</span>
+      <sc-if value="{{toastHasUndo}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{toastUndo}}" style="display:flex;align-items:center;gap:6px;border:0;background:none;color:var(--accent);cursor:pointer;padding:0;font-weight:600;">Undo <span style="display:inline-block;padding:0 4px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:3px;background:var(--kbd-bg);font-size:10px;color:var(--text-2);">U</span></button>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{lookupOpen}}" hint-placeholder-val="{{false}}">
+    <div onClick="{{closeLookup}}" style="position:fixed;inset:0;background:rgba(20,19,16,.35);z-index:50;display:flex;justify-content:center;align-items:flex-start;padding-top:12vh;">
+      <div onClick="{{stop}}" role="dialog" aria-label="Quick lookup" style="width:600px;max-width:92vw;background:var(--surface);border:1px solid var(--hairline-strong);border-radius:var(--r-panel);box-shadow:var(--shadow);overflow:hidden;">
+        <input type="text" value="{{lookupQ}}" onInput="{{onLookupQ}}" data-autofocus="lookup" placeholder="Type words or a reference — “mercy”, “Psalm 46”…" style="width:100%;padding:14px 18px;border:0;border-bottom:1px solid var(--hairline);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;box-sizing:border-box;outline:none;" />
+        <div style="max-height:46vh;overflow-y:auto;">
+          <sc-for list="{{lookupResults}}" as="r" hint-placeholder-count="3">
+            <div style="padding:10px 18px;border-bottom:1px solid var(--hairline);background:{{r.bg}};">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                <span style="font-weight:600;">{{r.ref}}</span>
+                <sc-if value="{{r.sel}}" hint-placeholder-val="{{false}}"><button onClick="{{r.start}}" style="border:0;background:none;color:var(--accent);cursor:pointer;padding:0;font-size:12px;">Start a review case from this search ↵</button></sc-if>
+              </div>
+              <div style="font-family:'Literata',Georgia,serif;font-size:14.5px;color:var(--text-2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{r.snippet}}</div>
+            </div>
+          </sc-for>
+          <sc-if value="{{lookupEmpty}}" hint-placeholder-val="{{false}}"><div style="padding:16px 18px;color:var(--text-3);">Nothing yet — try a word from the verse, or a reference like “Psalm 46:1”.</div></sc-if>
+        </div>
+        <div style="display:flex;gap:14px;padding:8px 18px;border-top:1px solid var(--hairline);color:var(--text-3);font-size:11px;">
+          <span>↑↓ Navigate</span><span>↵ Select</span><span>Esc Close</span>
+          <span style="flex:1;"></span>
+          <span>Looking something up never creates a case by itself.</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{helpOpen}}" hint-placeholder-val="{{false}}">
+    <div onClick="{{closeHelp}}" style="position:fixed;inset:0;background:rgba(20,19,16,.35);z-index:50;display:flex;justify-content:center;align-items:center;">
+      <div onClick="{{stop}}" role="dialog" aria-label="Keyboard shortcuts" style="width:520px;max-width:92vw;background:var(--surface);border:1px solid var(--hairline-strong);border-radius:var(--r-panel);box-shadow:var(--shadow);padding:24px 28px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+          <h2 style="font-size:14px;font-weight:600;margin:0;">Shortcuts</h2>
+          <button onClick="{{closeHelp}}" style="border:0;background:none;color:var(--text-3);cursor:pointer;padding:0;">Esc to close</button>
+        </div>
+        <sc-for list="{{helpGroups}}" as="g" hint-placeholder-count="3">
+          <div style="margin-bottom:14px;">
+            <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;">{{g.title}}</div>
+            <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="3">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;">
+                <span style="color:var(--text-2);">{{r.label}}</span>
+                <span style="display:inline-block;min-width:16px;padding:1px 6px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:4px;background:var(--kbd-bg);font-size:11px;color:var(--text-2);text-align:center;">{{r.kbd}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{onboardOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;inset:0;background:rgba(20,19,16,.45);z-index:60;display:flex;justify-content:center;align-items:center;">
+      <div role="dialog" aria-label="Welcome" style="width:440px;max-width:92vw;background:var(--panel);border:1px solid var(--hairline-strong);border-radius:var(--r-panel);box-shadow:var(--shadow);padding:36px 40px;text-align:center;">
+        <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:14px;">{{onboardStepLabel}}</div>
+        <div style="display:inline-block;min-width:26px;padding:8px 14px;border:1px solid var(--kbd-border);border-bottom-width:3px;border-radius:8px;background:var(--kbd-bg);font-size:22px;color:var(--ink);margin-bottom:14px;">{{onboardKbd}}</div>
+        <div style="font-family:'Literata',Georgia,serif;font-size:19px;margin-bottom:6px;">{{onboardTitle}}</div>
+        <div style="color:var(--text-2);max-width:36ch;margin:0 auto 18px;">{{onboardText}}</div>
+        <div style="color:var(--text-faint);font-size:12px;margin-bottom:10px;">Press the key to continue — that is the whole lesson.</div>
+        <button onClick="{{onboardSkip}}" style="border:0;background:none;color:var(--text-3);cursor:pointer;padding:0;text-decoration:underline;font-size:12px;">Skip the tour</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;system&quot;,&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;system&quot;,&quot;tsType&quot;:&quot;'system'|'light'|'dark'&quot;,&quot;section&quot;:&quot;Appearance&quot;},&quot;readOnly&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;},&quot;onboarding&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const parse = (raw) => raw.split(/(\^[^^]+\^|\*[^*]+\*)/).filter(Boolean).map((p) => {
+      if (p.startsWith('^')) return { isNum: true, isHl: false, isTx: false, text: p.slice(1, -1) };
+      if (p.startsWith('*')) return { isNum: false, isHl: true, isTx: false, text: p.slice(1, -1) };
+      return { isNum: false, isHl: false, isTx: true, text: p };
+    });
+    this.parse = parse;
+    this.ITEMS = [
+      { id: 'm1', q: 'mercy', ref: 'Micah 7:18', src: 'From a routine check', namedBy: 'Attributes of God — mercy', matched: 'mercy, pardoneth', reason: 'Matched the meaning', ctx: 'Micah closes with a song of confident hope: God pardons, has compassion, and casts sin into the depths of the sea (7:18–20). A frequent reading at services of assurance.', raw: '^18^Who is a God like unto thee, that pardoneth iniquity, and passeth by the transgression of the remnant of his heritage? he retaineth not his anger for ever, because he delighteth in *mercy*.' },
+      { id: 'm2', q: 'mercy', ref: 'Psalm 103:8', src: 'From real searches', namedBy: 'Attributes of God — mercy', matched: 'merciful, mercy', reason: 'Matched the meaning', ctx: 'Psalm 103 is David’s call to bless the LORD for forgiveness, healing, and steadfast love; verse 8 echoes God’s self-description to Moses.', raw: '^8^The LORD is *merciful* and gracious, slow to anger, and plenteous in *mercy*.' },
+      { id: 'm3', q: 'mercy', ref: 'Exodus 34:6', src: 'Needs a fresh look', namedBy: 'Attributes of God — mercy', matched: 'merciful', reason: 'Matched the meaning', ctx: 'God proclaims his own name to Moses on Sinai — the self-description echoed across the Old Testament (Psalm 86, Joel 2, Jonah 4).', raw: '^6^And the LORD passed by before him, and proclaimed, The LORD, The LORD God, *merciful* and gracious, longsuffering, and abundant in goodness and truth,' },
+      { id: 'm4', q: 'mercy', ref: 'Genesis 43:14', src: 'From real searches', namedBy: null, matched: 'mercy', reason: 'Shares key words', ctx: 'Jacob sends his sons back to Egypt with Benjamin, praying for favor before the ruler they do not yet know is Joseph.', raw: '^14^And God Almighty give you *mercy* before the man, that he may send away your other brother, and Benjamin. If I be bereaved of my children, I am bereaved.' },
+      { id: 'r1', q: 'refuge in the storm', ref: 'Psalm 46:1', src: 'From a routine check', namedBy: 'God as refuge', matched: 'refuge', reason: 'Matched the meaning', ctx: 'Psalm 46 — “God is our refuge and strength” — the psalm behind “A Mighty Fortress Is Our God.”', raw: '^1^God is our *refuge* and strength, a very present help in trouble.' },
+      { id: 'r2', q: 'refuge in the storm', ref: 'Psalm 91:2', src: 'From real searches', namedBy: 'God as refuge', matched: 'refuge, fortress', reason: 'Matched the meaning', ctx: 'Psalm 91 is a sustained picture of shelter: wings, fortress, shield. Often read in seasons of fear.', raw: '^2^I will say of the LORD, He is my *refuge* and my fortress: my God; in him will I trust.' },
+      { id: 'r3', q: 'refuge in the storm', ref: 'Nahum 1:7', src: 'New topic to cover', namedBy: null, matched: 'trouble', reason: 'Close in meaning', ctx: 'A line of comfort inside an oracle of judgment against Nineveh: the LORD knows those who take refuge in him.', raw: '^7^The LORD is good, a *strong hold* in the day of trouble; and he knoweth them that trust in him.' },
+    ];
+    this.PASSAGES = {
+      'lamentations 3:22': { ref: 'Lamentations 3:22–23', raw: '^22^It is of the LORD’S mercies that we are not consumed, because his compassions fail not. ^23^They are new every morning: great is thy faithfulness.' },
+      'zephaniah 3:17': { ref: 'Zephaniah 3:17', raw: '^17^The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing.' },
+      'psalm 42:11': { ref: 'Psalm 42:11', raw: '^11^Why art thou cast down, O my soul? and why art thou disquieted within me? hope thou in God: for I shall yet praise him, who is the health of my countenance, and my God.' },
+    };
+    this.CMP = {
+      q: 'hope in suffering',
+      a: [
+        { ref: 'Romans 5:3', verse: 'And not only so, but we glory in tribulations also: knowing that tribulation worketh patience;', whyA: 'Names the theme “Hope through trial.”', whyB: 'Names the theme “Hope through trial.”' },
+        { ref: 'Psalm 42:11', verse: 'Why art thou cast down, O my soul? and why art thou disquieted within me? hope thou in God: for I shall yet praise him.', whyA: 'Matched “hope” with a lament setting.', whyB: 'Ranked lower — fewer matched themes.' },
+        { ref: '1 Peter 1:6', verse: 'Wherein ye greatly rejoice, though now for a season, if need be, ye are in heaviness through manifold temptations:', whyA: 'Close in meaning to the search.', whyB: 'Not in this set’s top results.' },
+        { ref: 'Job 13:15', verse: 'Though he slay me, yet will I trust in him: but I will maintain mine own ways before him.', whyA: 'Shares the idea of trust under trial.', whyB: 'Not in this set’s top results.' },
+      ],
+      b: [
+        { ref: 'Romans 5:3', verse: 'And not only so, but we glory in tribulations also: knowing that tribulation worketh patience;', whyA: 'Names the theme “Hope through trial.”', whyB: 'Names the theme “Hope through trial.”' },
+        { ref: 'Lamentations 3:21', verse: 'This I recall to my mind, therefore have I hope.', whyA: 'Not in this set’s top results.', whyB: 'Names the theme “Hope through trial” and matched “hope.”' },
+        { ref: 'Psalm 42:11', verse: 'Why art thou cast down, O my soul? and why art thou disquieted within me? hope thou in God: for I shall yet praise him.', whyA: 'Matched “hope” with a lament setting.', whyB: 'Matched “hope” with a lament setting.' },
+        { ref: '2 Corinthians 4:17', verse: 'For our light affliction, which is but for a moment, worketh for us a far more exceeding and eternal weight of glory;', whyA: 'Not in this set’s top results.', whyB: 'Close in meaning: affliction working toward glory.' },
+      ],
+    };
+    let themePref = 'system';
+    let onboarded = false;
+    try {
+      themePref = localStorage.getItem('study.theme') || (props.theme ?? 'system');
+      onboarded = localStorage.getItem('study.onboarded') === '1';
+    } catch (e) {}
+    this.state = {
+      screen: 'review', themePref, systemDark: false,
+      selId: 'm1', judgments: {}, history: [
+        { when: 'Last week', text: 'Marked Psalm 23:1 essential (top 1) for “the lord is my shepherd”', replaced: false },
+        { when: 'Last week', text: 'Marked Proverbs 3:5 helpful for “trust”', replaced: false },
+        { when: '2 weeks ago', text: 'Marked Esther 4:14 not relevant for “courage” — matched words, not meaning', replaced: true, sub: 'Replaced by a newer call: marked helpful.' },
+      ],
+      withinTop: 3, checked: {},
+      interview: null, missingOpen: false, missingRef: '', missingNote: '', missingTop: 3,
+      toast: null, lookupOpen: false, lookupQ: '', lookupIdx: 0,
+      helpOpen: false, whyTab: 'why',
+      onboardStep: (props.onboarding || !onboarded) ? 0 : -1,
+      cmp: { sel: 0, call: null },
+      signTyped: '', signed: false, signedSummary: '',
+    };
+  }
+  componentDidMount() {
+    this.mq = window.matchMedia('(prefers-color-scheme: dark)');
+    this.setState({ systemDark: this.mq.matches });
+    this.mqFn = () => this.setState({ systemDark: this.mq.matches });
+    this.mq.addEventListener('change', this.mqFn);
+    this.keyFn = (e) => this.onKey(e);
+    document.addEventListener('keydown', this.keyFn);
+  }
+  componentWillUnmount() {
+    if (this.mq) this.mq.removeEventListener('change', this.mqFn);
+    document.removeEventListener('keydown', this.keyFn);
+    clearTimeout(this.toastT);
+  }
+  componentDidUpdate() {
+    if (this.state.lookupOpen) {
+      const el = document.querySelector('[data-autofocus="lookup"]');
+      if (el && document.activeElement !== el) el.focus();
+    }
+  }
+  flatIds() { return this.ITEMS.map((i) => i.id); }
+  item(id) { return this.ITEMS.find((i) => i.id === id); }
+  isJudged(id) { const j = this.state.judgments[id]; return !!(j && j.action); }
+  advance(fromId) {
+    const ids = this.flatIds();
+    const start = ids.indexOf(fromId);
+    for (let k = 1; k <= ids.length; k++) {
+      const id = ids[(start + k) % ids.length];
+      if (!this.isJudged(id) && id !== fromId) return id;
+    }
+    return fromId;
+  }
+  move(dir) {
+    const ids = this.flatIds();
+    const i = ids.indexOf(this.state.selId);
+    const n = Math.min(ids.length - 1, Math.max(0, i + dir));
+    this.setState({ selId: ids[n], interview: null, missingOpen: false });
+  }
+  showToast(msg, undoId) {
+    clearTimeout(this.toastT);
+    this.setState({ toast: { msg, undoId: undoId || null } });
+    this.toastT = setTimeout(() => this.setState({ toast: null }), 6000);
+  }
+  commit(id, action, opts = {}) {
+    if (this.props.readOnly) { this.showToast('Read-only right now — this call was not saved.'); return; }
+    const it = this.item(id);
+    const label = { essential: `essential (top ${opts.withinTop || this.state.withinTop})`, helpful: 'helpful', irrelevant: 'not relevant', missing: 'missing passage' }[action];
+    const j = { action, withinTop: opts.withinTop, conceptFlag: opts.conceptFlag || false, missingRef: opts.missingRef };
+    const judgments = { ...this.state.judgments, [id]: j };
+    let text = `Marked ${it.ref} ${label} for “${it.q}”`;
+    if (action === 'irrelevant') text += opts.conceptFlag ? ` — “${it.namedBy}” queued for review in the theme files` : ' — matched words, not meaning';
+    if (action === 'missing') text = `Added ${opts.missingRef} to the answers for “${it.q}”`;
+    const history = [{ when: 'Just now', text, replaced: false }, ...this.state.history];
+    const next = this.advance(id);
+    this.setState({ judgments, history, selId: next, interview: null, missingOpen: false, missingRef: '', missingNote: '' });
+    this.showToast(`Marked ${it.ref} ${action === 'missing' ? '— passage added' : label}`, id);
+  }
+  undo(id) {
+    if (!id || !this.state.judgments[id]) return;
+    const it = this.item(id);
+    const judgments = { ...this.state.judgments, [id]: null };
+    const history = [{ when: 'Just now', text: `Reopened ${it.ref} — the earlier call stays on record, replaced by this newer one`, replaced: false }, ...this.state.history.map((h, i) => (i === 0 ? { ...h, replaced: true, sub: 'Replaced by a newer call.' } : h))];
+    clearTimeout(this.toastT);
+    this.setState({ judgments, history, selId: id, toast: null });
+  }
+  startNotRelevant() {
+    const it = this.item(this.state.selId);
+    if (!it || this.isJudged(it.id)) return;
+    this.setState({ interview: { id: it.id, mode: it.namedBy ? 'concept' : 'auto', step: 0 }, missingOpen: false });
+  }
+  onKey(e) {
+    const s = this.state;
+    const tag = (e.target && e.target.tagName) || '';
+    const typing = tag === 'INPUT' || tag === 'TEXTAREA';
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); this.setState({ lookupOpen: !s.lookupOpen, lookupQ: '', lookupIdx: 0 }); return; }
+    if (s.onboardStep >= 0) {
+      const want = ['j', 'e', '?'][s.onboardStep];
+      if (e.key.toLowerCase() === want || (want === '?' && e.key === '?')) {
+        e.preventDefault();
+        if (s.onboardStep === 2) { try { localStorage.setItem('study.onboarded', '1'); } catch (err) {} this.setState({ onboardStep: -1 }); }
+        else this.setState({ onboardStep: s.onboardStep + 1 });
+      }
+      return;
+    }
+    if (s.lookupOpen) {
+      if (e.key === 'Escape') this.setState({ lookupOpen: false });
+      if (e.key === 'ArrowDown') { e.preventDefault(); this.setState({ lookupIdx: s.lookupIdx + 1 }); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); this.setState({ lookupIdx: Math.max(0, s.lookupIdx - 1) }); }
+      if (e.key === 'Enter') { this.startCase(); }
+      return;
+    }
+    if (s.helpOpen) { if (e.key === 'Escape' || e.key === '?') this.setState({ helpOpen: false }); return; }
+    if (typing) { if (e.key === 'Escape') this.setState({ missingOpen: false, interview: null }); return; }
+    if (e.key === '?') { e.preventDefault(); this.setState({ helpOpen: true }); return; }
+    if (e.key.toLowerCase() === 'u') { const last = Object.keys(s.judgments).reverse().find((k) => s.judgments[k]); if (s.toast && s.toast.undoId) this.undo(s.toast.undoId); else if (last) this.undo(last); return; }
+    if (s.screen === 'review') {
+      const k = e.key.toLowerCase();
+      if (k === 'j' || e.key === 'ArrowDown') { e.preventDefault(); this.move(1); }
+      if (k === 'k' || e.key === 'ArrowUp') { e.preventDefault(); this.move(-1); }
+      if (s.interview) return;
+      if (k === 'e') this.commit(s.selId, 'essential', { withinTop: s.withinTop });
+      if (k === 'h') this.commit(s.selId, 'helpful');
+      if (k === 'x') this.startNotRelevant();
+      if (k === 'm') this.setState({ missingOpen: true, interview: null });
+      if (e.key === 'Escape') this.setState({ missingOpen: false, interview: null });
+    } else if (s.screen === 'compare' && !s.cmp.call) {
+      const k = e.key.toLowerCase();
+      if (k === 'a') this.cmpCall('A wins');
+      if (k === 'b') this.cmpCall('B wins');
+      if (k === 't') this.cmpCall('Tie');
+      if (k === 'w') this.cmpCall('Both wrong');
+      if (k === 'j' || e.key === 'ArrowDown') { e.preventDefault(); this.setState({ cmp: { ...s.cmp, sel: Math.min(3, s.cmp.sel + 1) } }); }
+      if (k === 'k' || e.key === 'ArrowUp') { e.preventDefault(); this.setState({ cmp: { ...s.cmp, sel: Math.max(0, s.cmp.sel - 1) } }); }
+    }
+  }
+  cmpCall(call) {
+    if (this.props.readOnly) { this.showToast('Read-only right now — this call was not saved.'); return; }
+    this.setState({ cmp: { ...this.state.cmp, call } });
+  }
+  startCase() {
+    const q = this.state.lookupQ.trim();
+    if (!q) return;
+    this.setState({ lookupOpen: false, screen: 'review' });
+    this.showToast(`Started a review case for “${q}” — it will appear in next week’s queue.`);
+  }
+  lookupData() {
+    const q = this.state.lookupQ.trim().toLowerCase();
+    if (!q) return [];
+    const all = [
+      ...this.ITEMS.map((i) => ({ ref: i.ref, text: i.raw.replace(/[\^*]/g, '').replace(/\d+(?=[A-Z])/g, '') })),
+      ...Object.values(this.PASSAGES).map((p) => ({ ref: p.ref, text: p.raw.replace(/[\^*]/g, '') })),
+    ];
+    return all.filter((v) => v.ref.toLowerCase().includes(q) || v.text.toLowerCase().includes(q)).slice(0, 6);
+  }
+  renderVals() {
+    const s = this.state, P = this.props;
+    const readOnly = !!P.readOnly;
+    const resolved = s.themePref === 'system' ? (s.systemDark ? 'dark' : 'light') : s.themePref;
+    const cur = this.item(s.selId);
+    const curJ = cur ? s.judgments[cur.id] : null;
+    const total = this.ITEMS.length;
+    const judgedCount = this.flatIds().filter((id) => this.isJudged(id)).length;
+    const allJudged = judgedCount === total;
+    const vColor = { essential: 'var(--v-affirm)', helpful: 'var(--v-affirm)', irrelevant: 'var(--v-notrel)', missing: 'var(--v-missing)' };
+    const vWash = { essential: 'var(--v-affirm-wash)', helpful: 'var(--v-affirm-wash)', irrelevant: 'var(--v-notrel-wash)', missing: 'var(--v-missing-wash)' };
+    const groupsMap = {};
+    this.ITEMS.forEach((it) => { (groupsMap[it.q] = groupsMap[it.q] || []).push(it); });
+    const groups = Object.keys(groupsMap).map((q) => ({
+      q, count: `${groupsMap[q].filter((it) => this.isJudged(it.id)).length}/${groupsMap[q].length}`,
+      rows: groupsMap[q].map((it) => {
+        const sel = it.id === s.selId, j = s.judgments[it.id];
+        return {
+          ref: it.ref, meta: it.src, sel,
+          bg: sel ? 'var(--accent-wash)' : 'transparent',
+          edge: sel ? 'var(--accent)' : 'transparent',
+          refColor: j ? 'var(--text-3)' : 'var(--ink)', refWeight: sel ? '600' : '400',
+          dotBg: j ? vColor[j.action] : 'transparent',
+          dotBorder: j ? vColor[j.action] : 'var(--hairline-strong)',
+          dotLabel: j ? `Judged ${j.action}` : 'Not judged yet',
+          checked: !!s.checked[it.id],
+          toggle: (e) => { e.stopPropagation(); this.setState({ checked: { ...s.checked, [it.id]: !s.checked[it.id] } }); },
+          select: () => this.setState({ selId: it.id, interview: null, missingOpen: false }),
+          keySelect: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.setState({ selId: it.id }); } },
+        };
+      }),
+    }));
+    const iv = s.interview;
+    const ivItem = iv ? this.item(iv.id) : null;
+    let interviewQ = '', yesL = '', noL = '', yesFn = () => {}, noFn = () => {};
+    if (iv && ivItem) {
+      if (iv.mode === 'auto') {
+        interviewQ = `This looks like a word match without the meaning — “${ivItem.matched}” appears, but the verse is about something else. Mark it not relevant?`;
+        yesL = 'Yes — not relevant'; noL = 'Cancel';
+        yesFn = () => this.commit(iv.id, 'irrelevant', {});
+        noFn = () => this.setState({ interview: null });
+      } else if (iv.step === 0) {
+        interviewQ = `This verse ranked because it is listed under the theme “${ivItem.namedBy}.” Does ${ivItem.ref} really speak about that?`;
+        yesL = 'Yes, it does'; noL = 'No, it doesn’t';
+        yesFn = () => this.setState({ interview: { ...iv, step: 1 } });
+        noFn = () => this.commit(iv.id, 'irrelevant', { conceptFlag: true });
+      } else {
+        interviewQ = `Then is it just not a good answer for “${ivItem.q}”?`;
+        yesL = 'Right — not a fit here'; noL = 'Actually, keep it';
+        yesFn = () => this.commit(iv.id, 'irrelevant', {});
+        noFn = () => this.setState({ interview: null });
+      }
+    }
+    const mKey = s.missingRef.trim().toLowerCase().replace(/\s+/g, ' ').replace(/–/g, '-').replace(/psalms/, 'psalm');
+    const mHit = Object.keys(this.PASSAGES).find((k) => mKey && (k.startsWith(mKey) || mKey.startsWith(k)));
+    const mPass = mHit ? this.PASSAGES[mHit] : null;
+    const counts = { essential: 0, helpful: 0, irrelevant: 0, missing: 0 };
+    this.flatIds().forEach((id) => { const j = s.judgments[id]; if (j && j.action) counts[j.action] += 1; });
+    const fixtureFiles = Object.keys(groupsMap).map((q) => ({
+      q,
+      rows: groupsMap[q].map((it) => ({ it, j: s.judgments[it.id] })).filter((x) => x.j && x.j.action).map((x) => ({
+        text: x.j.action === 'essential' ? `Must rank: ${x.it.ref} in the top ${x.j.withinTop}`
+          : x.j.action === 'helpful' ? `Good answer: ${x.it.ref}`
+          : x.j.action === 'missing' ? `Must rank (new passage): ${x.j.missingRef}`
+          : `Must not rank: ${x.it.ref} — matched words, not meaning`,
+      })),
+    })).filter((f) => f.rows.length > 0);
+    const digest = `${judgedCount}-judgments-${fixtureFiles.length}-files-4e7a`;
+    const signReady = s.signTyped.trim() === digest && judgedCount > 0 && !readOnly;
+    const lookupRows = this.lookupData();
+    const lookupIdx = Math.min(s.lookupIdx, Math.max(0, lookupRows.length - 1));
+    const cmpCallDone = !!s.cmp.call;
+    const cmpSel = (s.cmp.sel < this.CMP.a.length) ? this.CMP.a[s.cmp.sel] : this.CMP.a[0];
+    const bMatch = this.CMP.b.find((r) => r.ref === cmpSel.ref);
+    const onboardSteps = [
+      { label: 'Welcome · 1 of 3', kbd: 'J', title: 'Move through the queue', text: 'J and K (or the arrow keys) walk you down and up the list of passages waiting for your call.' },
+      { label: 'Welcome · 2 of 3', kbd: 'E', title: 'Judge with one letter', text: 'E marks a passage essential. H is helpful, X is not relevant, M records a missing passage.' },
+      { label: 'Welcome · 3 of 3', kbd: '?', title: 'Help is always one key away', text: 'The question mark opens every shortcut, grouped by what you are doing.' },
+    ];
+    const ob = s.onboardStep >= 0 ? onboardSteps[s.onboardStep] : null;
+    const checkedIds = Object.keys(s.checked).filter((k) => s.checked[k]);
+    const mkTab = (id, label) => ({
+      label, active: s.screen === id, aria: s.screen === id ? 'page' : 'false',
+      color: s.screen === id ? 'var(--ink)' : 'var(--text-3)', weight: s.screen === id ? '600' : '400',
+      go: () => this.setState({ screen: id }),
+    });
+    return {
+      themeAttr: resolved, readOnly,
+      navTabs: [mkTab('review', 'Review'), mkTab('compare', 'Compare'), mkTab('history', 'History'), mkTab('finish', 'Finish up')],
+      isReview: s.screen === 'review', isCompare: s.screen === 'compare', isHistory: s.screen === 'history', isFinish: s.screen === 'finish', isAdvanced: s.screen === 'advanced',
+      advColor: s.screen === 'advanced' ? 'var(--ink)' : 'var(--text-faint)',
+      goAdvanced: () => this.setState({ screen: 'advanced' }),
+      goFinish: () => this.setState({ screen: 'finish' }),
+      goReviewBtn: () => this.setState({ screen: 'review' }),
+      themeLabel: { light: '☀ Light', dark: '☾ Dark', system: '◐ Auto' }[s.themePref],
+      themeTitle: `Theme: ${s.themePref}. Click to change.`,
+      cycleTheme: () => { const next = { system: 'light', light: 'dark', dark: 'system' }[s.themePref]; try { localStorage.setItem('study.theme', next); } catch (e) {} this.setState({ themePref: next }); },
+      remainingLabel: allJudged ? 'done' : `${total - judgedCount} to go`,
+      groups, totalCount: total, allJudged, hasCurrent: !allJudged && !!cur,
+      curRef: cur ? cur.ref : '', curQuery: cur ? cur.q : '',
+      curPos: cur ? groupsMap[cur.q].indexOf(cur) + 1 : 0, curTotal: cur ? groupsMap[cur.q].length : 0,
+      verseSegs: cur ? this.parse(cur.raw) : [],
+      curJudged: !!curJ, curCallLabel: curJ ? ({ essential: `Essential (top ${curJ.withinTop})`, helpful: 'Helpful', irrelevant: 'Not relevant', missing: 'Missing passage recorded' }[curJ.action]) : '',
+      curCallColor: curJ ? vColor[curJ.action] : 'transparent', curCallWash: curJ ? vWash[curJ.action] : 'transparent',
+      undoCurrent: () => this.undo(cur.id),
+      whyTab: s.whyTab === 'why', ctxTab: s.whyTab === 'ctx',
+      whyTabSel: s.whyTab === 'why' ? 'true' : 'false', ctxTabSel: s.whyTab === 'ctx' ? 'true' : 'false',
+      whyTabColor: s.whyTab === 'why' ? 'var(--ink)' : 'var(--text-3)', ctxTabColor: s.whyTab === 'ctx' ? 'var(--ink)' : 'var(--text-3)',
+      whyTabWeight: s.whyTab === 'why' ? '600' : '400', ctxTabWeight: s.whyTab === 'ctx' ? '600' : '400',
+      showWhy: () => this.setState({ whyTab: 'why' }), showCtx: () => this.setState({ whyTab: 'ctx' }),
+      whyRows: cur ? [
+        { k: 'Search', v: `“${cur.q}”` },
+        { k: 'Named by', v: cur.namedBy || 'No theme names this verse — it matched on wording alone' },
+        { k: 'Matched', v: cur.matched },
+        { k: 'Came from', v: cur.src },
+      ] : [],
+      curReason: cur ? cur.reason : '', curContext: cur ? cur.ctx : '',
+      verdictBarShown: s.screen === 'review' && !allJudged && !s.interview && !s.missingOpen && checkedIds.length === 0 && s.onboardStep < 0,
+      withinTops: [1, 3, 5, 10].map((n) => ({
+        n, pick: (e) => { e.stopPropagation(); this.setState({ withinTop: n }); },
+        bg: s.withinTop === n ? 'var(--accent)' : 'transparent',
+        color: s.withinTop === n ? 'var(--on-accent)' : 'var(--text-2)',
+        border: s.withinTop === n ? 'var(--accent)' : 'transparent',
+      })),
+      markEssential: () => this.commit(s.selId, 'essential', { withinTop: s.withinTop }),
+      markHelpful: () => this.commit(s.selId, 'helpful'),
+      markNotRelevant: () => this.startNotRelevant(),
+      openMissing: () => this.setState({ missingOpen: true, interview: null }),
+      interviewOpen: !!iv, interviewQ, interviewYesLabel: yesL, interviewNoLabel: noL, interviewYes: yesFn, interviewNo: noFn,
+      missingOpen: s.missingOpen, missingRef: s.missingRef, missingNote: s.missingNote,
+      onMissingRef: (e) => this.setState({ missingRef: e.target.value }),
+      onMissingNote: (e) => this.setState({ missingNote: e.target.value }),
+      missingHasPreview: !!mPass, missingNoPreview: !mPass,
+      missingSegs: mPass ? this.parse(mPass.raw) : [],
+      missingTops: [1, 3, 5, 10].map((n) => ({
+        n, pick: () => this.setState({ missingTop: n }),
+        bg: s.missingTop === n ? 'var(--accent)' : 'transparent',
+        color: s.missingTop === n ? 'var(--on-accent)' : 'var(--text-2)',
+        border: s.missingTop === n ? 'var(--accent)' : 'var(--hairline-strong)',
+      })),
+      missingDisabled: !mPass, missingOpacity: mPass ? '1' : '0.45',
+      missingSubmit: () => { if (mPass) this.commit(s.selId, 'missing', { missingRef: mPass.ref, withinTop: s.missingTop }); },
+      missingCancel: () => this.setState({ missingOpen: false, missingRef: '', missingNote: '' }),
+      bulkShown: checkedIds.length > 0, bulkCount: checkedIds.length,
+      bulkHelpful: () => { if (readOnly) { this.showToast('Read-only right now — nothing was saved.'); return; } const judgments = { ...s.judgments }; const history = [...s.history]; checkedIds.forEach((id) => { judgments[id] = { action: 'helpful' }; history.unshift({ when: 'Just now', text: `Marked ${this.item(id).ref} helpful for “${this.item(id).q}”`, replaced: false }); }); this.setState({ judgments, history, checked: {} }); this.showToast(`Marked ${checkedIds.length} passages helpful`); },
+      bulkClear: () => this.setState({ checked: {} }),
+      toastShown: !!s.toast, toastMsg: s.toast ? s.toast.msg : '', toastHasUndo: !!(s.toast && s.toast.undoId),
+      toastUndo: () => this.undo(s.toast.undoId),
+      cmpQuery: this.CMP.q, cmpRevealed: cmpCallDone, cmpNotRevealed: !cmpCallDone,
+      cmpRevealTitle: s.cmp.call === 'Tie' ? 'You called it a tie.' : s.cmp.call === 'Both wrong' ? 'You sent both back.' : `You preferred Set ${s.cmp.call === 'A wins' ? 'A — the current engine' : 'B — the candidate'}.`,
+      cmpRevealBody: 'Your preference is recorded exactly as you made it, blind. This call is final: it cannot be edited, only outweighed by future comparisons.',
+      cmpSides: [
+        { name: 'A', rows: this.CMP.a.map((r, i) => ({ n: i + 1, ref: r.ref, select: () => this.setState({ cmp: { ...s.cmp, sel: i } }), bg: s.cmp.sel === i ? 'var(--accent-wash)' : 'transparent', edge: s.cmp.sel === i ? 'var(--accent)' : 'transparent', color: s.cmp.sel === i ? 'var(--ink)' : 'var(--text-2)', weight: s.cmp.sel === i ? '600' : '400' })) },
+        { name: 'B', rows: this.CMP.b.map((r, i) => ({ n: i + 1, ref: r.ref, select: () => this.setState({ cmp: { ...s.cmp, sel: i } }), bg: s.cmp.sel === i ? 'var(--accent-wash)' : 'transparent', edge: s.cmp.sel === i ? 'var(--accent)' : 'transparent', color: s.cmp.sel === i ? 'var(--ink)' : 'var(--text-2)', weight: s.cmp.sel === i ? '600' : '400' })) },
+      ],
+      cmpSelRef: cmpSel.ref, cmpSelVerse: cmpSel.verse,
+      cmpSelWhyA: cmpSel.whyA, cmpSelWhyB: bMatch ? bMatch.whyB : cmpSel.whyB,
+      cmpButtons: [
+        { kbd: 'A', label: 'A wins', go: () => this.cmpCall('A wins') },
+        { kbd: 'B', label: 'B wins', go: () => this.cmpCall('B wins') },
+        { kbd: 'T', label: 'Tie', go: () => this.cmpCall('Tie') },
+        { kbd: 'W', label: 'Both wrong', go: () => this.cmpCall('Both wrong') },
+      ],
+      historyRows: s.history.map((h) => ({ when: h.when, text: h.text, color: h.replaced ? 'var(--text-faint)' : 'var(--text-2)', deco: h.replaced ? 'line-through' : 'none', hasSub: !!h.sub, sub: h.sub || '' })),
+      finishStats: [
+        { n: String(counts.essential), label: 'Essential', color: 'var(--v-affirm)' },
+        { n: String(counts.helpful), label: 'Helpful', color: 'var(--v-affirm)' },
+        { n: String(counts.irrelevant), label: 'Not relevant', color: 'var(--v-notrel)' },
+        { n: String(counts.missing), label: 'Missing passages', color: 'var(--v-missing)' },
+      ],
+      hasPending: !allJudged, pendingCount: `${total - judgedCount} of ${total} passages are`,
+      fixtureFiles,
+      signDigest: digest, signTyped: s.signTyped,
+      onSignTyped: (e) => this.setState({ signTyped: e.target.value }),
+      signDisabled: !signReady, signOpacity: signReady ? '1' : '0.45',
+      signButtonLabel: `Write ${judgedCount} judgment${judgedCount === 1 ? '' : 's'} to fixture files`,
+      signSubmit: () => { if (signReady) this.setState({ signed: true, signedSummary: `${judgedCount} judgments are now in the answer files.` }); },
+      signedDone: s.signed, notSignedDone: !s.signed, signedSummary: s.signedSummary,
+      advSections: [
+        { title: 'Health', badge: 'healthy', badgeColor: 'var(--v-affirm)', rows: [
+          { k: 'Engine', v: 'scripture-engine 2.4.1', font: 'inherit' },
+          { k: 'Corpus fingerprint', v: 'c9a41f72e8d03b5a', font: "ui-monospace,'SF Mono',Consolas,monospace" },
+          { k: 'Layer fingerprint', v: '7d2e90bb14c6aa08', font: "ui-monospace,'SF Mono',Consolas,monospace" },
+          { k: 'Mode', v: 'read-write · CSRF guard active', font: 'inherit' },
+        ] },
+        { title: 'Admission', badge: '1 candidate waiting', badgeColor: 'var(--v-missing)', rows: [
+          { k: 'Candidate', v: 'cand-2026-08-19 · 3 cases · gauntlet clean', font: 'inherit' },
+          { k: 'Subject digest', v: 'sha256:91f4…c07a', font: "ui-monospace,'SF Mono',Consolas,monospace" },
+        ] },
+        { title: 'Changes & publish', badge: 'nothing staged', badgeColor: 'var(--text-3)', rows: [
+          { k: 'Apply journal', v: 'empty — last apply 6 days ago', font: 'inherit' },
+          { k: 'Publish gate', v: 'typed-digest confirmation required (unchanged)', font: 'inherit' },
+        ] },
+        { title: 'Quality & telemetry audits', badge: 'ok', badgeColor: 'var(--v-affirm)', rows: [
+          { k: 'Holdout drift', v: 'none detected in the last 30 days', font: 'inherit' },
+          { k: 'Telemetry audit', v: 'last audit clean · 0 anomalies', font: 'inherit' },
+          { k: 'Review sessions', v: '2 open · oldest 9 days', font: 'inherit' },
+        ] },
+      ],
+      lookupOpen: s.lookupOpen, lookupQ: s.lookupQ,
+      openLookup: () => this.setState({ lookupOpen: true, lookupQ: '', lookupIdx: 0 }),
+      closeLookup: () => this.setState({ lookupOpen: false }),
+      onLookupQ: (e) => this.setState({ lookupQ: e.target.value, lookupIdx: 0 }),
+      lookupResults: lookupRows.map((r, i) => ({ ref: r.ref, snippet: r.text, sel: i === lookupIdx, bg: i === lookupIdx ? 'var(--accent-wash)' : 'transparent', start: () => this.startCase() })),
+      lookupEmpty: lookupRows.length === 0,
+      stop: (e) => e.stopPropagation(),
+      helpOpen: s.helpOpen,
+      openHelp: () => this.setState({ helpOpen: true }),
+      closeHelp: () => this.setState({ helpOpen: false }),
+      helpGroups: [
+        { title: 'Move', rows: [{ label: 'Next passage', kbd: 'J' }, { label: 'Previous passage', kbd: 'K' }] },
+        { title: 'Judge', rows: [{ label: 'Essential', kbd: 'E' }, { label: 'Helpful', kbd: 'H' }, { label: 'Not relevant', kbd: 'X' }, { label: 'Missing passage', kbd: 'M' }, { label: 'Undo the last call', kbd: 'U' }] },
+        { title: 'Compare', rows: [{ label: 'A wins / B wins', kbd: 'A · B' }, { label: 'Tie / Both wrong', kbd: 'T · W' }] },
+        { title: 'Everywhere', rows: [{ label: 'Quick lookup', kbd: '⌘K' }, { label: 'This sheet', kbd: '?' }] },
+      ],
+      onboardOpen: !!ob,
+      onboardStepLabel: ob ? ob.label : '', onboardKbd: ob ? ob.kbd : '', onboardTitle: ob ? ob.title : '', onboardText: ob ? ob.text : '',
+      onboardSkip: () => { try { localStorage.setItem('study.onboarded', '1'); } catch (e) {} this.setState({ onboardStep: -1 }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

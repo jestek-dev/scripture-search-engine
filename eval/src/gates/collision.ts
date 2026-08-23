@@ -14,6 +14,11 @@
 
 import { significantWords } from '@jestek-dev/scripture-engine';
 
+import {
+  collapseAcknowledgmentKey,
+  parseLexiconInventory,
+  type LexiconCollapseAcknowledgment,
+} from '../../../pipeline/src/importers/lexiconInventory.js';
 import { fail, pass, type GateFinding, type GateResult } from './types.js';
 
 export interface ConceptRecord {
@@ -152,10 +157,12 @@ export function collisionGate(
  * accident — the query "god" fired `presence-of-god` for weeks because nobody
  * could see that "god with us" had collapsed.
  *
- * Reported, never blocking. Most collapses are benign and several are actively
- * useful (`risen`, `anxiou`, `conqueror`). The failure this prevents is not
- * "a collapse exists" but "a collapse exists and nobody knows", so the right
- * output is a visible list a curator can scan, not a build stop.
+ * Most collapses are benign and several are actively useful (`risen`,
+ * `anxiou`, `conqueror`). The failure this prevents is not "a collapse
+ * exists" but "a collapse exists and nobody decided", so the enumeration
+ * stays a visible list a curator can scan — and lexiconInventoryCheck below
+ * turns it into a deny-list: every collapse must be acknowledged in
+ * `ontology/lexicon-inventory.yaml` or G4 fails naming it.
  */
 export function singleTokenCollapses(
   concepts: readonly ConceptRecord[],
@@ -180,4 +187,147 @@ export function singleTokenCollapses(
         ? -1
         : 1,
   );
+}
+
+export const LEXICON_INVENTORY_PATH = 'ontology/lexicon-inventory.yaml';
+
+/**
+ * The acknowledged-or-blocked deny-list over singleTokenCollapses.
+ *
+ * The enumeration above was advisory for a reason — most collapses are
+ * legitimate — but advisory-only meant a collapse could exist with nobody
+ * having decided it. This check closes that: every current collapse must be
+ * acknowledged by a matching entry in `ontology/lexicon-inventory.yaml`
+ * ({ conceptId, phrase, token, intended: true, reviewedBy, date, note }),
+ * and every entry must acknowledge a collapse that still exists with the
+ * token it still collapses to. Unacknowledged collapses fail; stale or
+ * malformed acknowledgments fail too — a record that no longer matches the
+ * lexicon it describes is itself a defect (same design as G1's stale
+ * acknowledgedUnarchivedRollingSources rule). Acknowledged collapses stay
+ * visible as findings on the passing gate: the diagnostic never disappears,
+ * it just stops being undecided.
+ *
+ * The gate never scores theology — it enforces that a human DECIDED, which
+ * is exactly the shape covenant #6 allows.
+ */
+export function lexiconInventoryCheck(
+  concepts: readonly ConceptRecord[],
+  inventoryFileContents: string | null,
+): GateResult {
+  const title = 'Single-token collapse inventory';
+  const collapses = singleTokenCollapses(concepts);
+  // Keys join via the parser's own collapseAcknowledgmentKey — the dedupe
+  // and the deny-list matching are two halves of one mechanism and must
+  // never disagree on what identifies an entry.
+  const collapseByKey = new Map(
+    collapses.map((entry) => [collapseAcknowledgmentKey(entry.conceptId, entry.phrase), entry]),
+  );
+
+  const acknowledged: LexiconCollapseAcknowledgment[] = [];
+  const findings: GateFinding[] = [];
+
+  if (inventoryFileContents === null) {
+    if (collapses.length === 0) {
+      return pass(
+        'G4-collision',
+        title,
+        'no lexicon phrase collapses to a single token; no inventory file required',
+        { singleTokenCollapses: 0, acknowledgedCollapses: 0 },
+      );
+    }
+    findings.push({
+      message:
+        `${LEXICON_INVENTORY_PATH} is missing but ${collapses.length} lexicon phrase(s) ` +
+        'collapse to a single token — every collapse needs an explicit human decision',
+      categoryCode: 'sse.gauntlet.v1.finding.g4-collision.lexicon-inventory-missing',
+    });
+  } else {
+    const { collapses: entries, errors } = parseLexiconInventory(inventoryFileContents);
+    for (const error of errors) {
+      findings.push({
+        message: `${LEXICON_INVENTORY_PATH}: ${error}`,
+        categoryCode: 'sse.gauntlet.v1.finding.g4-collision.lexicon-inventory-malformed',
+      });
+    }
+    for (const entry of entries) {
+      const live = collapseByKey.get(collapseAcknowledgmentKey(entry.conceptId, entry.phrase));
+      if (!live) {
+        findings.push({
+          message:
+            `stale acknowledgment: ${entry.conceptId} "${entry.phrase}" is acknowledged in ` +
+            `${LEXICON_INVENTORY_PATH} but no such single-token collapse exists any more ` +
+            '(concept or phrase removed, rephrased, or no longer collapsing) — delete the entry',
+          subjects: [entry.conceptId],
+          categoryCode: 'sse.gauntlet.v1.finding.g4-collision.lexicon-inventory-stale',
+        });
+        continue;
+      }
+      if (live.token !== entry.token) {
+        findings.push({
+          message:
+            `stale acknowledgment: ${entry.conceptId} "${entry.phrase}" now collapses to ` +
+            `"${live.token}" but the inventory acknowledges "${entry.token}" — ` +
+            're-review the entry against the current tokenizer output',
+          subjects: [entry.conceptId],
+          categoryCode: 'sse.gauntlet.v1.finding.g4-collision.lexicon-inventory-stale',
+        });
+        continue;
+      }
+      acknowledged.push(entry);
+    }
+  }
+
+  const acknowledgedKeys = new Set(
+    acknowledged.map((entry) => collapseAcknowledgmentKey(entry.conceptId, entry.phrase)),
+  );
+  for (const collapse of collapses) {
+    if (acknowledgedKeys.has(collapseAcknowledgmentKey(collapse.conceptId, collapse.phrase))) {
+      continue;
+    }
+    findings.push({
+      message:
+        `${collapse.conceptId}: "${collapse.phrase}" normalizes to the single token ` +
+        `"${collapse.token}", so the bare query "${collapse.token}" fires this concept ` +
+        'and the phrase faces the thin-cue gate inside longer queries. Acknowledge it in ' +
+        `${LEXICON_INVENTORY_PATH} ({ conceptId, phrase, token, intended: true, ` +
+        'reviewedBy, date, note }) or rephrase/remove the lexicon entry.',
+      subjects: [collapse.conceptId],
+      categoryCode: 'sse.gauntlet.v1.finding.g4-collision.lexicon-collapse-unacknowledged',
+    });
+  }
+
+  const metrics = {
+    singleTokenCollapses: collapses.length,
+    acknowledgedCollapses: acknowledged.length,
+  };
+  if (findings.length > 0) {
+    return fail(
+      'G4-collision',
+      title,
+      `${findings.length} single-token-collapse finding(s): every collapse must carry ` +
+        'a current human acknowledgment',
+      findings,
+      metrics,
+    );
+  }
+  if (collapses.length === 0) {
+    return pass('G4-collision', title, 'no single-token collapses', metrics);
+  }
+  // The diagnostic listing survives acknowledgment: visible, never blocking.
+  return {
+    ...pass(
+      'G4-collision',
+      title,
+      `${collapses.length} single-token collapse(s), all acknowledged in ` +
+        LEXICON_INVENTORY_PATH,
+      metrics,
+    ),
+    findings: acknowledged.map((entry) => ({
+      message:
+        `${entry.conceptId}: "${entry.phrase}" -> "${entry.token}" — acknowledged by ` +
+        `${entry.reviewedBy} (${entry.date}): ${entry.note}`,
+      subjects: [entry.conceptId],
+      categoryCode: 'sse.gauntlet.v1.finding.g4-collision.lexicon-collapse-acknowledged',
+    })),
+  };
 }

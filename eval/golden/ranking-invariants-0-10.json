@@ -1,23 +1,26 @@
 {
   "id": "ranking-invariants-0-10",
-  "status": "pending",
+  "status": "active",
   "note": [
-    "PENDING RANKER TWIN for the 0.10.0 ranking stages (plan Phase-1 preamble",
+    "RANKER TWIN for the 0.10.0 ranking stages (plan Phase-1 preamble",
     "rider / P3.1 + P3.3 field-4 obligations; engine-scoring PR-1(a)/(b)).",
-    "Authored 2026-08-21 on engine 0.9.0, where the failing cases below are",
-    "the measured-gap record; promoted to active in the 0.10.0 squash PR",
-    "(PR-2) alongside the ENGINE_VERSION bump. Pending ranker fixtures never",
-    "execute in G2/G3, so the fail-today state is demonstrated by out-of-band",
-    "replay pasted in the item log, per the F21 workaround.",
+    "Authored 2026-08-21 on engine 0.9.0, where the failing cases below were",
+    "the measured-gap record. PROMOTED pending -> active at stage 3 (P3.3,",
+    "the same commit that lands the taper/subsumption/tie-break/parity",
+    "mechanisms): all three cases pass on the 0.10.0 stack, and the branch",
+    "squash-merges as ONE PR-2 commit carrying the ENGINE_VERSION bump, so",
+    "the promotion still travels with the bump as originally specified.",
     "",
     "J-question discipline: cases encode BEHAVIOR, never a disputed constant.",
     "The sole-evidence case holds for any cap below token_overlap's 10 — the",
     "specific value 6 is Jesse's (J20). The tie-break case encodes the plan's",
     "recommended default (curated anchor before bare verbatim at an exact",
-    "authoritative tie) and awaits J25 ratification before promotion. The",
-    "taper case locks the stage-3 invariant at the evidence level; its",
-    "fail-today acceptance evidence is the lords-supper corpus fixture",
-    "(J19 owns the taper constant; J3 owns the ad8 ordering — reserved)."
+    "authoritative tie); J25's ratification rides the PR-2 approval flow, the",
+    "P3.1 precedent for plan-recommended encodings — a veto re-cuts the case",
+    "with the ruling before PR-2 merges. The taper case locks the stage-3",
+    "invariant at the evidence level; its acceptance evidence is the",
+    "lords-supper corpus fixture (J19 owns the taper constant; J3 owns the",
+    "ad8 ordering — still reserved, no ad8 expectation is encoded here)."
   ],
   "cases": [
     {

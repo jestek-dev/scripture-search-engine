@@ -83,6 +83,60 @@ describe('signal budgets (guardrail G6)', () => {
     expect(result.score).toBeCloseTo(expected);
   });
 
+  describe('sole-evidence floor (0.10.0 stage 1)', () => {
+    it('caps a lone translation_variant at the sole-evidence ceiling, below token_overlap', () => {
+      const sole = applyBudgets([ev('translation_variant', 1)]);
+      expect(sole.score).toBe(DEFAULT_BUDGETS.soleEvidenceMaxPoints!.translation_variant);
+      expect(sole.score).toBeLessThan(DEFAULT_BUDGETS.families.token_overlap.maxPoints);
+      expect(sole.capped).toBe(true);
+    });
+
+    it('ranks a sole variant hint below an honest text match (the prior arithmetic inverted)', () => {
+      // 0.9.0: sole variant 14 > 10 = 0.7x10 (token_overlap) + 0.5x6 (proximity).
+      // Under the floor the hint scores 6 and the honest match wins.
+      const honestTextMatch = applyBudgets([
+        ev('token_overlap', 0.7),
+        ev('proximity', 0.5),
+      ]);
+      const soleVariant = applyBudgets([ev('translation_variant', 1)]);
+      expect(soleVariant.score).toBeLessThan(honestTextMatch.score);
+    });
+
+    it('leaves a corroborated variant untouched: any unlisted family disables the step', () => {
+      const corroborated = applyBudgets([
+        ev('translation_variant', 1),
+        ev('token_overlap', 0.3),
+      ]);
+      const variant = corroborated.reasons.find((r) => r.family === 'translation_variant');
+      expect(variant!.points).toBe(DEFAULT_BUDGETS.families.translation_variant.maxPoints);
+      expect(variant!.uncappedPoints).toBeUndefined();
+      expect(corroborated.capped).toBe(false);
+    });
+
+    it('never fires below the ceiling: a weak sole variant keeps its honest points', () => {
+      const weak = applyBudgets([ev('translation_variant', 0.3)]);
+      expect(weak.score).toBeCloseTo(4.2);
+      expect(weak.capped).toBe(false);
+      expect(weak.reasons[0]!.uncappedPoints).toBeUndefined();
+    });
+
+    it('preserves uncappedPoints and the untouched label when the cap fires', () => {
+      const sole = applyBudgets([ev('translation_variant', 1, 'Worded this way in another translation')]);
+      const reason = sole.reasons[0]!;
+      expect(reason.points).toBe(6);
+      expect(reason.uncappedPoints).toBe(DEFAULT_BUDGETS.families.translation_variant.maxPoints);
+      expect(reason.label).toBe('Worded this way in another translation');
+      expect(reason.family).toBe('translation_variant');
+    });
+
+    it('is deterministic: repeated application is byte-identical', () => {
+      const evidence = [ev('translation_variant', 1)];
+      const first = applyBudgets(evidence);
+      const second = applyBudgets(evidence);
+      expect(JSON.stringify(second)).toBe(JSON.stringify(first));
+    });
+  });
+
   it('is order-independent: shuffled evidence yields the identical score and reasons', () => {
     const evidence = [
       ev('concept_anchor', 0.8, 'anchor', 'nave'),

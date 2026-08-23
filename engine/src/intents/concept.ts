@@ -12,6 +12,7 @@
  */
 
 import type { ConceptAnchorRow, CrossReferenceRow } from '../corpus/repository.js';
+import { significantWords } from '../tokenizer/index.js';
 import type { Evidence } from '../reasons/types.js';
 
 function conceptSpecificity(matchedTokenCount: number): number {
@@ -41,9 +42,23 @@ function conceptMatchStrength(
   matchedTokenCount: number,
   queryTokenCount: number,
 ): number {
+  // Full-query parity (0.10.0 stage 3): when the concept's normalized phrase
+  // accounts for EVERY significant token of the query — count equality
+  // implies set equality, because matchConcepts only matches phrases whose
+  // normalized tokens all occur among the query tokens — and is at least two
+  // tokens wide, specificity is 1. The query IS the phrase; docking it for
+  // being stored as a two-token entry made a weight-1.0 anchor worth 28 of
+  // its 40 points and let a tapered verbatim rebuke outrank the instituting
+  // passage a human curated. One- and zero-token matches keep the graded
+  // specificity: parity for a bare word would undo the thin-cue design.
+  // Deliberate, measured consequence: a stopword-heavy query that collapses
+  // to the same significant tokens as a remembered-phrasing lexicon entry
+  // gets parity — there is one tokenizer, and a query whose meaning collapses
+  // to two tokens IS a two-token query.
+  const parity = matchedTokenCount >= 2 && matchedTokenCount === queryTokenCount;
   return (
     Math.max(0, Math.min(1, anchorWeight)) *
-    conceptSpecificity(matchedTokenCount) *
+    (parity ? 1 : conceptSpecificity(matchedTokenCount)) *
     conceptCoverage(matchedTokenCount, queryTokenCount)
   );
 }
@@ -51,6 +66,66 @@ function conceptMatchStrength(
 // A bare-word cue that explains less than this share of the query's meaning
 // is too thin to activate a concept's full anchor set authoritatively.
 export const MIN_AUTHORITATIVE_BARE_CUE_IDF_SHARE = 0.2;
+
+/**
+ * One verse, one concept, ONE scored contribution (0.10.0 stage 6).
+ *
+ * The importer emits one anchor row per (entry × source), and overlapping
+ * ranges within a concept emit one row per range — so the same verse could
+ * reach the ranker several times for the SAME concept and be summed as if
+ * the entries were independent evidence. They are not: two sources naming
+ * one verse for one theme is agreement about a single fact, and G7 files
+ * agreement as one budget, not two. This is how a duplicated 1 Peter 5:7
+ * outscored peace-of-god's own weight-1.0 anchor.
+ *
+ * Groups by (conceptId, translationCode, verseId); the carrier is chosen
+ * deterministically (weight desc → sourceId asc → locator asc → anchor start
+ * asc) and provenance is NOT dropped: the surviving row's sourceId becomes
+ * the '+'-joined ascending union of the group's sources — the same
+ * convention passage_terms already uses — so one chip honestly names every
+ * agreeing source (covenant: explanations are contract; sources are named,
+ * never adjudicated). Cross-CONCEPT stacking is deliberately untouched: two
+ * different matched concepts naming one verse are two different claims.
+ * Groups keep first-occurrence order, so unmerged inputs pass through
+ * byte-identical and the output is a pure, deterministic function of the
+ * input order (the repository's ORDER BY makes that order stable).
+ */
+export function dedupeConceptAnchors(
+  anchors: readonly ConceptAnchorRow[],
+): readonly ConceptAnchorRow[] {
+  const groups = new Map<string, ConceptAnchorRow[]>();
+  const order: string[] = [];
+  for (const anchor of anchors) {
+    // U+0000 as the WRITTEN escape (never the raw byte, which turns a source
+    // file git-binary): no id component can contain it, so the joined key
+    // cannot collide across components.
+    const key = `${anchor.conceptId}\u0000${anchor.translationCode}\u0000${anchor.verseId}`;
+    const bucket = groups.get(key);
+    if (bucket) bucket.push(anchor);
+    else {
+      groups.set(key, [anchor]);
+      order.push(key);
+    }
+  }
+  return order.map((key) => {
+    const group = groups.get(key)!;
+    if (group.length === 1) return group[0]!;
+    const sorted = [...group].sort(
+      (a, b) =>
+        b.weight - a.weight ||
+        (a.sourceId < b.sourceId ? -1 : a.sourceId > b.sourceId ? 1 : 0) ||
+        ((a.locator ?? '') < (b.locator ?? '')
+          ? -1
+          : (a.locator ?? '') > (b.locator ?? '')
+            ? 1
+            : 0) ||
+        a.anchorStartVerseId - b.anchorStartVerseId,
+    );
+    const carrier = sorted[0]!;
+    const sourceIds = [...new Set(group.map((row) => row.sourceId))].sort();
+    return sourceIds.length === 1 ? carrier : { ...carrier, sourceId: sourceIds.join('+') };
+  });
+}
 
 /**
  * Anchor evidence.
@@ -76,7 +151,9 @@ export function conceptAnchorEvidence(
     strength: conceptMatchStrength(anchor.weight, matchedTokenCount, queryTokenCount),
     provenance: {
       sourceId: anchor.sourceId,
-      label: sourceLabel(anchor.sourceId),
+      // Rendered through joinedSourceLabel so a stage-6 merged row ('a+b')
+      // names every agreeing source; single ids render byte-identically.
+      label: joinedSourceLabel(anchor.sourceId),
       ...(anchor.locator ? { locator: anchor.locator } : {}),
       weight: anchor.weight,
     },
@@ -101,7 +178,7 @@ export function conceptCueEvidence(
     strength: conceptMatchStrength(anchor.weight, matchedTokenCount, queryTokenCount),
     provenance: {
       sourceId: anchor.sourceId,
-      label: sourceLabel(anchor.sourceId),
+      label: joinedSourceLabel(anchor.sourceId),
       ...(anchor.locator ? { locator: anchor.locator } : {}),
       weight: anchor.weight,
     },
@@ -109,21 +186,24 @@ export function conceptCueEvidence(
 }
 
 /**
- * Raw one-word lexicon entries are broad-query defaults.
+ * One-token lexicon entries are broad-query defaults.
  *
- * They remain authoritative when the whole query is that word. Inside a longer
- * query they should act as theme cues. Multi-word remembered phrasings like
- * "do not be afraid" are intentionally excluded even if normalization reduces
- * them to one token.
+ * They remain authoritative when the whole query is that token. Inside a
+ * longer query they should act as theme cues.
+ *
+ * Width is measured in SIGNIFICANT tokens, not raw words. This deliberately
+ * REVERSES the earlier carve-out that excluded multi-word phrasings whose
+ * normalization reduces to one token ("forgive others" -> `forgive`): at
+ * match time such a phrase IS its single stored token, so exempting it let a
+ * stopword-heavy phrase evade the thin-cue gate a deliberate bare word must
+ * face. Legitimate remembered phrasings stay protected by the two guards this
+ * keeps: (i) `queryTokenCount > 1` — a query that itself collapses to the
+ * same lone token ("do not be afraid" -> `afraid`) stays authoritative — and
+ * (ii) the IDF-share test in isThinBareWordConceptCue, so a collapsed cue
+ * that carries real query meaning survives.
  */
 export function isBareWordConceptCue(matchedPhrase: string, queryTokenCount: number): boolean {
-  return (
-    queryTokenCount > 1 &&
-    matchedPhrase
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean).length === 1
-  );
+  return queryTokenCount > 1 && significantWords(matchedPhrase).length <= 1;
 }
 
 export function isThinBareWordConceptCue(
@@ -152,7 +232,7 @@ export function relatedConceptEvidence(anchor: ConceptAnchorRow): Evidence {
     strength: Math.max(0, Math.min(1, anchor.weight)) * 0.5,
     provenance: {
       sourceId: anchor.sourceId,
-      label: sourceLabel(anchor.sourceId),
+      label: joinedSourceLabel(anchor.sourceId),
       ...(anchor.locator ? { locator: anchor.locator } : {}),
     },
   };
@@ -247,6 +327,19 @@ export function translationVariantEvidence(
   };
 }
 
+/**
+ * Half-saturation constant for the passage_terms PMI factor (0.10.0 stage 5).
+ *
+ * A match whose mean per-term PMI equals this value scores factor 0.5. The
+ * value is calibrated against reviewed data: the G5 admission floor
+ * (`eval/budgets.json` distinctiveness.minPmi = 2.0) scores 0.25 — a term
+ * that barely cleared admission speaks at quarter volume — and the measured
+ * corpus-mean PMI 6.37 scores ≈0.52. Mirrored into `eval/budgets.json`
+ * signalBudgets for the G6 reviewed-constants check; value pending J21
+ * sign-off, which rides the normal approval flow.
+ */
+export const PASSAGE_TERM_PMI_HALF_SATURATION = 6.0;
+
 export function passageTermEvidence(match: {
   matchedTerms: readonly string[];
   pmiSum: number;
@@ -261,13 +354,30 @@ export function passageTermEvidence(match: {
   // purpose: diffuse commentary is discounted, never discarded.
   const span = Math.max(1, match.minSpanVerses);
   const specificity = 1 / (1 + 0.25 * Math.log2(span));
+  // Distinctiveness (0.10.0 stage 5): the pipeline computed a PMI for every
+  // admitted term under G5, and until this factor existed scoring threw that
+  // statistic away — every same-count, same-span match tied exactly and
+  // canonical book order decided ("propitiation" returned a flat 2.85 pile
+  // led by whichever book comes first). Asymptotic on purpose: the earlier
+  // `min(1, pmiSum / (terms × 6))` form saturates at 1 for any per-term PMI
+  // ≥ 6, and distinctive vocabulary lives ABOVE that line (measured corpus
+  // range 2.02–18.54, every stored `propitiation` row 8.52–11.21), so the
+  // ties it existed to break survived it byte-identical. This form is
+  // strictly monotone in pmiSum — distinct pmiSums never tie, at any
+  // magnitude — and bounded below 1. No new adjudication: the statistic was
+  // already reviewed data; this only stops discarding it. Zero/absent pmiSum
+  // degrades to factor 0 rather than NaN or a negative.
+  const pmiSum = Math.max(0, match.pmiSum);
+  const halfSaturationMass =
+    Math.max(1, match.matchedTerms.length) * PASSAGE_TERM_PMI_HALF_SATURATION;
+  const pmiFactor = pmiSum / (pmiSum + halfSaturationMass);
   return {
     family: 'passage_terms',
     label:
       match.matchedTerms.length === 1
         ? `Preached vocabulary: ${match.matchedTerms[0]}`
         : `Preached vocabulary: ${match.matchedTerms.slice(0, 3).join(', ')}`,
-    strength: Math.max(0, Math.min(1, saturating * specificity)),
+    strength: Math.max(0, Math.min(1, saturating * specificity * pmiFactor)),
     provenance: {
       sourceId: match.sourceIds,
       label: joinedSourceLabel(match.sourceIds),

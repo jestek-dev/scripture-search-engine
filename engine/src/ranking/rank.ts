@@ -48,15 +48,31 @@ export const DEFAULT_MAX_PER_GROUP = 3;
 
 /**
  * Total order over scored results: score desc, then authoritative-first (so a
- * direct match outranks an equal-scoring pile of hints), then targetId asc.
- * targetId is the documented final tie-break and is unique, so this comparator
- * never returns 0 for distinct results — no reliance on sort stability.
+ * direct match outranks an equal-scoring pile of hints), then — at an exact
+ * tie between two authoritative results — curated-anchor-first, then targetId
+ * asc. targetId is the documented final tie-break and is unique, so this
+ * comparator never returns 0 for distinct results — no reliance on sort
+ * stability.
  */
 function compareResults(a: RankedResult, b: RankedResult): number {
   if (b.score !== a.score) return b.score - a.score;
   const aAuth = a.reasons.some((reason) => isAuthoritative(reason.family));
   const bAuth = b.reasons.some((reason) => isAuthoritative(reason.family));
   if (aAuth !== bAuth) return aAuth ? -1 : 1;
+  // Equal-score curated tie-break (0.10.0 stage 3): at an EXACT score tie
+  // between two authoritative results, the one a curated source anchors
+  // orders before one whose authority is a verbatim string hit alone. At
+  // identical evidence weight, preferring the passage a named human recorded
+  // for this concept over "the string occurs" is the product's stated reason
+  // to exist — and it adjudicates no theology: it prefers recorded human
+  // curation, not a doctrine. It fires ONLY on exact ties between
+  // authoritative results; unequal scores are never reordered, and the
+  // comparator remains a total order.
+  if (aAuth && bAuth) {
+    const aAnchor = a.reasons.some((reason) => reason.family === 'concept_anchor');
+    const bAnchor = b.reasons.some((reason) => reason.family === 'concept_anchor');
+    if (aAnchor !== bAnchor) return aAnchor ? -1 : 1;
+  }
   return a.targetId < b.targetId ? -1 : a.targetId > b.targetId ? 1 : 0;
 }
 

@@ -89,7 +89,9 @@ describe('token intent — the case that motivated the engine', () => {
 
   it('ranks the doers-of-the-word verse for a paraphrase', async () => {
     const results = await discover('be doers of the word not hearers only');
-    expect(results[0]!.reference).toBe('James 1:22');
+    // Since the 0.10.0 stage-7 span collapse, James 1:22 leads as the best
+    // member of its curated passage row.
+    expect(results[0]!.reference).toBe('James 1:22-25');
   });
 
   it('weights distinctive words above common ones', async () => {

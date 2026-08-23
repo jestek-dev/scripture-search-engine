@@ -12,12 +12,13 @@
     "against an absent verse passes vacuously â€” protection that is decoration.",
     "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts.",
     "2026-08-18 books-harvest curation: 'bereavement' asserted alongside the primary query. Before the matching lexicon entry landed, the query reached no curated concept — the failing pre-patch run is the gap evidence in the PR body.",
-    "Round-2 book admission 2026-08-18: grief-and-loss gained John 16:22 (sorrow into joy) and the bare 'sorrow' register."
+    "Round-2 book admission 2026-08-18: grief-and-loss gained John 16:22 (sorrow into joy) and the bare 'sorrow' register.",
+    "2026-08-21 ranking-fixes 0.10.0 stage 3 (P3.3 full-query parity): 'death of a loved one' collapses to the same significant tokens as the concept's lexicon phrase, so every grief-and-loss co-anchor now scores weight x 40 instead of weight x 28 - co-anchors order by their CURATED weights at full scale, and the 2026-08-17 observed pins (held by a 0.33-point corroboration margin) no longer describe the output: measured post-stage-3, Revelation 21:4 (weight 0.95) leads at 46.87 with Psalms 34:18 (weight 0.85 anchor plus two lexicon cues) at 46.00. Per the 2026-08-17 provision above, the ranking-fixes change re-cuts the observed pins: the Psalms 34:18 top-1 window widens to 3 and the Psalms-above-Revelation pair is WITHDRAWN rather than flipped - asserting Revelation-first would encode a pastoral preference nobody has ruled on. Whether Psalms 34:18 SHOULD lead a grief query is flagged for Jesse's PR-2 review with these numbers; if he rules yes, the remedy is a data-side weight adjustment (his call), and the pins re-tighten to his ruling. Windows deliberately leave room for the stage-4 xref-suppression re-measure."
   ],
   "expectedTop": [
     {
       "reference": "Psalms 34:18",
-      "withinTop": 1,
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Grief and loss"
     },
@@ -35,11 +36,6 @@
   ],
   "expectedWithinTop": 10,
   "preferredOrder": [
-    {
-      "above": "Psalms 34:18",
-      "below": "Revelation 21:4",
-      "withinTop": 3
-    },
     {
       "above": "Psalms 34:18",
       "below": "John 11:25-26",

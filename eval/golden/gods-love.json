@@ -13,7 +13,8 @@
     "2026-08-17 eval-toughening PR-B rank-sensitive tightening: the withinTop windows and preferredOrder pairs below assert the OBSERVED, admitted ordering recorded immediately before this edit (top-10 capture in the PR body). No ranking change is smuggled here; a different desired #1 belongs to ranking-fixes or lexicon-concepts.",
     "Round-2 book admission 2026-08-18: gods-love widened Eph 3:19 to 3:17-19 and gained the Rom 8:31-35 / Eph 2:4-5 / 1 Jn 4:16,19 cluster.",
     "Integrator correction: the drafted 'he first loved us' additionalQuery was removed — asserting it would bind the pack's John 3:16 / Rom 8:38-39 leads to that query's window, where 1 John 4:19 honestly wins on its own words (measured in the round-2 admission run). The 1 John 4:19 anchor itself stays.",
-    "2026-08-20 merge of eval-toughening PR-B into the round-2 books-harvest branch: PR-B pinned John 3:16 withinTop 5 from the ordering observed on main WITHOUT the round-2 data. With the round-2 gods-love anchors admitted, John 3:16 sits at #6 for 'love' and #8 for 'god loves us' — every verse above it is an admitted gods-love anchor of this same concept (Rom 5:8, Rom 8:35/39, Eph 2:4, 1 Jn 4:19/4:16), not an off-topic leak. This IS the lexicon-concepts data change PR-B's note routes ordering moves to, so the John 3:16 window widens to the fixture's own top-10 level (observed: 6 and 8). The Romans 5:8 top-1 pin, the Romans 8:38-39 top-5 pin, and the Romans 5:8 > John 3:16 preferredOrder pair all still hold and stay as PR-B wrote them."
+    "2026-08-20 merge of eval-toughening PR-B into the round-2 books-harvest branch: PR-B pinned John 3:16 withinTop 5 from the ordering observed on main WITHOUT the round-2 data. With the round-2 gods-love anchors admitted, John 3:16 sits at #6 for 'love' and #8 for 'god loves us' — every verse above it is an admitted gods-love anchor of this same concept (Rom 5:8, Rom 8:35/39, Eph 2:4, 1 Jn 4:19/4:16), not an off-topic leak. This IS the lexicon-concepts data change PR-B's note routes ordering moves to, so the John 3:16 window widens to the fixture's own top-10 level (observed: 6 and 8). The Romans 5:8 top-1 pin, the Romans 8:38-39 top-5 pin, and the Romans 5:8 > John 3:16 preferredOrder pair all still hold and stay as PR-B wrote them.",
+    "0.10.0 stage-4 re-cut (plan P3.4 / ES-3, the ranking-fixes change the 2026-08-17 note routes to): same-concept cross-reference suppression removed the restated gods-love edge (+3.10, from a co-anchor of this same concept) that held Romans 8:38-39 at the observed #3. Measured on the fixture corpus: after suppression it scores its bare curated 38.00 (weight 0.95, zero lexical corroboration for 'god loves us') and sits at #7 — every verse above it is an on-topic gods-love anchor winning on its own words. Window widens 5 -> 10 (the fixture's own expectedWithinTop level). The Rom 5:8 top-1 pin, the John 3:16 top-10 pin, and the Rom 5:8 > John 3:16 pair all still hold, re-verified after suppression. FLAG FOR JESSE (PR-2 review): if Rom 8:38-39 must stay top-5 for this query, the remedy is data-side (weight or lexicon phrasing, his call) and this window re-tightens to his ruling."
   ],
   "expectedTop": [
     {
@@ -30,7 +31,7 @@
     },
     {
       "reference": "Romans 8:38-39",
-      "withinTop": 5,
+      "withinTop": 10,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: The love of God"
     }

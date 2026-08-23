@@ -538,10 +538,13 @@ export function noiseGate(options: {
   }
 
   if (findings.length > 0) {
+    // Count PROBES, not findings: one probe can trip several checks, and a
+    // summary that says "4 probes" for 3 reads as protection it is not.
+    const degradedProbes = new Set(findings.flatMap((finding) => finding.subjects ?? [])).size;
     return fail(
       'G8-noise-probes',
       'Noise probes',
-      `${findings.length} probe(s) degraded versus baseline`,
+      `${degradedProbes} probe(s) degraded versus baseline (${findings.length} finding(s))`,
       findings,
     );
   }

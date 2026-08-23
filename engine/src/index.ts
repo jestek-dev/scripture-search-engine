@@ -26,16 +26,22 @@ export {
 } from './corpus/repository.js';
 
 export {
+  EXACT_PHRASE_FULL_AUTHORITY_WORDS,
   groupIdFor,
   mergeCandidates,
   phraseEvidence,
   queryIdfTotal,
   referenceLabel,
+  subsumeCompletePhraseRestatements,
   targetIdFor,
   tokenEvidence,
 } from './intents/lexical.js';
 
-export { sourceLabel } from './intents/concept.js';
+export {
+  dedupeConceptAnchors,
+  PASSAGE_TERM_PMI_HALF_SATURATION,
+  sourceLabel,
+} from './intents/concept.js';
 
 export {
   normalizeToken,
@@ -65,6 +71,12 @@ export {
   type Reason,
   type SignalFamily,
 } from './reasons/types.js';
+
+export {
+  CHIP_DISPLAY_MIN_POINTS,
+  PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
+  polishChipsForDisplay,
+} from './reasons/display.js';
 
 export {
   applyBudgets,

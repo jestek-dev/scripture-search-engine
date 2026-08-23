@@ -1,0 +1,65 @@
+{
+  "id": "prosperity-name-it-claim-it-answered",
+  "query": "name it and claim it",
+  "status": "active",
+  "note": [
+    "PROSPERITY FAMILY — the positive half for the slogan query, written",
+    "BEFORE the concept pack per the fixtures-first rule (the",
+    "prosperity-contentment.json precedent: the family's active fixtures say",
+    "what the slogan must NOT surface; this one says what it should). The",
+    "sibling doctrine-negative fixture prosperity-name-it-claim-it.json",
+    "(Jesse's 2026-08-15 ruling, untouched by this addition) holds John",
+    "14:13-14 below the top-3 leading window; until now nothing curated",
+    "actually ANSWERED the slogan — the demoted state was held only by the",
+    "accident of a flat passage_terms tie (see the 0.10.0 stage-5",
+    "measurement), with junk lexical rows at the top. This fixture pins the",
+    "honest answer: a searcher who types word-of-faith's own slogan is",
+    "answered by the canon's teaching on asking — asked-for things are",
+    "received according to God's will, not by entitlement — with the curated,",
+    "attributed anchor visible. Criteria: docs/DOCTRINAL-BASIS.md §3",
+    "(Akropong: God's power is not a technique; TGC §6).",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose — the assertion is",
+    "that a CURATED, attributed anchor put the passage there, not a lexical",
+    "coincidence. James 4:3 is the canon's direct diagnosis of claim-asking",
+    "('You ask, and don't receive, because you ask with wrong motives' —",
+    "WEB); 1 John 5:14-15 is the positive rule the slogan counterfeits.",
+    "Data coverage pulled forward from the Phase-4 adversarial pack (plan",
+    "item F14/A4) so the stage-5 PMI de-flattening could land without",
+    "breaking the sibling guard; the editorial stance rides this PR's human",
+    "review, per the A4 framing (attribute, never adjudicate — no 'this",
+    "saying is false' copy anywhere in engine output).",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-21, in the admission that landed the",
+    "asking-in-gods-will pack: measured pre-pack fail (4 expectations,",
+    "recorded in the pending-fixture commit), post-pack the slogan query",
+    "returns 1 John 5:14-15 / James 4:3 / Matthew 26:39 as the top-3 with",
+    "John 14:14 and 14:13 at #5/#6 — kept, demoted, never leading, exactly",
+    "Jesse's 2026-08-15 state, now held by curated coverage instead of a",
+    "flat passage_terms tie."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 4:3",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Asking in God's will"
+    },
+    {
+      "reference": "1 John 5:14-15",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Asking in God's will"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 26:39"
+  ],
+  "coversConcepts": [
+    "asking-in-gods-will"
+  ],
+  "additionalQueries": [
+    "asking amiss"
+  ]
+}

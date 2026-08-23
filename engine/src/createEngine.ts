@@ -24,6 +24,7 @@ import {
   queryIdfTotal,
   referenceLabel,
   significantWords,
+  subsumeCompletePhraseRestatements,
   targetIdFor,
   tokenEvidence,
 } from './intents/lexical.js';
@@ -31,12 +32,14 @@ import {
   conceptAnchorEvidence,
   conceptCueEvidence,
   crossReferenceEvidence,
+  dedupeConceptAnchors,
   isThinBareWordConceptCue,
   passageTermEvidence,
   relatedConceptEvidence,
   translationVariantEvidence,
 } from './intents/concept.js';
 import { DEFAULT_LIMIT, rank, type RankOptions } from './ranking/rank.js';
+import { polishChipsForDisplay } from './reasons/display.js';
 
 /**
  * Extra candidates ranked beyond the caller's limit so that collapsing a run
@@ -155,6 +158,11 @@ export async function createEngine(
     const verses = new Map<string, ScriptureVerse>();
     // targetId -> the curated anchor spans that produced it.
     const anchorSpans = new Map<string, Set<string>>();
+    // Targets whose evidence carries a COMPLETE whole-query exact_phrase
+    // match, marked for the complete-match subsumption at candidate merge
+    // (0.10.0 stage 3): their token_overlap/proximity evidence restates what
+    // the verbatim match already fully asserts. Fragments never mark.
+    const completePhraseTargets = new Set<string>();
     const contributions: { verse: ScriptureVerse; evidence: ReturnType<typeof tokenEvidence> }[] =
       [];
 
@@ -165,14 +173,25 @@ export async function createEngine(
     // badge it has not earned.
     if (query.trim().includes(' ')) {
       const whole = await repository.searchPhrase(query);
-      const queryWords = query.trim().split(/\s+/).filter(Boolean).length;
       if (whole.length > 0) {
+        // Whole-match authority is measured in SIGNIFICANT words (0.10.0
+        // stage 3), mirroring what the fragment branch has done since 0.8.0:
+        // "the cross" is two raw words but one unit of meaning, and granting
+        // it full 60-point authority let verbatim occurrences in negative
+        // context outrank the curated anchors. Deliberately NO raw-count
+        // fallback here (unlike the fragment branch, which needs one to
+        // avoid dividing by zero): an all-stopword verbatim match is the
+        // token intent wearing an authoritative badge, exactly what the
+        // taper demotes — phraseEvidence files anything under two
+        // significant words as token_overlap.
+        const querySignificant = significantWords(query).length;
         for (const match of whole) {
+          const evidence = phraseEvidence(query.trim(), querySignificant, querySignificant);
           verses.set(targetIdFor(match), match);
-          contributions.push({
-            verse: match,
-            evidence: [phraseEvidence(query.trim(), queryWords, queryWords)],
-          });
+          if (evidence.family === 'exact_phrase') {
+            completePhraseTargets.add(targetIdFor(match));
+          }
+          contributions.push({ verse: match, evidence: [evidence] });
         }
       } else {
         const fragment = await searchLongestFragment(repository, query);
@@ -276,7 +295,12 @@ export async function createEngine(
           )
           .map((match) => match.conceptId);
         const authoritativeConceptSet = new Set(authoritativeConceptIds);
-        const anchors = await concepts.anchorVerses(matched.map((match) => match.conceptId));
+        // Anchor dedupe (0.10.0 stage 6): one verse, one concept, one scored
+        // contribution — the surviving row's chip names every agreeing source.
+        // See dedupeConceptAnchors.
+        const anchors = dedupeConceptAnchors(
+          await concepts.anchorVerses(matched.map((match) => match.conceptId)),
+        );
         for (const anchor of anchors) {
           const match = matchedByConcept.get(anchor.conceptId);
           const matchedTokenCount = match?.matchedTokenCount ?? 1;
@@ -308,7 +332,7 @@ export async function createEngine(
         if (authoritativeConceptIds.length > 0) {
           // One hop through the curated graph, filed as weak evidence.
           const relatedIds = await concepts.relatedConcepts(authoritativeConceptIds);
-          for (const anchor of await concepts.anchorVerses(relatedIds)) {
+          for (const anchor of dedupeConceptAnchors(await concepts.anchorVerses(relatedIds))) {
             verses.set(targetIdFor(anchor), anchor);
             contributions.push({ verse: anchor, evidence: [relatedConceptEvidence(anchor)] });
           }
@@ -326,8 +350,45 @@ export async function createEngine(
           const seedLabels = new Map(
             authoritativeAnchors.map((anchor) => [anchor.verseId, referenceLabel(anchor)]),
           );
+          // Same-concept cross-reference suppression (0.10.0 stage 4). Within
+          // one concept's anchor set, an edge between two members restates the
+          // curated consensus each member's concept_anchor chip already
+          // carries — the same humans naming the same theme, walked one hop
+          // and counted again as if independent. That stacking is how a
+          // co-anchor's ≤6 "corroboration" points closed a deliberate
+          // curated-weight gap and displaced the verse being quoted (ph2,
+          // Jer 29:11 vs Rom 15:13). Suppressed, not discounted: a ×0.5 keeps
+          // a tunable fraction of double-counting with no principled value
+          // (G7 — correlated evidence shares one budget; identical facts
+          // collapse rather than sum — applied across the anchor/xref
+          // boundary). The map is built only from AUTHORITATIVE anchors of
+          // matched concepts, so edges from outside the set, edges whose
+          // target is not a co-anchor of the seeding concept, and edges
+          // between anchors of two DIFFERENT matched concepts are all
+          // untouched, and membership lookup is order-independent by
+          // construction. related() is deliberately untouched: there the
+          // passage is the input and its edges are exactly what was asked
+          // for — no concept consensus is being restated.
+          const anchorConceptsByVerse = new Map<number, Set<string>>();
+          for (const anchor of authoritativeAnchors) {
+            const bucket = anchorConceptsByVerse.get(anchor.verseId);
+            if (bucket) bucket.add(anchor.conceptId);
+            else anchorConceptsByVerse.set(anchor.verseId, new Set([anchor.conceptId]));
+          }
+          const sharesMatchedConcept = (fromVerseId: number, toVerseId: number): boolean => {
+            const from = anchorConceptsByVerse.get(fromVerseId);
+            const to = anchorConceptsByVerse.get(toVerseId);
+            if (!from || !to) return false;
+            for (const conceptId of from) if (to.has(conceptId)) return true;
+            return false;
+          };
           const maxVotes = await concepts.maxCrossReferenceVotes();
           for (const edge of await concepts.expandCrossReferences(seeds)) {
+            // The suppressed target stays in the candidate set through its own
+            // anchor evidence (it IS an anchor of the matched concept — that
+            // is why the edge is redundant); only the restated edge evidence
+            // is dropped, so no result ever disappears from this.
+            if (sharesMatchedConcept(edge.fromVerseId, edge.verseId)) continue;
             verses.set(targetIdFor(edge), edge);
             contributions.push({
               verse: edge,
@@ -349,24 +410,45 @@ export async function createEngine(
     // inside the top 25 becomes one row, and the three freed slots stay empty
     // while genuinely different passages sit just outside the window.
     const limit = options.rankOptions?.limit ?? DEFAULT_LIMIT;
-    const ranked = rank(mergeCandidates(contributions), {
-      ...options.rankOptions,
-      limit: limit + COLLAPSE_HEADROOM,
-    });
-    return collapseAnchorRuns(
-      ranked.map((result) => {
-        const verse = verses.get(result.targetId)!;
-        return {
-          targetId: result.targetId,
-          reference: referenceLabel(verse),
-          excerpt: verse.text,
-          score: result.score,
-          reasons: result.reasons,
-        };
-      }),
-      verses,
-      anchorSpans,
-    ).slice(0, limit);
+    const ranked = rank(
+      // Complete-match subsumption (0.10.0 stage 3): a complete whole-query
+      // exact_phrase match drops its same-token token_overlap/proximity
+      // restatement before ranking. See subsumeCompletePhraseRestatements.
+      subsumeCompletePhraseRestatements(mergeCandidates(contributions), completePhraseTargets),
+      {
+        ...options.rankOptions,
+        limit: limit + COLLAPSE_HEADROOM,
+      },
+    );
+    return (
+      collapseAnchorRuns(
+        ranked.map((result) => {
+          const verse = verses.get(result.targetId)!;
+          return {
+            targetId: result.targetId,
+            reference: referenceLabel(verse),
+            excerpt: verse.text,
+            score: result.score,
+            reasons: result.reasons,
+          };
+        }),
+        verses,
+        anchorSpans,
+      )
+        .slice(0, limit)
+        // Chip display polish (0.10.0 CO-2/F22), applied LAST — after
+        // ranking, collapsing and the cut — so it is display-only by
+        // construction: scores, order and the page are already decided.
+        // Withheld chips' points still count (a result's score may exceed
+        // the sum of its displayed chips). related() is deliberately
+        // untouched: its only chip family (cross_reference, votes >= 1
+        // against the corpus maximum) cannot produce a chip below the
+        // display minimum, and passage_terms never appears there.
+        .map((result) => {
+          const polished = polishChipsForDisplay(result.reasons);
+          return polished === result.reasons ? result : { ...result, reasons: polished };
+        })
+    );
   }
 
   async function relatedFor(reference: string): Promise<RelatedResult> {
@@ -570,77 +652,117 @@ export async function createEngine(
 }
 
 /**
- * Collapse a run of consecutive results that are all verses of ONE curated
- * anchor into the single passage that anchor names.
+ * Collapse the surfaced verses of ONE curated anchor span into the single
+ * passage that anchor names (0.10.0 stage 7: span MEMBERSHIP, not rank
+ * adjacency).
  *
  * Why this exists: a ranged anchor emits one candidate per verse, and results
  * carrying authoritative evidence are deliberately exempt from group
  * diversification — a genuine multi-verse hit must never be thinned for the
  * sake of variety. Correct for exact-phrase matches; wrong for a curated span,
- * where the four results ARE one passage. `communion` returned 1 Corinthians
+ * where the results ARE one passage. `communion` returned 1 Corinthians
  * 11:23, :24, :25 and :26 at identical scores, spending the whole top of the
  * list on a passage a human had already grouped.
  *
- * The curated span is the unit because a person chose it. Nothing is inferred,
- * and the collapse is a pure function of data already in the artifact, so it
- * cannot introduce non-determinism: the input order is the ranker's total
- * order, and equal inputs collapse identically on every platform.
+ * Until 0.10.0 this required RANK adjacency, which made the collapse depend
+ * on what happened to rank in between: `praise` filled five slots with
+ * individual verses of Psalm 150 because they ranked non-adjacently, and one
+ * differently-scored verse of a span broke the whole merge. The span is the
+ * unit because a person chose it — whether its verses rank consecutively is
+ * an accident of the other evidence. Now every surfaced member of a span
+ * merges into one row at the position of its best-ranked member; the members
+ * below drop and the results shift up. That is the point: the passage
+ * occupies one slot, not N.
  *
- * Only CONSECUTIVE results collapse. A verse of the same anchor that ranks far
- * below (because other evidence separated it) stays where the ranker put it —
- * merging across a gap would move a result up the list, which is a ranking
- * decision and not this function's business.
+ * Determinism: pass 1 assigns each result a governing span — the span, among
+ * the spans it belongs to, covering the most surfaced results (ties broken by
+ * span key ascending) — and pass 2 emits in rank order, so the output is a
+ * pure function of the ranker's total order and data already in the artifact.
+ * Nothing is inferred, and equal inputs collapse identically on every
+ * platform.
+ *
+ * The merged row is honest about what surfaced: its reference spans the
+ * surfaced members (canonical min..max), the excerpt is their texts in
+ * canonical verse order, the score is the best member's (existing policy),
+ * and reasons merge strongest-per-label so the chips explain the passage
+ * rather than an arbitrary one of its verses.
  */
 export function collapseAnchorRuns(
   results: readonly DiscoveryResult[],
   verses: ReadonlyMap<string, ScriptureVerse>,
   anchorSpans: ReadonlyMap<string, ReadonlySet<string>>,
 ): readonly DiscoveryResult[] {
+  // Pass 1a — how many surfaced results does each span cover? Counted over
+  // the results actually present, so a span mostly outside the ranked window
+  // does not outvote one that is really here.
+  const spanCounts = new Map<string, number>();
+  for (const result of results) {
+    const spans = anchorSpans.get(result.targetId);
+    if (!spans) continue;
+    for (const span of spans) {
+      spanCounts.set(span, (spanCounts.get(span) ?? 0) + 1);
+    }
+  }
+
+  // Pass 1b — each result's governing span: most surfaced members first,
+  // then span key ascending. A verse inside two overlapping curated spans
+  // joins the one that gathers more of this result page (deterministic, and
+  // the larger passage is the one the page is actually showing).
+  const governing = new Map<string, string>();
+  const members = new Map<string, DiscoveryResult[]>();
+  for (const result of results) {
+    const spans = anchorSpans.get(result.targetId);
+    if (!spans || spans.size === 0 || !verses.has(result.targetId)) continue;
+    let chosen: string | null = null;
+    for (const span of spans) {
+      if (
+        chosen === null ||
+        (spanCounts.get(span) ?? 0) > (spanCounts.get(chosen) ?? 0) ||
+        ((spanCounts.get(span) ?? 0) === (spanCounts.get(chosen) ?? 0) && span < chosen)
+      ) {
+        chosen = span;
+      }
+    }
+    governing.set(result.targetId, chosen!);
+    const bucket = members.get(chosen!);
+    if (bucket) bucket.push(result);
+    else members.set(chosen!, [result]);
+  }
+
+  // Pass 2 — emit in rank order. The first-encountered member of a span
+  // becomes the merged passage row; later members drop and everything below
+  // shifts up.
+  const emitted = new Set<string>();
   const output: DiscoveryResult[] = [];
-  let index = 0;
+  for (const result of results) {
+    const span = governing.get(result.targetId);
+    if (span === undefined) {
+      output.push(result);
+      continue;
+    }
+    if (emitted.has(span)) continue;
+    emitted.add(span);
 
-  while (index < results.length) {
-    const head = results[index]!;
-    const headSpans = anchorSpans.get(head.targetId);
-    if (!headSpans || headSpans.size === 0) {
-      output.push(head);
-      index += 1;
+    const group = members.get(span)!;
+    if (group.length === 1) {
+      output.push(result);
       continue;
     }
 
-    // Extend while the next result shares an anchor span AND is the next verse.
-    let last = index;
-    let shared: string | null = null;
-    for (const span of [...headSpans].sort()) {
-      let cursor = index;
-      while (cursor + 1 < results.length) {
-        const next = results[cursor + 1]!;
-        const nextVerse = verses.get(next.targetId);
-        const cursorVerse = verses.get(results[cursor]!.targetId);
-        if (!nextVerse || !cursorVerse) break;
-        if (nextVerse.verseId !== cursorVerse.verseId + 1) break;
-        if (!anchorSpans.get(next.targetId)?.has(span)) break;
-        cursor += 1;
-      }
-      if (cursor > last) {
-        last = cursor;
-        shared = span;
-      }
-    }
+    // Canonical verse order for the label and the excerpt; rank order decides
+    // WHERE the row sits (here, at the best member) and the targetId (the
+    // best member's, so consumers can still address the passage and fixture
+    // range-matching keeps working unchanged).
+    const canonical = [...group].sort(
+      (a, b) => verses.get(a.targetId)!.verseId - verses.get(b.targetId)!.verseId,
+    );
+    const first = verses.get(canonical[0]!.targetId)!;
+    const final = verses.get(canonical[canonical.length - 1]!.targetId)!;
 
-    if (shared === null || last === index) {
-      output.push(head);
-      index += 1;
-      continue;
-    }
-
-    const run = results.slice(index, last + 1);
-    const first = verses.get(head.targetId)!;
-    const final = verses.get(results[last]!.targetId)!;
     // Reasons merged by label, strongest kept, so the chip still explains the
     // passage rather than an arbitrary one of its verses.
     const byLabel = new Map<string, Reason>();
-    for (const item of run) {
+    for (const item of group) {
       for (const reason of item.reasons) {
         const existing = byLabel.get(reason.label);
         if (!existing || reason.points > existing.points) byLabel.set(reason.label, reason);
@@ -651,26 +773,22 @@ export function collapseAnchorRuns(
     );
 
     output.push({
-      // The run's own head id, so a consumer can still address the passage and
-      // fixture range-matching keeps working unchanged.
-      targetId: head.targetId,
+      targetId: result.targetId,
       reference:
         first.verseId === final.verseId
-          ? head.reference
+          ? canonical[0]!.reference
           : first.chapter === final.chapter
             ? `${referenceLabel(first)}-${final.verse}`
-            : // Cannot happen while verse ids are bbcccvvv (the last verse of a
-              // chapter and the first of the next are not consecutive integers,
-              // so the contiguity test below already breaks the run). Written
-              // correctly anyway: the id encoding is not this function's
-              // invariant to rely on, and "Psalms 22:31-1" is the kind of wrong
-              // that survives review because nobody can produce it on demand.
+            : // Reachable only for a span crossing a chapter boundary. Written
+              // correctly regardless of the bbcccvvv id encoding: that is not
+              // this function's invariant to rely on, and "Psalms 22:31-1" is
+              // the kind of wrong that survives review because nobody can
+              // produce it on demand.
               `${referenceLabel(first)}-${final.chapter}:${final.verse}`,
-      excerpt: run.map((item) => item.excerpt).join(' '),
-      score: Math.max(...run.map((item) => item.score)),
+      excerpt: canonical.map((item) => item.excerpt).join(' '),
+      score: Math.max(...group.map((item) => item.score)),
       reasons,
     });
-    index = last + 1;
   }
 
   return output;

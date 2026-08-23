@@ -1,7 +1,7 @@
 {
   "id": "propitiation-pmi-ordering",
   "query": "propitiation",
-  "status": "pending",
+  "status": "active",
   "note": [
     "0.10.0 STAGE-5 SPECIFICATION (plan P3.5 / ES-4 field-4 obligation,",
     "authored in Phase 1 per the P1 preamble rider; audit th2). The",
