@@ -1,0 +1,38 @@
+{
+  "name": "@jestek-dev/scripture-artifact-client",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Descriptor verification and artifact download for consumers of the scripture search engine. Pins are verified, never trusted: a wrong artifact is worse than no artifact.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jestek-dev/scripture-search-engine.git",
+    "directory": "artifact-client"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./descriptor": {
+      "types": "./dist/descriptor.d.ts",
+      "default": "./dist/descriptor.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "npm run build",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10"
+  }
+}

@@ -9,6 +9,7 @@
   },
   "workspaces": [
     "engine",
+    "artifact-client",
     "pipeline",
     "eval",
     "workbench"

@@ -13,6 +13,7 @@
     "compile-judgments": "tsx src/compileJudgments.ts"
   },
   "dependencies": {
+    "@jestek-dev/scripture-artifact-client": "*",
     "@jestek-dev/scripture-engine": "*",
     "yaml": "2.8.1"
   },

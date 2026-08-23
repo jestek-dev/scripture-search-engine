@@ -8,6 +8,7 @@
     "baseUrl": ".",
     "paths": {
       "@jestek-dev/scripture-engine/internal": ["../engine/src/internal.ts"],
+      "@jestek-dev/scripture-artifact-client": ["../artifact-client/src/index.ts"],
       "@jestek-dev/scripture-engine": ["../engine/src/index.ts"]
     }
   },
