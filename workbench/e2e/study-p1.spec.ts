@@ -213,6 +213,11 @@ async function installRoutes(page: Page, options: RouteOptions = {}): Promise<vo
       }));
       return;
     }
+    if (url.pathname === '/api/v2/inbox') {
+      // P4's "Worth a look next" fetch: empty inbox → the section is omitted.
+      await route.fulfill(ok({ items: [] }));
+      return;
+    }
     await route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ error: 'unmocked' }) });
   });
 }

@@ -88,7 +88,7 @@ button{font:inherit;}
 .header-spacer{flex:1;}
 .header-btn{display:flex;align-items:center;gap:8px;padding:5px 10px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--text-2);cursor:pointer;}
 .header-btn:hover{border-color:var(--text-3);}
-.advanced-link{padding:5px 10px;border:0;background:none;color:var(--text-3);font-size:12px;text-decoration:none;}
+.advanced-link{padding:5px 10px;border:0;background:none;color:var(--text-3);font-size:12px;text-decoration:none;cursor:pointer;}
 .advanced-link:hover{color:var(--text-2);}
 .kbd{display:inline-block;min-width:14px;padding:1px 5px;border:1px solid var(--kbd-border);border-bottom-width:2px;border-radius:4px;background:var(--kbd-bg);font-size:11px;color:var(--text-2);text-align:center;}
 
@@ -255,6 +255,77 @@ button{font:inherit;}
 .missing-link{width:100%;max-width:680px;text-align:left;border:0;background:none;color:var(--text-3);padding:4px 0 10px;cursor:pointer;font-size:12px;text-decoration:underline;}
 .missing-link:hover{color:var(--text-2);}
 .data-banner{padding:9px 16px;border-bottom:1px solid var(--hairline);background:var(--accent-wash);color:var(--text-2);}
+
+/* §screens — Compare / History / Finish up / Advanced (P4). [hidden] must win
+   over the review grid's display:grid. */
+[hidden]{display:none !important;}
+.screen{height:calc(100vh - 48px);overflow-y:auto;padding:28px 32px 60px;}
+.screen-inner{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:18px;}
+.screen h1{font-family:'Literata',Georgia,serif;font-size:22px;margin:0;}
+.screen h2{font-family:'Literata',Georgia,serif;font-size:17px;margin:0;}
+.screen-sub{color:var(--text-2);margin:0;max-width:64ch;}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;overflow-wrap:anywhere;}
+
+/* §done panel (§3.4 per-query done state) */
+.done-panel{width:100%;max-width:680px;background:var(--panel);border:1px solid var(--hairline);border-radius:var(--r-panel);box-shadow:var(--shadow);padding:26px 32px;margin-bottom:16px;}
+.done-panel .done-title{font-family:'Literata',Georgia,serif;font-size:22px;margin:0 0 6px;}
+.done-panel p{margin:0 0 14px;color:var(--text-2);}
+.done-panel .layer-actions{margin-top:0;}
+
+/* §waiting counts + inbox rows */
+.waiting-row .row-count{color:var(--text-3);white-space:nowrap;flex:none;}
+.waiting-row .row-source{color:var(--text-faint);font-size:12px;white-space:nowrap;flex:none;}
+
+/* §compare */
+.compare-card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-panel);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.compare-lists{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.compare-col{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-panel);padding:10px 12px;}
+.compare-col .col-head{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);padding:2px 8px 8px;}
+.compare-row{display:flex;gap:10px;width:100%;align-items:baseline;text-align:left;border:0;background:none;cursor:pointer;padding:6px 8px;border-radius:var(--r-ctl);color:var(--ink);font:inherit;}
+.compare-row:hover{background:var(--accent-wash);}
+.compare-row.sel{background:var(--accent-wash);}
+.compare-row .rank-badge{flex:none;}
+.compare-panel{background:var(--panel);border:1px solid var(--hairline);border-radius:var(--r-panel);padding:16px 20px;}
+.compare-says{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;}
+.compare-says .why-key{margin-bottom:4px;}
+.compare-toolbar{display:flex;gap:8px;flex-wrap:wrap;}
+.query-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.query-chip{border:1px solid var(--hairline-strong);border-radius:99px;background:var(--surface);color:var(--text-2);padding:4px 12px;cursor:pointer;font:inherit;}
+.query-chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-wash);color:var(--ink);font-weight:600;}
+.query-chip .chip-done{color:var(--v-affirm);}
+.reveal-card{background:var(--surface);border:1px solid var(--accent);border-radius:var(--r-panel);padding:18px 22px;}
+.reveal-card .reveal-tag{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px;}
+.reveal-card .reveal-line{font-family:'Literata',Georgia,serif;font-size:19px;margin:0 0 10px;}
+
+/* §history */
+.history-group{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-panel);padding:12px 16px;}
+.history-group .group-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px;}
+.history-row{padding:7px 0;border-top:1px solid var(--hairline);}
+.history-row .row-line{display:flex;gap:12px;align-items:baseline;}
+.history-row .when{color:var(--text-3);font-size:12px;white-space:nowrap;flex:none;min-width:104px;}
+.history-row.struck .what{text-decoration:line-through;color:var(--text-faint);}
+.history-sub{color:var(--text-3);font-size:12px;margin:2px 0 0 116px;}
+
+/* §finish up */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.tile{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-panel);padding:14px 16px;}
+.tile .tile-n{font-family:'Literata',Georgia,serif;font-size:26px;line-height:1.1;}
+.tile.affirm .tile-n{color:var(--v-affirm);}
+.tile.notrel .tile-n{color:var(--v-notrel);}
+.tile.missing .tile-n{color:var(--v-missing);}
+.tile .tile-label{color:var(--text-3);font-size:12px;margin-top:2px;}
+.pending-banner{padding:10px 14px;border:1px solid var(--hairline-strong);border-radius:var(--r-panel);background:var(--v-missing-wash);display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--ink);}
+.write-group{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-panel);padding:12px 16px;}
+.write-group .group-query{font-weight:600;margin-bottom:4px;}
+.write-line{padding:3px 0;}
+.write-line .write-suffix{color:var(--text-3);}
+.sign-panel{background:var(--panel);border:1px solid var(--hairline-strong);border-radius:var(--r-panel);padding:18px 22px;}
+.sign-chip{display:inline-block;font-family:'Literata',Georgia,serif;font-size:18px;letter-spacing:0.1em;border:1px dashed var(--hairline-strong);border-radius:var(--r-ctl);padding:8px 14px;margin:10px 0;}
+.sign-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.sign-input{padding:9px 12px;border:1px solid var(--control-border);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;outline:none;min-width:220px;}
+.sign-input[disabled]{opacity:0.45;}
+.written-card{background:var(--surface);border:1px solid var(--v-affirm);border-radius:var(--r-panel);padding:18px 22px;}
+.written-card .written-title{font-family:'Literata',Georgia,serif;font-size:22px;margin:0 0 8px;color:var(--v-affirm);}
 </style>
 </head>
 <body>
@@ -263,16 +334,16 @@ button{font:inherit;}
   <div class="wordmark">The Study</div>
   <nav class="app-nav" aria-label="Workbench views">
     <button type="button" class="nav-item" data-nav="review" aria-current="page">Review</button>
-    <button type="button" class="nav-item" data-nav="compare" aria-disabled="true" title="Coming in a later phase">Compare</button>
-    <button type="button" class="nav-item" data-nav="history" aria-disabled="true" title="Coming in a later phase">History</button>
-    <button type="button" class="nav-item" data-nav="finish" aria-disabled="true" title="Coming in a later phase">Finish up</button>
+    <button type="button" class="nav-item" data-nav="compare">Compare</button>
+    <button type="button" class="nav-item" data-nav="history">History</button>
+    <button type="button" class="nav-item" data-nav="finish">Finish up</button>
   </nav>
   <div class="header-spacer"></div>
   <button type="button" class="header-btn" id="lookup-open" aria-label="Quick lookup">
     <span>Look something up</span><span class="kbd">⌘K</span>
   </button>
   <button type="button" class="header-btn" id="theme-cycle" aria-label="Theme"></button>
-  <a class="advanced-link" href="/">Advanced</a>
+  <button type="button" class="advanced-link" data-nav="advanced" id="advanced-open">Advanced</button>
 </header>
 <div id="banner-slot"></div>
 <main class="review-grid" id="review-grid">
@@ -293,6 +364,10 @@ button{font:inherit;}
   </section>
   <aside class="why-rail" aria-label="Why this ranked" id="why-rail"></aside>
 </main>
+<section class="screen" id="screen-compare" hidden aria-label="Compare"></section>
+<section class="screen" id="screen-history" hidden aria-label="History"></section>
+<section class="screen" id="screen-finish" hidden aria-label="Finish up"></section>
+<section class="screen" id="screen-advanced" hidden aria-label="Advanced"></section>
 <div id="actionbar-slot"></div>
 <div id="toast-slot"></div>
 <div id="dialog-slot"></div>
@@ -418,7 +493,92 @@ button{font:inherit;}
     doneCount: 'done',
     toGo: (n) => n + ' to go',
     toGoReopened: (n, r) => n + ' to go · ' + r + ' reopened',
+    // §copy — P4 (queue, Compare, History, Finish up)
+    waitingTitle: 'Waiting in your queue',
+    inboxTitle: 'Worth a look next',
+    judgedOnly: (j) => j + ' judged',
+    doneTitle: (n) => 'All ' + n + ' judged.',
+    doneBody: (q) => 'Every result for “' + q + '” has your call on it. Well done.',
+    nextSearch: (q) => 'Next search: “' + q + '” →',
+    reviewDecided: 'Review what you decided →',
+    compareEmpty: 'Nothing to compare right now — comparisons appear when a candidate engine is ready.',
+    compareTitle: (q) => 'Which set answers “' + q + '” better?',
+    compareBlind: 'You are not told which engine is which. This call is final.',
+    compareHow: 'Read both lists, click any verse to read it below, then make one call.',
+    compareConfirmTitle: (label) => 'You’re calling it: ' + label + '.',
+    compareFinality: 'This call is final — it cannot be edited, only outweighed by future comparisons.',
+    compareConfirmButton: (label) => 'Confirm — ' + label,
+    revealTag: 'The reveal',
+    revealTie: 'You called it a tie.',
+    revealBothWrong: 'You sent both back.',
+    revealPreferred: (side, identity) => 'You preferred Set ' + side + ' — ' + identity + '.',
+    revealBody: 'Your preference is recorded exactly as you made it, blind. This call is final: it cannot be edited, only outweighed by future comparisons.',
+    backToReview: 'Back to Review',
+    notInThisSet: 'Not in this set’s list.',
+    setSays: (side) => 'Set ' + side + ' says',
+    historyTitle: 'What you have decided',
+    historySub: 'Every call stays on record. An undo does not erase a call — a newer one replaces it.',
+    historyCount: (n) => n + ' calls on record.',
+    historyEmpty: 'Nothing on record yet. Your first call on any search result will appear here.',
+    goToReview: 'Go to Review →',
+    replacedByNewer: 'Replaced by a newer call.',
+    showMore: 'Show more',
+    historyEssential: (ref, n, q) => 'Marked ' + ref + ' essential (top ' + n + ') for “' + q + '”',
+    historyHelpful: (ref, q) => 'Marked ' + ref + ' helpful for “' + q + '”',
+    historyIrrelevant: (ref, why, q) => 'Marked ' + ref + ' not relevant — ' + why + ', for “' + q + '”',
+    historyMissing: (ref, n, q) => 'Added ' + ref + ' as a missing passage (top ' + n + ') for “' + q + '”',
+    historyRescued: (ref, n, q) => 'Rescued ' + ref + ' from the lower results (top ' + n + ') for “' + q + '”',
+    historyPrefer: (above, below, q) => 'Preferred ' + above + ' above ' + below + ' for “' + q + '”',
+    finishIntro: 'Your reviewed calls leave the workbench here and become part of the search’s answer sheet.',
+    finishDefine: 'The answer sheet is the reviewed record of what the right results should be; the engineering checks hold every update to it.',
+    pendingBanner: (n, m) => n + ' of ' + m + ' passages are still waiting for a call. Finish them first →',
+    pendingBannerReopened: (n, m, r) => n + ' of ' + m + ' passages are still waiting for a call · ' + r + ' reopened calls unresolved. Finish them first →',
+    whatWillBeWritten: 'What will be written',
+    mustRank: (ref, n) => 'Must rank: ' + ref + ' in the top ' + n,
+    mustNotRank: (ref, why) => 'Must not rank: ' + ref + ' — ' + why,
+    suffixAdded: ' (added by you — not shown in the engine’s top 10)',
+    suffixRescued: ' (rescued by you from the lower results)',
+    suffixReopened: ' (reopened — this earlier call stands unless you change it)',
+    withdrawn: (q) => 'Withdrawn: “' + q + '” — no calls remain to write.',
+    corpusAdd: (book, chapters) => 'Add ' + book + ' ' + chapters + ' to the test corpus so these answers can be checked.',
+    emptyChangedSet: 'Nothing waiting to be written — every call you’ve made is already on the answer sheet.',
+    helpfulFootnote: 'Helpful calls stay on record and inform review; they do not write answer-sheet lines by themselves.',
+    signTitle: 'Sign to write',
+    signBody: 'This step changes reviewed files, so it asks for a signature: type the code below exactly. That is deliberate friction — it means nothing is written by a stray click.',
+    signInputLabel: 'Type the code to sign',
+    writeButton: (n) => n === 1 ? 'Write 1 call to the answer sheet' : 'Write ' + n + ' calls to the answer sheet',
+    writtenTitle: 'Written.',
+    writtenBody: (n) => n === 1
+      ? '1 call is now on the answer sheet. The engineering checks will pick them up on the next run.'
+      : n + ' calls are now on the answer sheet. The engineering checks will pick them up on the next run.',
+    staleLine: 'The picture changed since this preview — reloading it now.',
+    busyLine: 'Another change is being written right now — try again in a moment.',
+    advancedIntro: 'Engineering surfaces. Nothing here interrupts the review flow.',
+    advancedConsole: 'Open the full engineering console →',
+    advancedBack: '← Back to Review',
+    plainWhy: {
+      'lexical-noise': 'matched words, not meaning',
+      'wrong-anchor': 'listed under a theme it does not speak about',
+      'concept-misfire': 'speaks about the theme, but is not an answer for this query',
+    },
   };
+  const CHOICE_LABELS = { 'a-wins': 'A wins', 'b-wins': 'B wins', tie: 'Tie', 'both-wrong': 'Both wrong' };
+  const CHOICE_BY_KEY = { a: 'a-wins', b: 'b-wins', t: 'tie', w: 'both-wrong' };
+  const KEY_BY_CHOICE = { 'a-wins': 'a', 'b-wins': 'b', tie: 't', 'both-wrong': 'w' };
+  // Display-only book names for decoding a targetId's BBCCCVVV verse id into a
+  // human reference on the History screen. Copied verbatim from
+  // pipeline/src/books.ts (ids 1–66); never used for search or judging.
+  const BOOK_NAMES = [
+    'Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth',
+    '1 Samuel', '2 Samuel', '1 Kings', '2 Kings', '1 Chronicles', '2 Chronicles', 'Ezra',
+    'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs', 'Ecclesiastes', 'Song of Solomon',
+    'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos',
+    'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah',
+    'Malachi', 'Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians',
+    '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians', 'Colossians', '1 Thessalonians',
+    '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James',
+    '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation',
+  ];
   const VERDICT_LABELS = { essential: 'Essential', helpful: 'Helpful', irrelevant: 'Not relevant' };
   const PILL_BY_FAMILY = {
     concept_anchor: 'Matched the meaning',
@@ -477,6 +637,40 @@ button{font:inherit;}
     dataBanner: null,    // null | 'refreshed' | 'snapshot-wins'
     lastCommit: null,    // {kind:'verdict'|'rescue'|'suggestion'|'bulk', targetId?} — the U target
     caseSeq: 0,          // drops stale case-open fetches
+    // §state — P4 (queue counts, screens, Compare, History, Finish up)
+    screen: 'review',    // 'review' | 'compare' | 'history' | 'finish' | 'advanced'
+    caseCounts: Object.create(null),   // caseId -> {status,j,m,tiles,missingRefs,unjudgedTop} (§4.3 counts row)
+    countsPending: Object.create(null),// caseId -> true while its pair is reserved/in flight
+    compiledLocal: Object.create(null),// caseId -> true (§3.7 post-apply local compiled mark)
+    inbox: { status: 'idle', items: [] },
+    // Session-local knowledge for §3.6/§3.7 phrasing, keyed
+    // `${normalizeQuery(query)}|${reference}` — the rescue/suggestion
+    // distinction exists only in this log, never guessed.
+    sessionLog: { rescues: Object.create(null), reopened: Object.create(null) },
+    compare: {
+      status: 'idle',    // 'idle' | 'loading' | 'ready' | 'failed'
+      reviews: [],
+      readOnly: false,
+      reviewId: null,
+      session: null,
+      queryId: null,
+      passageKey: null,  // `${queryId}|${passageId}` of the shared panel
+      passages: Object.create(null),   // passageKey -> {status, data}
+      starting: false,
+      posting: false,
+    },
+    compareConfirm: null, // {choice, opener} — the §3.5 one-confirm layer
+    history: { expandedCount: 20, byCase: Object.create(null) }, // caseId -> {status, records}
+    finish: {
+      status: 'idle',    // 'idle' | 'loading' | 'ready' | 'failed'
+      plan: null,
+      changed: [],       // changed operations (sha256(afterText) !== beforeSha256)
+      lineCount: 0,      // Must-rank + Must-not-rank lines rendered (the Write {n})
+      input: '',
+      applying: false,
+      outcome: null,     // null | {kind:'written', n} | {kind:'stale'} | {kind:'busy'}
+      previewSeq: 0,
+    },
   };
 
   function readUiState() {
@@ -540,20 +734,43 @@ button{font:inherit;}
   function apiCaseState(caseId, caseState) { return postJson('/api/v2/cases/' + encodeURIComponent(caseId) + '/state', { state: caseState }); }
   function apiJudgments(caseId) { return requestJson('/api/v2/judgments?caseId=' + encodeURIComponent(caseId)); }
   function apiJudgmentSubmit(body) { return postJson('/api/v2/judgments', body); }
+  function apiInbox() { return requestJson('/api/v2/inbox'); }
+  function apiCandidates() { return requestJson('/api/v2/candidates'); }
+  function apiBlindSessionStart(reviewId, requestId) {
+    return postJson('/api/v2/candidates/' + encodeURIComponent(reviewId) + '/blind-sessions', { requestId });
+  }
+  function apiBlindPassage(reviewId, sessionId, queryId, passageId) {
+    return requestJson('/api/v2/candidates/' + encodeURIComponent(reviewId)
+      + '/blind-sessions/' + encodeURIComponent(sessionId)
+      + '/passages?queryId=' + encodeURIComponent(queryId) + '&passageId=' + encodeURIComponent(passageId));
+  }
+  function apiBlindJudgment(reviewId, sessionId, body) {
+    return postJson('/api/v2/candidates/' + encodeURIComponent(reviewId)
+      + '/blind-sessions/' + encodeURIComponent(sessionId) + '/judgments', body);
+  }
+  function apiCompilePreview() { return postJson('/api/v2/compile/preview', {}); }
+  function apiCompileApply(digest) { return postJson('/api/v2/compile/apply', { digest }); }
 
   // §stores
+  // §3.6 client sort (binding): a case's touch time is the `at` of its LAST
+  // event (the validated chain is causal, so the last event holds the newest
+  // timestamp; ISO-8601 UTC with fixed-width milliseconds makes plain string
+  // comparison safe). Every recency-ordered surface sorts descending on it.
+  function touchedAt(record) {
+    const events = Array.isArray(record.events) ? record.events : [];
+    const last = events.length > 0 ? events[events.length - 1] : null;
+    return last !== null && typeof last.at === 'string' ? last.at : '';
+  }
+  function sortByTouchedDesc(list) {
+    return list.slice().sort((a, b) => touchedAt(b) < touchedAt(a) ? -1 : touchedAt(b) > touchedAt(a) ? 1 : 0);
+  }
+  // "Open case" — the one §3.4 definition: state ∈ {new, reviewing, judged},
+  // minus cases the §3.7 post-apply re-preview locally marked compiled.
   function openCases() {
-    const open = state.cases.filter((c) => c && (c.state === 'new' || c.state === 'reviewing' || c.state === 'judged'));
-    // The raw response arrives in caseId order; the queue is most recently
-    // touched first (latest events[].at descending).
-    const touched = (c) => {
-      let latest = '';
-      for (const event of Array.isArray(c.events) ? c.events : []) {
-        if (event && typeof event.at === 'string' && event.at > latest) latest = event.at;
-      }
-      return latest;
-    };
-    return open.slice().sort((a, b) => touched(b) < touched(a) ? -1 : touched(b) > touched(a) ? 1 : 0);
+    const open = state.cases.filter((c) => c
+      && (c.state === 'new' || c.state === 'reviewing' || c.state === 'judged')
+      && state.compiledLocal[c.caseId] !== true);
+    return sortByTouchedDesc(open);
   }
   function degradedReadOnly() {
     const h = state.health;
@@ -580,6 +797,15 @@ button{font:inherit;}
     }
     return { byTarget, byRef };
   }
+  // Session-log key for §3.6/§3.7 phrasing: the active query + a reference.
+  function sessionKey(reference) {
+    const query = state.activeCase !== null ? state.activeCase.query : state.search.query;
+    return normalizeQuery(query) + '|' + reference;
+  }
+  function referenceForTarget(targetId) {
+    const hit = state.search.results.find((result) => result.targetId === targetId);
+    return hit !== undefined ? hit.reference : null;
+  }
   function recordLocalJudgment(record) {
     state.sessionJudgmentIds[record.judgmentId] = true;
     if (record.action === 'missing' && typeof record.reference === 'string') {
@@ -587,11 +813,103 @@ button{font:inherit;}
     } else if (typeof record.targetId === 'string') {
       state.judgedByTarget[record.targetId] = record;
       delete state.reopened[record.targetId];
+      const reference = referenceForTarget(record.targetId);
+      if (reference !== null) delete state.sessionLog.reopened[sessionKey(reference)];
     }
   }
   function verdictLabel(record) {
     if (record.action === 'essential') return 'Essential (top ' + record.withinTop + ')';
     return VERDICT_LABELS[record.action] ?? record.action;
+  }
+
+  // §counts-row (§4.3): per open case, ONE GET /api/v2/judgments?caseId=… and
+  // ONE GET /api/v2/cases/:uuid feed "{j}/{m}", the Finish-up tiles, and the
+  // pending banner. The open-case flow fills the entry for the case it opens
+  // (its own pair — never a duplicate), and the active case's entry is
+  // recomputed locally after every commit so counts live-update.
+  function countsEntryFrom(records, review) {
+    const resolved = resolveActiveJudgments(records);
+    const tiles = { essential: 0, helpful: 0, irrelevant: 0, missing: 0 };
+    const judgedTargets = Object.create(null);
+    for (const targetId of Object.keys(resolved.byTarget)) {
+      const action = resolved.byTarget[targetId].action;
+      if (tiles[action] !== undefined) tiles[action] += 1;
+      judgedTargets[targetId] = true;
+    }
+    const missingRefs = Object.keys(resolved.byRef);
+    tiles.missing += missingRefs.length;
+    const j = Object.keys(resolved.byTarget).length + missingRefs.length;
+    const snapItems = review !== null && review !== undefined
+      && review.result && Array.isArray(review.result.results) ? review.result.results : null;
+    // review:null (§4.3 degraded-with-engine-down): m is unavailable — the
+    // queue renders "{j} judged" and the case drops out of the banner's sums.
+    const m = snapItems !== null ? snapItems.length : null;
+    let unjudgedTop = null;
+    if (snapItems !== null) {
+      unjudgedTop = 0;
+      for (const item of snapItems) {
+        if (judgedTargets[item.targetId] !== true) unjudgedTop += 1;
+      }
+    }
+    return { status: 'done', j, m, tiles, missingRefs, unjudgedTop };
+  }
+  function applyCaseCounts(caseId, judgmentData, caseData) {
+    const records = judgmentData !== null && Array.isArray(judgmentData.judgments) ? judgmentData.judgments : [];
+    const review = caseData !== null && caseData !== undefined ? caseData.review : null;
+    state.caseCounts[caseId] = countsEntryFrom(records, review);
+    delete state.countsPending[caseId];
+  }
+  function fetchCaseCounts(caseId) {
+    state.countsPending[caseId] = true;
+    Promise.all([apiJudgments(caseId), apiCase(caseId)]).then(([judgmentData, caseData]) => {
+      applyCaseCounts(caseId, judgmentData, caseData);
+      renderAll({});
+    }).catch(() => {
+      delete state.countsPending[caseId];
+      state.caseCounts[caseId] = { status: 'failed', j: 0, m: null, tiles: { essential: 0, helpful: 0, irrelevant: 0, missing: 0 }, missingRefs: [], unjudgedTop: null };
+      renderAll({});
+    });
+  }
+  function ensureCaseCounts() {
+    for (const record of openCases()) {
+      if (state.caseCounts[record.caseId] !== undefined) continue;
+      if (state.countsPending[record.caseId] === true) continue;
+      fetchCaseCounts(record.caseId);
+    }
+  }
+  // Live-update the active case's counts from the local judged maps (§3.4:
+  // counts update after a judgment, including at the moment a case
+  // auto-transitions to judged).
+  function updateActiveCaseCounts() {
+    const active = state.activeCase;
+    if (active === null) return;
+    const tiles = { essential: 0, helpful: 0, irrelevant: 0, missing: 0 };
+    const judgedTargets = Object.create(null);
+    for (const targetId of Object.keys(state.judgedByTarget)) {
+      const action = state.judgedByTarget[targetId].action;
+      if (tiles[action] !== undefined) tiles[action] += 1;
+      judgedTargets[targetId] = true;
+    }
+    const missingRefs = Object.keys(state.missingByRef);
+    tiles.missing += missingRefs.length;
+    const snapItems = active.snapshotResults;
+    const m = Array.isArray(snapItems) && snapItems.length > 0 ? snapItems.length : null;
+    let unjudgedTop = null;
+    if (m !== null) {
+      unjudgedTop = 0;
+      for (const item of snapItems) {
+        if (judgedTargets[item.targetId] !== true) unjudgedTop += 1;
+      }
+    }
+    state.caseCounts[active.caseId] = {
+      status: 'done',
+      j: Object.keys(state.judgedByTarget).length + missingRefs.length,
+      m,
+      tiles,
+      missingRefs,
+      unjudgedTop,
+    };
+    delete state.countsPending[active.caseId];
   }
   function relativeTime(at) {
     const then = Date.parse(at);
@@ -630,7 +948,8 @@ button{font:inherit;}
     return Object.keys(state.selected).length;
   }
   function anyLayerOpen() {
-    return state.interview !== null || state.missingForm !== null || state.rescue !== null || state.lookup !== null;
+    return state.interview !== null || state.missingForm !== null || state.rescue !== null
+      || state.compareConfirm !== null || state.lookup !== null;
   }
 
   // §helpers
@@ -723,6 +1042,35 @@ button{font:inherit;}
   }
   function isRangeReference(reference) {
     return reference.indexOf('-') !== -1;
+  }
+  // Same slug the compiler uses for eval/golden/<slug>.json (compileJudgments
+  // slugOf) — how a case's query is matched to its fixture operation (§3.7).
+  function slugOf(query) {
+    return query.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+  // Display-only decode of "KJV:19085010" → "Psalms 85:10" (BBCCCVVV, the
+  // pipeline's verse-id encoding) for the humanized History rows. Returns
+  // null rather than guessing when the id does not decode.
+  function referenceOfTargetId(targetId) {
+    const match = /^[A-Za-z][A-Za-z0-9]*:(\d{7,8})$/.exec(typeof targetId === 'string' ? targetId : '');
+    if (match === null) return null;
+    const numeric = Number(match[1]);
+    const bookId = Math.floor(numeric / 1000000);
+    const chapter = Math.floor((numeric % 1000000) / 1000);
+    const verse = numeric % 1000;
+    const book = BOOK_NAMES[bookId - 1];
+    if (book === undefined || chapter === 0 || verse === 0) return null;
+    return book + ' ' + chapter + ':' + verse;
+  }
+  // SHA-256 of a string, hex — the §3.7 changed-set comparison. When the
+  // digest API is unavailable the operation is treated as changed: showing a
+  // write that would be a no-op is honest; hiding a real one is not.
+  async function sha256Hex(text) {
+    const bytes = new TextEncoder().encode(text);
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    let hex = '';
+    for (const byte of new Uint8Array(digest)) hex += byte.toString(16).padStart(2, '0');
+    return hex;
   }
 
   // §theme
@@ -855,8 +1203,10 @@ button{font:inherit;}
     }
 
     const activeCaseId = state.activeCase !== null ? state.activeCase.caseId : null;
+    // Rows in the §3.6 client-sorted order (most recently touched first) —
+    // openCases() already sorts; the raw caseId order is never rendered.
     const waiting = openCases().filter((record) => record.caseId !== activeCaseId);
-    body.appendChild(node('div', 'queue-section-title', 'Waiting in your queue'));
+    body.appendChild(node('div', 'queue-section-title', COPY.waitingTitle));
     if (waiting.length === 0) {
       body.appendChild(node('div', 'rail-empty', COPY.queueEmpty));
     } else {
@@ -865,7 +1215,15 @@ button{font:inherit;}
         row.type = 'button';
         row.appendChild(node('span', 'q', '“' + record.query + '”'));
         const source = SOURCE_LABELS[record.source];
-        if (source !== undefined) row.appendChild(node('span', '', source));
+        if (source !== undefined) row.appendChild(node('span', 'row-source', source));
+        // "{j}/{m}" from the §4.3 counts-row fetches; a judged case renders
+        // "{m}/{m}"; a null review renders "{j} judged" (no denominator).
+        const counts = state.caseCounts[record.caseId];
+        if (counts !== undefined && counts.status === 'done') {
+          row.appendChild(node('span', 'row-count', counts.m === null
+            ? COPY.judgedOnly(counts.j)
+            : counts.j + '/' + counts.m));
+        }
         row.addEventListener('click', () => {
           document.getElementById('search-input').value = record.query;
           void submitSearch(record.query);
@@ -874,12 +1232,60 @@ button{font:inherit;}
       }
     }
 
+    renderInboxSection(body);
+
     if (hasResults) {
       footer.hidden = false;
       footer.textContent = COPY.contract;
     } else {
       footer.hidden = true;
       footer.textContent = '';
+    }
+  }
+
+  // §render — "Worth a look next" (§3.4/D26): up to 5 inbox suggestions that
+  // are not already open cases, each with its plain-language renamed source.
+  // With none, the whole section (header included) is omitted.
+  function inboxEntries() {
+    if (state.inbox.status !== 'done') return [];
+    const openQueries = Object.create(null);
+    for (const record of openCases()) openQueries[normalizeQuery(record.query)] = true;
+    const entries = [];
+    for (const item of state.inbox.items) {
+      if (!item || typeof item !== 'object') continue;
+      const query = item.suggestion && typeof item.suggestion.query === 'string'
+        ? item.suggestion.query
+        : item.case && typeof item.case.query === 'string' ? item.case.query : null;
+      if (query === null || openQueries[normalizeQuery(query)] === true) continue;
+      const source = item.meta && typeof item.meta.source === 'string' ? item.meta.source : null;
+      entries.push({ query, source });
+      if (entries.length === 5) break;
+    }
+    return entries;
+  }
+  function renderInboxSection(body) {
+    if (state.inbox.status === 'failed') {
+      // §3.11: a failed rail fetch shows the fallback sentence inline in
+      // that rail section.
+      body.appendChild(node('div', 'queue-section-title', COPY.inboxTitle));
+      body.appendChild(node('div', 'rail-empty', COPY.bootFetchFailed));
+      return;
+    }
+    const entries = inboxEntries();
+    if (entries.length === 0) return;
+    body.appendChild(node('div', 'queue-section-title', COPY.inboxTitle));
+    for (const entry of entries) {
+      const row = node('button', 'waiting-row inbox-row');
+      row.type = 'button';
+      row.appendChild(node('span', 'q', '“' + entry.query + '”'));
+      const label = entry.source !== null ? SOURCE_LABELS[entry.source] : undefined;
+      if (label !== undefined) row.appendChild(node('span', 'row-source', label));
+      // Clicking runs the search — no case until the first vote (decision 6).
+      row.addEventListener('click', () => {
+        document.getElementById('search-input').value = entry.query;
+        void submitSearch(entry.query);
+      });
+      body.appendChild(row);
     }
   }
 
@@ -955,7 +1361,51 @@ button{font:inherit;}
     renderResults(body);
   }
 
+  // §3.4 per-query done state (D25): next open case (client-sorted) with
+  // unjudged items, per its counts-row entry — never guessed when unknown.
+  function nextOpenCaseWithUnjudged() {
+    const activeId = state.activeCase !== null ? state.activeCase.caseId : null;
+    const currentQuery = normalizeQuery(state.search.query);
+    for (const record of openCases()) {
+      if (record.caseId === activeId) continue;
+      if (normalizeQuery(record.query) === currentQuery) continue;
+      const counts = state.caseCounts[record.caseId];
+      if (counts === undefined || counts.status !== 'done') continue;
+      if (counts.unjudgedTop !== null && counts.unjudgedTop > 0) return record;
+    }
+    return null;
+  }
+  function renderDonePanel(body) {
+    const counts = topBlockCounts();
+    if (counts.total === 0 || counts.unjudged > 0) return;
+    const panel = node('div', 'done-panel');
+    panel.id = 'done-panel';
+    panel.appendChild(node('h2', 'done-title', COPY.doneTitle(counts.total)));
+    panel.appendChild(node('p', '', COPY.doneBody(state.search.query)));
+    const actions = node('div', 'layer-actions');
+    const next = nextOpenCaseWithUnjudged();
+    if (next !== null) {
+      const nextButton = node('button', 'btn-primary', COPY.nextSearch(next.query));
+      nextButton.type = 'button';
+      nextButton.id = 'next-search';
+      nextButton.addEventListener('click', () => {
+        document.getElementById('search-input').value = next.query;
+        void submitSearch(next.query);
+      });
+      actions.appendChild(nextButton);
+    }
+    // Quiet while a next search exists, accent otherwise (§3.4).
+    const review = node('button', next !== null ? 'btn-quiet' : 'btn-primary', COPY.reviewDecided);
+    review.type = 'button';
+    review.id = 'review-decided';
+    review.addEventListener('click', () => { setScreen('history'); });
+    actions.appendChild(review);
+    panel.appendChild(actions);
+    body.appendChild(panel);
+  }
+
   function renderResults(body) {
+    renderDonePanel(body);
     const search = state.search;
     const results = search.results;
     const top = results.slice(0, TOP_WINDOW);
@@ -1376,6 +1826,7 @@ button{font:inherit;}
       return { ok: false, raceMismatch: true };
     }
     adoptSnapshot(review, caseRecord);
+    updateActiveCaseCounts();
     renderQueue();
     return { ok: true, created };
   }
@@ -1458,6 +1909,8 @@ button{font:inherit;}
     const record = outcome && outcome.judgment ? outcome.judgment : null;
     if (record !== null) recordLocalJudgment(record);
     void updateCaseState(createdCase);
+    // §3.4: queue and Finish-up counts live-update after every judgment.
+    updateActiveCaseCounts();
     return { ok: true, record };
   }
   // Bookkeeping transitions (§4.3): failures show nothing, only log.
@@ -1534,6 +1987,8 @@ button{font:inherit;}
   function reopenCall(targetId) {
     if (state.judgedByTarget[targetId] === undefined) return;
     state.reopened[targetId] = true;
+    const reopenedRef = referenceForTarget(targetId);
+    if (reopenedRef !== null) state.sessionLog.reopened[sessionKey(reopenedRef)] = true;
     const top = state.search.results.slice(0, TOP_WINDOW);
     const index = top.findIndex((result) => result.targetId === targetId);
     if (index !== -1) { state.focus = index; state.expandedIndex = index; state.inTail = false; }
@@ -1599,6 +2054,7 @@ button{font:inherit;}
       const data = await apiCaseCreate(query);
       state.cases = state.cases.concat([data.case]);
       if (data.review !== null && typeof data.review.token === 'string') adoptSnapshot(data.review, data.case);
+      updateActiveCaseCounts();
       renderAll({});
     } catch (error) {
       refetchHealth();
@@ -2078,6 +2534,9 @@ button{font:inherit;}
     const caseId = state.activeCase !== null ? state.activeCase.caseId : '';
     state.sessionRescues[caseId + '|' + reference] = true;
     state.rescuedRows[caseId + '|' + rowReference] = reference;
+    // §3.6/§3.7: a rescued verse was never missing — the distinction lives
+    // only in this session log, never guessed for prior-session records.
+    state.sessionLog.rescues[sessionKey(reference)] = true;
     state.lastCommit = { kind: 'rescue' };
     closeRescue({});
     showToast(COPY.rescueToast(reference, state.search.query));
@@ -2505,8 +2964,39 @@ button{font:inherit;}
     slot.appendChild(bar);
   }
 
+  // §screens — nav switching (P4). The review grid stays in the DOM; the
+  // other screens render into their own containers.
+  function setScreen(name) {
+    if (state.screen === name) { renderAll({}); return; }
+    state.screen = name;
+    if (name === 'compare') void openCompare();
+    if (name === 'history') openHistory();
+    if (name === 'finish') void openFinishUp();
+    renderAll({});
+  }
+  function renderScreenChrome() {
+    document.getElementById('review-grid').hidden = state.screen !== 'review';
+    document.getElementById('screen-compare').hidden = state.screen !== 'compare';
+    document.getElementById('screen-history').hidden = state.screen !== 'history';
+    document.getElementById('screen-finish').hidden = state.screen !== 'finish';
+    document.getElementById('screen-advanced').hidden = state.screen !== 'advanced';
+    const navName = state.screen;
+    document.querySelectorAll('.nav-item, .advanced-link').forEach((item) => {
+      if (item.dataset.nav === navName) item.setAttribute('aria-current', 'page');
+      else item.removeAttribute('aria-current');
+    });
+    // The verdict toolbar and bulk bar belong to Review only.
+    if (state.screen !== 'review') clear(document.getElementById('actionbar-slot'));
+  }
+
   // §render — everything
   function renderAll(options) {
+    renderScreenChrome();
+    renderBanner();
+    if (state.screen === 'compare') { renderCompare(); return; }
+    if (state.screen === 'history') { renderHistory(); return; }
+    if (state.screen === 'finish') { renderFinish(); return; }
+    if (state.screen === 'advanced') { renderAdvanced(); return; }
     // Re-rendering replaces the results DOM: when the focused element lived
     // there (or focus already fell back to body after an earlier rebuild),
     // restore it, so an async re-render never strands keyboard focus.
@@ -2518,7 +3008,6 @@ button{font:inherit;}
     // closing a layer opened from such a control returns focus to it, not
     // to the roving card position.
     const activeId = focusWasInResults && typeof active.id === 'string' && active.id !== '' ? active.id : null;
-    renderBanner();
     renderQueue();
     renderCenter();
     renderRail();
@@ -2539,6 +3028,889 @@ button{font:inherit;}
     if (state.search.status === 'results' && (explicit || focusWasInResults)) focusCurrentStop();
   }
 
+  // §compare — the blind Compare screen (§3.5/D27). Session and passage
+  // field names are ported from the old console's compare code
+  // (index.html:2779 area, loadComparisonReviews:3730): the start body is
+  // {requestId}; a judgment posts {requestId, revision, stateDigest,
+  // queryId, choice}; the passages GET carries exactly queryId + passageId.
+  function compareReadOnly() {
+    return degradedReadOnly() || state.compare.readOnly === true;
+  }
+  async function openCompare() {
+    const compare = state.compare;
+    if (compare.status === 'loading') return;
+    compare.status = 'loading';
+    renderCompare();
+    try {
+      const data = await apiCandidates();
+      compare.reviews = data && Array.isArray(data.reviews) ? data.reviews : [];
+      compare.readOnly = !!(data && data.readOnly === true);
+      compare.status = 'ready';
+    } catch (error) {
+      compare.status = 'failed';
+    }
+    renderCompare();
+  }
+  // The per-review requestId persists in study.ui.v1 (§4.9) so a reload
+  // resumes the same blind session instead of minting a duplicate.
+  function blindRequestIdFor(reviewId) {
+    const ui = readUiState();
+    const map = typeof ui.blindRequestIds === 'object' && ui.blindRequestIds !== null ? ui.blindRequestIds : {};
+    if (typeof map[reviewId] === 'string') return map[reviewId];
+    const requestId = crypto.randomUUID();
+    map[reviewId] = requestId;
+    writeUiState({ blindRequestIds: map });
+    return requestId;
+  }
+  async function startCompareSession(reviewId) {
+    const compare = state.compare;
+    if (compare.starting) return;
+    compare.starting = true;
+    renderCompare();
+    try {
+      const data = await apiBlindSessionStart(reviewId, blindRequestIdFor(reviewId));
+      compare.reviewId = reviewId;
+      acceptCompareSession(data.session);
+    } catch (error) {
+      compare.status = 'failed';
+    }
+    compare.starting = false;
+    renderCompare();
+  }
+  function acceptCompareSession(session) {
+    const compare = state.compare;
+    compare.session = session;
+    const queries = session && Array.isArray(session.queries) ? session.queries : [];
+    if (!queries.some((query) => query.queryId === compare.queryId)) {
+      const firstOpen = queries.find((query) => !query.judgment);
+      compare.queryId = firstOpen !== undefined ? firstOpen.queryId
+        : queries.length > 0 ? queries[0].queryId : null;
+      compare.passageKey = null;
+    }
+  }
+  function compareSelectedQuery() {
+    const compare = state.compare;
+    if (compare.session === null || compare.queryId === null) return null;
+    const queries = Array.isArray(compare.session.queries) ? compare.session.queries : [];
+    return queries.find((query) => query.queryId === compare.queryId) ?? null;
+  }
+  function selectComparePassage(passageId) {
+    const compare = state.compare;
+    const key = compare.queryId + '|' + passageId;
+    compare.passageKey = key;
+    if (compare.passages[key] === undefined) {
+      compare.passages[key] = { status: 'loading', data: null };
+      apiBlindPassage(compare.reviewId, compare.session.sessionId, compare.queryId, passageId).then((data) => {
+        compare.passages[key] = { status: 'done', data };
+        if (state.screen === 'compare') renderCompare();
+      }).catch(() => {
+        compare.passages[key] = { status: 'failed', data: null };
+        if (state.screen === 'compare') renderCompare();
+      });
+    }
+    renderCompare();
+  }
+  // §3.5 binding: A/B/T/W never commits directly — each opens the
+  // one-confirm layer; only its Confirm posts.
+  function openCompareConfirm(choice, opener) {
+    if (compareReadOnly()) { showToast(COPY.readOnlyToast); return; }
+    const query = compareSelectedQuery();
+    if (query === null || query.judgment) return;
+    state.compareConfirm = {
+      choice,
+      opener: opener !== null && opener !== undefined
+        ? opener
+        : document.getElementById('compare-' + KEY_BY_CHOICE[choice]),
+    };
+    renderCompareConfirm();
+  }
+  function closeCompareConfirm() {
+    const confirm = state.compareConfirm;
+    state.compareConfirm = null;
+    closeLayerDialog(confirm !== null ? confirm.opener : null);
+  }
+  function renderCompareConfirm() {
+    const confirm = state.compareConfirm;
+    if (confirm === null) return;
+    const label = CHOICE_LABELS[confirm.choice];
+    const dialog = openLayerDialog(COPY.compareConfirmTitle(label), 'compare-confirm-title');
+    dialog.id = 'compare-confirm-dialog';
+    dialog.appendChild(node('p', 'layer-prompt', COPY.compareFinality));
+    const actions = node('div', 'layer-actions');
+    const commit = node('button', 'btn-primary', COPY.compareConfirmButton(label));
+    commit.type = 'button';
+    commit.id = 'compare-confirm-commit';
+    if (compareReadOnly() || state.compare.posting) commit.disabled = true;
+    commit.addEventListener('click', () => { void confirmCompareChoice(); });
+    actions.appendChild(commit);
+    const cancel = node('button', 'btn-quiet', 'Cancel');
+    cancel.type = 'button';
+    cancel.id = 'compare-confirm-cancel';
+    cancel.addEventListener('click', closeCompareConfirm);
+    actions.appendChild(cancel);
+    dialog.appendChild(actions);
+    // §3.12 exception class: initial focus is Cancel, never Confirm — a
+    // reflexive A-then-Enter double-tap must not commit.
+    cancel.focus();
+  }
+  async function confirmCompareChoice() {
+    const confirm = state.compareConfirm;
+    const compare = state.compare;
+    if (confirm === null || compare.session === null || compare.posting) return;
+    if (compareReadOnly()) { showToast(COPY.readOnlyToast); return; }
+    compare.posting = true;
+    const body = {
+      requestId: crypto.randomUUID(),
+      revision: compare.session.revision,
+      stateDigest: compare.session.stateDigest,
+      queryId: compare.queryId,
+      choice: confirm.choice,
+    };
+    let data = null;
+    try {
+      data = await apiBlindJudgment(compare.reviewId, compare.session.sessionId, body);
+    } catch (error) {
+      compare.posting = false;
+      refetchHealth();
+      const code = error && typeof error.code === 'string' ? error.code : '';
+      showToast(code === 'startup_degraded_read_only' || code === 'artifact_unavailable'
+        ? COPY.readOnlyToast
+        : COPY.postFailed);
+      renderCompareConfirm();
+      return;
+    }
+    compare.posting = false;
+    state.compareConfirm = null;
+    clear(document.getElementById('dialog-slot'));
+    acceptCompareSession(data.session);
+    // Keep the just-judged query selected so its reveal is what renders.
+    compare.queryId = body.queryId;
+    renderCompare();
+  }
+  function revealText(query) {
+    const choice = query.judgment.choice;
+    if (choice === 'tie') return COPY.revealTie;
+    if (choice === 'both-wrong') return COPY.revealBothWrong;
+    const reveal = query.reveal && typeof query.reveal === 'object' ? query.reveal : {};
+    const side = choice === 'a-wins' ? 'A' : 'B';
+    const sideName = choice === 'a-wins' ? reveal.sideA : reveal.sideB;
+    return COPY.revealPreferred(side, sideName === 'Current' ? 'the current engine' : 'the candidate');
+  }
+  function compareResultRow(entry, index) {
+    const compare = state.compare;
+    const row = node('button', 'compare-row'
+      + (compare.passageKey === compare.queryId + '|' + entry.passageId ? ' sel' : ''));
+    row.type = 'button';
+    row.dataset.passage = entry.passageId;
+    row.appendChild(node('span', 'rank-badge', '#' + (index + 1)));
+    row.appendChild(node('span', 'card-ref', entry.reference));
+    row.addEventListener('click', () => { selectComparePassage(entry.passageId); });
+    return row;
+  }
+  function renderCompare() {
+    if (state.screen !== 'compare') return;
+    const container = document.getElementById('screen-compare');
+    clear(container);
+    const inner = node('div', 'screen-inner');
+    container.appendChild(inner);
+    const compare = state.compare;
+    if (compare.status === 'loading' || compare.starting) {
+      for (let i = 0; i < 3; i += 1) inner.appendChild(node('div', 'skeleton-row'));
+      return;
+    }
+    if (compare.status === 'failed') {
+      inner.appendChild(node('p', 'screen-sub', COPY.bootFetchFailed));
+      return;
+    }
+    if (compare.session === null) {
+      inner.appendChild(node('h1', '', 'Compare'));
+      if (compare.reviews.length === 0) {
+        inner.appendChild(node('p', 'screen-sub', COPY.compareEmpty));
+        return;
+      }
+      for (const review of compare.reviews) {
+        const card = node('div', 'compare-card');
+        const left = node('div', '');
+        left.appendChild(node('div', '', typeof review.label === 'string' ? review.label : 'Comparison'));
+        left.appendChild(node('div', 'screen-sub', review.reviewedCount + ' of ' + review.queryCount + ' searches called'));
+        card.appendChild(left);
+        const start = node('button', 'btn-primary', review.status === 'not-started' ? 'Start the blind review' : 'Resume the blind review');
+        start.type = 'button';
+        start.dataset.review = review.reviewId;
+        start.addEventListener('click', () => { void startCompareSession(review.reviewId); });
+        card.appendChild(start);
+        inner.appendChild(card);
+      }
+      return;
+    }
+    const query = compareSelectedQuery();
+    if (query === null) {
+      inner.appendChild(node('p', 'screen-sub', COPY.compareEmpty));
+      return;
+    }
+    const queries = Array.isArray(compare.session.queries) ? compare.session.queries : [];
+    if (queries.length > 1) {
+      const chips = node('div', 'query-chips');
+      for (const entry of queries) {
+        const chip = node('button', 'query-chip');
+        chip.type = 'button';
+        chip.setAttribute('aria-pressed', entry.queryId === compare.queryId ? 'true' : 'false');
+        chip.appendChild(node('span', '', '“' + entry.query + '”'));
+        if (entry.judgment) chip.appendChild(node('span', 'chip-done', ' ✓'));
+        chip.addEventListener('click', () => {
+          compare.queryId = entry.queryId;
+          compare.passageKey = null;
+          renderCompare();
+        });
+        chips.appendChild(chip);
+      }
+      inner.appendChild(chips);
+    }
+    const head = node('div', '');
+    head.appendChild(node('h1', '', COPY.compareTitle(query.query)));
+    head.appendChild(node('p', 'screen-sub', COPY.compareBlind));
+    head.appendChild(node('p', 'screen-sub', COPY.compareHow));
+    inner.appendChild(head);
+    const lists = node('div', 'compare-lists');
+    const sides = query.sides && typeof query.sides === 'object' ? query.sides : { a: [], b: [] };
+    for (const side of ['a', 'b']) {
+      const column = node('div', 'compare-col');
+      column.appendChild(node('div', 'col-head', 'Set ' + side.toUpperCase()));
+      (Array.isArray(sides[side]) ? sides[side] : []).forEach((entry, index) => {
+        column.appendChild(compareResultRow(entry, index));
+      });
+      lists.appendChild(column);
+    }
+    inner.appendChild(lists);
+    if (compare.passageKey !== null) {
+      inner.appendChild(renderComparePanel(query, sides));
+    }
+    if (query.judgment) {
+      const reveal = node('div', 'reveal-card');
+      reveal.id = 'reveal-card';
+      reveal.appendChild(node('div', 'reveal-tag', COPY.revealTag));
+      reveal.appendChild(node('p', 'reveal-line', revealText(query)));
+      reveal.appendChild(node('p', 'screen-sub', COPY.revealBody));
+      const back = node('button', 'btn-quiet', COPY.backToReview);
+      back.type = 'button';
+      back.id = 'reveal-back';
+      back.addEventListener('click', () => { setScreen('review'); });
+      reveal.appendChild(back);
+      inner.appendChild(reveal);
+      return;
+    }
+    const toolbar = node('div', 'compare-toolbar');
+    toolbar.setAttribute('role', 'toolbar');
+    toolbar.setAttribute('aria-label', 'Comparison call');
+    const disabled = compareReadOnly();
+    const addButton = (keycap, choice, labelText) => {
+      const button = node('button', 'verdict-btn');
+      button.type = 'button';
+      button.id = 'compare-' + keycap.toLowerCase();
+      button.appendChild(node('span', 'kbd', keycap));
+      button.appendChild(node('span', '', labelText));
+      if (disabled) button.disabled = true;
+      button.addEventListener('click', (event) => { openCompareConfirm(choice, event.currentTarget); });
+      toolbar.appendChild(button);
+    };
+    addButton('A', 'a-wins', 'A wins');
+    addButton('B', 'b-wins', 'B wins');
+    addButton('T', 'tie', 'Tie');
+    addButton('W', 'both-wrong', 'Both wrong');
+    inner.appendChild(toolbar);
+  }
+  function renderComparePanel(query, sides) {
+    const compare = state.compare;
+    const panel = node('div', 'compare-panel');
+    panel.id = 'compare-panel';
+    const cached = compare.passages[compare.passageKey];
+    const passageId = compare.passageKey.split('|')[1];
+    if (cached === undefined || cached.status === 'loading') {
+      panel.appendChild(node('p', 'screen-sub', COPY.loadingPassage));
+      return panel;
+    }
+    if (cached.status === 'failed') {
+      panel.appendChild(node('p', 'screen-sub', COPY.bootFetchFailed));
+      return panel;
+    }
+    const data = cached.data;
+    panel.appendChild(node('h2', '', typeof data.reference === 'string' ? data.reference : ''));
+    const body = node('p', 'verse-body');
+    for (const verse of Array.isArray(data.verses) ? data.verses : []) {
+      body.appendChild(node('sup', '', String(verse.verse)));
+      body.appendChild(document.createTextNode(verse.text + ' '));
+    }
+    panel.appendChild(body);
+    const says = node('div', 'compare-says');
+    for (const side of ['a', 'b']) {
+      const cell = node('div', '');
+      cell.appendChild(node('div', 'why-key', COPY.setSays(side.toUpperCase())));
+      const entry = (Array.isArray(sides[side]) ? sides[side] : [])
+        .find((candidate) => candidate.passageId === passageId);
+      if (entry === undefined) {
+        cell.appendChild(node('div', 'screen-sub', COPY.notInThisSet));
+      } else {
+        const labels = (Array.isArray(entry.reasons) ? entry.reasons : [])
+          .map((reason) => reason && typeof reason.label === 'string' ? reason.label : null)
+          .filter((label) => label !== null);
+        cell.appendChild(node('div', 'why-val', labels.length > 0 ? labels.join(' · ') : '—'));
+      }
+      says.appendChild(cell);
+    }
+    panel.appendChild(says);
+    return panel;
+  }
+
+  // §history — the humanized History screen (§3.6/D28). No raw IDs, digests,
+  // or fingerprints anywhere on this screen.
+  function historyCases() {
+    return sortByTouchedDesc(state.cases.filter((record) => !!record));
+  }
+  function openHistory() {
+    // Re-fetch lazily per visit so calls made this session appear.
+    state.history.byCase = Object.create(null);
+    ensureHistoryFetches();
+  }
+  function ensureHistoryFetches() {
+    for (const record of historyCases().slice(0, state.history.expandedCount)) {
+      if (state.history.byCase[record.caseId] !== undefined) continue;
+      state.history.byCase[record.caseId] = { status: 'loading', records: [] };
+      apiJudgments(record.caseId).then((data) => {
+        state.history.byCase[record.caseId] = {
+          status: 'done',
+          records: data !== null && Array.isArray(data.judgments) ? data.judgments : [],
+        };
+        if (state.screen === 'history') renderHistory();
+      }).catch(() => {
+        state.history.byCase[record.caseId] = { status: 'failed', records: [] };
+        if (state.screen === 'history') renderHistory();
+      });
+    }
+  }
+  function historyWhy(record) {
+    const phrase = typeof record.diagnosis === 'string' ? COPY.plainWhy[record.diagnosis] : undefined;
+    return phrase !== undefined ? phrase : COPY.plainWhy['lexical-noise'];
+  }
+  function historyRowText(record, query) {
+    if (record.action === 'missing') {
+      const ref = typeof record.reference === 'string' ? record.reference : '';
+      const n = record.withinTop !== undefined ? record.withinTop : 10;
+      // A missing judgment this session recorded as a tail rescue renders
+      // the rescue phrasing; prior-session records render the generic
+      // template — the distinction is session-local, never guessed.
+      return state.sessionLog.rescues[normalizeQuery(query) + '|' + ref] === true
+        ? COPY.historyRescued(ref, n, query)
+        : COPY.historyMissing(ref, n, query);
+    }
+    if (record.action === 'prefer') {
+      const above = referenceOfTargetId(record.preferredTargetId);
+      const below = referenceOfTargetId(record.otherTargetId);
+      return above !== null && below !== null ? COPY.historyPrefer(above, below, query) : null;
+    }
+    const ref = referenceOfTargetId(record.targetId);
+    if (ref === null) return null; // never render a raw id in place of a reference
+    if (record.action === 'essential') return COPY.historyEssential(ref, record.withinTop !== undefined ? record.withinTop : 10, query);
+    if (record.action === 'helpful') return COPY.historyHelpful(ref, query);
+    if (record.action === 'irrelevant') return COPY.historyIrrelevant(ref, historyWhy(record), query);
+    return null;
+  }
+  function renderHistory() {
+    if (state.screen !== 'history') return;
+    const container = document.getElementById('screen-history');
+    clear(container);
+    const inner = node('div', 'screen-inner');
+    container.appendChild(inner);
+    const cases = historyCases();
+    const visible = cases.slice(0, state.history.expandedCount);
+    let total = 0;
+    let anyLoading = false;
+    const groups = [];
+    for (const record of visible) {
+      const entry = state.history.byCase[record.caseId];
+      if (entry === undefined || entry.status === 'loading') { anyLoading = true; continue; }
+      if (entry.status !== 'done' || entry.records.length === 0) continue;
+      total += entry.records.length;
+      groups.push({ record, records: entry.records });
+    }
+    const head = node('div', '');
+    head.appendChild(node('h1', '', COPY.historyTitle));
+    head.appendChild(node('p', 'screen-sub', COPY.historySub));
+    inner.appendChild(head);
+    if (cases.length === 0 || (!anyLoading && total === 0)) {
+      inner.appendChild(node('p', 'screen-sub', COPY.historyEmpty));
+      const go = node('button', 'btn-primary', COPY.goToReview);
+      go.type = 'button';
+      go.id = 'history-go-review';
+      go.addEventListener('click', () => { setScreen('review'); });
+      inner.appendChild(go);
+      return;
+    }
+    inner.appendChild(node('p', 'screen-sub', COPY.historyCount(total)));
+    for (const group of groups) {
+      const card = node('div', 'history-group');
+      const groupHead = node('div', 'group-head');
+      groupHead.appendChild(node('h2', '', '“' + group.record.query + '”'));
+      card.appendChild(groupHead);
+      const superseded = Object.create(null);
+      for (const record of group.records) {
+        if (record && typeof record.supersedes === 'string') superseded[record.supersedes] = true;
+      }
+      const ordered = group.records.slice().sort((a, b) => {
+        const left = typeof a.at === 'string' ? a.at : '';
+        const right = typeof b.at === 'string' ? b.at : '';
+        return right < left ? -1 : right > left ? 1 : 0;
+      });
+      for (const record of ordered) {
+        if (!record || record.schemaVersion !== 2) continue;
+        const text = historyRowText(record, group.record.query);
+        if (text === null) continue;
+        const struck = superseded[record.judgmentId] === true;
+        const row = node('div', 'history-row' + (struck ? ' struck' : ''));
+        const line = node('div', 'row-line');
+        line.appendChild(node('span', 'when', relativeTime(record.at)));
+        line.appendChild(node('span', 'what', text));
+        row.appendChild(line);
+        if (struck) row.appendChild(node('div', 'history-sub', COPY.replacedByNewer));
+        card.appendChild(row);
+      }
+      inner.appendChild(card);
+    }
+    if (anyLoading) inner.appendChild(node('div', 'skeleton-row'));
+    if (cases.length > state.history.expandedCount) {
+      const more = node('button', 'btn-quiet', COPY.showMore);
+      more.type = 'button';
+      more.id = 'history-show-more';
+      more.addEventListener('click', () => {
+        state.history.expandedCount += 20;
+        ensureHistoryFetches();
+        renderHistory();
+      });
+      inner.appendChild(more);
+    }
+  }
+
+  // §finish — the Finish-up screen (§3.7/D29): stat tiles, pending banner,
+  // the honestly-derived changed set, and the typed-digest signing flow.
+  // Signing reuses the server's existing digest/sign mechanism exactly:
+  // POST /api/v2/compile/preview → plan.digest; POST /api/v2/compile/apply
+  // posts the FULL digest back. No /api/v2 changes.
+  const WEB_SUBSET_PATH = 'pipeline/fixtures/web-subset.json';
+  async function openFinishUp() {
+    ensureCaseCounts();
+    state.finish.outcome = null;
+    state.finish.input = '';
+    await loadCompilePreview();
+  }
+  async function loadCompilePreview() {
+    const finish = state.finish;
+    finish.status = 'loading';
+    renderFinish();
+    const seq = ++finish.previewSeq;
+    let data = null;
+    try {
+      data = await apiCompilePreview();
+    } catch (error) {
+      if (seq !== finish.previewSeq) return;
+      finish.status = 'failed';
+      renderFinish();
+      return;
+    }
+    if (seq !== finish.previewSeq) return;
+    const plan = data !== null && data.plan ? data.plan : null;
+    if (plan === null) { finish.status = 'failed'; renderFinish(); return; }
+    finish.plan = plan;
+    finish.changed = await computeChangedSet(plan);
+    if (seq !== finish.previewSeq) return;
+    finish.status = 'ready';
+    finish.input = '';
+    renderFinish();
+  }
+  // §3.7 changed set: operations where sha256(afterText) !== beforeSha256;
+  // an afterText of null is a deletion, changed when beforeSha256 !== null.
+  // The compiler restates everything on every preview, so only this
+  // changed-bytes delta says whether anything will actually change.
+  async function computeChangedSet(plan) {
+    const changed = [];
+    for (const op of Array.isArray(plan.operations) ? plan.operations : []) {
+      if (!op || typeof op.path !== 'string') continue;
+      if (op.afterText === null || op.afterText === undefined) {
+        if (op.beforeSha256 !== null && op.beforeSha256 !== undefined) changed.push(op);
+        continue;
+      }
+      let after = null;
+      try { after = await sha256Hex(op.afterText); } catch (error) { after = null; }
+      if (after === null || after !== op.beforeSha256) changed.push(op);
+    }
+    return changed;
+  }
+  function finishTiles() {
+    const tiles = { essential: 0, helpful: 0, irrelevant: 0, missing: 0 };
+    for (const record of openCases()) {
+      const counts = state.caseCounts[record.caseId];
+      if (counts === undefined || counts.status !== 'done') continue;
+      tiles.essential += counts.tiles.essential;
+      tiles.helpful += counts.tiles.helpful;
+      tiles.irrelevant += counts.tiles.irrelevant;
+      tiles.missing += counts.tiles.missing;
+    }
+    return tiles;
+  }
+  function pendingTally() {
+    let n = 0;
+    let m = 0;
+    let any = false;
+    let firstQuery = null;
+    for (const record of openCases()) {
+      const counts = state.caseCounts[record.caseId];
+      // A case whose review came back null drops out of both sums (§3.7).
+      if (counts === undefined || counts.status !== 'done' || counts.m === null) continue;
+      any = true;
+      m += counts.m;
+      const unjudged = counts.unjudgedTop === null ? 0 : counts.unjudgedTop;
+      n += unjudged;
+      if (unjudged > 0 && firstQuery === null) firstQuery = record.query;
+    }
+    return { n, m, any, firstQuery };
+  }
+  function buildWriteGroups() {
+    const finish = state.finish;
+    const plan = finish.plan;
+    const groups = [];
+    let lineCount = 0;
+    // "Added by you" knowledge: the client's missing-action judgments per
+    // open case, from the §4.3 counts-row judgments (prior sessions
+    // included). Rescue phrasing comes only from the session log.
+    const localMissing = Object.create(null);
+    for (const record of openCases()) {
+      const counts = state.caseCounts[record.caseId];
+      if (counts === undefined || counts.status !== 'done') continue;
+      for (const ref of counts.missingRefs) {
+        localMissing[normalizeQuery(record.query) + '|' + ref] = true;
+      }
+    }
+    for (const op of finish.changed) {
+      if (op.path === WEB_SUBSET_PATH) {
+        const lines = [];
+        for (const entry of Array.isArray(plan.proposedSelections) ? plan.proposedSelections : []) {
+          const chapters = Array.isArray(entry.chapters) ? entry.chapters.join(', ') : '';
+          lines.push({ text: COPY.corpusAdd(entry.book, chapters), suffix: '' });
+        }
+        if (lines.length > 0) groups.push({ query: null, lines });
+        continue;
+      }
+      if (op.afterText === null || op.afterText === undefined) {
+        // A deletion: recover the query from the fixture slug for display.
+        const slug = op.path.split('/').pop().replace(/\.json$/, '');
+        groups.push({ query: null, lines: [{ text: COPY.withdrawn(slug.replace(/-/g, ' ')), suffix: '' }] });
+        continue;
+      }
+      const written = (Array.isArray(plan.fixturesWritten) ? plan.fixturesWritten : [])
+        .find((entry) => entry && entry.path === op.path);
+      if (written === undefined || !written.fixture) continue;
+      const fixture = written.fixture;
+      const queryKey = normalizeQuery(typeof fixture.query === 'string' ? fixture.query : '');
+      const lines = [];
+      for (const expectation of Array.isArray(fixture.expectedTop) ? fixture.expectedTop : []) {
+        const ref = expectation.ref !== undefined ? expectation.ref : expectation.reference !== undefined ? expectation.reference : '';
+        const n = expectation.withinTop !== undefined ? expectation.withinTop
+          : fixture.expectedWithinTop !== undefined ? fixture.expectedWithinTop : 10;
+        const key = queryKey + '|' + ref;
+        let suffix = '';
+        // Compiled fixtures render essential and missing identically — this
+        // suffix is the only distinction, from the client's own knowledge.
+        // Never "not in the engine's results": tail rescues ARE engine
+        // results, and a typed suggestion can name a rank-11+ verse — the
+        // honest claim is about the top 10 (§3.7).
+        if (state.sessionLog.rescues[key] === true) suffix += COPY.suffixRescued;
+        else if (localMissing[key] === true) suffix += COPY.suffixAdded;
+        if (state.sessionLog.reopened[key] === true) suffix += COPY.suffixReopened;
+        lines.push({ text: COPY.mustRank(ref, n), suffix });
+        lineCount += 1;
+      }
+      for (const forbidden of Array.isArray(fixture.mustNotRank) ? fixture.mustNotRank : []) {
+        const ref = forbidden.ref !== undefined ? forbidden.ref : forbidden.reference !== undefined ? forbidden.reference : '';
+        let why = typeof forbidden.why === 'string' ? forbidden.why : '';
+        // A note-less legacy record falls back to the raw diagnosis token
+        // (compileJudgments.ts:504–508 covers only lexical-noise in plain
+        // words) — never the jargon token on the signing surface (§3.7).
+        if (why === 'wrong-anchor') why = COPY.plainWhy['wrong-anchor'];
+        else if (why === 'concept-misfire') why = COPY.plainWhy['concept-misfire'];
+        const suffix = state.sessionLog.reopened[queryKey + '|' + ref] === true ? COPY.suffixReopened : '';
+        lines.push({ text: COPY.mustNotRank(ref, why), suffix });
+        lineCount += 1;
+      }
+      if (lines.length > 0) groups.push({ query: fixture.query, lines });
+    }
+    return { groups, lineCount };
+  }
+  function signCode() {
+    const finish = state.finish;
+    if (finish.plan === null || typeof finish.plan.digest !== 'string') return null;
+    return finish.plan.digest.slice(0, 12);
+  }
+  function signMatches() {
+    const code = signCode();
+    if (code === null) return false;
+    // Exact, case-insensitive match; the shown grouping spaces are ignored.
+    return state.finish.input.replace(/\s+/g, '').toLowerCase() === code.toLowerCase();
+  }
+  function signControlsEnabled() {
+    return !degradedReadOnly() && !state.finish.applying;
+  }
+  async function applyCompile() {
+    const finish = state.finish;
+    if (finish.status !== 'ready' || finish.applying) return;
+    if (degradedReadOnly()) { showToast(COPY.readOnlyToast); return; }
+    if (!signMatches()) return;
+    const writtenCount = finish.lineCount;
+    finish.applying = true;
+    renderFinish();
+    try {
+      // The FULL digest — the server contract, unchanged.
+      await apiCompileApply(finish.plan.digest);
+    } catch (error) {
+      finish.applying = false;
+      const code = error && typeof error.code === 'string' ? error.code : '';
+      if (code === 'stale_preview') {
+        finish.outcome = { kind: 'stale' };
+        renderFinish();
+        await loadCompilePreview(); // auto re-preview: a new code
+        return;
+      }
+      if (code === 'mutation_running' || code === 'job_running') {
+        finish.outcome = { kind: 'busy' };
+        renderFinish();
+        return;
+      }
+      refetchHealth();
+      showToast(code === 'startup_degraded_read_only' || code === 'artifact_unavailable'
+        ? COPY.readOnlyToast
+        : COPY.postFailed);
+      renderFinish();
+      return;
+    }
+    finish.applying = false;
+    finish.outcome = { kind: 'written', n: writtenCount };
+    finish.input = '';
+    renderFinish();
+    await repreviewAfterApply();
+  }
+  // §3.7 post-apply re-preview (binding): re-run the preview once and drop
+  // every judged open case whose query contributes no changed operation —
+  // the closing half of §3.4's open-case approximation. new/reviewing cases
+  // never drop; the mark is session-local.
+  async function repreviewAfterApply() {
+    const finish = state.finish;
+    let data = null;
+    try {
+      data = await apiCompilePreview();
+    } catch (error) {
+      return; // cannot recompute — drop nothing rather than guess
+    }
+    const plan = data !== null && data.plan ? data.plan : null;
+    if (plan === null) return;
+    finish.previewSeq += 1;
+    finish.plan = plan;
+    finish.changed = await computeChangedSet(plan);
+    finish.input = '';
+    finish.status = 'ready';
+    const changedSlugs = Object.create(null);
+    for (const op of finish.changed) {
+      if (op.path === WEB_SUBSET_PATH) continue;
+      const written = (Array.isArray(plan.fixturesWritten) ? plan.fixturesWritten : [])
+        .find((entry) => entry && entry.path === op.path);
+      if (written !== undefined && written.fixture && typeof written.fixture.query === 'string') {
+        changedSlugs[slugOf(written.fixture.query)] = true;
+      } else {
+        changedSlugs[op.path.split('/').pop().replace(/\.json$/, '')] = true;
+      }
+    }
+    for (const record of openCases()) {
+      if (record.state !== 'judged') continue;
+      if (changedSlugs[slugOf(record.query)] !== true) state.compiledLocal[record.caseId] = true;
+    }
+    renderFinish();
+    if (state.screen === 'review') renderQueue();
+  }
+  function renderFinish() {
+    if (state.screen !== 'finish') return;
+    const container = document.getElementById('screen-finish');
+    clear(container);
+    const inner = node('div', 'screen-inner');
+    container.appendChild(inner);
+    const finish = state.finish;
+    const head = node('div', '');
+    head.appendChild(node('h1', '', 'Finish up'));
+    head.appendChild(node('p', 'screen-sub', COPY.finishIntro));
+    head.appendChild(node('p', 'screen-sub', COPY.finishDefine));
+    inner.appendChild(head);
+
+    // Four stat tiles across ALL open cases (§3.4's one open definition).
+    const tiles = finishTiles();
+    const tileRow = node('div', 'tiles');
+    tileRow.id = 'finish-tiles';
+    const addTile = (tone, count, labelText) => {
+      const tile = node('div', 'tile ' + tone);
+      tile.appendChild(node('div', 'tile-n', String(count)));
+      tile.appendChild(node('div', 'tile-label', labelText));
+      tileRow.appendChild(tile);
+    };
+    addTile('affirm', tiles.essential, 'Essential');
+    addTile('affirm', tiles.helpful, 'Helpful');
+    addTile('notrel', tiles.irrelevant, 'Not relevant');
+    addTile('missing', tiles.missing, 'Missing passages');
+    inner.appendChild(tileRow);
+
+    const pending = pendingTally();
+    const reopenedCount = Object.keys(state.reopened).length;
+    if (pending.any && pending.n > 0) {
+      const banner = node('div', 'pending-banner');
+      banner.id = 'pending-banner';
+      banner.appendChild(node('span', '', reopenedCount > 0
+        ? COPY.pendingBannerReopened(pending.n, pending.m, reopenedCount)
+        : COPY.pendingBanner(pending.n, pending.m)));
+      if (pending.firstQuery !== null) {
+        const go = node('button', 'btn-quiet', 'Finish them first →');
+        go.type = 'button';
+        go.id = 'pending-go';
+        const target = pending.firstQuery;
+        go.addEventListener('click', () => {
+          document.getElementById('search-input').value = target;
+          void submitSearch(target);
+        });
+        banner.appendChild(go);
+      }
+      inner.appendChild(banner);
+    }
+
+    if (finish.outcome !== null && finish.outcome.kind === 'written') {
+      const card = node('div', 'written-card');
+      card.id = 'written-card';
+      card.appendChild(node('p', 'written-title', COPY.writtenTitle));
+      card.appendChild(node('p', '', COPY.writtenBody(finish.outcome.n)));
+      inner.appendChild(card);
+    }
+    if (finish.outcome !== null && finish.outcome.kind === 'stale') {
+      inner.appendChild(node('p', 'screen-sub', COPY.staleLine));
+    }
+    if (finish.outcome !== null && finish.outcome.kind === 'busy') {
+      inner.appendChild(node('p', 'screen-sub', COPY.busyLine));
+    }
+
+    inner.appendChild(node('h2', '', COPY.whatWillBeWritten));
+    if (finish.status === 'loading' || finish.status === 'idle') {
+      for (let i = 0; i < 3; i += 1) inner.appendChild(node('div', 'skeleton-row'));
+      return;
+    }
+    if (finish.status === 'failed') {
+      inner.appendChild(node('p', 'screen-sub', COPY.bootFetchFailed));
+      return;
+    }
+    const built = buildWriteGroups();
+    finish.lineCount = built.lineCount;
+    if (finish.changed.length === 0) {
+      inner.appendChild(node('p', 'screen-sub', COPY.emptyChangedSet));
+      inner.appendChild(node('p', 'screen-sub', COPY.helpfulFootnote));
+      return;
+    }
+    const list = node('div', '');
+    list.id = 'write-list';
+    for (const group of built.groups) {
+      const card = node('div', 'write-group');
+      if (group.query !== null) card.appendChild(node('div', 'group-query', '“' + group.query + '”'));
+      for (const line of group.lines) {
+        const row = node('div', 'write-line');
+        row.appendChild(document.createTextNode(line.text));
+        if (line.suffix !== '') row.appendChild(node('span', 'write-suffix', line.suffix));
+        card.appendChild(row);
+      }
+      list.appendChild(card);
+    }
+    inner.appendChild(list);
+
+    // Sign to write — deliberately a plain div, never a native <form>, so no
+    // raw browser submit can fire (§3.7).
+    const sign = node('div', 'sign-panel');
+    sign.id = 'sign-panel';
+    sign.appendChild(node('h2', '', COPY.signTitle));
+    sign.appendChild(node('p', 'screen-sub', COPY.signBody));
+    const code = signCode();
+    const codeText = code === null ? '' : code.slice(0, 4) + ' ' + code.slice(4, 8) + ' ' + code.slice(8, 12);
+    const chip = node('div', 'sign-chip', codeText);
+    chip.id = 'sign-code';
+    sign.appendChild(chip);
+    const row = node('div', 'sign-row');
+    const input = node('input', 'sign-input');
+    input.id = 'sign-input';
+    input.type = 'text';
+    input.autocomplete = 'off';
+    input.setAttribute('aria-label', COPY.signInputLabel);
+    input.placeholder = COPY.signInputLabel;
+    input.value = finish.input;
+    if (!signControlsEnabled()) input.disabled = true;
+    const write = node('button', 'btn-primary', COPY.writeButton(built.lineCount));
+    write.type = 'button';
+    write.id = 'sign-write';
+    write.disabled = !signMatches() || !signControlsEnabled();
+    write.addEventListener('click', () => { void applyCompile(); });
+    input.addEventListener('input', () => {
+      finish.input = input.value;
+      write.disabled = !signMatches() || !signControlsEnabled();
+    });
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      // Enter activates the Write button only while it is enabled (§3.7).
+      if (!write.disabled) void applyCompile();
+    });
+    row.appendChild(input);
+    row.appendChild(write);
+    sign.appendChild(row);
+    inner.appendChild(sign);
+  }
+
+  // §advanced — the Advanced door (§3.8/D30): the identity trio lives here,
+  // in mono — nowhere else except the signing chip.
+  function renderAdvanced() {
+    if (state.screen !== 'advanced') return;
+    const container = document.getElementById('screen-advanced');
+    clear(container);
+    const inner = node('div', 'screen-inner');
+    container.appendChild(inner);
+    inner.appendChild(node('h1', '', 'Advanced'));
+    inner.appendChild(node('p', 'screen-sub', COPY.advancedIntro));
+    const health = node('div', 'write-group');
+    health.id = 'advanced-health';
+    health.appendChild(node('h2', '', 'Health'));
+    const addRow = (key, value, mono) => {
+      const row = node('div', 'why-row');
+      row.appendChild(node('div', 'why-key', key));
+      row.appendChild(node('div', 'why-val' + (mono ? ' mono' : ''), value));
+      health.appendChild(row);
+    };
+    const meta = state.meta;
+    addRow('Engine version', meta !== null && typeof meta.engineVersion === 'string' ? meta.engineVersion : '—', true);
+    addRow('Corpus fingerprint', meta !== null && typeof meta.corpusFingerprint === 'string' ? meta.corpusFingerprint : '—', true);
+    addRow('Layer fingerprint', meta !== null && typeof meta.layerFingerprint === 'string' ? meta.layerFingerprint : '—', true);
+    addRow('Mode', state.health === null
+      ? '—'
+      : degradedReadOnly()
+        ? 'Read-only — the engine is rebuilding its data.'
+        : typeof state.health.status === 'string' ? state.health.status : '—', false);
+    inner.appendChild(health);
+    const link = node('a', 'btn-quiet', COPY.advancedConsole);
+    link.id = 'advanced-console';
+    link.href = '/'; // pre-flip: the preserved old console serves at /
+    link.style.alignSelf = 'flex-start';
+    inner.appendChild(link);
+    const back = node('button', 'btn-quiet', COPY.advancedBack);
+    back.type = 'button';
+    back.id = 'advanced-back';
+    back.style.alignSelf = 'flex-start';
+    back.addEventListener('click', () => { setScreen('review'); });
+    inner.appendChild(back);
+  }
+
   // §search
   function resetQueryState() {
     state.activeCase = null;
@@ -2550,11 +3922,13 @@ button{font:inherit;}
     state.interview = null;
     state.missingForm = null;
     state.rescue = null;
+    state.compareConfirm = null;
     if (state.lookup === null) clear(document.getElementById('dialog-slot'));
   }
   async function submitSearch(rawQuery) {
     const query = rawQuery.trim();
     if (query === '') return; // A blank or whitespace-only submit is a client no-op.
+    state.screen = 'review'; // a submitted search always lands on Review
     const seq = ++state.searchSeq;
     resetQueryState();
     state.search = { status: 'loading', query, kind: null, results: [], passage: null };
@@ -2600,9 +3974,15 @@ button{font:inherit;}
       try {
         [caseData, judgmentData] = await Promise.all([apiCase(openCase.caseId), apiJudgments(openCase.caseId)]);
       } catch (error) {
+        delete state.countsPending[openCase.caseId];
         showToast(COPY.bootFetchFailed);
       }
       if (seq !== state.searchSeq) return; // stale
+      if (caseData !== null || judgmentData !== null) {
+        // This pair IS the §4.3 counts row for the opened case — one fetch
+        // pair per open case, never a duplicate.
+        applyCaseCounts(openCase.caseId, judgmentData, caseData);
+      }
       if (judgmentData !== null && Array.isArray(judgmentData.judgments)) {
         const resolved = resolveActiveJudgments(judgmentData.judgments);
         state.judgedByTarget = resolved.byTarget;
@@ -2823,6 +4203,13 @@ button{font:inherit;}
       }
       return;
     }
+    // The Compare confirm rides the same §3.12 Esc slot as the rescue
+    // preview and missing form (at most one of the three is ever open).
+    if (state.compareConfirm !== null) {
+      if (event.key === 'Escape') { event.preventDefault(); closeCompareConfirm(); return; }
+      if (event.key === 'Tab') { trapTab(event); }
+      return;
+    }
     if (event.key === 'Escape' && selectedCount() > 0) {
       event.preventDefault();
       state.selected = Object.create(null);
@@ -2832,6 +4219,17 @@ button{font:inherit;}
     // Typing in an input suppresses single-letter shortcuts.
     if (isTypingTarget(event.target)) return;
     if (event.metaKey || event.ctrlKey || event.altKey) return;
+    // A/B/T/W open the §3.5 one-confirm layer on Compare — the key alone
+    // never commits; other single letters are inert off the Review screen.
+    if (state.screen === 'compare') {
+      const choice = CHOICE_BY_KEY[event.key.toLowerCase()];
+      if (choice !== undefined) {
+        event.preventDefault();
+        openCompareConfirm(choice, null);
+      }
+      return;
+    }
+    if (state.screen !== 'review') return;
     if (event.key === 'j' || event.key === 'J' || event.key === 'ArrowDown') {
       event.preventDefault();
       moveFocus(1);
@@ -2901,6 +4299,9 @@ button{font:inherit;}
   // §boot
   document.getElementById('theme-cycle').addEventListener('click', cycleTheme);
   document.getElementById('lookup-open').addEventListener('click', (event) => { openLookup(event.currentTarget); });
+  document.querySelectorAll('[data-nav]').forEach((item) => {
+    item.addEventListener('click', () => { setScreen(item.dataset.nav); });
+  });
   document.getElementById('search-form').addEventListener('submit', (event) => {
     event.preventDefault();
     void submitSearch(document.getElementById('search-input').value);
@@ -2953,10 +4354,23 @@ button{font:inherit;}
     // queue row were clicked; with none, no request until the first submit.
     const open = openCases();
     if (open.length > 0 && state.search.status === 'idle' && state.lookup === null) {
+      // Reserve the boot case's §4.3 counts-row pair for the open-case flow
+      // itself — one fetch pair per open case, never a duplicate.
+      state.countsPending[open[0].caseId] = true;
       document.getElementById('search-input').value = open[0].query;
       void submitSearch(open[0].query);
     }
+    ensureCaseCounts();
   }).catch(bootFailed);
+  // "Worth a look next" (§3.4): inbox suggestions load once at boot; a
+  // failure shows the §3.11 fallback sentence inline in that rail section.
+  apiInbox().then((data) => {
+    state.inbox = { status: 'done', items: data !== null && Array.isArray(data.items) ? data.items : [] };
+    if (state.screen === 'review') renderQueue();
+  }).catch(() => {
+    state.inbox = { status: 'failed', items: [] };
+    if (state.screen === 'review') renderQueue();
+  });
 })();
 </script>
 </body>
