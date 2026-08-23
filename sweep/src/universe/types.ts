@@ -73,6 +73,12 @@ export interface UniverseLine {
    */
   readonly crisisAdjacent?: true;
   /**
+   * Adversarial lines: references that must NOT lead the results — each one
+   * names (or is checked against) an MS-7 watchlist row. Attribution of a
+   * documented negative context, never a theology score (covenant #6).
+   */
+  readonly mustNotLead?: readonly string[];
+  /**
    * Paraphrase lines inherit their seed's expectation at reduced confidence:
    * a miss routes to AI grading, not straight to a defect record.
    */
