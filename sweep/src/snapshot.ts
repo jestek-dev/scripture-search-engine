@@ -36,6 +36,12 @@ export interface SnapshotResult {
   readonly rank: number;
   readonly targetId: string;
   readonly reference: string;
+  /**
+   * The surfaced WEB excerpt. Carried so Layer-2 grading can supply the
+   * text IN-PROMPT (rubric rule: the grader reads the actual words, never
+   * its memory of them).
+   */
+  readonly excerpt: string;
   readonly score: number;
   readonly reasons: readonly JsonValue[];
   readonly verses?: readonly JsonValue[];
@@ -79,6 +85,7 @@ export function buildSnapshotRecord(
     rank: index + 1,
     targetId: result.targetId,
     reference: result.reference,
+    excerpt: result.excerpt,
     score: result.score,
     reasons: result.reasons as unknown as JsonValue[],
     ...(result.verses !== undefined ? { verses: result.verses as unknown as JsonValue[] } : {}),

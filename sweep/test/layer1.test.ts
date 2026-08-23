@@ -31,6 +31,7 @@ const CONTEXT: Layer1Context = {
 function result(partial: Partial<SnapshotResult> & { reference: string; rank: number }): SnapshotResult {
   return {
     targetId: `verse:${partial.rank}`,
+    excerpt: 'Without faith it is impossible to be well pleasing to him…',
     score: 50 - partial.rank,
     reasons: [{ family: 'concept_anchor', label: 'Theme: Faith', points: 40 }],
     ...partial,
