@@ -3,16 +3,19 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 // WCAG contrast audit for The Study's token sheet (plan D5, extended by D35).
-// This is the text-contrast half: every foreground/background pairing named
-// in the reviewed workbench/test/pairs.json is checked against its per-entry
-// AA threshold, for BOTH theme columns, with rgba tokens composited over
-// their named base token. D35 extends this file with the non-text (1.4.11)
-// checks and the ARIA role assertions.
+// The text-contrast half: every foreground/background pairing named in the
+// reviewed workbench/test/pairs.json is checked against its per-entry AA
+// threshold, for BOTH theme columns, with rgba tokens composited over their
+// named base token. The D35 extension below adds the non-text (WCAG 1.4.11)
+// checks — focus outline, verdict dots, and the interactive-boundary token —
+// plus the two negative fixtures; the ARIA role assertions live in the D35
+// Playwright checks (study-p5.spec.ts).
 //
 // The `.test.ts` name is load-bearing: vitest's default include pattern is
 // what makes `npm test` actually run this audit.
 
-const studyHtml = readFileSync(new URL('../static/study.html', import.meta.url), 'utf8');
+// The Study page lives at static/index.html since the flip (D41).
+const studyHtml = readFileSync(new URL('../static/index.html', import.meta.url), 'utf8');
 
 interface PairEntry {
   readonly fg: string;
@@ -116,26 +119,39 @@ function pairKey(entry: PairEntry): string {
   return `${entry.fg}/${entry.bg}@${entry.exempt === true ? 'exempt' : String(entry.minRatio)}`;
 }
 
+/** Pure schema validator so the negative fixture can demonstrate a failure. */
+function entrySchemaValid(entry: PairEntry): boolean {
+  if (!/^--/.test(entry.fg) || !/^--/.test(entry.bg)) return false;
+  if (typeof entry.use !== 'string' || entry.use.length === 0) return false;
+  if (entry.exempt === true) return true;
+  return entry.minRatio === 4.5 || entry.minRatio === 3;
+}
+
+/** Pure roster check so the delete-one-pair negative fixture can run. */
+function rosterGaps(list: readonly PairEntry[]): string[] {
+  const keys = list.map(pairKey);
+  const missing = REQUIRED_PAIR_KEYS.filter((required) => !keys.includes(required));
+  if (list.length !== REQUIRED_PAIR_KEYS.length) missing.push(`length ${list.length} !== ${REQUIRED_PAIR_KEYS.length}`);
+  return missing;
+}
+
 describe('pairs.json schema and coverage', () => {
   it('every entry names fg, bg, a use, and either a threshold or an exemption', () => {
     for (const entry of pairs) {
-      expect(entry.fg, JSON.stringify(entry)).toMatch(/^--/);
-      expect(entry.bg, JSON.stringify(entry)).toMatch(/^--/);
-      expect(typeof entry.use === 'string' && entry.use.length > 0, `use stated for ${pairKey(entry)}`).toBe(true);
-      if (entry.exempt === true) continue;
-      expect(
-        entry.minRatio === 4.5 || entry.minRatio === 3,
-        `minRatio 4.5 or 3 (or exempt: true) required for ${entry.fg}/${entry.bg}`,
-      ).toBe(true);
+      expect(entrySchemaValid(entry), `schema valid for ${pairKey(entry)}`).toBe(true);
     }
   });
 
   it('covers the full reviewed roster (deleting a pair fails this count)', () => {
-    const keys = pairs.map(pairKey);
-    for (const required of REQUIRED_PAIR_KEYS) {
-      expect(keys, `pairs.json contains ${required}`).toContain(required);
-    }
-    expect(pairs).toHaveLength(REQUIRED_PAIR_KEYS.length);
+    expect(rosterGaps(pairs)).toEqual([]);
+  });
+
+  it('negative fixture: deleting one pair fails the roster count', () => {
+    expect(rosterGaps(pairs.slice(1)).length).toBeGreaterThan(0);
+  });
+
+  it('negative fixture: an entry with minRatio absent and no exempt fails the schema', () => {
+    expect(entrySchemaValid({ fg: '--ink', bg: '--ground', use: 'threshold forgotten' })).toBe(false);
   });
 });
 
@@ -153,6 +169,58 @@ describe.each([
         ratio,
         `${theme}: ${entry.fg} on ${entry.bg} measures ${ratio.toFixed(3)}:1, below ${entry.minRatio}:1 (${entry.use})`,
       ).toBeGreaterThanOrEqual(entry.minRatio!);
+    });
+  }
+});
+
+// D35(b): WCAG 1.4.11 non-text contrast (≥3:1). Deliberately-exempt tokens
+// are reviewed data with stated reasons, never silent skips:
+// - `--hairline-strong` is NOT asserted against 3:1: it stays on decorative
+//   dividers and card edges — "not the sole indicator — cards and buttons
+//   are identified by fill, text, and the focus ring" (it measures 1.47:1
+//   vs --surface in both themes).
+// - `--kbd-border` has no 3:1 check: "decorative — the keycap's text carries
+//   the information (--text-2 on --kbd-bg measures 6.49:1)" (the border
+//   itself measures 1.26:1 light).
+const NON_TEXT_EXEMPT = [
+  { token: '--hairline-strong', reason: 'not the sole indicator — cards and buttons are identified by fill, text, and the focus ring' },
+  { token: '--kbd-border', reason: 'decorative — the keycap’s text carries the information (--text-2 on --kbd-bg measures 6.49:1)' },
+] as const;
+
+const NON_TEXT_CHECKS: readonly { fg: string; bg: string; use: string }[] = [
+  // The :focus-visible outline (--accent) vs every background it appears
+  // over: page ground, chrome surfaces, and the verse panel.
+  { fg: '--accent', bg: '--ground', use: 'focus outline over the page ground' },
+  { fg: '--accent', bg: '--surface', use: 'focus outline over chrome surfaces' },
+  { fg: '--accent', bg: '--panel', use: 'focus outline over the verse panel' },
+  // Verdict dot colors vs --surface (the queue rail).
+  { fg: '--v-affirm', bg: '--surface', use: 'affirm verdict dot on the queue rail' },
+  { fg: '--v-notrel', bg: '--surface', use: 'not-relevant verdict dot on the queue rail' },
+  { fg: '--v-missing', bg: '--surface', use: 'missing verdict dot on the queue rail' },
+  // The interactive-boundary token: --control-border vs --surface — used
+  // only on text inputs and the segmented picker's selected boundary (§3.0).
+  { fg: '--control-border', bg: '--surface', use: 'text-input / selected-picker boundary' },
+];
+
+describe.each([
+  ['light', lightTokens],
+  ['dark', darkTokens],
+] as const)('WCAG 1.4.11 non-text contrast — %s theme', (theme, tokens) => {
+  it('the exempt set is stated with reasons and stays out of the checks', () => {
+    for (const exempt of NON_TEXT_EXEMPT) {
+      expect(exempt.reason.length).toBeGreaterThan(0);
+      expect(NON_TEXT_CHECKS.some((check) => check.fg === exempt.token || check.bg === exempt.token)).toBe(false);
+    }
+  });
+  for (const check of NON_TEXT_CHECKS) {
+    it(`${check.fg} vs ${check.bg} ≥ 3:1 — ${check.use}`, () => {
+      const fg = resolveOpaque(tokens, check.fg, undefined, theme);
+      const bg = resolveOpaque(tokens, check.bg, undefined, theme);
+      const ratio = contrastRatio(fg, bg);
+      expect(
+        ratio,
+        `${theme}: ${check.fg} vs ${check.bg} measures ${ratio.toFixed(3)}:1, below 3:1 (${check.use})`,
+      ).toBeGreaterThanOrEqual(3);
     });
   }
 });

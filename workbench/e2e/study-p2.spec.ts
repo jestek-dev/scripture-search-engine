@@ -6,7 +6,8 @@ import {
   submit, type StudyServer,
 } from './study-shared';
 
-// P2 demo spec (plan D19): drives static/study.html over mocked /api/**
+// P2 demo spec (plan D19): drives the Study page (static/index.html since
+// the flip, D41) over mocked /api/**
 // routes, covering D10 (cases store + lazy creation), D11 (snapshot
 // handling), D12 (verdict toolbar), D13 (not-relevant interview), D14
 // (judged chips / supersede / undo), D15 (effect-timing contract), D16
@@ -385,8 +386,9 @@ test('D15 + §7: contract copy placements, engine order sacred after votes, no s
   await submit(page, 'mercy');
 
   const contract = 'Your calls are saved the moment you make them. They change search results only in the next reviewed update — never while you work.';
-  // (a) the results-rail footer.
-  await expect(page.locator('#rail-footer')).toHaveText(contract);
+  // (a) the results-rail footer (the D33 shortcut-hint line rides above it;
+  // the contract line itself is still asserted verbatim).
+  await expect(page.locator('#rail-footer .footer-contract')).toHaveText(contract);
 
   // Vote on three items; the toast never carries the contract sentence.
   await expect(page.locator('.result-card[data-stop="0"]')).toBeFocused();

@@ -7,7 +7,7 @@ let server: http.Server;
 let origin: string;
 
 test.beforeAll(async () => {
-  const page = await readFile(new URL('../static/index.html', import.meta.url));
+  const page = await readFile(new URL('../static/advanced.html', import.meta.url));
   server = http.createServer((_request, response) => {
     response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
     response.end(page);

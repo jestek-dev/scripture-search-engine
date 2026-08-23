@@ -106,7 +106,10 @@ describe('server startup preflight integration', () => {
       expect(mutation.status).toBe(503);
       expect(await mutation.json()).toMatchObject({ ok: false, error: { code: 'startup_degraded_read_only', details: { mode: 'degraded-read-only' } } });
     }
-    const studio = await (await fetch(`http://127.0.0.1:${port}/`)).text();
+    // Post-flip (D41): `/` serves the Study; the preserved console lives at /advanced.
+    const study = await (await fetch(`http://127.0.0.1:${port}/`)).text();
+    expect(study).toContain('The Study');
+    const studio = await (await fetch(`http://127.0.0.1:${port}/advanced`)).text();
     expect(studio).toContain('Workbench');
     expect(studio).toContain('Admission');
   }, 30_000);

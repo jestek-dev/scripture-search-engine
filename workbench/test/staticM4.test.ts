@@ -2,7 +2,9 @@ import { readFileSync } from 'node:fs';
 
 import { describe, expect, it } from 'vitest';
 
-const page = readFileSync(new URL('../static/index.html', import.meta.url), 'utf8');
+// The old console moved byte-identical to static/advanced.html at the flip
+// (D41); these guards keep running against the moved file.
+const page = readFileSync(new URL('../static/advanced.html', import.meta.url), 'utf8');
 
 describe('Milestone 4 static workbench controls', () => {
   it('exposes only the fixed review operations and check ids', () => {

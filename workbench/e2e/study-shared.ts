@@ -3,8 +3,8 @@ import { readFile } from 'node:fs/promises';
 
 import { expect, type Page } from '@playwright/test';
 
-// Shared harness for the /study demo specs (plan D19 study-p2.spec.ts and
-// D23 study-p3.spec.ts): a static fixture server for static/study.html plus
+// Shared harness for the Study demo specs (study-p1..p5): a static fixture
+// server for the Study page (static/index.html since the flip, D41) plus
 // the stateful /api/** mock and the shared result/passage fixtures.
 
 export const identity = {
@@ -19,7 +19,8 @@ export interface StudyServer {
 }
 
 export async function startStudyServer(): Promise<StudyServer> {
-  const page = await readFile(new URL('../static/study.html', import.meta.url));
+  // The Study page lives at static/index.html since the flip (D41).
+  const page = await readFile(new URL('../static/index.html', import.meta.url));
   const server = http.createServer((_request, response) => {
     response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
     response.end(page);
@@ -237,7 +238,21 @@ export function liveTop10(query: string): MockResult[] {
   return [];
 }
 
-export async function installRoutes(page: Page, mock: MockState): Promise<void> {
+export interface InstallOptions {
+  /**
+   * D32 onboarding shows on first visit (no `study.onboarded` flag). The
+   * pre-P5 specs exercise flows behind it, so the harness seeds the flag by
+   * default; the study-p5 onboarding tests opt out with `onboarded: false`.
+   */
+  readonly onboarded?: boolean;
+}
+
+export async function installRoutes(page: Page, mock: MockState, options: InstallOptions = {}): Promise<void> {
+  if (options.onboarded !== false) {
+    await page.addInitScript(() => {
+      localStorage.setItem('study.onboarded', '1');
+    });
+  }
   const ok = (data: unknown) => ({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, data }) });
   const created = (data: unknown) => ({ status: 201, contentType: 'application/json', body: JSON.stringify({ ok: true, data }) });
   const err = (status: number, code: string, message: string) => ({

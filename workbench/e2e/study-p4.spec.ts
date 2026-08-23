@@ -155,14 +155,14 @@ test('D24/D27/D28/D30: zero-case boot, Compare empty state, History empty state,
   await expect(page.locator('#review-grid')).toBeVisible();
 
   // Advanced (§3.8/D30): the identity trio in mono, only on this screen; the
-  // console link href is exactly '/'.
+  // console link href is exactly '/advanced' (post-flip, D41).
   await expect(page.locator('body')).not.toContainText('a'.repeat(64));
   await page.click('#advanced-open');
   await expect(page.locator('#screen-advanced')).toContainText('Engineering surfaces. Nothing here interrupts the review flow.');
   await expect(page.locator('#advanced-health .mono', { hasText: '0.9.0' })).toBeVisible();
   await expect(page.locator('#advanced-health .mono', { hasText: 'a'.repeat(64) })).toBeVisible();
   await expect(page.locator('#advanced-health .mono', { hasText: 'b'.repeat(64) })).toBeVisible();
-  expect(await page.locator('#advanced-console').getAttribute('href')).toBe('/');
+  expect(await page.locator('#advanced-console').getAttribute('href')).toBe('/advanced');
   await page.click('#advanced-back');
   await expect(page.locator('#review-grid')).toBeVisible();
   expect(errors).toEqual([]);
