@@ -190,6 +190,32 @@ export function gradeLine(
   }
 
   // (5) correction-cited oracle (Ring 2) and correction-cited expectations.
+  //
+  // PLAN REFINEMENT (disclosed deviation): MS-4's wording is "correction
+  // must be CITED (never silent), non-empty, corrected top-3 ≡ base
+  // top-3". Two branches below refine that for perturbation edits that
+  // LAND IN-VOCABULARY — which the perturbation cannot exclude (it is a
+  // pure pre-engine string transform with no artifact knowledge, e.g.
+  // transposing "form" → "from") and for which the engine is
+  // FIXTURE-PINNED to cite nothing (spelling-in-vocab-meaning-guard,
+  // spelling-known-word-guard, spelling-comfort-guard: corrections fire
+  // only for words in NO vocabulary — J31). Applying the plan verbatim
+  // would classify that pinned-correct engine behavior as a defect:
+  //   uncited + identical top-3 → pass (nothing was corrected, nothing to
+  //     cite — the edit landed on a real word and results held);
+  //   uncited + divergent top-3 → needs-ai-grade (silent rewrite vs real
+  //     vocabulary shift — graded, never guessed, never auto-passed).
+  // MS-14's "silent corrections = 0 absolutely" clause RIDES ON THIS
+  // BRANCH: it is computed as zero correction-oracle/correction-cited
+  // defects with suspectedCause spelling-correction, with the
+  // uncited-divergent residue routed to grading. A genuinely silent
+  // engine rewrite cannot hide in the uncited-identical pass branch
+  // systematically — the planted correction-cited rows (battery
+  // misspellings + reference misspelling variants) fail loudly whenever a
+  // correction fires without its citation.
+  // Revert path (restores the plan's literal wording): make both uncited
+  // branches a defect (defectClass wrong-explanation, suspectedCause
+  // spelling-correction).
   if (line.expectation.kind === 'base-query-oracle') {
     const base = context.baseSnapshots.get(line.expectation.baseQueryId);
     if (base === undefined) {
