@@ -1,0 +1,15 @@
+# MS-3: adversarial class — slogans, misquotes, and out-of-context uses that
+# a search engine must not confirm. Cells from the committed
+# words/adversarial-slogans.yaml list. Rows carry must-not-lead references
+# (checked against MS-7's negative-context watchlist) and, where an approved
+# corrective concept exists, its anchors as the expectation; correctives
+# themselves remain Jesse's editorial call (J9) — a row here never decides
+# one, it only tests what curation has already landed.
+id: adversarial
+category: adversarial
+source: list
+listRef: adversarial-slogans
+perTemplateCap: 1
+templates:
+  - text: '{label}'
+    register: church-member

@@ -21,6 +21,8 @@ export interface ConceptCell {
   readonly lexicon: readonly string[];
   /** Curated anchor references (already resolved labels, e.g. "Hebrews 11:6"). */
   readonly anchors: readonly string[];
+  /** Curated related-concept links, for multi-concept pair cells. */
+  readonly related?: readonly string[];
 }
 
 /** One felt-need frame: pastoral judgment AS DATA (reviewed via J65, never ships). */
@@ -77,6 +79,8 @@ interface Cell {
   readonly cellId: string;
   readonly label: string;
   readonly lexicon: readonly string[];
+  /** Second label for pair cells ({label2}). */
+  readonly label2?: string;
   readonly expectation: Expectation;
   readonly crisisAdjacent: boolean;
   readonly mustNotLead?: readonly string[];
@@ -186,6 +190,37 @@ function cellsFor(grammar: GrammarSpec, input: CompileInput): Cell[] {
           };
         });
     }
+    case 'concept-pairs': {
+      // One cell per curated related-link pair (a < b to dedupe the edge).
+      // The pairing is CURATED data (each concept's own related: list) — the
+      // compiler never invents a topical combination.
+      const cells: Cell[] = [];
+      const seen = new Set<string>();
+      for (const concept of [...input.concepts].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+        for (const relatedId of concept.related ?? []) {
+          const other = known.get(relatedId);
+          if (other === undefined) continue; // link to a not-yet-landed pack
+          const [first, second] = concept.id < other.id ? [concept, other] : [other, concept];
+          const pairId = `${first.id}+${second.id}`;
+          if (seen.has(pairId)) continue;
+          seen.add(pairId);
+          cells.push({
+            cellId: pairId,
+            label: first.label.toLowerCase(),
+            label2: second.label.toLowerCase(),
+            lexicon: [first.label.toLowerCase(), second.label.toLowerCase()],
+            expectation: {
+              kind: 'concept-anchors',
+              conceptId: first.id,
+              anchors: [...new Set([...first.anchors, ...second.anchors])],
+              alsoAcceptable: [second.id],
+            },
+            crisisAdjacent: grammar.crisisAdjacent === true,
+          });
+        }
+      }
+      return cells.sort((a, b) => (a.cellId < b.cellId ? -1 : 1));
+    }
     case 'list': {
       const rows = input.lists[grammar.listRef!];
       if (rows === undefined) {
@@ -227,12 +262,20 @@ function expandTemplate(
 ): string {
   return templateText.replace(PLACEHOLDER, (_match, slot: string) => {
     if (slot === 'label') return cell.label;
+    if (slot === 'label2') {
+      if (cell.label2 === undefined) {
+        throw new CompileError(
+          `grammar ${grammarId} template ${templateIndex}: {label2} used outside a pair source`,
+        );
+      }
+      return cell.label2;
+    }
     if (slot === 'lexicon') {
       const stream = decisionStream(seed, grammarId, cell.cellId, `t${templateIndex}`, slot, counter);
       return stream.pick(cell.lexicon);
     }
     throw new CompileError(
-      `grammar ${grammarId} template ${templateIndex}: unknown slot {${slot}} (typed slots are {label} and {lexicon})`,
+      `grammar ${grammarId} template ${templateIndex}: unknown slot {${slot}} (typed slots are {label}, {label2}, {lexicon})`,
     );
   });
 }

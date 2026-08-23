@@ -41,7 +41,16 @@ export function loadConceptCells(ontologyConceptsDir: string): ConceptCell[] {
           )
           .filter((ref): ref is string => typeof ref === 'string')
       : [];
-    return { id: parsed.id, label: parsed.label, lexicon, anchors };
+    const related = Array.isArray(parsed.related)
+      ? parsed.related.filter((entry): entry is string => typeof entry === 'string')
+      : [];
+    return {
+      id: parsed.id,
+      label: parsed.label,
+      lexicon,
+      anchors,
+      ...(related.length > 0 ? { related } : {}),
+    };
   });
 }
 
@@ -110,17 +119,24 @@ export function loadWordLists(directory: string, exclude: readonly string[] = []
   return lists;
 }
 
-/** Read eval/golden/*.json down to verbatim queries + expected anchors. */
+/**
+ * Read eval/golden/*.json down to verbatim queries + expected anchors.
+ * Structural fixtures with no top-level `query` (ranking-invariant cases,
+ * referenceExpectations files) are skipped — their queries are exercised by
+ * the gauntlet, and the reference grammar is MS-4's ring.
+ */
 export function loadGoldenCells(goldenDir: string): GoldenCell[] {
   const files = readdirSync(goldenDir)
     .filter((name) => name.endsWith('.json'))
     .sort();
-  return files.map((name) => {
+  const cells: GoldenCell[] = [];
+  for (const name of files) {
     const path = join(goldenDir, name);
     const parsed = JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown>;
-    if (typeof parsed.id !== 'string' || typeof parsed.query !== 'string') {
-      throw new InputSchemaError(`${path}: fixture missing id/query`);
+    if (typeof parsed.id !== 'string') {
+      throw new InputSchemaError(`${path}: fixture missing id`);
     }
+    if (typeof parsed.query !== 'string') continue;
     const additional = Array.isArray(parsed.additionalQueries)
       ? parsed.additionalQueries.filter((q): q is string => typeof q === 'string')
       : [];
@@ -139,12 +155,13 @@ export function loadGoldenCells(goldenDir: string): GoldenCell[] {
     const alsoAcceptable = Array.isArray(parsed.alsoAcceptable)
       ? parsed.alsoAcceptable.filter((r): r is string => typeof r === 'string')
       : [];
-    return {
+    cells.push({
       id: parsed.id,
       queries: [parsed.query, ...additional],
       ...(covers.length > 0 ? { conceptId: covers[0] } : {}),
       anchors,
       ...(alsoAcceptable.length > 0 ? { alsoAcceptable } : {}),
-    };
-  });
+    });
+  }
+  return cells;
 }

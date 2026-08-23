@@ -20,6 +20,8 @@ export type GrammarSource =
   | 'felt-need-map'
   /** One cell per tokenizer-derived lexicon token (bare words). */
   | 'lexicon-tokens'
+  /** One cell per curated related-link pair of concepts (multi-concept). */
+  | 'concept-pairs'
   /** One cell per row of a committed word list named by listRef. */
   | 'list';
 
@@ -49,7 +51,13 @@ export class GrammarSchemaError extends Error {
   }
 }
 
-const SOURCES = new Set<GrammarSource>(['concepts', 'felt-need-map', 'lexicon-tokens', 'list']);
+const SOURCES = new Set<GrammarSource>([
+  'concepts',
+  'felt-need-map',
+  'lexicon-tokens',
+  'concept-pairs',
+  'list',
+]);
 
 export function validateGrammar(value: unknown, origin: string): GrammarSpec {
   const fail = (why: string): never => {

@@ -1,0 +1,45 @@
+# MS-3: concepts × registers. One cell per ontology concept pack; templates
+# voice the three register personas over the concept's own label and lexicon.
+# Expectation: the concept's curated anchors (concept-anchors), attached at
+# generation time. Raising perTemplateCap is a reviewed PR with a
+# UNIVERSE-VERSION bump, never ad-hoc (plan MS-3 shortfall lever).
+id: concept-register
+category: felt-need
+source: concepts
+perTemplateCap: 2
+templates:
+  # church-member: how people actually type into a Bible app
+  - text: '{lexicon}'
+    register: church-member
+  - text: 'what does the bible say about {lexicon}'
+    register: church-member
+  - text: 'bible verses about {lexicon}'
+    register: church-member
+  - text: 'verses on {label}'
+    register: church-member
+  - text: 'scripture about {lexicon}'
+    register: church-member
+  - text: 'where in the bible does it talk about {label}'
+    register: church-member
+  - text: 'i want to learn about {label}'
+    register: church-member
+  - text: 'help me understand {label}'
+    register: church-member
+  - text: 'verses to memorize about {lexicon}'
+    register: church-member
+  # pastor: study and sermon preparation phrasings
+  - text: 'sermon text on {label}'
+    register: pastor
+  - text: 'key passages on {lexicon}'
+    register: pastor
+  - text: 'teaching passage about {label}'
+    register: pastor
+  - text: 'primary text for a lesson on {lexicon}'
+    register: pastor
+  - text: 'what passage teaches {label}'
+    register: pastor
+  # worship-leader: service-planning phrasings over the same concepts
+  - text: 'call to worship about {label}'
+    register: worship-leader
+  - text: 'scripture reading on {lexicon}'
+    register: worship-leader

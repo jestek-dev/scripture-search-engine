@@ -1,0 +1,16 @@
+# MS-3: single-word class (battery grade F13 history). One cell per lexicon
+# token, derived by THE tokenizer over every concept lexicon entry — this
+# probes every token collapse the runtime actually resolves. Expectation:
+# the owning concept's anchors; a token shared by several concepts lists the
+# others as alsoAcceptable (the collapse set).
+#
+# The plan's second feed — the top-1,500 CORPUS tokens — is artifact-derived
+# and lands as a committed word list when the terminus corpus is minted; the
+# lexicon-token feed is complete now (see impl notes / J43 floors).
+id: bare-word
+category: single-word
+source: lexicon-tokens
+perTemplateCap: 1
+templates:
+  - text: '{label}'
+    register: church-member
