@@ -535,6 +535,26 @@ concepts:
     # me" — exactly the bare words someone would type; kept deliberately.
     admitted: [abide, remain]
 
+  - id: asking-in-gods-will
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. Every phrase
+    # is multi-word BY DESIGN per the pack's own comments — the pack
+    # answers the movement slogan ("name it and claim it") with the
+    # canon's teaching on asking (James 4:3 in both its WEB and KJV
+    # registers), and its doctrine-negative sibling fixture depends on
+    # proof-texts staying below the leading window. No width-1 phrase
+    # exists, so no bare word fires today.
+    skipped:
+      - token: asking
+        reason: >-
+          Bare "ask"/"asking" is the canon's whole asking language
+          (prayer, petition, narrative) and must never fire a pack built
+          to answer one movement's slogan vocabulary; the slogan and the
+          James 4:3 phrase forms carry the concept. (Note the pack's own
+          width note: "asking" does not stem to "ask" under the one
+          tokenizer, so the two registers are distinct tokens — both
+          stay phrase-bound.)
+
   - id: assurance-of-salvation
     # 2026-08-20 (PR #33) admitted bare `assurance` here to close a measured
     # gap (the word fired no concept; this pack is its honest home per its
@@ -560,6 +580,26 @@ concepts:
           admission is deferred until the double-chip question is
           re-adjudicated. The 2026-08-20 gap measurement stands recorded
           in this row's comment.
+
+  - id: baptism
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (the audit query sw2): it fires the concept on every query
+    # carrying "baptism(s)". "baptized into christ" keeps two
+    # significant tokens ({baptiz, christ}) so plain narrative
+    # baptized-queries never fire the concept (pack width note).
+    admitted: [baptism]
+
+  - id: benediction
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (the audit query wl4): the bare query "benediction" fires the
+    # concept authoritatively. The service-register phrases ("closing
+    # blessing", "aaronic blessing", Num 6:24's own wording) all keep
+    # two or more significant tokens.
+    admitted: [benediction]
 
   - id: betrayal-and-marriage-crisis
     skipped:
@@ -587,11 +627,38 @@ concepts:
           2026-08-08 decision table: spans metaphor and terrain; "firm
           foundation" already carries the concept.
 
+  - id: caring-for-aging-parents
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. Every phrase
+    # is multi-word BY DESIGN per the pack's own comments (the fn13
+    # felt-need mechanism): the registers a grieving or care-burdened
+    # adult child actually types, each >= 2 significant tokens. No
+    # width-1 phrase exists, so no bare word fires today.
+    skipped:
+      - token: parent
+        reason: >-
+          Bare "parent(s)" is raising-children / honor-your-father-and-
+          mother territory across the canon and must never fire a
+          death-and-caregiving felt-need pack; the multi-word crisis
+          phrasings ("dying parent", "aging parents", "when a parent
+          dies", ...) carry the concept — that width discipline is the
+          pack's documented fn13 design.
+
   - id: caught-up-together
     # 2026-08-18 harvest, §1.6d option 3: "rapture" appears nowhere in the
     # WEB text, so no lexical rung can serve the query, and the word IS the
     # concept.
     admitted: [rapture]
+
+  - id: christ-the-cornerstone
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (the audit query): every WEB occurrence of "cornerstone" is a
+    # cornerstone text, so the bare trigger is safe (pack width note).
+    # The remembered registers ("the stone the builders rejected",
+    # "head of the corner") stay multi-token.
+    admitted: [cornerstone]
 
   - id: contentment
     # 2026-08-18 harvest, all deliberate per the in-file comments:
@@ -659,6 +726,15 @@ concepts:
     # 2026-08-18 harvest: deliberate bare entries — the felt-need words
     # people actually type.
     admitted: [discouraged, discouragement]
+
+  - id: doubt
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (the audit query); it is also the stem of doubts/doubted/doubting,
+    # so every inflection reaches the concept. Mark 9:24's "help my
+    # unbelief" keeps two significant tokens.
+    admitted: [doubt]
 
   - id: dreams-and-visions
     # PR #41 (2026-08-22 Genesis pilot): bare subject words, deliberate
@@ -859,7 +935,14 @@ concepts:
     # never fired because "holiness" does not stem to "holy"
     # (holiness.json additionalQueries failing run is the PR-body
     # evidence).
-    admitted: [holy, sanctified, purity, holiness]
+    # sanctification/sanctify: 2026-08-23 stack merge — the branch's
+    # Phase-4 P4.2 extension (audit sanct1/sanct2) added both as
+    # deliberate one-word entries: 'sanctified' stems to `sanctifi`, but
+    # the pastor-register nouns normalize to themselves, so neither
+    # query could ever fire the concept without the entries (the pack's
+    # in-file comment; extending the stemmer was explicitly rejected
+    # there in favor of the deterministic lexicon fix).
+    admitted: [holy, sanctified, purity, holiness, sanctification, sanctify]
 
   - id: holy-spirit-the-comforter
     # 2026-08-18 harvest: deliberate bare entries — the Paraclete titles
@@ -928,6 +1011,17 @@ concepts:
           "made in gods image" phrase forms carry the doctrine. Pending
           curation review before any bare admission.
 
+  - id: incarnation
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (audit query th6): "incarnation" never occurs in the WEB text, so
+    # no lexical rung could reach the doctrine without this entry —
+    # §1.6d option-3 shape, the word IS the concept. The verse-shaped
+    # registers ("word became flesh", "god became man/flesh") keep
+    # multiple significant tokens.
+    admitted: [incarnation]
+
   - id: joy-in-the-lord
     # 2026-08-08 decision table.
     admitted: [joy]
@@ -939,6 +1033,17 @@ concepts:
           Spans final judgment, church discipline, and discernment senses
           across the canon; the "judgment seat" / "bema seat" phrase forms
           carry this concept's specific referent.
+
+  - id: justification-by-faith
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (audit query th1): the bare query "justification" fires the
+    # concept authoritatively. "justified by faith" is Rom 5:1's exact
+    # wording and keeps two significant tokens ({justifi, faith} — a
+    # different stem than the noun), as do the forensic and
+    # plain-language registers.
+    admitted: [justification]
 
   - id: loneliness
     # 2026-08-18 harvest: deliberate bare entries — the felt-need words.
@@ -1378,7 +1483,13 @@ concepts:
     # the cross: 2026-08-08 decision table ("the token `cross` in a
     # scripture engine is unambiguous"). atonement: deliberate one-word
     # entry.
-    admitted: [cross, atonement]
+    # propitiation: 2026-08-23 stack merge — the branch's Phase-4 P4.3
+    # extension (audit th2) added it as a deliberate one-word entry: the
+    # WEB never contains "propitiation" (verified corpus-wide in the
+    # pack's in-file comment), so no lexical rung can ever reach it —
+    # only the curated entry can; 'atoning sacrifice' is the WEB's own
+    # wording at 1 John 2:2 / 4:10.
+    admitted: [cross, atonement, propitiation]
 
   - id: the-lords-discipline
     # 2026-08-18 harvest: "chastening" deliberate bare entry (the KJV-family
@@ -1403,6 +1514,19 @@ concepts:
     # 2026-08-18 harvest: deliberate bare entries — the practice's own
     # vocabulary.
     admitted: [tithing, tithe, firstfruits]
+
+  - id: trinity
+    # 2026-08-23 stack merge (P4.11 completion): row authored for a
+    # branch pack that postdates the 2026-08-20 backfill. The subject
+    # noun is a deliberate one-word entry per the pack's in-file comment
+    # (audit query th5): "trinity" never occurs in the WEB text, so no
+    # lexical rung could ever reach the doctrine without this entry —
+    # §1.6d option-3 shape, the word IS the concept. The other registers
+    # ("triune god", "father son and holy spirit", "three persons one
+    # god" — reworded from "three in one" precisely to AVOID a bare
+    # {three} collapse, pack REWORD note) keep multiple significant
+    # tokens.
+    admitted: [trinity]
 
   - id: trust-in-god
     # trust: 2026-08-08 decision table. confidence: 2026-08-18 round-2
