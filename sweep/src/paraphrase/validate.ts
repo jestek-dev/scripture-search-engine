@@ -42,7 +42,7 @@ export function validateParaphrases(options: {
   readonly manifestPath: string;
   readonly promptPath: string;
   readonly seedsPath: string;
-  /** ringFloors.ring1Paraphrase from sweep-budgets (null until J43). */
+  /** ringFloors.ring1Paraphrase from the eval/budgets.json sweep block (null until J43). */
   readonly countFloor: number | null;
 }): Finding[] {
   const findings: Finding[] = [];

@@ -1,7 +1,7 @@
 /**
  * `npm run derive-ring2 --workspace sweep` — derive Ring 2 to a JSONL file.
  *
- * Multiplicities come from config/sweep-budgets.json (perturbK). While J43
+ * Multiplicities come from the eval/budgets.json sweep block (perturbK). While J43
  * has not signed them they are null and this tool REFUSES with a
  * not-applicable reason — it never defaults silently. Local shakedown may
  * pass --k-grammar/--k-paraphrase explicitly (an explicit flag is a
@@ -36,7 +36,7 @@ if (explicitGrammar !== undefined && explicitParaphrase !== undefined) {
   const signed = readPerturbK();
   if (signed === null) {
     console.error(
-      'not-applicable — perturbK unset in sweep/config/sweep-budgets.json (J43 has not signed the sweep numbers block). ' +
+      'not-applicable — perturbK unset in the eval/budgets.json sweep block (J43 has not signed the sweep numbers block). ' +
         'Pass --k-grammar/--k-paraphrase explicitly for local shakedown.',
     );
     process.exit(2);

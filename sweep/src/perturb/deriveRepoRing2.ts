@@ -21,7 +21,19 @@ import {
 } from './referenceVariants.js';
 
 export const PERTURB_DIR = join(REPO_ROOT, 'sweep', 'perturb');
-export const SWEEP_BUDGETS_PATH = join(REPO_ROOT, 'sweep', 'config', 'sweep-budgets.json');
+/** The J43 sweep numbers live as the `sweep` block of eval/budgets.json —
+ *  the file the plan (MS-14) names for reviewed sweep thresholds. */
+export const SWEEP_BUDGETS_PATH = join(REPO_ROOT, 'eval', 'budgets.json');
+
+/** Parse the `sweep` numbers block out of eval/budgets.json. A missing
+ *  block reads as all-null — every consumer then refuses (J43 unsigned),
+ *  never defaults. */
+export function readSweepNumbersBlock(): Record<string, unknown> {
+  const parsed = JSON.parse(readFileSync(SWEEP_BUDGETS_PATH, 'utf8')) as {
+    sweep?: Record<string, unknown>;
+  };
+  return parsed.sweep ?? {};
+}
 
 export function loadPhoneticRules(path = join(PERTURB_DIR, 'misspelling-rules.yaml')): PhoneticRule[] {
   const parsed = parseYaml(readFileSync(path, 'utf8')) as { rules?: unknown };
@@ -83,11 +95,11 @@ export interface RepoRing2Options {
 }
 
 /**
- * Read perturbK from sweep-budgets. Returns null when unsigned (J43) — the
+ * Read perturbK from the eval/budgets.json sweep block. Returns null when unsigned (J43) — the
  * caller must refuse with a not-applicable reason, never default silently.
  */
 export function readPerturbK(): { grammar: number; paraphrase: number } | null {
-  const parsed = JSON.parse(readFileSync(SWEEP_BUDGETS_PATH, 'utf8')) as {
+  const parsed = readSweepNumbersBlock() as {
     perturbK?: { grammar?: number | null; paraphrase?: number | null };
   };
   const grammar = parsed.perturbK?.grammar ?? null;

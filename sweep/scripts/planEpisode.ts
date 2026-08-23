@@ -6,7 +6,7 @@
  * ratifies the tiers/hours via J67, signs the trust thresholds via J43) —
  * this script only produces the deterministic plan he runs.
  *
- * Workload numbers come from sweep/config/sweep-budgets.json
+ * Workload numbers come from the eval/budgets.json sweep block
  * (graderWorkload) and are NULL until J43 signs them: without a signed
  * value this refuses with a not-applicable reason unless BOTH shakedown
  * flags pass explicit values (interim builds only; a shakedown plan is
@@ -58,7 +58,7 @@ if (signed.tierBSample !== null && signed.ceilingRowsPerEpisode !== null) {
   );
 } else {
   console.error(
-    'not-applicable — graderWorkload unset in sweep/config/sweep-budgets.json (J43 has not signed the ' +
+    'not-applicable — graderWorkload unset in the eval/budgets.json sweep block (J43 has not signed the ' +
       'sweep numbers block). Refusing to plan an episode with guessed workload numbers; for interim ' +
       'shakedown builds pass BOTH --shakedown-tier-b and --shakedown-ceiling explicitly.',
   );

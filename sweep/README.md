@@ -50,6 +50,7 @@ until certification.
 
 Every threshold and floor the plan routes through J43 (ring floors, grader
 trust gate, workload ceiling, promoted-fixture cap, exit numbers) lives in
-`config/sweep-budgets.json` as **null until Jesse signs it**. Tools that need
+the `sweep` block of `eval/budgets.json` (the file the plan names for
+reviewed sweep thresholds) as **null until Jesse signs it**. Tools that need
 a number report `not-applicable — threshold unset (J43)` while it is null;
 they never guess and never pass vacuously.

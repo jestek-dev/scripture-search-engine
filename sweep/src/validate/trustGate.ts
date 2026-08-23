@@ -9,15 +9,13 @@
  * Fail ⇒ new rubric version, re-grade, re-measure on a FRESH sample —
  * never re-fit.
  *
- * Every threshold lives in sweep/config/sweep-budgets.json as reviewed data
+ * Every threshold lives in the eval/budgets.json sweep block as reviewed data
  * and is NULL until J43 signs it. A null clause reports
  * `not-applicable — threshold unset (J43)` and the gate as a whole can then
  * never report pass (CLAUDE.md gate discipline: an unrun check never reads
  * as protection).
  */
-import { readFileSync } from 'node:fs';
-
-import { SWEEP_BUDGETS_PATH } from '../perturb/deriveRepoRing2.js';
+import { readSweepNumbersBlock } from '../perturb/deriveRepoRing2.js';
 import type { GradeValue } from '../grade/layer2.js';
 import { weightedKappa, type KappaWeighting } from './kappa.js';
 import type { CanaryScore } from './canary.js';
@@ -36,7 +34,7 @@ export interface GraderWorkloadBudget {
 
 /** Read the J43 trust thresholds — nulls come back as nulls, never defaults. */
 export function readGraderTrust(): TrustThresholds {
-  const parsed = JSON.parse(readFileSync(SWEEP_BUDGETS_PATH, 'utf8')) as {
+  const parsed = readSweepNumbersBlock() as {
     graderTrust?: Partial<TrustThresholds>;
   };
   return {
@@ -49,7 +47,7 @@ export function readGraderTrust(): TrustThresholds {
 
 /** Read the J43 workload numbers — nulls come back as nulls, never defaults. */
 export function readGraderWorkload(): GraderWorkloadBudget {
-  const parsed = JSON.parse(readFileSync(SWEEP_BUDGETS_PATH, 'utf8')) as {
+  const parsed = readSweepNumbersBlock() as {
     graderWorkload?: Partial<GraderWorkloadBudget>;
   };
   return {

@@ -18,6 +18,7 @@ import { join } from 'node:path';
 import { ENGINE_VERSION } from '@jestek-dev/scripture-engine';
 
 import { REPO_ROOT } from './universe/compileFromRepo.js';
+import { readSweepNumbersBlock } from './perturb/deriveRepoRing2.js';
 
 export interface PreconditionFinding {
   readonly ok: boolean;
@@ -58,9 +59,7 @@ export function checkCertifiedPreconditions(): PreconditionFinding[] {
   }
 
   // (b) J43 numbers signed.
-  const budgets = JSON.parse(
-    readFileSync(join(REPO_ROOT, 'sweep', 'config', 'sweep-budgets.json'), 'utf8'),
-  ) as {
+  const budgets = readSweepNumbersBlock() as {
     perturbK?: { grammar?: number | null; paraphrase?: number | null };
     ringFloors?: Record<string, number | null>;
   };
@@ -78,7 +77,7 @@ export function checkCertifiedPreconditions(): PreconditionFinding[] {
       name: 'j43-numbers',
       reason:
         `not-applicable — J43 has not signed the sweep numbers block: ` +
-        `${unsignedNumbers.join(', ')} are null in sweep/config/sweep-budgets.json`,
+        `${unsignedNumbers.join(', ')} are null in the eval/budgets.json sweep block`,
     });
   }
 
