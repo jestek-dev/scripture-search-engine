@@ -321,6 +321,22 @@ Three design commitments a consumer can rely on:
   capped at 40 tokens. Otherwise two consumers passing identical data get
   different rankings and the reproducibility contract is false.
 
+**PROPOSED fourth commitment — CC BY attribution passthrough (pending Jesse's
+ratification as consumer-contract owner, J49; not yet binding):** Artifacts
+embed OpenBible.info data (CC BY 4.0); every consumer app MUST surface the
+attribution per `docs/ATTRIBUTIONS.md` — the obligation passes through. This
+is an obligation the shipped data already carries: the release notes have
+stated the passthrough since the promote-only release flow landed (see the
+notes text in `.github/workflows/release.yml`, which cross-references this
+section so the two stay in step), but the consumer contract itself has never
+said it, so Maskil, LH Worship Setlist and Versed have had no contractual
+notice. Same MUST framing as the pastoral-crisis requirements below — the §5
+pattern for non-optional consumer obligations. It is additive (a disclosure,
+not an API change): pinned `(engine semver, artifact descriptor)` pairs are
+unaffected until they upgrade. When `CONSUMERS.md` exists (CO-6/P7.3) it
+inherits this text verbatim — never forks it. On Jesse's sign-off, drop the
+PROPOSED marker and this becomes the fourth commitment above.
+
 Per-consumer adapters stay per-app: Maskil's Yjs selection bridge and panel;
 Setlist's musical-compatibility scoring (key/BPM/flow stays in Setlist — it is
 not Scripture evidence); Versed's memorization-pack builder. Each app pins

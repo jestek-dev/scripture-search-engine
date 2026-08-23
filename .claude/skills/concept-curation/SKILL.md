@@ -54,6 +54,16 @@ Start `pending`. Run `npm run gauntlet` — it should show the fixture failing
 (as pending, not blocking). **If it already passes, stop: the engine does not
 have this gap, and you were about to add data for nothing.** Tell the user.
 
+**Corpus-blocked references:** if any verse you want to assert on (expected,
+mustNotRank, or anchor) is outside the current fixture corpus
+(`pipeline/fixtures/web-subset.json`), check
+`docs/corpus-payload-dependency.md` first. While that statement reads
+BLOCKED, the corpus cannot be regenerated (WEB source drift, awaiting the
+reviewed re-pin) and no such assertion may ship active — it rides the
+corpus-expansion PR described there, or ships `pending` with an explicit
+activation note. An assertion on an absent verse passes vacuously; that is a
+guardrail turned decoration, not coverage.
+
 ### 3. Check for collisions BEFORE drafting
 
 Read every file in `ontology/concepts/`. If an existing concept covers this
