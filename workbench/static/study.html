@@ -1038,17 +1038,35 @@ button{font:inherit;}
   // engine results (no rank badge). Session suggestions and prior-session
   // missing records both render here; session tail rescues do not (their
   // receipt rides the rescued row).
+  const receiptFetches = Object.create(null);
+  function receiptExcerpt(reference) {
+    // §3.3: the receipt card carries the suggested verse's text. A session
+    // submit's resolution is already cached (the form caches on resolve); a
+    // prior-session missing record resolves lazily, once, then re-renders.
+    const cached = state.passages[reference];
+    if (cached !== undefined && cached.status === 'done'
+      && Array.isArray(cached.passage.verses) && cached.passage.verses.length > 0) {
+      return cached.passage.verses[0].text;
+    }
+    if (receiptFetches[reference] !== true) {
+      receiptFetches[reference] = true;
+      void resolveRowPassage(reference).then((passage) => {
+        if (passage !== null && state.search.status === 'results') renderAll({});
+      });
+    }
+    return null;
+  }
   function renderReceiptCards(list) {
     if (state.activeCase === null) return;
     const caseId = state.activeCase.caseId;
     for (const reference of Object.keys(state.missingByRef)) {
       if (state.sessionRescues[caseId + '|' + reference] === true) continue;
-      const record = state.missingByRef[reference];
       const card = node('div', 'receipt-card');
       card.appendChild(node('div', 'receipt-tag', COPY.receiptTitle));
       card.appendChild(node('span', 'card-ref', reference));
-      if (typeof record.excerpt === 'string' && record.excerpt !== '') {
-        card.appendChild(node('div', 'card-excerpt', record.excerpt));
+      const excerpt = receiptExcerpt(reference);
+      if (excerpt !== null) {
+        card.appendChild(node('div', 'card-excerpt', excerpt));
       }
       const lines = node('div', 'receipt-lines');
       lines.appendChild(node('div', '', COPY.receiptSaved));
@@ -2137,6 +2155,9 @@ button{font:inherit;}
           form.resolved = outcome.passage;
           form.resolvedFor = value;
           form.unresolvedShown = false;
+          // Cache under the canonical label so the receipt card (§3.3) and
+          // the already-displayed pre-check reuse this resolution.
+          state.passages[outcome.passage.reference] = { status: 'done', passage: outcome.passage };
           if (form.settle !== null) { clearTimeout(form.settle); form.settle = null; }
           renderMissingFormPreview();
         }
@@ -2165,6 +2186,7 @@ button{font:inherit;}
       if (state.missingForm !== form || form.picked !== verseNumber) return;
       if (outcome && outcome.kind === 'passage' && outcome.passage && outcome.passage.verses.length === 1) {
         form.pickedRef = outcome.passage.reference;
+        state.passages[outcome.passage.reference] = { status: 'done', passage: outcome.passage };
       }
     } catch (error) { /* Submit stays disabled */ }
     if (state.missingForm !== form || form.picked !== verseNumber) return;
@@ -2206,6 +2228,24 @@ button{font:inherit;}
       seg.addEventListener('click', () => { form.withinTop = value; renderMissingForm(); });
       picker.appendChild(seg);
     }
+    // Selection follows focus — the same WAI-ARIA radiogroup pattern as the
+    // toolbar picker (§3.2/§3.12): the arrow alone changes the value.
+    picker.addEventListener('keydown', (event) => {
+      const values = [1, 3, 5, 10];
+      const index = values.indexOf(form.withinTop);
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        const next = event.key === 'ArrowRight' ? Math.min(values.length - 1, index + 1) : Math.max(0, index - 1);
+        if (next !== index) {
+          form.withinTop = values[next];
+          renderMissingForm();
+          const seg = document.querySelector('#missing-topn .topn-seg[aria-checked="true"]');
+          if (seg !== null) seg.focus();
+        }
+        return;
+      }
+      if (event.key === ' ') event.preventDefault(); // selection already follows focus
+    });
     segRow.appendChild(picker);
     dialog.appendChild(segRow);
 
@@ -2473,16 +2513,30 @@ button{font:inherit;}
     const active = document.activeElement;
     const focusWasInResults = active !== null && typeof active.closest === 'function'
       && active.closest('#center-body') !== null;
+    // An id-bearing element (e.g. #missing-link, #empty-add-missing) is
+    // re-found after the rebuild so the §3.12 layer focus contract holds:
+    // closing a layer opened from such a control returns focus to it, not
+    // to the roving card position.
+    const activeId = focusWasInResults && typeof active.id === 'string' && active.id !== '' ? active.id : null;
     renderBanner();
     renderQueue();
     renderCenter();
     renderRail();
     renderActionBar();
-    if (state.search.status === 'results' && !anyLayerOpen()) {
+    if (anyLayerOpen()) return;
+    const explicit = options !== undefined && options.focus === true;
+    if (state.search.status === 'results') {
       const focused = state.focus < topCount() ? state.search.results[state.focus] : null;
       if (focused) ensurePassage(focused.reference);
-      if ((options && options.focus) || focusWasInResults) focusCurrentStop();
     }
+    if (!explicit && activeId !== null) {
+      const byId = document.getElementById(activeId);
+      if (byId !== null && typeof byId.closest === 'function' && byId.closest('#center-body') !== null) {
+        byId.focus();
+        return;
+      }
+    }
+    if (state.search.status === 'results' && (explicit || focusWasInResults)) focusCurrentStop();
   }
 
   // §search
