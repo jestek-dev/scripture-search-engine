@@ -216,3 +216,36 @@ later token change forced by the contrast audit is appended here.
    information-bearing copy — the Advanced nav link and every hint sentence
    use `--text-3` or better. `pairs.json` lists `--text-faint` pairings under
    `exempt: true`, which the contrast audit's ratio check skips.
+
+## Flip smoke checklist (D42)
+
+A documented manual script, run **twice** against a real server with a real
+artifact — this is the first time the Study page ever talks to a real server
+(every phase demo mocks `/api/**`), so run 1 must happen while the old page
+is still the default:
+
+1. **Pre-flip run, against `http://127.0.0.1:8787/study`** — the D41 merge
+   gate. Each step's observed result is pasted into the D41 flip PR
+   description before that PR merges.
+2. **Post-flip run, against `http://127.0.0.1:8787/`** — the same checklist
+   on the new default page, plus the extra 302 line below.
+
+Setup (both runs): `npm run fetch-artifact --workspace workbench`, then
+`npm run serve --workspace workbench`. If fetch-artifact cannot verify the
+artifact (this container has hit a proxy sha256 mismatch — audit-runtime.md
+§3 — both runs may need Jesse's machine), the server starts **degraded
+read-only**; the expected observation for every commit step is then the
+§3.11 banner ("Read-only right now. …") with the committing control
+disabled — record that observation, it is the degraded fallback, not a
+failure of the checklist.
+
+| # | Step | Expected observation (healthy) | Expected observation (degraded read-only) |
+|---|---|---|---|
+| 1 | Open the run's target page | The Study renders: search bar, queue rail, no console errors | Same, plus the read-only banner at the top |
+| 2 | Run one search (e.g. "mercy") | Results render in engine order; focus lands on card #1 | Same (search is a GET and keeps working) |
+| 3 | Make one call (press E) | Toast "Marked {ref} Essential (top {n})", judged chip appears, focus advances | Toast "Read-only right now — this call was not saved."; no chip |
+| 4 | Undo it (press U) | Chip reads "Reopened — your earlier call stands until you make a new one." | n/a (no call was recorded) |
+| 5 | Add one suggestion — type a **range** first (e.g. "Psalm 23:1-4") | The whole passage previews; per-verse "Add this verse" pick chips appear; Submit stays disabled until one verse is picked; submitting shows the receipt card with the permanence sentence | Form opens; Submit disabled; read-only toast on any attempt |
+| 6 | Rescue one lower result (expand the divider, E on a tail row) | The rescue preview shows the verse text first (§3.1); Confirm posts; toast "Noted — {ref} should rank near the top…" | Preview opens read-only; Confirm disabled |
+| 7 | Open the old console via the Advanced screen's link | Pre-flip run: the link's href is `/` and the old console loads there. Post-flip run: the href is `/advanced` and the old console loads there with its 11 tabs | Same |
+| 8 | *(Post-flip run only)* `GET /study` | Answers 302 with `Location: /` (old bookmarks land on the new default) | Same |

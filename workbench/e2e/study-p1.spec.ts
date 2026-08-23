@@ -3,7 +3,8 @@ import { readFile } from 'node:fs/promises';
 
 import { expect, test, type Page } from '@playwright/test';
 
-// P1 demo spec (plan D9): drives static/study.html end-to-end over mocked
+// P1 demo spec (plan D9): drives the Study page (static/index.html since
+// the flip, D41) end-to-end over mocked
 // /api/** + /fonts/** routes, covering D5 (shell/theme/boot), D6 (real
 // search + read-only results), D7 (quick lookup), D8 (loading/error states).
 
@@ -17,7 +18,7 @@ let server: http.Server;
 let origin: string;
 
 test.beforeAll(async () => {
-  const page = await readFile(new URL('../static/study.html', import.meta.url));
+  const page = await readFile(new URL('../static/index.html', import.meta.url));
   server = http.createServer((_request, response) => {
     response.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
     response.end(page);

@@ -1,0 +1,4517 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="workbench-static-protocol" content="1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Workbench</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f1f4f3;
+    --panel: #f8faf9;
+    --card: #ffffff;
+    --line: #d4dad7;
+    --line-strong: #adb8b3;
+    --text: #1b1d1f;
+    --muted: #61686f;
+    --accent: #285a55;
+    --accent-soft: #dbe9e7;
+    --warn: #8a5612;
+    --warn-soft: #f7ecd9;
+    --danger: #8a3030;
+    --danger-soft: #f6e2e0;
+    --ok: #1f5a3c;
+    --ok-soft: #e2f0e8;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    --radius: 8px;
+    --focus: 0 0 0 3px rgba(40, 90, 85, 0.22);
+    --sidebar-width: 20rem;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: Inter, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.45;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  button,
+  input,
+  select,
+  textarea,
+  summary {
+    border-radius: 8px;
+  }
+
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible,
+  [role="tab"]:focus-visible {
+    outline: none;
+    box-shadow: var(--focus);
+  }
+
+  a {
+    color: inherit;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .app {
+    width: min(100%, 88rem);
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .shell {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .topbar,
+  .panel,
+  .sidebar-card,
+  .tab-strip {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+
+  .topbar {
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: start;
+  }
+
+  .eyebrow {
+    margin: 0 0 0.2rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.65rem;
+    line-height: 1.15;
+  }
+
+  .subhead {
+    margin: 0.4rem 0 0;
+    color: var(--muted);
+    max-width: 48rem;
+  }
+
+  .topbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .tab-strip {
+    border-radius: 8px;
+    padding: 0.5rem;
+  }
+
+  .tab-list {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    appearance: none;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    padding: 0.65rem 0.9rem;
+    min-height: 2.6rem;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .tab[aria-selected="true"] {
+    background: var(--card);
+    border-color: var(--line);
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+
+  .layout {
+    display: grid;
+    gap: 1rem;
+    align-items: start;
+    min-width: 0;
+  }
+
+  .sidebar {
+    display: grid;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .sidebar-card,
+  .panel {
+    border-radius: 8px;
+  }
+
+  .sidebar-card {
+    padding: 1rem;
+  }
+
+  .panel {
+    padding: 1rem;
+    min-width: 0;
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: start;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .section-head h2,
+  .sidebar-card h2,
+  .sidebar-card h3,
+  .panel h3 {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.25;
+  }
+
+  .muted {
+    color: var(--muted);
+  }
+
+  .tiny {
+    font-size: 0.82rem;
+  }
+
+  .stack {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  #view-root,
+  #view-root > *,
+  .change-card > *,
+  .operations-band > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .field label,
+  .field legend {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  fieldset.fieldset {
+    border: 1px solid var(--line);
+    padding: 0.75rem;
+    margin: 0;
+    min-width: 0;
+    background: var(--card);
+  }
+
+  .field input,
+  .field select,
+  .field textarea,
+  .search-input {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--card);
+    padding: 0.7rem 0.8rem;
+    min-height: 2.75rem;
+    min-width: 0;
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 5rem;
+  }
+
+  .btn {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--text);
+    padding: 0.65rem 0.85rem;
+    min-height: 2.7rem;
+    cursor: pointer;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .btn:hover {
+    border-color: var(--line-strong);
+  }
+
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+  }
+
+  .btn-subtle {
+    background: transparent;
+  }
+
+  .btn-danger {
+    background: var(--danger-soft);
+    border-color: #e5c0bb;
+    color: var(--danger);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.55rem;
+    border: 1px solid var(--line);
+    background: var(--card);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  .pill-good {
+    background: var(--ok-soft);
+    border-color: #bcd7c6;
+    color: var(--ok);
+  }
+
+  .pill-warn {
+    background: var(--warn-soft);
+    border-color: #ead7ba;
+    color: var(--warn);
+  }
+
+  .pill-danger {
+    background: var(--danger-soft);
+    border-color: #e5c0bb;
+    color: var(--danger);
+  }
+
+  .message {
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    padding: 0.75rem 0.85rem;
+    background: var(--card);
+    color: var(--muted);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .message.warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+    border-color: #ead7ba;
+  }
+
+  .message.error {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-color: #e5c0bb;
+  }
+
+  .message.success {
+    background: var(--ok-soft);
+    color: var(--ok);
+    border-color: #bcd7c6;
+  }
+
+  .metric-grid,
+  .case-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .filter-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.65rem;
+    align-items: end;
+  }
+
+  .metric-card,
+  .case-card,
+  .result-card,
+  .history-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.9rem;
+    min-width: 0;
+  }
+
+  .metric-value {
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0.15rem 0 0;
+  }
+
+  .case-list {
+    display: grid;
+    gap: 0.65rem;
+    max-height: 48rem;
+    overflow: auto;
+    padding-right: 0.1rem;
+  }
+
+  .case-button {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--line);
+    background: var(--card);
+    padding: 0.8rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .case-button.current {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .case-button .case-query,
+  .result-reference {
+    font-weight: 600;
+  }
+
+  .case-meta,
+  .result-meta,
+  .history-meta,
+  .mono-wrap {
+    color: var(--muted);
+    font-size: 0.85rem;
+    word-break: break-word;
+  }
+
+  .mono-wrap {
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+
+  .signal-list,
+  .history-list,
+  .result-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .signal-item {
+    border-left: 4px solid var(--line);
+    padding: 0.1rem 0 0.1rem 0.8rem;
+  }
+
+  .signal-item.warn {
+    border-left-color: var(--warn);
+  }
+
+  .signal-item.error {
+    border-left-color: var(--danger);
+  }
+
+  .review-header {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .review-summary {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .action-row,
+  .segment {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .segment {
+    padding: 0.25rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel);
+  }
+
+  .segment button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    border-radius: 999px;
+    min-width: 2.25rem;
+    min-height: 2.25rem;
+    padding: 0 0.7rem;
+    cursor: pointer;
+  }
+
+  .segment button[aria-pressed="true"] {
+    background: var(--card);
+    color: var(--text);
+    box-shadow: var(--shadow);
+  }
+
+  .result-card {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .result-top {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .result-title-row {
+    display: flex;
+    gap: 0.55rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  .rank {
+    display: inline-flex;
+    min-width: 2rem;
+    justify-content: center;
+    padding: 0.2rem 0.45rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .excerpt,
+  .context-text {
+    margin: 0;
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+
+  .reason-list {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+
+  .reason-chip {
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    padding: 0.28rem 0.55rem;
+    font-size: 0.78rem;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  details.disclosure {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 0.15rem 0.7rem 0.7rem;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  details.disclosure > summary {
+    cursor: pointer;
+    padding: 0.6rem 0;
+    font-weight: 600;
+  }
+
+  .disclosure-body {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .context-block {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .verse-line {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.55rem;
+    align-items: start;
+    padding: 0.3rem 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .verse-line:first-child {
+    border-top: none;
+  }
+
+  .verse-ref {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .inline-status {
+    font-size: 0.84rem;
+    color: var(--muted);
+  }
+
+  .compare-bar {
+    display: grid;
+    gap: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--accent-soft);
+    padding: 0.9rem;
+  }
+
+  .split {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .history-list {
+    align-items: start;
+  }
+
+  .history-card.active {
+    border-color: #bcd7c6;
+    background: #fbfefc;
+  }
+
+  .history-card.superseded {
+    opacity: 0.85;
+  }
+
+  .empty {
+    padding: 1.1rem 0;
+    color: var(--muted);
+  }
+
+  .change-list,
+  .check-list,
+  .checklist {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .change-card,
+  .check-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.9rem;
+    min-width: 0;
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .change-card h3,
+  .check-card h3 {
+    overflow-wrap: anywhere;
+  }
+
+  .change-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .file-preview {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    max-height: 22rem;
+    overflow: auto;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #f4f7f6;
+    padding: 0.75rem;
+    font: 0.8rem/1.45 ui-monospace, "SFMono-Regular", Consolas, monospace;
+    white-space: pre;
+  }
+
+  .confirm-row {
+    display: grid;
+    gap: 0.65rem;
+    align-items: end;
+    min-width: 0;
+  }
+
+  .check-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .check-actions .btn {
+    width: 100%;
+  }
+
+  .job-output {
+    margin: 0;
+    min-height: 8rem;
+    max-height: 28rem;
+    overflow: auto;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #1f2524;
+    color: #edf4f1;
+    padding: 0.75rem;
+    font: 0.8rem/1.45 ui-monospace, "SFMono-Regular", Consolas, monospace;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .comparison-toolbar,
+  .comparison-progress,
+  .blind-actions,
+  .gate-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .comparison-picker { min-width: min(100%, 18rem); }
+
+  .query-rail {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 0.45rem;
+  }
+
+  .query-step {
+    min-height: 3.25rem;
+    text-align: left;
+    border-left: 3px solid transparent;
+  }
+
+  .query-step[aria-current="step"] {
+    border-left-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .blind-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.8rem;
+    align-items: start;
+  }
+
+  .blind-side {
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  .blind-side-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 0.85rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+  }
+
+  .side-letter {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 4px;
+    color: #fff;
+    background: var(--text);
+    font-weight: 800;
+  }
+
+  .blind-results { display: grid; }
+
+  .blind-result {
+    width: 100%;
+    min-height: 4.25rem;
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    gap: 0.65rem;
+    align-items: center;
+    padding: 0.7rem 0.8rem;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .blind-result:last-child { border-bottom: 0; }
+  .blind-result:hover { background: var(--panel); }
+  .blind-result[aria-pressed="true"] { background: var(--accent-soft); box-shadow: inset 3px 0 var(--accent); }
+  .blind-result:focus-visible { position: relative; z-index: 1; }
+
+  .rank-box,
+  .score-box { font: 700 0.78rem/1 ui-monospace, "SFMono-Regular", Consolas, monospace; }
+  .rank-box { color: var(--muted); }
+  .result-reference { font-weight: 750; overflow-wrap: anywhere; }
+
+  .passage-detail {
+    min-height: 8rem;
+    padding: 0.8rem;
+    border-top: 1px solid var(--line);
+    background: var(--panel);
+  }
+
+  .reason-row { padding: 0.55rem 0; border-top: 1px solid var(--line); }
+  .reason-row:first-of-type { border-top: 0; }
+
+  .movement-grid,
+  .gate-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+
+  .movement-cell,
+  .gate-group {
+    padding: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--card);
+  }
+
+  .gate-group h4 { margin-bottom: 0.45rem; }
+  .gate-list { display: grid; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
+  .gate-finding { font-size: 0.84rem; line-height: 1.4; }
+
+  .judgment-bar {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .judgment-bar .btn { min-height: 2.75rem; }
+
+  .reveal-panel {
+    min-width: 0;
+    max-width: 100%;
+    padding: 0.9rem;
+    border-left: 3px solid var(--ok);
+    background: var(--ok-soft);
+  }
+
+  .reveal-panel details,
+  .reveal-panel .file-preview {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .reveal-panel details { overflow: hidden; }
+
+  .missing-form {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.7fr) minmax(12rem, 1fr) auto;
+    gap: 0.55rem;
+    align-items: end;
+  }
+
+  .operations-toolbar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.65rem;
+    align-items: end;
+  }
+
+  .operations-band {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .operations-band:first-of-type { border-top: 0; }
+
+  .data-table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--card);
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 0.58rem 0.65rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    overflow-wrap: anywhere;
+  }
+
+  .data-table th {
+    color: var(--muted);
+    background: var(--panel);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .data-table tr:last-child td { border-bottom: 0; }
+  .data-table .numeric { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .partition-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    align-items: start;
+  }
+
+  .partition-section { min-width: 0; }
+  .partition-section > h3 { margin-bottom: 0.55rem; }
+
+  .progress-track {
+    width: 100%;
+    height: 0.45rem;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--line);
+  }
+
+  .progress-fill { height: 100%; background: var(--accent); }
+
+  .privacy-note {
+    border-left: 3px solid var(--warn);
+    padding: 0.7rem 0.8rem;
+    background: var(--warn-soft);
+  }
+
+  .layout.operations-layout { grid-template-columns: minmax(0, 1fr); }
+  .layout.operations-layout .sidebar { display: none; }
+
+  @media (min-width: 760px) {
+    .metric-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .case-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .confirm-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .check-actions {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 980px) {
+    .layout {
+      grid-template-columns: minmax(17rem, var(--sidebar-width)) minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 1rem;
+    }
+  }
+
+  @media (max-width: 759px) {
+    .app {
+      padding: 0.75rem;
+    }
+
+    .topbar,
+    .panel,
+    .sidebar-card,
+    .tab-strip {
+      padding-left: 0.85rem;
+      padding-right: 0.85rem;
+    }
+
+    .case-list {
+      max-height: none;
+    }
+
+    .blind-grid,
+    .movement-grid,
+    .gate-grid,
+    .judgment-bar,
+    .missing-form,
+    .partition-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .comparison-toolbar { align-items: stretch; }
+    .comparison-toolbar > * { width: 100%; }
+
+    .data-table thead { display: none; }
+    .data-table,
+    .data-table tbody,
+    .data-table tr,
+    .data-table td { display: block; width: 100%; }
+    .data-table tr { padding: 0.35rem 0; border-bottom: 1px solid var(--line); }
+    .data-table tr:last-child { border-bottom: 0; }
+    .data-table td,
+    .data-table td.numeric {
+      display: grid;
+      grid-template-columns: minmax(5.5rem, 0.42fr) minmax(0, 1fr);
+      gap: 0.6rem;
+      text-align: left;
+      border: 0;
+      padding: 0.35rem 0.65rem;
+    }
+    .data-table td::before {
+      content: attr(data-label);
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Scripture Search Engine</p>
+        <h1>Workbench</h1>
+        <p id="header-summary" class="subhead">Operational review for search quality, case flow, and release health.</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="refresh-all" class="btn" type="button">Refresh</button>
+        <div id="global-status-pill" class="pill">Loading</div>
+      </div>
+    </header>
+
+    <nav class="tab-strip" aria-label="Workbench views">
+      <div id="tab-list" class="tab-list" role="tablist" aria-label="Workbench views"></div>
+    </nav>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <section class="sidebar-card stack" aria-labelledby="create-case-heading">
+          <div class="section-head">
+            <div>
+              <h2 id="create-case-heading">New review case</h2>
+              <div class="tiny muted">Open a fresh search snapshot for human review.</div>
+            </div>
+          </div>
+          <form id="create-case-form" class="stack">
+            <div class="field">
+              <label for="new-case-query">Query</label>
+              <input id="new-case-query" name="query" type="text" autocomplete="off" placeholder="for example, faith and works">
+            </div>
+            <div class="field">
+              <label for="new-case-source">Source</label>
+              <select id="new-case-source" name="source"></select>
+            </div>
+            <div class="row">
+              <button id="create-case-submit" class="btn btn-primary" type="submit">Create case</button>
+            </div>
+          </form>
+          <div id="create-case-message" class="message" role="status" aria-live="polite">Ready.</div>
+        </section>
+
+        <section class="sidebar-card stack" aria-labelledby="cases-heading">
+          <div class="section-head">
+            <div>
+              <h2 id="cases-heading">Cases</h2>
+              <div id="case-count" class="tiny muted">Loading cases</div>
+            </div>
+            <button id="reload-cases" class="btn btn-subtle" type="button">Reload</button>
+          </div>
+          <div id="case-list" class="case-list" aria-live="polite"></div>
+        </section>
+      </aside>
+
+      <main id="main-panel" class="panel" tabindex="-1">
+        <div id="global-message" class="message" role="status" aria-live="polite">Loading workbench data.</div>
+        <div id="view-root"></div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const STORAGE_KEY = 'workbench-ui-state-v3';
+  const STUDIO_ROUTES = Object.freeze([
+    '/api/v2/sessions',
+    '/api/v2/quality',
+    '/api/v2/audits/preview',
+    '/api/v2/audits/apply',
+    '/api/v2/audits/close',
+    '/api/v2/admissions',
+    '/api/v2/publish',
+    '/complete-item',
+    '/skip-item',
+    '/complete-session',
+  ]);
+  const TABS = [
+    { id: 'health', label: 'Health' },
+    { id: 'inbox', label: 'Inbox' },
+    { id: 'review', label: 'Review' },
+    { id: 'history', label: 'History' },
+    { id: 'compare', label: 'Candidate' },
+    { id: 'admission', label: 'Admission' },
+    { id: 'changes', label: 'Changes' },
+    { id: 'publish', label: 'Publish' },
+    { id: 'sessions', label: 'Sessions' },
+    { id: 'quality', label: 'Quality' },
+    { id: 'audits', label: 'Audits' },
+  ];
+  const CASE_SOURCES = [
+    'manual',
+    'gauntlet',
+    'coverage',
+    'stale-judgment',
+    'telemetry',
+    'calibration',
+    'regression',
+  ];
+  const STATE_ORDER = {
+    reviewing: 0,
+    new: 1,
+    judged: 2,
+    proposed: 3,
+    'candidate-ready': 4,
+    admitted: 5,
+    'pr-prepared': 6,
+    merged: 7,
+    monitored: 8,
+    rejected: 9,
+    'needs-engineering': 10,
+  };
+  const WINDOW_VALUES = [1, 3, 5, 10];
+  const ACTION_LABELS = {
+    essential: 'Essential',
+    helpful: 'Helpful',
+    irrelevant: 'Not relevant',
+    missing: 'Missing passage',
+    prefer: 'Prefer A',
+  };
+  const DIAGNOSIS_LABELS = {
+    'lexical-noise': 'Matched words, not meaning',
+    'wrong-anchor': 'Theme anchor is attached to the wrong passage',
+    'concept-misfire': 'Theme trigger is too broad for this query',
+  };
+
+  const state = {
+    view: 'review',
+    readOnly: false,
+    readOnlyReason: '',
+    selectedCaseId: null,
+    health: null,
+    cases: [],
+    inbox: {
+      items: [],
+      fallback: false,
+      unavailable: false,
+      reason: '',
+      filters: { source: 'all', state: 'all', sensitivity: 'all', reviewer: 'all', identity: 'all', age: 'all' },
+    },
+    caseDetail: null,
+    judgments: [],
+    loading: {
+      health: false,
+      cases: false,
+      inbox: false,
+      review: false,
+      history: false,
+    },
+    requests: {
+      caseSerial: 0,
+    },
+    drafts: {
+      results: Object.create(null),
+      missing: { reference: '', withinTop: 10, note: '' },
+      pairNote: '',
+      preferredTargetId: null,
+      context: Object.create(null),
+    },
+    changes: {
+      compilePlan: null,
+      compileConfirmation: '',
+      promotionPlans: Object.create(null),
+      selectedPromotionId: null,
+      promotionConfirmation: '',
+      job: null,
+      loadingPreview: false,
+      applying: false,
+      loadingPromotionId: null,
+      applyingPromotionId: null,
+      polling: false,
+    },
+    comparison: {
+      reviews: [],
+      selectedReviewId: null,
+      session: null,
+      selectedQueryId: null,
+      selectedPassageId: null,
+      passageContexts: Object.create(null),
+      loading: false,
+      submitting: false,
+      missingOpen: false,
+      missingReference: '',
+      missingNote: '',
+    },
+    sessions: {
+      items: [], selected: null, loading: false, submitting: false,
+      form: { kind: 'weekly-triage', reviewedSize: 20, seed: 'weekly-review', reviewer: 'jesse', qualifiedReviewer: false, authorizedHoldoutReview: false },
+    },
+    quality: { report: null, loading: false, unavailable: '' },
+    audits: { preview: null, files: [], loading: false, submitting: false, recoveryDigest: null },
+    admission: { items: [], selectedReviewId: null, detail: null, loading: false, submitting: false, decisions: Object.create(null) },
+    publish: { items: [], selectedReviewId: null, detail: null, loading: false, submitting: false, push: false, openDraftPr: false, result: null },
+  };
+
+  function mutationReadOnly(localValue) { return state.readOnly || localValue === true; }
+
+  function readOnlyNotice() {
+    const notice = node('div', 'message warn');
+    notice.setAttribute('role', 'status');
+    notice.textContent = state.readOnlyReason || 'Read-only mode: repository mutations are disabled. Resolve the startup health issues and restart Workbench to resume changes.';
+    return notice;
+  }
+
+  const tabList = document.getElementById('tab-list');
+  const viewRoot = document.getElementById('view-root');
+  const mainPanel = document.getElementById('main-panel');
+  const layout = document.querySelector('.layout');
+  const caseList = document.getElementById('case-list');
+  const caseCount = document.getElementById('case-count');
+  const globalMessage = document.getElementById('global-message');
+  const globalStatusPill = document.getElementById('global-status-pill');
+  const headerSummary = document.getElementById('header-summary');
+  const refreshAllButton = document.getElementById('refresh-all');
+  const reloadCasesButton = document.getElementById('reload-cases');
+  const createCaseForm = document.getElementById('create-case-form');
+  const createCaseMessage = document.getElementById('create-case-message');
+  const newCaseQuery = document.getElementById('new-case-query');
+  const newCaseSource = document.getElementById('new-case-source');
+  const createCaseSubmit = document.getElementById('create-case-submit');
+
+  function node(tag, className, text) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+
+  function clear(element) {
+    while (element.firstChild) element.removeChild(element.firstChild);
+  }
+
+  function isPlainObject(value) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+  }
+
+  function safeArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function formatDate(value) {
+    if (typeof value !== 'string' || value.trim() === '') return 'Unknown time';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return new Intl.DateTimeFormat(undefined, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(date);
+  }
+
+  function escapeCaseSourceLabel(value) {
+    return value.replace(/-/g, ' ');
+  }
+
+  function statusTone(value) {
+    if (value === 'healthy' || value === 'aligned' || value === 'main') return 'pill-good';
+    if (value === 'rejected' || value === 'unavailable' || value === 'mismatch' || value === 'detached') return 'pill-danger';
+    if (value === 'running') return 'pill';
+    return 'pill-warn';
+  }
+
+  function currentCase() {
+    return state.cases.find((entry) => entry.caseId === state.selectedCaseId) || null;
+  }
+
+  function selectedReview() {
+    return state.caseDetail && state.caseDetail.review ? state.caseDetail.review : null;
+  }
+
+  function latestEventTime(entry) {
+    const events = entry && Array.isArray(entry.events) ? entry.events : [];
+    const last = events.length > 0 ? events[events.length - 1] : null;
+    return last && typeof last.at === 'string' ? last.at : '';
+  }
+
+  function sortCases(entries) {
+    return [...entries].sort((left, right) => {
+      const stateDiff = (STATE_ORDER[left.state] ?? 99) - (STATE_ORDER[right.state] ?? 99);
+      if (stateDiff !== 0) return stateDiff;
+      return latestEventTime(right).localeCompare(latestEventTime(left));
+    });
+  }
+
+  function queryStateFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const view = params.get('view');
+    const caseId = params.get('case');
+    return {
+      view: TABS.some((tab) => tab.id === view) ? view : null,
+      caseId: typeof caseId === 'string' && caseId.trim() !== '' ? caseId : null,
+    };
+  }
+
+  function persistRouteState() {
+    const params = new URLSearchParams();
+    params.set('view', state.view);
+    if (state.selectedCaseId) params.set('case', state.selectedCaseId);
+    const nextUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState(null, '', nextUrl);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      view: state.view,
+      selectedCaseId: state.selectedCaseId,
+      inboxFilters: state.inbox.filters,
+      changes: {
+        selectedPromotionId: state.changes.selectedPromotionId,
+        jobRunId: state.changes.job && typeof state.changes.job.runId === 'string' ? state.changes.job.runId : null,
+      },
+      comparisonReviewId: state.comparison.selectedReviewId,
+      auditRecoveryDigest: state.audits.preview && typeof state.audits.preview.auditDigest === 'string' ? state.audits.preview.auditDigest : null,
+    }));
+  }
+
+  function loadStoredRouteState() {
+    const fromUrl = queryStateFromUrl();
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw);
+        if (saved && TABS.some((tab) => tab.id === saved.view)) state.view = saved.view;
+        if (saved && typeof saved.selectedCaseId === 'string' && saved.selectedCaseId.trim() !== '') {
+          state.selectedCaseId = saved.selectedCaseId;
+        }
+        if (saved && isPlainObject(saved.inboxFilters)) {
+          for (const key of Object.keys(state.inbox.filters)) {
+            if (typeof saved.inboxFilters[key] === 'string') state.inbox.filters[key] = saved.inboxFilters[key];
+          }
+        }
+        if (saved && isPlainObject(saved.changes)) {
+          if (typeof saved.changes.selectedPromotionId === 'string') {
+            state.changes.selectedPromotionId = saved.changes.selectedPromotionId;
+          }
+          if (typeof saved.changes.jobRunId === 'string' && saved.changes.jobRunId.trim() !== '') {
+            state.changes.job = { runId: saved.changes.jobRunId, state: 'queued', jobId: 'check' };
+          }
+        }
+        if (saved && typeof saved.comparisonReviewId === 'string' && saved.comparisonReviewId.trim() !== '') {
+          state.comparison.selectedReviewId = saved.comparisonReviewId;
+        }
+        if (saved && typeof saved.auditRecoveryDigest === 'string' && /^[0-9a-f]{64}$/.test(saved.auditRecoveryDigest)) {
+          state.audits.recoveryDigest = saved.auditRecoveryDigest;
+        }
+      }
+    } catch {
+      // Ignore storage corruption and continue with defaults.
+    }
+    if (fromUrl.view) state.view = fromUrl.view;
+    if (fromUrl.caseId) state.selectedCaseId = fromUrl.caseId;
+  }
+
+  function nearestWindow(rank) {
+    if (rank <= 1) return 1;
+    if (rank <= 3) return 3;
+    if (rank <= 5) return 5;
+    return 10;
+  }
+
+  function ensureResultDraft(targetId, rank) {
+    if (!state.drafts.results[targetId]) {
+      state.drafts.results[targetId] = {
+        withinTop: nearestWindow(rank || 10),
+        interview: null,
+        note: '',
+      };
+    }
+    return state.drafts.results[targetId];
+  }
+
+  function judgmentKey(record) {
+    if (!record || record.schemaVersion !== 2 || typeof record.action !== 'string') return null;
+    if (record.action === 'missing') return `missing:${String(record.reference || '')}`;
+    if (record.action === 'prefer') {
+      const pair = [String(record.preferredTargetId || ''), String(record.otherTargetId || '')].sort();
+      return `prefer:${pair[0]}|${pair[1]}`;
+    }
+    return `target:${String(record.targetId || '')}`;
+  }
+
+  function supersededIds(records) {
+    const ids = new Set();
+    for (const record of records) {
+      if (record && record.schemaVersion === 2 && typeof record.supersedes === 'string') ids.add(record.supersedes);
+    }
+    return ids;
+  }
+
+  function activeJudgmentsByKey(records) {
+    const superseded = supersededIds(records);
+    const map = new Map();
+    for (const record of records) {
+      const key = judgmentKey(record);
+      if (!key) continue;
+      if (typeof record.judgmentId !== 'string' || superseded.has(record.judgmentId)) continue;
+      const existing = map.get(key);
+      if (!existing || String(existing.at || '').localeCompare(String(record.at || '')) <= 0) {
+        map.set(key, record);
+      }
+    }
+    return map;
+  }
+
+  function currentJudgmentForTarget(targetId) {
+    return activeJudgmentsByKey(state.judgments).get(`target:${targetId}`) || null;
+  }
+
+  function currentMissingJudgment(reference) {
+    return activeJudgmentsByKey(state.judgments).get(`missing:${reference}`) || null;
+  }
+
+  function currentPairJudgment(targetA, targetB) {
+    const pair = [targetA, targetB].sort();
+    return activeJudgmentsByKey(state.judgments).get(`prefer:${pair[0]}|${pair[1]}`) || null;
+  }
+
+  function technicalDetailsId(targetId, suffix) {
+    return `result-${targetId.replace(/[^a-zA-Z0-9_-]/g, '-')}-${suffix}`;
+  }
+
+  async function requestJson(url, options) {
+    let response;
+    try {
+      response = await fetch(url, options);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Network request failed.';
+      throw { status: 0, code: 'network_error', message };
+    }
+    let body = null;
+    try {
+      body = await response.json();
+    } catch {
+      body = null;
+    }
+    if (!response.ok) {
+      const message = body && isPlainObject(body) && isPlainObject(body.error) && typeof body.error.message === 'string'
+        ? body.error.message
+        : body && isPlainObject(body) && typeof body.error === 'string'
+          ? body.error
+          : `${response.status} ${response.statusText}`;
+      const code = body && isPlainObject(body) && isPlainObject(body.error) && typeof body.error.code === 'string'
+        ? body.error.code
+        : 'request_failed';
+      throw { status: response.status, code, message, body };
+    }
+    if (body && isPlainObject(body) && body.ok === true && 'data' in body) return body.data;
+    return body;
+  }
+
+  function setGlobalMessage(kind, text) {
+    globalMessage.className = `message${kind ? ` ${kind}` : ''}`;
+    globalMessage.textContent = text;
+  }
+
+  function setInlineMessage(element, kind, text) {
+    element.className = `message${kind ? ` ${kind}` : ''}`;
+    element.textContent = text;
+  }
+
+  function updateHeader() {
+    const count = state.cases.length;
+    const caseText = count === 1 ? '1 case' : `${count} cases`;
+    headerSummary.textContent = state.selectedCaseId
+      ? `Operational review for search quality, case flow, and release health. ${caseText} loaded.`
+      : `Operational review for search quality, case flow, and release health. ${caseText} loaded.`;
+    globalStatusPill.className = `pill ${state.health ? statusTone(state.health.status) : ''}`.trim();
+    globalStatusPill.textContent = state.health ? `Status: ${state.health.status}` : 'Status: loading';
+  }
+
+  function renderTabs() {
+    clear(tabList);
+    TABS.forEach((tab, index) => {
+      const button = node('button', 'tab', tab.label);
+      button.type = 'button';
+      button.id = `tab-${tab.id}`;
+      button.role = 'tab';
+      button.setAttribute('aria-selected', state.view === tab.id ? 'true' : 'false');
+      button.setAttribute('aria-controls', `panel-${tab.id}`);
+      button.tabIndex = state.view === tab.id ? 0 : -1;
+      button.dataset.view = tab.id;
+      button.addEventListener('click', () => {
+        state.view = tab.id;
+        persistRouteState();
+        render();
+        if (tab.id === 'sessions') void loadSessions();
+        else if (tab.id === 'quality') void loadQuality();
+        else if (tab.id === 'audits') void recoverAuditPreview().then(render);
+        else if (tab.id === 'admission') void loadAdmissions();
+        else if (tab.id === 'publish') void loadPublish();
+      });
+      button.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' && event.key !== 'Home' && event.key !== 'End') return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % TABS.length;
+        else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + TABS.length) % TABS.length;
+        else if (event.key === 'Home') nextIndex = 0;
+        else if (event.key === 'End') nextIndex = TABS.length - 1;
+        const next = tabList.querySelector(`[data-view="${TABS[nextIndex].id}"]`);
+        if (next) next.focus();
+      });
+      tabList.appendChild(button);
+    });
+  }
+
+  function renderSidebar() {
+    caseCount.textContent = state.loading.cases ? 'Loading cases' : `${state.cases.length} loaded`;
+    clear(caseList);
+    if (state.loading.cases && state.cases.length === 0) {
+      caseList.appendChild(node('div', 'empty', 'Loading cases.'));
+      return;
+    }
+    if (state.cases.length === 0) {
+      caseList.appendChild(node('div', 'empty', 'No cases yet.'));
+      return;
+    }
+    sortCases(state.cases).forEach((entry) => {
+      const button = node('button', `case-button${state.selectedCaseId === entry.caseId ? ' current' : ''}`);
+      button.type = 'button';
+      button.addEventListener('click', () => {
+        selectCase(entry.caseId, state.view === 'health' ? 'review' : state.view);
+      });
+
+      const title = node('div', 'case-query', entry.query);
+      title.className = 'case-query';
+      button.appendChild(title);
+
+      const meta = node('div', 'case-meta');
+      meta.textContent = `${escapeCaseSourceLabel(entry.source)} | ${entry.state} | ${formatDate(latestEventTime(entry))}`;
+      button.appendChild(meta);
+
+      const chips = node('div', 'row');
+      chips.appendChild(statusBadge(entry.state));
+      if (entry.caseId === state.selectedCaseId) chips.appendChild(node('span', 'pill pill-good', 'Selected'));
+      button.appendChild(chips);
+      caseList.appendChild(button);
+    });
+  }
+
+  function statusBadge(value) {
+    const badge = node('span', `pill ${statusTone(value)}`.trim(), value);
+    return badge;
+  }
+
+  function metricCard(label, value, tone, detail) {
+    const card = node('section', 'metric-card');
+    const top = node('div', 'tiny muted', label);
+    const main = node('div', 'metric-value', String(value));
+    card.appendChild(top);
+    card.appendChild(main);
+    if (detail) card.appendChild(node('div', `pill ${tone}`.trim(), detail));
+    return card;
+  }
+
+  function twoColumnDefinitionList(entries) {
+    const wrapper = node('div', 'case-grid');
+    entries.forEach(([label, value]) => {
+      const card = node('div', 'history-card');
+      card.appendChild(node('div', 'tiny muted', label));
+      card.appendChild(node('div', value.className || '', value.text));
+      wrapper.appendChild(card);
+    });
+    return wrapper;
+  }
+
+  function renderHealthView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-health';
+    panel.role = 'tabpanel';
+    panel.setAttribute('aria-labelledby', 'tab-health');
+
+    const head = node('div', 'section-head');
+    const text = node('div');
+    text.appendChild(node('h2', '', 'Health'));
+    text.appendChild(node('div', 'tiny muted', 'Descriptor, artifact, fixture, gauntlet, judgment, and git status.'));
+    head.appendChild(text);
+    panel.appendChild(head);
+
+    if (state.loading.health && !state.health) {
+      panel.appendChild(node('div', 'message', 'Loading health.'));
+      return panel;
+    }
+    if (!state.health) {
+      panel.appendChild(node('div', 'message warn', 'Health is unavailable.'));
+      return panel;
+    }
+
+    const health = state.health;
+    const metrics = node('div', 'metric-grid');
+    metrics.appendChild(metricCard('Overall', health.status, statusTone(health.status), health.descriptor.alignment));
+    metrics.appendChild(metricCard('Golden fixtures', `${health.golden.active}/${health.golden.total}`, 'pill', `${health.golden.pending} pending`));
+    metrics.appendChild(metricCard('Coverage', `${health.coverage.active}/${health.coverage.total}`, 'pill', `${health.coverage.uncovered} uncovered`));
+    metrics.appendChild(metricCard('Judgments', `${health.judgments.effective}/${health.judgments.total}`, 'pill', `${health.judgments.stale} stale`));
+    panel.appendChild(metrics);
+
+    const gauntletCard = node('section', 'history-card stack');
+    gauntletCard.appendChild(node('h3', '', 'Release gate'));
+    const gauntletRow = node('div', 'row');
+    gauntletRow.appendChild(statusBadge(health.gauntlet.status));
+    gauntletRow.appendChild(statusBadge(health.git.state));
+    if (health.gauntlet.verdict) gauntletRow.appendChild(node('span', 'pill', `Verdict: ${health.gauntlet.verdict}`));
+    gauntletCard.appendChild(gauntletRow);
+    if (health.gauntlet.summary) gauntletCard.appendChild(node('p', 'excerpt', health.gauntlet.summary));
+    if (health.gauntlet.reason) gauntletCard.appendChild(node('div', 'message warn', health.gauntlet.reason));
+    if (health.gauntlet.reportPath) gauntletCard.appendChild(node('div', 'mono-wrap tiny', health.gauntlet.reportPath));
+    panel.appendChild(gauntletCard);
+
+    const signals = node('section', 'stack');
+    signals.appendChild(node('h3', '', 'Signals'));
+    if (!Array.isArray(health.signals) || health.signals.length === 0) {
+      signals.appendChild(node('div', 'message success', 'No warnings or errors reported.'));
+    } else {
+      const list = node('div', 'signal-list');
+      health.signals.forEach((signal) => {
+        const item = node('div', `signal-item ${signal.severity}`);
+        item.appendChild(node('div', 'tiny muted', `${signal.area} | ${signal.severity}`));
+        item.appendChild(node('div', '', signal.message));
+        if (Array.isArray(signal.subjects) && signal.subjects.length > 0) {
+          item.appendChild(node('div', 'mono-wrap tiny', signal.subjects.join(', ')));
+        }
+        list.appendChild(item);
+      });
+      signals.appendChild(list);
+    }
+    panel.appendChild(signals);
+
+    const details = node('div', 'split');
+    const descriptor = node('section', 'history-card stack');
+    descriptor.appendChild(node('h3', '', 'Descriptor and artifact'));
+    descriptor.appendChild(twoColumnDefinitionList([
+      ['Alignment', { text: health.descriptor.alignment, className: 'mono-wrap' }],
+      ['Engine version', { text: health.descriptor.identity ? health.descriptor.identity.engineVersion : 'Unavailable', className: 'mono-wrap' }],
+      ['Corpus fingerprint', { text: health.descriptor.identity ? health.descriptor.identity.corpusFingerprint : 'Unavailable', className: 'mono-wrap' }],
+      ['Layer fingerprint', { text: health.descriptor.identity ? health.descriptor.identity.layerFingerprint : 'Unavailable', className: 'mono-wrap' }],
+    ]));
+    if (health.descriptor.stale && health.descriptor.stale.reason) {
+      descriptor.appendChild(node('div', 'message warn', health.descriptor.stale.reason));
+    }
+    details.appendChild(descriptor);
+
+    const startup = node('section', 'history-card stack');
+    startup.appendChild(node('h3', '', 'Startup and git'));
+    const legacyLog = isPlainObject(health.legacyLog) ? health.legacyLog : null;
+    startup.appendChild(twoColumnDefinitionList([
+      ['Branch', { text: health.git.branch || 'Unavailable', className: 'mono-wrap' }],
+      ['Ahead / behind', { text: `${health.git.aheadBy} / ${health.git.behindBy}`, className: '' }],
+      ['Dirty tree', { text: health.git.dirty ? 'Yes' : 'No', className: '' }],
+      ['Degraded startup', { text: health.startup.degraded ? 'Yes' : 'No', className: '' }],
+      ['Legacy judgment log', {
+        text: legacyLog && legacyLog.status === 'closed-canonical'
+          ? 'Closed and canonical'
+          : legacyLog ? legacyLog.status : 'Not checked',
+        className: '',
+      }],
+    ]));
+    if (legacyLog && legacyLog.status !== 'closed-canonical' && legacyLog.status !== 'absent' && legacyLog.message) {
+      startup.appendChild(node('div', 'message warn', legacyLog.message));
+    }
+    if (Array.isArray(health.startup.diagnostics) && health.startup.diagnostics.length > 0) {
+      const list = node('div', 'stack');
+      health.startup.diagnostics.forEach((item) => list.appendChild(node('div', 'message error', item)));
+      startup.appendChild(list);
+    }
+    details.appendChild(startup);
+    panel.appendChild(details);
+
+    return panel;
+  }
+
+  function normalizeInboxItem(item) {
+    if (!item) return null;
+    if (isPlainObject(item) && isPlainObject(item.case)) {
+      return {
+        case: item.case,
+        suggestion: null,
+        note: typeof item.reason === 'string' ? item.reason : typeof item.note === 'string' ? item.note : '',
+        freshness: typeof item.freshness === 'string' ? item.freshness : '',
+        judgmentCount: typeof item.judgmentCount === 'number' ? item.judgmentCount : null,
+        resultCount: typeof item.resultCount === 'number' ? item.resultCount : null,
+        meta: isPlainObject(item.meta) ? item.meta : {},
+      };
+    }
+    if (isPlainObject(item) && isPlainObject(item.suggestion) &&
+      typeof item.suggestion.query === 'string' && typeof item.suggestion.source === 'string') {
+      return {
+        case: null,
+        suggestion: item.suggestion,
+        note: typeof item.reason === 'string' ? item.reason : '',
+        freshness: '',
+        judgmentCount: null,
+        resultCount: typeof item.resultCount === 'number' ? item.resultCount : null,
+        meta: isPlainObject(item.meta) ? item.meta : {},
+      };
+    }
+    if (isPlainObject(item) && typeof item.caseId === 'string' && typeof item.query === 'string') {
+      return { case: item, suggestion: null, note: '', freshness: '', judgmentCount: null, resultCount: null, meta: {} };
+    }
+    return null;
+  }
+
+  function renderInboxView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-inbox';
+    panel.role = 'tabpanel';
+    panel.setAttribute('aria-labelledby', 'tab-inbox');
+
+    const head = node('div', 'section-head');
+    const text = node('div');
+    text.appendChild(node('h2', '', 'Inbox'));
+    text.appendChild(node('div', 'tiny muted', 'Cases that need human attention right now.'));
+    head.appendChild(text);
+    const reload = node('button', 'btn btn-subtle', 'Reload inbox');
+    reload.type = 'button';
+    reload.addEventListener('click', () => {
+      void loadInbox(true);
+    });
+    head.appendChild(reload);
+    panel.appendChild(head);
+
+    if (state.loading.inbox && state.inbox.items.length === 0) {
+      panel.appendChild(node('div', 'message', 'Loading inbox.'));
+      return panel;
+    }
+
+    if (state.inbox.unavailable) {
+      panel.appendChild(node('div', 'message warn', state.inbox.reason || 'Inbox endpoint unavailable. Showing local fallback queue.'));
+    } else if (state.inbox.fallback) {
+      panel.appendChild(node('div', 'message', state.inbox.reason || 'Showing fallback queue from cases.'));
+    }
+
+    const allItems = state.inbox.items.map(normalizeInboxItem).filter(Boolean);
+    if (allItems.length === 0) {
+      panel.appendChild(node('div', 'empty', 'Nothing is waiting in the inbox.'));
+      return panel;
+    }
+
+    const filterBar = node('div', 'filter-bar');
+    const filterDefinitions = [
+      ['source', 'Source', ['all', ...new Set(allItems.map((item) => item.meta.source || (item.case || item.suggestion).source))]],
+      ['state', 'State', ['all', ...new Set(allItems.map((item) => item.meta.state || item.case?.state || 'new'))]],
+      ['sensitivity', 'Sensitivity', ['all', 'standard', 'sensitive']],
+      ['reviewer', 'Reviewer', ['all', ...new Set(allItems.map((item) => item.meta.reviewer || 'unassigned'))]],
+      ['identity', 'Artifact', ['all', 'current', 'other']],
+      ['age', 'Age', ['all', '7', '30', 'older']],
+    ];
+    filterDefinitions.forEach(([key, label, values]) => {
+      const field = node('div', 'field');
+      const fieldLabel = node('label', '', label);
+      const select = document.createElement('select');
+      const selectId = `inbox-filter-${key}`;
+      select.id = selectId;
+      fieldLabel.htmlFor = selectId;
+      values.forEach((value) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value === 'all' ? `All ${label.toLowerCase()}`
+          : key === 'age' ? (value === '7' ? 'Last 7 days' : value === '30' ? 'Last 30 days' : 'Older than 30 days')
+            : value.replaceAll('-', ' ');
+        option.selected = state.inbox.filters[key] === value;
+        select.appendChild(option);
+      });
+      select.addEventListener('change', () => {
+        state.inbox.filters[key] = select.value;
+        persistRouteState();
+        render();
+      });
+      field.appendChild(fieldLabel);
+      field.appendChild(select);
+      filterBar.appendChild(field);
+    });
+    panel.appendChild(filterBar);
+
+    const currentIdentity = state.health && state.health.artifact ? state.health.artifact.identity : null;
+    const items = allItems.filter((item) => {
+      const subject = item.case || item.suggestion;
+      const meta = item.meta;
+      const reviewer = meta.reviewer || 'unassigned';
+      const artifact = meta.artifact || item.case?.artifact || null;
+      const isCurrent = currentIdentity && artifact &&
+        artifact.engineVersion === currentIdentity.engineVersion &&
+        artifact.corpusFingerprint === currentIdentity.corpusFingerprint &&
+        artifact.layerFingerprint === currentIdentity.layerFingerprint;
+      const ageDays = typeof meta.ageDays === 'number' ? meta.ageDays : 0;
+      const filters = state.inbox.filters;
+      return (filters.source === 'all' || filters.source === (meta.source || subject.source)) &&
+        (filters.state === 'all' || filters.state === (meta.state || item.case?.state || 'new')) &&
+        (filters.sensitivity === 'all' || filters.sensitivity === (meta.sensitivity || 'standard')) &&
+        (filters.reviewer === 'all' || filters.reviewer === reviewer) &&
+        (filters.identity === 'all' || (filters.identity === 'current' ? isCurrent : !isCurrent)) &&
+        (filters.age === 'all' || (filters.age === '7' ? ageDays <= 7 : filters.age === '30' ? ageDays <= 30 : ageDays > 30));
+    });
+    if (items.length === 0) {
+      panel.appendChild(node('div', 'empty', 'No inbox cases match these filters.'));
+      return panel;
+    }
+
+    const list = node('div', 'case-grid');
+    items.forEach((item) => {
+      const subject = item.case || item.suggestion;
+      const card = node('article', 'case-card stack');
+      card.appendChild(node('div', 'case-query', subject.query));
+      const metaText = item.case
+        ? `${escapeCaseSourceLabel(item.case.source)} | ${item.case.state} | ${formatDate(latestEventTime(item.case))}`
+        : `${escapeCaseSourceLabel(item.suggestion.source)} | suggested review`;
+      const meta = node('div', 'case-meta', metaText);
+      card.appendChild(meta);
+      const row = node('div', 'row');
+      row.appendChild(item.case ? statusBadge(item.case.state) : node('span', 'pill pill-warn', 'Suggested'));
+      if (item.freshness) row.appendChild(node('span', 'pill', `Snapshot: ${item.freshness}`));
+      if (typeof item.judgmentCount === 'number') row.appendChild(node('span', 'pill', `${item.judgmentCount} judgments`));
+      if (typeof item.resultCount === 'number') row.appendChild(node('span', 'pill', `${item.resultCount} results`));
+      card.appendChild(row);
+      if (item.note) card.appendChild(node('p', 'excerpt', item.note));
+      const actions = node('div', 'row');
+      if (item.case) {
+        const review = node('button', 'btn btn-primary', 'Open review');
+        review.type = 'button';
+        review.addEventListener('click', () => {
+          selectCase(item.case.caseId, 'review');
+        });
+        actions.appendChild(review);
+        const history = node('button', 'btn', 'Open history');
+        history.type = 'button';
+        history.addEventListener('click', () => {
+          selectCase(item.case.caseId, 'history');
+        });
+        actions.appendChild(history);
+      } else {
+        const create = node('button', 'btn btn-primary', 'Create review case');
+        create.type = 'button';
+        create.addEventListener('click', () => {
+          void createCase(item.suggestion.query, item.suggestion.source);
+        });
+        actions.appendChild(create);
+      }
+      card.appendChild(actions);
+      list.appendChild(card);
+    });
+    panel.appendChild(list);
+    return panel;
+  }
+
+  function resultCurrentActionText(record) {
+    if (!record || record.schemaVersion !== 2) return 'No review yet';
+    const label = ACTION_LABELS[record.action] || record.action;
+    if (record.action === 'essential' && typeof record.withinTop === 'number') {
+      return `${label} within top ${record.withinTop}`;
+    }
+    if (record.action === 'irrelevant' && record.diagnosis) {
+      return `${label} | ${DIAGNOSIS_LABELS[record.diagnosis] || record.diagnosis}`;
+    }
+    return label;
+  }
+
+  // Concept label -> id from the artifact's own concept table, fetched once.
+  // This is what lets "Not relevant" name the concept from the result's
+  // evidence instead of asking the reviewer to know internal ids. A failed
+  // fetch degrades to the hand-typed fallback inside the note step — never a
+  // blocked judgment and never a guessed id.
+  const conceptIdsByLabel = new Map();
+
+  async function loadConceptLabels() {
+    try {
+      const list = await requestJson('/api/concepts');
+      safeArray(list).forEach((concept) => {
+        if (isPlainObject(concept) && typeof concept.id === 'string' && typeof concept.label === 'string') {
+          conceptIdsByLabel.set(concept.label, concept.id);
+        }
+      });
+    } catch {
+      // Degraded mode: conceptEvidence returns null ids and the note step
+      // asks for the concept id by hand.
+    }
+  }
+
+  // The distinct concepts a result's evidence actually names: one entry per
+  // concept behind a concept_anchor or concept_lexicon reason. All three
+  // current label prefixes ('Theme: ', 'Theme cue: ', 'Related theme: ') are
+  // stripped; a future prefix this misses leaves the label unmatched, which
+  // degrades to the hand-typed fallback rather than wiring a wrong id.
+  function conceptEvidence(result) {
+    const seen = new Set();
+    const concepts = [];
+    safeArray(result.reasons).forEach((reason) => {
+      if (!isPlainObject(reason) || typeof reason.label !== 'string') return;
+      if (reason.family !== 'concept_anchor' && reason.family !== 'concept_lexicon') return;
+      const label = reason.label
+        .replace(/^Theme cue: /, '')
+        .replace(/^Related theme: /, '')
+        .replace(/^Theme: /, '');
+      if (seen.has(label)) return;
+      seen.add(label);
+      concepts.push({ label, id: conceptIdsByLabel.has(label) ? conceptIdsByLabel.get(label) : null });
+    });
+    return concepts;
+  }
+
+  // Honest-demotion copy: what an irrelevant judgment actually compiles to.
+  const DEMOTION_EXPLANATION = 'It is demoted out of the top results for this query only — the verse stays in the corpus and every other search.';
+
+  function renderMachineReasons(result) {
+    const reasons = node('div', 'reason-list');
+    safeArray(result.reasons).forEach((reason) => {
+      const family = typeof reason.family === 'string' ? reason.family : 'reason';
+      const points = typeof reason.points === 'number' ? `${reason.points.toFixed(2)} pts` : '';
+      const label = typeof reason.label === 'string' ? reason.label : '';
+      const chip = node('div', 'reason-chip', `${family}${points ? ` | ${points}` : ''}${label ? ` | ${label}` : ''}`);
+      reasons.appendChild(chip);
+    });
+    return reasons;
+  }
+
+  function renderPassageContextDisclosure(result) {
+    const ref = typeof result.reference === 'string' ? result.reference : '';
+    const cache = state.drafts.context[ref] || { status: 'idle', data: null, error: '' };
+    state.drafts.context[ref] = cache;
+
+    const details = node('details', 'disclosure');
+    const summary = node('summary', '', 'Passage context');
+    details.appendChild(summary);
+    const body = node('div', 'disclosure-body');
+    const meta = node('div', 'tiny muted', `Review target stays ${result.targetId}. Context is loaded around ${ref}.`);
+    body.appendChild(meta);
+
+    const content = node('div', 'context-block');
+    body.appendChild(content);
+    details.appendChild(body);
+
+    function paintContext() {
+      clear(content);
+      if (cache.status === 'loading') {
+        content.appendChild(node('div', 'message', 'Loading surrounding verses.'));
+        return;
+      }
+      if (cache.status === 'error') {
+        content.appendChild(node('div', 'message warn', cache.error || 'Context is unavailable.'));
+        return;
+      }
+      if (!cache.data) {
+        content.appendChild(node('div', 'message', 'Open this section to load surrounding verses on demand.'));
+        return;
+      }
+      content.appendChild(node('div', 'tiny muted', `Requested reference: ${cache.data.requestedReference || ref}`));
+      const context = cache.data.context;
+      const passage = isPlainObject(context) && context.kind === 'passage' && isPlainObject(context.passage)
+        ? context.passage
+        : context;
+      if (isPlainObject(passage) && typeof passage.reference === 'string') {
+        content.appendChild(node('div', 'pill', passage.reference));
+      }
+      const verses = isPlainObject(passage) && Array.isArray(passage.verses) ? passage.verses : [];
+      if (verses.length === 0) {
+        content.appendChild(node('div', 'message', 'No expanded passage came back for this result.'));
+        return;
+      }
+      const verseList = node('div', 'stack');
+      verses.forEach((verse) => {
+        const line = node('div', 'verse-line');
+        const verseNumber = node('div', 'verse-ref', typeof verse.verse === 'number' ? String(verse.verse) : typeof verse.verse === 'string' ? verse.verse : '');
+        const verseText = node('p', 'context-text', typeof verse.text === 'string' ? verse.text : '');
+        line.appendChild(verseNumber);
+        line.appendChild(verseText);
+        verseList.appendChild(line);
+      });
+      content.appendChild(verseList);
+    }
+
+    details.addEventListener('toggle', () => {
+      if (!details.open || cache.status === 'loading' || cache.data || !ref) return;
+      cache.status = 'loading';
+      paintContext();
+      void requestJson(`/api/v2/context?ref=${encodeURIComponent(ref)}`)
+        .then((data) => {
+          cache.status = 'ready';
+          cache.data = data;
+          paintContext();
+        })
+        .catch((error) => {
+          cache.status = 'error';
+          cache.error = error && typeof error.message === 'string' ? error.message : 'Context could not be loaded.';
+          paintContext();
+        });
+    });
+
+    paintContext();
+    return details;
+  }
+
+  // Plain yes/no questions built from the result's own concept evidence
+  // decide between wrong-anchor and concept-misfire — the diagnosis is never
+  // picked from a jargon list, and the concept id is wired from the evidence
+  // rather than asked for. A hand-written sentence stays required only here,
+  // because these two causes queue changes to reviewed theme files.
+  function renderNotRelevantInterview(result, review, record, draft) {
+    const interview = draft.interview;
+    const concept = interview.concepts[interview.index];
+    const reference = result.reference || result.targetId;
+    const panel = node('div', 'stack');
+
+    const cancelButton = () => {
+      const cancel = node('button', 'btn btn-subtle', 'Never mind');
+      cancel.type = 'button';
+      cancel.addEventListener('click', () => {
+        draft.interview = null;
+        render();
+      });
+      return cancel;
+    };
+
+    // The interview draft (including the required hand-typed note) must
+    // survive a rejected submit — stale snapshot token, CSRF, network — so
+    // the reviewer can retry without retyping. submitJudgment clears it in
+    // its success branch, alongside the missing/prefer draft clears.
+    const submitIrrelevant = (details, successMessage) => {
+      void submitJudgment(Object.assign({
+        caseId: review.caseId,
+        snapshotToken: review.token,
+        action: 'irrelevant',
+        targetId: result.targetId,
+        supersedes: record && record.judgmentId ? record.judgmentId : undefined,
+      }, details), successMessage);
+    };
+
+    // Every named theme checked out on both counts: the pull was word
+    // overlap after all, recorded with the diagnosisInferred marker.
+    const logNoise = () => submitIrrelevant(
+      { diagnosis: 'lexical-noise', diagnosisInferred: true, note: draft.note.trim() || undefined },
+      `Marked ${reference} not relevant — matched words, not meaning. ${DEMOTION_EXPLANATION}`,
+    );
+
+    const question = (text, onYes, onNo) => {
+      panel.appendChild(node('div', '', text));
+      const row = node('div', 'action-row');
+      [['Yes', onYes], ['No', onNo]].forEach(([label, handler]) => {
+        const button = node('button', 'btn', label);
+        button.type = 'button';
+        button.addEventListener('click', handler);
+        row.appendChild(button);
+      });
+      row.appendChild(cancelButton());
+      panel.appendChild(row);
+    };
+
+    if (interview.step === 'fit') {
+      question(
+        `Does “${concept.label}” fit this verse?`,
+        () => {
+          interview.step = 'trigger';
+          render();
+        },
+        () => {
+          interview.step = 'note';
+          interview.cause = 'wrong-anchor';
+          render();
+        },
+      );
+      return panel;
+    }
+
+    if (interview.step === 'trigger') {
+      question(
+        `Should “${review.query}” have brought up “${concept.label}” at all?`,
+        () => {
+          if (interview.index + 1 < interview.concepts.length) {
+            interview.index += 1;
+            interview.step = 'fit';
+            render();
+          } else {
+            logNoise();
+          }
+        },
+        () => {
+          interview.step = 'note';
+          interview.cause = 'concept-misfire';
+          render();
+        },
+      );
+      return panel;
+    }
+
+    const explanation = interview.cause === 'wrong-anchor'
+      ? `“${concept.label}” doesn’t belong on this verse — that anchor will be queued for review in the theme files.`
+      : `“${review.query}” shouldn’t pull in “${concept.label}” — that trigger will be queued for review in the theme files.`;
+    panel.appendChild(node('div', '', explanation));
+
+    let conceptInput = null;
+    if (concept.id === null) {
+      const conceptField = node('div', 'field');
+      const conceptLabel = node('label', '', `Concept id (the workbench could not match “${concept.label}” to an id)`);
+      conceptLabel.htmlFor = technicalDetailsId(result.targetId, 'interview-concept');
+      conceptInput = document.createElement('input');
+      conceptInput.type = 'text';
+      conceptInput.id = technicalDetailsId(result.targetId, 'interview-concept');
+      conceptInput.value = interview.conceptId;
+      conceptInput.placeholder = 'for example, obedience';
+      conceptInput.addEventListener('input', () => {
+        interview.conceptId = conceptInput.value;
+      });
+      conceptField.appendChild(conceptLabel);
+      conceptField.appendChild(conceptInput);
+      panel.appendChild(conceptField);
+    }
+
+    const noteField = node('div', 'field');
+    const noteLabel = node('label', '', 'Why, from the verse itself (required — this queues a change to reviewed theme files)');
+    noteLabel.htmlFor = technicalDetailsId(result.targetId, 'interview-note');
+    const noteInput = document.createElement('textarea');
+    noteInput.id = technicalDetailsId(result.targetId, 'interview-note');
+    noteInput.value = interview.note;
+    noteInput.placeholder = 'What you saw in the passage.';
+    noteInput.addEventListener('input', () => {
+      interview.note = noteInput.value;
+    });
+    noteField.appendChild(noteLabel);
+    noteField.appendChild(noteInput);
+    panel.appendChild(noteField);
+
+    const submitRow = node('div', 'action-row');
+    const submit = node('button', 'btn btn-danger', 'Log not relevant');
+    submit.type = 'button';
+    submit.addEventListener('click', () => {
+      const conceptId = concept.id !== null ? concept.id : interview.conceptId.trim();
+      if (!conceptId) {
+        setGlobalMessage('warn', 'This judgment must name the concept.');
+        return;
+      }
+      if (!interview.note.trim()) {
+        setGlobalMessage('warn', 'This judgment queues a change to reviewed theme files — say why, from the verse itself.');
+        return;
+      }
+      submitIrrelevant(
+        { diagnosis: interview.cause, conceptId, note: interview.note.trim() },
+        `Marked ${reference} not relevant — “${concept.label}” is queued for review in the theme files. ${DEMOTION_EXPLANATION}`,
+      );
+    });
+    submitRow.appendChild(submit);
+    submitRow.appendChild(cancelButton());
+    panel.appendChild(submitRow);
+    return panel;
+  }
+
+  function renderResultCard(result, review, activeByKey) {
+    const record = currentJudgmentForTarget(result.targetId);
+    const draft = ensureResultDraft(result.targetId, result.rank || 10);
+    const card = node('article', 'result-card');
+
+    const top = node('div', 'result-top');
+    const titleRow = node('div', 'result-title-row');
+    titleRow.appendChild(node('span', 'rank', `#${result.rank}`));
+    titleRow.appendChild(node('div', 'result-reference', result.reference || result.targetId));
+    if (typeof result.score === 'number') titleRow.appendChild(node('span', 'pill', `Score ${result.score.toFixed(2)}`));
+    top.appendChild(titleRow);
+    top.appendChild(node('div', 'result-meta', `Target ${result.targetId}`));
+    if (result.excerpt) top.appendChild(node('p', 'excerpt', result.excerpt));
+    card.appendChild(top);
+
+    const currentRow = node('div', 'row');
+    currentRow.appendChild(node('span', 'pill', `Current call: ${resultCurrentActionText(record)}`));
+    if (record && record.judgmentId) currentRow.appendChild(node('span', 'pill', `Judgment ${record.judgmentId.slice(0, 8)}`));
+    card.appendChild(currentRow);
+
+    const actions = node('div', 'stack');
+    const essentialGroup = node('div', 'row');
+    essentialGroup.appendChild(node('span', 'tiny muted', 'Place within'));
+    const segment = node('div', 'segment');
+    WINDOW_VALUES.forEach((windowValue) => {
+      const option = node('button', '', String(windowValue));
+      option.type = 'button';
+      option.setAttribute('aria-pressed', draft.withinTop === windowValue ? 'true' : 'false');
+      option.addEventListener('click', () => {
+        draft.withinTop = windowValue;
+        render();
+      });
+      segment.appendChild(option);
+    });
+    essentialGroup.appendChild(segment);
+    actions.appendChild(essentialGroup);
+
+    const buttonRow = node('div', 'action-row');
+    const essentialButton = node('button', 'btn btn-primary', 'Essential');
+    essentialButton.type = 'button';
+    essentialButton.addEventListener('click', () => {
+      void submitJudgment({
+        caseId: review.caseId,
+        snapshotToken: review.token,
+        action: 'essential',
+        targetId: result.targetId,
+        withinTop: draft.withinTop,
+        note: draft.note.trim() || undefined,
+        supersedes: record && record.judgmentId ? record.judgmentId : undefined,
+      }, `Marked ${result.reference || result.targetId} essential.`);
+    });
+    buttonRow.appendChild(essentialButton);
+
+    const helpfulButton = node('button', 'btn', 'Helpful');
+    helpfulButton.type = 'button';
+    helpfulButton.addEventListener('click', () => {
+      void submitJudgment({
+        caseId: review.caseId,
+        snapshotToken: review.token,
+        action: 'helpful',
+        targetId: result.targetId,
+        note: draft.note.trim() || undefined,
+        supersedes: record && record.judgmentId ? record.judgmentId : undefined,
+      }, `Marked ${result.reference || result.targetId} helpful.`);
+    });
+    buttonRow.appendChild(helpfulButton);
+
+    const irrelevantButton = node('button', 'btn btn-danger', 'Not relevant');
+    irrelevantButton.type = 'button';
+    irrelevantButton.addEventListener('click', () => {
+      const concepts = conceptEvidence(result);
+      if (concepts.length === 0) {
+        // No theme evidence on this result: word overlap is the only thing
+        // that put it up here, so one click is the whole judgment and the
+        // record carries diagnosisInferred to mark the auto-classification.
+        void submitJudgment({
+          caseId: review.caseId,
+          snapshotToken: review.token,
+          action: 'irrelevant',
+          targetId: result.targetId,
+          diagnosis: 'lexical-noise',
+          diagnosisInferred: true,
+          note: draft.note.trim() || undefined,
+          supersedes: record && record.judgmentId ? record.judgmentId : undefined,
+        }, `Marked ${result.reference || result.targetId} not relevant — matched words, not meaning. ${DEMOTION_EXPLANATION}`);
+        return;
+      }
+      draft.interview = { concepts, index: 0, step: 'fit', cause: '', conceptId: '', note: '' };
+      render();
+    });
+    buttonRow.appendChild(irrelevantButton);
+
+    const preferredTargetId = state.drafts.preferredTargetId;
+    if (preferredTargetId === result.targetId) {
+      const clearA = node('button', 'btn', 'Clear A');
+      clearA.type = 'button';
+      clearA.addEventListener('click', () => {
+        state.drafts.preferredTargetId = null;
+        state.drafts.pairNote = '';
+        render();
+      });
+      buttonRow.appendChild(clearA);
+    } else if (!preferredTargetId) {
+      const chooseA = node('button', 'btn', 'Choose as A');
+      chooseA.type = 'button';
+      chooseA.addEventListener('click', () => {
+        state.drafts.preferredTargetId = result.targetId;
+        render();
+      });
+      buttonRow.appendChild(chooseA);
+    } else {
+      const preferA = node('button', 'btn', 'Prefer A');
+      preferA.type = 'button';
+      preferA.addEventListener('click', () => {
+        const prior = currentPairJudgment(preferredTargetId, result.targetId);
+        void submitJudgment({
+          caseId: review.caseId,
+          snapshotToken: review.token,
+          action: 'prefer',
+          preferredTargetId,
+          otherTargetId: result.targetId,
+          note: state.drafts.pairNote.trim() || undefined,
+          supersedes: prior && prior.judgmentId ? prior.judgmentId : undefined,
+        }, 'Recorded pair preference.');
+      });
+      buttonRow.appendChild(preferA);
+    }
+    actions.appendChild(buttonRow);
+    card.appendChild(actions);
+
+    if (draft.interview) card.appendChild(renderNotRelevantInterview(result, review, record, draft));
+
+    card.appendChild(renderPassageContextDisclosure(result));
+
+    const technical = node('details', 'disclosure');
+    const summary = node('summary', '', 'Why this result misses or notes');
+    technical.appendChild(summary);
+    const body = node('div', 'disclosure-body');
+    body.appendChild(node('div', 'tiny muted', 'Machine evidence and notes are optional. Not relevant asks its own plain questions when a theme is on the result.'));
+    body.appendChild(renderMachineReasons(result));
+
+    const noteField = node('div', 'field');
+    const noteLabel = node('label', '', 'Optional note');
+    noteLabel.htmlFor = technicalDetailsId(result.targetId, 'note');
+    const noteInput = document.createElement('textarea');
+    noteInput.id = technicalDetailsId(result.targetId, 'note');
+    noteInput.value = draft.note;
+    noteInput.placeholder = 'What you saw in the passage.';
+    noteInput.addEventListener('input', () => {
+      draft.note = noteInput.value;
+    });
+    noteField.appendChild(noteLabel);
+    noteField.appendChild(noteInput);
+    body.appendChild(noteField);
+    technical.appendChild(body);
+    card.appendChild(technical);
+
+    return card;
+  }
+
+  function renderReviewView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-review';
+    panel.role = 'tabpanel';
+    panel.setAttribute('aria-labelledby', 'tab-review');
+
+    const head = node('div', 'section-head');
+    const text = node('div');
+    text.appendChild(node('h2', '', 'Review'));
+    text.appendChild(node('div', 'tiny muted', 'Review one case at a time against the current snapshot.'));
+    head.appendChild(text);
+    const refresh = node('button', 'btn btn-subtle', 'Refresh case');
+    refresh.type = 'button';
+    refresh.disabled = !state.selectedCaseId;
+    refresh.addEventListener('click', () => {
+      if (state.selectedCaseId) void loadSelectedCaseData(true);
+    });
+    head.appendChild(refresh);
+    panel.appendChild(head);
+
+    if (!state.selectedCaseId) {
+      panel.appendChild(node('div', 'message', 'Select a case from the sidebar or create a new one.'));
+      return panel;
+    }
+    if (state.loading.review && !state.caseDetail) {
+      panel.appendChild(node('div', 'message', 'Loading case review.'));
+      return panel;
+    }
+    if (!state.caseDetail || !state.caseDetail.case) {
+      panel.appendChild(node('div', 'message warn', 'The selected case could not be loaded.'));
+      return panel;
+    }
+
+    const detail = state.caseDetail;
+    const caseEntry = detail.case;
+    const review = detail.review;
+    const reviewHeader = node('section', 'review-header history-card');
+    reviewHeader.appendChild(node('h3', '', caseEntry.query));
+    const summary = node('div', 'review-summary');
+    summary.appendChild(statusBadge(caseEntry.state));
+    summary.appendChild(node('span', 'pill', escapeCaseSourceLabel(caseEntry.source)));
+    summary.appendChild(node('span', 'pill', `Updated ${formatDate(latestEventTime(caseEntry))}`));
+    if (review && review.freshness) summary.appendChild(node('span', 'pill', `Snapshot ${review.freshness}`));
+    reviewHeader.appendChild(summary);
+    reviewHeader.appendChild(node('div', 'result-meta', `Case ${caseEntry.caseId}`));
+
+    const stateActions = node('div', 'row');
+    if (caseEntry.state === 'new') {
+      const startReview = node('button', 'btn', 'Start review');
+      startReview.type = 'button';
+      startReview.addEventListener('click', () => {
+        void transitionCase(caseEntry.caseId, 'reviewing', 'Case moved to reviewing.');
+      });
+      stateActions.appendChild(startReview);
+    }
+    if (caseEntry.state === 'reviewing') {
+      const markJudged = node('button', 'btn', 'Mark judged');
+      markJudged.type = 'button';
+      markJudged.addEventListener('click', () => {
+        void transitionCase(caseEntry.caseId, 'judged', 'Case moved to judged.');
+      });
+      stateActions.appendChild(markJudged);
+    }
+    reviewHeader.appendChild(stateActions);
+    panel.appendChild(reviewHeader);
+
+    if (!review) {
+      panel.appendChild(node('div', 'message warn', 'No live review snapshot is available for this case.'));
+      return panel;
+    }
+
+    const resultSet = review.result && review.result.kind === 'discovery' && Array.isArray(review.result.results)
+      ? review.result.results.map((item, index) => ({ ...item, rank: index + 1 }))
+      : [];
+
+    if (state.drafts.preferredTargetId) {
+      const preferred = resultSet.find((item) => item.targetId === state.drafts.preferredTargetId);
+      const compareBar = node('section', 'compare-bar');
+      compareBar.appendChild(node('h3', '', 'Prefer A'));
+      compareBar.appendChild(node('div', '', preferred
+        ? `A is ${preferred.reference || preferred.targetId}. Choose "Prefer A" on another result to record the pairwise call.`
+        : 'A is selected. Choose "Prefer A" on another result to record the pairwise call.'));
+      const noteField = node('div', 'field');
+      const noteLabel = node('label', '', 'Optional pair note');
+      noteLabel.htmlFor = 'pair-note';
+      const noteInput = document.createElement('textarea');
+      noteInput.id = 'pair-note';
+      noteInput.placeholder = 'Why passage A should rank above the other passage.';
+      noteInput.value = state.drafts.pairNote;
+      noteInput.addEventListener('input', () => {
+        state.drafts.pairNote = noteInput.value;
+      });
+      noteField.appendChild(noteLabel);
+      noteField.appendChild(noteInput);
+      compareBar.appendChild(noteField);
+      const row = node('div', 'row');
+      const clearA = node('button', 'btn', 'Clear A');
+      clearA.type = 'button';
+      clearA.addEventListener('click', () => {
+        state.drafts.preferredTargetId = null;
+        state.drafts.pairNote = '';
+        render();
+      });
+      row.appendChild(clearA);
+      compareBar.appendChild(row);
+      panel.appendChild(compareBar);
+    }
+
+    if (resultSet.length === 0) {
+      panel.appendChild(node('div', 'message warn', 'This review snapshot has no ranked discovery results to judge.'));
+    } else {
+      const list = node('div', 'result-list');
+      const activeByKey = activeJudgmentsByKey(state.judgments);
+      resultSet.forEach((result) => list.appendChild(renderResultCard(result, review, activeByKey)));
+      panel.appendChild(list);
+    }
+
+    const missingSection = node('section', 'history-card stack');
+    missingSection.appendChild(node('h3', '', 'Missing passage'));
+    missingSection.appendChild(node('div', 'tiny muted', 'Use this when a passage should have surfaced in the reviewed window but did not.'));
+
+    const missingForm = document.createElement('form');
+    missingForm.className = 'stack';
+    missingForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const reference = state.drafts.missing.reference.trim();
+      if (!reference) {
+        setGlobalMessage('warn', 'Missing passage needs a reference.');
+        return;
+      }
+      const prior = currentMissingJudgment(reference);
+      void submitJudgment({
+        caseId: review.caseId,
+        snapshotToken: review.token,
+        action: 'missing',
+        reference,
+        withinTop: state.drafts.missing.withinTop,
+        note: state.drafts.missing.note.trim() || undefined,
+        supersedes: prior && prior.judgmentId ? prior.judgmentId : undefined,
+      }, `Logged missing passage ${reference}.`);
+    });
+
+    const missingSplit = node('div', 'split');
+    const left = node('div', 'stack');
+    const refField = node('div', 'field');
+    const refLabel = node('label', '', 'Reference');
+    refLabel.htmlFor = 'missing-reference';
+    const refInput = document.createElement('input');
+    refInput.id = 'missing-reference';
+    refInput.type = 'text';
+    refInput.value = state.drafts.missing.reference;
+    refInput.placeholder = 'for example, James 2:14';
+    refInput.addEventListener('input', () => {
+      state.drafts.missing.reference = refInput.value;
+    });
+    refField.appendChild(refLabel);
+    refField.appendChild(refInput);
+    left.appendChild(refField);
+
+    const withinField = node('div', 'stack');
+    withinField.appendChild(node('div', 'tiny muted', 'Should appear within'));
+    const segment = node('div', 'segment');
+    WINDOW_VALUES.forEach((windowValue) => {
+      const option = node('button', '', String(windowValue));
+      option.type = 'button';
+      option.setAttribute('aria-pressed', state.drafts.missing.withinTop === windowValue ? 'true' : 'false');
+      option.addEventListener('click', () => {
+        state.drafts.missing.withinTop = windowValue;
+        render();
+      });
+      segment.appendChild(option);
+    });
+    withinField.appendChild(segment);
+    left.appendChild(withinField);
+    missingSplit.appendChild(left);
+
+    const right = node('div', 'field');
+    const noteLabel = node('label', '', 'Optional note');
+    noteLabel.htmlFor = 'missing-note';
+    const noteInput = document.createElement('textarea');
+    noteInput.id = 'missing-note';
+    noteInput.value = state.drafts.missing.note;
+    noteInput.placeholder = 'Why this passage belongs here.';
+    noteInput.addEventListener('input', () => {
+      state.drafts.missing.note = noteInput.value;
+    });
+    right.appendChild(noteLabel);
+    right.appendChild(noteInput);
+    missingSplit.appendChild(right);
+    missingForm.appendChild(missingSplit);
+
+    const submitRow = node('div', 'row');
+    const submit = node('button', 'btn btn-primary', 'Missing passage');
+    submit.type = 'submit';
+    submitRow.appendChild(submit);
+    missingForm.appendChild(submitRow);
+    missingSection.appendChild(missingForm);
+    panel.appendChild(missingSection);
+
+    return panel;
+  }
+
+  function renderCaseTimeline(caseEntry) {
+    const list = node('div', 'history-list');
+    safeArray(caseEntry.events).slice().reverse().forEach((event) => {
+      const card = node('article', 'history-card stack');
+      card.appendChild(node('div', 'history-meta', `${formatDate(event.at)} | ${event.kind}`));
+      if (event.kind === 'case-state-changed' && event.state) {
+        card.appendChild(node('div', '', `State changed to ${event.state}.`));
+      } else if (event.kind === 'case-created') {
+        card.appendChild(node('div', '', `Case created for "${caseEntry.query}".`));
+      } else {
+        card.appendChild(node('div', '', event.kind));
+      }
+      if (event.eventId) card.appendChild(node('div', 'mono-wrap tiny', event.eventId));
+      list.appendChild(card);
+    });
+    return list;
+  }
+
+  function renderJudgmentTimeline() {
+    const list = node('div', 'history-list');
+    const superseded = supersededIds(state.judgments);
+    if (state.judgments.length === 0) {
+      list.appendChild(node('div', 'empty', 'No judgments have been recorded for this case yet.'));
+      return list;
+    }
+    [...state.judgments].sort((left, right) => String(right.at || '').localeCompare(String(left.at || ''))).forEach((record) => {
+      const key = judgmentKey(record);
+      const active = record && record.schemaVersion === 2 && typeof record.judgmentId === 'string' && !superseded.has(record.judgmentId);
+      const card = node('article', `history-card stack${active ? ' active' : ' superseded'}`);
+      card.appendChild(node('div', 'history-meta', `${formatDate(record.at)} | ${ACTION_LABELS[record.action] || record.action}`));
+      const target = record.action === 'missing'
+        ? record.reference
+        : record.action === 'prefer'
+          ? `${record.preferredTargetId} over ${record.otherTargetId}`
+          : record.targetId;
+      card.appendChild(node('div', '', target || 'Unknown target'));
+      const chips = node('div', 'row');
+      chips.appendChild(node('span', `pill ${active ? 'pill-good' : 'pill-warn'}`.trim(), active ? 'Active' : 'Superseded'));
+      if (record.withinTop) chips.appendChild(node('span', 'pill', `Top ${record.withinTop}`));
+      if (record.diagnosis) chips.appendChild(node('span', 'pill', DIAGNOSIS_LABELS[record.diagnosis] || record.diagnosis));
+      if (record.supersedes) chips.appendChild(node('span', 'pill', `Supersedes ${record.supersedes.slice(0, 8)}`));
+      card.appendChild(chips);
+      if (record.note) card.appendChild(node('p', 'excerpt', record.note));
+      if (record.excerpt) card.appendChild(node('p', 'excerpt', record.excerpt));
+      if (record.judgmentId) card.appendChild(node('div', 'mono-wrap tiny', record.judgmentId));
+      if (key) card.appendChild(node('div', 'tiny muted', key));
+      list.appendChild(card);
+    });
+    return list;
+  }
+
+  function renderHistoryView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-history';
+    panel.role = 'tabpanel';
+    panel.setAttribute('aria-labelledby', 'tab-history');
+
+    const head = node('div', 'section-head');
+    const text = node('div');
+    text.appendChild(node('h2', '', 'History'));
+    text.appendChild(node('div', 'tiny muted', 'Case events and judgments, including corrections through supersedes.'));
+    head.appendChild(text);
+    panel.appendChild(head);
+
+    if (!state.selectedCaseId) {
+      if (state.cases.length === 0) {
+        panel.appendChild(node('div', 'message', 'Create or select a case to see its history.'));
+        return panel;
+      }
+      const list = node('div', 'case-grid');
+      sortCases(state.cases).forEach((entry) => {
+        const card = node('article', 'case-card stack');
+        card.appendChild(node('div', 'case-query', entry.query));
+        card.appendChild(node('div', 'case-meta', `${escapeCaseSourceLabel(entry.source)} | ${entry.state} | ${formatDate(latestEventTime(entry))}`));
+        const button = node('button', 'btn', 'Open history');
+        button.type = 'button';
+        button.addEventListener('click', () => {
+          selectCase(entry.caseId, 'history');
+        });
+        card.appendChild(button);
+        list.appendChild(card);
+      });
+      panel.appendChild(list);
+      return panel;
+    }
+    if (!state.caseDetail || !state.caseDetail.case) {
+      panel.appendChild(node('div', 'message warn', 'Select a valid case to inspect its history.'));
+      return panel;
+    }
+
+    const caseEntry = state.caseDetail.case;
+    const summary = node('section', 'history-card stack');
+    summary.appendChild(node('h3', '', caseEntry.query));
+    const row = node('div', 'row');
+    row.appendChild(statusBadge(caseEntry.state));
+    row.appendChild(node('span', 'pill', escapeCaseSourceLabel(caseEntry.source)));
+    row.appendChild(node('span', 'pill', `${state.judgments.length} judgment${state.judgments.length === 1 ? '' : 's'}`));
+    summary.appendChild(row);
+    summary.appendChild(node('div', 'mono-wrap tiny', caseEntry.caseId));
+    panel.appendChild(summary);
+
+    const split = node('div', 'split');
+    const events = node('section', 'stack');
+    events.appendChild(node('h3', '', 'Case events'));
+    events.appendChild(renderCaseTimeline(caseEntry));
+    split.appendChild(events);
+
+    const judgments = node('section', 'stack');
+    judgments.appendChild(node('h3', '', 'Judgments'));
+    judgments.appendChild(renderJudgmentTimeline());
+    split.appendChild(judgments);
+    panel.appendChild(split);
+    return panel;
+  }
+
+  function textPre(text, className) {
+    const pre = node('pre', className || 'file-preview');
+    pre.textContent = typeof text === 'string' && text !== '' ? text : '(empty)';
+    return pre;
+  }
+
+  function planOperationCard(operation) {
+    const card = node('article', 'change-card');
+    const title = node('h3', '', operation.path || 'Unknown file');
+    card.appendChild(title);
+    const summary = node('div', 'change-summary');
+    const kind = operation.afterText === null ? 'Remove'
+      : operation.beforeSha256 === null ? 'Create' : 'Update';
+    summary.appendChild(node('span', `pill ${kind === 'Remove' ? 'pill-danger' : 'pill-warn'}`, kind));
+    if (operation.beforeSha256) summary.appendChild(node('span', 'pill mono-wrap', `Before ${operation.beforeSha256.slice(0, 12)}`));
+    card.appendChild(summary);
+
+    const details = document.createElement('details');
+    details.className = 'disclosure';
+    const disclosure = node('summary', '', 'Exact file preview');
+    details.appendChild(disclosure);
+    const body = node('div', 'disclosure-body');
+    body.appendChild(node('div', 'tiny muted', 'Before'));
+    body.appendChild(textPre(operation.beforeText || operation.before ||
+      (operation.beforeSha256 ? 'Prior bytes are represented by this preview\'s observed SHA-256.' : '(file absent)')));
+    body.appendChild(node('div', 'tiny muted', 'After'));
+    body.appendChild(textPre(operation.afterText === null ? '(file removed)' : (operation.afterText || operation.after || '')));
+    details.appendChild(body);
+    card.appendChild(details);
+    return card;
+  }
+
+  function messageList(title, entries, kind) {
+    const section = node('section', 'stack');
+    section.appendChild(node('h3', '', title));
+    const values = safeArray(entries).filter((entry) => typeof entry === 'string' && entry.trim() !== '');
+    if (values.length === 0) {
+      section.appendChild(node('div', 'message success', title === 'Warnings' ? 'No warnings in this preview.' : 'No checklist items in this preview.'));
+      return section;
+    }
+    const list = node('div', 'checklist');
+    values.forEach((entry) => list.appendChild(node('div', `message ${kind}`, entry)));
+    section.appendChild(list);
+    return section;
+  }
+
+  function pendingFixtures(plan) {
+    return safeArray(plan && plan.fixturesWritten)
+      .filter((entry) => entry && entry.fixture && entry.fixture.status === 'pending')
+      .sort((left, right) => String(left.fixture.id).localeCompare(String(right.fixture.id)));
+  }
+
+  function jobIsFinished(job) {
+    return job && ['passed', 'failed', 'timed-out', 'cancelled'].includes(job.state);
+  }
+
+  function renderJobCard() {
+    const card = node('section', 'check-card');
+    card.appendChild(node('h3', '', 'Latest check'));
+    const job = state.changes.job;
+    if (!job) {
+      card.appendChild(node('div', 'empty', 'No check has been started in this browser session.'));
+      return card;
+    }
+    const row = node('div', 'row');
+    row.appendChild(statusBadge(job.state || 'queued'));
+    row.appendChild(node('span', 'pill', job.jobId || 'check'));
+    if (job.runId) row.appendChild(node('span', 'pill mono-wrap', job.runId));
+    card.appendChild(row);
+    const timing = [
+      job.startedAt ? `Started ${formatDate(job.startedAt)}` : `Queued ${formatDate(job.queuedAt)}`,
+      job.finishedAt ? `Finished ${formatDate(job.finishedAt)}` : '',
+      typeof job.exitCode === 'number' ? `Exit ${job.exitCode}` : '',
+    ].filter(Boolean).join(' | ');
+    if (timing) card.appendChild(node('div', 'tiny muted', timing));
+    if (job.failureReason) card.appendChild(node('div', 'message error', job.failureReason));
+    if (!jobIsFinished(job)) {
+      const cancel = node('button', 'btn btn-danger', 'Cancel check');
+      cancel.type = 'button';
+      cancel.addEventListener('click', () => { void cancelCheck(job.runId); });
+      card.appendChild(cancel);
+    }
+    const output = job.output || {};
+    const outputText = [
+      output.stdout ? `stdout\n${output.stdout}` : '',
+      output.stderr ? `stderr\n${output.stderr}` : '',
+      output.stdoutTruncated || output.stderrTruncated ? '\nOutput was truncated by the server.' : '',
+    ].filter(Boolean).join('\n\n');
+    card.appendChild(textPre(outputText || 'Waiting for check output.', 'job-output'));
+    return card;
+  }
+
+  function renderChangesView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-changes';
+    panel.role = 'tabpanel';
+    panel.setAttribute('aria-labelledby', 'tab-changes');
+
+    const head = node('div', 'section-head');
+    const heading = node('div');
+    heading.appendChild(node('h2', '', 'Changes'));
+    heading.appendChild(node('div', 'tiny muted', 'Preview fixture changes, promote pending fixtures, and run fixed repository checks.'));
+    head.appendChild(heading);
+    const preview = node('button', 'btn btn-primary', state.changes.loadingPreview ? 'Creating preview...' : 'Preview fixture changes');
+    preview.type = 'button';
+    preview.disabled = state.changes.loadingPreview || state.changes.applying;
+    preview.addEventListener('click', () => { void loadCompilePreview(); });
+    head.appendChild(preview);
+    panel.appendChild(head);
+
+    const plan = state.changes.compilePlan;
+    if (!plan) {
+      panel.appendChild(node('div', 'message', 'Create a preview to inspect exactly what fixture and corpus-subset files would change.'));
+    } else {
+      const summary = node('section', 'change-card');
+      summary.appendChild(node('h3', '', 'Fixture compilation preview'));
+      const chips = node('div', 'row');
+      chips.appendChild(node('span', 'pill', `${safeArray(plan.operations).length} file operation${safeArray(plan.operations).length === 1 ? '' : 's'}`));
+      chips.appendChild(node('span', 'pill', `${pendingFixtures(plan).length} pending fixture${pendingFixtures(plan).length === 1 ? '' : 's'}`));
+      summary.appendChild(chips);
+      summary.appendChild(node('div', 'mono-wrap tiny', `Digest ${plan.digest}`));
+      panel.appendChild(summary);
+
+      const operations = node('section', 'stack');
+      operations.appendChild(node('h3', '', 'Exact changes'));
+      const operationList = node('div', 'change-list');
+      if (safeArray(plan.operations).length === 0) operationList.appendChild(node('div', 'empty', 'This preview would not write any files.'));
+      safeArray(plan.operations).forEach((operation) => operationList.appendChild(planOperationCard(operation)));
+      operations.appendChild(operationList);
+      panel.appendChild(operations);
+
+      if (safeArray(plan.proposedSelections).length > 0) {
+        const selections = node('section', 'stack');
+        selections.appendChild(node('h3', '', 'Fixture-corpus additions'));
+        const list = node('div', 'checklist');
+        safeArray(plan.proposedSelections).forEach((entry) => {
+          list.appendChild(node('div', 'message warn', `${entry.book} ${safeArray(entry.chapters).join(', ')}: ${entry.why}`));
+        });
+        selections.appendChild(list);
+        panel.appendChild(selections);
+      }
+
+      panel.appendChild(messageList('Warnings', plan.warnings, 'warn'));
+      panel.appendChild(messageList('Reviewer checklist', plan.checklist, ''));
+
+      const apply = node('section', 'change-card');
+      apply.appendChild(node('h3', '', 'Apply this preview'));
+      apply.appendChild(node('div', 'tiny muted', 'Type the full preview digest to confirm this exact write. A repository change requires a fresh preview.'));
+      const confirmRow = node('div', 'confirm-row');
+      const field = node('div', 'field');
+      const label = node('label', '', 'Preview digest');
+      label.htmlFor = 'compile-digest-confirmation';
+      const input = document.createElement('input');
+      input.id = 'compile-digest-confirmation';
+      input.type = 'text';
+      input.autocomplete = 'off';
+      input.spellcheck = false;
+      input.value = state.changes.compileConfirmation;
+      input.addEventListener('input', () => {
+        state.changes.compileConfirmation = input.value;
+        persistRouteState();
+        render();
+      });
+      field.appendChild(label);
+      field.appendChild(input);
+      confirmRow.appendChild(field);
+      const applyButton = node('button', 'btn btn-primary', state.changes.applying ? 'Applying...' : 'Apply fixture changes');
+      applyButton.type = 'button';
+      applyButton.disabled = state.changes.applying || input.value !== plan.digest;
+      applyButton.addEventListener('click', () => { void applyCompilePreview(); });
+      confirmRow.appendChild(applyButton);
+      apply.appendChild(confirmRow);
+      panel.appendChild(apply);
+    }
+
+    const promotion = node('section', 'stack');
+    promotion.appendChild(node('h3', '', 'Pending fixture promotion'));
+    const pending = pendingFixtures(plan);
+    if (pending.length === 0) {
+      promotion.appendChild(node('div', 'message', plan ? 'This preview has no pending workbench fixtures to promote.' : 'A compilation preview identifies promotable pending fixtures.'));
+    } else {
+      const list = node('div', 'change-list');
+      pending.forEach((entry) => {
+        const fixture = entry.fixture;
+        const card = node('article', 'change-card');
+        card.appendChild(node('h3', '', fixture.id));
+        card.appendChild(node('div', 'tiny muted', fixture.query || entry.path));
+        const previewButton = node('button', 'btn', state.changes.loadingPromotionId === fixture.id ? 'Loading promotion preview...' : 'Preview promotion');
+        previewButton.type = 'button';
+        previewButton.disabled = state.changes.loadingPromotionId === fixture.id || state.changes.applyingPromotionId === fixture.id;
+        previewButton.addEventListener('click', () => { void loadPromotionPreview(fixture.id); });
+        card.appendChild(previewButton);
+        const promotionPlan = state.changes.promotionPlans[fixture.id];
+        if (promotionPlan) {
+          card.appendChild(node('div', 'mono-wrap tiny', `Digest ${promotionPlan.digest}`));
+          const details = document.createElement('details');
+          details.className = 'disclosure';
+          details.appendChild(node('summary', '', `Exact status change in ${promotionPlan.fixturePath}`));
+          const body = node('div', 'disclosure-body');
+          body.appendChild(node('div', 'tiny muted', 'Before'));
+          body.appendChild(textPre(promotionPlan.before && promotionPlan.before.text));
+          body.appendChild(node('div', 'tiny muted', 'After'));
+          body.appendChild(textPre(promotionPlan.after && promotionPlan.after.text));
+          details.appendChild(body);
+          card.appendChild(details);
+          const promotionConfirm = node('div', 'confirm-row');
+          const field = node('div', 'field');
+          const label = node('label', '', 'Promotion digest');
+          const inputId = `promotion-digest-${fixture.id}`;
+          label.htmlFor = inputId;
+          const input = document.createElement('input');
+          input.id = inputId;
+          input.type = 'text';
+          input.autocomplete = 'off';
+          input.spellcheck = false;
+          input.value = state.changes.selectedPromotionId === fixture.id ? state.changes.promotionConfirmation : '';
+          input.addEventListener('input', () => {
+            state.changes.selectedPromotionId = fixture.id;
+            state.changes.promotionConfirmation = input.value;
+            persistRouteState();
+            render();
+          });
+          field.appendChild(label);
+          field.appendChild(input);
+          promotionConfirm.appendChild(field);
+          const promote = node('button', 'btn btn-primary', state.changes.applyingPromotionId === fixture.id ? 'Promoting...' : 'Promote fixture');
+          promote.type = 'button';
+          promote.disabled = state.changes.applyingPromotionId === fixture.id || input.value !== promotionPlan.digest;
+          promote.addEventListener('click', () => { void applyPromotion(fixture.id); });
+          promotionConfirm.appendChild(promote);
+          card.appendChild(promotionConfirm);
+        }
+        list.appendChild(card);
+      });
+      promotion.appendChild(list);
+    }
+    panel.appendChild(promotion);
+
+    const checks = node('section', 'stack');
+    checks.appendChild(node('h3', '', 'Repository checks'));
+    checks.appendChild(node('div', 'tiny muted', 'These fixed checks never update a baseline. Only one can run at a time.'));
+    const actions = node('div', 'check-actions');
+    const running = state.changes.job && !jobIsFinished(state.changes.job);
+    [
+      ['typecheck', 'Typecheck'],
+      ['test', 'Unit tests'],
+      ['gauntlet', 'Gauntlet'],
+      ['verify', 'Full verify'],
+    ].forEach(([jobId, label]) => {
+      const button = node('button', 'btn', label);
+      button.type = 'button';
+      button.disabled = Boolean(running);
+      button.addEventListener('click', () => { void startCheck(jobId); });
+      actions.appendChild(button);
+    });
+    checks.appendChild(actions);
+    checks.appendChild(renderJobCard());
+    panel.appendChild(checks);
+    return panel;
+  }
+
+  function comparisonRequestId(prefix) {
+    const suffix = typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    return `${prefix}-${suffix}`;
+  }
+
+  function selectedComparisonQuery() {
+    const session = state.comparison.session;
+    if (!session || !Array.isArray(session.queries)) return null;
+    return session.queries.find((entry) => entry.queryId === state.comparison.selectedQueryId) || session.queries[0] || null;
+  }
+
+  function movementCount(query, key) {
+    return query && query.movement && Array.isArray(query.movement[key]) ? query.movement[key].length : 0;
+  }
+
+  function renderBlindSide(letter, results, selectedPassageId) {
+    const side = node('section', 'blind-side');
+    side.setAttribute('aria-labelledby', `side-${letter.toLowerCase()}-heading`);
+    const head = node('div', 'blind-side-head');
+    const sideLabel = node('div', 'side-letter', letter);
+    sideLabel.id = `side-${letter.toLowerCase()}-heading`;
+    head.appendChild(sideLabel);
+    head.appendChild(node('span', 'tiny muted', `${safeArray(results).length} ranked passages`));
+    side.appendChild(head);
+
+    const list = node('div', 'blind-results');
+    safeArray(results).forEach((result) => {
+      const button = node('button', 'blind-result');
+      button.type = 'button';
+      button.dataset.passageId = result.passageId;
+      button.setAttribute('aria-label', `Select ${result.reference} in side ${letter}`);
+      button.setAttribute('aria-pressed', String(state.comparison.selectedPassageId === result.passageId));
+      button.appendChild(node('span', 'rank-box', `#${result.rank}`));
+      button.appendChild(node('span', 'result-reference', result.reference));
+      button.appendChild(node('span', 'score-box', Number(result.score).toFixed(2)));
+      button.addEventListener('click', () => {
+        state.comparison.selectedPassageId = result.passageId;
+        render();
+        void loadBlindPassageContext(result.passageId);
+      });
+      list.appendChild(button);
+    });
+    if (safeArray(results).length === 0) list.appendChild(node('div', 'message', 'No passage ranked on this side.'));
+    side.appendChild(list);
+
+    const selected = safeArray(results).find((result) => result.passageId === selectedPassageId) || null;
+    const detail = node('div', 'passage-detail stack');
+    if (selected === null) {
+      detail.appendChild(node('div', 'tiny muted', selectedPassageId ? 'This passage is absent from this side.' : 'Select a passage to inspect its scoring evidence.'));
+    } else {
+      detail.appendChild(node('h4', '', `${selected.reference} | rank ${selected.rank}`));
+      const passageContext = state.comparison.passageContexts[selected.passageId];
+      if (passageContext && passageContext.loading) {
+        detail.appendChild(node('div', 'tiny muted', 'Loading synchronized passage context.'));
+      } else if (passageContext && passageContext.data) {
+        detail.appendChild(node('div', 'tiny muted', passageContext.data.contextReference));
+        safeArray(passageContext.data.verses).forEach((verse) => {
+          const verseLine = node('div', 'reason-row');
+          verseLine.appendChild(node('strong', '', `${verse.bookName} ${verse.chapter}:${verse.verse} `));
+          verseLine.appendChild(document.createTextNode(verse.text));
+          detail.appendChild(verseLine);
+        });
+      } else if (passageContext && passageContext.error) {
+        detail.appendChild(node('div', 'tiny muted', passageContext.error));
+      }
+      safeArray(selected.reasons).forEach((reason) => {
+        const row = node('div', 'reason-row');
+        const cap = reason.capped ? `, capped from ${reason.uncappedPoints}` : ', uncapped';
+        row.appendChild(node('div', '', `${reason.label} | ${reason.points} points${cap}`));
+        row.appendChild(node('div', 'tiny muted', `Family: ${reason.family}`));
+        if (reason.provenance) {
+          const location = reason.provenance.locator ? ` | ${reason.provenance.locator}` : '';
+          const weight = reason.provenance.weight === null ? '' : ` | weight ${reason.provenance.weight}`;
+          row.appendChild(node('div', 'tiny muted', `Provenance: ${reason.provenance.label} (${reason.provenance.sourceId})${location}${weight}`));
+        } else {
+          row.appendChild(node('div', 'tiny muted', 'Provenance: none'));
+        }
+        detail.appendChild(row);
+      });
+    }
+    side.appendChild(detail);
+    return side;
+  }
+
+  function renderMovement(query) {
+    const section = node('section', 'stack');
+    section.appendChild(node('h3', '', 'Exact movement'));
+    const grid = node('div', 'movement-grid');
+    [
+      ['Only in A', movementCount(query, 'onlyA')],
+      ['Only in B', movementCount(query, 'onlyB')],
+      ['Rank changed', movementCount(query, 'rankMoved')],
+      ['Reason changed', movementCount(query, 'reasonChanged')],
+      ['Provenance changed', movementCount(query, 'provenanceChanged')],
+      ['Score changed', movementCount(query, 'scoreChanged')],
+      ['Cap changed', movementCount(query, 'capChanged')],
+    ].forEach(([label, count]) => {
+      const cell = node('div', 'movement-cell');
+      cell.appendChild(node('div', 'metric-value', String(count)));
+      cell.appendChild(node('div', 'tiny muted', label));
+      grid.appendChild(cell);
+    });
+    section.appendChild(grid);
+    const rankMoves = safeArray(query.movement && query.movement.rankMoved);
+    if (rankMoves.length > 0) {
+      section.appendChild(node('div', 'tiny muted', rankMoves.map((entry) => `${entry.passageId}: A #${entry.aRank}, B #${entry.bRank}`).join(' | ')));
+    }
+    return section;
+  }
+
+  function renderGateGroups(groups) {
+    const section = node('section', 'stack');
+    section.appendChild(node('h3', '', 'Gate findings'));
+    const grid = node('div', 'gate-grid');
+    [
+      ['blocking', 'Blocking'],
+      ['review-required', 'Review required'],
+      ['passing', 'Passing'],
+      ['not-applicable', 'Not applicable'],
+    ].forEach(([key, label]) => {
+      const findings = safeArray(groups && groups[key]);
+      const group = node('section', 'gate-group');
+      group.appendChild(node('h4', '', `${label} (${findings.length})`));
+      const list = node('ul', 'gate-list');
+      if (findings.length === 0) list.appendChild(node('li', 'gate-finding muted', 'None'));
+      findings.forEach((finding) => list.appendChild(node('li', 'gate-finding', finding.message)));
+      group.appendChild(list);
+      grid.appendChild(group);
+    });
+    section.appendChild(grid);
+    return section;
+  }
+
+  function renderComparisonView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-compare';
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-labelledby', 'tab-compare');
+
+    const heading = node('div', 'section-head');
+    const title = node('div');
+    title.appendChild(node('h2', '', 'Candidate'));
+    title.appendChild(node('div', 'tiny muted', 'Blind, query-by-query comparison review.'));
+    heading.appendChild(title);
+    panel.appendChild(heading);
+
+    if (state.comparison.loading && state.comparison.reviews.length === 0) {
+      panel.appendChild(node('div', 'message', 'Loading comparisons.'));
+      return panel;
+    }
+    if (state.comparison.reviews.length === 0) {
+      panel.appendChild(node('div', 'message', 'No verified comparison publication is ready for review.'));
+      return panel;
+    }
+
+    const toolbar = node('div', 'comparison-toolbar');
+    const pickerField = node('div', 'field comparison-picker');
+    const pickerLabel = node('label', '', 'Comparison');
+    pickerLabel.htmlFor = 'comparison-picker';
+    const picker = document.createElement('select');
+    picker.id = 'comparison-picker';
+    state.comparison.reviews.forEach((review) => {
+      const option = document.createElement('option');
+      option.value = review.reviewId;
+      option.textContent = `${review.label} | ${review.reviewedCount}/${review.queryCount} reviewed`;
+      option.selected = review.reviewId === state.comparison.selectedReviewId;
+      picker.appendChild(option);
+    });
+    picker.addEventListener('change', () => {
+      state.comparison.selectedReviewId = picker.value;
+      state.comparison.session = null;
+      state.comparison.selectedQueryId = null;
+      state.comparison.selectedPassageId = null;
+      persistRouteState();
+      render();
+    });
+    pickerField.appendChild(pickerLabel);
+    pickerField.appendChild(picker);
+    toolbar.appendChild(pickerField);
+    const start = node('button', 'btn btn-primary', state.comparison.session ? 'Resume blind review' : 'Start blind review');
+    start.type = 'button';
+    start.disabled = state.comparison.loading || state.comparison.submitting || !state.comparison.selectedReviewId;
+    start.addEventListener('click', () => { void startBlindReview(); });
+    toolbar.appendChild(start);
+    panel.appendChild(toolbar);
+
+    const session = state.comparison.session;
+    if (!session) {
+      const selected = state.comparison.reviews.find((entry) => entry.reviewId === state.comparison.selectedReviewId);
+      if (selected) {
+        panel.appendChild(node('div', 'message', `${selected.queryCount} required queries | ${selected.gateCounts.blocking} blocking findings | ${selected.gateCounts.reviewRequired} need review.`));
+      }
+      return panel;
+    }
+
+    const progress = node('div', 'comparison-progress');
+    progress.appendChild(node('span', session.progress.complete ? 'pill pill-good' : 'pill pill-warn', `${session.progress.reviewed} of ${session.progress.total} reviewed`));
+    progress.appendChild(node('span', 'pill', session.phase === 'revealed' ? 'Review complete' : 'Blind review'));
+    panel.appendChild(progress);
+
+    const rail = node('div', 'query-rail');
+    safeArray(session.queries).forEach((query, index) => {
+      const button = node('button', 'btn query-step', `${index + 1}. ${query.query}`);
+      button.type = 'button';
+      if (query.queryId === state.comparison.selectedQueryId) button.setAttribute('aria-current', 'step');
+      if (query.judgment) button.appendChild(node('span', 'tiny', ' | reviewed'));
+      button.addEventListener('click', () => {
+        state.comparison.selectedQueryId = query.queryId;
+        state.comparison.selectedPassageId = null;
+        state.comparison.passageContexts = Object.create(null);
+        state.comparison.missingOpen = false;
+        render();
+      });
+      rail.appendChild(button);
+    });
+    panel.appendChild(rail);
+
+    const query = selectedComparisonQuery();
+    if (!query) return panel;
+    const queryHeader = node('section', 'history-card stack');
+    queryHeader.id = `blind-query-${query.queryId}`;
+    queryHeader.tabIndex = -1;
+    const queryTitle = node('div', 'section-head');
+    queryTitle.appendChild(node('h3', '', query.query));
+    queryTitle.appendChild(node('span', query.verdict === 'regressed' ? 'pill pill-danger' : query.changed ? 'pill pill-warn' : 'pill pill-good', query.verdict.replaceAll('-', ' ')));
+    queryHeader.appendChild(queryTitle);
+    queryHeader.appendChild(node('div', 'blind-grid'));
+    const grid = queryHeader.lastElementChild;
+    grid.appendChild(renderBlindSide('A', query.sides.a, state.comparison.selectedPassageId));
+    grid.appendChild(renderBlindSide('B', query.sides.b, state.comparison.selectedPassageId));
+    panel.appendChild(queryHeader);
+    panel.appendChild(renderMovement(query));
+
+    const decision = node('section', 'stack');
+    decision.appendChild(node('h3', '', 'Blind judgment'));
+    if (query.judgment) {
+      decision.appendChild(node('div', 'message success', `Saved: ${query.judgment.choice.replaceAll('-', ' ')}. This judgment is immutable.`));
+    } else {
+      const choices = node('div', 'judgment-bar');
+      [['a-wins', 'A wins'], ['b-wins', 'B wins'], ['tie', 'Tie'], ['both-wrong', 'Both wrong']].forEach(([choice, label]) => {
+        const button = node('button', choice === 'both-wrong' ? 'btn btn-danger' : 'btn', label);
+        button.type = 'button';
+        button.disabled = state.comparison.submitting;
+        button.addEventListener('click', () => { void submitBlindChoice(query.queryId, choice); });
+        choices.appendChild(button);
+      });
+      decision.appendChild(choices);
+    }
+    const missingToggle = node('button', 'btn btn-subtle', state.comparison.missingOpen ? 'Close missing passage' : 'Record missing passage');
+    missingToggle.type = 'button';
+    missingToggle.setAttribute('aria-expanded', String(state.comparison.missingOpen));
+    missingToggle.addEventListener('click', () => { state.comparison.missingOpen = !state.comparison.missingOpen; render(); });
+    decision.appendChild(missingToggle);
+    if (state.comparison.missingOpen) {
+      const form = node('form', 'missing-form');
+      const referenceField = node('div', 'field');
+      const referenceLabel = node('label', '', 'Missing passage reference');
+      referenceLabel.htmlFor = 'comparison-missing-reference';
+      const reference = document.createElement('input');
+      reference.id = 'comparison-missing-reference';
+      reference.type = 'text';
+      reference.autocomplete = 'off';
+      reference.value = state.comparison.missingReference;
+      reference.addEventListener('input', () => { state.comparison.missingReference = reference.value; });
+      referenceField.appendChild(referenceLabel);
+      referenceField.appendChild(reference);
+      const noteField = node('div', 'field');
+      const noteLabel = node('label', '', 'Note');
+      noteLabel.htmlFor = 'comparison-missing-note';
+      const note = document.createElement('input');
+      note.id = 'comparison-missing-note';
+      note.type = 'text';
+      note.value = state.comparison.missingNote;
+      note.addEventListener('input', () => { state.comparison.missingNote = note.value; });
+      noteField.appendChild(noteLabel);
+      noteField.appendChild(note);
+      const save = node('button', 'btn', 'Save missing passage');
+      save.type = 'submit';
+      save.disabled = state.comparison.submitting;
+      form.appendChild(referenceField);
+      form.appendChild(noteField);
+      form.appendChild(save);
+      form.addEventListener('submit', (event) => { event.preventDefault(); void submitComparisonMissing(query.queryId); });
+      decision.appendChild(form);
+    }
+    safeArray(query.missingPassages).forEach((entry) => decision.appendChild(node('div', 'message warn', `Missing: ${entry.reference}${entry.note ? ` | ${entry.note}` : ''}`)));
+    panel.appendChild(decision);
+
+    if (query.reveal) {
+      const reveal = node('section', 'reveal-panel stack');
+      reveal.appendChild(node('h3', '', 'Identity reveal'));
+      reveal.appendChild(node('div', '', `A was ${query.reveal.sideA}. B was ${query.reveal.sideB}.`));
+      reveal.appendChild(node('div', 'pill pill-good', `Recorded preference: ${query.reveal.preference.replaceAll('-', ' ')}`));
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.textContent = 'Technical details';
+      details.appendChild(summary);
+      details.appendChild(node('pre', 'file-preview', JSON.stringify({ identities: query.reveal.identities, exact: query.reveal.exact }, null, 2)));
+      reveal.appendChild(details);
+      const followUp = node('button', 'btn', 'Create follow-up case');
+      followUp.type = 'button';
+      followUp.addEventListener('click', () => { void createCase(query.query, 'regression'); });
+      reveal.appendChild(followUp);
+      reveal.appendChild(node('div', 'tiny muted', 'A follow-up case is separate from this blind preference. No fixture is changed automatically.'));
+      panel.appendChild(reveal);
+    }
+
+    panel.appendChild(renderGateGroups(session.gateGroups));
+    const admission = node('section', 'history-card stack');
+    admission.appendChild(node('h3', '', 'Admission control'));
+    safeArray(session.admission.blockers).forEach((blocker) => admission.appendChild(node('div', 'message error', blocker)));
+    const admit = node('button', 'btn btn-primary', session.admission.enabled ? 'Open admission review' : 'Admission blocked');
+    admit.type = 'button';
+    admit.disabled = !session.admission.enabled;
+    admit.addEventListener('click', () => {
+      state.view = 'admission';
+      persistRouteState();
+      render();
+      void loadAdmissions();
+    });
+    admission.appendChild(admit);
+    panel.appendChild(admission);
+    return panel;
+  }
+
+  function renderDataTable(headers, rows, label) {
+    const wrap = node('div', 'data-table-wrap');
+    const table = node('table', 'data-table');
+    if (label) table.setAttribute('aria-label', label);
+    const head = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    headers.forEach((header) => headRow.appendChild(node('th', header.numeric ? 'numeric' : '', header.label)));
+    head.appendChild(headRow);
+    table.appendChild(head);
+    const body = document.createElement('tbody');
+    rows.forEach((cells) => {
+      const row = document.createElement('tr');
+      cells.forEach((cell, index) => {
+        const td = node('td', headers[index] && headers[index].numeric ? 'numeric' : '');
+        td.dataset.label = headers[index] ? headers[index].label : '';
+        if (cell instanceof Node) td.appendChild(cell);
+        else td.textContent = String(cell == null ? '' : cell);
+        row.appendChild(td);
+      });
+      body.appendChild(row);
+    });
+    table.appendChild(body);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function metricValue(metric) {
+    if (metric && typeof metric.count === 'number') return String(metric.count);
+    if (!metric || metric.rate === null || typeof metric.rate !== 'number') return 'Unavailable';
+    return `${(metric.rate * 100).toFixed(1)}%`;
+  }
+
+  function renderMetricTable(metrics, label) {
+    const rows = safeArray(metrics).map((metric) => [
+      String(metric.metricKey || 'metric'),
+      metricValue(metric),
+      typeof metric.denominator === 'number' ? `${metric.numerator}/${metric.denominator}` : `${metric.sampleSize || 0} sample`,
+      metric.sparse ? 'Sparse' : 'Comparable',
+      String(metric.context || ''),
+    ]);
+    if (rows.length === 0) return node('div', 'empty', 'No metrics are available.');
+    return renderDataTable([
+      { label: 'Metric' }, { label: 'Value', numeric: true }, { label: 'Evidence', numeric: true }, { label: 'Precision' }, { label: 'Context' },
+    ], rows, label);
+  }
+
+  function renderSessionsView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-sessions';
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-labelledby', 'tab-sessions');
+    const head = node('div', 'section-head');
+    const title = node('div');
+    title.appendChild(node('h2', '', 'Review sessions'));
+    title.appendChild(node('div', 'tiny muted', 'Build a source-balanced queue, preserve its order, and resume exactly where review stopped.'));
+    head.appendChild(title);
+    const reload = node('button', 'btn btn-subtle', 'Reload');
+    reload.type = 'button';
+    reload.addEventListener('click', () => { void loadSessions(); });
+    head.appendChild(reload);
+    panel.appendChild(head);
+    if (state.readOnly) panel.appendChild(readOnlyNotice());
+
+    const controls = node('form', 'operations-toolbar');
+    const definitions = [
+      ['Kind', 'select', 'kind'], ['Reviewed size', 'number', 'reviewedSize'], ['Seed', 'text', 'seed'], ['Reviewer', 'text', 'reviewer'],
+    ];
+    definitions.forEach(([label, kind, key]) => {
+      const field = node('div', 'field');
+      const id = `session-${key}`;
+      const caption = document.createElement('label'); caption.htmlFor = id; caption.textContent = label;
+      let control;
+      if (kind === 'select') {
+        control = document.createElement('select');
+        ['weekly-triage', 'stale-reconfirmation', 'candidate-regression', 'calibration', 'holdout'].forEach((value) => {
+          const option = document.createElement('option'); option.value = value; option.textContent = value.replace(/-/g, ' '); control.appendChild(option);
+        });
+      } else {
+        control = document.createElement('input'); control.type = kind; if (kind === 'number') { control.min = '1'; control.max = '200'; }
+      }
+      control.id = id;
+      control.disabled = state.readOnly;
+      control.value = String(state.sessions.form[key]);
+      control.addEventListener('input', () => { state.sessions.form[key] = kind === 'number' ? Number(control.value) : control.value; });
+      field.appendChild(caption); field.appendChild(control); controls.appendChild(field);
+    });
+    [['qualifiedReviewer', 'Pastoral review qualified'], ['authorizedHoldoutReview', 'Authorized holdout review']].forEach(([key, label]) => {
+      const field = node('label', 'row tiny');
+      const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = state.sessions.form[key];
+      checkbox.disabled = state.readOnly;
+      checkbox.addEventListener('change', () => { state.sessions.form[key] = checkbox.checked; });
+      field.appendChild(checkbox); field.appendChild(document.createTextNode(label)); controls.appendChild(field);
+    });
+    const start = node('button', 'btn btn-primary', state.sessions.submitting ? 'Starting' : 'Start session');
+    start.type = 'submit'; start.disabled = state.readOnly || state.sessions.submitting || state.sessions.loading;
+    controls.appendChild(start);
+    controls.addEventListener('submit', (event) => { event.preventDefault(); void startStudioSession(); });
+    panel.appendChild(controls);
+
+    const formula = node('div', 'privacy-note tiny');
+    formula.textContent = 'Priority = outcome severity + converted-rank evidence + recurrence + age + source factor + blocker status. Device count is a bounded recurrence signal; popularity is excluded. A small seeded exploration sample protects quiet failures.';
+    panel.appendChild(formula);
+
+    if (state.sessions.loading && state.sessions.items.length === 0) panel.appendChild(node('div', 'empty', 'Loading sessions.'));
+    else if (state.sessions.items.length === 0) panel.appendChild(node('div', 'empty', 'No review sessions yet.'));
+    else {
+      const picker = document.createElement('select'); picker.className = 'comparison-picker'; picker.setAttribute('aria-label', 'Review session');
+      state.sessions.items.forEach((entry, index) => {
+        const option = document.createElement('option');
+        option.value = entry.sessionId || `opaque-${index}`;
+        option.textContent = entry.opaqueMembership ? `Holdout | ${entry.status} | membership protected` : `${entry.kind} | ${entry.status} | ${entry.progress.handled}/${entry.progress.total}`;
+        if (state.sessions.selected && entry.sessionId === state.sessions.selected.sessionId) option.selected = true;
+        picker.appendChild(option);
+      });
+      picker.addEventListener('change', () => {
+        const chosen = state.sessions.items.find((entry) => entry.sessionId === picker.value);
+        if (chosen) { state.sessions.selected = chosen; render(); }
+      });
+      panel.appendChild(picker);
+    }
+
+    const session = state.sessions.selected;
+    if (session && !session.opaqueMembership) {
+      const progress = session.progress || { handled: 0, total: 0, remaining: 0 };
+      const summary = node('section', 'operations-band');
+      const summaryHead = node('div', 'row');
+      summaryHead.appendChild(node('span', 'pill', `${progress.handled}/${progress.total} handled`));
+      summaryHead.appendChild(node('span', 'pill', `${progress.remaining} remaining`));
+      summaryHead.appendChild(statusBadge(session.status));
+      summary.appendChild(summaryHead);
+      const track = node('div', 'progress-track');
+      const fill = node('div', 'progress-fill'); fill.style.width = `${progress.total === 0 ? 0 : Math.round(progress.handled / progress.total * 100)}%`; track.appendChild(fill); summary.appendChild(track);
+      summary.appendChild(node('div', 'tiny muted', `Source balance: ${Object.entries(session.sourceCounts || {}).map(([source, count]) => `${source} ${count}`).join(' | ') || 'none'}`));
+      panel.appendChild(summary);
+
+      const rows = safeArray(session.queue).map((item) => {
+        const actions = node('div', 'row');
+        if (item.state === 'queued') {
+          const complete = node('button', 'btn btn-subtle', 'Complete'); complete.type = 'button'; complete.dataset.itemId = item.itemId;
+          complete.disabled = state.readOnly;
+          complete.addEventListener('click', () => { void mutateStudioSession('complete-item', item.itemId, complete); });
+          const reason = document.createElement('select'); reason.setAttribute('aria-label', `Skip reason for ${item.query}`);
+          reason.disabled = state.readOnly;
+          ['needs-context', 'duplicate', 'pastoral-escalation', 'technical-blocker', 'timebox'].forEach((value) => { const option = document.createElement('option'); option.value = value; option.textContent = value.replace(/-/g, ' '); reason.appendChild(option); });
+          const requeue = document.createElement('select'); requeue.setAttribute('aria-label', `Requeue outcome for ${item.query}`);
+          requeue.disabled = state.readOnly;
+          [['next-session', 'Next session'], ['do-not-requeue', 'Do not requeue']].forEach(([value, text]) => { const option = document.createElement('option'); option.value = value; option.textContent = text; requeue.appendChild(option); });
+          reason.addEventListener('change', () => { if (reason.value === 'duplicate') requeue.value = 'do-not-requeue'; else requeue.value = 'next-session'; });
+          const skip = node('button', 'btn btn-subtle', 'Skip'); skip.type = 'button';
+          skip.disabled = state.readOnly;
+          skip.addEventListener('click', () => { void mutateStudioSession('skip-item', item.itemId, skip, reason.value, requeue.value); });
+          actions.appendChild(complete); actions.appendChild(reason); actions.appendChild(requeue); actions.appendChild(skip);
+        } else actions.appendChild(statusBadge(item.state));
+        return [item.query, item.source, item.selection, item.priority, actions];
+      });
+      panel.appendChild(renderDataTable([
+        { label: 'Query' }, { label: 'Source' }, { label: 'Selection' }, { label: 'Priority', numeric: true }, { label: 'Action' },
+      ], rows, 'Session queue'));
+      const close = node('button', 'btn btn-primary', session.status === 'completed' ? 'Session complete' : 'Complete session');
+      close.type = 'button'; close.disabled = state.readOnly || session.status === 'completed' || progress.handled !== progress.total;
+      close.addEventListener('click', () => { void mutateStudioSession('complete-session', null, close); });
+      panel.appendChild(close);
+    } else if (session && session.opaqueMembership) {
+      panel.appendChild(node('div', 'privacy-note', 'Holdout membership is protected. Enter the explicit authorized holdout review flow to see its queue.'));
+    }
+    return panel;
+  }
+
+  function renderQualityView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-quality'; panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', 'tab-quality');
+    const head = node('div', 'section-head');
+    const title = node('div'); title.appendChild(node('h2', '', 'Quality evidence')); title.appendChild(node('div', 'tiny muted', 'Partitioned evidence with denominators and sparse-sample context. No composite score.'));
+    head.appendChild(title);
+    const reload = node('button', 'btn btn-subtle', 'Reload'); reload.type = 'button'; reload.addEventListener('click', () => { void loadQuality(); }); head.appendChild(reload); panel.appendChild(head);
+    if (state.readOnly) panel.appendChild(readOnlyNotice());
+    if (state.quality.loading && !state.quality.report) { panel.appendChild(node('div', 'empty', 'Loading quality evidence.')); return panel; }
+    if (!state.quality.report) { panel.appendChild(node('div', 'empty', state.quality.unavailable || 'No authorized quality report is available.')); return panel; }
+    const quality = state.quality.report;
+    const verdict = node('div', quality.candidateImprovement.blocked ? 'message error' : 'message success');
+    verdict.textContent = `${quality.candidateImprovement.verdict.replace(/-/g, ' ')}. ${quality.candidateImprovement.context}`;
+    panel.appendChild(verdict);
+    const partitions = node('div', 'partition-grid');
+    ['calibration', 'holdout'].forEach((partition) => {
+      const section = node('section', 'partition-section'); section.appendChild(node('h3', '', partition === 'holdout' ? 'Holdout evidence' : 'Calibration evidence'));
+      if (partition === 'holdout') section.appendChild(node('div', 'privacy-note tiny', 'Membership and drill identifiers remain opaque; only redacted aggregate metrics are shown.'));
+      section.appendChild(renderMetricTable(quality.partitions[partition], `${partition} benchmark metrics`));
+      section.appendChild(node('h3', '', 'Telemetry'));
+      section.appendChild(renderMetricTable(quality.telemetry[partition], `${partition} telemetry metrics`));
+      section.appendChild(node('h3', '', 'Required gates'));
+      section.appendChild(renderMetricTable(quality.requiredGates[partition], `${partition} required gates`));
+      partitions.appendChild(section);
+    });
+    panel.appendChild(partitions);
+    const operational = node('section', 'operations-band'); operational.appendChild(node('h3', '', 'Coverage and case flow'));
+    const operationalRows = [];
+    [['Concept coverage', quality.coverage && quality.coverage.concepts], ['Fixture coverage', quality.coverage && quality.coverage.fixtures], ['Cases', quality.cases]].forEach(([family, entries]) => {
+      Object.entries(entries || {}).forEach(([key, metric]) => operationalRows.push([family, key, metricValue(metric), metric.context || '']));
+    });
+    safeArray(quality.admissions).forEach((admission) => {
+      operationalRows.push([`Admission ${admission.admissionId}`, 'changed probes', metricValue(admission.changedProbes), admission.changedProbes.context || '']);
+      operationalRows.push([`Admission ${admission.admissionId}`, 'accepted regressions', metricValue(admission.acceptedRegressions), admission.acceptedRegressions.context || '']);
+    });
+    operational.appendChild(renderDataTable([{ label: 'Family' }, { label: 'State' }, { label: 'Count', numeric: true }, { label: 'Context' }], operationalRows, 'Coverage and case flow'));
+    panel.appendChild(operational);
+    const trends = node('section', 'operations-band'); trends.appendChild(node('h3', '', 'Artifact trends'));
+    trends.appendChild(renderDataTable([{ label: 'Partition' }, { label: 'Metric' }, { label: 'Points', numeric: true }, { label: 'Latest delta' }, { label: 'Precision' }], safeArray(quality.trends).map((trend) => [trend.partition, trend.metricKey, trend.points.length, trend.latestDeltaPercentagePoints === null ? 'Suppressed' : `${trend.latestDeltaPercentagePoints} pp`, trend.precision]), 'Artifact trends'));
+    panel.appendChild(trends);
+    const links = node('section', 'operations-band'); links.appendChild(node('h3', '', 'Authorized calibration drill links'));
+    const linkRows = safeArray(quality.calibrationDrillLinks).map((entry) => {
+      const targets = node('div', 'row');
+      safeArray(entry.caseIds).forEach((caseId) => { const anchor = document.createElement('a'); anchor.href = `/?view=history&case=${encodeURIComponent(caseId)}`; anchor.textContent = caseId; targets.appendChild(anchor); });
+      safeArray(entry.aggregateIds).forEach((aggregateId) => targets.appendChild(node('span', 'pill', aggregateId)));
+      return [entry.metricKey, targets];
+    });
+    links.appendChild(linkRows.length ? renderDataTable([{ label: 'Metric' }, { label: 'Evidence' }], linkRows, 'Calibration drill links') : node('div', 'empty', 'No authorized calibration links are available.'));
+    panel.appendChild(links);
+    return panel;
+  }
+
+  function renderAuditsView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-audits'; panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', 'tab-audits');
+    const head = node('div', 'section-head');
+    const title = node('div'); title.appendChild(node('h2', '', 'Telemetry audits')); title.appendChild(node('div', 'tiny muted', 'Preview aggregate distillates, apply approved cases, then delete the temporary dump.'));
+    head.appendChild(title); panel.appendChild(head);
+    if (state.readOnly) panel.appendChild(readOnlyNotice());
+    const form = node('form', 'operations-toolbar');
+    const field = node('div', 'field'); const label = document.createElement('label'); label.htmlFor = 'audit-files'; label.textContent = 'Distillate JSON files';
+    const input = document.createElement('input'); input.id = 'audit-files'; input.type = 'file'; input.accept = 'application/json,.json'; input.multiple = true;
+    input.disabled = state.readOnly;
+    input.addEventListener('change', () => { state.audits.files = Array.from(input.files || []); render(); });
+    field.appendChild(label); field.appendChild(input); form.appendChild(field);
+    form.appendChild(node('div', 'tiny muted', state.audits.files.length ? `${state.audits.files.length} selected` : 'No files selected'));
+    const previewButton = node('button', 'btn btn-primary', state.audits.loading ? 'Reading files' : 'Preview audit'); previewButton.type = 'submit'; previewButton.disabled = state.readOnly || state.audits.loading || state.audits.files.length === 0;
+    form.appendChild(previewButton); form.addEventListener('submit', (event) => { event.preventDefault(); void previewAuditFiles(); }); panel.appendChild(form);
+    panel.appendChild(node('div', 'privacy-note tiny', 'Only selected aggregate distillate bytes are uploaded. Browser paths and raw event logs are never accepted. Suppressed and sensitive strings never return to this page.'));
+    const audit = state.audits.preview;
+    if (!audit) { panel.appendChild(node('div', 'empty', state.audits.recoveryDigest ? 'The previous preview is not in this process. Reselect the same files to recover it idempotently.' : 'Select one or more aggregate distillates to begin.')); return panel; }
+    const badges = node('div', 'row'); badges.appendChild(statusBadge(audit.status)); badges.appendChild(node('span', 'pill', `Schema ${safeArray(audit.schemaVersions).join(', ')}`)); badges.appendChild(node('span', 'pill', `${audit.opaqueTokenCount} opaque tokens`)); badges.appendChild(node('span', 'pill', `${audit.candidateCaseCount} candidate cases`)); panel.appendChild(badges);
+    panel.appendChild(renderDataTable([{ label: 'Category' }, { label: 'Count', numeric: true }], [
+      ['Distillates', audit.distillateCount], ['Below threshold', audit.suppression.belowThreshold], ['Sensitive excluded', audit.suppression.sensitiveExcluded], ['Unreplayable', audit.excludedEvidence.unreplayable], ['Rank mismatch', audit.excludedEvidence.rankMismatch],
+    ], 'Audit summary'));
+    safeArray(audit.privacyWarnings).forEach((warning) => panel.appendChild(node('div', 'privacy-note tiny', warning)));
+    if (safeArray(audit.candidateCases).length) panel.appendChild(renderDataTable([{ label: 'Query' }, { label: 'Verdict' }, { label: 'Devices', numeric: true }], audit.candidateCases.map((entry) => [entry.query, entry.verdict, entry.devices]), 'Candidate cases'));
+    const actions = node('div', 'row');
+    const apply = node('button', 'btn btn-primary', audit.status === 'ready' ? 'Apply approved cases' : 'Applied'); apply.type = 'button'; apply.disabled = state.readOnly || audit.status !== 'ready' || state.audits.submitting; apply.addEventListener('click', () => { void mutateAudit('apply'); }); actions.appendChild(apply);
+    const close = node('button', 'btn', audit.dumpDeleted ? 'Dump deleted' : 'Close and delete dump'); close.type = 'button'; close.disabled = state.readOnly || audit.status !== 'applied' || state.audits.submitting; close.addEventListener('click', () => { void mutateAudit('close'); }); actions.appendChild(close); panel.appendChild(actions);
+    if (audit.dumpDeleted) panel.appendChild(node('div', 'message success', 'Audit closed. The temporary distillate dump was deleted and deletion was verified.'));
+    return panel;
+  }
+
+  function admissionSlotLabel(slot) {
+    if (slot.kind === 'source-proposal') return 'Source proposal';
+    if (slot.kind === 'probe-baseline') return 'Probe baseline movement';
+    return `Fixture promotion: ${slot.slotId}`;
+  }
+
+  function admissionDecisionsReady(preview) {
+    return safeArray(preview && preview.decisions).every((slot) => {
+      const decision = state.admission.decisions[slot.slotId];
+      const rationaleField = document.getElementById(`admission-rationale-${slot.slotId}`);
+      const rationale = rationaleField && typeof rationaleField.value === 'string' ? rationaleField.value : decision && decision.rationale;
+      return typeof rationale === 'string' && rationale.trim().length >= 8 && (slot.kind !== 'probe-baseline' || safeArray(slot.probes).every((probe) => {
+        const probeField = document.getElementById(`admission-probe-${probe.probeId}`);
+        const value = probeField && typeof probeField.value === 'string' ? probeField.value : decision && decision.probes && decision.probes[probe.probeId];
+        return typeof value === 'string' && value.trim().length >= 8;
+      }));
+    });
+  }
+
+  function syncAdmissionSubmitButton(preview, admission) {
+    const button = document.getElementById('admission-submit');
+    if (button) button.disabled = mutationReadOnly(admission.readOnly) || admission.state !== 'READY' || !preview.measurableEffect || !admissionDecisionsReady(preview) || state.admission.submitting;
+  }
+
+  function renderAdmissionView() {
+    const panel = node('section', 'stack');
+    panel.id = 'panel-admission'; panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', 'tab-admission');
+    const head = node('div', 'section-head');
+    const title = node('div'); title.appendChild(node('h2', '', 'Admission')); title.appendChild(node('div', 'tiny muted', 'Review the bounded candidate evidence before final isolated verification.'));
+    head.appendChild(title);
+    const reload = node('button', 'btn btn-subtle', state.admission.loading ? 'Loading...' : 'Reload'); reload.type = 'button'; reload.disabled = state.admission.loading; reload.addEventListener('click', () => { void loadAdmissions(); }); head.appendChild(reload); panel.appendChild(head);
+    if (mutationReadOnly(state.admission.detail && state.admission.detail.readOnly)) panel.appendChild(readOnlyNotice());
+    if (state.admission.loading && state.admission.items.length === 0) { panel.appendChild(node('div', 'empty', 'Loading admission evidence.')); return panel; }
+    if (state.admission.items.length === 0) { panel.appendChild(node('div', 'empty', 'No candidate has a trusted admission evidence bundle yet.')); return panel; }
+    const picker = node('div', 'field'); const pickerLabel = node('label', '', 'Candidate evidence'); pickerLabel.htmlFor = 'admission-candidate';
+    const select = document.createElement('select'); select.id = 'admission-candidate';
+    state.admission.items.forEach((item) => { const option = document.createElement('option'); option.value = item.reviewId; option.textContent = `${item.proposalId} (${item.state.toLowerCase()})`; option.selected = item.reviewId === state.admission.selectedReviewId; select.appendChild(option); });
+    select.addEventListener('change', () => { state.admission.selectedReviewId = select.value; state.admission.detail = null; state.admission.decisions = Object.create(null); void loadAdmissionDetail(); }); picker.appendChild(pickerLabel); picker.appendChild(select); panel.appendChild(picker);
+    const admission = state.admission.detail;
+    if (!admission) { panel.appendChild(node('div', 'empty', 'Select a candidate to inspect its admission evidence.')); return panel; }
+    const status = node('div', admission.state === 'ADMITTED' ? 'message success' : admission.state === 'BLOCKED' ? 'message error' : 'message'); status.textContent = admission.state === 'ADMITTED' ? 'Admission manifest recorded.' : admission.state === 'BLOCKED' ? 'Admission is blocked.' : 'Admission evidence is ready for review.'; panel.appendChild(status);
+    safeArray(admission.blockers).forEach((blocker) => panel.appendChild(node('div', 'message error', blocker)));
+    safeArray(admission.recovery).forEach((entry) => panel.appendChild(node('div', 'message warn', entry)));
+    if (!admission.preview) return panel;
+    const preview = admission.preview;
+    const evidence = node('section', 'operations-band stack'); evidence.appendChild(node('h3', '', 'Final verification binding'));
+    evidence.appendChild(renderDataTable([{ label: 'Evidence' }, { label: 'Digest' }], [
+      ['Admission preview', preview.digest], ['Proposal', preview.proposalDigest], ['Candidate descriptor', preview.candidate.descriptorSha256], ['Candidate database', preview.candidate.databaseSha256], ['Candidate cache', preview.candidate.cacheKey], ['Admitted main', preview.baseCommit],
+    ], 'Final verification binding'));
+    panel.appendChild(evidence);
+    const diffs = node('section', 'stack'); diffs.appendChild(node('h3', '', 'Exact approved diffs'));
+    if (safeArray(preview.diffs).length === 0) diffs.appendChild(node('div', 'empty', 'The candidate has no source changes to admit.'));
+    safeArray(preview.diffs).forEach((diff) => {
+      const card = node('article', 'change-card stack'); card.appendChild(node('h3', '', diff.path)); card.appendChild(node('div', 'tiny muted', `${diff.kind} | ${diff.changed ? 'changed' : 'unchanged'} | ${diff.digest}`));
+      const details = document.createElement('details'); details.className = 'disclosure'; details.appendChild(node('summary', '', 'Reviewed file bytes'));
+      const body = node('div', 'disclosure-body'); body.appendChild(node('div', 'tiny muted', 'Before')); body.appendChild(textPre(diff.before.text)); body.appendChild(node('div', 'tiny muted', 'After')); body.appendChild(textPre(diff.after.text)); details.appendChild(body); card.appendChild(details); diffs.appendChild(card);
+    }); panel.appendChild(diffs);
+    const gates = node('section', 'operations-band stack'); gates.appendChild(node('h3', '', 'Candidate gates'));
+    gates.appendChild(renderDataTable([{ label: 'Gate' }, { label: 'Status' }, { label: 'Verdict' }, { label: 'Finding' }], safeArray(preview.gauntlet.gates).map((gate) => [gate.title, gate.status, gate.verdict, safeArray(gate.findings).map((finding) => finding.message).join(' ') || gate.summary]), 'Candidate gates'));
+    panel.appendChild(gates);
+    const review = node('section', 'operations-band stack'); review.appendChild(node('h3', '', 'Independent admission decisions'));
+    safeArray(preview.decisions).forEach((slot) => {
+      const card = node('article', 'change-card stack'); card.appendChild(node('h3', '', admissionSlotLabel(slot))); card.appendChild(node('div', 'mono-wrap tiny', slot.subjectDigest));
+      const field = node('div', 'field'); const label = node('label', '', 'Reviewed rationale'); const inputId = `admission-rationale-${slot.slotId}`; label.htmlFor = inputId;
+      const rationale = document.createElement('textarea'); rationale.id = inputId; rationale.value = state.admission.decisions[slot.slotId] && state.admission.decisions[slot.slotId].rationale || ''; rationale.placeholder = 'Record the reason for this independent decision.';
+      rationale.disabled = mutationReadOnly(admission.readOnly);
+      rationale.addEventListener('input', () => { const current = state.admission.decisions[slot.slotId] || {}; current.rationale = rationale.value; state.admission.decisions[slot.slotId] = current; syncAdmissionSubmitButton(preview, admission); }); field.appendChild(label); field.appendChild(rationale); card.appendChild(field);
+      if (slot.kind === 'probe-baseline') {
+        safeArray(slot.probes).forEach((probe) => {
+          const probeField = node('div', 'field'); const probeLabel = node('label', '', `Probe ${probe.probeId}`); const probeId = `admission-probe-${probe.probeId}`; probeLabel.htmlFor = probeId;
+          const probeRationale = document.createElement('textarea'); probeRationale.id = probeId; const saved = state.admission.decisions[slot.slotId] || {}; const values = saved.probes || Object.create(null); probeRationale.value = values[probe.probeId] || ''; probeRationale.placeholder = 'Why this probe movement is intentional.';
+          probeRationale.disabled = mutationReadOnly(admission.readOnly);
+          probeRationale.addEventListener('input', () => { const current = state.admission.decisions[slot.slotId] || {}; current.probes = current.probes || Object.create(null); current.probes[probe.probeId] = probeRationale.value; state.admission.decisions[slot.slotId] = current; syncAdmissionSubmitButton(preview, admission); }); probeField.appendChild(probeLabel); probeField.appendChild(probeRationale); card.appendChild(probeField);
+        });
+      }
+      review.appendChild(card);
+    });
+    const admit = node('button', 'btn btn-primary', state.admission.submitting ? 'Running final verification...' : admission.state === 'ADMITTED' ? 'Admission recorded' : 'Admit reviewed change'); admit.id = 'admission-submit'; admit.type = 'button'; admit.disabled = mutationReadOnly(admission.readOnly) || admission.state !== 'READY' || !preview.measurableEffect || !admissionDecisionsReady(preview) || state.admission.submitting;
+    admit.addEventListener('click', () => { void submitAdmission(); }); review.appendChild(admit); panel.appendChild(review);
+    return panel;
+  }
+
+  function renderPublishView() {
+    const panel = node('section', 'stack'); panel.id = 'panel-publish'; panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', 'tab-publish');
+    const head = node('div', 'section-head'); const title = node('div'); title.appendChild(node('h2', '', 'Publish')); title.appendChild(node('div', 'tiny muted', 'Prepare a reviewed admission on an isolated branch.')); head.appendChild(title);
+    const reload = node('button', 'btn btn-subtle', state.publish.loading ? 'Loading...' : 'Reload'); reload.type = 'button'; reload.disabled = state.publish.loading; reload.addEventListener('click', () => { void loadPublish(); }); head.appendChild(reload); panel.appendChild(head);
+    if (state.readOnly) panel.appendChild(readOnlyNotice());
+    if (state.publish.loading && state.publish.items.length === 0) { panel.appendChild(node('div', 'empty', 'Loading publish preflight.')); return panel; }
+    if (state.publish.items.length === 0) { panel.appendChild(node('div', 'empty', 'No admission evidence is available for branch preparation.')); return panel; }
+    const picker = node('div', 'field'); const label = node('label', '', 'Admitted candidate'); label.htmlFor = 'publish-candidate'; const select = document.createElement('select'); select.id = 'publish-candidate';
+    state.publish.items.forEach((item) => { const option = document.createElement('option'); option.value = item.reviewId; option.textContent = `${item.proposalId} (${item.state.toLowerCase()})`; option.selected = item.reviewId === state.publish.selectedReviewId; select.appendChild(option); });
+    select.addEventListener('change', () => { state.publish.selectedReviewId = select.value; state.publish.detail = null; state.publish.result = null; void loadPublishDetail(); }); picker.appendChild(label); picker.appendChild(select); panel.appendChild(picker);
+    const publish = state.publish.detail;
+    if (!publish) { panel.appendChild(node('div', 'empty', 'Select an admitted candidate to inspect preparation status.')); return panel; }
+    if (!publish.admission) { panel.appendChild(node('div', 'message warn', 'Admission is required before an isolated branch can be prepared.')); return panel; }
+    const preflight = publish.preflight;
+    if (preflight) {
+      const status = node('div', preflight.ready ? 'message success' : 'message error'); status.textContent = preflight.ready ? 'Publish preflight passed.' : 'Publish preflight is blocked.'; panel.appendChild(status);
+      panel.appendChild(renderDataTable([{ label: 'Binding' }, { label: 'Value' }], [
+        ['Admission manifest', preflight.admissionDigest], ['Isolated branch', preflight.branch], ['Admitted main', preflight.expectedMainCommit], ['Current remote main', preflight.currentMainCommit || 'Unavailable'],
+      ], 'Publish preflight'));
+      safeArray(preflight.blockers).forEach((blocker) => panel.appendChild(node('div', 'message error', blocker)));
+      safeArray(preflight.recovery).forEach((entry) => panel.appendChild(node('div', 'message warn', entry)));
+      const choices = node('section', 'operations-band stack'); choices.appendChild(node('h3', '', 'Preparation choices'));
+      const pushField = node('label', 'check-row'); const push = document.createElement('input'); push.type = 'checkbox'; push.checked = state.publish.push; push.disabled = state.readOnly; push.addEventListener('change', () => { state.publish.push = push.checked; if (!push.checked) state.publish.openDraftPr = false; render(); }); pushField.appendChild(push); pushField.appendChild(node('span', '', 'Push the isolated branch')); choices.appendChild(pushField);
+      const prField = node('label', 'check-row'); const pr = document.createElement('input'); pr.type = 'checkbox'; pr.checked = state.publish.openDraftPr; pr.disabled = state.readOnly || !state.publish.push; pr.addEventListener('change', () => { state.publish.openDraftPr = pr.checked; }); prField.appendChild(pr); prField.appendChild(node('span', '', 'Open a draft pull request')); choices.appendChild(prField);
+      const prepare = node('button', 'btn btn-primary', state.publish.submitting ? 'Preparing isolated branch...' : 'Prepare branch'); prepare.type = 'button'; prepare.disabled = state.readOnly || !preflight.ready || state.publish.submitting; prepare.addEventListener('click', () => { void submitPublish(); }); choices.appendChild(prepare); panel.appendChild(choices);
+    }
+    if (state.publish.result) {
+      const result = state.publish.result; const evidence = node('section', 'operations-band stack'); evidence.appendChild(node('h3', '', 'Preparation evidence')); evidence.appendChild(renderDataTable([{ label: 'Evidence' }, { label: 'Value' }], [['Status', result.status], ['Branch', result.branch], ['Commit', result.commit], ['Tree', result.treeHash], ['Draft PR', result.draftPrUrl || 'Not opened']], 'Preparation evidence')); safeArray(result.nextActions).forEach((entry) => evidence.appendChild(node('div', 'message', entry))); panel.appendChild(evidence);
+    }
+    return panel;
+  }
+
+  function renderView() {
+    clear(viewRoot);
+    let panel;
+    if (state.view === 'health') panel = renderHealthView();
+    else if (state.view === 'inbox') panel = renderInboxView();
+    else if (state.view === 'history') panel = renderHistoryView();
+    else if (state.view === 'compare') panel = renderComparisonView();
+    else if (state.view === 'admission') panel = renderAdmissionView();
+    else if (state.view === 'changes') panel = renderChangesView();
+    else if (state.view === 'publish') panel = renderPublishView();
+    else if (state.view === 'sessions') panel = renderSessionsView();
+    else if (state.view === 'quality') panel = renderQualityView();
+    else if (state.view === 'audits') panel = renderAuditsView();
+    else panel = renderReviewView();
+    viewRoot.appendChild(panel);
+  }
+
+  function render() {
+    layout.classList.toggle('operations-layout', state.view === 'sessions' || state.view === 'quality' || state.view === 'audits' || state.view === 'admission' || state.view === 'publish');
+    updateHeader();
+    renderTabs();
+    renderSidebar();
+    renderView();
+  }
+
+  async function loadHealth() {
+    state.loading.health = true;
+    render();
+    try {
+      state.health = await requestJson('/api/v2/health');
+      state.readOnly = Boolean(state.health && state.health.startup && state.health.startup.degraded);
+      state.readOnlyReason = state.readOnly
+        ? 'Read-only mode: startup health checks found a degraded dependency. Existing evidence remains available; resolve Health issues and restart Workbench before changing repository state.'
+        : '';
+    } catch (error) {
+      setGlobalMessage('warn', error && typeof error.message === 'string' ? error.message : 'Health could not be loaded.');
+    } finally {
+      state.loading.health = false;
+      render();
+    }
+  }
+
+  async function loadCases(renderNow) {
+    state.loading.cases = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson('/api/v2/cases');
+      const cases = data && Array.isArray(data.cases) ? data.cases : [];
+      state.cases = sortCases(cases);
+      if (state.selectedCaseId && !state.cases.some((entry) => entry.caseId === state.selectedCaseId)) {
+        state.selectedCaseId = state.cases[0] ? state.cases[0].caseId : null;
+      }
+      persistRouteState();
+    } catch (error) {
+      setGlobalMessage('warn', error && typeof error.message === 'string' ? error.message : 'Cases could not be loaded.');
+    } finally {
+      state.loading.cases = false;
+      render();
+    }
+  }
+
+  async function loadInbox(renderNow) {
+    state.loading.inbox = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson('/api/v2/inbox');
+      const items = data && Array.isArray(data.items)
+        ? data.items
+        : data && Array.isArray(data.inbox)
+          ? data.inbox
+          : data && Array.isArray(data.cases)
+            ? data.cases
+            : [];
+      state.inbox.items = items;
+      state.inbox.fallback = false;
+      state.inbox.unavailable = false;
+      state.inbox.reason = '';
+    } catch (error) {
+      state.inbox.items = state.cases;
+      state.inbox.fallback = true;
+      state.inbox.unavailable = error && error.status === 404;
+      state.inbox.reason = state.inbox.unavailable
+        ? 'Inbox endpoint is not available here yet. Showing the local case queue instead.'
+        : error && typeof error.message === 'string'
+          ? `${error.message} Showing the local case queue instead.`
+          : 'Showing the local case queue instead.';
+    } finally {
+      state.loading.inbox = false;
+      render();
+    }
+  }
+
+  async function loadComparisonReviews(renderNow) {
+    state.comparison.loading = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson('/api/v2/candidates');
+      state.comparison.reviews = data && Array.isArray(data.reviews) ? data.reviews : [];
+      if (!state.comparison.reviews.some((entry) => entry.reviewId === state.comparison.selectedReviewId)) {
+        state.comparison.selectedReviewId = state.comparison.reviews[0] ? state.comparison.reviews[0].reviewId : null;
+        state.comparison.session = null;
+      }
+      persistRouteState();
+    } catch (error) {
+      state.comparison.reviews = [];
+      if (!(error && error.status === 404)) {
+        setGlobalMessage('warn', error && typeof error.message === 'string' ? error.message : 'Candidate comparisons could not be loaded.');
+      }
+    } finally {
+      state.comparison.loading = false;
+      render();
+    }
+  }
+
+  async function loadSessions(renderNow) {
+    state.sessions.loading = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson('/api/v2/sessions');
+      state.readOnly = state.readOnly || data.readOnly === true;
+      state.sessions.items = data && Array.isArray(data.sessions) ? data.sessions : [];
+      if (!state.sessions.selected) state.sessions.selected = state.sessions.items.find((entry) => !entry.opaqueMembership) || state.sessions.items[0] || null;
+      else if (state.sessions.selected.kind !== 'holdout') {
+        state.sessions.selected = state.sessions.items.find((entry) => entry.sessionId === state.sessions.selected.sessionId) || state.sessions.selected;
+      }
+    } catch (error) {
+      state.sessions.items = [];
+      if (!(error && error.status === 503)) setGlobalMessage('warn', error && error.message ? error.message : 'Sessions could not be loaded.');
+    } finally { state.sessions.loading = false; render(); }
+  }
+
+  async function startStudioSession() {
+    if (state.sessions.submitting) return;
+    state.sessions.submitting = true; render();
+    try {
+      const data = await requestJson('/api/v2/sessions', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(state.sessions.form),
+      });
+      state.sessions.selected = data.session;
+      await loadSessions(false);
+      state.sessions.selected = data.session;
+      setGlobalMessage('success', 'Review session is ready. Its order is deterministic and resumable.');
+      render(); mainPanel.focus();
+    } catch (error) { setGlobalMessage('error', error && error.message ? error.message : 'Session could not be started.'); }
+    finally { state.sessions.submitting = false; render(); }
+  }
+
+  function operationRequestId(prefix) {
+    const uuid = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    return `${prefix}:${uuid}`;
+  }
+
+  async function mutateStudioSession(action, itemId, focusTarget, reason, requeue) {
+    const session = state.sessions.selected;
+    if (!session || !session.sessionId || state.sessions.submitting) return;
+    state.sessions.submitting = true;
+    if (focusTarget) focusTarget.disabled = true;
+    try {
+      const payload = {
+        requestId: operationRequestId(action), expectedRevision: session.revision, expectedDigest: session.digest,
+        ...(itemId ? { itemId } : {}), ...(reason ? { reason } : {}), ...(requeue ? { requeue } : {}),
+      };
+      const scope = session.kind === 'holdout' ? '?scope=authorized-review' : '';
+      const data = await requestJson(`/api/v2/sessions/${encodeURIComponent(session.sessionId)}/${action}${scope}`, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload),
+      });
+      state.sessions.selected = data.session;
+      const index = state.sessions.items.findIndex((entry) => entry.sessionId === data.session.sessionId);
+      if (index >= 0) state.sessions.items[index] = data.session;
+      setGlobalMessage('success', action === 'complete-session' ? 'Session completed.' : action === 'skip-item' ? 'Item skipped with an explicit requeue outcome.' : 'Item completed.');
+      render(); mainPanel.focus();
+    } catch (error) {
+      setGlobalMessage('error', error && error.message ? error.message : 'Session action failed.');
+      await loadSessions(false);
+    } finally { state.sessions.submitting = false; render(); }
+  }
+
+  async function loadQuality(renderNow) {
+    state.quality.loading = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson('/api/v2/quality');
+      state.readOnly = state.readOnly || data.readOnly === true;
+      state.quality.report = data.quality;
+      state.quality.unavailable = '';
+    } catch (error) {
+      state.quality.report = null;
+      state.quality.unavailable = error && error.message ? error.message : 'Quality evidence is unavailable.';
+    } finally { state.quality.loading = false; render(); }
+  }
+
+  async function fileBase64(file) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    let binary = '';
+    for (let offset = 0; offset < bytes.length; offset += 32768) binary += String.fromCharCode(...bytes.subarray(offset, Math.min(bytes.length, offset + 32768)));
+    return btoa(binary);
+  }
+
+  async function previewAuditFiles() {
+    if (state.audits.loading || state.audits.files.length === 0) return;
+    state.audits.loading = true; render();
+    try {
+      const files = [];
+      for (const file of state.audits.files) {
+        if (file.size < 1 || file.size > 1048576) throw new Error('Each distillate must be between 1 byte and 1 MiB.');
+        files.push({ filename: file.name, size: file.size, contentBase64: await fileBase64(file) });
+      }
+      const data = await requestJson('/api/v2/audits/preview', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ files }),
+      });
+      state.audits.preview = data.audit; state.audits.recoveryDigest = data.audit.auditDigest; persistRouteState();
+      setGlobalMessage('success', 'Audit preview complete. Suppressed evidence remains hidden.');
+    } catch (error) { setGlobalMessage('error', error && error.message ? error.message : 'Audit preview failed.'); }
+    finally { state.audits.loading = false; render(); }
+  }
+
+  async function mutateAudit(action) {
+    const audit = state.audits.preview;
+    if (!audit || state.audits.submitting) return;
+    state.audits.submitting = true; render();
+    try {
+      const data = await requestJson(`/api/v2/audits/${action}`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ auditDigest: audit.auditDigest, previewDigest: audit.previewDigest, expectedRevision: action === 'apply' ? 0 : 1 }),
+      });
+      state.audits.preview = data.audit; persistRouteState();
+      setGlobalMessage('success', action === 'close' ? 'Audit closed and temporary dump deletion verified.' : 'Approved aggregate cases applied. Close the audit to delete its temporary dump.');
+      render(); mainPanel.focus();
+    } catch (error) { setGlobalMessage('error', error && error.message ? error.message : `Audit ${action} failed.`); }
+    finally { state.audits.submitting = false; render(); }
+  }
+
+  async function recoverAuditPreview() {
+    if (!state.audits.recoveryDigest || state.audits.preview) return;
+    try {
+      const data = await requestJson(`/api/v2/audits/${encodeURIComponent(state.audits.recoveryDigest)}`);
+      state.audits.preview = data.audit;
+    } catch {
+      // A restarted process requires the same files to be selected again.
+    }
+  }
+
+  async function loadAdmissions(renderNow) {
+    state.admission.loading = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson('/api/v2/admissions');
+      state.readOnly = state.readOnly || data.readOnly === true;
+      state.admission.items = data && Array.isArray(data.admissions) ? data.admissions : [];
+      if (!state.admission.items.some((entry) => entry.reviewId === state.admission.selectedReviewId)) {
+        state.admission.selectedReviewId = state.admission.items[0] ? state.admission.items[0].reviewId : null;
+        state.admission.detail = null;
+        state.admission.decisions = Object.create(null);
+      }
+      if (state.admission.selectedReviewId) await loadAdmissionDetail(false);
+    } catch (error) {
+      state.admission.items = [];
+      state.admission.detail = null;
+      if (!(error && error.status === 503)) setGlobalMessage('warn', error && error.message ? error.message : 'Admission evidence could not be loaded.');
+    } finally { state.admission.loading = false; render(); }
+  }
+
+  async function loadAdmissionDetail(renderNow) {
+    const reviewId = state.admission.selectedReviewId;
+    if (!reviewId) return;
+    state.admission.loading = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson(`/api/v2/admissions/${encodeURIComponent(reviewId)}`);
+      state.admission.detail = data.admission || null;
+      state.readOnly = state.readOnly || data.readOnly === true || Boolean(data.admission && data.admission.readOnly);
+    } catch (error) {
+      state.admission.detail = null;
+      setGlobalMessage('warn', error && error.message ? error.message : 'Admission preview could not be loaded.');
+    } finally { state.admission.loading = false; if (renderNow !== false) render(); }
+  }
+
+  async function submitAdmission() {
+    const admission = state.admission.detail;
+    if (!admission || !admission.preview || !state.admission.selectedReviewId || state.admission.submitting) return;
+    state.admission.submitting = true; render();
+    try {
+      const decisions = safeArray(admission.preview.decisions).map((slot) => {
+        const decision = state.admission.decisions[slot.slotId] || {};
+        const base = { slotId: slot.slotId, rationale: String(decision.rationale || '').trim() };
+        return slot.kind === 'probe-baseline'
+          ? { ...base, probeRationales: safeArray(slot.probes).map((probe) => ({ probeId: probe.probeId, rationale: String((decision.probes || {})[probe.probeId] || '').trim() })) }
+          : base;
+      });
+      const data = await requestJson(`/api/v2/admissions/${encodeURIComponent(state.admission.selectedReviewId)}/admit`, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ previewDigest: admission.preview.digest, decisions }),
+      });
+      state.admission.detail = data.admission;
+      state.admission.decisions = Object.create(null);
+      await loadPublish(false);
+      setGlobalMessage('success', 'Admission recorded after final isolated verification.');
+      mainPanel.focus();
+    } catch (error) { setGlobalMessage('error', error && error.message ? error.message : 'Admission was not completed.'); }
+    finally { state.admission.submitting = false; render(); }
+  }
+
+  async function loadPublish(renderNow) {
+    state.publish.loading = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson('/api/v2/publish');
+      state.readOnly = state.readOnly || data.readOnly === true;
+      state.publish.items = data && Array.isArray(data.admissions) ? data.admissions : [];
+      if (!state.publish.items.some((entry) => entry.reviewId === state.publish.selectedReviewId)) {
+        state.publish.selectedReviewId = state.publish.items[0] ? state.publish.items[0].reviewId : null;
+        state.publish.detail = null;
+      }
+      if (state.publish.selectedReviewId) await loadPublishDetail(false);
+    } catch (error) {
+      state.publish.items = [];
+      state.publish.detail = null;
+      if (!(error && error.status === 503)) setGlobalMessage('warn', error && error.message ? error.message : 'Publish preflight could not be loaded.');
+    } finally { state.publish.loading = false; render(); }
+  }
+
+  async function loadPublishDetail(renderNow) {
+    const reviewId = state.publish.selectedReviewId;
+    if (!reviewId) return;
+    state.publish.loading = true;
+    if (renderNow !== false) render();
+    try {
+      const data = await requestJson(`/api/v2/publish/${encodeURIComponent(reviewId)}/preflight`);
+      state.publish.detail = data.publish || null;
+      state.readOnly = state.readOnly || data.readOnly === true;
+    } catch (error) {
+      state.publish.detail = null;
+      setGlobalMessage('warn', error && error.message ? error.message : 'Publish preflight could not be loaded.');
+    } finally { state.publish.loading = false; if (renderNow !== false) render(); }
+  }
+
+  async function submitPublish() {
+    const publish = state.publish.detail;
+    if (!publish || !publish.preflight || !state.publish.selectedReviewId || state.publish.submitting) return;
+    state.publish.submitting = true; render();
+    try {
+      const data = await requestJson(`/api/v2/publish/${encodeURIComponent(state.publish.selectedReviewId)}/prepare`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ admissionDigest: publish.preflight.admissionDigest, push: state.publish.push, openDraftPr: state.publish.openDraftPr }),
+      });
+      state.publish.result = data.publication || null;
+      await loadPublishDetail(false);
+      setGlobalMessage('success', 'Isolated branch preparation completed.');
+      mainPanel.focus();
+    } catch (error) { setGlobalMessage('error', error && error.message ? error.message : 'Branch preparation was not completed.'); }
+    finally { state.publish.submitting = false; render(); }
+  }
+
+  function acceptComparisonSession(session) {
+    state.comparison.session = session;
+    const queries = session && Array.isArray(session.queries) ? session.queries : [];
+    if (!queries.some((entry) => entry.queryId === state.comparison.selectedQueryId)) {
+      const firstOpen = queries.find((entry) => !entry.judgment);
+      state.comparison.selectedQueryId = (firstOpen || queries[0] || {}).queryId || null;
+      state.comparison.selectedPassageId = null;
+    }
+    const review = state.comparison.reviews.find((entry) => entry.reviewId === state.comparison.selectedReviewId);
+    if (review && session && session.progress) {
+      review.reviewedCount = session.progress.reviewed;
+      review.status = session.progress.complete ? 'complete' : 'in-progress';
+    }
+    persistRouteState();
+  }
+
+  async function startBlindReview() {
+    const reviewId = state.comparison.selectedReviewId;
+    if (!reviewId || state.comparison.submitting) return;
+    state.comparison.submitting = true;
+    render();
+    try {
+      const data = await requestJson(`/api/v2/candidates/${encodeURIComponent(reviewId)}/blind-sessions`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ requestId: comparisonRequestId('start') }),
+      });
+      acceptComparisonSession(data.session);
+      setGlobalMessage('', 'Blind comparison is ready.');
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Blind comparison could not be started.');
+    } finally {
+      state.comparison.submitting = false;
+      render();
+    }
+  }
+
+  async function loadBlindPassageContext(passageId) {
+    const reviewId = state.comparison.selectedReviewId;
+    const session = state.comparison.session;
+    const query = selectedComparisonQuery();
+    if (!reviewId || !session || !query || !passageId) return;
+    const existing = state.comparison.passageContexts[passageId];
+    if (existing && (existing.loading || existing.data)) return;
+    state.comparison.passageContexts[passageId] = { loading: true, data: null, error: '' };
+    render();
+    try {
+      const data = await requestJson(
+        `/api/v2/candidates/${encodeURIComponent(reviewId)}/blind-sessions/${encodeURIComponent(session.sessionId)}/passages?queryId=${encodeURIComponent(query.queryId)}&passageId=${encodeURIComponent(passageId)}`,
+      );
+      if (state.comparison.session && state.comparison.session.sessionId === session.sessionId) {
+        state.comparison.passageContexts[passageId] = { loading: false, data, error: '' };
+      }
+    } catch (error) {
+      state.comparison.passageContexts[passageId] = {
+        loading: false,
+        data: null,
+        error: error && typeof error.message === 'string' ? error.message : 'Passage context is unavailable.',
+      };
+    } finally {
+      render();
+    }
+  }
+
+  async function submitBlindChoice(queryId, choice) {
+    const reviewId = state.comparison.selectedReviewId;
+    const session = state.comparison.session;
+    if (!reviewId || !session || state.comparison.submitting) return;
+    state.comparison.submitting = true;
+    render();
+    try {
+      const data = await requestJson(`/api/v2/candidates/${encodeURIComponent(reviewId)}/blind-sessions/${encodeURIComponent(session.sessionId)}/judgments`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          requestId: comparisonRequestId('judgment'),
+          revision: session.revision,
+          stateDigest: session.stateDigest,
+          queryId,
+          choice,
+        }),
+      });
+      acceptComparisonSession(data.session);
+      state.comparison.selectedQueryId = queryId;
+      setGlobalMessage('success', 'Blind judgment persisted. Identities are now revealed for this query.');
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Blind judgment could not be saved.');
+    } finally {
+      state.comparison.submitting = false;
+      render();
+      const heading = document.getElementById(`blind-query-${queryId}`);
+      if (heading) heading.focus();
+    }
+  }
+
+  async function submitComparisonMissing(queryId) {
+    const reviewId = state.comparison.selectedReviewId;
+    const session = state.comparison.session;
+    const reference = state.comparison.missingReference.trim();
+    const note = state.comparison.missingNote.trim();
+    if (!reviewId || !session || state.comparison.submitting) return;
+    if (!reference) {
+      setGlobalMessage('warn', 'A missing passage reference is required.');
+      return;
+    }
+    state.comparison.submitting = true;
+    render();
+    try {
+      const data = await requestJson(`/api/v2/candidates/${encodeURIComponent(reviewId)}/blind-sessions/${encodeURIComponent(session.sessionId)}/missing-passages`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          requestId: comparisonRequestId('missing'),
+          revision: session.revision,
+          stateDigest: session.stateDigest,
+          queryId,
+          reference,
+          ...(note ? { note } : {}),
+        }),
+      });
+      acceptComparisonSession(data.session);
+      state.comparison.missingReference = '';
+      state.comparison.missingNote = '';
+      state.comparison.missingOpen = false;
+      setGlobalMessage('success', 'Missing passage saved separately. A blind preference is still required.');
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Missing passage could not be saved.');
+    } finally {
+      state.comparison.submitting = false;
+      render();
+    }
+  }
+
+  async function loadSelectedCaseData(renderNow) {
+    if (!state.selectedCaseId) {
+      state.caseDetail = null;
+      state.judgments = [];
+      render();
+      return;
+    }
+    const caseId = state.selectedCaseId;
+    const serial = ++state.requests.caseSerial;
+    state.loading.review = true;
+    state.loading.history = true;
+    if (renderNow !== false) render();
+    try {
+      const [detail, history] = await Promise.all([
+        requestJson(`/api/v2/cases/${encodeURIComponent(caseId)}`),
+        requestJson(`/api/v2/judgments?caseId=${encodeURIComponent(caseId)}`),
+      ]);
+      if (serial !== state.requests.caseSerial || state.selectedCaseId !== caseId) return;
+      state.caseDetail = detail;
+      state.judgments = history && Array.isArray(history.judgments) ? history.judgments : [];
+      if (detail && detail.case && !state.cases.some((entry) => entry.caseId === detail.case.caseId)) {
+        state.cases = sortCases([...state.cases, detail.case]);
+      }
+    } catch (error) {
+      if (serial !== state.requests.caseSerial || state.selectedCaseId !== caseId) return;
+      state.caseDetail = null;
+      state.judgments = [];
+      setGlobalMessage('warn', error && typeof error.message === 'string' ? error.message : 'Case review could not be loaded.');
+    } finally {
+      if (serial !== state.requests.caseSerial || state.selectedCaseId !== caseId) return;
+      state.loading.review = false;
+      state.loading.history = false;
+      render();
+    }
+  }
+
+  async function refreshAll() {
+    setGlobalMessage('', 'Refreshing workbench data.');
+    await loadCases(false);
+    await Promise.all([
+      loadHealth(),
+      loadInbox(false),
+      loadComparisonReviews(false),
+      loadSelectedCaseData(false),
+      restoreSavedJob(),
+    ]);
+    if (state.view === 'sessions') await loadSessions(false);
+    else if (state.view === 'quality') await loadQuality(false);
+    else if (state.view === 'audits') await recoverAuditPreview();
+    else if (state.view === 'admission') await loadAdmissions(false);
+    else if (state.view === 'publish') await loadPublish(false);
+    setGlobalMessage('success', 'Workbench refreshed.');
+  }
+
+  let jobEventSource = null;
+  let jobPollTimer = null;
+
+  function stopJobWatch() {
+    if (jobEventSource) {
+      jobEventSource.close();
+      jobEventSource = null;
+    }
+    if (jobPollTimer !== null) {
+      window.clearInterval(jobPollTimer);
+      jobPollTimer = null;
+    }
+    state.changes.polling = false;
+  }
+
+  function updateJob(job) {
+    if (!job || typeof job.runId !== 'string') return;
+    state.changes.job = job;
+    persistRouteState();
+    if (jobIsFinished(job)) stopJobWatch();
+    render();
+  }
+
+  async function pollJob(runId) {
+    try {
+      const data = await requestJson(`/api/v2/jobs/${encodeURIComponent(runId)}`);
+      if (data && data.job) updateJob(data.job);
+    } catch (error) {
+      if (error && error.status === 404 && state.changes.job && state.changes.job.runId === runId) {
+        state.changes.job = null;
+        persistRouteState();
+        stopJobWatch();
+        render();
+      }
+    }
+  }
+
+  function watchJob(runId) {
+    stopJobWatch();
+    state.changes.polling = true;
+    void pollJob(runId);
+    if (typeof window.EventSource === 'function') {
+      jobEventSource = new EventSource(`/api/v2/jobs/${encodeURIComponent(runId)}/events`);
+      jobEventSource.addEventListener('status', (event) => {
+        try {
+          updateJob(JSON.parse(event.data));
+        } catch {
+          // Polling remains the recovery path for malformed event data.
+        }
+      });
+      jobEventSource.onerror = () => {
+        if (jobEventSource) {
+          jobEventSource.close();
+          jobEventSource = null;
+        }
+      };
+    }
+    jobPollTimer = window.setInterval(() => { void pollJob(runId); }, 1000);
+  }
+
+  async function loadCompilePreview() {
+    state.changes.loadingPreview = true;
+    render();
+    try {
+      const data = await requestJson('/api/v2/compile/preview', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: '{}',
+      });
+      state.changes.compilePlan = data && data.plan ? data.plan : null;
+      state.changes.compileConfirmation = '';
+      state.changes.promotionPlans = Object.create(null);
+      state.changes.selectedPromotionId = null;
+      state.changes.promotionConfirmation = '';
+      setGlobalMessage('success', 'Fixture preview is ready for review.');
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Fixture preview could not be created.');
+    } finally {
+      state.changes.loadingPreview = false;
+      persistRouteState();
+      render();
+    }
+  }
+
+  async function applyCompilePreview() {
+    const plan = state.changes.compilePlan;
+    if (!plan || state.changes.compileConfirmation !== plan.digest) return;
+    state.changes.applying = true;
+    render();
+    try {
+      await requestJson('/api/v2/compile/apply', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ digest: plan.digest }),
+      });
+      state.changes.compileConfirmation = '';
+      state.changes.promotionPlans = Object.create(null);
+      setGlobalMessage('success', 'Fixture changes were applied. Create a fresh preview before promotion or another apply.');
+      await loadHealth();
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Fixture changes could not be applied.');
+    } finally {
+      state.changes.applying = false;
+      persistRouteState();
+      render();
+    }
+  }
+
+  async function loadPromotionPreview(fixtureId) {
+    state.changes.loadingPromotionId = fixtureId;
+    state.changes.selectedPromotionId = fixtureId;
+    state.changes.promotionConfirmation = '';
+    render();
+    try {
+      const data = await requestJson(`/api/v2/fixtures/${encodeURIComponent(fixtureId)}/promotion/preview`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: '{}',
+      });
+      state.changes.promotionPlans[fixtureId] = data && data.plan ? data.plan : null;
+      setGlobalMessage('success', `Promotion preview for ${fixtureId} is ready for review.`);
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Promotion preview could not be created.');
+    } finally {
+      state.changes.loadingPromotionId = null;
+      persistRouteState();
+      render();
+    }
+  }
+
+  async function applyPromotion(fixtureId) {
+    const plan = state.changes.promotionPlans[fixtureId];
+    if (!plan || state.changes.selectedPromotionId !== fixtureId || state.changes.promotionConfirmation !== plan.digest) return;
+    state.changes.applyingPromotionId = fixtureId;
+    render();
+    try {
+      await requestJson(`/api/v2/fixtures/${encodeURIComponent(fixtureId)}/promotion/apply`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ digest: plan.digest }),
+      });
+      state.changes.compilePlan = null;
+      state.changes.promotionPlans = Object.create(null);
+      state.changes.selectedPromotionId = null;
+      state.changes.promotionConfirmation = '';
+      setGlobalMessage('success', `${fixtureId} is active. Create a fresh fixture preview for the current state.`);
+      await loadHealth();
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Fixture promotion could not be applied.');
+    } finally {
+      state.changes.applyingPromotionId = null;
+      persistRouteState();
+      render();
+    }
+  }
+
+  async function startCheck(jobId) {
+    if (state.changes.job && !jobIsFinished(state.changes.job)) return;
+    try {
+      const data = await requestJson('/api/v2/checks', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ jobId }),
+      });
+      if (!data || !data.job) throw new Error('The check did not return a job record.');
+      updateJob(data.job);
+      watchJob(data.job.runId);
+      setGlobalMessage('', `${jobId} check started.`);
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Check could not be started.');
+      render();
+    }
+  }
+
+  async function cancelCheck(runId) {
+    try {
+      const data = await requestJson(`/api/v2/jobs/${encodeURIComponent(runId)}/cancel`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: '{}',
+      });
+      if (data && data.job) updateJob(data.job);
+      setGlobalMessage('warn', 'Check cancellation was requested.');
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Check could not be cancelled.');
+      render();
+    }
+  }
+
+  async function restoreSavedJob() {
+    const job = state.changes.job;
+    if (!job || typeof job.runId !== 'string') return;
+    await pollJob(job.runId);
+    if (state.changes.job && !jobIsFinished(state.changes.job)) watchJob(job.runId);
+  }
+
+  async function submitJudgment(payload, successMessage) {
+    try {
+      const clean = {};
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] !== undefined && payload[key] !== '') clean[key] = payload[key];
+      });
+      await requestJson('/api/v2/judgments', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(clean),
+      });
+      setGlobalMessage('success', successMessage);
+      if (clean.action === 'missing') {
+        state.drafts.missing.reference = '';
+        state.drafts.missing.note = '';
+      }
+      if (clean.action === 'prefer') {
+        state.drafts.preferredTargetId = null;
+        state.drafts.pairNote = '';
+      }
+      if (clean.action === 'irrelevant' && typeof clean.targetId === 'string') {
+        const resultDraft = state.drafts.results[clean.targetId];
+        if (resultDraft) resultDraft.interview = null;
+      }
+      await Promise.all([loadCases(false), loadSelectedCaseData(false)]);
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Judgment could not be saved.');
+      render();
+    }
+  }
+
+  async function transitionCase(caseId, nextState, successMessage) {
+    try {
+      await requestJson(`/api/v2/cases/${encodeURIComponent(caseId)}/state`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ state: nextState }),
+      });
+      setGlobalMessage('success', successMessage);
+      await Promise.all([loadCases(false), loadSelectedCaseData(false), loadInbox(false)]);
+    } catch (error) {
+      setGlobalMessage('error', error && typeof error.message === 'string' ? error.message : 'Case state could not be updated.');
+      render();
+    }
+  }
+
+  async function createCase(query, source) {
+    createCaseSubmit.disabled = true;
+    setInlineMessage(createCaseMessage, '', 'Creating case.');
+    try {
+      const data = await requestJson('/api/v2/cases', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ query, source }),
+      });
+      setInlineMessage(createCaseMessage, 'success', 'Case created.');
+      newCaseQuery.value = '';
+      state.drafts.preferredTargetId = null;
+      state.caseDetail = null;
+      state.judgments = [];
+      state.selectedCaseId = data.case.caseId;
+      state.view = 'review';
+      persistRouteState();
+      await Promise.all([loadCases(false), loadInbox(false), loadSelectedCaseData(false)]);
+      render();
+      mainPanel.focus();
+    } catch (error) {
+      setInlineMessage(createCaseMessage, 'error', error && typeof error.message === 'string' ? error.message : 'Case could not be created.');
+    } finally {
+      createCaseSubmit.disabled = false;
+    }
+  }
+
+  function selectCase(caseId, nextView) {
+    state.selectedCaseId = caseId;
+    state.view = nextView || state.view;
+    state.caseDetail = null;
+    state.judgments = [];
+    state.drafts.preferredTargetId = null;
+    state.drafts.pairNote = '';
+    persistRouteState();
+    void loadSelectedCaseData();
+    render();
+  }
+
+  function wireStaticControls() {
+    clear(newCaseSource);
+    CASE_SOURCES.forEach((source) => {
+      const option = document.createElement('option');
+      option.value = source;
+      option.textContent = escapeCaseSourceLabel(source);
+      if (source === 'manual') option.selected = true;
+      newCaseSource.appendChild(option);
+    });
+
+    refreshAllButton.addEventListener('click', () => {
+      void refreshAll();
+    });
+    reloadCasesButton.addEventListener('click', () => {
+      void loadCases();
+    });
+    createCaseForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const query = newCaseQuery.value.trim();
+      const source = newCaseSource.value;
+      if (!query) {
+        setInlineMessage(createCaseMessage, 'warn', 'Query is required.');
+        return;
+      }
+      void createCase(query, source);
+    });
+  }
+
+  async function boot() {
+    loadStoredRouteState();
+    if (state.view === 'sessions') state.sessions.loading = true;
+    if (state.view === 'quality') state.quality.loading = true;
+    if (state.view === 'admission') state.admission.loading = true;
+    if (state.view === 'publish') state.publish.loading = true;
+    wireStaticControls();
+    render();
+    await loadCases(false);
+    if (!state.selectedCaseId && state.cases[0]) state.selectedCaseId = state.cases[0].caseId;
+    persistRouteState();
+    await Promise.all([
+      loadHealth(),
+      loadInbox(false),
+      loadComparisonReviews(false),
+      loadSelectedCaseData(false),
+      loadConceptLabels(),
+    ]);
+    if (state.view === 'sessions') await loadSessions(false);
+    else if (state.view === 'quality') await loadQuality(false);
+    else if (state.view === 'audits') await recoverAuditPreview();
+    else if (state.view === 'admission') await loadAdmissions(false);
+    else if (state.view === 'publish') await loadPublish(false);
+    setGlobalMessage('success', 'Workbench ready.');
+    render();
+  }
+
+  void boot();
+})();
+</script>
+</body>
+</html>

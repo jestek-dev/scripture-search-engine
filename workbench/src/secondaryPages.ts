@@ -6,17 +6,18 @@ import { resolveStaticSnapshot, type StaticAsset } from './staticSnapshot.js';
 /**
  * Secondary static pages / redirects — the first of the two additive static
  * mechanisms (implementation plan §4.2(1)). The snapshot machinery serves
- * only `/`; during the transition the new Study page lives at `/study` and
- * the preserved old console will live at `/advanced`, so this fixed table
- * maps extra routes to either a file (validated with the same
- * `resolveStaticSnapshot` machinery, read once at startup, held in memory)
- * or a redirect. A missing or invalid secondary file 404s its route and is
- * deliberately NOT a startup issue — only `/` participates in preflight.
+ * only `/`; since the flip (D41) the Study page IS `/` (static/index.html),
+ * the preserved old console lives at `/advanced`, and `/study` answers a
+ * 302 → `/` so old bookmarks land on the new default. File entries are
+ * validated with the same `resolveStaticSnapshot` machinery, read once at
+ * startup and held in memory. A missing or invalid secondary file 404s its
+ * route and is deliberately NOT a startup issue — only `/` participates in
+ * preflight.
  */
 export type SecondaryPageEntry = string | { readonly redirect: string };
 
 export const SECONDARY_PAGES: Readonly<Record<string, SecondaryPageEntry>> = {
-  '/study': 'static/study.html',
+  '/study': { redirect: '/' },
   '/advanced': 'static/advanced.html',
 };
 

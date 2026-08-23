@@ -86,36 +86,40 @@ describe('secondary page table resolution', () => {
 });
 
 describe('degraded-mode static serving', () => {
-  it('serves /study, fonts, and the untouched old page while startup is degraded', async () => {
+  it('serves the flipped routes and fonts while startup is degraded: / = the Study, /advanced = the old console, /study = 302', async () => {
     const port = await unusedPort();
     await startDegradedServer(port);
     const origin = `http://127.0.0.1:${port}`;
 
     // Startup IS degraded (missing artifact database) — the routes below
-    // must serve anyway — and no diagnostic mentions the secondary pages:
-    // the absent advanced.html is not a startup issue.
+    // must serve anyway — and no diagnostic mentions the secondary pages.
     const health = (await (await fetch(`${origin}/api/v2/health`)).json()) as {
       readonly data: { readonly startup: { readonly degraded: boolean; readonly diagnostics: readonly string[] } };
     };
     expect(health.data.startup.degraded).toBe(true);
     expect(health.data.startup.diagnostics.join(' ')).not.toContain('advanced');
 
-    // D4: /study serves the committed page with etag + nosniff.
-    const study = await fetch(`${origin}/study`);
-    expect(study.status).toBe(200);
-    expect(study.headers.get('content-type')).toBe('text/html; charset=utf-8');
-    expect(study.headers.get('etag')).toMatch(/^"[0-9a-f]{64}"$/);
-    expect(study.headers.get('x-content-type-options')).toBe('nosniff');
-    expect(await study.text()).toContain('The Study');
+    // D41: /study answers 302 → / (old bookmarks land on the new default).
+    const study = await fetch(`${origin}/study`, { redirect: 'manual' });
+    expect(study.status).toBe(302);
+    expect(study.headers.get('location')).toBe('/');
 
-    // D4: /advanced 404s while no file exists.
-    expect((await fetch(`${origin}/advanced`)).status).toBe(404);
+    // D41: /advanced serves the preserved old console byte-identically,
+    // with etag + nosniff.
+    const advanced = await fetch(`${origin}/advanced`);
+    expect(advanced.status).toBe(200);
+    expect(advanced.headers.get('content-type')).toBe('text/html; charset=utf-8');
+    expect(advanced.headers.get('etag')).toMatch(/^"[0-9a-f]{64}"$/);
+    expect(advanced.headers.get('x-content-type-options')).toBe('nosniff');
+    const advancedBytes = Buffer.from(await advanced.arrayBuffer());
+    expect(advancedBytes.equals(readFileSync(new URL('../static/advanced.html', import.meta.url)))).toBe(true);
 
-    // D4: `/` still serves the old page byte-identically.
-    const oldPage = await fetch(`${origin}/`);
-    expect(oldPage.status).toBe(200);
-    const oldPageBytes = Buffer.from(await oldPage.arrayBuffer());
-    expect(oldPageBytes.equals(readFileSync(new URL('../static/index.html', import.meta.url)))).toBe(true);
+    // D41: `/` serves the Study page (static/index.html) byte-identically.
+    const defaultPage = await fetch(`${origin}/`);
+    expect(defaultPage.status).toBe(200);
+    const defaultBytes = Buffer.from(await defaultPage.arrayBuffer());
+    expect(defaultBytes.equals(readFileSync(new URL('../static/index.html', import.meta.url)))).toBe(true);
+    expect(defaultBytes.toString('utf8')).toContain('The Study');
 
     // D3: a known font serves with the woff2 content type, etag, nosniff.
     const font = await fetch(`${origin}/fonts/literata/Literata-Variable.woff2`);
