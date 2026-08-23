@@ -1,0 +1,43 @@
+{
+  "id": "providence",
+  "query": "god is in control",
+  "additionalQueries": [
+    "gods sovereignty",
+    "is god in control of everything",
+    "providence"
+  ],
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (cluster draft, 2026-08-22). Fixtures-first for the",
+    "new providence concept; PENDING until the pack lands, then flip active in",
+    "the same PR (pending fixtures do not count for G3 coverage).",
+    "",
+    "Primary assert Psalms 33:10-11: 'The counsel of the LORD stands fast",
+    "forever' — the WEB text contains neither 'control' nor 'sovereignty', so",
+    "no lexical rung reaches it for these queries; only the curated anchor",
+    "can, which is what requiredReasonFamily: concept_anchor asserts.",
+    "",
+    "This is the sovereignty register, deliberately distinct from",
+    "gods-provision (needs met) and from remembered-all-things-for-good",
+    "(Rom 8:28 verse-memory) — see the pack header. Rom 8:28 ranking for",
+    "'gods sovereignty' would be honest and is not forbidden; it is simply",
+    "not asserted here."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 33:10-11",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's providence"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 103:19",
+    "Lamentations 3:37-38",
+    "Acts 17:26-28"
+  ],
+  "coversConcepts": [
+    "providence"
+  ]
+}

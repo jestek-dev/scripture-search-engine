@@ -1,0 +1,26 @@
+{
+  "id": "testing-boundary-trials",
+  "query": "trials of many kinds",
+  "status": "active",
+  "note": [
+    "BOUNDARY-GUARD FIXTURE (14-concept batch, drafted 2026-08-22). The",
+    "`testing` pack was designed to leave the trials/joy phrasings with",
+    "remembered-joy-in-trials (its lexicon speaks no 'trial' or 'joy'",
+    "token). This fixture pins that boundary: the memorised NIV phrasing",
+    "still resolves to James 1:2-4 with the Joy-in-trials reason, and the",
+    "new pack's eleven anchors do not crowd it out of the top.",
+    "",
+    "Deliberately NOT declaring coversConcepts — remembered-joy-in-trials",
+    "is already covered by its own active fixture; this one exists to fail",
+    "loudly if a future testing-lexicon edit reaches across the boundary."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 1:2-4",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Joy in trials"
+    }
+  ],
+  "expectedWithinTop": 10
+}

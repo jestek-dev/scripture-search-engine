@@ -1,0 +1,142 @@
+# GENESIS-PILOT PACK (14-concept batch, drafted 2026-08-22) — "God testing
+# his people." The pilot found "why does God test us" queries have no target;
+# Gen 22:1 ("God tested Abraham") is the explicit namesake text.
+#
+# BOUNDARY DESIGN — three neighbors own adjacent registers and this lexicon
+# deliberately speaks none of their vocabulary:
+#   - remembered-joy-in-trials owns the trials/joy phrasings ("consider it
+#     pure joy", "trials of many kinds", bare "patience"/"perseverance").
+#     No "trial(s)" or "joy" token here. James 1:2-4 stays its anchor; the
+#     boundary fixture (testing-boundary-trials.json) proves "trials of many
+#     kinds" is not hijacked.
+#   - remembered-a-way-of-escape owns temptation ("tempted beyond what you
+#     can bear", bare "temptation"/"tempted"). No "tempt" token here —
+#     Scripture itself splits the senses (Jas 1:13: God tests, never tempts),
+#     and so do the packs.
+#   - the-lords-discipline owns chastening ("gods discipline", "chastening").
+#     Testing proves; discipline corrects. Cross-linked via related:.
+#   Hand-computed G4 ratios vs all three (and the full 108-concept ontology):
+#   worst shared-token ratio 0.25 (vs faith: {god, faith}), shared phrases 0.
+#
+# The spine is the refining metaphor — the one register no concept carries:
+# "tested by fire", "refined", "the refiner's fire" (1 Pet 1:7; Zech 13:9;
+# Mal 3:2-3; Ps 66:10; Prov 17:3; Job 23:10 — Torrey files them under
+# AFFLICTIONS MADE BENEFICIAL, "In testing and exhibiting our sincerity" /
+# "In trying our faith and obedience" / "In purifying us").
+#
+# No theology scores: the pack reports that Torrey/LH editorial name these
+# passages for God-tests-his-people; it never adjudicates why God tests.
+id: testing
+label: God tests his people
+lexicon:
+  - god tested abraham
+  - why does god test us
+  - god is testing me
+  # Verbatim in WEB Jas 1:3 and the subject of 1 Pet 1:7 ("the proof of your
+  # faith... tested by fire"). Shares only the token "faith" with the faith
+  # concept (1 shared token, ratio 0.25 — well under the 0.6 limit) and
+  # NOTHING with remembered-joy-in-trials' phrasings; Jas 1:2-4 still ranks
+  # for it lexically and via its own pack (see boundary fixture).
+  - testing of your faith
+  - tested by fire
+  - refined by fire
+  # Bare single-token entry, deliberate (NEEDS-JESSE §1.6d option-3
+  # precedent; one-token specificity discount 0.55 keeps the claim humble).
+  # "refining" is distinctive vocabulary no other concept speaks; "God is
+  # refining me" is a live search register. Bare "test"/"testing" are
+  # deliberately NOT admitted (see lexicon-inventory row proposal in the
+  # draft notes: too many non-devotional senses).
+  - refining
+  - the refiners fire
+anchors:
+  # "After these things, God tested Abraham" (WEB 22:1 wording from
+  # knowledge — Genesis 22 NOT in pipeline/fixtures/web-subset.json; see
+  # corpus-needs note). The narrative the concept is named for, through the
+  # provision of the ram (v14). Torrey AFFLICTIONS MADE BENEFICIAL "In
+  # trying our faith and obedience" lists Gen 22:1 and 22:2; editorial for
+  # the range. The Genesis pilot tags 22:8,13-14 for gods-provision and
+  # 22:3-8 for trust-in-god — overlapping claims on this chapter are honest
+  # and legal (the duplicate-anchor guard is per-concept).
+  - ref: Genesis 22:1-14
+    sources: [editorial]
+    weight: 1.0
+  # "the proof of your faith, which is more precious than gold that
+  # perishes, even though it is tested by fire" (WEB). Torrey TEMPTATION
+  # lists 1 Pet 1:7 ("Permitted as a trial of Faith") and 1:6 ("Saints may
+  # be in heaviness through") — both verses in the verified outline.
+  # IN corpus — this pack's G3 assert. NOTE: suffering-for-christ also
+  # anchors 1 Pet 1:6-7 (fiery-trial persecution register); dual claim is
+  # honest — the passage is both. For test-vocabulary queries only this
+  # concept fires, so the reason chip stays truthful.
+  - ref: 1 Peter 1:6-7
+    sources: [torrey]
+    weight: 0.95
+  # "that he might humble you, to test you, to know what was in your heart,
+  # whether you would keep his commandments or not" (WEB from knowledge —
+  # Deut 8 NOT in web-subset). Torrey AFFLICTIONS MADE BENEFICIAL lists
+  # Deut 8:2 ("In trying our faith and obedience") and 8:3 ("In humbling
+  # us") — adjacent outline refs, Isaiah 1:19-20 precedent.
+  - ref: Deuteronomy 8:2-3
+    sources: [torrey]
+    weight: 0.85
+  # "By faith, Abraham, being tested, offered up Isaac" (WEB). The NT's own
+  # reading of Gen 22. Torrey AFFLICTIONS MADE BENEFICIAL "In trying our
+  # faith and obedience :: Hebrews 11:17". IN corpus.
+  - ref: Hebrews 11:17
+    sources: [torrey]
+    weight: 0.85
+  # "For you, God, have tested us. You have refined us, as silver is
+  # refined" (WEB from knowledge — Psalm 66 NOT in web-subset). Torrey
+  # "In testing and exhibiting our sincerity :: Psalms 66:10".
+  - ref: Psalms 66:10
+    sources: [torrey]
+    weight: 0.8
+  # "Have you considered my servant Job?" — the testing of Job framed by
+  # God's own commendation. Torrey TEMPTATION "Permitted as a trial of
+  # Disinterestedness :: Job 1:9-12"; editorial for the range (v8 opens the
+  # exchange the outline's refs answer). IN corpus. Job 1:21 belongs to
+  # surrender-to-god; this row claims the heavenly-court frame, not the
+  # response.
+  - ref: Job 1:8-12
+    sources: [editorial]
+    weight: 0.75
+  # "I will bring the third part into the fire, and will refine them as
+  # silver is refined, and will test them like gold is tested" (WEB). Torrey
+  # AFFLICTIONS MADE BENEFICIAL "In purifying us :: Zechariah 13:9".
+  # IN corpus — carries the refining fixture.
+  - ref: Zechariah 13:9
+    sources: [torrey]
+    weight: 0.75
+  # "he is like a refiner's fire... he will sit as a refiner and purifier of
+  # silver" (WEB). Torrey "In purifying us :: Malachi 3:2, Malachi 3:3".
+  # IN corpus. Watchlisted Mal 3:10 sits later in the chapter and stays
+  # with tithing; this pack speaks no materialFrameKeyword, so the G4
+  # pairing scan is out of scope here anyway.
+  - ref: Malachi 3:2-3
+    sources: [torrey]
+    weight: 0.7
+  # "The refining pot is for silver, and the furnace for gold, but the LORD
+  # tests the hearts" (WEB from knowledge — Proverbs 17 NOT in web-subset).
+  # Torrey "In testing and exhibiting our sincerity :: Proverbs 17:3".
+  - ref: Proverbs 17:3
+    sources: [torrey]
+    weight: 0.7
+  # "But he knows the way that I take. When he has tried me, I will come
+  # out like gold" (WEB from knowledge — Job 23 NOT in web-subset). Torrey
+  # "In testing and exhibiting our sincerity :: Job 23:10". The sufferer's
+  # own confession of the refining frame.
+  - ref: Job 23:10
+    sources: [torrey]
+    weight: 0.65
+  # "that I may test them, whether they will walk in my law or not" (WEB
+  # from knowledge — Exodus 16 NOT in web-subset). Daily manna as daily
+  # test — the ordinary-provision register of testing, next to Moriah's
+  # extraordinary one. Not in the Torrey outlines; editorial.
+  - ref: Exodus 16:4
+    sources: [editorial]
+    weight: 0.6
+related:
+  - the-lords-discipline
+  - remembered-joy-in-trials
+  - suffering-for-christ
+  - trust-in-god

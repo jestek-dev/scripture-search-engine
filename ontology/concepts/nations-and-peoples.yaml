@@ -1,0 +1,156 @@
+# GENESIS-PILOT PACK (14-concept round, drafted 2026-08-22) — the origin and
+# spread of the nations, and God's stated purpose for them. The Genesis review
+# found Genesis 10 supports no honest tag at all and "table of nations"
+# queries reach nothing curated; this file is that coverage, swept across the
+# whole canon: the table itself (Gen 10), the scattering (Gen 11), the
+# counter-move (Gen 12:3 — all families blessed), the psalms' and prophets'
+# universal horizon (Ps 67, Ps 86:9, Isa 2, Isa 49), the commission
+# (Matt 28:19), the apostolic summary (Acts 17:26-27), and the consummation
+# (Rev 7:9-10; 21:24-26).
+#
+# COLLISION DESIGN (G4, ratios computed with the engine tokenizer
+# 2026-08-22): nearest neighbors are praying-for-leaders (shares only the
+# stem `nation`, via its "pray for our nation" — 1 shared token, ratio 0.14),
+# those-who-never-heard (0 shared tokens), sharing-your-faith (0 shared
+# tokens). Worst pair overall is marriage-divorce-teaching /
+# work-and-diligence at token ratio 0.25 (shared: `do` from "where DID the
+# nations come from" — the did→do lemma — and `bible`); limits are 0.34
+# phrase / 0.6 token, so margin is comfortable. Zero shared phrases anywhere.
+#
+# BARE-WORD NOTE (PR #33 inventory): "all nations" collapses to the single
+# significant token `nation` under the tokenizer ("all" is a stopword) —
+# deliberate: bare "nations" is what people type, and the one-token
+# specificity discount (0.55) keeps the claim humble. Needs an inventory row
+# (admitted: [nation]) if the lexicon-inventory gate lands.
+#
+# DOCTRINAL SCAN: no materialFrameKeyword in id, label, or lexicon; no anchor
+# below is on the flagged-pairings watchlist. The concept reports that
+# curated sources name these passages for the nations theme; it adjudicates
+# nothing about any nation (CLAUDE.md #6 — note esp. that Ps 33:12 national-
+# election territory is deliberately NOT anchored here; praying-for-leaders
+# already holds it with its context on record).
+#
+# SIBLING COORDINATION (same 14-pack round): Gen 11:8-9 (Babel) is also a
+# divine-judgment seed ref, and Gen 12:3 also belongs to the blessing and
+# covenant drafts — cross-concept anchor overlap is legal (the duplicate-
+# anchor guard is per-concept) and honest: the same passage carries more
+# than one theme. Cross-sibling lexicon check (2026-08-22, against the
+# drafted 14): worst pairs are blessing ({do}, 0.17) and covenant
+# ({bible}, 0.17) — incidental function-adjacent tokens, zero shared
+# phrases, no bless/covenant/judgment subject tokens here.
+id: nations-and-peoples
+label: Nations and peoples
+lexicon:
+  - table of nations
+  - where did the nations come from
+  - origin of the nations
+  # Collapses to the bare token `nation` (see header note) — deliberate.
+  - all nations
+  # Rev 5/7 phrasing searchers actually use; shares only `tongue` with
+  # taming-the-tongue (1 token, ratio well under limit).
+  - every tribe and tongue
+  - nations in the bible
+anchors:
+  # "He made from one blood every nation of men to dwell on all the surface
+  # of the earth, having determined appointed seasons and the boundaries of
+  # their dwellings, that they should seek the Lord…" (WEB). The canon's own
+  # one-sentence answer to "where did the nations come from" — and its
+  # purpose clause. IN the fixture corpus, so it carries the G3 assertion.
+  # Editorial for the range: Torrey lists the singles under two headings
+  # (PROVIDENCE OF GOD, THE "Determining the period of human life" ::
+  # Acts 17:26; HEATHEN, THE "Have evidence of the power of God" ::
+  # Acts 17:27) — corroboration under adjacent identities, not attribution.
+  # SIBLING NOTE (adversarial review 2026-08-22): the providence draft
+  # anchors the overlapping range Acts 17:26-28 for the governance frame
+  # (boundaries appointed BY God's ordering); this row claims the
+  # origin-of-nations frame (one blood, every nation). The lexicons share
+  # no tokens, so each query fires exactly one of the two concepts; the
+  # passage honestly carries both themes.
+  - ref: Acts 17:26-27
+    sources: [editorial]
+    weight: 1.0
+  # "These are the families of the sons of Noah, by their generations,
+  # according to their nations. Of these were the nations divided in the
+  # earth after the flood" (WEB wording from knowledge — Genesis 10 NOT in
+  # web-subset; see notes.md corpus request). The table of nations' own
+  # summary verse. Editorial: Torrey files the chapter's point under
+  # LANGUAGE ("Confusion of > Divided men into separated nations" ::
+  # Gen 10:5, 10:20, 10:31) — corroborates the subject, different verses.
+  - ref: Genesis 10:32
+    sources: [editorial]
+    weight: 0.9
+  # "So the LORD scattered them abroad from there on the surface of all the
+  # earth… Therefore its name was called Babel" (WEB from knowledge — NOT in
+  # web-subset on main; the p6 stack adds Genesis 11, see notes.md). The
+  # scattering that produced the spread. Editorial for the pair: Torrey
+  # LANGUAGE lists 11:8 and 11:9 as adjacent singles ("Scattered men over
+  # the earth"). Babel-as-judgment is the divine-judgment draft's claim;
+  # this anchor claims only the origin-of-the-nations side.
+  - ref: Genesis 11:8-9
+    sources: [editorial]
+    weight: 0.85
+  # Torrey HEATHEN, THE "Salvation of, foretold :: Genesis 12:3".
+  # "…in you will all the families of the earth be blessed" — the
+  # counter-move to Babel: one family chosen FOR all families. (WEB from
+  # knowledge — Genesis 12 not in web-subset.) Also a blessing/covenant
+  # seed ref; overlap deliberate and honest.
+  - ref: Genesis 12:3
+    sources: [torrey]
+    weight: 0.85
+  # Torrey HEATHEN, THE "Pray for :: Psalms 67:2-5".
+  # "That your way may be known on earth, and your salvation among all
+  # nations… let all the peoples praise you" (WEB from knowledge — Psalm 67
+  # not in web-subset).
+  - ref: Psalms 67:2-5
+    sources: [torrey]
+    weight: 0.8
+  # Torrey GLORIFYING GOD "Shall be universal :: Psalms 86:9" (also
+  # DEVOTEDNESS TO GOD "Grounded upon our creation").
+  # "All nations you have made will come and worship before you, Lord" —
+  # IN the fixture corpus. Also anchored by `worship` (its own honest
+  # frame); cross-concept duplication is legal and both claims are true.
+  - ref: Psalms 86:9
+    sources: [torrey]
+    weight: 0.75
+  # Torrey HEATHEN, THE "Salvation of, foretold :: Isaiah 2:2-4".
+  # "All nations shall flow to it… he will judge between the nations…
+  # nation shall not lift up sword against nation" (WEB from knowledge —
+  # Isaiah 2 not in web-subset).
+  - ref: Isaiah 2:2-4
+    sources: [torrey]
+    weight: 0.8
+  # Torrey SALVATION "Of the Gentiles, predicted :: Isaiah 49:6" (also
+  # "Christ appointed for").
+  # "I will also give you as a light to the nations, that you may be my
+  # salvation to the end of the earth" (WEB from knowledge — Isaiah 49 not
+  # in web-subset).
+  - ref: Isaiah 49:6
+    sources: [torrey]
+    weight: 0.8
+  # Torrey HEATHEN, THE "The gospel to be preached to :: Matthew 28:19"
+  # (also "Baptism to be administered to"). "Go and make disciples of all
+  # nations" — IN the fixture corpus. The commission itself; kept at
+  # supporting weight because the going is sharing-your-faith's claim
+  # (related:) while the ALL-NATIONS scope is this concept's.
+  - ref: Matthew 28:19
+    sources: [torrey]
+    weight: 0.75
+  # "…a great multitude which no man could count, out of every nation and
+  # of all tribes, peoples, and languages… Salvation be to our God" (WEB
+  # from knowledge — Revelation 7 not in web-subset). Where the table of
+  # nations ends up. Editorial for the range: Torrey lists 7:9-12
+  # (EXCELLENCY AND GLORY OF CHRIST "Celebrated by the redeemed") and 7:10
+  # (SALVATION "The heavenly host ascribe, to God").
+  - ref: Revelation 7:9-10
+    sources: [editorial]
+    weight: 0.85
+  # "The nations will walk in its light… they shall bring the glory and the
+  # honor of the nations into it" — IN the fixture corpus. The nations
+  # persist, healed, in the new creation.
+  - ref: Revelation 21:24-26
+    sources: [editorial]
+    weight: 0.6
+related:
+  - those-who-never-heard
+  - sharing-your-faith
+  - praying-for-leaders
