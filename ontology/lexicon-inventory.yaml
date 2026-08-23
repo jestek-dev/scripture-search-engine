@@ -408,6 +408,87 @@ collapses:
     date: "2026-08-21"
     note: "Bare 'exalt' belongs here; distinctive."
 
+  # --- 2026-08-23 stack-merge transcriptions: the six Genesis-pilot
+  # collapses below (PR #41 packs, now live under this branch's P3.2
+  # deny-list) were already decided in this file's bare-word register
+  # (concepts: section rows for blessing, divine-judgment,
+  # envy-and-jealousy, hospitality, nations-and-peoples, providence —
+  # #33's format, #41-era notes). The rows here mechanically transcribe
+  # those standing decisions so the acknowledgment register and the live
+  # lexicon agree; no new judgment is made. reviewedBy pending Jesse's
+  # merge-time ratification (J12 chain).
+  - conceptId: blessing
+    phrase: blessed to be a blessing
+    token: bless
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the blessing bare-word row: KEPT-WITH-RESERVATION
+      2026-08-22 (PR #41 merge) — the pack file does not mark the collapse
+      deliberate, but `bless` is the concept's own subject stem, so
+      plausibly right; recorded because it fires today. Deny-list review
+      candidate if it proves broad.
+  - conceptId: divine-judgment
+    phrase: the flood
+    token: flood
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the divine-judgment bare-word row: PR #41
+      (2026-08-22 Genesis pilot) — deliberate per the pack's in-file
+      comment (§1.6d option-3 register: the word IS the query),
+      fixture-backed (divine-judgment-flood.json).
+  - conceptId: envy-and-jealousy
+    phrase: envious of others
+    token: enviou
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the envy-and-jealousy bare-word row: PR #41
+      (2026-08-22 Genesis pilot) — deliberate per the pack's in-file
+      comments; "envious of others" collapses to bare "envious" (stem
+      `enviou`) and the pack comment records it as a fourth bare-word
+      entry alongside envy/jealousy/jealous.
+  - conceptId: hospitality
+    phrase: be hospitable
+    token: hospitable
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the hospitality bare-word row: PR #41 (2026-08-22
+      Genesis pilot) — "be hospitable" collapses to bare "hospitable" and
+      the pack comment records it as admitted in its inventory-row
+      proposal; fixture-backed (hospitality.json).
+  - conceptId: nations-and-peoples
+    phrase: all nations
+    token: nation
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the nations-and-peoples bare-word row: PR #41
+      (2026-08-22 Genesis pilot) — "all nations" collapses to the bare
+      token `nation` ("all" is a stopword), deliberate per the pack's
+      in-file comment; fixture-backed
+      (nations-and-peoples-all-nations.json).
+  - conceptId: providence
+    phrase: sovereign over all
+    token: sovereign
+    intended: true
+    reviewedBy: pending-J12
+    date: 2026-08-23
+    note: >-
+      Transcribed from the providence bare-word row: KEPT-WITH-RESERVATION
+      (PR #41 merge, 2026-08-22) — "sovereign over all" collapses to the
+      bare token ("over all" are stopwords); attribute language in the
+      gods-faithfulness register, plausibly right, but the pack file does
+      not mark the collapse deliberate; recorded because it fires today.
+      Deny-list review candidate if it proves broad.
+
 # Bare-word inventory — reviewed data, one row per compiled concept id.
 #
 # Every concept carries an explicit single-word decision: `admitted` bare
