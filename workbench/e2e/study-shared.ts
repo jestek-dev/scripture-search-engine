@@ -165,6 +165,26 @@ export interface MockState {
   /** Custom judgment POST responses; return null to fall through. */
   judgmentResponder?: (body: Record<string, unknown>, n: number) => JudgmentResponse | null;
   failPassageRefs: Set<string>;
+  /** GET /api/v2/inbox items (default: empty — the section is omitted). */
+  inboxItems: unknown[];
+  /** Whether GET /api/v2/inbox 500s (the §3.11 failed-rail-fetch branch). */
+  inboxFails: boolean;
+  /** GET /api/v2/candidates payload. */
+  candidates: { reviews: unknown[]; readOnly: boolean };
+  /** Blind-session state; the mock folds judgments into the session view. */
+  blind: {
+    session: Record<string, unknown> | null;
+    startRequestIds: string[];
+    judgmentBodies: Record<string, unknown>[];
+  };
+  /** POST /api/v2/compile/preview plans, consumed in order (last repeats). */
+  compilePlans: unknown[];
+  compilePreviewCount: number;
+  /** Custom apply responder; return null for a plain success. */
+  applyResponder?: (body: Record<string, unknown>, n: number) => JudgmentResponse | null;
+  applyCount: number;
+  /** null-review case ids: GET /api/v2/cases/:uuid returns review:null. */
+  nullReviewCases: Set<string>;
 }
 
 export function caseMock(caseId: string, query: string, state = 'reviewing', at = '2026-08-20T00:00:00.000Z'): Record<string, unknown> {
@@ -199,6 +219,14 @@ export function makeMock(options: Partial<MockState> = {}): MockState {
     judgmentCounter: 0,
     judgments: {},
     failPassageRefs: new Set(),
+    inboxItems: [],
+    inboxFails: false,
+    candidates: { reviews: [], readOnly: false },
+    blind: { session: null, startRequestIds: [], judgmentBodies: [] },
+    compilePlans: [],
+    compilePreviewCount: 0,
+    applyCount: 0,
+    nullReviewCases: new Set(),
     ...options,
   };
 }
@@ -282,7 +310,82 @@ export async function installRoutes(page: Page, mock: MockState): Promise<void> 
         await route.fulfill(err(404, 'case_not_found', 'Unknown review case.'));
         return;
       }
+      if (mock.nullReviewCases.has(record.caseId as string)) {
+        await route.fulfill(ok({ case: record, review: null }));
+        return;
+      }
       await route.fulfill(ok({ case: record, review: review(record.caseId as string, record.query as string) }));
+      return;
+    }
+    if (url.pathname === '/api/v2/inbox') {
+      if (mock.inboxFails) {
+        await route.fulfill(err(500, 'inbox_unavailable', 'Inbox could not be built.'));
+        return;
+      }
+      await route.fulfill(ok({ items: mock.inboxItems }));
+      return;
+    }
+    if (url.pathname === '/api/v2/candidates' && request.method() === 'GET') {
+      await route.fulfill(ok(mock.candidates));
+      return;
+    }
+    const blindStart = /^\/api\/v2\/candidates\/([^/]+)\/blind-sessions$/.exec(url.pathname);
+    if (blindStart !== null && request.method() === 'POST') {
+      if (body !== null && typeof body.requestId === 'string') mock.blind.startRequestIds.push(body.requestId);
+      await route.fulfill(created({ session: mock.blind.session }));
+      return;
+    }
+    const blindPassages = /^\/api\/v2\/candidates\/([^/]+)\/blind-sessions\/([^/]+)\/passages$/.exec(url.pathname);
+    if (blindPassages !== null) {
+      const ref = url.searchParams.get('passageId') ?? '';
+      // The fixture maps passageId → a small context payload.
+      await route.fulfill(ok({
+        passageId: ref,
+        reference: 'Psalm 85:10',
+        contextReference: 'Psalm 85:8-12',
+        verses: [
+          { verse: 9, text: 'Surely his salvation is nigh them that fear him.' },
+          { verse: 10, text: 'mercy, and truth are met together; righteousness and peace have kissed each other.' },
+          { verse: 11, text: 'Truth shall spring out of the earth.' },
+        ],
+      }));
+      return;
+    }
+    const blindJudge = /^\/api\/v2\/candidates\/([^/]+)\/blind-sessions\/([^/]+)\/judgments$/.exec(url.pathname);
+    if (blindJudge !== null && request.method() === 'POST') {
+      if (body !== null) mock.blind.judgmentBodies.push(body);
+      const session = mock.blind.session;
+      if (session !== null && body !== null) {
+        const queries = session.queries as Record<string, unknown>[];
+        const target = queries.find((entry) => entry.queryId === body.queryId);
+        if (target !== undefined) {
+          target.judgment = { choice: body.choice, recordedAt: '2026-08-23T00:00:00.000Z' };
+          target.reveal = { sideA: 'Current', sideB: 'Candidate', preference: 'current-wins' };
+        }
+        session.revision = (session.revision as number) + 1;
+        session.stateDigest = 'sd-' + String(session.revision);
+      }
+      await route.fulfill(created({ session }));
+      return;
+    }
+    if (url.pathname === '/api/v2/compile/preview' && request.method() === 'POST') {
+      mock.compilePreviewCount += 1;
+      const plan = mock.compilePlans.length === 0
+        ? { schemaVersion: 1, operations: [], fixturesWritten: [], fixturesRemoved: [], proposedSelections: [], checklist: [], warnings: [], report: '', inputs: [], digest: 'f'.repeat(64) }
+        : mock.compilePlans[Math.min(mock.compilePreviewCount, mock.compilePlans.length) - 1];
+      await route.fulfill(ok({ plan }));
+      return;
+    }
+    if (url.pathname === '/api/v2/compile/apply' && request.method() === 'POST') {
+      mock.applyCount += 1;
+      if (mock.applyResponder !== undefined && body !== null) {
+        const custom = mock.applyResponder(body, mock.applyCount);
+        if (custom !== null) {
+          await route.fulfill({ status: custom.status, contentType: 'application/json', body: JSON.stringify(custom.payload) });
+          return;
+        }
+      }
+      await route.fulfill(ok({ digest: body?.digest ?? '', outcome: { fixturesWritten: [], fixturesRemoved: [] } }));
       return;
     }
     if (url.pathname === '/api/v2/judgments' && request.method() === 'GET') {
