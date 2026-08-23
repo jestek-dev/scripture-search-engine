@@ -24,6 +24,16 @@ lexicon:
   - heal me Lord
   - heals all my diseases
   - verses about healing
+  # Bare word added 2026-08-20 (lexicon-concepts PR 2) to close a MEASURED
+  # gap: every phrase above is multi-token, so the pack's own subject noun
+  # never fired and the most common way this pack is asked for bypassed
+  # Layer A (pastoral-healing.json additionalQueries failing run is the
+  # evidence; the 2026-08-20 84-query battery flagged the same gap).
+  # Extends the NEEDS-JESSE §1.6d single-word exception to the pack's own
+  # subject noun — called out in the PR body. Stems to "heal", so
+  # heal/heals/healed reach it too. Decision recorded in
+  # ontology/lexicon-inventory.yaml.
+  - healing
 anchors:
   - ref: James 5:13-16
     sources: [editorial]

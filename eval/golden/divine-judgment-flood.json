@@ -1,0 +1,49 @@
+{
+  "id": "divine-judgment-flood",
+  "query": "the flood",
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22). Second",
+    "fixture for the divine-judgment pack: the narrative-judgment queries",
+    "the Genesis pilot measured (flood, Sodom) - today they reach nothing",
+    "curated.",
+    "",
+    "The narratives themselves (Gen 6-7, Gen 19) are OUTSIDE the fixture",
+    "corpus, so the honest tops cannot be asserted. Luke 17:26-30 is the",
+    "in-corpus anchor that carries BOTH narratives in Jesus's own telling",
+    "('the flood came and destroyed them all... it rained fire and sulfur",
+    "from the sky') - a defensible top for both queries on this corpus.",
+    "withinTop 5 because the pack's higher-weighted in-corpus anchors",
+    "(Rom 2:5-11, Acts 17:30-31, Nahum 1:2-6) also fire for the concept,",
+    "and Matt 24:37-39 (unanchored, in corpus, says 'the flood' twice) is",
+    "a live lexical competitor - listed alsoAcceptable.",
+    "",
+    "If the corpus-extension request in the pack notes (Genesis 6-7, 19)",
+    "is approved, re-point expectedTop at the narratives and demote this",
+    "assertion to alsoAcceptable.",
+    "",
+    "Integration measurement 2026-08-22: 'sodom and gomorrah' was drafted",
+    "as an additionalQuery here but DROPPED - the pack's higher-weighted",
+    "Rom 2:5-11 anchor renders as five separate verse rows for a pure",
+    "concept query and Luke 17:29 lands 10th; asserting top-10 would be",
+    "protection that is decoration. Gen 19:24-25 is that query's honest",
+    "home; re-add it with the Genesis corpus extension."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 17:26-30",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's judgment"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 24:37-39",
+    "Romans 2:5-11",
+    "Nahum 1:2-6"
+  ],
+  "coversConcepts": [
+    "divine-judgment"
+  ]
+}

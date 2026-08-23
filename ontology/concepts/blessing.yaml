@@ -1,0 +1,112 @@
+# GENESIS-PILOT PACK (14-concept wave, drafted 2026-08-22) — whole-canon
+# sweep. "Bless" runs creation to patriarchs and nothing in the current
+# vocabulary answers it; "God's blessing" / "what does it mean to be
+# blessed" are live topical queries.
+#
+# COLLISION DESIGN vs `benediction` (NOT on main — added by the open
+# wrhubh-p6 stack; lexicon read from that branch 2026-08-22): benediction
+# owns the liturgical-formula register — "benediction", "closing blessing",
+# "the lord bless you and keep you", "aaronic blessing". THIS pack owns the
+# blessing-as-lived register: God's blessing given, promised, and passed
+# on. No phrase below matches any benediction phrase; shared tokens are
+# {bless, blessing} = 2 of benediction's 7-token set (0.29, limit 0.6).
+# Deliberately NOT here: any "bless you and keep you" wording, "aaronic",
+# "closing" — and NOT anchored here: Num 6:24-26, which benediction anchors
+# at weight 1.0 (if p6 never merges, adding it back is a one-line follow-up
+# with its own fixture evidence).
+#
+# DOCTRINAL-GUARDRAIL DESIGN (docs/DOCTRINAL-BASIS.md §3): blessing is THE
+# magnet topic for prosperity misuse. This id, label and lexicon speak NO
+# materialFrameKeyword — "favor" and "increase" ARE on that reviewed list
+# and are deliberately absent; so are prosperity/wealth/abundance/
+# breakthrough/financial phrasings. No anchor below is on the
+# flagged-pairings watchlist (checked each against
+# ontology/flagged-pairings.yaml: Mal 3:10, Luke 6:38, Phil 4:19 et al. are
+# NOT anchored by this pack). Deut 28:1-14 was considered and LEFT OUT: the
+# covenant-Israel blessings-for-obedience catalogue is the classic
+# prosperity proof-text quarry, and pairing it under a "blessing" search
+# concept is exactly the query→verse frame §3 exists to prevent; it is also
+# outside the fixture corpus, so nothing measurable is lost. The
+# doctrine-negative fixture (prosperity-blessing) forbids the classic
+# pairings with in-corpus refs so the guard cannot pass vacuously.
+id: blessing
+label: Blessing
+lexicon:
+  # The register people actually type.
+  - gods blessing
+  # Gen 12:2's own logic, as preached and searched.
+  - blessed to be a blessing
+  # The felt question behind Beatitude searches.
+  - what does it mean to be blessed
+  # The family register (Genesis's own: patriarchal blessing passed on).
+  - bless my family
+  - fathers blessing
+anchors:
+  # "I will bless you... and you will be a blessing... in you will all the
+  # families of the earth be blessed" (WEB wording from knowledge — Gen 12
+  # NOT in web-subset; see notes.md). The programmatic blessing text of the
+  # whole canon. Torrey corroboration: BLESSED, THE "Who favour saints ::
+  # Genesis 12:3" — a narrower point than the passage's own claim, so
+  # editorial.
+  - ref: Genesis 12:2-3
+    sources: [editorial]
+    weight: 1.0
+  # Torrey BLESSED, THE "Whom God chooses :: Psalms 65:4; Ephesians 1:3;
+  # Ephesians 1:4". "blessed us with every spiritual blessing in the
+  # heavenly places in Christ" (WEB, in corpus) — where the NT locates the
+  # believer's blessing. NB: identity-in-christ also anchors Eph 1:3
+  # (weight 0.7) via its "every spiritual blessing" entry — shared passage
+  # is honest (the verse serves both registers); this pack's phrasings and
+  # that entry share no normalized phrase.
+  - ref: Ephesians 1:3
+    sources: [torrey]
+    weight: 0.95
+  # "Blessed are the poor in spirit..." (WEB, in corpus). The Beatitudes —
+  # Jesus's own answer to "what does it mean to be blessed", inverting
+  # every material reading. Editorial for the range: Torrey BLESSED, THE
+  # lists 5:3,4,5,6,7,8,9 as separate per-Beatitude rows.
+  - ref: Matthew 5:3-12
+    sources: [editorial]
+    weight: 0.9
+  # "Blessed is the man who doesn't walk in the counsel of the wicked...
+  # he will be like a tree planted by the streams of water" (WEB, in
+  # corpus). The Psalter's doorway definition of the blessed life.
+  # Editorial for the range: Torrey BLESSED, THE "Who avoid the wicked ::
+  # Psalms 1:1" covers v1 only.
+  - ref: Psalms 1:1-3
+    sources: [editorial]
+    weight: 0.85
+  # "God blessed them. God said to them, 'Be fruitful, multiply...'"
+  # (WEB, in corpus). The first blessing in Scripture — blessing as God's
+  # creational posture, before any covenant. Torrey files Gen 1:28 under
+  # MARRIAGE — honest cross-file, so editorial.
+  - ref: Genesis 1:28
+    sources: [editorial]
+    weight: 0.8
+  # "The Scripture... preached the Good News beforehand to Abraham,
+  # saying, 'In you all the nations will be blessed.' So then, those who
+  # are of faith are blessed with the faithful Abraham." (WEB, in corpus).
+  # Gen 12 read forward — how the NT says the blessing reaches us.
+  # Editorial for the range: Torrey BLESSED, THE "Who believe" lists Gal
+  # 3:9 only; v8 carries the Gen 12 quotation that grounds it.
+  - ref: Galatians 3:8-9
+    sources: [editorial]
+    weight: 0.75
+  # Torrey BLESSED, THE "Who trust in God :: ...Psalms 34:8...". "Blessed
+  # is the man who takes refuge in him" (WEB, in corpus).
+  - ref: Psalms 34:8
+    sources: [torrey]
+    weight: 0.7
+  # "He blessed Joseph... the angel who has redeemed me from all evil,
+  # bless the lads" (WEB wording from knowledge — Gen 48 NOT in
+  # web-subset). Jacob blessing Ephraim and Manasseh — the canonical
+  # father's-blessing scene (the one Heb 11:21 remembers), for the
+  # "fathers blessing" / "bless my family" register. Chosen over Gen
+  # 27:27-29 (see notes.md — the stolen-blessing context).
+  - ref: Genesis 48:15-16
+    sources: [editorial]
+    weight: 0.6
+related:
+  - thanksgiving
+  - identity-in-christ
+  - praise

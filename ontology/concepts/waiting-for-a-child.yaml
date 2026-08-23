@@ -1,0 +1,150 @@
+# GENESIS-PILOT PACK (14-concept batch, drafted 2026-08-22) — barrenness and
+# the long wait for promised children. Strong pastoral gap ("struggling to
+# conceive", "waiting on God for a baby"); Genesis is the Bible's densest
+# text on infertility.
+#
+# PASTORAL REGISTER — read before editing. Deliberately DISTINCT from
+# `pregnancy-and-child-loss` (miscarriage/stillbirth GRIEF — loss register)
+# and from `god-sees-my-suffering` (the God-who-sees comfort register, whose
+# home text Gen 16:13 sits in this pack's opening chapter). This pack is the
+# WAITING register: the ache of the empty crib, not the grief of the emptied
+# one. Lexicons are token-disjoint except {baby} (ratio 0.13 vs the loss
+# pack — hand-checked, well under G4 limits).
+#
+# DOCTRINAL GUARDRAIL (the heaviest in this batch): every biblical
+# barrenness narrative ends in a birth — Sarah, Rebekah, Rachel, Hannah,
+# Elizabeth. The pack must NEVER preach that arc as a promise. Scripture
+# records that God heard these particular women; it nowhere guarantees a
+# child to every waiting couple, and a search engine that implied otherwise
+# would hand a fragile searcher a prosperity-shaped counterfeit comfort
+# (DOCTRINAL-BASIS.md §3: God's power is not a technique). Design responses:
+#   1. Comfort anchors are chosen for the God-hears / God-remembers /
+#      God-sees framing (1 Sam 1; Gen 30:22 "God remembered Rachel"), never
+#      for ask-and-receive mechanics.
+#   2. waiting-for-a-child.json carries a mustNotRank against Mark 11:24 —
+#      "whatever you pray and ask for, believe that you have received them"
+#      recruited as a claim-a-baby guarantee is the exact wrong-comfort
+#      pairing, and the verse is IN corpus so the guard cannot pass
+#      vacuously. (It ranks honestly for prayer queries; prayer anchors it.)
+#   3. Isa 54:1 is weighted LOW with its typological frame stated (see the
+#      anchor comment) so the narrative anchors lead.
+#   4. Luke 1:37 ("nothing spoken by God is impossible") is deliberately
+#      NOT anchored — see the draft notes' decision table.
+#
+# No theology scores: the pack reports that Torrey CHILDREN / WAITING UPON
+# GOD and LH editorial name these passages for the waiting; it promises
+# nothing.
+id: waiting-for-a-child
+label: Waiting for a child
+lexicon:
+  - struggling to conceive
+  - struggling with infertility
+  # Bare single-token entries, deliberate (NEEDS-JESSE §1.6d option-3
+  # precedent; one-token discount 0.55): "infertility" is a distinctive
+  # modern word absent from the WEB text where the word IS the concept
+  # ("burnout"/"cancer" precedent); "barren" and "childless" are the
+  # text's own words for it and no other concept claims them.
+  - infertility
+  - barren
+  - childless
+  - waiting for a baby
+  - waiting on god for a baby
+  - unable to conceive
+  # "praying for a BABY", not "for a child" — parenting's lexicon holds
+  # "prayer for my child", which normalizes to the same significant tokens
+  # as "praying for a child" would ({pray, child}); the baby-form keeps the
+  # normalized phrase sets disjoint (hand-checked with the engine
+  # tokenizer).
+  - praying for a baby
+anchors:
+  # Hannah: provoked and grieved, "in bitterness of soul... she prayed to
+  # the LORD, and wept bitterly", and the LORD remembered her (WEB from
+  # knowledge — 1 Samuel 1 NOT in pipeline/fixtures/web-subset.json; the
+  # top corpus-needs request of this pack). Torrey CHILDREN "Often prayed
+  # for :: 1 Sam 1:10, 1:11", "Not to have — a reproach in Israel ::
+  # 1 Sam 1:6, 1:7", "Often given in answer to prayer :: 1 Sam 1:27";
+  # WAITING UPON GOD "Exemplified — Hannah". Editorial for the narrative
+  # range. THE text for this ache — the prayer is poured out BEFORE any
+  # answer exists, which is exactly where the searcher stands.
+  - ref: 1 Samuel 1:9-20
+    sources: [editorial]
+    weight: 1.0
+  # "He settles the barren woman in her home as a joyful mother of
+  # children. Praise Yah!" (WEB from knowledge — Psalm 113 NOT in
+  # web-subset). Torrey CHILDREN "An heritage from the Lord :: Ps 113:9".
+  # A praise of God's character — who he is, not a mechanism to operate;
+  # the comment stays on the chip via the psalm's own doxology frame.
+  - ref: Psalms 113:9
+    sources: [torrey]
+    weight: 0.95
+  # "Isaac entreated the LORD for his wife, because she was barren. The
+  # LORD was entreated by him, and Rebekah his wife conceived" (WEB from
+  # knowledge — Genesis 25 NOT in web-subset). Torrey CHILDREN "Often
+  # given in answer to prayer :: Gen 25:21". Twenty years of waiting sit
+  # inside this one verse (25:20 with 25:26). Genesis-pilot seed ref.
+  - ref: Genesis 25:21
+    sources: [torrey]
+    weight: 0.9
+  # Isaac born to Sarah in old age; "God has made me laugh" (WEB from
+  # knowledge — Genesis 21 NOT in web-subset) — the wait of Gen 11:30 /
+  # 15:2 / 16:1 finally answered, laughter renamed from doubt to joy.
+  # Torrey CHILDREN lists 21:3, 21:6 only under naming customs — not this
+  # frame; editorial.
+  - ref: Genesis 21:1-7
+    sources: [editorial]
+    weight: 0.85
+  # Zacharias and Elizabeth: "your request has been heard, and your wife,
+  # Elizabeth, will bear you a son" (WEB from knowledge — Luke 1 NOT in
+  # web-subset) — a lifetime of unanswered prayer (1:7, 1:25) heard.
+  # Editorial.
+  - ref: Luke 1:13
+    sources: [editorial]
+    weight: 0.8
+  # "Now Sarai, Abram's wife, bore him no children... the LORD has
+  # restrained me from bearing" (WEB). The situation text — barrenness
+  # named, and the Hagar shortcut it tempted. IN corpus — this pack's G3
+  # assert. NOTE: chapter 16's crown text (16:13, "the God who sees")
+  # belongs to god-sees-my-suffering; this row claims only the barrenness
+  # verses, and the two concepts meet honestly in one chapter (related:).
+  # Genesis-pilot seed ref (16:1). Editorial.
+  - ref: Genesis 16:1-2
+    sources: [editorial]
+    weight: 0.75
+  # "God remembered Rachel, and God listened to her, and opened her womb"
+  # (WEB from knowledge — Genesis 30 NOT in web-subset) — after the
+  # rawest cry in the canon on this subject (30:1, "Give me children, or
+  # else I die"), which is deliberately NOT anchored itself (see draft
+  # notes). Editorial. Genesis-pilot seed ref (30:22).
+  - ref: Genesis 30:22-24
+    sources: [editorial]
+    weight: 0.75
+  # Abram: "what will you give me, since I go childless?" answered with
+  # the stars (WEB from knowledge — Genesis 15 NOT in web-subset). The
+  # wait voiced TO God rather than away from him. Editorial.
+  # Genesis-pilot seed ref (15:2-3).
+  - ref: Genesis 15:2-5
+    sources: [editorial]
+    weight: 0.7
+  # "Sing, barren, you who didn't give birth!... more are the children of
+  # the desolate than the children of the married wife" (WEB). IN corpus.
+  # WEIGHTED LOW, DELIBERATELY: the barren one addressed is Zion, and
+  # Paul reads the verse of the Jerusalem above (Gal 4:27) — its comfort
+  # to the childless is real but does NOT run through promised
+  # conception, which is exactly the shape of comfort this pack is
+  # allowed to give. Also note Isa 54's deserted-wife verses (54:5-6,
+  # 54:10) belong to betrayal-and-marriage-crisis; the chapter is shared
+  # honestly. Editorial.
+  - ref: Isaiah 54:1
+    sources: [editorial]
+    weight: 0.65
+  # "Sarai was barren. She had no child" (WEB from knowledge — Genesis 11
+  # NOT in web-subset on main; the wrhubh-p6 stack adds Gen 11) — the
+  # quiet verse that opens the whole Abraham arc: the promise-bearing
+  # family begins from barrenness. Editorial. Genesis-pilot seed ref.
+  - ref: Genesis 11:30
+    sources: [editorial]
+    weight: 0.5
+related:
+  - pregnancy-and-child-loss
+  - god-sees-my-suffering
+  - hope-in-god

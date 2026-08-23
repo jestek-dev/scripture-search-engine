@@ -1,0 +1,140 @@
+# GENESIS-PILOT PACK (14-concept round, drafted 2026-08-22) — dreams and
+# visions as the Bible describes them: God speaking through dreams in the
+# patriarchal and Daniel narratives, interpretation belonging to God, and the
+# Joel promise quoted at Pentecost. Load-bearing in six-plus chapters of
+# Genesis; today "dreams in the bible" reaches nothing curated (guidance is
+# keyed to direction-for-my-life queries, verified token-disjoint below).
+#
+# DOCTRINAL-GUARDRAIL DESIGN: this pack is DESCRIPTIVE. The engine reports
+# that curated sources name these passages for the dreams-and-visions theme;
+# it does not teach the searcher to seek private revelation, and it
+# adjudicates nothing about anyone's dream (CLAUDE.md #6). Concretely:
+# - Anchors are biblical INSTANCES (Jacob, Joseph, Pharaoh, Daniel, Joseph of
+#   Nazareth, Peter, Paul) plus the Joel/Acts promise as the text's own claim.
+# - Deliberately EXCLUDED lexicon phrasings: "what is god telling me in my
+#   dreams", "how to interpret my dreams" — the private-oracle register the
+#   guidance pack also refuses ("not private oracle-on-demand", its Isa 30:21
+#   note). "what do dreams mean" IS kept: it is the Genesis review's own
+#   query, and its honest answer here is Gen 40:8 — interpretation belongs
+#   to God, not to a technique.
+# - The false-dream counter-witness is handled in the fixture, not the
+#   anchors: Zech 13:4 (prophets ashamed of their visions) is demoted below
+#   the Joel promise, never forbidden (demote-don't-forbid ruling).
+#
+# COLLISION DESIGN (G4, ratios computed with the engine tokenizer
+# 2026-08-22): guidance shares ZERO tokens ("gods" in its lexicon and "god"
+# here are distinct tokens under the 4-char stemming floor). Worst pairs are
+# marriage-divorce-teaching and studying-the-word at token ratio 0.29
+# (shared: {bible, god}); limits 0.34 phrase / 0.6 token — comfortable, and
+# zero shared phrases anywhere (main + p6 stack checked).
+#
+# BARE-WORD NOTE (PR #33 inventory): "dreams" → {dream} and "visions" →
+# {vision} are deliberate bare subject words (rest-for-the-weary precedent:
+# the word IS the concept; one-token discount 0.55 applies). Inventory row:
+# admitted [dream, vision].
+id: dreams-and-visions
+label: Dreams and visions
+lexicon:
+  - dreams and visions
+  - dreams in the bible
+  - god speaking through dreams
+  - interpretation of dreams
+  # The Genesis review's own query; answered descriptively (see header).
+  - what do dreams mean
+  # Bare subject words, deliberate (see header note).
+  - dreams
+  - visions
+anchors:
+  # "It will be in the last days, says God, that I will pour out my Spirit
+  # on all flesh. Your sons and your daughters will prophesy. Your young men
+  # will see visions. Your old men will dream dreams." — Peter quoting Joel
+  # at Pentecost; the NT's own frame for the whole theme. IN the fixture
+  # corpus, so it carries the G3 assertion. Editorial: Torrey attributes the
+  # Joel original (below), not the Acts quotation.
+  - ref: Acts 2:17
+    sources: [editorial]
+    weight: 1.0
+  # Torrey PROPHETS "God communicated to > By dreams and visions ::
+  # Joel 2:28" (also PROPHECY "Gift of, promised"; INSPIRATION OF THE HOLY
+  # SPIRIT "Foretold"). The promise itself. (WEB from knowledge — Joel not
+  # in web-subset.)
+  - ref: Joel 2:28
+    sources: [torrey]
+    weight: 0.95
+  # Torrey VISIONS "God especially made himself known to prophets by ::
+  # Numbers 12:6". "If there is a prophet among you, I… will make myself
+  # known to him in a vision. I will speak with him in a dream" — God's own
+  # statement of the mechanism, WITH its 12:7-8 contrast (Moses is spoken to
+  # plainly): dreams are one way God spoke, not the highest. (WEB from
+  # knowledge — Numbers 12 not in web-subset.)
+  - ref: Numbers 12:6
+    sources: [torrey]
+    weight: 0.9
+  # Torrey VISIONS "Mentioned in scripture > To Nebuchadnezzar ::
+  # Daniel 2:28". "But there is a God in heaven who reveals secrets" — the
+  # Daniel narrative's thesis sentence; the honest answer to who explains
+  # dreams. (WEB from knowledge — Daniel not in web-subset.)
+  - ref: Daniel 2:28
+    sources: [torrey]
+    weight: 0.85
+  # Jacob's ladder — "He dreamed and saw a stairway set upon the earth, and
+  # its top reached to heaven" (WEB from knowledge — Genesis 28 not in
+  # web-subset). Editorial: Torrey files 28:12 under TYPES OF CHRIST
+  # ("Jacob's ladder") — a different identity; the dream frame is the
+  # text's own ("he dreamed"). Verse 12 only, deliberately: the covenant
+  # words of 28:13-15 are the covenant draft's claim (Torrey COVENANT, THE
+  # "Made with Jacob" :: 28:13-14).
+  - ref: Genesis 28:12
+    sources: [editorial]
+    weight: 0.8
+  # Joseph's two dreams (sheaves, sun-moon-stars) — the dream cycle the rest
+  # of Genesis pays off. (WEB from knowledge — Genesis 37 not in web-subset.)
+  # The brothers' envy at 37:11 is the envy-and-jealousy draft's claim.
+  - ref: Genesis 37:5-10
+    sources: [editorial]
+    weight: 0.8
+  # "Don't interpretations belong to God?" — Joseph in prison; the anchor
+  # that answers "interpretation of dreams" queries with dependence, not
+  # technique (see doctrinal header). (WEB from knowledge — Genesis 40 not
+  # in web-subset.)
+  - ref: Genesis 40:8
+    sources: [editorial]
+    weight: 0.75
+  # Pharaoh's dreams read: "What God is about to do he has declared to
+  # Pharaoh… The dream was doubled to Pharaoh, because the thing is
+  # established by God" (41:32) — dreams in service of providence. (WEB from
+  # knowledge — Genesis 41 not in web-subset.)
+  - ref: Genesis 41:25-32
+    sources: [editorial]
+    weight: 0.75
+  # Torrey VISIONS "Mentioned in scripture > To Jacob :: Genesis 46:2"
+  # (also "Often communicated > In the night season"). "God spoke to Israel
+  # in the visions of the night… I will go down with you into Egypt." (WEB
+  # from knowledge — Genesis 46 not in web-subset.)
+  - ref: Genesis 46:2
+    sources: [torrey]
+    weight: 0.7
+  # "An angel of the Lord appeared to him in a dream, saying, 'Joseph, son
+  # of David, don't be afraid to take to yourself Mary as your wife'" —
+  # the NT's opening dream. Editorial: Torrey files 1:20 under ANGELS
+  # ("Announced the conception of Christ") — a different identity. (WEB
+  # from knowledge — Matthew 1 not in web-subset.)
+  - ref: Matthew 1:20
+    sources: [editorial]
+    weight: 0.75
+  # Torrey VISIONS "Mentioned in scripture > To Peter :: Acts 10:9-17" —
+  # exact range. The rooftop vision that opened the gospel to the Gentiles.
+  # (WEB from knowledge — Acts 10 not in web-subset.)
+  - ref: Acts 10:9-17
+    sources: [torrey]
+    weight: 0.7
+  # Torrey VISIONS "Mentioned in scripture > To Paul :: Acts 16:9" (also
+  # "Often accompanied > An appearance of human beings"). "A vision appeared
+  # to Paul in the night… Come over into Macedonia and help us." IN the
+  # fixture corpus — the second in-corpus assert.
+  - ref: Acts 16:9
+    sources: [torrey]
+    weight: 0.7
+related:
+  - guidance
+  - holy-spirit-the-comforter

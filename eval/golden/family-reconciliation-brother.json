@@ -1,0 +1,43 @@
+{
+  "id": "family-reconciliation-brother",
+  "query": "reconciling with my brother",
+  "additionalQueries": [
+    "reunion with my brother",
+    "my brother and i dont speak"
+  ],
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (cluster draft, 2026-08-22). The brother-specific",
+    "register the pilot doc names ('reconciling with my brother'). THE",
+    "narrative answers are Genesis 33:4 and Genesis 45 — both outside the",
+    "fixture corpus (extension requested in notes.md); until then the assert",
+    "is Matthew 5:23-24, 'First be reconciled to your brother' — in corpus,",
+    "and anchored by no other concept (checked; forgiving-others carries the",
+    "phrase in its LEXICON but does not anchor this verse).",
+    "",
+    "withinTop is 5, not 3, deliberately: forgiving-others' lexicon entry",
+    "'reconcile with your brother' legitimately fires for these queries and",
+    "its anchors (Matt 18:21-22, Eph 4:32...) ranking above is honest",
+    "neighboring, not a failure. The assertion is that the family-",
+    "reconciliation frame surfaces with its own reason chip, not that it",
+    "crowds forgiveness out.",
+    "",
+    "When Genesis 33/45 enter the corpus, add Genesis 33:4 to alsoAcceptable",
+    "(or promote it) in the same PR as the corpus change."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 5:23-24",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Family reconciliation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 15:11-32"
+  ],
+  "coversConcepts": [
+    "family-reconciliation"
+  ]
+}
