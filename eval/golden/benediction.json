@@ -1,0 +1,36 @@
+{
+  "id": "benediction",
+  "query": "benediction",
+  "additionalQueries": [
+    "closing blessing",
+    "the lord bless you and keep you"
+  ],
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (audit F12 / wl4; re-verified 2026-08-21 sweep). A",
+    "worship-leader-core query with zero curated coverage: the hermetic run",
+    "finds Num 6:24 #1 by passage_terms luck alone (the audit's 2.8-score",
+    "accident, reproduced), no concept chip anywhere in the top-10.",
+    "Numbers 6 IS in the fixture corpus (selection note 'law/liturgy:",
+    "Aaronic blessing'), so this pack is measurable today — the audit's",
+    "easiest full win. Specification for a future benediction pack:",
+    "Num 6:24-26 leads with a curated chip. requiredReasonLabel absent",
+    "until the label is approved; which benediction should LEAD is an",
+    "optional liturgical-preference question folded into the doctrinal-wave",
+    "approval batch. Corpus-deferred: 2 Cor 13:14, Jude 24-25, Rev 22:21",
+    "(all absent — re-pin payload)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Numbers 6:24-26",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 13:20-21",
+    "Romans 15:13",
+    "1 Thessalonians 5:23-24"
+  ]
+}

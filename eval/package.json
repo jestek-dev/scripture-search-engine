@@ -8,6 +8,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "gauntlet": "tsx src/gauntlet.ts",
+    "tier-report": "tsx src/tierReport.ts",
+    "battery:check": "tsx src/batteryJobCheck.ts",
     "review-packet": "tsx src/baselineReviewPacket.ts"
   },
   "dependencies": {
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "24.10.1",
+    "fast-check": "4.9.0",
     "tsx": "4.23.1",
     "typescript": "5.9.3",
     "vitest": "4.1.10"

@@ -1,0 +1,38 @@
+{
+  "id": "no-weapon",
+  "query": "no weapon formed against me",
+  "status": "pending",
+  "note": [
+    "0.10.0 STAGE-4 COMPANION (plan P3.4 / ES-3 field-4 obligation,",
+    "authored in Phase 1 per the P1 preamble rider; audit ph12-B).",
+    "Isaiah 54:17 — the verse being quoted — sits #2 for its own",
+    "remembered phrasing; the same same-concept xref-stacking pattern as",
+    "ph2. Fixture-corpus-live: Isaiah 54 present.",
+    "",
+    "HONESTY NOTE from the measured replay: on the fixture corpus",
+    "Isaiah 54:17 remains #2 behind the Psalm 91 weight-1.0 anchors EVEN",
+    "AFTER stage-4 suppression + stage-3 parity — the residual gap is",
+    "anchor-weight DATA (gods-protection anchors Isa 54:17 at 0.85 vs",
+    "Psalm 91 at 1.0) plus the J4 quoted-verse product question, NOT xref",
+    "stacking. This fixture therefore stays pending past the 0.10.0",
+    "squash: it activates only with the ph12 anchor-data decision",
+    "(data-gaps aspect) and Jesse's J4 ruling on whether a remembered",
+    "phrase's quoted verse must always lead. The withinTop: 1 expectation",
+    "encodes the plan's J4 default (quoted verse leads, provisional).",
+    "The ACTIVE gods-protection.json carries this query as an",
+    "additionalQuery with today's admitted Ps 91 expectation and is",
+    "untouched — the two fixtures assert different layers on purpose."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 54:17",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 91:9-12",
+    "Psalms 91:14-16"
+  ]
+}

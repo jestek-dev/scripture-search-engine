@@ -1,0 +1,35 @@
+{
+  "id": "ref-grammar-regressions",
+  "status": "active",
+  "note": [
+    "Battery rows ref2-ref6 (search-quality audit 2026-08-20): all E today. Active immediately — this fixture pins the floor the QR-3/QR-4 grammar work must not break, with today's exact labels.",
+    "\"Psalms 23\" — plural — is the canonical BOOKS[].name rendering, pinned as-is; any future singular-label product decision is a deliberate fixture edit, not drift."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "psalm 23",
+      "expectedKind": "reference",
+      "expectedPassage": "Psalms 23"
+    },
+    {
+      "query": "1cor13",
+      "expectedKind": "reference",
+      "expectedPassage": "1 Corinthians 13"
+    },
+    {
+      "query": "Jn 3:16",
+      "expectedKind": "reference",
+      "expectedPassage": "John 3:16"
+    },
+    {
+      "query": "Phil 4:6-7",
+      "expectedKind": "reference",
+      "expectedPassage": "Philippians 4:6-7"
+    },
+    {
+      "query": "psalms 91",
+      "expectedKind": "reference",
+      "expectedPassage": "Psalms 91"
+    }
+  ]
+}

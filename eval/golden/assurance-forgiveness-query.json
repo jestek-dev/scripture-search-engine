@@ -1,0 +1,45 @@
+{
+  "id": "assurance-forgiveness-query",
+  "query": "does God forgive me",
+  "status": "pending",
+  "note": [
+    "0.10.0 STAGE-2 SPECIFICATION (plan P3.2 / ES-5 field-4 obligation,",
+    "authored in Phase 1 per the P1 preamble rider; audit fn3, FLAG #1).",
+    "The stopword-heavy lexicon phrase 'forgive others' normalizes to the",
+    "single token 'forgive' and EVADES the bare-cue demotion (width is",
+    "measured by raw whitespace split), so a penitent asking for assurance",
+    "is led with Eph 4:32 / Matt 6:14-15 — forgive-others / conditional",
+    "forgiveness — instead of 1 John 1:9. Fixture-corpus-live: 1 John 1,",
+    "Ephesians 4, Matthew 6 all present.",
+    "",
+    "Measured honesty (engine-scoring deep-dive): the P3.2 engine half alone",
+    "does NOT fix this query — fn3's 'forgive' carries IDF share well above",
+    "the 0.2 threshold, so the collapsed cue survives the thin-cue gate.",
+    "The real deliverable is the DATA half (the 46-phrase triage in the",
+    "lexicon inventory) plus Jesse's J1 ruling on the forgiving-others",
+    "lexicon shape. This fixture encodes the plan's stated J1 default",
+    "('yes — assurance leads'), provisional in the battery-judgment sense:",
+    "Jesse's ruling writes the final assertion either way, and the fixture",
+    "is amended to his answer BEFORE the fix that promotes it lands.",
+    "Battery twin: judgments.json fn3 (1 John 1:9 grade 3, provisional)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 John 1:9",
+      "withinTop": 3
+    }
+  ],
+  "expectedWithinTop": 10,
+  "preferredOrder": [
+    {
+      "above": "1 John 1:9",
+      "below": "Ephesians 4:32",
+      "withinTop": 10
+    }
+  ],
+  "alsoAcceptable": [
+    "Psalms 103:12",
+    "Ephesians 4:32",
+    "Matthew 6:14-15"
+  ]
+}

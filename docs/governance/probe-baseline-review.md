@@ -40,9 +40,10 @@ budgets in `eval/budgets.json`. Adversarial probes that must return nothing
 are called out explicitly. The packet's footer prints exactly the digest and
 identity values the approval must bind.
 
-The packet tool is read-only. It never writes the approval, and
-`--update-baseline` on the gauntlet writes only the baseline — no code path
-in this repository authors an approval. The workbench only validates and
+The packet tool is read-only. It never writes the approval, and the
+gauntlet's update flags (`--update-baseline`, `--update-ordering-snapshot`,
+`--update-rank-baseline`) write only their baseline or snapshot — no code
+path in this repository authors an approval. The workbench only validates and
 carries an approval file the reviewer authored.
 
 ## Where the artifacts live
@@ -52,6 +53,8 @@ carries an approval file the reviewer authored.
 | Probe definitions | `eval/probes/probes.json` |
 | Baseline | `eval/baselines/probes.json` |
 | Approval | `eval/baselines/probes.approval.json` |
+| Rank-metrics baseline | `eval/baselines/rank-metrics.json` |
+| Rank-metrics approval | `eval/baselines/rank-metrics.approval.json` |
 | Review records | `docs/reviews/YYYY-MM-DD-*.md` |
 | Budgets consulted | `eval/budgets.json` |
 
@@ -72,7 +75,8 @@ quotes stay repository-relative and reproducible.
 3. The reviewer reads the packet, writes the dated review record under
    `docs/reviews/`, and authors the updated approval binding the exact
    digests the packet's footer prints — including their name, contact, the
-   independence attestation, and the review record's path and SHA-256.
+   independence attestation, the review record's path and SHA-256, and the
+   packet's own SHA-256 (printed on stderr at generation time).
 4. The baseline diff and the approval diff land **in the same batch**; the
    publish path fails closed (`probe_approval_missing` /
    `probe_approval_orphaned` / `probe_approval_mismatch`) when either travels
@@ -82,25 +86,105 @@ quotes stay repository-relative and reproducible.
 6. Jesse merges the PR by hand. A rejection by the reviewer reopens the
    baseline as an explicit Jesse decision — never an automatic revert.
 
-## Approval schema cutover (v1 → v2)
+## Approval schema v2 and the v1 grandfather
 
-The committed approval is still the v1 record while its v2 re-review
-(`docs/reviews/2026-08-15-probe-baseline-re-review.md`) is pending. The
-gauntlet already enforces the full v2 schema for any approval that declares
-it; the cutover commit — the one that re-issues the committed approval as a
-signed v2 record and deletes v1 acceptance — is **held unopened until the
-designated reviewer signs**. A commit that would turn the suite red is not a
-deliverable, and a signature is not something this repository can produce for
-itself; holding the two together is how both facts stay true.
+Schema v2 — `…/probe-baseline-approval/v2` and its mirror
+`…/ordering-snapshot-approval/v2` — makes the approval an accountable record.
+Beyond v1's digest and identity bindings it requires:
 
-### Open decision — Jesse
+- `reviewerName` / `reviewerContact` — a stable, named reviewer handle, not a
+  free-text role;
+- `independence` — the attestation naming the reviewed change and what the
+  reviewer did **not** author;
+- `evidence` — the `docs/reviews/` review record's repository-relative path
+  and the SHA-256 of its bytes;
+- `reviewPacketSha256` (probe-baseline approvals only) — the SHA-256 of the
+  review packet file the decision was read from; the packet tool prints it on
+  stderr, and `sha256sum` on the saved packet reproduces it. The
+  ordering-snapshot approval binds no packet digest: no packet renders
+  ordering movement, so its rendered evidence is the review record itself;
+- `priorProvenance` — required non-null, except beside an explicit
+  `bootstrap` field documenting why no prior record exists to chain.
 
-Schema v2 **replaces** v1's free-text `reviewer` field with `reviewerName` /
-`reviewerContact` / `independence` rather than adding `reviewerName`
-alongside it, as the plan's wording ("adds") could be read. Rationale: the
-schema is exact-keys, and keeping the disputed free-text role field beside
-its replacement would preserve exactly the ambiguity v2 exists to remove.
-This is a deviation from the plan text and it is Jesse's call — if he wants
-`reviewer` retained, the change is confined to the v2 shape in
-`eval/src/gates/probes.ts` and its tests, before the cutover commit is
-prepared.
+Enforcement, proven by unit tests (`eval/test/probe-approval.test.ts`,
+`eval/test/ordering-snapshot.test.ts`): the already-committed v1 records stay
+valid — grandfathered by their exact fingerprint identity, with none of their
+original checks loosened. A v1 approval binding any other identity, or one
+whose `reviewedAt` postdates the v1 sunset (2026-08-20), fails the gauntlet
+with a named finding: every new approval is authored in v2. The schema change
+edited no committed approval file; the v1 records (including the pending
+re-review noted in `docs/reviews/2026-08-15-probe-baseline-re-review.md`)
+retire naturally when their identities are next re-baselined.
+
+## Rank-metrics baselines and the null-threshold protocol
+
+The rank-quality thresholds in `eval/budgets.json` (`rankQuality`: nDCG@10
+overall and per battery category, MRR@10, goodOrBetterTop3Rate — micro-integer
+units, value × 10⁶) are born **null**. A null threshold means measured and
+reported: the Admission Report prints the value with `(no threshold — baseline
+not yet established)` and it is never counted as a pass and never as a fail —
+"a guessed threshold that never fires is worse than an absent one" (CLAUDE.md).
+The one non-null sub-block at introduction is `battery.categoryFloors`: the
+nine seed counts of the transcribed battery, which are structural facts about
+the committed specimen set, not guessed quality numbers.
+
+### The only path from null to a number
+
+1. **≥ 3 ADMIT runs on main** establish a measured history for the metric
+   being armed.
+2. The change author runs the gauntlet with `--update-rank-baseline` against
+   an explicit artifact target. This writes `eval/baselines/rank-metrics.json`
+   **only** — the machine never writes an approval, the same discipline as
+   `--update-baseline` and `--update-ordering-snapshot`.
+3. An **independent reviewer** — same qualification rules as "Who can sign"
+   above, designated by Jesse per review — reads the review packet (generated
+   with `--rank-before <prior> --rank-after eval/baselines/rank-metrics.json`;
+   the packet renders per-category metric deltas and prints every digest the
+   approval must bind) and hand-authors
+   `eval/baselines/rank-metrics.approval.json`. There is no v1 generation for
+   this record: it is born under the accountable-record schema
+   (`…/rank-metrics-approval/v2` — named reviewer, contact, independence
+   attestation, `docs/reviews/` evidence binding, `reviewPacketSha256`,
+   `priorProvenance` chained to the prior baseline's git blob, or null beside
+   an explicit `bootstrap` field for the first record). Beyond the probe
+   approval's bindings it also binds `batteryQueriesSha256` and
+   `batteryJudgmentsSha256`: the metrics are a function of the judgment set,
+   so a changed set re-opens the baseline.
+4. **The same PR** flips the chosen nulls in `eval/budgets.json` to values,
+   quoting the run history from step 1. Jesse's merge is the sign-off on each
+   flip.
+
+The gauntlet enforces this ordering structurally, on every run including the
+fixture CI legs: a non-null `rankQuality` threshold with no approved baseline
+pair on disk fails G12 with a named finding, as does a committed
+`rank-metrics.json` whose approval is missing, malformed, tampered, or bound
+to different digests. Steps 1–4 cannot begin while main's standing G2/G8
+approval debt is open — a rank baseline minted now would chain from an
+unratified identity — so the first execution of this protocol is, by
+definition, a later PR after that debt clears.
+
+### Rolling a threshold back
+
+Reverting a flipped threshold is a reviewed data change like the flip itself:
+set it back to `null` and leave a dated `$comment` tombstone beside it saying
+why (the `noise.$comment_minMeanDistinctiveness` pattern in
+`eval/budgets.json`). Never delete the key silently — a threshold that
+vanishes reads as never having existed.
+
+### Open decisions — Jesse (J40)
+
+- The reviewer-identity scheme — who counts as a named, accountable handle in
+  `reviewerName` / `reviewerContact` — is Jesse's call, per "Who can sign".
+- The in-flight external re-approvals for main's current identity (the
+  outstanding G2/G8 candidates) are **offered** direct-v2 authoring: a v1
+  record dated after 2026-08-20 will fail the gauntlet, so authoring in v2 is
+  one review instead of review-then-migrate. Jesse may instead adjust the
+  sunset at PR review; nothing here decides for him.
+- Schema v2 **replaces** v1's free-text `reviewer` field with `reviewerName` /
+  `reviewerContact` / `independence` rather than adding `reviewerName`
+  alongside it, as the plan's wording ("adds") could be read. Rationale: the
+  schema is exact-keys, and keeping the disputed free-text role field beside
+  its replacement would preserve exactly the ambiguity v2 exists to remove.
+  If he wants `reviewer` retained, the change is confined to the v2 shapes in
+  `eval/src/gates/probes.ts` / `eval/src/gates/orderingSnapshot.ts` and their
+  tests.

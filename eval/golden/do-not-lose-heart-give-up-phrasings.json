@@ -1,0 +1,42 @@
+{
+  "id": "do-not-lose-heart-give-up-phrasings",
+  "query": "tempted to give up",
+  "additionalQueries": [
+    "want to give up",
+    "ready to give up"
+  ],
+  "status": "pending",
+  "coversConcepts": [
+    "do-not-lose-heart"
+  ],
+  "note": [
+    "GAP FIXTURE (audit F15 / fn12; re-verified 2026-08-21 sweep).",
+    "'tempted to give up' never reaches do-not-lose-heart: the word",
+    "'tempted' fires the deliberate bare-word routing to",
+    "remembered-a-way-of-escape (1 Cor 10:13 #1 with its chip) and the",
+    "rest of the top-10 is passage_terms/token accidents on 'tempt' —",
+    "the perseverance register the asker needs never surfaces. ('up' is a",
+    "stopword; 'give' is one common token.) Specification for lexicon",
+    "phrases 'tempted to give up' / 'want to give up' / 'ready to give up'",
+    "on do-not-lose-heart. 1 Cor 10:13 ranking is NOT banned — it is an",
+    "honest neighbour; the assertion is that the perseverance anchors",
+    "lead. Folds into the active do-not-lose-heart.json / ",
+    "pastoral-despair-give-up.json family as additionalQueries when the",
+    "item lands; this file then retires."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Galatians 6:9",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Do not lose heart"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "2 Corinthians 4:16-18",
+    "Psalms 42:5",
+    "2 Corinthians 4:8-10",
+    "Hebrews 10:35"
+  ]
+}

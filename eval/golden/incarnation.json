@@ -1,0 +1,35 @@
+{
+  "id": "incarnation",
+  "query": "incarnation",
+  "additionalQueries": [
+    "the word became flesh",
+    "god became man"
+  ],
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (audit th6, 2026-08-20; re-verified 2026-08-21 sweep).",
+    "'incarnation' appears in no WEB verse (verified corpus-wide) and no",
+    "concept exists; the hermetic run returns passage_terms accidents",
+    "(John 1:5 #1, John 1:14 only #3 and chip-less; 'the word became flesh'",
+    "finds John 1:14 by exact_phrase alone). Specification for a future",
+    "incarnation pack: John 1:14 leads with a curated chip.",
+    "requiredReasonLabel is deliberately absent: if G4 rejects the pack as a",
+    "near-duplicate of deity-of-christ (measured token overlap 0.40, the",
+    "highest in the doctrinal wave), the fold fallback changes the label,",
+    "and Jesse rules on whether the folded chip wording is honest.",
+    "Corpus-deferred: Phil 2:6-8, Heb 1:3, Heb 2:14-17, 1 Tim 3:16,",
+    "Gal 4:4-5, Matt 1:22-23, Luke 2:10-11 (all absent — re-pin payload)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 1:14",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 1:1",
+    "Colossians 1:15-19"
+  ]
+}

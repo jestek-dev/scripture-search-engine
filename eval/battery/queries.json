@@ -1,0 +1,679 @@
+{
+  "$schema": "scripture-search-engine/battery-queries/v1",
+  "batteryVersion": 1,
+  "policy": "Queries are append-only specimens of how church members actually type. Never edit a query in place - a misspelling battery query keeps its misspelling forever. Retirement flips status to 'retired' and requires retiredAt plus retirementNote in a reviewed PR. Category floors are enforced structurally by G12-battery (see eval/src/gates/rankMetrics.ts).",
+  "queries": [
+    {
+      "id": "fn1",
+      "query": "I'm anxious",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn2",
+      "query": "grief",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn3",
+      "query": "does God forgive me",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn4",
+      "query": "I feel alone",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn5",
+      "query": "worried about money",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn6",
+      "query": "my marriage is struggling",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn7",
+      "query": "burnout",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn8",
+      "query": "fear of death",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn9",
+      "query": "I feel hopeless",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn10",
+      "query": "depression",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn11",
+      "query": "guilt and shame",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn12",
+      "query": "tempted to give up",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn13",
+      "query": "caring for a dying parent",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "fn14",
+      "query": "I keep falling into the same sin",
+      "category": "felt-need",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw1",
+      "query": "worship",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw2",
+      "query": "baptism",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw3",
+      "query": "grace",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw4",
+      "query": "hope",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw5",
+      "query": "temptation",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw6",
+      "query": "healing",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw7",
+      "query": "communion",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw8",
+      "query": "love",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw9",
+      "query": "forgiveness",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw10",
+      "query": "peace",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw11",
+      "query": "joy",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "sw12",
+      "query": "tithing",
+      "category": "single-word",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph1",
+      "query": "be still and know",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph2",
+      "query": "for I know the plans I have for you",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph3",
+      "query": "I can do all things",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph4",
+      "query": "cast all your anxiety on him",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph5",
+      "query": "all things work together for good",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph6",
+      "query": "the Lord is my shepherd",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph7",
+      "query": "wonderful counselor",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph8",
+      "query": "do not be anxious about anything",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph9",
+      "query": "God so loved the world",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph10",
+      "query": "trust in the Lord with all your heart",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph11",
+      "query": "come to me all who are weary",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ph12",
+      "query": "no weapon formed against me shall prosper",
+      "category": "remembered-phrase",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "th1",
+      "query": "justification",
+      "category": "theological-term",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "th2",
+      "query": "propitiation",
+      "category": "theological-term",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "th3",
+      "query": "sanctification",
+      "category": "theological-term",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "th4",
+      "query": "atonement",
+      "category": "theological-term",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "th5",
+      "query": "trinity",
+      "category": "theological-term",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "th6",
+      "query": "incarnation",
+      "category": "theological-term",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "th7",
+      "query": "predestination",
+      "category": "theological-term",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "th8",
+      "query": "repentance",
+      "category": "theological-term",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ref1",
+      "query": "John 3 16",
+      "category": "reference-adjacent",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ref2",
+      "query": "psalm 23",
+      "category": "reference-adjacent",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ref3",
+      "query": "1cor13",
+      "category": "reference-adjacent",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ref4",
+      "query": "Jn 3:16",
+      "category": "reference-adjacent",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ref5",
+      "query": "Phil 4:6-7",
+      "category": "reference-adjacent",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ref6",
+      "query": "psalms 91",
+      "category": "reference-adjacent",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ref7",
+      "query": "1 corinthians 13 4",
+      "category": "reference-adjacent",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ref8",
+      "query": "Songs of Solomon 2:1",
+      "category": "reference-adjacent",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ms1",
+      "query": "forgivness",
+      "category": "misspelling",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ms2",
+      "query": "annointing",
+      "category": "misspelling",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ms3",
+      "query": "rightousness",
+      "category": "misspelling",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ms4",
+      "query": "Phillipians 4:13",
+      "category": "misspelling",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ms5",
+      "query": "stregnth",
+      "category": "misspelling",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ms6",
+      "query": "salvasion",
+      "category": "misspelling",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad1",
+      "query": "name it and claim it",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad2",
+      "query": "God wants me rich",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad3",
+      "query": "seed faith offering",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad4",
+      "query": "prosperity",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad5",
+      "query": "new beginnings",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad6",
+      "query": "comforter",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad7",
+      "query": "it is well with my soul",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad8",
+      "query": "lord's supper",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad9",
+      "query": "doubt",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad10",
+      "query": "God helps those who help themselves",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad11",
+      "query": "speak things into existence",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad12",
+      "query": "favor of God",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad13",
+      "query": "rapture",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "ad14",
+      "query": "once saved always saved",
+      "category": "adversarial",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "mc1",
+      "query": "faith and works",
+      "category": "multi-concept",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "mc2",
+      "query": "suffering and hope",
+      "category": "multi-concept",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "mc3",
+      "query": "grace and truth",
+      "category": "multi-concept",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "mc4",
+      "query": "fear and trust",
+      "category": "multi-concept",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "mc5",
+      "query": "love your enemies forgiveness",
+      "category": "multi-concept",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "mc6",
+      "query": "death and resurrection",
+      "category": "multi-concept",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "wl1",
+      "query": "songs about God's faithfulness",
+      "category": "worship-leader",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "wl2",
+      "query": "verses for communion service",
+      "category": "worship-leader",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "wl3",
+      "query": "call to worship psalm",
+      "category": "worship-leader",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    },
+    {
+      "id": "wl4",
+      "query": "benediction",
+      "category": "worship-leader",
+      "status": "active",
+      "addedAt": "2026-08-20",
+      "origin": "search-quality-report-2026-08-20 §6"
+    }
+  ]
+}

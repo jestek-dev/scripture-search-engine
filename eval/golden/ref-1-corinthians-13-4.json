@@ -1,0 +1,14 @@
+{
+  "id": "ref-1-corinthians-13-4",
+  "status": "pending",
+  "note": [
+    "Battery row ref7 (search-quality audit 2026-08-20): \"1 corinthians 13 4\" — numbered book plus space-separated chapter/verse — returns INVALID-REFERENCE today. Written fixture-first; activated by QR-4's space-separated reference grammar."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "1 corinthians 13 4",
+      "expectedKind": "reference",
+      "expectedPassage": "1 Corinthians 13:4"
+    }
+  ]
+}

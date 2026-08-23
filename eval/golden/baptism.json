@@ -1,0 +1,32 @@
+{
+  "id": "baptism",
+  "query": "baptism",
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (audit F13 / sw2, prior-plan 1.9 remainder; re-verified",
+    "2026-08-21 sweep). 'baptism' is lexical-only on the hermetic bed:",
+    "token_overlap and passage_terms rows (Eph 4:5 #1), no concept exists,",
+    "no curated chip. Specification for a future baptism pack per the",
+    "2026-08-14 plan's design, anchors re-cut to the fixture corpus:",
+    "Matt 28:19, Acts 2:38, Rom 6:3-4, Gal 3:27, 1 Pet 3:21 all present.",
+    "The pack states and never adjudicates — mode/timing is an explicit",
+    "DOCTRINAL-BASIS non-criterion, and 1 Pet 3:21 is anchored with that",
+    "care. requiredReasonLabel absent until the label is approved.",
+    "Corpus-deferred: Col 2:12, Acts 8:36-38 (Colossians 2, Acts 8 absent",
+    "— re-pin payload)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 6:3-4",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 28:19",
+    "Acts 2:38",
+    "Galatians 3:27",
+    "1 Peter 3:21"
+  ]
+}

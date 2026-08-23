@@ -1,6 +1,6 @@
-# Gauntlet machine report v1
+# Gauntlet machine report v2
 
-`npm run gauntlet -- --json <path>` runs the normal gauntlet and writes a machine report with schema `scripture-search-engine/gauntlet-report/v1`. Markdown remains the stdout contract. The report is written only after every gate completes and the repository identity captured at the end still matches the identity captured at the start.
+`npm run gauntlet -- --json <path>` runs the normal gauntlet and writes a machine report with schema `scripture-search-engine/gauntlet-report/v2`. Markdown remains the stdout contract. The report is written only after every gate completes and the repository identity captured at the end still matches the identity captured at the start.
 
 `npm run gauntlet:report` runs the exact-`ADMIT` check and refreshes the workbench report at the ignored path `eval/.runs/gauntlet-report.json`.
 
@@ -20,10 +20,15 @@ The machine report contains exactly these gates, in this order:
 10. `G9-saturation` - Saturation
 11. `G10-size` - Size budgets
 12. `G11-latency` - Latency
+13. `G12-battery` - Pastoral battery
 
 The roster is an attestation boundary: freshness validation requires the exact count, order, gate id, title, applicability, status-derived code, and machine verdict for every row. An omitted, duplicated, reordered, or unknown gate is invalid.
 
-All gates are `required` except `G1b-reachability`, which is `optional-advisory`. `G1b` is network opt-in and is `not-applicable` by default; that explicit N/A does not block an exact `ADMIT`. A `not-applicable` required gate makes the report `REJECT`. When `changedOutcomes` is not `false`, a gate `warn` produces `ADMIT_WITH_WARNINGS`; `--require-admit` exits successfully only for exact `ADMIT`.
+All gates are `required` except `G1b-reachability`, which is `optional-advisory`, and `G12-battery`, whose applicability is context-dependent: `required` on explicit-target (candidate/release artifact) runs — where an unrun battery must `REJECT` — and `optional-advisory` (a visible N/A with reason) on fixture-corpus runs, where the battery cannot execute. Freshness validation computes the expected applicability from whether the report identity carries a `target`. `G1b` is network opt-in and is `not-applicable` by default; that explicit N/A does not block an exact `ADMIT`. A `not-applicable` required gate makes the report `REJECT`. When `changedOutcomes` is not `false`, a gate `warn` produces `ADMIT_WITH_WARNINGS`; `--require-admit` exits successfully only for exact `ADMIT`.
+
+## Battery evidence section (`payload.battery`)
+
+On explicit-target runs the payload additionally carries `battery`: the two battery files' byte SHA-256s (`eval/battery/queries.json`, `eval/battery/judgments.json`), the active/judged/provisional counts, and every active query's outcome — kind plus the top-10 `targetId`/`reference`/score (6 dp)/sorted reason families. The section is forbidden on reports without a `target` (the battery does not run against the fixture subset corpus). The `battery (full artifact)` CI job's checker (`npm run battery:check --workspace eval -- check <report>`) accepts only a report whose `G12-battery` row is `pass` or `warn` with applicability `required` and whose battery section exists; a missing report is red. A `warn` row is the guard-vacuity state — a `harmful` judgment whose reference resolves to no verse in the measured corpus, reported per ref rather than passing silently — and is tolerated but printed loudly as advisory (S-tier is where zero vacuity becomes a hard requirement); `fail` and `not-applicable` stay red. The G12 row also hard-fails, before and independent of every aggregate, when any rank-1 result overlaps a non-provisional `harmful` judgment (`harmful-at-rank-1`); provisional harmful rows never gate and are counted in `provisionalHarmfulAtRank1`, with `harmfulInTop3`/`harmfulInTop10` computed and reported as S-tier inputs. `compare <left> <right>` byte-compares the two OS legs' G12 + battery sections by canonical JSON. Relative report paths are resolved against the repository root — never the process cwd, which `npm run --workspace eval` sets to `eval/` — so the repo-root-relative `eval/.runs/battery-report.json` works from anywhere; the checker prints the resolved absolute path it read.
 
 ## Start/end repository identity
 
@@ -33,7 +38,7 @@ Before gates run, the CLI captures a repository identity containing:
 - `dirtyTreeSha256`, hashing visible modified and untracked bytes
 - the reviewed `artifacts/content-artifact.json` path and SHA-256
 - the `eval/budgets.json` SHA-256
-- the complete fixture-input SHA-256 over `eval/golden`, `eval/probes`, `eval/baselines`, `ontology/concepts`, `pipeline/fixtures`, and `pipeline/manifests`
+- the complete fixture-input SHA-256 over `eval/battery`, `eval/golden`, `eval/probes`, `eval/baselines`, `ontology/concepts`, `pipeline/fixtures`, and `pipeline/manifests`
 - the exact parsed CLI flags and accepted `argv`
 
 After gates finish, it captures the repository identity again. `repositoryIdentitiesMatch` compares the canonical full identity. Any mismatch is detected at the API boundary and the CLI fails closed: it writes no report, sets a nonzero exit code, and does not emit an admission report from that run. The configured machine-report path is excluded from the dirty-tree digest so an in-repository output can be overwritten; its exact path remains bound in `identity.flags.jsonPath`.

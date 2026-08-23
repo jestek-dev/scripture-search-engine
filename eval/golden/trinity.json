@@ -1,0 +1,37 @@
+{
+  "id": "trinity",
+  "query": "trinity",
+  "additionalQueries": [
+    "father son and holy spirit",
+    "triune god"
+  ],
+  "status": "pending",
+  "note": [
+    "GAP FIXTURE (audit th5, 2026-08-20; re-verified 2026-08-21 sweep).",
+    "'trinity' appears in no WEB verse (verified corpus-wide) and no concept",
+    "exists; the hermetic run returns passage_terms accidents (Gen 1:1 #1).",
+    "Specification for a future trinity LOCATOR pack — passages where",
+    "Father, Son, and Spirit appear together, never a doctrine-scorer.",
+    "Matt 28:19 (the baptismal formula) is the naming text and must lead",
+    "with a curated chip. requiredReasonLabel is deliberately absent: the",
+    "label wording ('Trinity — Father, Son, and Spirit' proposed) is fixed",
+    "on the doctrinal-wave approval batch, and the family assertion alone",
+    "keeps this fixture honest under any wording Jesse approves.",
+    "Corpus-deferred: 2 Cor 13:14 (2 Corinthians 13 absent — re-pin",
+    "payload, shared with the benediction pack)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 28:19",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 1:1-3",
+    "Acts 2:32-33",
+    "1 Peter 1:2",
+    "2 Corinthians 1:21-22"
+  ]
+}

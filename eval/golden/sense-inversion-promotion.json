@@ -33,7 +33,17 @@
     "pack is in scope for the G4 pairing scan by design; it anchors no",
     "watchlisted reference, so the scan stays at zero flags. When this",
     "fixture starts passing, the Admission Report names it for promotion to",
-    "active."
+    "active.",
+    "",
+    "PRECISION UPGRADE (E2, 2026-08-21, flagged strictness change — revert",
+    "this fixture's mustNotLead alone to undo): the preferredOrder pair only",
+    "fires when 1 Pet 5:6 is present in the window, but the ruling ('may",
+    "appear, just at low priority, never leading') is unconditional. The",
+    "mustNotLead guard encodes the ruling exactly — and unlike the fixture's",
+    "original expectedWithinTop-1 mustNotRank encoding (see above), a",
+    "leadership window of 1 forbids only rank #1, so it does not reintroduce",
+    "the over-strictness that encoding was retired for. Prov 3:35 verified",
+    "in the fixture corpus, so the guard is live, not vacuous."
   ],
   "expectedTop": [
     {
@@ -49,6 +59,12 @@
       "above": "1 Peter 5:6",
       "below": "Proverbs 3:35",
       "withinTop": 10
+    }
+  ],
+  "mustNotLead": [
+    {
+      "ref": "Proverbs 3:35",
+      "why": "'shame shall be the promotion of fools' — the query word only in irony; demoted, never forbidden (Jesse's 2026-08-15 audit ruling)"
     }
   ],
   "coversConcepts": [

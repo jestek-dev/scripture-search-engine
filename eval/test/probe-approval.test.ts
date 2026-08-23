@@ -1,12 +1,12 @@
 /**
- * Approval schema v2: an approval is valid only when it names an identifiable
- * independent reviewer, attests to what they did not author, and binds the
- * review record's bytes. The committed approval is still the v1 record, so
- * v1 validates too — with exactly its original checks, none loosened — until
- * the cutover commit re-issues the approval as a signed v2 record and deletes
- * v1 acceptance in the same change. That commit is held unopened until the
- * designated reviewer signs (docs/governance/probe-baseline-review.md), so
- * the repository never carries an approval its own gauntlet rejects.
+ * Approval schema v2 and the v1 grandfather: an approval is valid only when
+ * it names an identifiable independent reviewer, attests to what they did not
+ * author, binds the review record's bytes, and quotes the review packet the
+ * decision was read from. The already-committed v1 records stay valid —
+ * grandfathered by their exact fingerprint identity, with none of their
+ * original checks loosened — but a v1 approval for any other identity, or
+ * dated after the v1 sunset, is rejected with a named finding: every new
+ * approval is authored in v2 (docs/governance/probe-baseline-review.md).
  */
 
 import { createHash } from 'node:crypto';
@@ -15,6 +15,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
   APPROVAL_EVIDENCE_PATH_PATTERN,
+  APPROVAL_V1_SUNSET_DATE,
+  GRANDFATHERED_V1_APPROVAL_IDENTITIES,
   PROBE_BASELINE_APPROVAL_SCHEMA,
   PROBE_BASELINE_APPROVAL_SCHEMA_V2,
   canonicalJsonSha256,
@@ -35,8 +37,19 @@ const ENGINE = {
   layerFingerprint: BASELINE.layerFingerprint,
 };
 
+// The one identity v1 records may still bind: the committed approvals'.
+const GRANDFATHERED_ENGINE = GRANDFATHERED_V1_APPROVAL_IDENTITIES[0]!;
+
+const GRANDFATHERED_BASELINE: ProbeBaseline = {
+  corpusFingerprint: GRANDFATHERED_ENGINE.corpusFingerprint,
+  engineVersion: GRANDFATHERED_ENGINE.engineVersion,
+  layerFingerprint: GRANDFATHERED_ENGINE.layerFingerprint,
+  observations: BASELINE.observations,
+};
+
 const EVIDENCE_BYTES = Buffer.from('# Probe baseline review record\n\nAccepted.\n');
 const EVIDENCE_SHA256 = createHash('sha256').update(EVIDENCE_BYTES).digest('hex');
+const PACKET_SHA256 = createHash('sha256').update('# Probe baseline review packet\n').digest('hex');
 
 const PRIOR_PROVENANCE = {
   baselineGitBlobSha1: 'a'.repeat(40),
@@ -46,9 +59,9 @@ const PRIOR_PROVENANCE = {
 function v1Approval(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     schema: PROBE_BASELINE_APPROVAL_SCHEMA,
-    baselineSha256: canonicalJsonSha256(BASELINE),
+    baselineSha256: canonicalJsonSha256(GRANDFATHERED_BASELINE),
     probesSha256: '9'.repeat(64),
-    engine: { ...ENGINE },
+    engine: { ...GRANDFATHERED_ENGINE },
     reviewer: 'independent admission baseline reviewer',
     reviewedAt: '2026-08-10',
     rationale: 'The reviewed probe movement is acceptable.',
@@ -67,22 +80,36 @@ function v2Approval(overrides: Record<string, unknown> = {}): Record<string, unk
     reviewerContact: 'reviewer@example.test',
     independence: 'I did not author the data change, the engine code, or the proposal under review.',
     evidence: { path: 'docs/reviews/2026-08-15-probe-baseline-re-review.md', sha256: EVIDENCE_SHA256 },
-    reviewedAt: '2026-08-15',
+    reviewPacketSha256: PACKET_SHA256,
+    reviewedAt: '2026-08-21',
     rationale: 'The reviewed movement sharpens anchors without silent regression.',
     priorProvenance: { ...PRIOR_PROVENANCE },
     ...overrides,
   };
 }
 
-function validate(approval: unknown, evidenceSha256: string | null = EVIDENCE_SHA256) {
+function validate(
+  approval: unknown,
+  evidenceSha256: string | null = EVIDENCE_SHA256,
+  baseline: ProbeBaseline = BASELINE,
+) {
   return validateProbeBaselineApproval({
-    baseline: BASELINE,
+    baseline,
     approval,
-    baselineSha256: canonicalJsonSha256(BASELINE),
+    baselineSha256: canonicalJsonSha256(baseline),
     probesSha256: '9'.repeat(64),
-    engine: ENGINE,
+    engine: {
+      engineVersion: baseline.engineVersion,
+      corpusFingerprint: baseline.corpusFingerprint,
+      layerFingerprint: baseline.layerFingerprint,
+    },
     evidenceSha256,
   });
+}
+
+/** Committed-record context: grandfathered identity, no evidence file. */
+function validateGrandfathered(approval: unknown) {
+  return validate(approval, null, GRANDFATHERED_BASELINE);
 }
 
 function categories(findings: readonly { categoryCode?: string }[]): string[] {
@@ -94,16 +121,22 @@ describe('probe baseline approval schema v2', () => {
     expect(validate(v2Approval())).toEqual([]);
   });
 
-  it('still validates the committed v1 record with its original checks until the signed cutover', () => {
-    expect(validate(v1Approval(), null)).toEqual([]);
+  it('accepts a null priorProvenance only beside a documented bootstrap', () => {
+    expect(validate(v2Approval({ priorProvenance: null, bootstrap: 'First baseline for this corpus: no prior record exists to chain.' })))
+      .toEqual([]);
+    const bare = validate(v2Approval({ priorProvenance: null }));
+    expect(categories([...bare])).toEqual(['baseline-approval-malformed']);
+    expect(bare[0]!.message).toContain('priorProvenance');
+    expect(bare[0]!.message).toContain('bootstrap');
   });
 
-  it('keeps every original v1 check: a blank reviewer or missing field is still malformed', () => {
-    expect(categories([...validate(v1Approval({ reviewer: '   ' }), null)]))
-      .toEqual(['baseline-approval-malformed']);
-    const { rationale: _dropped, ...withoutRationale } = v1Approval();
-    expect(categories([...validate(withoutRationale, null)]))
-      .toEqual(['baseline-approval-malformed']);
+  it('rejects a bootstrap that is blank or rides beside a real priorProvenance', () => {
+    const blank = validate(v2Approval({ priorProvenance: null, bootstrap: '   ' }));
+    expect(categories([...blank])).toEqual(['baseline-approval-malformed']);
+    expect(blank[0]!.message).toContain('bootstrap');
+    const both = validate(v2Approval({ bootstrap: 'not actually a bootstrap' }));
+    expect(categories([...both])).toEqual(['baseline-approval-malformed']);
+    expect(both[0]!.message).toContain('bootstrap');
   });
 
   it('rejects an unrecognized schema outright', () => {
@@ -111,12 +144,24 @@ describe('probe baseline approval schema v2', () => {
       .toEqual(['baseline-approval-malformed']);
   });
 
-  it('rejects a v2 document that smuggles v1 keys or drops v2 ones', () => {
-    expect(categories([...validate(v2Approval({ reviewer: 'free-text role' }))]))
-      .toEqual(['baseline-approval-malformed']);
+  it('rejects a v2 document that smuggles v1 keys or drops v2 ones, naming the field', () => {
+    const smuggled = validate(v2Approval({ reviewer: 'free-text role' }));
+    expect(categories([...smuggled])).toEqual(['baseline-approval-malformed']);
+    expect(smuggled[0]!.message).toContain('"reviewer"');
     const { independence: _dropped, ...withoutIndependence } = v2Approval();
-    expect(categories([...validate(withoutIndependence)]))
-      .toEqual(['baseline-approval-malformed']);
+    const missing = validate(withoutIndependence);
+    expect(categories([...missing])).toEqual(['baseline-approval-malformed']);
+    expect(missing[0]!.message).toContain('"independence"');
+  });
+
+  it('requires the review-packet digest and names it when absent or malformed', () => {
+    const { reviewPacketSha256: _dropped, ...withoutPacket } = v2Approval();
+    const missing = validate(withoutPacket);
+    expect(categories([...missing])).toEqual(['baseline-approval-malformed']);
+    expect(missing[0]!.message).toContain('"reviewPacketSha256"');
+    const malformed = validate(v2Approval({ reviewPacketSha256: 'not-a-digest' }));
+    expect(categories([...malformed])).toEqual(['baseline-approval-malformed']);
+    expect(malformed[0]!.message).toContain('"reviewPacketSha256"');
   });
 
   it('names a blank reviewer identity instead of hiding it in malformation', () => {
@@ -146,27 +191,63 @@ describe('probe baseline approval schema v2', () => {
     }
   });
 
-  it('still binds digests and engine identity exactly, on both schema branches', () => {
-    for (const approval of [
-      () => ({ document: v2Approval, evidence: EVIDENCE_SHA256 }),
-      () => ({ document: v1Approval, evidence: null }),
-    ]) {
-      const { document, evidence } = approval();
-      expect(categories([...validate(document({ baselineSha256: '0'.repeat(64) }), evidence)]))
-        .toEqual(['baseline-approval-baseline-mismatch']);
-      expect(categories([...validate(document({ probesSha256: '0'.repeat(64) }), evidence)]))
-        .toEqual(['baseline-approval-probes-mismatch']);
-      expect(categories([...validate(document({ engine: { ...ENGINE, layerFingerprint: '0'.repeat(64) } }), evidence)]))
-        .toEqual(['baseline-approval-engine-mismatch']);
-    }
-  });
-
   it('reports every deficiency at once so one fix does not hide the next', () => {
     const findings = validate(v2Approval({ reviewerName: '', independence: '' }), null);
     expect(categories([...findings]).sort()).toEqual([
       'baseline-approval-evidence-mismatch',
       'baseline-approval-independence-missing',
       'baseline-approval-reviewer-unidentified',
+    ]);
+  });
+});
+
+describe('v1 grandfather and sunset', () => {
+  it('still validates the committed v1 record: grandfathered identity, pre-sunset date', () => {
+    expect(validateGrandfathered(v1Approval())).toEqual([]);
+  });
+
+  it('accepts a v1 record dated exactly on the sunset day, but none after it', () => {
+    expect(validateGrandfathered(v1Approval({ reviewedAt: APPROVAL_V1_SUNSET_DATE }))).toEqual([]);
+    const retired = validateGrandfathered(v1Approval({ reviewedAt: '2026-08-21' }));
+    expect(categories([...retired])).toEqual(['baseline-approval-v1-retired']);
+    expect(retired[0]!.message).toContain('2026-08-21');
+    expect(retired[0]!.message).toContain(APPROVAL_V1_SUNSET_DATE);
+  });
+
+  it('rejects a v1 approval for any identity outside the grandfathered records', () => {
+    const approval = v1Approval({ baselineSha256: canonicalJsonSha256(BASELINE), engine: { ...ENGINE } });
+    const findings = validate(approval, null);
+    expect(categories([...findings])).toEqual(['baseline-approval-v1-not-grandfathered']);
+    expect(findings[0]!.message).toContain('v2');
+  });
+
+  it('keeps every original v1 check: a blank reviewer or missing field is still malformed', () => {
+    expect(categories([...validateGrandfathered(v1Approval({ reviewer: '   ' }))]))
+      .toEqual(['baseline-approval-malformed']);
+    const { rationale: _dropped, ...withoutRationale } = v1Approval();
+    expect(categories([...validateGrandfathered(withoutRationale)]))
+      .toEqual(['baseline-approval-malformed']);
+  });
+
+  it('still binds digests and engine identity exactly, on both schema branches', () => {
+    expect(categories([...validate(v2Approval({ baselineSha256: '0'.repeat(64) }))]))
+      .toEqual(['baseline-approval-baseline-mismatch']);
+    expect(categories([...validate(v2Approval({ probesSha256: '0'.repeat(64) }))]))
+      .toEqual(['baseline-approval-probes-mismatch']);
+    expect(categories([...validate(v2Approval({ engine: { ...ENGINE, layerFingerprint: '0'.repeat(64) } }))]))
+      .toEqual(['baseline-approval-engine-mismatch']);
+
+    expect(categories([...validateGrandfathered(v1Approval({ baselineSha256: '0'.repeat(64) }))]))
+      .toEqual(['baseline-approval-baseline-mismatch']);
+    expect(categories([...validateGrandfathered(v1Approval({ probesSha256: '9'.repeat(63) + 'a' }))]))
+      .toEqual(['baseline-approval-probes-mismatch']);
+    // Moving a v1 approval off its identity also moves it out of the
+    // grandfather: both facts are reported.
+    expect(categories([...validateGrandfathered(v1Approval({
+      engine: { ...GRANDFATHERED_ENGINE, layerFingerprint: '0'.repeat(64) },
+    }))]).sort()).toEqual([
+      'baseline-approval-engine-mismatch',
+      'baseline-approval-v1-not-grandfathered',
     ]);
   });
 });
