@@ -194,6 +194,27 @@ deliberately **flagged, not decided** here:
 When a flag is decided, its row records the decision and date, and the §5
 contract gains the corresponding text if it binds all consumers.
 
+## Runtime conformance (Hermes/JSC) — prove the pin on YOUR runtime
+
+Determinism is promised on every platform, and your app should not take that
+on faith: run the conformance kit (`conformance/` in this repo,
+`@jestek-dev/scripture-conformance-kit`) once per re-pin, on the runtime you
+actually ship (Hermes/JSC over OP-SQLite):
+
+```ts
+import { runConformance } from '@jestek-dev/scripture-conformance-kit';
+
+const report = await runConformance(engine, expectedSlice, 'hermes/op-sqlite (YourApp iOS)');
+```
+
+The expected slice for your pinned identity is generated in the engine repo
+and committed under `conformance/expected/`. `conformant` = byte-identical
+orderings + reasons; `divergent` is a release-blocking finding to report
+upstream (the report names the query and the first differing bytes);
+`not-applicable` means the run could not judge (wrong identity, corrupted
+slice) and never counts as a pass. Label the `runtime` string honestly — it
+is the recorded evidence. Full instructions: `conformance/README.md`.
+
 ## Diagnostics a consumer may rely on
 
 - `createEngine` throws on an unsupported artifact schema (the message names

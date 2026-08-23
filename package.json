@@ -10,6 +10,7 @@
   "workspaces": [
     "engine",
     "artifact-client",
+    "conformance",
     "pipeline",
     "eval",
     "workbench"
