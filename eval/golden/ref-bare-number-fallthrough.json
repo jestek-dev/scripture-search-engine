@@ -1,0 +1,20 @@
+{
+  "id": "ref-bare-number-fallthrough",
+  "status": "active",
+  "note": [
+    "Companion to ref-shaped-fallthrough for the J36 bare-number flip (QR-4/P5.3): bare-number shapes with no resolving book and no unique in-policy suggestion fall through to discovery instead of dead-ending as invalid-reference. This fixture pins the two shapes ref-shaped-fallthrough does not cover.",
+    "\"3 16\" — an all-numeric pair with no book text at all — is invalid-reference today; after the flip it must reach discovery and must NEVER be captured as a resolved reference (there is no book to resolve; a machine-guessed book here would be the exact harm J35 forbids).",
+    "\"grateful for 2024\" — a felt-need query ending in a year — is invalid-reference today because the locator regex captures the digit tail (bookText \"grateful for 2\", locator \"024\"). It is precisely the memory-query class the J36 flip rescues: no resolving book, no in-policy suggestion, bare-number shape -> discovery.",
+    "Stays PENDING until QR-4's deciding commit, exactly as ref-shaped-fallthrough's note prescribes: the fallthrough policy is decided and ratified there (J36), not here."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "3 16",
+      "expectedKind": "discovery"
+    },
+    {
+      "query": "grateful for 2024",
+      "expectedKind": "discovery"
+    }
+  ]
+}

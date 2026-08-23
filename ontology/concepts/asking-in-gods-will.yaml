@@ -1,0 +1,70 @@
+# ASKING IN GOD'S WILL — adversarial-coverage pack (Phase-4 item F14/A4
+# pulled forward, 2026-08-21, so the 0.10.0 stage-5 PMI de-flattening can
+# land without breaking the Jesse-ruled prosperity-name-it-claim-it guard).
+#
+# Design, faced head-on: the lexicon deliberately carries word-of-faith's own
+# slogan "name it and claim it" — the same routing move as contentment's
+# "wealth"/"money" entries (routing the movement's vocabulary to the canon's
+# actual teaching is this concept's entire point). Criteria:
+# docs/DOCTRINAL-BASIS.md §3 (Akropong: God's power is not a technique;
+# TGC §6). The concept ATTRIBUTES and never adjudicates: no "this saying is
+# false" copy anywhere — a searcher typing the slogan sees curated anchors
+# with "LH editorial" visible, exactly the A4 shape.
+#
+# DOCTRINAL SCAN: no materialFrameKeyword (flagged-pairings.yaml) appears in
+# this id, label, or lexicon — "name" and "claim" are not on that reviewed
+# list — and no watchlist reference is anchored here. In particular John
+# 14:13-14 and Mark 11:24 are deliberately ABSENT (they live at the bottom of
+# prayer.yaml in their honest frames, per Jesse's 2026-08-15 ruling); this
+# concept must never share a token with a query it would push those verses UP
+# for. The active prosperity-* mustNotRank sets stay green: none of their
+# forbidden refs appear below.
+#
+# Lexicon collision check (G4): zero shared normalized phrases with any
+# pack; token overlap with prayer is {ask} only ("according to his will"
+# phrasing stays prayer's — this pack does not duplicate it).
+id: asking-in-gods-will
+label: Asking in God's will
+lexicon:
+  # The slogan itself (tokens: name, claim) — the designed trigger that lets
+  # the prosperity-name-it-claim-it-answered fixture pass: the movement's
+  # vocabulary answered with the canon's teaching on asking, by a curated,
+  # attributed anchor, while the sibling doctrine-negative fixture keeps the
+  # ask-in-my-name proof-texts below the leading window.
+  - name it and claim it
+  # James 4:3's own WEB wording — the discontent diagnosis in the text's
+  # words ("you ask with wrong motives").
+  - ask with wrong motives
+  # The KJV-register remembered phrasing of the same verse ("ye ask amiss").
+  # Both surface forms are needed: the tokenizer's -ing strip requires a
+  # stem of >= 4 characters, so "asking" does NOT reduce to "ask" and the
+  # two phrasings normalize to disjoint token pairs.
+  - ask amiss
+  - asking amiss
+anchors:
+  # "You ask, and don't receive, because you ask with wrong motives, so that
+  # you may spend it on your pleasures" (WEB). The canon's direct diagnosis
+  # of claim-asking — the lead answer for a searcher who types the slogan.
+  - ref: James 4:3
+    sources: [editorial]
+    weight: 1.0
+  # "If we ask anything according to his will, he listens to us. And if we
+  # know that he listens to us, whatever we ask, we know that we have the
+  # petitions" (WEB). The positive rule the slogan counterfeits: confidence
+  # in asking is real, and it is grounded in God's will, not entitlement.
+  # Also anchored in prayer.yaml (torrey, under PRAYER, ANSWERS TO); here the
+  # editorial claim is different — this verse ANSWERS the claim-it frame.
+  - ref: 1 John 5:14-15
+    sources: [editorial]
+    weight: 0.9
+  # Gethsemane: "not what I desire, but what you desire" (WEB). The Lord's
+  # own asking, submitted — the exact opposite of a claim technique. Luke's
+  # parallel (22:42) is anchored in surrender-to-god.yaml; the Matthean
+  # telling is anchored here so neither concept dilutes the other.
+  - ref: Matthew 26:39
+    sources: [editorial]
+    weight: 0.8
+related:
+  - prayer
+  - contentment
+  - surrender-to-god

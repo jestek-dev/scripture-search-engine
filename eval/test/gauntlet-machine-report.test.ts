@@ -204,6 +204,54 @@ describe('gauntlet machine report', () => {
     expect(reportSha256).toBe(sha256(canonicalJson(unsigned)));
   });
 
+  it('maps legacy G3 fixture-failure codes to semantic categories instead of crashing', () => {
+    // An ACTIVE fixture's preferredOrder failure reaches the machine report
+    // carrying corpusGolden's legacy code. Before the legacy-G3 mapping this
+    // threw "Invalid semantic category for G3-golden: G3_PREFERRED_ORDER"
+    // and the run produced no report at all — a failing guard must yield a
+    // machine finding, never a crash.
+    const report = buildReport({
+      gates: [fail('G3-golden', 'Golden regression', '2 corpus fixture expectation(s) failed', [
+        {
+          message: 'some-fixture: preferredOrder violated: "Matthew 7:24-27" ranks below "Luke 6:46-49"',
+          subjects: ['some-fixture'],
+          categoryCode: 'G3_PREFERRED_ORDER',
+        },
+        {
+          message: 'other-fixture: mustNotRank "John 14:14" found at rank 2',
+          subjects: ['other-fixture'],
+          categoryCode: 'G3_MUST_NOT_RANK',
+          params: { ref: 'John 14:14' },
+        },
+      ])],
+    });
+    const machine = buildMachineReport({
+      startedAt: '2026-08-10T12:00:00.000Z',
+      finishedAt: '2026-08-10T12:00:01.000Z',
+      identity,
+      report,
+    });
+    expect(machine.payload.verdict).toBe('REJECT');
+    expect(machine.payload.gates[0]?.findings.map((finding) => finding.categoryCode)).toEqual([
+      'sse.gauntlet.v1.finding.g3-golden.preferred-order',
+      'sse.gauntlet.v1.finding.g3-golden.must-not-rank',
+    ]);
+    // A code outside G3's legacy family still fails loudly — the mapping
+    // must not weaken the semantic-category guard for anything else.
+    expect(() =>
+      buildMachineReport({
+        startedAt: '2026-08-10T12:00:00.000Z',
+        finishedAt: '2026-08-10T12:00:01.000Z',
+        identity,
+        report: buildReport({
+          gates: [fail('G4-collision', 'Collision', 'bad', [
+            { message: 'x', categoryCode: 'G3_PREFERRED_ORDER' },
+          ])],
+        }),
+      }),
+    ).toThrow(/Invalid semantic category for G4-collision/);
+  });
+
   it('binds sorted structured fixture-promotion candidates into report digests', () => {
     const report = buildReport({
       gates: [{

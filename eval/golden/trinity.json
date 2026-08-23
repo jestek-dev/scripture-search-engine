@@ -5,7 +5,10 @@
     "father son and holy spirit",
     "triune god"
   ],
-  "status": "pending",
+  "status": "active",
+  "coversConcepts": [
+    "trinity"
+  ],
   "note": [
     "GAP FIXTURE (audit th5, 2026-08-20; re-verified 2026-08-21 sweep).",
     "'trinity' appears in no WEB verse (verified corpus-wide) and no concept",
@@ -18,13 +21,39 @@
     "on the doctrinal-wave approval batch, and the family assertion alone",
     "keeps this fixture honest under any wording Jesse approves.",
     "Corpus-deferred: 2 Cor 13:14 (2 Corinthians 13 absent — re-pin",
-    "payload, shared with the benediction pack)."
+    "payload, shared with the benediction pack).",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-21 (P4.4). One GATE-FORCED edit: the",
+    "authored note above deferred requiredReasonLabel to the batch",
+    "sign-off, but G3's coverage check requires the active demonstrating",
+    "fixture to assert the exact label — so the proposed wording is now",
+    "pinned ('Theme: Trinity — Father, Son, and Spirit'). If Jesse's",
+    "batch sign-off changes the wording, the label re-cuts in the same",
+    "commit as the yaml change, exactly as for every other label pin.",
+    "The ranking windows held as cut. Measured on the fixture bed: bare",
+    "'trinity' puts Matt 28:19 #2 (22.00, anchor) behind John 1:1-3",
+    "(22.86 — the pack's own 0.7 floor anchor lifted past the 1.0 lead by",
+    "its second honest cue, the related-edge 'Related theme: The deity of",
+    "Christ' chip plus preached vocabulary; every rank above the window's",
+    "edge carries a curated chip). 'father son and holy spirit' and",
+    "'triune god' both put Matt 28:19 #1 (49.65 / 40.00).",
+    "",
+    "REVISED 2026-08-21 (round-1 critique D-1): the worklist-mandated",
+    "phrase 'three in one' collapsed to the bare token {three} and",
+    "hijacked 'peter denied three times' at #1-#2 on both beds (John",
+    "13:38, the true verse, demoted to #3). The phrase is reworded to",
+    "'three persons one god' ({three, person, god} — no collapse), the",
+    "lexicon-inventory row is removed in the same commit, and",
+    "peter-denial-guard.json locks the healed state. This fixture's own",
+    "three queries never used 'three in one'; ranking expectations are",
+    "untouched and re-verified green after the reword."
   ],
   "expectedTop": [
     {
       "reference": "Matthew 28:19",
       "withinTop": 3,
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Trinity — Father, Son, and Spirit"
     }
   ],
   "expectedWithinTop": 10,

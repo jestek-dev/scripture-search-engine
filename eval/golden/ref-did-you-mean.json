@@ -1,0 +1,28 @@
+{
+  "id": "ref-did-you-mean",
+  "status": "active",
+  "note": [
+    "Cited did-you-mean fixture for QR-4 (P5.3): an un-curated book misspelling must dead-end WITH guidance, never empty-handed. The suggestion is a citation on the invalid-reference outcome — suggestion only, NEVER a silently opened guessed passage (J35): curated aliases auto-resolve, edit-distance matches only suggest.",
+    "\"filipians\" is the plan-named example: distance 2 from QR-3's curated \"Philipians\" row under the ONE edit-policy table (key length 9 -> ED 2) — one more reason QR-3 landed first. Pinned in both the colon form and QR-4's space-separated form.",
+    "\"palms 91\" pins the bare-number-shape-with-nearly-resolving-book branch of J36: a unique in-policy match (palms -> Psalms, distance 1, key length 5 -> ED 1) keeps the query invalid-reference WITH the suggestion instead of falling through to discovery. Psalm 91 is present in the fixture corpus, so the suggested locator passes verseExists validation.",
+    "Suggestion-absence cases (ties suggest nothing; <5-char keys never suggest; invalid suggested locators suggest nothing) cannot be asserted by expectedSuggestion and are pinned in engine/test/reference.test.ts instead.",
+    "Written fixture-first, pending until QR-4's deciding commit activates it (J34/J35/J36 ride that commit as review flags)."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "filipians 4:13",
+      "expectedKind": "invalid-reference",
+      "expectedSuggestion": "Philippians"
+    },
+    {
+      "query": "filipians 4 13",
+      "expectedKind": "invalid-reference",
+      "expectedSuggestion": "Philippians"
+    },
+    {
+      "query": "palms 91",
+      "expectedKind": "invalid-reference",
+      "expectedSuggestion": "Psalms"
+    }
+  ]
+}

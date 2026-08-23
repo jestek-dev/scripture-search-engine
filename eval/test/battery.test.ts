@@ -103,7 +103,11 @@ describe('battery schema validation', () => {
   });
 
   it('rings on a non-canonical reference', () => {
-    const bad = tinyJudgments({ judged: [{ ...JUDGED_ROW, ref: 'Philipians 4:99' }] });
+    // "Philipians" stopped being a valid drill input when P5.2/QR-3 admitted
+    // it as a curated misspelling alias (it now resolves to Philippians, as
+    // designed) — the drill needs a spelling NO reviewed row will ever
+    // cover, so it keeps proving the alarm rings on an unresolvable book.
+    const bad = tinyJudgments({ judged: [{ ...JUDGED_ROW, ref: 'Philippianz 4:99' }] });
     expect(messages(tinyQueries(), bad)).toContain('not a canonical scripture range');
   });
 

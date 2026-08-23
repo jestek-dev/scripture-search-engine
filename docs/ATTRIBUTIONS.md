@@ -163,9 +163,19 @@ Alignment tier 1, per-verse-heading shape: 'PSALM <roman>.' section headings wit
 
 ## Scripture text, topical data and cross-references
 
+### OpenBible.info Bible Section Counts
+
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
+- **Source:** <https://a.openbible.info/data/bible-section-counts.txt>
+- **Checksum:** `5e9e838d0226c6106ff8c578aa5c1cb8fa8b206f0fb83f784aa1613cc50e26e8`
+
+Creative Commons Attribution 4.0, the standard license OpenBible.info applies to its published datasets (announcement post and site footer; same posture as the two admitted OpenBible sources). Attribution required in shipped output.
+
+Section-placement counts by OpenBible.info, used under CC BY 4.0. Counts ONLY: each row is a candidate section span and the number of the 20 surveyed translations whose headings mark it - no heading text and no verse text of any translation is present, which is what keeps the copyrighted expression of those translations out of this file entirely. Boundary counts must be DERIVED as the sum over rows sharing a start verse (the per-row vote for one exact span is a different number and the two must never be conflated). The upstream URL is a rolling 'latest' path with no archival versioning, so this checksum IS our snapshot (verified live 2026-08-14 and re-verified byte-identical 2026-08-22); re-downloading later may produce a different file and must be re-admitted as a change. Re-verify the hash at fetch time.
+
 ### OpenBible.info Topical Bible
 
-- **Rights:** CC BY 4.0 — **attribution required**
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/topic-scores.zip>
 - **Checksum:** `2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60`
 
@@ -175,13 +185,24 @@ Topical data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info
 
 ### OpenBible.info Cross References
 
-- **Rights:** CC BY 4.0 — **attribution required**
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/cross-references.zip>
 - **Checksum:** `36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829`
 
 Creative Commons Attribution 4.0. The data file's own header states: 'www.openbible.info CC-BY 2026-07-27'. Attribution required in shipped output.
 
 Cross-reference data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info/labs/cross-references/). OpenBible states this data 'draws primarily from public-domain sources, especially the Treasury of Scripture Knowledge' - hence the declared derivedFrom, which places it in one correlation budget with TSK and with any homiletical co-citation source that also derives from TSK. Counting them as independent evidence would inflate confidence for what is substantially one body of scholarship. Rolling URL with no archival versioning; this checksum is our snapshot.
+
+### STEPBible TVTMS (Translators Versification Traditions)
+
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
+- **Source:** <https://raw.githubusercontent.com/STEPBible/STEPBible-Data/efe428a0047bf7b9c3ce2624f60c252c6e435945/Versification/TVTMS%20-%20Translators%20Versification%20Traditions%20with%20Methodology%20for%20Standardisation%20for%20Eng%2BHeb%2BLat%2BGrk%2BOthers%20-%20STEPBible.org%20CC%20BY.txt>
+- **Retrieved:** 2026-08-22
+- **Checksum:** `63058e0f20201af4bdaa7d830da5be8f493455d947c5f147d84840b33db9ddf8`
+
+Creative Commons Attribution 4.0. The file's own header: 'Data created by www.STEPBible.org based on work at Tyndale House Cambridge' with a CC BY notice; the STEPBible-Data repository README states CC BY 4.0 for the datasets. Attribution required in shipped output: credit 'STEP Bible' linked to www.STEPBible.org. Soft asks honored: changes are 'recorded and made available' by committing the distillation script (pipeline/scripts/generateTvtmsDistillate.ts) and the distillate it produces, both diffable in this repository.
+
+ZERO SHIPPED BYTES (P6.4/B5 S1): TVTMS is a build-time versification witness only - pipeline/src/versificationGuard.ts checks every corpus verse-ID shape against TVTMS's English-tradition stanzas at build time, and the Admission Report line declares 'zero-row guard source: NO MEASURABLE EFFECT expected and accepted' (a declared exception class, never a silent lean). WHAT IS TAKEN: only the expanded section's structural columns (SourceType, SourceRef, StandardRef, Action, Tests), distilled to English-relevant loci; all prose/note columns are dropped at parse time. WHAT IS EXCLUDED under covenant #1, pending J56 ratification: TIPNR (its per-person descriptions are 'created by Claude 3 AI' - AI-authored content never reaches the artifact, so the dataset is not admitted at all in S1), TBCWG entirely, and TTESV (tags Crossway's copyrighted ESV - never pinned). The URL pins repository commit efe428a0047bf7b9c3ce2624f60c252c6e435945, so the checksum is reproducible; an archive-first snapshot upload to a source-snapshots release remains an open errand of the J52 family, flagged in the admitting PR.
 
 ### Torrey, The New Topical Textbook
 
@@ -192,6 +213,17 @@ Cross-reference data by OpenBible.info, used under CC BY 4.0 (https://www.openbi
 Underlying work public domain by age: R. A. Torrey, The New Topical Textbook, 1897. This machine-readable transcription is the audited PDF-derived JSONL dataset from github.com/j86schroeder/topical-bible-search, MIT License (LICENSE at the pinned commit), which permits redistribution including commercial use with preservation of the license notice. Pinned to commit 7eac7ebd6ce28030090cf7279aed90068e6114f5 (2026-08-05).
 
 Topical anchors from Torrey's New Topical Textbook (1897, public domain), machine-readable edition by j86schroeder/topical-bible-search under the MIT License. The transcription's source PDF is reproducible-by-recipe rather than pinned upstream; this checksum pins the exact dataset we admitted. 620 topics vs CCEL's 628 remains unreconciled (merged/split headings suspected).
+
+### Treasury of Scripture Knowledge (CrossWire module, phrase-keyed)
+
+- **Rights:** Public domain
+- **Source:** <https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/TSK.zip>
+- **Retrieved:** 2026-08-22
+- **Checksum:** `6784c7099465995a8e66f02ead82b0bca66603c1bdeaf8332949774b7bfd4293`
+
+Public domain by age: the Treasury of Scripture Knowledge's reference chains were compiled in the 1830s (Canne, Browne, Blayney, Scott and others; the module's own About line dates the compilation 'about 1880', the era of R. A. Torrey's edition). Distributed by CrossWire as a SWORD module declaring DistributionLicense=Public Domain. The module records no TextSource, so the transcription's origin is unverified - admitted as public domain on the strength of the work's age and CrossWire's declaration, with that gap stated here rather than implied away (the same posture as the Barnes and Clarke admissions from this host). If a transcription claim ever surfaces, this manifest is where it gets recorded.
+
+NEW ADMISSION, distinct from the lineage-only `tsk` manifest: that stub pins no bytes and its review row says 're-review required before any import', so importing TSK data is a fresh admission with a fresh doctrinal-review row (J55), never a reuse. derivedFrom ['tsk'] keeps this module in ONE G7 correlation budget with openbible-xrefs, which derives from the same body of scholarship - counting them as independent evidence would inflate confidence for what is substantially one work. What is mined is TSK's native phrase-keyed structure: (verse, quoted word/phrase, reference list) triples, emitted in Phase A ONLY into the optional cross_reference_phrases capability table; no row enters cross_references until the Phase B ENGINE_VERSION-bumped PR (J26/J55). The URL is stable, not rolling (Last-Modified 2013-07-16, unchanged); a durable snapshot upload to a source-snapshots release remains an open errand of the J52 family, flagged in the admitting PR rather than silently skipped.
 
 ### World English Bible
 
@@ -213,6 +245,7 @@ can declare that lineage, which keeps the engine from counting the same
 scholarship twice as independent evidence.
 
 - **LH editorial** — Authored for this dataset. LH holds all rights. Drafted with AI assistance offline and admitted by human review; no AI runs at query time.
+- **LH editorial (public-domain hymn index)** — Authored for this dataset (QR-6, 2026-08-22). LH holds all rights to the alias rows themselves. Every hymn indexed in the starter pack is verifiably public domain in the United States (pre-1930 publication; per-row provenance in ontology/aliases/hymn-lines.yaml). Titles and short first-line phrases are not copyrightable (US Copyright Office Circular 33), and no hymn lyrics beyond a title or a first-line/refrain phrase are stored. Hymnary.org's index is not openly licensed and was not used (J38).
 - **Nave's Topical Bible** — Public domain by age (Orville J. Nave, Topical Bible, 1897; Nave died 1917). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).
 - **Cross-translation vocabulary (KJV, ESV, NIV, NLT)** — DERIVED INDEX ONLY. No translation text is stored or shipped. What this source contributes is, per verse, the set of word STEMS appearing in some English translation of that verse but not in the shipped one — unordered, deduplicated, stopwords removed, stemmed, and merged across all four sources so no single translation's contribution is separable. There is no word order, no punctuation and no function words, so the prose cannot be reconstructed from it. KJV is public domain (eBible.org verse-per-line export). ESV, NIV and NLT are copyrighted; licensed copies held by Jesse Freeman were read ONCE, locally, to derive this index, and never entered this repository or the artifact. The relationship is that of a search index to the works it indexes rather than a copy of them. Recorded here in full because the distinction is the entire basis on which this source is admitted, and a reader must be able to check it rather than take it on trust.
 - **Treasury of Scripture Knowledge** — Public domain by age (published 1830s). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).

@@ -1,0 +1,33 @@
+{
+  "id": "hymn-turn-your-eyes",
+  "query": "turn your eyes upon jesus",
+  "status": "active",
+  "note": [
+    "QR-6 (P5.5) curated hymn alias — Helen Howarth Lemmel, 'Turn Your Eyes",
+    "upon Jesus' (1922, public domain: pre-1930 US publication). Measured gap",
+    "2026-08-22 pre-change: the refrain query led with a translation_variant",
+    "accident (Luke 6:20, 'jesu, turn' stems — 8.30) and 'look full in his",
+    "wonderful face' led with James 1:23, the MIRROR verse — sense-adjacent",
+    "noise. No concept fired.",
+    "",
+    "Target: remembered-looking-to-jesus — the hymn IS the look-to-Jesus theme",
+    "(Heb 12:1-2), the concept that already owns 'fixing our eyes on Jesus'.",
+    "The hymn's first line 'o soul are you weary and troubled' is deliberately",
+    "NOT an alias row: measured pre-change it is already answered well by",
+    "rest-for-the-weary (Isaiah 40:31 #1, concept_anchor 10.80), and an alias",
+    "would demote a good themed answer to install a hymn chip — recorded as a",
+    "measured-out row for the J13 line-by-line review.",
+    "",
+    "Written fixture-first (pending, failing); promoted in the 0.13.0 flip",
+    "commit that made it pass."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Hebrews 12:2",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Hymn: \"Turn Your Eyes upon Jesus\" → Theme: Looking to Jesus"
+    }
+  ],
+  "additionalQueries": ["look full in his wonderful face"]
+}

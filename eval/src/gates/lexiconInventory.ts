@@ -32,7 +32,7 @@
 
 import { significantWords } from '@jestek-dev/scripture-engine';
 
-import { parseLexiconInventory } from '../../../pipeline/src/importers/lexiconInventory.js';
+import { parseBareWordInventory } from '../../../pipeline/src/importers/lexiconInventory.js';
 import type { ConceptRecord } from './collision.js';
 import { fail, notApplicable, pass, type GateFinding, type GateResult } from './types.js';
 
@@ -92,7 +92,7 @@ export function lexiconInventoryCheck(input: {
     );
   }
 
-  const { rows, errors } = parseLexiconInventory(input.inventoryFileContents);
+  const { rows, errors } = parseBareWordInventory(input.inventoryFileContents);
   const findings: GateFinding[] = errors.map((message) =>
     finding('malformed', `${LEXICON_INVENTORY_PATH}: ${message}`, [LEXICON_INVENTORY_PATH]),
   );

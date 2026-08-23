@@ -1,160 +1,235 @@
+/**
+ * The single-token-collapse acknowledgment mechanism (plan P3.2 gate half).
+ *
+ * Three behaviours matter: the deny-list FIRES on an unacknowledged or stale
+ * collapse (synthetic data), the committed repository state passes it (every
+ * live collapse carries a current acknowledgment in
+ * ontology/lexicon-inventory.yaml — this is the test that rings when someone
+ * adds a collapsing phrase without a decision, or deletes the inventory),
+ * and the parser never guesses: malformed rows surface as errors, because an
+ * acknowledgment record that silently skips rows is decoration.
+ */
+
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, it } from 'vitest';
 
-import type { ConceptRecord } from '../src/gates/collision.js';
-import { lexiconInventoryCheck, LEXICON_INVENTORY_PATH } from '../src/gates/lexiconInventory.js';
+import { compileOntology } from '../../pipeline/src/importers/ontologyImporter.js';
+import { parseLexiconInventory } from '../../pipeline/src/importers/lexiconInventory.js';
+import {
+  lexiconInventoryCheck,
+  LEXICON_INVENTORY_PATH,
+  singleTokenCollapses,
+  type ConceptRecord,
+} from '../src/gates/collision.js';
 
-function concept(id: string, lexicon: string[]): ConceptRecord {
-  return { id, label: id, lexicon };
+const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
+
+function inventoryYaml(
+  entries: readonly Record<string, unknown>[],
+  { raw }: { raw?: string } = {},
+): string {
+  if (raw !== undefined) return raw;
+  const lines = ['collapses:'];
+  for (const entry of entries) {
+    lines.push(`  - conceptId: ${JSON.stringify(entry['conceptId'])}`);
+    for (const key of ['phrase', 'token', 'intended', 'reviewedBy', 'date', 'note']) {
+      if (entry[key] !== undefined) lines.push(`    ${key}: ${JSON.stringify(entry[key])}`);
+    }
+  }
+  return `${lines.join('\n')}\n`;
 }
 
-/** A minimal well-formed inventory document. */
-function inventory(rows: string): string {
-  return `concepts:\n${rows}`;
-}
+const forgiving: ConceptRecord = {
+  id: 'forgiving-others',
+  label: 'Forgiving others',
+  lexicon: ['forgive others', 'forgive one another'],
+};
 
-describe('G4 lexicon bare-word inventory', () => {
-  const WORSHIP = concept('worship', ['worship the lord', 'worship', 'bow down before him']);
+const ack = {
+  conceptId: 'forgiving-others',
+  phrase: 'forgive others',
+  token: 'forgiv',
+  intended: true,
+  reviewedBy: 'jesse',
+  date: '2026-08-21',
+  note: 'bare forgive reaching this concept is a deliberate trigger',
+};
 
-  it('passes when every concept has a row and every decision matches behaviour', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [WORSHIP],
-      inventoryFileContents: inventory('  - id: worship\n    admitted: [worship, bow]\n'),
+// The real collapsed token for "forgive others" per the shared tokenizer.
+const realToken = singleTokenCollapses([forgiving])[0]!.token;
+const validAck = { ...ack, token: realToken };
+
+describe('parseLexiconInventory', () => {
+  it('parses a valid acknowledgment', () => {
+    const { collapses, errors } = parseLexiconInventory(inventoryYaml([validAck]));
+    expect(errors).toEqual([]);
+    expect(collapses).toHaveLength(1);
+    expect(collapses[0]).toMatchObject({
+      conceptId: 'forgiving-others',
+      phrase: 'forgive others',
+      token: realToken,
+      intended: true,
+      reviewedBy: 'jesse',
     });
+  });
+
+  it('rejects a file without a top-level collapses list', () => {
+    const { collapses, errors } = parseLexiconInventory('reviews: []\n');
+    expect(collapses).toEqual([]);
+    expect(errors.join(' ')).toContain('top-level `collapses` list');
+  });
+
+  it('rejects invalid YAML with a parse error, never a throw', () => {
+    const { errors } = parseLexiconInventory('collapses: [unclosed');
+    expect(errors.join(' ')).toContain('not valid YAML');
+  });
+
+  it('rejects rows whose intended is not literally true', () => {
+    const { collapses, errors } = parseLexiconInventory(
+      inventoryYaml([{ ...validAck, intended: false }]),
+    );
+    expect(collapses).toEqual([]);
+    expect(errors.join(' ')).toContain('intended must be literally true');
+  });
+
+  it('rejects empty reviewer, malformed date, and empty note', () => {
+    const { errors } = parseLexiconInventory(
+      inventoryYaml([
+        { ...validAck, reviewedBy: ' ' },
+        { ...validAck, phrase: 'p2', date: 'yesterday' },
+        { ...validAck, phrase: 'p3', note: '' },
+      ]),
+    );
+    expect(errors).toHaveLength(3);
+    expect(errors.join(' ')).toContain('reviewedBy');
+    expect(errors.join(' ')).toContain('YYYY-MM-DD');
+    expect(errors.join(' ')).toContain('note');
+  });
+
+  it('rejects duplicate acknowledgments for one (conceptId, phrase)', () => {
+    const { collapses, errors } = parseLexiconInventory(inventoryYaml([validAck, validAck]));
+    expect(collapses).toHaveLength(1);
+    expect(errors.join(' ')).toContain('duplicate acknowledgment');
+  });
+
+  it('tolerates unknown top-level keys (room for future bare-word inventory sections)', () => {
+    const { collapses, errors } = parseLexiconInventory(
+      `concepts: []\n${inventoryYaml([validAck])}`,
+    );
+    expect(errors).toEqual([]);
+    expect(collapses).toHaveLength(1);
+  });
+});
+
+describe('lexiconInventoryCheck', () => {
+  it('passes when every collapse is acknowledged, keeping the listing visible', () => {
+    const result = lexiconInventoryCheck([forgiving], inventoryYaml([validAck]));
     expect(result.status).toBe('pass');
-    expect(result.findings ?? []).toHaveLength(0);
-    expect(result.metrics).toMatchObject({ inventoryRows: 1, admittedBareWords: 2 });
+    expect(result.summary).toContain('all acknowledged');
+    // The diagnostic never disappears — it stops being undecided.
+    expect(result.findings).toHaveLength(1);
+    expect(result.findings?.[0]?.message).toContain('"forgive others"');
+    expect(result.findings?.[0]?.message).toContain('acknowledged by jesse');
+    expect(result.metrics).toMatchObject({ singleTokenCollapses: 1, acknowledgedCollapses: 1 });
   });
 
-  it('BLOCKS a concept with no inventory row — a pack cannot ship without a bare-word decision', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [WORSHIP, concept('praise', ['praise the lord', 'praise'])],
-      inventoryFileContents: inventory('  - id: worship\n    admitted: [worship, bow]\n'),
-    });
+  it('fails on an unacknowledged collapse, naming concept, phrase, and token with the remedy', () => {
+    const result = lexiconInventoryCheck([forgiving], inventoryYaml([]));
     expect(result.status).toBe('fail');
-    expect(result.findings?.some((finding) => finding.message.includes('praise: no row'))).toBe(true);
+    const message = result.findings?.map((finding) => finding.message).join(' ') ?? '';
+    expect(message).toContain('forgiving-others');
+    expect(message).toContain('"forgive others"');
+    expect(message).toContain(`"${realToken}"`);
+    expect(message).toContain('rephrase/remove');
   });
 
-  it('BLOCKS a row for a concept that does not exist', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [WORSHIP],
-      inventoryFileContents: inventory(
-        '  - id: worship\n    admitted: [worship, bow]\n' +
-          '  - id: healing\n    admitted: [healing]\n',
-      ),
-    });
+  it('fails on a stale acknowledgment for a collapse that no longer exists', () => {
+    const result = lexiconInventoryCheck(
+      [forgiving],
+      inventoryYaml([validAck, { ...validAck, phrase: 'formerly collapsing phrase' }]),
+    );
     expect(result.status).toBe('fail');
-    const message = result.findings?.map((finding) => finding.message).join('\n') ?? '';
-    // The keying trap is named: rows key by compiled id, not filename.
-    expect(message).toContain('no concept "healing" compiles');
-    expect(message).toContain('never by filename');
+    expect(result.findings?.map((finding) => finding.message).join(' ')).toContain(
+      'stale acknowledgment',
+    );
   });
 
-  it('BLOCKS an admitted token that does not fire', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [concept('holiness', ['be holy', 'pursue holiness'])],
-      inventoryFileContents: inventory('  - id: holiness\n    admitted: [holy, holiness]\n'),
-    });
+  it('fails when the acknowledged token no longer matches the tokenizer output', () => {
+    const result = lexiconInventoryCheck(
+      [forgiving],
+      inventoryYaml([{ ...validAck, token: 'pardon' }]),
+    );
     expect(result.status).toBe('fail');
-    expect(
-      result.findings?.some((finding) => finding.message.includes('"holiness" (token "holiness") does not fire')),
-    ).toBe(true);
+    const message = result.findings?.map((finding) => finding.message).join(' ') ?? '';
+    expect(message).toContain('now collapses to');
+    // The mismatched entry does not count as acknowledging the live collapse.
+    expect(message).toContain('rephrase/remove');
   });
 
-  it('BLOCKS a skipped token that DOES fire — the 2026-08-08 accident class', () => {
-    const result = lexiconInventoryCheck({
-      // "god with us" collapses to the single token "god".
-      concepts: [concept('presence-of-god', ['god with us', 'in your presence'])],
-      inventoryFileContents: inventory(
-        '  - id: presence-of-god\n' +
-          '    admitted: [presence]\n' +
-          '    skipped:\n' +
-          '      - token: god\n' +
-          '        reason: removed 2026-08-08; must not return\n',
-      ),
-    });
+  it('fails on a malformed inventory instead of skipping rows', () => {
+    const result = lexiconInventoryCheck([forgiving], 'collapses: [unclosed');
     expect(result.status).toBe('fail');
-    expect(
-      result.findings?.some((finding) => finding.message.includes('skipped "god" (token "god") FIRES')),
-    ).toBe(true);
+    expect(result.findings?.map((finding) => finding.message).join(' ')).toContain(
+      'not valid YAML',
+    );
   });
 
-  it('BLOCKS an empty skip reason via the parser', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [WORSHIP],
-      inventoryFileContents: inventory(
-        '  - id: worship\n' +
-          '    admitted: [worship, bow]\n' +
-          '    skipped:\n' +
-          '      - token: sing\n' +
-          '        reason: ""\n',
-      ),
-    });
+  it('fails when collapses exist but the inventory file is missing', () => {
+    const result = lexiconInventoryCheck([forgiving], null);
     expect(result.status).toBe('fail');
-    expect(
-      result.findings?.some((finding) => finding.message.includes('reason must be a non-empty explanation')),
-    ).toBe(true);
+    expect(result.findings?.map((finding) => finding.message).join(' ')).toContain('is missing');
   });
 
-  it('BLOCKS a token that is both admitted and skipped', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [WORSHIP],
-      inventoryFileContents: inventory(
-        '  - id: worship\n' +
-          '    admitted: [worship]\n' +
-          '    skipped:\n' +
-          '      - token: worship\n' +
-          '        reason: contradicts the admitted list\n',
-      ),
-    });
-    expect(result.status).toBe('fail');
-    expect(result.findings?.some((finding) => finding.message.includes('both admitted and skipped'))).toBe(true);
-  });
-
-  it('BLOCKS an admitted entry that is not one significant token', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [WORSHIP],
-      inventoryFileContents: inventory('  - id: worship\n    admitted: [worship, the]\n'),
-    });
-    expect(result.status).toBe('fail');
-    expect(
-      result.findings?.some((finding) => finding.message.includes('does not normalize to one significant token')),
-    ).toBe(true);
-  });
-
-  it('fails closed when the inventory file is missing', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [WORSHIP],
-      inventoryFileContents: null,
-    });
-    expect(result.status).toBe('fail');
-    expect(result.summary).toContain(LEXICON_INVENTORY_PATH);
-  });
-
-  it('REPORTS (never blocks) a firing token with no recorded decision', () => {
-    const result = lexiconInventoryCheck({
-      // "bow down before him" collapses to "bow", which the row omits.
-      concepts: [WORSHIP],
-      inventoryFileContents: inventory('  - id: worship\n    admitted: [worship]\n'),
-    });
+  it('passes with no collapses and no inventory file', () => {
+    const wide: ConceptRecord = {
+      id: 'still-waters',
+      label: 'Still waters',
+      lexicon: ['still waters'],
+    };
+    const result = lexiconInventoryCheck([wide], null);
     expect(result.status).toBe('pass');
-    expect(
-      result.findings?.some((finding) => finding.message.includes('"bow" fires this concept but has no admitted entry')),
-    ).toBe(true);
+    expect(result.metrics).toMatchObject({ singleTokenCollapses: 0 });
   });
+});
 
-  it('matches with the engine tokenizer, so stemmed surface forms fire ("tempted" → "tempt")', () => {
-    const result = lexiconInventoryCheck({
-      concepts: [concept('remembered-a-way-of-escape', ['tempted', 'temptation'])],
-      inventoryFileContents: inventory(
-        '  - id: remembered-a-way-of-escape\n    admitted: [temptation, tempted]\n',
-      ),
-    });
+describe('committed repository state', () => {
+  const directory = join(REPO_ROOT, 'ontology', 'concepts');
+  const files = readdirSync(directory)
+    .filter((name) => name.endsWith('.yaml'))
+    .sort()
+    .map((name) => ({ name, contents: readFileSync(join(directory, name), 'utf8') }));
+  const { ontology, errors } = compileOntology(files);
+  const lexiconByConcept = new Map<string, string[]>();
+  for (const entry of ontology.lexicon) {
+    const bucket = lexiconByConcept.get(entry.conceptId);
+    if (bucket) bucket.push(entry.phrase);
+    else lexiconByConcept.set(entry.conceptId, [entry.phrase]);
+  }
+  const concepts: ConceptRecord[] = ontology.concepts.map((concept) => ({
+    id: concept.id,
+    label: concept.label,
+    lexicon: lexiconByConcept.get(concept.id) ?? [],
+  }));
+  const inventoryPath = join(REPO_ROOT, ...LEXICON_INVENTORY_PATH.split('/'));
+
+  it('every live collapse carries a current acknowledgment in the committed inventory', () => {
+    expect(errors).toEqual([]);
+    expect(existsSync(inventoryPath)).toBe(true);
+    const result = lexiconInventoryCheck(concepts, readFileSync(inventoryPath, 'utf8'));
     expect(result.status).toBe('pass');
-    expect(result.findings ?? []).toHaveLength(0);
+    const collapseCount = singleTokenCollapses(concepts).length;
+    expect(result.metrics).toMatchObject({
+      singleTokenCollapses: collapseCount,
+      acknowledgedCollapses: collapseCount,
+    });
+    expect(collapseCount).toBeGreaterThan(0);
   });
 
-  it('is not applicable before any concept exists', () => {
-    const result = lexiconInventoryCheck({ concepts: [], inventoryFileContents: null });
-    expect(result.status).toBe('not-applicable');
+  it('deleting the committed inventory would ring, not silently pass', () => {
+    const result = lexiconInventoryCheck(concepts, null);
+    expect(result.status).toBe('fail');
   });
 });

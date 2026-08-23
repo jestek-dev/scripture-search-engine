@@ -1,25 +1,25 @@
 {
-  "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
-  "layerFingerprint": "510285c049b5af949883c3421ee0d1a3f0121e76561cc785c2cce97a63c3dd29",
-  "engineVersion": "0.9.0",
+  "corpusFingerprint": "d2846ff36ccd7ffb7a12d525cf3f26aeaf5a81427b014a96da9ff2a903a5d1fe",
+  "layerFingerprint": "2421ff501d2bbb97095975f7dcc14ce9bc26ae5bf9c86617deb9e2fc0865096a",
+  "engineVersion": "0.14.0",
   "observations": [
     {
       "id": "broad-love",
       "top": [
         "WEB:45005008",
-        "WEB:45008035",
+        "WEB:62004010",
         "WEB:45008039",
         "WEB:49002004",
         "WEB:62004019",
         "WEB:43003016",
         "WEB:62004016",
-        "WEB:45008038",
-        "WEB:62004010",
-        "WEB:62004009"
+        "WEB:45008035",
+        "WEB:43015013",
+        "WEB:24031003"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.202307,
-      "meanTopScore": 23.580505
+      "weakReasonShare": 0.194533,
+      "meanTopScore": 22.533513
     },
     {
       "id": "broad-grace",
@@ -30,22 +30,22 @@
         "WEB:56003005",
         "WEB:49002010",
         "WEB:43001016",
+        "WEB:58013025",
         "WEB:45006014",
         "WEB:45006015",
-        "WEB:58013025",
-        "WEB:45006001"
+        "WEB:59002014"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.502782,
-      "meanTopScore": 15.193203
+      "weakReasonShare": 0.460834,
+      "meanTopScore": 13.773217
     },
     {
       "id": "broad-faith",
       "top": [
         "WEB:45010017",
         "WEB:58011006",
-        "WEB:59002017",
         "WEB:59002022",
+        "WEB:59002017",
         "WEB:59002024",
         "WEB:58011001",
         "WEB:49002008",
@@ -54,44 +54,44 @@
         "WEB:45001012"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.70006,
-      "meanTopScore": 14.302863
+      "weakReasonShare": 0.675778,
+      "meanTopScore": 13.23169
     },
     {
       "id": "broad-word",
       "top": [
-        "WEB:59001022",
         "WEB:48006006",
-        "WEB:43001001",
-        "WEB:23040008",
-        "WEB:44016032",
+        "WEB:59001022",
         "WEB:26033030",
-        "WEB:43015003",
-        "WEB:45010017",
-        "WEB:49005026",
-        "WEB:24010001"
+        "WEB:23040008",
+        "WEB:02014012",
+        "WEB:06001013",
+        "WEB:24010001",
+        "WEB:26033007",
+        "WEB:40026075",
+        "WEB:42011028"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.077963,
-      "meanTopScore": 65.073278
+      "weakReasonShare": 1,
+      "meanTopScore": 10.400983
     },
     {
       "id": "medium-refuge-trouble",
       "top": [
         "WEB:19046001",
         "WEB:19091002",
-        "WEB:19091001",
-        "WEB:19091004",
-        "WEB:19046002",
         "WEB:34001007",
+        "WEB:19091004",
         "WEB:19009009",
-        "WEB:19121005",
+        "WEB:19046010",
         "WEB:19032007",
-        "WEB:19046010"
+        "WEB:23025004",
+        "WEB:19034007",
+        "WEB:19034019"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.224323,
-      "meanTopScore": 32.002289
+      "weakReasonShare": 0.092346,
+      "meanTopScore": 36.446547
     },
     {
       "id": "medium-fear-not",
@@ -100,106 +100,106 @@
         "WEB:06001009",
         "WEB:19056011",
         "WEB:19027001",
-        "WEB:23043002",
-        "WEB:20003025",
         "WEB:23041010",
         "WEB:55001007",
+        "WEB:20003025",
         "WEB:62004018",
-        "WEB:19027003"
+        "WEB:19027003",
+        "WEB:58013006"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.105691,
-      "meanTopScore": 20.9838
+      "weakReasonShare": 0.099403,
+      "meanTopScore": 20.03116
     },
     {
       "id": "medium-light-darkness",
       "top": [
         "WEB:62001007",
-        "WEB:62001006",
-        "WEB:62001005",
-        "WEB:49005008",
         "WEB:62002006",
-        "WEB:49005009",
+        "WEB:49005008",
         "WEB:50001027",
         "WEB:51001010",
+        "WEB:25003002",
         "WEB:66021024",
-        "WEB:25003002"
+        "WEB:43011010",
+        "WEB:19056013",
+        "WEB:43011009"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.297762,
-      "meanTopScore": 26.714602
+      "weakReasonShare": 0.335018,
+      "meanTopScore": 23.722405
     },
     {
       "id": "narrow-hearing-doing",
       "top": [
+        "WEB:42006047",
         "WEB:40007024",
         "WEB:59001022",
-        "WEB:42006047",
-        "WEB:40007026",
-        "WEB:59001023",
-        "WEB:42006049",
+        "WEB:09015022",
         "WEB:45002013",
-        "WEB:40007025",
-        "WEB:40007027",
-        "WEB:42006046"
+        "WEB:43014015",
+        "WEB:40007021",
+        "WEB:42011028",
+        "WEB:43014021",
+        "WEB:26033032"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.377198,
-      "meanTopScore": 42.575318
+      "weakReasonShare": 0.176941,
+      "meanTopScore": 40.713646
     },
     {
       "id": "narrow-doers-word",
       "top": [
         "WEB:59001022",
-        "WEB:40007026",
-        "WEB:42006049",
         "WEB:42006047",
-        "WEB:40007024",
-        "WEB:59001023",
-        "WEB:40007025",
-        "WEB:40007027",
-        "WEB:42006046",
-        "WEB:59001024"
+        "WEB:40007026",
+        "WEB:42011028",
+        "WEB:09015022",
+        "WEB:45002013",
+        "WEB:26033032",
+        "WEB:43014015",
+        "WEB:40007021",
+        "WEB:43014021"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.399614,
-      "meanTopScore": 43.484487
+      "weakReasonShare": 0.305903,
+      "meanTopScore": 30.061847
     },
     {
       "id": "narrow-house-rock",
       "top": [
         "WEB:40007024",
-        "WEB:40007026",
-        "WEB:40007025",
         "WEB:42006048",
-        "WEB:40007027",
-        "WEB:42006049",
-        "WEB:42006047",
-        "WEB:42006046",
         "WEB:58010024",
-        "WEB:52005011"
+        "WEB:52005011",
+        "WEB:59001022",
+        "WEB:40018020",
+        "WEB:44002042",
+        "WEB:43013017",
+        "WEB:40016018",
+        "WEB:60002005"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.275924,
-      "meanTopScore": 47.218519
+      "weakReasonShare": 0.291208,
+      "meanTopScore": 23.985608
     },
     {
       "id": "phrase-present-help",
       "top": [
         "WEB:19046001",
-        "WEB:50004014",
-        "WEB:42011007",
         "WEB:19056012",
-        "WEB:19009009",
-        "WEB:19040017",
+        "WEB:42011007",
+        "WEB:50004014",
         "WEB:19010014",
-        "WEB:11018020",
-        "WEB:19034001",
-        "WEB:46007028"
+        "WEB:19009009",
+        "WEB:19091015",
+        "WEB:19040017",
+        "WEB:19040013",
+        "WEB:19121002"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.547191,
-      "meanTopScore": 13.250623
+      "weakReasonShare": 0.407238,
+      "meanTopScore": 10.122101
     },
     {
       "id": "adversarial-nonsense",
@@ -219,19 +219,19 @@
       "id": "ot-law-decalogue",
       "top": [
         "WEB:02020017",
-        "WEB:45007007",
         "WEB:45013009",
+        "WEB:45007007",
         "WEB:05007025",
-        "WEB:45007008",
         "WEB:44020033",
-        "WEB:02020001",
+        "WEB:45007008",
+        "WEB:59004002",
         "WEB:18031007",
-        "WEB:40006019",
-        "WEB:45007012"
+        "WEB:45007012",
+        "WEB:40006019"
       ],
-      "resultCount": 17,
-      "weakReasonShare": 0.138582,
-      "meanTopScore": 27.861045
+      "resultCount": 14,
+      "weakReasonShare": 1,
+      "meanTopScore": 6.067331
     },
     {
       "id": "ot-law-neighbour",
@@ -241,33 +241,33 @@
         "WEB:40022039",
         "WEB:59002008",
         "WEB:03019018",
-        "WEB:40019019",
-        "WEB:45013010",
-        "WEB:45013008",
         "WEB:43013035",
-        "WEB:43013034"
+        "WEB:40019019",
+        "WEB:46013004",
+        "WEB:40005044",
+        "WEB:40007012"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.182532,
-      "meanTopScore": 64.418417
+      "weakReasonShare": 0.068757,
+      "meanTopScore": 50.900186
     },
     {
       "id": "ot-blessing",
       "top": [
         "WEB:04006024",
+        "WEB:58013020",
+        "WEB:45015013",
+        "WEB:52005023",
         "WEB:49001003",
-        "WEB:40005003",
         "WEB:19034008",
-        "WEB:40005004",
-        "WEB:19032008",
         "WEB:19121007",
-        "WEB:20003026",
-        "WEB:05006017",
-        "WEB:19034020"
+        "WEB:40005003",
+        "WEB:01001028",
+        "WEB:50004006"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.435587,
-      "meanTopScore": 20.644901
+      "weakReasonShare": 0.150719,
+      "meanTopScore": 28.584702
     },
     {
       "id": "ot-narrative-ruth",
@@ -275,62 +275,62 @@
         "WEB:08001016"
       ],
       "resultCount": 1,
-      "weakReasonShare": 0,
-      "meanTopScore": 60
+      "weakReasonShare": 1,
+      "meanTopScore": 10
     },
     {
       "id": "ot-histories-elijah",
       "top": [
         "WEB:11019012",
         "WEB:40017005",
-        "WEB:19046006",
         "WEB:23054007",
+        "WEB:19046006",
         "WEB:19139018",
-        "WEB:46015017",
+        "WEB:58012019",
         "WEB:19027007",
-        "WEB:40027050",
         "WEB:43011043",
+        "WEB:41001003",
         "WEB:19046010"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.467122,
-      "meanTopScore": 11.259603
+      "weakReasonShare": 0.313824,
+      "meanTopScore": 8.744109
     },
     {
       "id": "ot-histories-humble",
       "top": [
         "WEB:14007014",
+        "WEB:60005006",
+        "WEB:59004010",
         "WEB:23043007",
-        "WEB:01016015",
-        "WEB:23043001",
         "WEB:10012025",
         "WEB:59002007",
+        "WEB:33006008",
+        "WEB:01016015",
         "WEB:01016013",
-        "WEB:10012024",
-        "WEB:60005006",
-        "WEB:23040026"
+        "WEB:45012003"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.646168,
-      "meanTopScore": 15.826731
+      "weakReasonShare": 0.393948,
+      "meanTopScore": 13.959194
     },
     {
       "id": "ot-wisdom-trust",
       "top": [
         "WEB:20003005",
         "WEB:19037005",
-        "WEB:20003006",
         "WEB:19027014",
         "WEB:23040031",
         "WEB:19062005",
         "WEB:20003026",
         "WEB:25003025",
         "WEB:33007007",
-        "WEB:19032008"
+        "WEB:19013005",
+        "WEB:19009010"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.139824,
-      "meanTopScore": 27.322456
+      "weakReasonShare": 0.16427,
+      "meanTopScore": 23.866277
     },
     {
       "id": "ot-wisdom-time",
@@ -341,14 +341,14 @@
         "WEB:55001009",
         "WEB:49006022",
         "WEB:49005016",
-        "WEB:21003002",
         "WEB:45008028",
+        "WEB:21003003",
         "WEB:40018022",
         "WEB:46007029"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.566035,
-      "meanTopScore": 13.825988
+      "weakReasonShare": 0.564883,
+      "meanTopScore": 9.192932
     },
     {
       "id": "ot-prophets-servant",
@@ -359,14 +359,14 @@
         "WEB:23043025",
         "WEB:18031033",
         "WEB:26033010",
-        "WEB:58004012",
         "WEB:19051001",
-        "WEB:01003006",
-        "WEB:01003007"
+        "WEB:58004012",
+        "WEB:19065003",
+        "WEB:19103012"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.440919,
-      "meanTopScore": 10.731888
+      "weakReasonShare": 0.400369,
+      "meanTopScore": 6.670765
     },
     {
       "id": "ot-prophets-plans",
@@ -376,15 +376,15 @@
         "WEB:43014027",
         "WEB:51003015",
         "WEB:50004009",
-        "WEB:59002004",
-        "WEB:50004006",
         "WEB:23026003",
-        "WEB:40006027",
-        "WEB:19034014"
+        "WEB:43016033",
+        "WEB:59002004",
+        "WEB:19034014",
+        "WEB:60005007"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.307714,
-      "meanTopScore": 20.042385
+      "weakReasonShare": 0.226431,
+      "meanTopScore": 17.690125
     },
     {
       "id": "ot-prophets-justly",
@@ -396,31 +396,31 @@
         "WEB:48006016",
         "WEB:19101001",
         "WEB:51003012",
+        "WEB:45014015",
         "WEB:19116001",
-        "WEB:49002005",
-        "WEB:45014015"
+        "WEB:05007012"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 10.155584
+      "meanTopScore": 7.821491
     },
     {
       "id": "ot-adversarial-census",
       "top": [
         "WEB:01005008",
         "WEB:01005004",
-        "WEB:01005005",
         "WEB:02020009",
         "WEB:20003002",
-        "WEB:20003016",
-        "WEB:33007015",
         "WEB:43011006",
         "WEB:43011017",
-        "WEB:58011030"
+        "WEB:20003016",
+        "WEB:58011030",
+        "WEB:33007015",
+        "WEB:39003004"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 5.485492
+      "meanTopScore": 4.054023
     }
   ]
 }

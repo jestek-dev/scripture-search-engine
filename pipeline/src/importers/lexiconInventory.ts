@@ -1,27 +1,147 @@
 /**
- * Parses `ontology/lexicon-inventory.yaml` — the reviewed bare-word decision
- * table, one row per compiled concept id.
+ * Parses `ontology/lexicon-inventory.yaml` — the reviewed acknowledgment
+ * record for lexicon phrases whose real matching width is one token.
  *
- * The 2026-08-08 single-token audit's hard lesson was that bare-word
- * behaviour existed with nobody deciding it: multi-word phrases silently
- * collapsed to one significant token and the broadest queries in the product
- * fired concepts by accident. The inventory makes every bare-word decision an
- * explicit, reviewed row: `admitted` tokens MUST fire the concept, `skipped`
- * tokens MUST NOT, and each skip carries the reason a human gave. The
- * companion gate (eval/src/gates/lexiconInventory.ts) enforces the rows
- * against the compiled ontology with the engine's own tokenizer.
+ * A stopword-heavy phrase normalizing to one common token is a different
+ * object than a deliberate bare-word trigger; this file is where a human
+ * says, per phrase, that the collapse is intended. Every entry under
+ * `collapses:` acknowledges one live `singleTokenCollapses` finding
+ * (eval/src/gates/collision.ts) — the gate turns unacknowledged or stale
+ * collapses into G4 failures, so the acknowledgment can never silently
+ * drift from the lexicon it describes.
  *
- * Parsing is strict and error-returning, never throwing and never guessing —
- * the same discipline as doctrinalReviews.ts: an unreadable decision table
- * must surface as a loud gate finding, because a guardrail that silently
- * skips its own data is decoration.
- *
- * Keying trap, recorded here because it already bit once: rows are keyed by
- * compiled concept **id**, not by filename. The healing concept's id is
- * `prayer-for-healing` while its file is `pastoral-prayer-for-healing.yaml`.
+ * The file is shared reviewed data: future bare-word inventory sections
+ * (per-concept admitted/skipped rows — one file, one gate, two consumers)
+ * add their own top-level keys, so unknown top-level keys are tolerated
+ * here; the `collapses` list itself is validated strictly. Parsing is
+ * error-returning, never throwing and never guessing, for the same reason
+ * as doctrinalReviews.ts: an unreadable acknowledgment record must surface
+ * as a loud gate finding, not vanish.
  */
 
 import { parse as parseYaml } from 'yaml';
+
+export interface LexiconCollapseAcknowledgment {
+  readonly conceptId: string;
+  readonly phrase: string;
+  readonly token: string;
+  /** Literally `true` — an unintended collapse is fixed in the lexicon, not recorded here. */
+  readonly intended: true;
+  readonly reviewedBy: string;
+  readonly date: string;
+  readonly note: string;
+}
+
+/**
+ * Canonical (conceptId, phrase) key. Shared by this parser's duplicate check
+ * and the G4 deny-list's acknowledgment matching (eval/src/gates/collision.ts)
+ * — they are two halves of one mechanism, so they must join identically.
+ * NUL cannot occur inside a YAML scalar, so the joined key is unambiguous;
+ * written as an escape, never a raw byte, so this file stays text to git and
+ * the mechanism stays reviewable in a PR diff.
+ */
+export function collapseAcknowledgmentKey(conceptId: string, phrase: string): string {
+  return `${conceptId}\u0000${phrase}`;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function nonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+export function parseLexiconInventory(contents: string): {
+  readonly collapses: readonly LexiconCollapseAcknowledgment[];
+  readonly errors: readonly string[];
+} {
+  const errors: string[] = [];
+  let parsed: unknown;
+  try {
+    parsed = parseYaml(contents);
+  } catch (error) {
+    return {
+      collapses: [],
+      errors: [`not valid YAML: ${error instanceof Error ? error.message : 'parse error'}`],
+    };
+  }
+  if (!isRecord(parsed) || !Array.isArray(parsed['collapses'])) {
+    return {
+      collapses: [],
+      errors: ['lexicon-inventory.yaml must contain a top-level `collapses` list'],
+    };
+  }
+
+  const collapses: LexiconCollapseAcknowledgment[] = [];
+  const seen = new Set<string>();
+  for (const [index, row] of parsed['collapses'].entries()) {
+    const location = `collapses[${index}]`;
+    if (!isRecord(row)) {
+      errors.push(`${location}: must be an object`);
+      continue;
+    }
+    if (!nonEmptyString(row['conceptId'])) {
+      errors.push(`${location}: conceptId must be a non-empty string`);
+      continue;
+    }
+    const conceptId = (row['conceptId'] as string).trim();
+    if (!nonEmptyString(row['phrase'])) {
+      errors.push(`${location} (${conceptId}): phrase must be the lexicon phrase verbatim`);
+      continue;
+    }
+    const phrase = row['phrase'] as string;
+    const key = collapseAcknowledgmentKey(conceptId, phrase);
+    if (seen.has(key)) {
+      errors.push(`${location}: duplicate acknowledgment for ${conceptId} "${phrase}"`);
+      continue;
+    }
+    seen.add(key);
+    if (!nonEmptyString(row['token'])) {
+      errors.push(`${location} (${conceptId} "${phrase}"): token must be the collapsed token`);
+      continue;
+    }
+    if (row['intended'] !== true) {
+      errors.push(
+        `${location} (${conceptId} "${phrase}"): intended must be literally true — ` +
+          'an acknowledgment records a deliberate collapse; a phrase that should not ' +
+          'collapse is rephrased or removed in the lexicon, never recorded as unintended',
+      );
+      continue;
+    }
+    if (!nonEmptyString(row['reviewedBy'])) {
+      errors.push(`${location} (${conceptId} "${phrase}"): reviewedBy must name the reviewer`);
+      continue;
+    }
+    if (!nonEmptyString(row['date']) || !/^\d{4}-\d{2}-\d{2}$/.test(row['date'] as string)) {
+      errors.push(`${location} (${conceptId} "${phrase}"): date must be a YYYY-MM-DD date`);
+      continue;
+    }
+    if (!nonEmptyString(row['note'])) {
+      errors.push(
+        `${location} (${conceptId} "${phrase}"): note must say why the collapse is intended — ` +
+          'an empty reason is decoration, not a decision',
+      );
+      continue;
+    }
+    collapses.push({
+      conceptId,
+      phrase,
+      token: (row['token'] as string).trim(),
+      intended: true,
+      reviewedBy: (row['reviewedBy'] as string).trim(),
+      date: row['date'] as string,
+      note: (row['note'] as string).trim(),
+    });
+  }
+  return { collapses, errors };
+}
+
+// ---------------------------------------------------------------------------
+// Bare-word inventory section (top-level `concepts:` list) — merged from the
+// lexicon-concepts PR 2 mechanism (#33). Same file, second consumer:
+// eval/src/gates/lexiconInventory.ts. Both parsers tolerate each other's
+// top-level key by design.
 
 export interface SkippedBareWord {
   /** The candidate bare word, as a user would type it. */
@@ -39,20 +159,12 @@ export interface LexiconInventoryRow {
   readonly skipped: readonly SkippedBareWord[];
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function nonEmptyString(value: unknown): value is string {
-  return typeof value === 'string' && value.trim().length > 0;
-}
-
 /** A bare word is one typed word: no whitespace, so a phrase cannot hide in a token slot. */
 function isBareWord(value: unknown): value is string {
   return nonEmptyString(value) && /^\S+$/.test(value.trim());
 }
 
-export function parseLexiconInventory(contents: string): {
+export function parseBareWordInventory(contents: string): {
   readonly rows: readonly LexiconInventoryRow[];
   readonly errors: readonly string[];
 } {

@@ -1,0 +1,42 @@
+{
+  "id": "hymn-solid-rock",
+  "query": "the solid rock",
+  "status": "active",
+  "note": [
+    "QR-6 (P5.5) curated hymn alias — Edward Mote, 'The Solid Rock' / 'My Hope",
+    "Is Built on Nothing Less' (1834, public domain). Measured gap 2026-08-22",
+    "pre-change: 'the solid rock' #1 was Matthew 7:24 on passage_terms alone",
+    "(3.39 — no concept, no attribution); 'on christ the solid rock i stand'",
+    "led with a translation_variant accident; 'all other ground is sinking",
+    "sand' led with translation_variant noise (Acts 20:9, Eutychus 'sinking",
+    "down in a deep sleep').",
+    "",
+    "Target: christ-the-cornerstone — the hymn's claim is christological",
+    "(Christ himself is the foundation of the sinner's hope; Mote's own title",
+    "is 'The Immutable Basis of a Sinner's Hope'), which is the cornerstone",
+    "locator's subject (1 Pet 2:4-7, Eph 2:19-22, Acts 4:11). Flagged J13",
+    "alternatives where two fit: building-on-the-rock (the wise/foolish",
+    "builders PARABLE supplies the sinking-sand imagery but is a claim about",
+    "hearing-and-doing, not about who Christ is) and hope-in-god (Heb 6:19's",
+    "anchor-of-the-soul). The alias mechanism deliberately does NOT add 'rock'",
+    "or 'foundation' to any lexicon — whole-query equality only — so the",
+    "cornerstone pack's G4 distinctness against building-on-the-rock is",
+    "untouched.",
+    "",
+    "Written fixture-first (pending, failing); promoted in the 0.13.0 flip",
+    "commit that made it pass."
+  ],
+  "expectedTop": [
+    {
+      "ref": "1 Peter 2:4-7",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Hymn: \"The Solid Rock\" → Theme: Christ the cornerstone"
+    }
+  ],
+  "additionalQueries": [
+    "my hope is built on nothing less",
+    "on christ the solid rock i stand",
+    "all other ground is sinking sand"
+  ]
+}

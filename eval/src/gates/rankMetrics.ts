@@ -62,8 +62,14 @@ export type BatteryCategoryFloors = Readonly<Record<BatteryCategory, number>>;
 
 const QUERY_FIELDS = ['id', 'query', 'category', 'status', 'addedAt', 'origin', 'retiredAt', 'retirementNote'] as const;
 const QUERIES_FILE_FIELDS = ['$schema', 'batteryVersion', 'policy', 'queries'] as const;
-const JUDGED_ROW_FIELDS = ['ref', 'grade', 'basis', 'judgedBy', 'judgedAt', 'provisional'] as const;
-const HARMFUL_ROW_FIELDS = ['ref', 'why', 'judgedBy', 'judgedAt', 'provisional'] as const;
+// voteSnapshotSha256 (P6.5/B6): the provenance mark a VOTE-SEEDED row must
+// carry — the pinned snapshot its grades were derived from. Allowed here as
+// schema; its value (and the rule that vote rows must carry it and editorial
+// rows must not) is enforced by the judgment-provenance lint
+// (gates/judgmentProvenance.ts), whose findings ride this gate's
+// instrument-findings channel.
+const JUDGED_ROW_FIELDS = ['ref', 'grade', 'basis', 'judgedBy', 'judgedAt', 'provisional', 'voteSnapshotSha256'] as const;
+const HARMFUL_ROW_FIELDS = ['ref', 'why', 'judgedBy', 'judgedAt', 'provisional', 'voteSnapshotSha256'] as const;
 const EMPTY_FIELDS = ['why', 'judgedBy', 'judgedAt'] as const;
 const JUDGMENT_ENTRY_FIELDS = ['judged', 'harmful', 'legitimatelyEmpty'] as const;
 const JUDGMENTS_FILE_FIELDS = [
@@ -1215,6 +1221,7 @@ export function withRankEvidence(
   metrics: RankMetricsReport,
   findings: readonly GateFinding[],
   quality?: RankQualityOutcome,
+  acceptance?: BatteryAcceptanceOutcome,
 ): GateResult {
   const overall = metrics.overall;
   const display = (value: RankMetricValue): string =>
@@ -1243,22 +1250,35 @@ export function withRankEvidence(
       ? `thresholds: none set, ${unset} null (measured and reported — ${RANK_QUALITY_NULL_MARKER})`
       : `thresholds: ${set} set (${qualityFailures.length} FAILED), ${unset} null (measured and reported)`;
   }
+  // QR-8 acceptance criteria segment: a null criterion prints the exact
+  // plan-stated "not-applicable — thresholds unset" words beside its
+  // measured detail — reported, never counted as pass or fail.
+  let acceptanceSummary = '';
+  const acceptanceFailures = acceptance?.failures ?? [];
+  if (acceptance !== undefined) {
+    acceptanceSummary = `; acceptance: ${acceptance.evaluations
+      .map((entry) => entry.outcome === 'no-threshold'
+        ? `${entry.criterion} ${BATTERY_ACCEPTANCE_NULL_MARKER} (${entry.detail})`
+        : `${entry.criterion} ${entry.outcome} (${entry.detail})`)
+      .join('; ')}`;
+  }
   const summary =
     `${gate.summary} | rank metrics: ` +
     `nDCG@10 ${display(overall.ndcg10)}, MRR@10 ${display(overall.mrr10)}, ` +
     `good-or-better@3 ${display(overall.goodOrBetterTop3Rate)}, ` +
     `recall@50 ${display(overall.recallAt50)} over ${overall.scoreableQueries} scoreable ` +
-    `quer(ies) (${overall.excludedQueries} excluded, IDCG=0); ${thresholdsSummary}`;
+    `quer(ies) (${overall.excludedQueries} excluded, IDCG=0); ${thresholdsSummary}${acceptanceSummary}`;
+  const enforcedFailures = [...qualityFailures, ...acceptanceFailures];
   const merged = {
     ...gate,
     summary,
     metrics: { ...(gate.metrics ?? {}), ...numbers },
-    findings: [...(gate.findings ?? []), ...findings, ...qualityFailures],
+    findings: [...(gate.findings ?? []), ...findings, ...enforcedFailures],
   };
   // An enforced (non-null) threshold that failed or could not be measured
   // fails the row; nothing here can ever upgrade a status.
-  return qualityFailures.length > 0 && gate.status !== 'fail'
-    ? { ...merged, status: 'fail', summary: `${summary}; ${qualityFailures.length} rank threshold(s) failed` }
+  return enforcedFailures.length > 0 && gate.status !== 'fail'
+    ? { ...merged, status: 'fail', summary: `${summary}; ${enforcedFailures.length} rank threshold(s) failed` }
     : merged;
 }
 
@@ -1514,6 +1534,17 @@ export interface RankQualityThresholds {
   readonly mrr10: number | null;
   readonly goodOrBetterTop3Rate: number | null;
   readonly battery: { readonly categoryFloors: BatteryCategoryFloors };
+  /**
+   * QR-8 (P5.7): the ms/ref battery rows as budget-bound acceptance
+   * criteria. Booleans, not micro-rationals — the enforced value is
+   * literally `true` (rollback is null-with-tombstone, never `false`), and
+   * the same E5 null-until-baselined discipline applies: null means
+   * "not-applicable — thresholds unset", measured and reported, never a
+   * hollow pass, and a non-null value is structurally impossible before an
+   * independently approved rank-metrics baseline exists.
+   */
+  readonly spelling: { readonly noSilentEmpty: true | null };
+  readonly references: { readonly grammarCoverage: true | null };
 }
 
 function commentKeys(record: Record<string, unknown>): string[] {
@@ -1554,6 +1585,43 @@ function parseThresholdMicro(
 }
 
 /**
+ * QR-8 acceptance booleans: null (unset) or literally `true` (enforced).
+ * `false` is deliberately invalid — disabling a flipped criterion is a
+ * null-with-tombstone rollback, never a silent off-switch that reads as a
+ * value. The premature-threshold discipline applies exactly as it does to
+ * the micro thresholds: `true` with no independently approved rank-metrics
+ * baseline rings and is coerced to null.
+ */
+function parseAcceptanceBoolean(
+  value: unknown,
+  path: string,
+  deps: { readonly rankBaselineEstablished: boolean },
+  findings: GateFinding[],
+  prematureFindings: GateFinding[],
+): true | null {
+  if (value === null) return null;
+  if (value !== true) {
+    findings.push(finding(
+      'rank-quality-schema',
+      `rankQuality.${path} must be null or literally true (a budget-bound acceptance boolean; ` +
+        `rollback is null-with-tombstone, never false), got ${String(value)}`,
+    ));
+    return null;
+  }
+  if (!deps.rankBaselineEstablished) {
+    prematureFindings.push(finding(
+      'rank-quality-premature-threshold',
+      `rankQuality.${path} is non-null but no independently approved rank-metrics baseline exists ` +
+        `(${RANK_METRICS_BASELINE_PATH} + its approval) — acceptance criteria flip only via the ` +
+        'four-step protocol in docs/governance/probe-baseline-review.md (J42); the value is not ' +
+        'enforced on this run',
+    ));
+    return null;
+  }
+  return true;
+}
+
+/**
  * Validates the reviewed `rankQuality` block of eval/budgets.json. Returns
  * null thresholds (and findings) on any structural shape problem — a gate
  * must never enforce, or skip enforcing, on the strength of a malformed
@@ -1578,7 +1646,7 @@ export function validateRankQualityBlock(
       )],
     };
   }
-  const allowed = ['ndcg10', 'mrr10', 'goodOrBetterTop3Rate', 'battery'];
+  const allowed = ['ndcg10', 'mrr10', 'goodOrBetterTop3Rate', 'battery', 'spelling', 'references'];
   for (const key of commentKeys(block)) {
     if (!allowed.includes(key)) {
       findings.push(finding('rank-quality-schema', `rankQuality has unknown field "${key}"`));
@@ -1622,6 +1690,35 @@ export function validateRankQualityBlock(
     block['goodOrBetterTop3Rate'], 'goodOrBetterTop3Rate', deps, findings, prematureFindings,
   );
 
+  // QR-8 acceptance sub-blocks. Explicit presence is required exactly like
+  // the per-category ndcg entries: the reviewed file carries every criterion
+  // by name, null included — an absent key would be indistinguishable from a
+  // silently dropped one.
+  let noSilentEmpty: true | null = null;
+  const spelling = block['spelling'];
+  if (!isRecord(spelling) || commentKeys(spelling).join(',') !== 'noSilentEmpty') {
+    findings.push(finding(
+      'rank-quality-schema',
+      'rankQuality.spelling must be { noSilentEmpty } (QR-8 acceptance criterion, null until baselined)',
+    ));
+  } else {
+    noSilentEmpty = parseAcceptanceBoolean(
+      spelling['noSilentEmpty'], 'spelling.noSilentEmpty', deps, findings, prematureFindings,
+    );
+  }
+  let grammarCoverage: true | null = null;
+  const references = block['references'];
+  if (!isRecord(references) || commentKeys(references).join(',') !== 'grammarCoverage') {
+    findings.push(finding(
+      'rank-quality-schema',
+      'rankQuality.references must be { grammarCoverage } (QR-8 acceptance criterion, null until baselined)',
+    ));
+  } else {
+    grammarCoverage = parseAcceptanceBoolean(
+      references['grammarCoverage'], 'references.grammarCoverage', deps, findings, prematureFindings,
+    );
+  }
+
   const battery = block['battery'];
   const floors: Partial<Record<BatteryCategory, number>> = {};
   if (!isRecord(battery) || !isRecord(battery['categoryFloors'])
@@ -1661,6 +1758,8 @@ export function validateRankQualityBlock(
       mrr10,
       goodOrBetterTop3Rate,
       battery: { categoryFloors: floors as BatteryCategoryFloors },
+      spelling: { noSilentEmpty },
+      references: { grammarCoverage },
     },
     findings: prematureFindings,
   };
@@ -1760,6 +1859,192 @@ export function evaluateRankQuality(
     ),
   );
   return { evaluations, failures };
+}
+
+// ---------------------------------------------------------------------------
+// QR-8 (P5.7): the ms/ref battery rows as budget-bound acceptance criteria.
+//
+// Measurement, never adjudication, exactly like every metric above:
+// spelling.noSilentEmpty asks whether any misspelling-category query came
+// back a BARE EMPTY (a discovery outcome with zero results — the audit's
+// silent-empty class, and the shape the documented E9 mutation check
+// produces by disabling OOV substitution); references.grammarCoverage asks
+// whether every reference-adjacent row resolved as a reference and every
+// tiers.referenceGrammar pinned row resolved to exactly its expected label.
+// While the reviewed threshold is null the criterion reports
+// "not-applicable — thresholds unset" — measured and reported, never a
+// hollow pass. When enforced (true), fail-closed: a violation fails, and a
+// criterion that CANNOT be verified from this run's evidence (an
+// invalid-reference outcome whose suggestion presence the battery evidence
+// does not record; missing grammar pins) fails as unmeasurable rather than
+// passing on a gap.
+// ---------------------------------------------------------------------------
+
+/** The exact words a null acceptance criterion reports (plan-stated). */
+export const BATTERY_ACCEPTANCE_NULL_MARKER = 'not-applicable — thresholds unset';
+
+export interface BatteryAcceptanceEvaluation {
+  readonly criterion: 'spelling.noSilentEmpty' | 'references.grammarCoverage';
+  readonly threshold: true | null;
+  /** Measured truth of the boolean on this run; null when not determinable. */
+  readonly holds: boolean | null;
+  readonly outcome: 'no-threshold' | 'met' | 'not-met' | 'unmeasurable';
+  readonly detail: string;
+}
+
+export interface BatteryAcceptanceOutcome {
+  readonly evaluations: readonly BatteryAcceptanceEvaluation[];
+  /** One finding per not-met or unmeasurable ENFORCED criterion; empty = nothing enforced failed. */
+  readonly failures: readonly GateFinding[];
+}
+
+function acceptanceEvaluation(
+  criterion: BatteryAcceptanceEvaluation['criterion'],
+  threshold: true | null,
+  holds: boolean | null,
+  detail: string,
+  failures: GateFinding[],
+): BatteryAcceptanceEvaluation {
+  if (threshold === null) {
+    return { criterion, threshold, holds, outcome: 'no-threshold', detail };
+  }
+  if (holds === true) return { criterion, threshold, holds, outcome: 'met', detail };
+  if (holds === false) {
+    failures.push(finding(
+      'battery-acceptance-not-met',
+      `rankQuality.${criterion} is enforced (true) but does not hold: ${detail}`,
+    ));
+    return { criterion, threshold, holds, outcome: 'not-met', detail };
+  }
+  failures.push(finding(
+    'battery-acceptance-unmeasurable',
+    `rankQuality.${criterion} is enforced (true) but cannot be verified from this run's battery ` +
+      `evidence — a criterion that cannot be measured must not pass: ${detail}`,
+  ));
+  return { criterion, threshold, holds, outcome: 'unmeasurable', detail };
+}
+
+/**
+ * Evaluates the two QR-8 acceptance criteria over an executed battery.
+ * `referenceGrammarPins` is the reviewed `tiers.referenceGrammar` row list
+ * (null when the tiers block is unavailable or malformed — which makes the
+ * enforced grammar criterion unmeasurable rather than half-checked).
+ */
+export function evaluateBatteryAcceptance(input: {
+  readonly thresholds: RankQualityThresholds;
+  readonly validated: ValidatedBattery;
+  readonly outcomes: readonly BatteryQueryOutcome[];
+  readonly referenceGrammarPins:
+    readonly { readonly query: string; readonly expectedReference: string }[] | null;
+}): BatteryAcceptanceOutcome {
+  const failures: GateFinding[] = [];
+  const byId = new Map(input.outcomes.map((outcome) => [outcome.id, outcome]));
+
+  // spelling.noSilentEmpty — over the misspelling category rows.
+  const msQueries = input.validated.queries.filter((query) => query.category === 'misspelling');
+  const bareEmpty: string[] = [];
+  const indeterminate: string[] = [];
+  const unexecuted: string[] = [];
+  for (const query of msQueries) {
+    const outcome = byId.get(query.id);
+    if (outcome === undefined) {
+      unexecuted.push(query.id);
+    } else if (outcome.kind === 'discovery' && outcome.top.length === 0) {
+      // The bare empty: no results, no resolved reference, no suggestion —
+      // the exact class the criterion exists to trip on.
+      bareEmpty.push(query.id);
+    } else if (outcome.kind === 'invalid-reference') {
+      // Acceptable ONLY when suggestion-bearing, and the battery outcome
+      // shape does not record suggestion presence — not determinable here.
+      // (Extending the recorded outcome schema is part of the threshold-flip
+      // PR, which re-baselines the battery evidence anyway. That extension
+      // should record correction citations alongside suggestion presence:
+      // the "cited-correction results" arm is equally uncertifiable today —
+      // a non-empty discovery is accepted without verifying any citation.)
+      indeterminate.push(query.id);
+    }
+  }
+  const spellingProblems: string[] = [];
+  if (bareEmpty.length > 0) spellingProblems.push(`bare-empty quer(ies): ${bareEmpty.join(', ')}`);
+  if (indeterminate.length > 0) {
+    spellingProblems.push(
+      `invalid-reference outcome(s) whose suggestion presence the battery evidence does not record: ${indeterminate.join(', ')}`,
+    );
+  }
+  if (unexecuted.length > 0) spellingProblems.push(`unexecuted quer(ies): ${unexecuted.join(', ')}`);
+  const spellingHolds = bareEmpty.length > 0
+    ? false
+    : indeterminate.length > 0 || unexecuted.length > 0 || msQueries.length === 0
+      ? null
+      : true;
+  const spellingDetail = spellingProblems.length > 0
+    ? spellingProblems.join('; ')
+    : msQueries.length === 0
+      ? 'no misspelling quer(ies) in the battery — nothing to measure'
+      : `${msQueries.length} misspelling quer(ies), 0 bare-empty`;
+
+  // references.grammarCoverage — every reference-adjacent row resolves, and
+  // every reviewed grammar pin resolves to exactly its expected label.
+  const refQueries = input.validated.queries.filter((query) => query.category === 'reference-adjacent');
+  const notResolving: string[] = [];
+  const refUnexecuted: string[] = [];
+  for (const query of refQueries) {
+    const outcome = byId.get(query.id);
+    if (outcome === undefined) refUnexecuted.push(query.id);
+    else if (outcome.kind !== 'reference') notResolving.push(`${query.id} (${outcome.kind})`);
+  }
+  const pinMismatches: string[] = [];
+  const pinsUnmatched: string[] = [];
+  for (const pin of input.referenceGrammarPins ?? []) {
+    const outcome = input.outcomes.find((entry) => entry.query === pin.query);
+    if (outcome === undefined) {
+      pinsUnmatched.push(pin.query);
+    } else if (outcome.kind !== 'reference' || outcome.passageReference !== pin.expectedReference) {
+      pinMismatches.push(
+        `"${pin.query}" resolved to ` +
+          `${outcome.kind === 'reference' ? `"${outcome.passageReference ?? ''}"` : outcome.kind}, ` +
+          `expected "${pin.expectedReference}"`,
+      );
+    }
+  }
+  const grammarProblems: string[] = [];
+  if (notResolving.length > 0) grammarProblems.push(`unresolved ref row(s): ${notResolving.join(', ')}`);
+  if (pinMismatches.length > 0) grammarProblems.push(pinMismatches.join('; '));
+  if (input.referenceGrammarPins === null) {
+    grammarProblems.push('tiers.referenceGrammar pins unavailable (tiers block missing or malformed)');
+  }
+  if (pinsUnmatched.length > 0) {
+    grammarProblems.push(
+      `grammar pin(s) matching no battery outcome: ${pinsUnmatched.map((query) => `"${query}"`).join(', ')}`,
+    );
+  }
+  if (refUnexecuted.length > 0) grammarProblems.push(`unexecuted ref row(s): ${refUnexecuted.join(', ')}`);
+  const grammarHolds = notResolving.length > 0 || pinMismatches.length > 0
+    ? false
+    : input.referenceGrammarPins === null || pinsUnmatched.length > 0 || refUnexecuted.length > 0
+        || refQueries.length === 0
+      ? null
+      : true;
+  const grammarDetail = grammarProblems.length > 0
+    ? grammarProblems.join('; ')
+    : refQueries.length === 0
+      ? 'no reference-adjacent quer(ies) in the battery — nothing to measure'
+      : `${refQueries.length}/${refQueries.length} ref row(s) resolve, ` +
+        `${input.referenceGrammarPins!.length}/${input.referenceGrammarPins!.length} pinned label(s) match`;
+
+  return {
+    evaluations: [
+      acceptanceEvaluation(
+        'spelling.noSilentEmpty', input.thresholds.spelling.noSilentEmpty,
+        spellingHolds, spellingDetail, failures,
+      ),
+      acceptanceEvaluation(
+        'references.grammarCoverage', input.thresholds.references.grammarCoverage,
+        grammarHolds, grammarDetail, failures,
+      ),
+    ],
+    failures,
+  };
 }
 
 // ---------------------------------------------------------------------------

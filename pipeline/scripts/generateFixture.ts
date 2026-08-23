@@ -34,7 +34,17 @@ const OUTPUT = join(HERE, '..', 'fixtures', 'web-subset.json');
  * Passage selection, with the reason each is present. A fixture whose
  * contents nobody can justify becomes impossible to prune later.
  */
-export const SELECTION: readonly { book: string; chapters: readonly number[]; why: string }[] = [
+export const SELECTION: readonly {
+  book: string;
+  chapters?: readonly number[];
+  /**
+   * Single-verse selections as "chapter:verse" strings, for targets where a
+   * whole chapter would be unjustified weight (P5.2/QR-3 added two verses,
+   * not two chapters — the fixture df shift stays small and explainable).
+   */
+  verses?: readonly string[];
+  why: string;
+}[] = [
   { book: 'James', chapters: [1, 2], why: 'golden fixture #1 anchor: hearers and doers' },
   { book: 'Matthew', chapters: [5, 6, 7], why: 'fixture #1 anchor (7:24-27) + dense teaching text' },
   { book: 'Luke', chapters: [6], why: 'fixture #1 anchor (6:46-49)' },
@@ -167,6 +177,23 @@ export const SELECTION: readonly { book: string; chapters: readonly number[]; wh
   { book: 'Zechariah', chapters: [13], why: 'pastoral harm gate: strike the shepherd (13:7)' },
   { book: 'Psalms', chapters: [116], why: 'pastoral harm gate: death of the saints must not answer despair or grief' },
   { book: '1 Peter', chapters: [2, 3], why: 'pastoral harm gates: submission passages must not answer abuse disclosures' },
+
+  // --- QR-3 reference-coverage targets, added 2026-08-22 (P5.2) ---
+  // Single verses, not chapters: these exist so the activating reference
+  // fixtures can prove resolution against a verse that is actually present
+  // (verseExists gates the resolver), and the plan's expected-churn budget
+  // for P5.2 is "small explained df shift from the two added verses".
+  { book: 'Song of Solomon', verses: ['2:1'], why: 'P5.2/QR-3: ref8 "Songs of Solomon 2:1" fixture target — the book had zero fixture verses, so the new alias row alone could not resolve (verseExists)' },
+  { book: '3 John', verses: ['1:4'], why: 'P5.2/QR-3: ordinal fixture target "3rd John 4" — single-chapter branch resolves to 3 John 1:4, which must exist in the fixture corpus' },
+
+  // --- Pericope-grouping fixture targets, added 2026-08-22 (P5.6/CO-3 PR 2) ---
+  // The two golden fixtures that only the pericope path can satisfy name
+  // chapters the fixture corpus did not carry; without them the fixtures are
+  // vacuous on the hermetic bed (their own notes disclose this). Same rule as
+  // the pastoral packs: an assertion for a verse outside the fixture corpus
+  // is vacuous protection, so target chapters and fixtures arrive together.
+  { book: 'Psalms', chapters: [136], why: 'P5.6/CO-3: pericope-grouping-loving-kindness target — the WEB prints the refrain in all 26 verses, no curated anchor touches the psalm, and it derives as a single pericope (summed boundary vote 12 at 136:1)' },
+  { book: 'Genesis', chapters: [11], why: 'P5.6/CO-3: pericope-no-overgrouping-terah target — 11:26/11:27 carry the same verbatim phrase across the 11:10-26 / 11:27-32 pericope boundary (summed votes 19/14)' },
 ];
 
 /**
@@ -199,7 +226,7 @@ interface FixtureFile {
     readonly sourceSha256: string;
     readonly note: string;
   };
-  readonly selection: readonly { book: string; chapters: readonly number[]; why: string }[];
+  readonly selection: typeof SELECTION;
   readonly verses: readonly VerseArrayEntry[];
 }
 
@@ -230,21 +257,38 @@ function main(): void {
   // Adding "Matthew 17 — mustard seed" would have deleted Matthew 5-7 and
   // with them golden fixture #1's anchor, with nothing reporting a loss.
   const wanted = new Map<number, Set<number>>();
+  const wantedVerses = new Map<number, Set<string>>();
   for (const entry of SELECTION) {
     const book = findBook(entry.book);
     if (!book) throw new Error(`generateFixture: unknown book "${entry.book}"`);
+    if (!entry.chapters && !entry.verses) {
+      throw new Error(`generateFixture: selection entry for "${entry.book}" names no chapters and no verses`);
+    }
     // MERGE chapters across entries for the same book. This used to be
     // `wanted.set(book.id, new Set(entry.chapters))`, which silently discarded
     // every earlier entry for the book — the 2026-07-30 "Isaiah 53" addition
     // overwrote "Isaiah 40, 43", so the committed fixture lacked chapters its
     // own selection record claimed (including the fear-not anchor Isa 43:1-3).
     const bucket = wanted.get(book.id) ?? new Set<number>();
-    for (const chapter of entry.chapters) bucket.add(chapter);
-    wanted.set(book.id, bucket);
+    for (const chapter of entry.chapters ?? []) bucket.add(chapter);
+    if (bucket.size > 0) wanted.set(book.id, bucket);
+    // Single-verse selections merge the same way, keyed "chapter:verse".
+    const verseBucket = wantedVerses.get(book.id) ?? new Set<string>();
+    for (const locator of entry.verses ?? []) {
+      if (!/^\d{1,3}:\d{1,3}$/.test(locator)) {
+        throw new Error(`generateFixture: bad verse locator "${locator}" for "${entry.book}" (want "chapter:verse")`);
+      }
+      verseBucket.add(locator);
+    }
+    if (verseBucket.size > 0) wantedVerses.set(book.id, verseBucket);
   }
 
   const verses = source.verses
-    .filter((verse) => wanted.get(verse.book)?.has(verse.chapter) ?? false)
+    .filter(
+      (verse) =>
+        (wanted.get(verse.book)?.has(verse.chapter) ?? false) ||
+        (wantedVerses.get(verse.book)?.has(`${verse.chapter}:${verse.verse}`) ?? false),
+    )
     // Canonical order makes the output byte-stable regardless of source order.
     .sort((a, b) =>
       a.book !== b.book

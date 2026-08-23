@@ -7,7 +7,10 @@
     "caring for aging parents",
     "watching a parent die"
   ],
-  "status": "pending",
+  "status": "active",
+  "coversConcepts": [
+    "caring-for-aging-parents"
+  ],
   "note": [
     "GAP FIXTURE (audit F11 / fn13, FLAG-FOR-JESSE #7; re-verified",
     "2026-08-21 sweep). The audit's one confidently-WRONG concept fire,",
@@ -23,13 +26,32 @@
     "main; the equivalent Prov 22:6 guard is corpus-blocked (Proverbs 22",
     "absent) and rides the re-pin payload with Isa 46:4 and Ps 71:9,18.",
     "requiredReasonLabel deliberately absent until Jesse approves the",
-    "pack's label."
+    "pack's label.",
+    "",
+    "PROMOTED TO ACTIVE 2026-08-22 (P4.6). One GATE-FORCED edit (the",
+    "trinity/incarnation/P4.10 precedent): the authored note above",
+    "deferred requiredReasonLabel to the A2 sign-off, but G3's coverage",
+    "check requires the active demonstrating fixture to assert the exact",
+    "label, so the proposed wording 'Theme: Caring for aging parents' is",
+    "now pinned. If Jesse's sign-off changes the wording, the label",
+    "re-cuts in the same commit as the yaml change. Measured on the",
+    "fixture bed at promotion (full bed same shape): all five queries put",
+    "2 Cor 1:3-4 #1 by concept_anchor (28.86-46.00) with Ps 23:4 /",
+    "Ps 73:26 / 1 Thess 4:13-14 / Rom 8:38-39 behind it; the Raising-",
+    "children rows drop to #8-#10 or out of the top-10 on every query,",
+    "and Eph 6:4 sits below 2 Cor 1:3-4 everywhere (the preferredOrder",
+    "guard, now passing). Ps 116:15 stays out per its standing global",
+    "gate. The companion dying-parent-register-guard fixture locks the",
+    "same healed state on the registers this fixture does not carry",
+    "('prayer for my dying mother', 'aging parents', 'caring for elderly",
+    "parents', 'when a parent dies', 'losing a parent')."
   ],
   "expectedTop": [
     {
       "reference": "2 Corinthians 1:3-4",
       "withinTop": 3,
-      "requiredReasonFamily": "concept_anchor"
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Caring for aging parents"
     }
   ],
   "expectedWithinTop": 10,

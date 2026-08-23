@@ -27,7 +27,8 @@ import { createEngine } from '@jestek-dev/scripture-engine';
 import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
 import {
   collisionGate,
-  singleTokenCollapses,
+  lexiconInventoryCheck,
+  LEXICON_INVENTORY_PATH,
   type ConceptRecord,
 } from './gates/collision.js';
 import {
@@ -47,10 +48,7 @@ import {
   DOCTRINAL_REVIEWS_PATH,
   FLAGGED_PAIRINGS_PATH,
 } from './gates/doctrinalGuardrail.js';
-import {
-  lexiconInventoryCheck,
-  LEXICON_INVENTORY_PATH,
-} from './gates/lexiconInventory.js';
+import { lexiconInventoryCheck as bareWordInventoryCheck } from './gates/lexiconInventory.js';
 import {
   correlationGroups,
   isFileUrl,
@@ -77,6 +75,7 @@ import {
   computeRankMetrics,
   deriveGoldenRankJudgments,
   detectNoMeasurableEffect,
+  evaluateBatteryAcceptance,
   evaluateRankQuality,
   probeHarmfulRefPresence,
   runBattery,
@@ -98,6 +97,11 @@ import {
   type ValidatedBattery,
   type VerseRange,
 } from './gates/rankMetrics.js';
+import {
+  lintJudgmentProvenance,
+  VOTE_SOURCE_MANIFESTS,
+  type PinnedVoteSnapshots,
+} from './gates/judgmentProvenance.js';
 import { budgetsPropertyGate, reviewedConstantsCheck } from './gates/budgetsProperty.js';
 import {
   orderingSnapshotGate,
@@ -151,6 +155,8 @@ interface Budgets {
   readonly rankQuality?: unknown;
   /** Validated at runtime by validateTiersBlock (E6) — reviewed data, never trusted shapes. */
   readonly tiers?: unknown;
+  /** G6 reviewed-constants mirror — validated by reviewedConstantsCheck, never trusted shapes. */
+  readonly signalBudgets?: unknown;
   readonly latency: { readonly p95Ms: number };
   readonly noise: {
     readonly maxTop10ChurnRatio: number;
@@ -617,6 +623,8 @@ interface LoadedBattery {
   readonly validated: ValidatedBattery;
   readonly queriesSha256: string;
   readonly judgmentsSha256: string;
+  /** Parsed judgments file, for the provenance lint (P6.5/B6). */
+  readonly judgmentsParsed: unknown;
 }
 
 /**
@@ -642,7 +650,31 @@ function loadBattery(floors: BatteryCategoryFloors | null): LoadedBattery {
     validated: validateBattery(queries.parsed, judgments.parsed, floors),
     queriesSha256: queries.sha256,
     judgmentsSha256: judgments.sha256,
+    judgmentsParsed: judgments.parsed,
   };
+}
+
+/**
+ * Pinned snapshot shas for the judgment-provenance lint (P6.5/B6): one per
+ * recognised vote source, read from the source's manifest. `null` marks a
+ * manifest that could not be read, which the lint fails CLOSED on for any
+ * vote-seeded row — an unverifiable snapshot mark must never verify.
+ */
+function loadPinnedVoteSnapshots(): PinnedVoteSnapshots {
+  const shaBySource = new Map<string, string | null>();
+  for (const [source, manifestPath] of VOTE_SOURCE_MANIFESTS) {
+    const path = join(REPO_ROOT, ...manifestPath.split('/'));
+    try {
+      const parsed = JSON.parse(readFileSync(path, 'utf8')) as { sha256?: unknown };
+      shaBySource.set(
+        source,
+        typeof parsed.sha256 === 'string' && parsed.sha256.length > 0 ? parsed.sha256 : null,
+      );
+    } catch {
+      shaBySource.set(source, null);
+    }
+  }
+  return { shaBySource };
 }
 
 /**
@@ -952,12 +984,13 @@ async function main(): Promise<void> {
     const doctrinalReviewsContents = existsSync(reviewsPath) ? readFileSync(reviewsPath, 'utf8') : null;
     const flaggedPairingsContents = existsSync(watchlistPath) ? readFileSync(watchlistPath, 'utf8') : null;
 
-    // Bare-word inventory (ontology/lexicon-inventory.yaml) — same
-    // contents-or-null discipline: the check itself reports a missing file,
-    // and it fails closed rather than warning, because the inventory IS the
-    // mechanism that makes a bare-word decision mandatory.
-    const inventoryPath = join(REPO_ROOT, ...LEXICON_INVENTORY_PATH.split('/'));
-    const lexiconInventoryContents = existsSync(inventoryPath) ? readFileSync(inventoryPath, 'utf8') : null;
+    // Single-token-collapse acknowledgment record (plan P3.2 gate half):
+    // contents-or-null for the same reason as the doctrinal files — the
+    // check itself reports a missing file against the live collapse count.
+    const lexiconInventoryPath = join(REPO_ROOT, ...LEXICON_INVENTORY_PATH.split('/'));
+    const lexiconInventoryContents = existsSync(lexiconInventoryPath)
+      ? readFileSync(lexiconInventoryPath, 'utf8')
+      : null;
 
     const distillate = loadDistillate();
 
@@ -972,6 +1005,15 @@ async function main(): Promise<void> {
     });
 
     const battery = loadBattery(rankQuality.thresholds?.battery.categoryFloors ?? null);
+    // Judgment-label provenance lint (P6.5/B6): file-level reviewed-data
+    // check, run in EVERY context like the structural validation — a
+    // judgment row whose provenance is broken (or whose vote-snapshot mark
+    // does not match the pinned manifest) fails the G12 roster row on
+    // fixture CI legs too, never waiting for an artifact run.
+    const judgmentProvenanceFindings = lintJudgmentProvenance(
+      battery.judgmentsParsed,
+      loadPinnedVoteSnapshots(),
+    );
     const rankDocumentFindings = validateRankMetricsBaselineDocuments({
       baseline: rankBaselineDocument,
       approval: rankApprovalDocument,
@@ -982,6 +1024,19 @@ async function main(): Promise<void> {
     const probeRun = await runProbeGates(budgets, options, target, battery);
     const rankQualityOutcome = probeRun.rankMetrics !== null && rankQuality.thresholds !== null
       ? evaluateRankQuality(rankQuality.thresholds, probeRun.rankMetrics)
+      : null;
+    // QR-8 (P5.7): the ms/ref acceptance criteria ride the same G12 row,
+    // evaluated exactly when the battery executed and the reviewed block
+    // validated. The tiers block supplies the reference-grammar label pins;
+    // when it is unavailable the enforced grammar criterion is unmeasurable
+    // (fail-closed), never half-checked.
+    const batteryAcceptance = probeRun.batteryOutcomes !== null && rankQuality.thresholds !== null
+      ? evaluateBatteryAcceptance({
+          thresholds: rankQuality.thresholds,
+          validated: battery.validated,
+          outcomes: probeRun.batteryOutcomes,
+          referenceGrammarPins: validateTiersBlock(budgets.tiers).config?.referenceGrammar ?? null,
+        })
       : null;
     const probeGates = probeRun.gates;
     const g3 = mergeGateResults('Golden regression', [
@@ -1006,28 +1061,7 @@ async function main(): Promise<void> {
               'ontology failed to compile',
               ontologyErrors.map((message) => ({ message })),
             )
-          : (() => {
-              const result = collisionGate(concepts, budgets.collision);
-              if (result.status !== 'pass') return result;
-              // Collapses are reported ON the passing gate rather than as their
-              // own row: they are a curation diagnostic, not an admission
-              // decision, and they must be visible without ever blocking.
-              const collapses = singleTokenCollapses(concepts);
-              if (collapses.length === 0) return result;
-              return {
-                ...result,
-                summary:
-                  `${result.summary}; ${collapses.length} lexicon phrase(s) collapse to a ` +
-                  'single token and therefore act as bare-word triggers',
-                findings: collapses.map((entry) => ({
-                  message:
-                    `${entry.conceptId}: "${entry.phrase}" normalizes to the single token ` +
-                    `"${entry.token}", so the bare query "${entry.token}" fires this concept. ` +
-                    'Intended for most; check it is intended for this one.',
-                  subjects: [entry.conceptId],
-                })),
-              };
-            })();
+          : collisionGate(concepts, budgets.collision);
     // Doctrinal-guardrail sub-checks (docs/DOCTRINAL-BASIS.md §5), merged the
     // way concept-coverage merged into G3: review records ride G1 (they are
     // provenance for the human admission decision), the pairing watchlist
@@ -1047,6 +1081,15 @@ async function main(): Promise<void> {
         ? g4Base
         : mergeGateResults('Concept collision', [
             g4Base,
+            // Deny-list over singleTokenCollapses (plan P3.2 gate half):
+            // every collapse must be acknowledged in lexicon-inventory.yaml
+            // or the row fails naming it; stale acknowledgments fail too.
+            // Skipped while the ontology itself fails to compile — the
+            // compile failure already rejects, and collapses computed from a
+            // broken ontology would only produce confusing double findings.
+            ...(ontologyErrors.length === 0
+              ? [lexiconInventoryCheck(concepts, lexiconInventoryContents)]
+              : []),
             flaggedPairingsCheck({
               concepts,
               anchors,
@@ -1066,7 +1109,7 @@ async function main(): Promise<void> {
                   'Lexicon bare-word inventory',
                   'ontology failed to compile; the inventory check needs compiled concept ids',
                 )
-              : lexiconInventoryCheck({
+              : bareWordInventoryCheck({
                   concepts,
                   inventoryFileContents: lexiconInventoryContents,
                 }),
@@ -1082,11 +1125,16 @@ async function main(): Promise<void> {
       g3,
       g4,
       distinctivenessGate(distillate, budgets.distinctiveness),
-      // G6 rides one roster row like G2/G3: the reviewed-constants half is
-      // honest N/A until Phase 3 mirrors the budget constants into
-      // budgets.json; the property half needs no data, so it always runs —
-      // this row never has a fully not-applicable state.
-      mergeGateResults('Signal budgets', [reviewedConstantsCheck(), budgetsPropertyGate()]),
+      // G6 rides one roster row like G2/G3: the reviewed-constants half
+      // compares the engine's constants against the signalBudgets mirror in
+      // budgets.json (built incrementally by the 0.10.0 stages; honest N/A
+      // only while the mirror block is absent); the property half needs no
+      // data, so it always runs — this row never has a fully not-applicable
+      // state.
+      mergeGateResults('Signal budgets', [
+        reviewedConstantsCheck(budgets.signalBudgets),
+        budgetsPropertyGate(),
+      ]),
       correlationGate(),
       probeGates[0]!,
       saturationGate(distillate, budgets.saturation),
@@ -1103,7 +1151,11 @@ async function main(): Promise<void> {
           validated: battery.validated,
           outcomes: probeRun.batteryOutcomes,
           harmfulPresence: probeRun.batteryHarmfulPresence,
-          instrumentFindings: [...rankQuality.findings, ...rankDocumentFindings],
+          instrumentFindings: [
+            ...rankQuality.findings,
+            ...rankDocumentFindings,
+            ...judgmentProvenanceFindings,
+          ],
           context: { explicitTarget: target !== null },
         });
         return probeRun.rankMetrics === null
@@ -1113,6 +1165,7 @@ async function main(): Promise<void> {
               probeRun.rankMetrics,
               probeRun.noEffect?.findings ?? [],
               rankQualityOutcome ?? undefined,
+              batteryAcceptance ?? undefined,
             );
       })(),
     ];

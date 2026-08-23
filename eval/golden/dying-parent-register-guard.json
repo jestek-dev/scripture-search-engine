@@ -1,0 +1,58 @@
+{
+  "id": "dying-parent-register-guard",
+  "query": "prayer for my dying mother",
+  "additionalQueries": [
+    "aging parents",
+    "caring for elderly parents",
+    "when a parent dies",
+    "losing a parent",
+    "take care of your parents"
+  ],
+  "status": "active",
+  "note": [
+    "GUARD FIXTURE (P4.6, 2026-08-22 — the fn13 kill made permanent on",
+    "the registers the gap fixture does not carry). Before the",
+    "caring-for-aging-parents pack, every one of these queries was led",
+    "by 'Theme: Raising children' anchors (Col 3:20-21 #1, Eph 6:4 and",
+    "Deut 6:6-7 #2-#4 on both beds) — child-discipline verses served",
+    "confidently to a grieving or care-burdened adult child; 'prayer for",
+    "my dying mother' was led by generic Theme: Prayer anchors with the",
+    "same absence of any caregiving register. Measured healed state",
+    "(2026-08-22, both beds identical shape): 2 Cor 1:3-4 #1 by",
+    "concept_anchor on every query, comfort ladder #1-#5, honoring",
+    "register behind it, Raising-children rows at #8-#10 or gone.",
+    "The mustNotLead entries name the two measured hijack leads with",
+    "window 3 because they occupied #1-#2. 'when a parent dies' and",
+    "'losing a parent' assert the two lexicon phrases added beyond the",
+    "worklist's five (dies / losing are distinct tokens under the one",
+    "tokenizer — no mandated phrase could reach either register; both",
+    "measured with the identical harm shape pre-commit).",
+    "'take care of your parents' added 2026-08-22 (round-1 critique",
+    "P4.6-1): the same fn13 harm shape measured live on the caregiver",
+    "phrasing ({take, care, parent} — no committed phrase could reach",
+    "it; Raising-children #1-#3 hermetic, both mustNotLead refs in the",
+    "leadership window). This query line was extended FIRST and measured",
+    "failing before the matching lexicon phrase existed."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Corinthians 1:3-4",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Caring for aging parents"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotLead": [
+    {
+      "reference": "Colossians 3:20-21",
+      "withinTop": 3,
+      "why": "parenting's 0.85 anchor ('children, obey your parents'), the measured #1 on the parent-word registers before the pack (fn13, FLAG #7) — a child-obedience text must never again be the first word to someone losing a parent"
+    },
+    {
+      "reference": "Ephesians 6:4",
+      "withinTop": 3,
+      "why": "parenting's 0.9 anchor ('you fathers, don't provoke your children'), the measured #2-#3 of the same fn13 hijack; same class"
+    }
+  ]
+}

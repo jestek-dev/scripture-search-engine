@@ -49,16 +49,27 @@ import { dirname, join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { fileURLToPath } from 'node:url';
 
+import { buildAliasLayer } from './buildAliasLayer.js';
 import { buildConceptLayer, type ConceptLayerInput } from './buildConceptLayer.js';
 import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
+import { buildSpellingIndex, type SqliteReadWriteDatabase } from './buildSpellingIndex.js';
 import { EXPOSITION_SOURCES } from './expositionSources.js';
+import { compileHymnAliases } from './importers/aliasImporter.js';
 import { compileOntology } from './importers/ontologyImporter.js';
-import { loadExposition } from './loadExpositions.js';
+import { loadExposition, readTestament } from './loadExpositions.js';
 import { fingerprintDirectory } from './provenance/contentFingerprint.js';
 import { manifestFingerprint } from './provenance/manifest.js';
-import { importCrossReferences, importTopicScores } from './importers/openbibleImporter.js';
+import {
+  importCrossReferences,
+  importSectionCounts,
+  importTopicScores,
+} from './importers/openbibleImporter.js';
+import { derivePericopes } from './buildPericopes.js';
+import { importTskText } from './importers/tskImporter.js';
 import { importVpl } from './importers/vplImporter.js';
 import { buildTermProfiles, type ExpositionDocument } from './stats/passageTerms.js';
+import { declaredNullLine, runVersificationGuard } from './versificationGuard.js';
+import { TVTMS_ENGLISH_LOCI } from './versification/tvtms.js';
 import type { DistributionTier, ManifestSet, SourceManifest } from './provenance/manifest.js';
 import type { TranslationImport } from './importers/types.js';
 
@@ -67,6 +78,7 @@ const ROOT = join(HERE, '..');
 const SOURCES = join(ROOT, 'sources');
 const MANIFEST_DIR = join(ROOT, 'manifests');
 const ONTOLOGY_DIR = join(ROOT, '..', 'ontology', 'concepts');
+const ALIASES_DIR = join(ROOT, '..', 'ontology', 'aliases');
 const ARTIFACT_DIR = join(ROOT, '..', 'artifacts');
 
 function loadManifests(): ManifestSet {
@@ -414,9 +426,30 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
     const xrefs = importCrossReferences(
       unzipSingleTextEntry(readVerified(manifests, 'openbible-xrefs', 'cross-references.zip')),
     );
+    // Pericope tiling (schema v8, CO-3 PR 1): checksum-verified full source,
+    // derived over this artifact's present verses. Same re-verify-at-read
+    // posture as the other two OpenBible sources — the URL rolls, so the
+    // pinned bytes are the admitted source, not whatever the URL serves now.
+    const sections = importSectionCounts(
+      readVerified(manifests, 'openbible-sections', 'bible-section-counts.txt').toString('utf8'),
+    );
+    // TSK phrase re-mining (schema v9, P6.3/B3 Phase A): archive verified
+    // against the manifest, module read from its unpack directory. Phase A
+    // discipline: these rows feed ONLY cross_reference_phrases; none may
+    // reach cross_references before the Phase B bump (J26/J55).
+    readVerified(manifests, 'tsk-text', 'TSK.zip');
+    const tskDirectory = join(SOURCES, 'tsk');
+    const tsk = importTskText({
+      ot: readTestament(tskDirectory, 'ot'),
+      nt: readTestament(tskDirectory, 'nt'),
+    });
+    process.stdout.write(
+      `tsk-text : ${tsk.rows.length} phrase triples mined ` +
+        `(${tsk.rejected.length} fragments rejected-and-reported)\n`,
+    );
     process.stdout.write(
       `layer A  : ${ontology.concepts.length} concepts, ${topics.rows.length} topic rows, ` +
-        `${xrefs.rows.length} cross-references\n`,
+        `${xrefs.rows.length} cross-references, ${sections.rows.length} section spans\n`,
     );
 
     // ---- Layer B ----
@@ -442,20 +475,73 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       process.stdout.write(`cross-tr : ${translationTokens.size} verses carry alternate wording\n`);
     }
 
+    const presentVerseIds = new Set(verses.map((verse) => verse.verseId));
+
+    // Versification guard (P6.4/B5 S1): TVTMS as an independent witness that
+    // the corpus's verse-ID shape matches a recognized English-tradition
+    // stanza at every locus where versifications are known to differ. A
+    // failure here is the "concept anchored to the WRONG passage" class that
+    // no other gate can see. ZERO SHIPPED BYTES — the declared-null line
+    // below is the Admission Report's mandated disclosure.
+    const versification = runVersificationGuard(TVTMS_ENGLISH_LOCI, presentVerseIds, 'full');
+    if (versification.mismatches.length > 0) {
+      throw new Error(
+        `buildArtifact: versification guard failed:\n  ${versification.mismatches.join('\n  ')}`,
+      );
+    }
+    process.stdout.write(`${declaredNullLine(versification)}\n`);
+
     const layer = buildConceptLayer(database as unknown as SqliteDatabase, {
       ontology,
       topicRows: topics.rows,
       crossReferences: xrefs.rows,
+      pericopes: derivePericopes(sections.rows, presentVerseIds),
+      crossReferencePhrases: tsk.rows,
       manifests,
-      presentVerseIds: new Set(verses.map((verse) => verse.verseId)),
+      presentVerseIds,
       verseTerms,
       translationTokens,
     });
     process.stdout.write(
       `layer    : ${layer.concepts} concepts, ${layer.editorialAnchors} editorial anchors, ` +
         `${layer.topicAnchors} topic anchors, ${layer.crossReferences} xrefs, ` +
+        `${layer.pericopes} pericopes, ${layer.crossReferencePhrases} tsk phrase triples, ` +
         `${layer.verseTerms} verse terms (${layer.droppedOutOfCorpus} dropped out of corpus)\n`,
     );
+
+    // Spelling index next-to-last (schema v7, QR-5): derived from rows
+    // already in this database; chains the layer fingerprint per-record.
+    const spelling = buildSpellingIndex(database as unknown as SqliteReadWriteDatabase);
+    process.stdout.write(
+      `spelling : ${spelling.termCount} vocabulary terms, ` +
+        `${spelling.deleteRowCount} delete rows\n`,
+    );
+
+    // Curated aliases LAST (QR-6, 0.13.0 — no schema bump): reviewed pack
+    // rows compiled against the ontology, chained onto the spelling
+    // fingerprint per-record. An empty pack set is a byte-level no-op.
+    const aliasFiles = existsSync(ALIASES_DIR)
+      ? readdirSync(ALIASES_DIR)
+          .filter((name) => name.endsWith('.yaml'))
+          .sort()
+          .map((name) => ({ name, contents: readFileSync(join(ALIASES_DIR, name), 'utf8') }))
+      : [];
+    const compiledAliases = compileHymnAliases(
+      aliasFiles,
+      new Set(ontology.concepts.map((concept) => concept.id)),
+      // The double-chip guard needs the compiled lexicon: an alias phrase
+      // reaching full lexicon parity with its own target concept is refused.
+      ontology.lexicon,
+    );
+    if (compiledAliases.errors.length > 0) {
+      throw new Error(`buildArtifact: alias pack errors:\n  ${compiledAliases.errors.join('\n  ')}`);
+    }
+    const aliases = buildAliasLayer(
+      database as unknown as SqliteReadWriteDatabase,
+      compiledAliases.rows,
+      manifests,
+    );
+    process.stdout.write(`aliases  : ${aliases.aliasCount} curated phrase/hymn aliases\n`);
 
     database.exec('VACUUM');
     const perTableBytes = measurePerTableBytes(database as unknown as SqliteReadable);
@@ -498,7 +584,10 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
       tokenizerVersion: corpus.tokenizerVersion,
       engineVersion: readEngineVersion(),
       corpusFingerprint: corpus.corpusFingerprint,
-      layerFingerprint: layer.layerFingerprint ?? null,
+      // The FINAL layer identity: concept layer → spelling index → curated
+      // aliases, each chaining on the last (QR-6; the alias link is a no-op
+      // when no rows ship, so pre-QR-6 identities are preserved exactly).
+      layerFingerprint: aliases.layerFingerprint,
       manifestFingerprint: manifestFingerprint(manifests),
       databaseSha256,
       databaseBytes,
@@ -525,8 +614,13 @@ export function buildArtifact(options: BuildArtifactOptions = {}): ArtifactDescr
         editorialAnchors: layer.editorialAnchors,
         topicAnchors: layer.topicAnchors,
         crossReferences: layer.crossReferences,
+        pericopes: layer.pericopes,
+        crossReferencePhrases: layer.crossReferencePhrases,
         verseTerms: layer.verseTerms,
         translationTokens: layer.translationTokens,
+        spellingTerms: spelling.termCount,
+        spellingDeletes: spelling.deleteRowCount,
+        curatedAliases: aliases.aliasCount,
       },
       sources: manifests.sources
         .filter((source) => source.sha256)

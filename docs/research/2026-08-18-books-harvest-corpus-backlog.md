@@ -1,5 +1,12 @@
 # Books-harvest corpus backlog — consolidated (2026-08-18)
 
+> **Dependency statement:** everything in this ledger is gated on the WEB
+> re-pin — see `docs/corpus-payload-dependency.md` (DG-16 / plan P2.6) for
+> what exactly it waits on (the J52 snapshot errand, the P2.1 re-pin PR,
+> J39 approvals), how the payload composes with the re-pin (PR-α/PR-β, one
+> regeneration cycle), and when the block is discharged. Do not build a
+> pack from these rows before that statement reads discharged.
+
 Every reference in this document is **blocked on the fixture corpus**
 (`pipeline/fixtures/web-subset.json`), not on soundness. None of it can land
 today: `npm run check:drift` shows the pinned WEB source (and both OpenBible

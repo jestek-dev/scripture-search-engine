@@ -763,8 +763,33 @@ function isSemanticFindingCategory(gate: GateId, value: unknown): value is strin
   return typeof value === 'string' && findingCategoryPattern(gate).test(value);
 }
 
+/**
+ * G3's fixture-run findings carry the gate's own legacy category codes
+ * (G3_EXPECTED_TOP_ABSENT, G3_PREFERRED_ORDER, ...) — reviewer-facing
+ * identifiers that predate the machine report's semantic namespace and are
+ * asserted verbatim by the corpus-golden tests and pending-fixture preview
+ * messages. Map them here rather than rewriting the gate: the deterministic
+ * transform G3_X_Y -> sse.gauntlet.v1.finding.g3-golden.x-y covers every
+ * code the gate emits (all match LEGACY_G3_CODE by construction), so an
+ * active G3 failure of ANY assertion kind produces a machine finding instead
+ * of crashing report generation. Before this mapping a preferredOrder
+ * failure on an active fixture threw "Invalid semantic category for
+ * G3-golden: G3_PREFERRED_ORDER" and the run died without a report.
+ */
+const LEGACY_G3_CODE = /^G3_[A-Z][A-Z0-9_]*$/;
+
+function legacyG3Category(code: string): string {
+  return `sse.gauntlet.v1.finding.g3-golden.${code
+    .slice('G3_'.length)
+    .toLowerCase()
+    .replaceAll('_', '-')}`;
+}
+
 function categoryCode(gate: AdmissionReport['gates'][number], finding: GateFinding): string {
-  const category = finding.categoryCode ?? `sse.gauntlet.v1.finding.${gate.gate.toLowerCase()}.reported`;
+  const raw = finding.categoryCode ?? `sse.gauntlet.v1.finding.${gate.gate.toLowerCase()}.reported`;
+  const category = gate.gate === 'G3-golden' && LEGACY_G3_CODE.test(raw)
+    ? legacyG3Category(raw)
+    : raw;
   if (!isSemanticFindingCategory(gate.gate, category)) {
     throw new Error(`Invalid semantic category for ${gate.gate}: ${category}`);
   }

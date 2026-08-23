@@ -1,0 +1,20 @@
+{
+  "id": "spelling-stregnth",
+  "query": "stregnth",
+  "status": "active",
+  "note": [
+    "QR-5 (P5.4) cited spelling correction — battery ms5, an audit F: 'stregnth' is a silent-empty discovery today. THIS FIXTURE PINS DAMERAU SPECIFICALLY (plan-named): 'stregnth' -> 'strength' is a gn->ng adjacent transposition, which costs 1 only under Damerau–Levenshtein — plain Levenshtein prices it at 2, and the normalized token length 8 (equal to the typed length here; policy keyed on the NORMALIZED token) allows edit budget 1, so a non-Damerau metric would find NO correction here. A regression to plain edit distance turns this fixture red.",
+    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Ephesians 6:10",
+      "withinTop": 3,
+      "requiredReasonLabel": "Shared word: strength (corrected from \"stregnth\")"
+    },
+    {
+      "ref": "Isaiah 40:29",
+      "withinTop": 5
+    }
+  ]
+}

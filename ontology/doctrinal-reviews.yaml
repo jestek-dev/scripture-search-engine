@@ -55,6 +55,21 @@ reviews:
       weight). §5 applies: each editorial pairing is signed off by PR merge;
       the audit's Part 1 §C inventories all 148 editorial anchors.
 
+  - source: hymn-aliases
+    reviewedAt: "2026-08-22"
+    reviewer: "QR-6 starter-pack curation (see ontology/aliases/hymn-lines.yaml; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §1", "DOCTRINAL-BASIS.md §5"]
+    notes: >-
+      LH's own editorial voice, same class as `editorial`: each row states
+      only that a typed query names a public-domain hymn and that the hymn's
+      scriptural basis is the row's target — attribution the §1 pattern
+      blesses (judgment human, named, cited as a source, never a hidden
+      weight). No prosperity vector: the six starter hymns are classic
+      assurance/refuge/prayer hymns; no material-frame keyword appears in any
+      phrase or target rationale. §5 applies: every row rides the J13
+      line-by-line review, and merging the PR is the review act.
+
   - source: jfb
     reviewedAt: "2026-08-15"
     reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
@@ -100,6 +115,19 @@ reviews:
       as data it must be re-admitted (the manifest says so itself), which
       includes a fresh row here.
 
+  - source: openbible-sections
+    reviewedAt: "2026-08-22"
+    reviewer: "P5.6/CO-3 PR 1 admission (see pipeline/manifests/openbible-sections.json; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      Section-placement counts across 20 surveyed translations — purely
+      structural, like openbible-xrefs: each row says only where translations
+      start a section and how many of them do, with no heading text, no verse
+      text, and no topical framing of any kind through which a §3 vector
+      could enter. The engine cites the summed boundary vote as a countable
+      fact, never a relevance or correctness score.
+
   - source: openbible-topics
     reviewedAt: "2026-08-15"
     reviewer: "2026-08-15 doctrinal audit (see docs/DOCTRINAL-BASIS.md; ratified by PR merge)"
@@ -127,6 +155,22 @@ reviews:
     notes: >-
       Verse-to-verse cross-reference links carry no topical framing at all;
       correctly budgeted with TSK lineage.
+
+  - source: stepbible-tvtms
+    reviewedAt: "2026-08-22"
+    reviewer: "P6.4/B5 S1 admission (see pipeline/manifests/stepbible-tvtms.json; ratified by PR merge)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      STEPBible's TVTMS versification catalogue (CC BY 4.0, credit "STEP
+      Bible" — www.STEPBible.org): structural-linguistic facts only — at
+      which loci Bible versifications differ and machine-checkable tests per
+      tradition. No topical framing, no verse text, and ZERO SHIPPED BYTES:
+      it runs as a build-time versification witness (versificationGuard.ts)
+      and nothing from it enters the artifact. J56 is flagged for Jesse's
+      own per-source verdict and to RATIFY the covenant-#1 exclusions this
+      admission applies: TIPNR (per-person descriptions "created by Claude 3
+      AI") not admitted, TBCWG excluded entirely, TTESV never pinned.
 
   - source: torrey
     reviewedAt: "2026-08-15"
@@ -202,6 +246,26 @@ reviews:
     notes: >-
       Treasury of Scripture Knowledge (1830s); no data rows — exists to
       declare lineage with openbible-xrefs for G7. Re-review before any import.
+
+  - source: tsk-text
+    reviewedAt: "2026-08-22"
+    reviewer: "P6.3/B3 Phase A admission (see pipeline/manifests/tsk-text.json; verdict is Jesse's - J55 - and merging the PR is the review act)"
+    verdict: compatible
+    criteria: ["DOCTRINAL-BASIS.md §1", "DOCTRINAL-BASIS.md §3"]
+    notes: >-
+      FRESH admission row the lineage-only `tsk` row demands ("Re-review
+      before any import") - that row stands unchanged as the G7 ancestor.
+      What is imported is structural: (verse, quoted phrase of that verse,
+      reference list) triples. The phrase keys are the verse's own words,
+      not commentary prose; no TSK sentence ships. The reference lists ARE
+      19th-century interpretive associations (which passages the compilers
+      connected), which is exactly why this row exists and why J55 asks
+      Jesse for the verdict rather than inheriting the lineage row: the
+      associations carry no topical framing or prose through which a §3
+      vector could enter, and the engine reports them as "TSK links these,
+      under this phrase" - attribution, never adjudication (§1). Phase A
+      ships the capability table only; no ordering is touched before the
+      Phase B PR, which cannot merge before J55.
 
   - source: web
     reviewedAt: "2026-08-15"

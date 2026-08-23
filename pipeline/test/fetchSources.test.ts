@@ -71,6 +71,15 @@ describe('source registry and manifests agree', () => {
     }
   });
 
+  it('saves TVTMS under its manifest id, not its 130-character URL basename', () => {
+    const manifest = manifests().find((entry) => entry.id === 'stepbible-tvtms');
+    expect(manifest).toBeDefined();
+    expect(fileNameFor(manifest!)).toBe('stepbible-tvtms.txt');
+    // A bare .txt: fetched only to regenerate the committed distillate, so it
+    // must stay plain — an unpack rule here would mean something changed.
+    expect(UNPACK['stepbible-tvtms']).toEqual({ kind: 'plain' });
+  });
+
   it('sword modules declare a directory, plain sources declare a filename', () => {
     for (const spec of EXPOSITION_SOURCES) {
       if (spec.strategy === 'sword-zcom') {

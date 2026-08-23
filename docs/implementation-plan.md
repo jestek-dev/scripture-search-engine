@@ -311,7 +311,41 @@ Three design commitments a consumer can rely on:
 
 - **Invalid input is a typed kind, never an exception.** Consumers render the
   invalid-reference case; throwing would make every caller wrap a try/catch
-  around something the type system already expresses.
+  around something the type system already expresses. Additive since 0.11.0
+  (QR-4): an invalid-reference outcome MAY carry `suggestion?: { book,
+  reference, distance }` — a cited did-you-mean for a near-miss book name
+  ("did you mean Philippians 4:13?"). Suggestion only: the engine never
+  silently opens a guessed passage; consumers render it as a question, and
+  its absence needs no handling (the field is optional on all three
+  invalid-reference kinds — `research()`, `passage()`, `related()`).
+  Additive since 0.12.0 (QR-5, artifact schema v7): a `research()` discovery
+  outcome MAY carry `corrections?: [{ typed, corrected, distance }]` — the
+  machine-readable citation for deterministic spelling correction, present
+  iff an out-of-vocabulary token was substituted (J32; all three apps render
+  it). `typed` is the surface form the user typed, never the stem;
+  `distance` is the verified integer Damerau distance. A word in ANY
+  vocabulary is never rewritten, `themes()`/`forSong()` never correct, and
+  absence needs no handling. Over a pre-v7 artifact the engine simply never
+  corrects (presence-probed), so pinned pairs are unaffected until re-mint.
+  Additive since 0.14.0 (CO-3, artifact schema v8): a discovery result MAY
+  carry `verses?: GroupedVerse[]` and `grouping?: ResultGrouping` — present
+  exactly when the row is a merged passage-level result. `verses[]` is the
+  member verses in canonical order, each with its own uncollapsed evidence;
+  `grouping` says WHY they travel together: `section` (the full grouping
+  span — the row's own `reference` spans only the surfaced hits) and
+  `provenance` (`sourceId`/`label`, plus `boundaryVotes` on pericope groups
+  — the summed section-boundary vote at the section's start verse, read
+  from the artifact row itself so explanation and data cannot disagree).
+  Grouping is a typed field, deliberately NOT a reason chip: it contributes
+  zero points, and a merged row's score is the max of its members, never a
+  sum. Two mechanisms produce groups in fixed authority order — curated
+  anchor spans first (the pre-0.14.0 collapse, now explained, citing the
+  anchor's own source), then derived pericopes (OpenBible section counts,
+  citing 'openbible-sections'); a verse claimed by an anchor span never
+  joins a pericope group. Over a pre-v8 artifact (or one whose pericopes
+  table is empty) the pericope arm simply never fires (presence-probed),
+  so pinned pairs are unaffected until re-mint; anchor groups then still
+  carry `verses`/`grouping`.
 - **`related()` is not similarity.** Every entry exists because a human
   recorded the link — a cross-reference edge, or a concept whose curated
   anchors include the passage. Similarity is what `research()` does, and
@@ -320,6 +354,22 @@ Three design commitments a consumer can rely on:
   decided by the engine, not by how a caller built the object, and lyrics are
   capped at 40 tokens. Otherwise two consumers passing identical data get
   different rankings and the reproducibility contract is false.
+
+**PROPOSED fourth commitment — CC BY attribution passthrough (pending Jesse's
+ratification as consumer-contract owner, J49; not yet binding):** Artifacts
+embed OpenBible.info data (CC BY 4.0); every consumer app MUST surface the
+attribution per `docs/ATTRIBUTIONS.md` — the obligation passes through. This
+is an obligation the shipped data already carries: the release notes have
+stated the passthrough since the promote-only release flow landed (see the
+notes text in `.github/workflows/release.yml`, which cross-references this
+section so the two stay in step), but the consumer contract itself has never
+said it, so Maskil, LH Worship Setlist and Versed have had no contractual
+notice. Same MUST framing as the pastoral-crisis requirements below — the §5
+pattern for non-optional consumer obligations. It is additive (a disclosure,
+not an API change): pinned `(engine semver, artifact descriptor)` pairs are
+unaffected until they upgrade. When `CONSUMERS.md` exists (CO-6/P7.3) it
+inherits this text verbatim — never forks it. On Jesse's sign-off, drop the
+PROPOSED marker and this becomes the fourth commitment above.
 
 Per-consumer adapters stay per-app: Maskil's Yjs selection bridge and panel;
 Setlist's musical-compatibility scoring (key/BPM/flow stays in Setlist — it is

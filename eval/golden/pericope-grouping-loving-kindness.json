@@ -1,0 +1,52 @@
+{
+  "id": "pericope-grouping-loving-kindness",
+  "query": "his loving kindness endures forever",
+  "status": "active",
+  "note": [
+    "P5.6 (CO-3) pericope grouping. Written pending-first at PR 1 (2026-08-22,",
+    "fixtures-first); ACTIVATED in the PR 2 commit that lands the behavior",
+    "(ENGINE_VERSION 0.14.0) together with the fixture-corpus addition of",
+    "Psalm 136 that makes it measurable on the hermetic bed.",
+    "",
+    "The WEB prints this refrain in all 26 verses of Psalm 136; each is an",
+    "exact_phrase hit (authoritative, deliberately exempt from per-chapter",
+    "thinning) and NO curated anchor touches Psalm 136 — so only the pericope",
+    "path can group them, and only the pericope path can satisfy",
+    "requiredGroupingSourceId here. An improvement attributable to the",
+    "pre-existing anchor collapse cannot fake this fixture green. That is the",
+    "PR 2 measured-effect attribution instance the plan demands.",
+    "",
+    "MEASURED at activation (hermetic bed, 0.14.0): Psalms 136:1-26 surfaces",
+    "as ONE grouped row (26 members, grouping cites openbible-sections with",
+    "the stored summed boundary vote 12 at 136:1) at rank 4, behind the",
+    "2 Chronicles 7:3 / 7:6 / Psalms 100:5 refrain quotations that tie it at",
+    "60 points and precede it canonically (targetId tie-break). withinTop is",
+    "therefore 5, not the 3 the pending draft guessed — the fixture's real",
+    "assertion is the grouped row and its provenance, not a rank contest",
+    "between verses quoting the same refrain.",
+    "",
+    "RELEASE-BED DISCLOSURE (J-flag): on the v0.7.1 next-mint simulation the",
+    "same merged row sits at rank 13 — twelve other passages quote the",
+    "refrain verbatim and tie at 60, and canonical order runs Chronicles →",
+    "Ezra → Psalms 100/106/107/118 → 136. Grouping did its job there (the 26",
+    "Psalm 136 fragments and the 4 Psalm 118 fragments each collapse to one",
+    "row; the page shows genuinely different passages), but NO valid",
+    "withinTop window (max 10) admits rank 13, so this fixture will need",
+    "Jesse's ruling before a release-corpus G3 run: widen the assertion,",
+    "re-rank ties, or accept the failure as the tie-break's honest price.",
+    "",
+    "Grouping contributes ZERO points: the grouped row's score is the max of",
+    "its members, never a sum — a passage must not outrank by having more",
+    "mediocre verses. The reference must span the HITS, never the whole",
+    "pericope. Nothing theological is adjudicated: the grouping cites a",
+    "countable structural fact (how many of 20 translations start a section",
+    "at this verse)."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Psalms 136:1-26",
+      "withinTop": 5,
+      "requiredGroupingSourceId": "openbible-sections"
+    }
+  ]
+}

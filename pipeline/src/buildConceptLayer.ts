@@ -14,11 +14,29 @@ import type { CompiledOntology } from './importers/ontologyImporter.js';
 import type { CrossReferenceRow, TopicAnchorRow } from './importers/openbibleImporter.js';
 import { scoreToWeight } from './importers/openbibleImporter.js';
 import type { SqliteDatabase } from './buildCorpus.js';
+import type { PericopeRow } from './buildPericopes.js';
+import type { CrossReferencePhraseRow } from './importers/tskImporter.js';
 
 export interface ConceptLayerInput {
   readonly ontology: CompiledOntology;
   readonly topicRows: readonly TopicAnchorRow[];
   readonly crossReferences: readonly CrossReferenceRow[];
+  /**
+   * Derived pericope tiling (schema v8, CO-3 PR 1) — ALREADY derived over
+   * this artifact's present verses by buildPericopes.ts; inserted verbatim
+   * and fed per-record into the layer fingerprint, because a re-tiled
+   * corpus returns differently-grouped results once PR 2 lands and a
+   * consumer must be able to tell that happened.
+   */
+  readonly pericopes?: readonly PericopeRow[];
+  /**
+   * TSK phrase-keyed triples (schema v9, P6.3/B3 Phase A) for the
+   * cross_reference_phrases capability table ONLY. Load-bearing restriction:
+   * none of these rows may reach cross_references in Phase A — the engine
+   * expands ALL xref rows with no source filter, so a tsk-text edge there
+   * would change ordering under a capability-only framing.
+   */
+  readonly crossReferencePhrases?: readonly CrossReferencePhraseRow[];
   readonly manifests: ManifestSet;
   /** Verse ids present in this artifact; anything outside is dropped. */
   readonly presentVerseIds: ReadonlySet<number>;
@@ -46,6 +64,8 @@ export interface ConceptLayerResult {
   readonly editorialAnchors: number;
   readonly topicAnchors: number;
   readonly crossReferences: number;
+  readonly pericopes: number;
+  readonly crossReferencePhrases: number;
   readonly verseTerms: number;
   readonly translationTokens: number;
   readonly droppedOutOfCorpus: number;
@@ -84,6 +104,8 @@ export function buildConceptLayer(
   // to remember not to release.
   const topicCited = input.ontology.topicSubscriptions.length > 0 ? ['openbible-topics'] : [];
   const xrefCited = input.crossReferences.length > 0 ? ['openbible-xrefs'] : [];
+  const pericopeCited = (input.pericopes ?? []).length > 0 ? ['openbible-sections'] : [];
+  const phraseCited = (input.crossReferencePhrases ?? []).length > 0 ? ['tsk-text'] : [];
   const termCited = [
     ...new Set((input.verseTerms ?? []).flatMap((term) => term.sourceIds.split('+'))),
   ];
@@ -93,6 +115,8 @@ export function buildConceptLayer(
       ...input.ontology.citedSourceIds,
       ...topicCited,
       ...xrefCited,
+      ...pericopeCited,
+      ...phraseCited,
       ...termCited,
     ],
     tier: 'public_distribution',
@@ -124,10 +148,25 @@ export function buildConceptLayer(
     `INSERT INTO cross_references(from_verse_id, to_start_verse_id, to_end_verse_id, source_id, votes)
      VALUES (?, ?, ?, ?, ?)`,
   );
+  const insertPericope = database.prepare(
+    `INSERT INTO pericopes(start_verse_id, end_verse_id, boundary_votes, source_id)
+     VALUES (?, ?, ?, ?)`,
+  );
+  const insertPhrase = database.prepare(
+    `INSERT INTO cross_reference_phrases(from_verse_id, normalized_phrase, to_start_verse_id,
+                                         to_end_verse_id, source_id)
+     VALUES (?, ?, ?, ?, ?)`,
+  );
 
   let editorialAnchors = 0;
   let topicAnchors = 0;
   let crossReferences = 0;
+  let pericopes = 0;
+  let crossReferencePhrases = 0;
+  // The rows that actually shipped, for the per-record fingerprint feed —
+  // feeding the unfiltered input would hash evidence the artifact does not
+  // carry.
+  const shippedPhrases: CrossReferencePhraseRow[] = [];
   let verseTerms = 0;
   let translationTokens = 0;
   let dropped = 0;
@@ -207,6 +246,40 @@ export function buildConceptLayer(
       );
       crossReferences += 1;
     }
+    // Pericope rows are derived over the present verses upstream
+    // (buildPericopes.ts checks its tiling invariants there), so they are
+    // inserted verbatim — a drop here would silently break the tiling.
+    for (const pericope of input.pericopes ?? []) {
+      insertPericope.run(
+        pericope.startVerseId,
+        pericope.endVerseId,
+        pericope.boundaryVotes,
+        'openbible-sections',
+      );
+      pericopes += 1;
+    }
+    // TSK phrase triples (v9 capability): same presence filtering as the
+    // cross_references they will one day gate — a phrase row whose verses
+    // this artifact does not carry is dead weight in a size-budgeted file.
+    for (const phrase of input.crossReferencePhrases ?? []) {
+      if (!input.presentVerseIds.has(phrase.fromVerseId)) {
+        dropped += 1;
+        continue;
+      }
+      if (!rangeIsPresent(phrase.toStartVerseId, phrase.toEndVerseId, input.presentVerseIds)) {
+        dropped += 1;
+        continue;
+      }
+      insertPhrase.run(
+        phrase.fromVerseId,
+        phrase.normalizedPhrase,
+        phrase.toStartVerseId,
+        phrase.toEndVerseId,
+        'tsk-text',
+      );
+      shippedPhrases.push(phrase);
+      crossReferencePhrases += 1;
+    }
     for (const term of input.verseTerms ?? []) {
       if (!input.presentVerseIds.has(term.verseId)) {
         dropped += 1;
@@ -278,10 +351,39 @@ export function buildConceptLayer(
   )) {
     feed(['r', edge.conceptId, edge.relatedId]);
   }
+  // Pericope rows join the fingerprint PER-RECORD (CO-3 PR 1): the derived
+  // tiling is a deterministic function of (source rows, threshold, present
+  // verses), and a change to any of the three — a re-rolled upstream file,
+  // a threshold edit, a corpus change — re-groups results once PR 2 lands.
+  // Rows arrive already sorted by verse id from the derivation; sorted again
+  // here so the fingerprint never depends on a caller's ordering.
+  for (const pericope of [...(input.pericopes ?? [])].sort(
+    (a, b) => a.startVerseId - b.startVerseId,
+  )) {
+    feed(['p', pericope.startVerseId, pericope.endVerseId, pericope.boundaryVotes]);
+  }
+  // TSK phrase rows join per-record (P6.3/B3 Phase A) for the same reason
+  // pericopes do: today nothing reads them, but the Phase B behavior will
+  // consult exactly these rows, and a consumer must be able to tell the
+  // shipped evidence changed. Sorted here so the fingerprint never depends
+  // on the caller's ordering; only rows that actually shipped feed.
+  for (const phrase of [...shippedPhrases].sort((a, b) =>
+    a.fromVerseId - b.fromVerseId ||
+    (a.normalizedPhrase < b.normalizedPhrase ? -1 : a.normalizedPhrase > b.normalizedPhrase ? 1 : 0) ||
+    a.toStartVerseId - b.toStartVerseId ||
+    a.toEndVerseId - b.toEndVerseId,
+  )) {
+    feed(['x', phrase.fromVerseId, phrase.normalizedPhrase, phrase.toStartVerseId, phrase.toEndVerseId]);
+  }
   // translationTokens joins the fingerprint because it changes RESULTS:
   // admitting another translation's vocabulary makes verses reachable that
   // were not before, and a consumer must be able to tell that happened.
-  feed(['counts', topicAnchors, crossReferences, verseTerms, translationTokens]);
+  // The pericope count joined in the same move (CO-3 PR 1) — this widening
+  // moves EVERY layer fingerprint once, sanctioned and baselined in-train.
+  // The phrase count joined in the v9 move — this widening moves EVERY
+  // layer fingerprint once, sanctioned and baselined in-train (the exact
+  // pericope-count precedent).
+  feed(['counts', topicAnchors, crossReferences, verseTerms, translationTokens, pericopes, crossReferencePhrases]);
   const layerFingerprint = hash.digest('hex');
 
   // Written with REPLACE because the corpus build already populated meta.
@@ -296,6 +398,8 @@ export function buildConceptLayer(
     editorialAnchors,
     topicAnchors,
     crossReferences,
+    pericopes,
+    crossReferencePhrases,
     verseTerms,
     translationTokens,
     droppedOutOfCorpus: dropped,

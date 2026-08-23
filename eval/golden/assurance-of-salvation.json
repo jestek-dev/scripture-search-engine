@@ -3,8 +3,7 @@
   "query": "assurance of salvation",
   "additionalQueries": [
     "am i really saved",
-    "know i am saved",
-    "assurance"
+    "know i am saved"
   ],
   "status": "active",
   "note": [
@@ -27,7 +26,7 @@
     "faith-definition sense): that fixture owns 'confidence in what we hope",
     "for'; this one never asserts Heb 11:1.",
     "Round-2 book admission 2026-08-18: assurance-of-salvation gained 2 Tim 2:19 (with the seal's second line quoted in the pack comment) and 1 Jn 2:1 (the advocate clause).",
-    "2026-08-20 bare-word strengthening (lexicon-concepts PR 2): bare 'assurance' is asserted as an additional query. Measured before the lexicon addition, the bare word fired no concept - every phrase in both assurance packs is multi-token. The pack comment already names this concept as bare-assurance's honest home (the Heb 11:1 pack is the faith-DEFINITION sense and stays phrasing-only); the 2026-08-08 audit deferred the word only because this concept did not exist yet. The failing run is the gap evidence in the PR body; the same PR adds the '- assurance' lexicon entry and the lexicon-inventory rows on both concepts."
+    "2026-08-20 bare-word strengthening (lexicon-concepts PR 2) asserted bare 'assurance' as an additional query; the 2026-08-23 stack merge withdrew that promotion: the pack's P5.5 'blessed assurance' hymn aliases token-contain the bare word and the P5.6 superset double-chip guard refuses the combination, so the '- assurance' lexicon entry was removed to preserve the reviewed hymn mapping. The query is unpromoted, not re-cut - the lexicon-inventory row on assurance-of-salvation records the skip and the revert path."
   ],
   "expectedTop": [
     {

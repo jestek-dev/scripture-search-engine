@@ -1,0 +1,34 @@
+{
+  "id": "ref-incidental-numbers-guard",
+  "status": "active",
+  "note": [
+    "Non-capture guards for QR-4's grammar widening (P5.3), in the spirit of ref-not-reference-guard: every query here contains an incidental number, is genuinely discovery TODAY, and must stay discovery — a widened space-separated reference grammar must never hijack a felt-need or phrase query into a reference or an invalid-reference dead end. Active immediately: these pin current behavior.",
+    "Coverage: leading counts (\"10 commandments\", \"7 deadly sins\", \"12 disciples\", \"40 days\", \"3 days\") and an ordinal book mention that is not a reference (\"the 23rd psalm\"). All end in letters, so no locator candidate parses — the guard exists so that stays structurally true as the grammar grows."
+  ],
+  "referenceExpectations": [
+    {
+      "query": "10 commandments",
+      "expectedKind": "discovery"
+    },
+    {
+      "query": "the 23rd psalm",
+      "expectedKind": "discovery"
+    },
+    {
+      "query": "7 deadly sins",
+      "expectedKind": "discovery"
+    },
+    {
+      "query": "40 days",
+      "expectedKind": "discovery"
+    },
+    {
+      "query": "3 days",
+      "expectedKind": "discovery"
+    },
+    {
+      "query": "12 disciples",
+      "expectedKind": "discovery"
+    }
+  ]
+}

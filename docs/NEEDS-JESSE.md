@@ -736,7 +736,7 @@ The ontology changed, so `artifacts/content-artifact.json` no longer describes
 what the pipeline builds — its `layerFingerprint` and `databaseSha256` are
 both from before the packs. **The next tagged release will fail** at the
 verify step, which is the new behaviour working as intended rather than a
-regression: before §2.11 it would have sailed through and shipped a mismatch.
+regression: before §7.1 it would have sailed through and shipped a mismatch.
 
 It cannot be refreshed from a laptop. SQLite's byte layout depends on the
 SQLite compiled into Node, so a locally-built checksum will not match what CI
@@ -752,7 +752,7 @@ the tagless `workflow_dispatch` one, so the refresh is:
 4. Commit it, then tag.
 
 Worth doing before the next release regardless of the packs, since the
-committed descriptor's checksum was independently wrong until today (§2.11).
+committed descriptor's checksum was independently wrong until today (§7.1).
 
 **c) Weak-reason share, and a probe set that no longer covers the corpus.**
 Matthew Henry raised weak-evidence share by 0.120 against a 0.15 budget on
@@ -978,7 +978,12 @@ files only from the package directory, not the repo root, which is why 0.7.1
 shipped with neither. The distinction the LICENSE section of the README draws
 still stands: MIT covers the code, not the corpora it is built from.
 
-### 2.11 The release verify step was a tautology — fixed, and the descriptor was wrong
+### 7.1 The release verify step was a tautology — fixed, and the descriptor was wrong
+
+*(Renumbered 2026-08-21: this section under §7 was the document's second
+"2.11" — §2.11 now refers only to the corroboration section above. Older
+citations of "the second §2.11" or "NEEDS-JESSE line 981" mean this
+section.)*
 
 The release workflow's "verify the built artifact matches the reviewed
 descriptor" step read `artifacts/content-artifact.json` **after** the build —

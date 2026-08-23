@@ -8,6 +8,7 @@
  */
 
 import type { Candidate } from '../ranking/rank.js';
+import { correctionCitation } from '../reasons/display.js';
 import type { Evidence } from '../reasons/types.js';
 import { significantWords } from '../tokenizer/index.js';
 import type { TokenMatch } from '../corpus/repository.js';
@@ -33,10 +34,28 @@ export function referenceLabel(verse: ScriptureVerse): string {
 }
 
 /**
+ * Significant-word count at which a verbatim phrase carries FULL exact-phrase
+ * authority (0.10.0 stage 3 taper). Below two significant words a "phrase" is
+ * one unit of meaning wearing a 60-point badge and files as token_overlap; at
+ * two it earns 2/3 authority (40 points, exactly the concept_anchor ceiling);
+ * at three or more it is a real quotation and earns the full 60.
+ *
+ * This constant is FIXED reviewed data, not a tuning knob: raising it to 4
+ * would push 2-word phrases to 30 points, colliding with weakAggregateCap 30
+ * and endangering correct remembered-phrase verbatim #1s. It is mirrored into
+ * eval/budgets.json `signalBudgets` for the G6 reviewed-constants check;
+ * changing it changes ordering, so covenant #2 requires an ENGINE_VERSION
+ * bump in the same commit.
+ */
+export const EXACT_PHRASE_FULL_AUTHORITY_WORDS = 3;
+
+/**
  * Exact phrase evidence.
  *
- * Strength is BINARY: a verse either contains the phrase or it does not, and
- * pretending otherwise would put a confidence gradient on a yes/no fact.
+ * Strength carries no per-verse confidence gradient: a verse either contains
+ * the phrase or it does not, and every verse containing the same phrase gets
+ * the same strength. What strength DOES encode is how much the phrase itself
+ * means — coverage of the query times the significant-width taper below.
  * bm25 is used upstream to choose WHICH matches survive the candidate cap
  * when there are more than the limit, but it never modulates strength — so
  * equal-strength matches fall through to the canonical-order tie-break,
@@ -49,6 +68,25 @@ export function phraseEvidence(
 ): Evidence {
   const complete = fragmentWords >= queryWords;
   const coverage = Math.max(0, Math.min(1, fragmentWords / Math.max(1, queryWords)));
+  // Taper, part 1 (0.10.0 stage 3): a verbatim match of fewer than two
+  // significant words is one unit of meaning, not a quotation — "the cross"
+  // occurring verbatim says no more than the token `cross` matching, and the
+  // 60-point badge it used to wear is how crucifixion-mockery verses outranked
+  // the curated atonement anchors. It files under token_overlap at full
+  // strength (10 points), keeping its truthful label: the phrase genuinely
+  // occurs; the points now say how much that means.
+  if (fragmentWords < 2) {
+    return {
+      family: 'token_overlap',
+      label: complete ? 'Exact phrase' : `Contains "${fragment}"`,
+      strength: complete ? 1 : coverage,
+    };
+  }
+  // Taper, part 2: authority grows with significant width up to
+  // EXACT_PHRASE_FULL_AUTHORITY_WORDS. Two significant words earn 2/3 of the
+  // family budget (40 points — level with the concept_anchor ceiling, above
+  // weakAggregateCap 30); three or more earn the full 60.
+  const authority = Math.min(1, fragmentWords / EXACT_PHRASE_FULL_AUTHORITY_WORDS);
   return {
     // Authoritative only while the verbatim text covers the MAJORITY of the
     // query. G6's definition of the exact_phrase family is "the query text
@@ -59,10 +97,10 @@ export function phraseEvidence(
     // outranking curated anchors.
     family: complete || coverage >= 0.5 ? 'exact_phrase' : 'token_overlap',
     label: complete ? 'Exact phrase' : `Contains "${fragment}"`,
-    // Proportional to how much of the question this verbatim text answers.
-    // A whole-query match earns full authority; a four-word fragment of an
-    // eight-word paraphrase earns half. This is what lets a paraphrase like
-    // "be doers of the word not hearers only" still resolve decisively to
+    // Coverage is proportional to how much of the question this verbatim text
+    // answers. A whole-query match earns full coverage; a four-word fragment
+    // of an eight-word paraphrase earns half. This is what lets a paraphrase
+    // like "be doers of the word not hearers only" still resolve decisively to
     // James 1:22, without pretending a fragment is the whole quotation.
     //
     // Since 0.8.0 the caller passes SIGNIFICANT word counts, not raw ones.
@@ -73,8 +111,44 @@ export function phraseEvidence(
     // close to me": strike the shepherd) above Psalm 34:18 for a grieving
     // searcher. Coverage of MEANING, not of words, is what this signal
     // claims to measure.
-    strength: coverage,
+    strength: coverage * authority,
   };
+}
+
+/**
+ * Complete-match subsumption (0.10.0 stage 3).
+ *
+ * When a candidate's evidence includes a COMPLETE whole-query exact_phrase
+ * match, its token_overlap and proximity evidence restates a fact the verbatim
+ * match already fully asserts: both are computed from the same query tokens
+ * the phrase accounts for in their entirety. Counting the restatement let a
+ * verbatim rebuke carry 11 extra points of "corroboration" that was really one
+ * fact shown three times. This is the correlation principle the budgets
+ * already commit to (G7: correlated families share one budget; identical
+ * edges collapse rather than sum), applied across the exact_phrase/
+ * token_overlap boundary — and covenant #5 improves with it, because the
+ * result no longer shows three chips asserting one fact.
+ *
+ * Fragment matches do NOT subsume: a partial quotation leaves room for the
+ * rest of the query to earn honest token credit. The caller marks only the
+ * targets whose whole-query match was emitted as exact_phrase; this function
+ * is pure and deterministic, and with an empty mark set it is the identity.
+ */
+export function subsumeCompletePhraseRestatements(
+  candidates: readonly Candidate[],
+  completePhraseTargets: ReadonlySet<string>,
+): readonly Candidate[] {
+  if (completePhraseTargets.size === 0) return candidates;
+  return candidates.map((candidate) =>
+    completePhraseTargets.has(candidate.targetId)
+      ? {
+          ...candidate,
+          evidence: candidate.evidence.filter(
+            (item) => item.family !== 'token_overlap' && item.family !== 'proximity',
+          ),
+        }
+      : candidate,
+  );
 }
 
 /** A fallback phrase must carry at least two meaningful words. */
@@ -102,10 +176,24 @@ const PRECISION_SMOOTHING = 2;
  * by inverse document frequency expresses that without anyone having to
  * hand-maintain a list of which words are important.
  */
-export function tokenEvidence(match: TokenMatch, queryIdfTotal: number): Evidence[] {
+export function tokenEvidence(
+  match: TokenMatch,
+  queryIdfTotal: number,
+  correctionCitations?: ReadonlyMap<string, string>,
+): Evidence[] {
   const evidence: Evidence[] = [];
   const coverage = queryIdfTotal > 0 ? Math.min(1, match.idfSum / queryIdfTotal) : 0;
   if (coverage <= 0) return evidence;
+
+  // Cited corrections (0.12.0/QR-5): a token that reached this verse only
+  // because an out-of-vocabulary typed word was corrected must SAY so, on the
+  // chip, citing the surface form the user typed — never the stem. Silence
+  // here would be a corrected query pretending to be an exact one, the
+  // theological failure mode the feature's design forbids.
+  const display = (token: string): string => {
+    const typed = correctionCitations?.get(token);
+    return typed === undefined ? token : `${token} (${correctionCitation(typed)})`;
+  };
 
   // Coverage alone is RECALL — "did the verse contain what I asked for?" —
   // and it saturates at 1.0 for every verse containing all the query's
@@ -129,8 +217,8 @@ export function tokenEvidence(match: TokenMatch, queryIdfTotal: number): Evidenc
     family: 'token_overlap',
     label:
       match.matchedTokens.length === 1
-        ? `Shared word: ${match.matchedTokens[0]}`
-        : `Shared words: ${match.matchedTokens.join(', ')}`,
+        ? `Shared word: ${display(match.matchedTokens[0]!)}`
+        : `Shared words: ${match.matchedTokens.map(display).join(', ')}`,
     strength: coverage * precision,
   });
 

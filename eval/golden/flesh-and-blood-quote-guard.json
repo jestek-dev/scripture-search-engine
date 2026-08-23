@@ -1,0 +1,48 @@
+{
+  "id": "flesh-and-blood-quote-guard",
+  "query": "flesh and blood cannot inherit the kingdom of god",
+  "status": "active",
+  "note": [
+    "GUARD FIXTURE (P4.5 round-1 critique D-2, 2026-08-21). The",
+    "worklist-mandated incarnation lexicon phrase 'god in the flesh'",
+    "reduced to the two-token containment set {god, flesh} under the one",
+    "tokenizer, so it fired on ANY query containing both near-ubiquitous",
+    "tokens. Measured on both beds, this quoted-verse query — 1 Cor",
+    "15:50 in its remembered phrasing — was demoted from #1 to #4 under",
+    "incarnation anchors: John 1:1 ('Theme: The incarnation') #1 @24.75,",
+    "Col 1:15-19 #2, John 1:14 #3. A quoted verse displaced by a",
+    "doctrine chip is the wrong-scripture harm class. Healed by",
+    "narrowing the phrase to 'god became flesh' ({god, became, flesh})",
+    "in the same commit as this guard. Measured healed state",
+    "(2026-08-21): 1 Cor 15:50 #1 on both beds (fixture bed 12.61, full",
+    "bed 13.06 — proximity + preached vocabulary + translation variant +",
+    "shared words blood/flesh/inherit/kingdom), no incarnation anchor",
+    "anywhere in either top-10. The mustNotLead entries name the three",
+    "measured hijackers; window 3 because they occupied #1-#3."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Corinthians 15:50",
+      "withinTop": 1,
+      "requiredReasonFamily": "token_overlap"
+    }
+  ],
+  "expectedWithinTop": 1,
+  "mustNotLead": [
+    {
+      "reference": "John 1:1",
+      "withinTop": 3,
+      "why": "incarnation's 0.9 anchor, the measured #1 hijacker of this quote via the {god, flesh} containment of 'god in the flesh' (critique D-2); a quoted verse's top belongs to the verse being quoted, never to a doctrine pack's anchor list"
+    },
+    {
+      "reference": "Colossians 1:15-19",
+      "withinTop": 3,
+      "why": "incarnation's 0.8 anchor, the measured #2 hijacker of this quote (critique D-2); same class"
+    },
+    {
+      "reference": "John 1:14",
+      "withinTop": 3,
+      "why": "incarnation's 1.0 anchor, the measured #3 hijacker of this quote (critique D-2); same class — even THE incarnation sentence has no place above 1 Cor 15:50 on 1 Cor 15:50's own words"
+    }
+  ]
+}

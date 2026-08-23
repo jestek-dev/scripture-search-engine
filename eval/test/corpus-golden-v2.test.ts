@@ -556,3 +556,74 @@ describe('G3 mustNotLead and guard vacuity', () => {
     ).toBe(true);
   });
 });
+
+describe('G3 requiredGroupingSourceId (P5.6 PR 1 capability — fail-closed until PR 2)', () => {
+  const grouped = (
+    verse: number,
+    sourceId: string,
+  ): DiscoveryResult =>
+    ({
+      ...johnVerse(verse),
+      // The PR 2 typed shape (ResultGrouping): section span + provenance.
+      grouping: {
+        section: {
+          reference: `John 3:${verse}`,
+          startVerseId: 43_003_000 + verse,
+          endVerseId: 43_003_000 + verse,
+        },
+        provenance: { sourceId, label: sourceId },
+      },
+    }) as DiscoveryResult;
+
+  it('FAILS an active fixture whose hit carries no grouping — the field can never pass vacuously', async () => {
+    const problems = await runCorpusFixture(
+      mockEngine({ q: [johnVerse(16)] }),
+      fixture({
+        query: 'q',
+        expectedTop: [
+          { ref: 'John 3:16', withinTop: 1, requiredGroupingSourceId: 'openbible-sections' },
+        ],
+      }),
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]!).toContain('not a grouped result');
+    expect(problems[0]!).toContain("'openbible-sections'");
+  });
+
+  it('passes when the hit is grouped citing exactly the named source (the PR 2 shape, structurally)', async () => {
+    const problems = await runCorpusFixture(
+      mockEngine({ q: [grouped(16, 'openbible-sections')] }),
+      fixture({
+        query: 'q',
+        expectedTop: [
+          { ref: 'John 3:16', withinTop: 1, requiredGroupingSourceId: 'openbible-sections' },
+        ],
+      }),
+    );
+    expect(problems).toEqual([]);
+  });
+
+  it('fails on grouping citing the WRONG source — authority order has teeth', async () => {
+    const problems = await runCorpusFixture(
+      mockEngine({ q: [grouped(16, 'openbible-sections')] }),
+      fixture({
+        query: 'q',
+        expectedTop: [
+          { ref: 'John 3:16', withinTop: 1, requiredGroupingSourceId: 'editorial' },
+        ],
+      }),
+    );
+    expect(problems).toHaveLength(1);
+    expect(problems[0]!).toContain('not a grouped result');
+  });
+
+  it('rejects an empty requiredGroupingSourceId at the schema, like the other required* fields', async () => {
+    const result = await corpusGoldenGate(mockEngine({ q: [] }), [
+      fixture({
+        query: 'q',
+        expectedTop: [{ ref: 'John 3:16', requiredGroupingSourceId: '   ' }],
+      }),
+    ]);
+    expect(codes(result)).toContain('G3_FIXTURE_MALFORMED');
+  });
+});

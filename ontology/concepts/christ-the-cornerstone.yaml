@@ -1,0 +1,100 @@
+# CHRIST THE CORNERSTONE — christology locator pack (Phase-4 item P4.10 /
+# DG-10, prior-plan 1.9 remainder; authored 2026-08-21 fixture-first:
+# eval/golden/christ-the-cornerstone.json was committed pending-and-failing
+# before this file existed. Measured gap, both beds: "cornerstone" returned
+# three bare token_overlap rows (Eph 2:20 #1 @3.00) and "christ the
+# cornerstone" a proximity/translation_variant accident ladder (1 Pet 2:4 #2
+# by translation_variant) — no concept, no curated chip anywhere.)
+#
+# Design: a LOCATOR for the passages where Christ is named the cornerstone —
+# the living-stone/spiritual-house texts. The pack states and attributes;
+# nothing adjudicates ecclesiology. Per the prior plan's explicit guard
+# (quoted in the pending fixture): the lexicon keeps `foundation` and `rock`
+# OUT so G4 distinctness against building-on-the-rock (the wise/foolish
+# builders PARABLE — a different claim about hearing and doing) stays clean;
+# for the same reason this pack declares NO related: edge to
+# building-on-the-rock (related edges are ranking-effective and would blur
+# the parable into the christology locator).
+#
+# Attribution note (trinity/benediction precedent): all three anchors are
+# [editorial] — Torrey has NO CORNERSTONE topic in the verified outline set
+# (docs/research/torrey-topical/torrey-miller-topics.json, checked
+# 2026-08-21; the worklist's own words: "all [editorial]"). Nearest
+# corroborations are recorded per anchor below — they corroborate under
+# OTHER topic identities (TITLES AND NAMES OF CHRIST "Chief Corner-stone"
+# lists Eph 2:20 and 1 Pet 2:6 only — single verses of the anchored ranges,
+# so even that outline could not carry the range under the both-verses
+# rule). No new source ⇒ no doctrinal-reviews.yaml row due.
+# Corpus-deferred to the re-pin payload (P4.15): Ps 118:22, Isa 28:16,
+# Matt 21:42 (Psalms 118, Isaiah 28, Matthew 21 absent — re-verified).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist; no
+# materialFrameKeyword appears in this id, label, or lexicon.
+#
+# SENSE-INVERSION SWEEP (2026-08-21): no anchor below denies what it
+# anchors. 1 Pet 2:7 QUOTES the builders' rejection ("The stone which the
+# builders rejected") in order to affirm the reversal ("has become the
+# chief cornerstone") — quoted rejection overturned, not endorsed; same
+# shape in Acts 4:11 ("regarded as worthless by you, the builders...has
+# become the head of the corner").
+#
+# Lexicon width note (one tokenizer, verified with engine significantWords
+# BEFORE commit): "cornerstone" is the subject noun — one WORD, not a
+# multi-word collapse, no lexicon-inventory row due. "christ the
+# cornerstone" -> {christ, cornerstone} (2 tokens); "the stone the builders
+# rejected" -> {stone, builder, reject} (3 tokens); "head of the corner" ->
+# {head, corner} (2 tokens). NO single-token collapses. Containment breadth
+# probed on both beds before commit: {head, corner} fires on no measured
+# non-cornerstone query ("four corners of the earth" carries no `head`;
+# untouched before→after); every WEB verse carrying "cornerstone" is itself
+# a cornerstone text, so the bare noun hijacks no narrative.
+#
+# Lexicon collision check (G4): no phrase below normalizes to an existing
+# concept's phrase; building-on-the-rock's phrases share only the single
+# token `builder` ("wise and foolish builders") — different phrase, no
+# normalization collision, and its parable queries were probed unchanged
+# before→after.
+id: christ-the-cornerstone
+label: Christ the cornerstone
+lexicon:
+  # The subject noun — the audit query. One word; every WEB occurrence is a
+  # cornerstone text, so the bare trigger is safe (see width note).
+  - cornerstone
+  # The fixture's own title register.
+  - christ the cornerstone
+  # The remembered Ps 118:22 register in 1 Pet 2:7's own WEB wording.
+  - the stone the builders rejected
+  # The KJV-remembered register; Acts 4:11's own WEB wording.
+  - head of the corner
+anchors:
+  # "Come to him, a living stone, rejected indeed by men, but chosen by
+  # God, precious... Behold, I lay in Zion a chief cornerstone, chosen and
+  # precious... The stone which the builders rejected has become the chief
+  # cornerstone." (WEB). The fullest cornerstone text — living stone,
+  # chief cornerstone, and the builders' reversal in one passage; the
+  # pending fixture's expectedTop. Torrey corroboration (no CORNERSTONE
+  # outline — see attribution note): TITLES AND NAMES OF CHRIST, "Chief
+  # Corner-stone" (1 Pet 2:6); PRECIOUSNESS OF CHRIST, "As the
+  # corner-stone of the Church" (1 Pet 2:6); CHURCH, THE, "Christ, the
+  # foundation-stone of" (1 Pet 2:4; 2:5).
+  - ref: 1 Peter 2:4-7
+    sources: [editorial]
+    weight: 1.0
+  # "fellow citizens with the saints and of the household of God, being
+  # built on the foundation of the apostles and prophets, Christ Jesus
+  # himself being the chief cornerstone; in whom the whole building...
+  # grows into a holy temple in the Lord" (WEB). The church built on the
+  # cornerstone. Torrey corroboration: TITLES AND NAMES OF CHRIST, "Chief
+  # Corner-stone" (Eph 2:20); UNION WITH CHRIST, "Foundation and building"
+  # (Eph 2:20; 2:21).
+  - ref: Ephesians 2:19-22
+    sources: [editorial]
+    weight: 0.85
+  # "He is 'the stone which was regarded as worthless by you, the
+  # builders, which has become the head of the corner.'" (WEB). Peter's
+  # Ps 118:22 citation preached of the risen Christ. Torrey corroboration:
+  # RESURRECTION OF CHRIST, THE, "Followed by his exaltation" (Acts 4:11)
+  # — a resurrection claim, not this pairing, hence editorial.
+  - ref: Acts 4:11
+    sources: [editorial]
+    weight: 0.75

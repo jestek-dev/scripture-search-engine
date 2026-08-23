@@ -1,0 +1,38 @@
+{
+  "id": "atonement-reachability",
+  "query": "atonement",
+  "status": "active",
+  "coversConcepts": [
+    "the-cross"
+  ],
+  "note": [
+    "REACHABILITY PIN (audit th2b, STRUCK by the 2026-08-21 re-verification",
+    "sweep; authored with the P4.3 pack per the worklist and the",
+    "propitiation.json note). th2b asked for a bare-'atonement' pack",
+    "addition; the sweep found the query ALREADY led by Romans 5:8 with the",
+    "'Theme: The cross and atonement' concept_anchor chip on both beds —",
+    "closed by pre-audit data (the-cross.yaml's 'atonement' lexicon entry,",
+    "PR #13 + 76b608d). \"A pack addition for it would be weight without",
+    "value — NO MEASURABLE EFFECT, applied before the YAML exists.\" This",
+    "fixture is the active assertion that locks the already-closed state so",
+    "it cannot silently regress; it adds no data and asserts the honest",
+    "measured current ordering (fixture bed, 2026-08-21, post-P4.3:",
+    "Rom 5:8 #1 at 25.20, anchor 19.8 + love-of-God related cue 5.4).",
+    "Authored active, measure-first, same idiom as session-of-christ-guard."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 5:8",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The cross and atonement"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 53:5",
+    "1 John 2:2",
+    "1 John 4:10",
+    "John 1:29"
+  ]
+}

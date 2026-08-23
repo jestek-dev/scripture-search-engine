@@ -11,6 +11,16 @@ name: Release artifact
 # release. This workflow's job is to prove those bytes match the reviewed
 # descriptor and to ship them unchanged. A drifted asset cannot ship: the
 # sha256, byte count, and attestation checks below fail the tag instead.
+#
+# ASSETS ARE FROZEN AT PUBLISH. With the repo's immutable-releases setting
+# enabled (Jesse's toggle, plan RH-2/J51), a release's assets become
+# read-only the moment --draft=false runs — a re-run of this workflow against
+# a published tag is a verification pass, not a second promotion (the promote
+# step below skips upload/edit when the release is already published).
+# Releases published BEFORE the setting (v0.7.0, v0.7.1) remain mutable at
+# rest — deliberately left untouched per the ship-forward decision (RH-1);
+# the scheduled release-integrity sentinel (release-integrity.yml) watches
+# their asset digests instead.
 on:
   push:
     tags: ['v*']
@@ -42,6 +52,13 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - run: npm ci
+
+      - name: Install curation dev deps
+        # curation/ is deliberately outside the npm workspaces (runtime
+        # boundary), so root `npm ci` skips it — but `npm run verify` below
+        # runs the root typecheck, which includes `tsc` over curation/.
+        # --ignore-scripts: typecheck needs only the package files on disk.
+        run: npm ci --prefix curation --ignore-scripts
 
       - name: Refuse to release against a stale descriptor
         # `stale.blocksRelease` in the reviewed descriptor is enforced here, or
@@ -119,11 +136,43 @@ jobs:
 
       - name: Verify the minted bytes' build provenance
         if: startsWith(github.ref, 'refs/tags/v')
-        # Proves the bytes came out of this repository's mint workflow — not a
-        # laptop, not a hand-upload to the draft.
+        # Proves the bytes came out of THIS REPOSITORY'S MINT WORKFLOW — not a
+        # laptop, not a hand-upload to the draft, and not any other workflow
+        # in this repo. --signer-workflow closes the hole a bare --repo check
+        # leaves open: any workflow run here with `attestations: write` —
+        # including a modified workflow pushed to a non-default branch — could
+        # attest arbitrary bytes that --repo alone would accept. Only
+        # mint-artifact.yml is supposed to be able to mint bytes.
+        #
+        # How gh matches the pin (verified against cli/cli source,
+        # pkg/cmd/attestation/verify/policy.go `validateSignerWorkflow`): the
+        # value is NOT treated as a user-supplied regex. gh builds
+        # `https://github.com/<value>`, regexp.QuoteMeta-escapes the whole
+        # URL (dots become literal), and anchors it with `^` — a literal,
+        # prefix-anchored SAN match, stricter than a raw regex. The missing
+        # end anchor is deliberate slack: the SAN carries an `@<ref>` suffix
+        # (…/mint-artifact.yml@refs/heads/main). Re-check this pin if the
+        # workflow file is ever renamed. --repo is kept as belt-and-braces.
+        #
+        # Verification is ANY-MATCH over ALL attestations recorded for the
+        # digest (up to --limit, default 30): gh succeeds when at least one
+        # attestation satisfies the policy. So this step proves "a genuine
+        # mint attestation exists for these bytes" — which is exactly the
+        # property we want — and a later foreign attestation over the same
+        # bytes cannot flip a passing verify to red.
+        #
+        # If the accept path ever fails against a real mint attestation
+        # (rehearsal: docs/release-verification-rehearsal.md), the fallback
+        # is `--cert-identity-regex` pinned to the path prefix
+        # (^https://github\.com/OWNER/REPO/\.github/workflows/mint-artifact\.yml@)
+        # — NOT exact `--cert-identity`, which would freeze the SAN's @<ref>
+        # suffix and break the day a mint runs from a different ref.
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh attestation verify "$RUNNER_TEMP/asset/content.db" --repo "$GITHUB_REPOSITORY"
+        run: |
+          gh attestation verify "$RUNNER_TEMP/asset/content.db" \
+            --repo "$GITHUB_REPOSITORY" \
+            --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/mint-artifact.yml"
 
       # A tarball as well as a registry publish: this installs with
       # `npm i <url>` and needs no registry at all.
@@ -179,8 +228,25 @@ jobs:
           TARBALL: ${{ steps.pack.outputs.tarball }}
         run: |
           set -euo pipefail
+          # Idempotence guard, mirroring the npm-publish skip above: once the
+          # release is published (and, with immutable releases enabled,
+          # frozen), a re-run must not attempt upload/edit — `--clobber`
+          # against an immutable release fails, turning a legitimate
+          # verification re-run into a red herring. Skipping here keeps
+          # "re-run release.yml on a published tag" a green no-op whose value
+          # is the verification gates above, which all ran again.
+          if [ "$(gh release view "$GITHUB_REF_NAME" --json isDraft --jq .isDraft)" != "true" ]; then
+            echo "Release $GITHUB_REF_NAME is already published — skipping asset upload and release edit."
+            echo "(Published assets are never mutated; this re-run re-verified the gates and changed nothing.)"
+            exit 0
+          fi
           VERSION=$(node -p "require('./engine/package.json').version")
           gh release upload "$GITHUB_REF_NAME" artifacts/content-artifact.json "$TARBALL" --clobber
+          # The CC BY attribution paragraph below must stay in step with the
+          # consumer-contract commitment in docs/implementation-plan.md §5
+          # (RH-8/P2.5; §5 cross-references back here). The RH-1 release
+          # checklist carries "release notes and §5 attribution text agree" —
+          # if you edit one, edit both.
           cat > "$RUNNER_TEMP/release-notes.md" <<EOF
           Deterministic Scripture artifact — CI-built, attested bytes; nothing rebuilt at tag time.
 
@@ -223,9 +289,17 @@ jobs:
 
       # No npm ci: the smoke test must exercise what a consumer gets, not what
       # this repository's node_modules happens to contain.
+      #
+      # SMOKE_COMMITTED_DESCRIPTOR_PATH points the script at the descriptor in
+      # THIS CHECKOUT — the identity a human reviewed in a PR. Without it the
+      # smoke check is self-referential (release-served bytes vs release-served
+      # descriptor) and a coordinated post-promotion swap of both assets would
+      # pass. The script REQUIRES this in release mode, so the cross-check can
+      # never be silently dropped.
       - name: Smoke-test the published release
         env:
           RELEASE_TAG: ${{ github.ref_name }}
+          SMOKE_COMMITTED_DESCRIPTOR_PATH: artifacts/content-artifact.json
         run: |
           VERSION=$(node -p "require('./engine/package.json').version")
           ENGINE_VERSION="$VERSION" node .github/scripts/release-smoke.mjs

@@ -15,6 +15,20 @@
  *   RELEASE_TAG          release to download from (e.g. v0.9.0)  [required*]
  *   ENGINE_VERSION       npm version expected to be installable  [required*]
  *
+ * The release-served pair is necessary but NOT sufficient: descriptor and
+ * bytes downloaded from the same release URL only prove self-consistency,
+ * and a coordinated post-promotion swap of both assets stays self-consistent.
+ * So the script ALSO cross-checks the release-served descriptor against the
+ * COMMITTED artifacts/content-artifact.json (read from the repo checkout —
+ * the identity a human reviewed in a PR). Chain: committed descriptor ⇒
+ * release-served descriptor ⇒ release-served bytes; no link self-referential.
+ *
+ *   SMOKE_COMMITTED_DESCRIPTOR_PATH  path to the checkout's committed
+ *                                    descriptor. REQUIRED in release mode
+ *                                    (release.yml sets it); optional in local
+ *                                    dry-runs, where skipping prints a loud
+ *                                    SKIPPED line — never a silent pass.
+ *
  * Local dry-run overrides (*replace the corresponding required variable), so
  * the script is exercisable against a locally built artifact + `npm pack`
  * tarball before any release depends on it:
@@ -104,6 +118,91 @@ async function installEngine(scratch, spec) {
   }
 }
 
+/**
+ * The identity-bearing descriptor fields. A mismatch in ANY of these between
+ * the committed and release-served descriptors means the release is serving
+ * an identity nobody reviewed. Field-list (not full-file) equality on
+ * purpose: a re-serialized copy must not fail a release; a changed identity
+ * field must.
+ */
+export const IDENTITY_FIELDS = [
+  'databaseSha256',
+  'databaseBytes',
+  'schemaVersion',
+  'engineVersion',
+  'tokenizerVersion',
+  'corpusFingerprint',
+  'layerFingerprint',
+  'manifestFingerprint',
+  'release.tag',
+];
+
+/** Reads a possibly-dotted field path; absent segments yield undefined. */
+function readField(object, path) {
+  return path
+    .split('.')
+    .reduce((value, key) => (value === null || value === undefined ? undefined : value[key]), object);
+}
+
+/**
+ * Compares the committed descriptor against the release-served one on the
+ * identity fields. Returns one entry per differing field, carrying BOTH
+ * values — the caller prints both halves of the comparison, per the repo's
+ * convention that a failed check always shows what it compared.
+ */
+export function compareDescriptorIdentity(committed, served) {
+  return IDENTITY_FIELDS.flatMap((field) => {
+    const committedValue = readField(committed, field);
+    const servedValue = readField(served, field);
+    return committedValue === servedValue
+      ? []
+      : [{ field, committed: committedValue, served: servedValue }];
+  });
+}
+
+/**
+ * Loads the committed descriptor and fails on any identity mismatch with the
+ * release-served one. In release mode the env is mandatory — an unrun check
+ * must never look like a pass; in a local dry-run an absent path prints a
+ * loud SKIPPED line instead.
+ */
+function crossCheckCommittedDescriptor(served, { localMode }) {
+  const committedPath = process.env.SMOKE_COMMITTED_DESCRIPTOR_PATH;
+  if (!committedPath) {
+    if (localMode) {
+      console.log(
+        'Committed-descriptor cross-check: SKIPPED — SMOKE_COMMITTED_DESCRIPTOR_PATH not set ' +
+          '(local dry-run without a checkout). Release mode requires it.',
+      );
+      return;
+    }
+    fail(
+      'SMOKE_COMMITTED_DESCRIPTOR_PATH must be set in release mode — without the committed ' +
+        'descriptor the smoke check is self-referential (release-served bytes vs release-served ' +
+        'descriptor), and a coordinated swap of both assets would pass.',
+    );
+  }
+  const committed = JSON.parse(readFileSync(committedPath, 'utf8'));
+  const mismatches = compareDescriptorIdentity(committed, served);
+  if (mismatches.length > 0) {
+    fail(
+      'release-served descriptor does not match the COMMITTED descriptor ' +
+        `(${committedPath}) on identity fields:\n` +
+        mismatches
+          .map(
+            ({ field, committed: reviewed, served: actual }) =>
+              `  ${field}: committed ${JSON.stringify(reviewed)}, release-served ${JSON.stringify(actual)}`,
+          )
+          .join('\n') +
+        '\nThe release is serving an identity nobody reviewed — do not trust these assets; ' +
+        'compare against git history and the mint run before touching anything.',
+    );
+  }
+  console.log(
+    `Committed-descriptor cross-check: PASS (${IDENTITY_FIELDS.length} identity fields match ${committedPath})`,
+  );
+}
+
 /** True when `reference` covers James 1:22 — a bare verse or a collapsed run. */
 export function coversJames122(reference) {
   const match = /^James 1:(\d+)(?:-(?:1:)?(\d+))?$/.exec(reference.trim());
@@ -125,6 +224,12 @@ async function main() {
     fail(`content.db is ${database.length} bytes; descriptor says ${descriptor.databaseBytes}`);
   }
   console.log(`sha256 verified: ${sha} (${database.length} bytes)`);
+
+  // ---- The served identity IS the reviewed identity ----
+  // Bytes-vs-served-descriptor above is self-consistency only; this is the
+  // link back to the descriptor a human reviewed in a PR.
+  const localMode = Boolean(process.env.SMOKE_DB_PATH || process.env.SMOKE_DESCRIPTOR_PATH);
+  crossCheckCommittedDescriptor(descriptor, { localMode });
 
   // ---- The engine a consumer installs accepts these bytes ----
   const spec =

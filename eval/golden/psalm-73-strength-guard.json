@@ -1,0 +1,41 @@
+{
+  "id": "psalm-73-strength-guard",
+  "query": "my flesh and my heart may fail but god is my strength",
+  "status": "active",
+  "note": [
+    "GUARD FIXTURE (P4.5 round-1 critique D-2, second measured hijack,",
+    "2026-08-21). Same {god, flesh} containment breadth as",
+    "flesh-and-blood-quote-guard: this Ps 73:26 quote (in its remembered",
+    "phrasing) was pushed from #2 to #4 beneath John 1:1 ('Theme: The",
+    "incarnation') @26.14 and John 1:14 on both beds. Healed by the same",
+    "narrowing ('god in the flesh' -> 'god became flesh') in the same",
+    "commit as this guard. Measured healed state (2026-08-21, both beds",
+    "identical shape): Psalms 51:10-12 #1 (a Rising-after-a-fall anchor",
+    "with honest lexical support — legitimate, not banned; it was #1",
+    "before the incarnation pack too), Ps 73:26 #2 @14.51 by shared",
+    "words fail/flesh/god/heart/strength, no incarnation anchor in",
+    "either top-10. The expectedTop window is 3, the honest pre-pack",
+    "placement this guard restores; the mustNotLead entries name the two",
+    "measured hijackers with window 3 because they occupied #1-#2."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 73:26",
+      "withinTop": 3,
+      "requiredReasonFamily": "token_overlap"
+    }
+  ],
+  "expectedWithinTop": 3,
+  "mustNotLead": [
+    {
+      "reference": "John 1:1",
+      "withinTop": 3,
+      "why": "incarnation's 0.9 anchor, the measured #1 hijacker of this psalm quote via the {god, flesh} containment of 'god in the flesh' (critique D-2); the psalm's own words must outrank a doctrine chip"
+    },
+    {
+      "reference": "John 1:14",
+      "withinTop": 3,
+      "why": "incarnation's 1.0 anchor, the measured #2 hijacker of this psalm quote (critique D-2); same class"
+    }
+  ]
+}

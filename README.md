@@ -199,7 +199,7 @@ budget, 341k cross-references, 877k corroborated terms, queries under 10 ms.
 npm run build:artifact --workspace pipeline
 ```
 
-CI still gates against an 828-verse fixture, deliberately — a per-PR check must
+CI still gates against a 5,667-verse fixture, deliberately — a per-PR check must
 be hermetic and fast. The two builds answer different questions: the fixture
 says whether the code is correct, the artifact says what you would ship.
 

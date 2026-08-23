@@ -1,0 +1,14 @@
+{
+  "$schema": "scripture-search-engine/tsk-golden-slices/v1",
+  "generatedFrom": {
+    "sourceId": "tsk-text",
+    "sourceSha256": "6784c7099465995a8e66f02ead82b0bca66603c1bdeaf8332949774b7bfd4293",
+    "note": "Raw ThML entry bodies copied VERBATIM from the pinned CrossWire TSK module (zcom walk, preserveMarkup) so the parser's golden slices are real module bytes, not paraphrase. Keys are bookId:chapter:verse."
+  },
+  "entries": {
+    "24:29:11": "<br />I know.<br /><scripRef>Job 23:13; Ps 33:11; 40:5; Isa 46:10,11; 55:8-12; Mic 4:12; Zec 1:6</scripRef><br /><scripRef>Zec 8:14,15</scripRef><br />thoughts.<br /><scripRef>3:12-19; 30:18-22; 31:1-33:26; Isa 40:1-46:13; Eze 34:11-31</scripRef><br /><scripRef>Eze 36:1-37:28; 39:1-29; Ho 2:14-23; 3:5; 14:2-9; Joe 2:28-32</scripRef><br /><scripRef>Am 9:8-15; Mic 5:4-7; 7:14-20; Zep 3:14-20; Zec 9:9-17; 12:5-10</scripRef><br /><scripRef>Zec 14:20,21; Re 14:8-14</scripRef><br />expected end.  Heb. end and expectation.<br /><scripRef>La 3:26</scripRef>\n",
+    "59:1:22": "<br />be.<br /><scripRef>4:17; Mt 7:21-25; 12:50; 28:20; Lu 6:46-48; 11:28; 12:47,48</scripRef><br /><scripRef>Joh 13:17; Ro 2:13; Php 4:8; Col 3:17; 1Jo 2:3; 3:7; 3Jo 1:11; Re 22:7</scripRef><br />deceiving.<br /><scripRef>26; Isa 44:20; Ob 1:3; 1Co 3:18; 6:9; 15:33; Ga 6:3,7; 2Ti 3:13</scripRef><br /><scripRef>Tit 3:3; 2Pe 2:13; 1Jo 1:8; Re 12:9</scripRef>\n",
+    "40:1:1": "<br /><scripRef passage=\"Mt 1:1\">1</scripRef> The genealogy of Christ from Abraham to Joseph.<br /><scripRef passage=\"Mt 1:18\">18</scripRef> He is miraculously conceived of the Holy Ghost by the Virgin Mary, when she was espoused to Joseph.<br /><scripRef passage=\"Mt 1:19\">19</scripRef> The angel satisfies the doubts of Joseph, and declares the names and office of Christ:  Jesus is born.<br />\n<br />\n<br />generation.<br /><scripRef>Ge 2:4; 5:1; Isa 53:8; Lu 3:23-38; Ro 9:5</scripRef><br />the son of David.<br /><scripRef>9:27; 15:22; 22:42-45; 2Sa 7:13,16; Ps 89:36; 132:11; Isa 9:6,7</scripRef><br /><scripRef>Isa 11:1; Jer 23:5; 33:15-17,26; Am 9:11; Zec 12:8; Lu 1:31,32</scripRef><br /><scripRef>Lu 1:69,70; Joh 7:42; Ac 2:30; 13:22; Ro 1:3; Re 22:16</scripRef><br />the son of Abraham.<br /><scripRef>Ge 12:3; 22:18; 26:3-5; 28:13,14; Ro 4:13; Ga 3:16</scripRef>\n",
+    "40:1:3": "<br />Judas.<br /><scripRef>Ge 38:27,29,30; 46:12; * Judah, Pharez, Zarah:</scripRef><br /><scripRef>Nu 26:20,21; 1Ch 2:3,4</scripRef><br />Zerah.<br /><scripRef>1Ch 9:6</scripRef><br />Thamar.<br /><scripRef>Ge 38:6,11,24-26</scripRef><br />Tamar.  and Phares.<br /><scripRef>Ge 46:12; Nu 26:21; Ru 4:18; 1Ch 2:5; 4:1</scripRef><br />Hezron.<br /><scripRef>Lu 3:33</scripRef><br />Aram.<br /><scripRef>Ru 4:19; 1Ch 2:9</scripRef><br />Ram.\n"
+  }
+}

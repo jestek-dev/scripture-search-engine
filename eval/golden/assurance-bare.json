@@ -1,0 +1,51 @@
+{
+  "id": "assurance-bare",
+  "query": "assurance",
+  "status": "pending",
+  "coversConcepts": [
+    "assurance-of-salvation"
+  ],
+  "note": [
+    "GAP FIXTURE (reopened 2026-08-23 stack merge). Bare 'assurance' was a",
+    "measured gap closed by PR #33's bare-word admission on",
+    "assurance-of-salvation; the stack merge stepped that admission back to",
+    "a documented skip because the pack's reviewed P5.5 'blessed assurance'",
+    "hymn aliases token-contain the bare word and the P5.6 superset",
+    "double-chip guard structurally refuses the combination. The hymn",
+    "mapping was kept; this fixture keeps the reopened gap measured.",
+    "Measured either side of the trim: on main fbf2655 (#33 behavior) bare",
+    "'assurance' returned Rom 8:38-39 #1 (24.4) and 1 Jn 5:11-13 #2 (22.0),",
+    "then Phil 1:6 / Rom 8:16 / 1 Jn 2:1 — all via 'Theme: Assurance of",
+    "salvation'. At the post-trim tips the concept never fires: Heb 11:1",
+    "leads at 3.33 ('Shared word: assurance'), then Acts 17:31, Job 31:37,",
+    "Num 6:27 — the pre-#33 lexical-noise class the closure was measured",
+    "against.",
+    "PENDING on the J-decision recorded in ontology/lexicon-inventory.yaml",
+    "(assurance-of-salvation skipped row): reactivate if Jesse restores the",
+    "bare '- assurance' lexicon entry via that row's one-commit revert path",
+    "(restore entry + admitted form, drop the two hymn phrases) or resolves",
+    "the double-chip guard collision another way; flip active in that same",
+    "PR. Until then this file is the only instrument watching the gap —",
+    "retire it only by activation, never by deletion."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 8:38-39",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Assurance of salvation"
+    },
+    {
+      "reference": "1 John 5:11-13",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Assurance of salvation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Philippians 1:6",
+    "Romans 8:16",
+    "1 John 2:1"
+  ]
+}

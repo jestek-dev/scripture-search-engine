@@ -22,7 +22,7 @@
  * |                                 | gateApplicability context matrix (G12/G1b/default-degrade)   |
  * | golden.ts (G3/G2 in-memory)     | order regression rings; right-rank-wrong-reason rings;       |
  * |                                 | determinism N/A-never-pass edge                              |
- * | collision.ts (G4)               | lexicon floor; shared-phrase; shared-token; collapse report  |
+ * | collision.ts (G4)               | lexicon floor; shared-phrase; shared-token; collapse deny-list|
  * | layerB.ts (G5/G9)               | PMI floor; per-verse cap; N/A-never-pass; saturation honesty |
  * | orderingSnapshot.ts (G2)        | all 7 decision-table branches (missing snapshot; missing /   |
  * |                                 | malformed approval; binding mismatches; stale identity;      |
@@ -104,7 +104,7 @@ import {
 } from '@jestek-dev/scripture-engine';
 
 import { parseAnchorRef } from '../../pipeline/src/importers/ontologyImporter.js';
-import { collisionGate, singleTokenCollapses } from '../src/gates/collision.js';
+import { collisionGate, lexiconInventoryCheck, singleTokenCollapses } from '../src/gates/collision.js';
 import {
   conceptCoverageGate,
   corpusGoldenGate,
@@ -473,6 +473,57 @@ describe('collisionGate mutations', () => {
       { id: 'presence', label: 'Presence', lexicon: ['god with us', 'abiding presence'] },
     ]);
     expect(collapses).toEqual([{ conceptId: 'presence', phrase: 'god with us', token: 'god' }]);
+  });
+
+  const collapsing = [
+    { id: 'presence', label: 'Presence', lexicon: ['god with us', 'abiding presence'] },
+  ];
+  const acknowledgment = (overrides: Record<string, unknown> = {}) => {
+    const entry = {
+      conceptId: 'presence',
+      phrase: 'god with us',
+      token: 'god',
+      intended: true,
+      reviewedBy: 'jesse',
+      date: '2026-08-21',
+      note: 'deliberate bare-word trigger',
+      ...overrides,
+    };
+    return [
+      'collapses:',
+      `  - conceptId: ${JSON.stringify(entry.conceptId)}`,
+      ...Object.entries(entry)
+        .filter(([key]) => key !== 'conceptId')
+        .map(([key, value]) => `    ${key}: ${JSON.stringify(value)}`),
+      '',
+    ].join('\n');
+  };
+
+  it('lexiconInventoryCheck rings on an unacknowledged collapse, naming the remedy', () => {
+    const result = lexiconInventoryCheck(collapsing, 'collapses: []\n');
+    expect(result.status).toBe('fail');
+    expect(messages(result)).toMatch(/"god with us".*acknowledge it in ontology\/lexicon-inventory\.yaml/i);
+  });
+
+  it('lexiconInventoryCheck rings on a stale acknowledgment', () => {
+    const result = lexiconInventoryCheck(
+      collapsing,
+      acknowledgment() + acknowledgment({ phrase: 'no longer here' }).replace('collapses:\n', ''),
+    );
+    expect(result.status).toBe('fail');
+    expect(messages(result)).toMatch(/stale acknowledgment/);
+  });
+
+  it('lexiconInventoryCheck rings when the inventory file is missing but collapses exist', () => {
+    const result = lexiconInventoryCheck(collapsing, null);
+    expect(result.status).toBe('fail');
+    expect(messages(result)).toMatch(/is missing/);
+  });
+
+  it('passing twin: an acknowledged collapse passes and stays visible in the findings', () => {
+    const result = lexiconInventoryCheck(collapsing, acknowledgment());
+    expect(result.status).toBe('pass');
+    expect(messages(result)).toMatch(/acknowledged by jesse/);
   });
 });
 
@@ -1438,6 +1489,8 @@ const NULL_THRESHOLDS: RankQualityThresholds = {
   mrr10: null,
   goodOrBetterTop3Rate: null,
   battery: { categoryFloors: UNIT_FLOORS },
+  spelling: { noSilentEmpty: null },
+  references: { grammarCoverage: null },
 };
 
 describe('rank-quality threshold discipline', () => {
@@ -1510,6 +1563,8 @@ describe('rank-quality threshold discipline', () => {
       mrr10: null,
       goodOrBetterTop3Rate: null,
       battery: { categoryFloors: UNIT_FLOORS },
+      spelling: { noSilentEmpty: null },
+      references: { grammarCoverage: null },
     };
     const { thresholds, findings } = validateRankQualityBlock(block, { rankBaselineEstablished: false });
     expect(findings.map((f) => f.categoryCode)).toContain(g12cat('rank-quality-premature-threshold'));
@@ -1765,10 +1820,18 @@ describe('budgetsPropertyGate mutations', () => {
     expect(result.metrics?.['propertySeed']).toBe(G6_PROPERTY_SEED);
   });
 
-  it('the reviewed-constants half reports not-applicable WITH its reason, never a fake pass', () => {
+  it('the reviewed-constants half reports not-applicable WITH its reason when the mirror is absent, never a fake pass', () => {
     const result = reviewedConstantsCheck();
     expect(result.status).toBe('not-applicable');
-    expect(result.summary).toMatch(/reviewed-constants mirror not yet in budgets\.json/);
+    expect(result.summary).toMatch(/reviewed-constants mirror absent from budgets\.json/);
+  });
+
+  it('the reviewed-constants half rings when the mirror disagrees with the engine', () => {
+    const result = reviewedConstantsCheck({
+      soleEvidenceMaxPoints: { translation_variant: 7 },
+    });
+    expect(result.status).toBe('fail');
+    expect((result.findings ?? []).some((f) => f.categoryCode === 'mirror-mismatch')).toBe(true);
   });
 });
 

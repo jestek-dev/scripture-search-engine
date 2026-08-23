@@ -1,6 +1,6 @@
 {
   "id": "ref-ordinal-1st-corinthians-13",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Ordinal book forms (\"1st Corinthians\", \"First Corinthians\", \"2nd Timothy\", \"3rd John\") — untested in the battery but the same defect class as ms4/ref8: no ordinal book_aliases rows, so every form is INVALID-REFERENCE today. Written fixture-first; activated by QR-3's alias coverage.",
     "\"1 Corinthians 13\" is the whole-chapter label labelFor renders today and after QR-4's label fix (which keys the Book C form on an explicit whole-chapter flag rather than verse-1 anchoring).",
