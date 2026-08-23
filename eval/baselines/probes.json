@@ -1,6 +1,6 @@
 {
   "corpusFingerprint": "d1b00196128f15514f1b0f9a15c4a3c1d6a1a2dbd6fc5f9b3729c2f9be6fafd5",
-  "layerFingerprint": "801693293ccb648f20e5fe4e3421071378902c77ac184f4278ee8df5e6cb2318",
+  "layerFingerprint": "00babe3c38f6d83aa0584e6c0f94e6342e30dbf4f1e17631c5626c3e6fa4365d",
   "engineVersion": "0.13.0",
   "observations": [
     {
@@ -258,16 +258,16 @@
         "WEB:58013020",
         "WEB:45015013",
         "WEB:52005023",
+        "WEB:49001003",
+        "WEB:19034008",
         "WEB:19121007",
-        "WEB:19091011",
-        "WEB:19034020",
-        "WEB:19121008",
-        "WEB:05006024",
-        "WEB:23061009"
+        "WEB:40005003",
+        "WEB:01001028",
+        "WEB:50004006"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.247174,
-      "meanTopScore": 26.621881
+      "weakReasonShare": 0.150721,
+      "meanTopScore": 28.584759
     },
     {
       "id": "ot-narrative-ruth",

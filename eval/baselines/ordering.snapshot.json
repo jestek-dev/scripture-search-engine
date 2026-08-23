@@ -1,7 +1,7 @@
 {
   "engineVersion": "0.13.0",
   "corpusFingerprint": "d1b00196128f15514f1b0f9a15c4a3c1d6a1a2dbd6fc5f9b3729c2f9be6fafd5",
-  "layerFingerprint": "801693293ccb648f20e5fe4e3421071378902c77ac184f4278ee8df5e6cb2318",
+  "layerFingerprint": "00babe3c38f6d83aa0584e6c0f94e6342e30dbf4f1e17631c5626c3e6fa4365d",
   "probes": [
     {
       "id": "broad-love",
@@ -1364,8 +1364,32 @@
           "score": 32
         },
         {
+          "targetId": "WEB:49001003",
+          "score": 19.336814
+        },
+        {
+          "targetId": "WEB:19034008",
+          "score": 16.678407
+        },
+        {
           "targetId": "WEB:19121007",
           "score": 13.303243
+        },
+        {
+          "targetId": "WEB:40005003",
+          "score": 11.431535
+        },
+        {
+          "targetId": "WEB:01001028",
+          "score": 10.838063
+        },
+        {
+          "targetId": "WEB:50004006",
+          "score": 10.8
+        },
+        {
+          "targetId": "WEB:19001001",
+          "score": 10.79645
         },
         {
           "targetId": "WEB:19091011",
@@ -1384,6 +1408,10 @@
           "score": 9.645499
         },
         {
+          "targetId": "WEB:48003008",
+          "score": 9.526279
+        },
+        {
           "targetId": "WEB:23061009",
           "score": 9.35516
         },
@@ -1394,6 +1422,10 @@
         {
           "targetId": "WEB:03019003",
           "score": 8.482731
+        },
+        {
+          "targetId": "WEB:58010022",
+          "score": 8.455376
         },
         {
           "targetId": "WEB:19024005",
@@ -1414,38 +1446,6 @@
         {
           "targetId": "WEB:05033011",
           "score": 7.836318
-        },
-        {
-          "targetId": "WEB:19034008",
-          "score": 7.787213
-        },
-        {
-          "targetId": "WEB:19037034",
-          "score": 7.679937
-        },
-        {
-          "targetId": "WEB:20003026",
-          "score": 7.594177
-        },
-        {
-          "targetId": "WEB:19040004",
-          "score": 7.521284
-        },
-        {
-          "targetId": "WEB:40024046",
-          "score": 7.484016
-        },
-        {
-          "targetId": "WEB:19034001",
-          "score": 7.291475
-        },
-        {
-          "targetId": "WEB:39003012",
-          "score": 7.200241
-        },
-        {
-          "targetId": "WEB:05033013",
-          "score": 7.105152
         }
       ]
     },
