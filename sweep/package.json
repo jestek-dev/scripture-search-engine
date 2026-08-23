@@ -12,7 +12,8 @@
     "compile-universe": "tsx src/universe/compileCli.ts",
     "universe-freshness": "tsx src/universe/freshnessCli.ts",
     "derive-ring2": "tsx src/perturb/ring2Cli.ts",
-    "select-seeds": "tsx src/paraphrase/seedsCli.ts"
+    "select-seeds": "tsx src/paraphrase/seedsCli.ts",
+    "grade-l1": "tsx src/grade/layer1Cli.ts"
   },
   "dependencies": {
     "@jestek-dev/scripture-engine": "*",

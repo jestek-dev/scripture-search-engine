@@ -1,0 +1,66 @@
+# negative-context-watchlist.yaml — MS-7 (plan P8.7). Sweep-side curated
+# data, NEVER compiled into the artifact (lint-enforced by
+# sweep/test/layer1.test.ts: nothing under pipeline/ or engine/ may
+# reference sweep/grading). Seed rows are the plan's, verbatim, PENDING
+# JESSE'S APPROVAL (J16); every later addition comes to him in batches.
+#
+# What a row IS: an attribution of documented sense-in-context with a
+# citation — a verse whose words, lifted from context, invert or wound
+# when surfaced for the named query classes. What a row is NOT: a theology
+# score. The engine never adjudicates and neither does this list
+# (covenant #6); the tooling FLAGS a watchlisted ref at #1 for a matching
+# class as severity theologically-harmful and AUTO-ESCALATES it to
+# Jesse's list. The tooling flags; Jesse rules.
+rows:
+  - ref: 'Jeremiah 4:10'
+    status: seed-pending-J16
+    matchClasses: [guidance, trust-in-god, gods-faithfulness, felt-need]
+    senseInContext: >-
+      The prophet's anguished protest "you have greatly deceived this
+      people" within the judgment oracle of Jer 4 — words ABOUT perceived
+      divine deception in judgment, not a teaching that God deceives.
+      Surfaced for a trust/guidance query it asserts the inversion.
+    citation: 'Jeremiah 4:5-18 (WEB); the protest is v10 within the alarm oracle.'
+  - ref: 'Job 16:2'
+    status: seed-pending-J16
+    matchClasses: [god-of-all-comfort, grief-and-loss, near-to-the-brokenhearted, felt-need]
+    senseInContext: >-
+      "Miserable comforters are you all" — Job's rebuke OF his comforters,
+      not counsel about comfort. Surfaced for a comfort/grief query it
+      mocks the seeker.
+    citation: 'Job 16:1-5 (WEB); the rebuke answers the friends'' speeches.'
+  - ref: 'Ecclesiastes 1:9'
+    status: seed-pending-J16
+    matchClasses: [hope-in-despair, hope-in-god, new-creation, restoration, felt-need]
+    senseInContext: >-
+      "There is no new thing under the sun" — the Preacher's thesis of
+      futility-under-the-sun, answered later in the book and by the
+      gospel's "new creation". Surfaced for a hope/renewal query it
+      preaches the despair it exists to expose.
+    citation: 'Ecclesiastes 1:1-11 (WEB) frame; contrast 2 Corinthians 5:17.'
+  - ref: '1 Corinthians 11:20'
+    status: pending-J3
+    matchClasses: [lords-supper]
+    senseInContext: >-
+      "It is not the Lord's supper that you eat" — Paul DENYING that the
+      Corinthians' abusive meal is the Supper. Lifted alone for a
+      communion query the negation reads as a statement about the
+      ordinance itself. Status pending Jesse's J3 ruling on this row.
+    citation: '1 Corinthians 11:17-34 (WEB); the denial is v20 within the abuse rebuke.'
+  - ref: 'Luke 18:5'
+    status: seed-pending-J16
+    matchClasses: [prayer, asking-in-gods-will, felt-need]
+    senseInContext: >-
+      The UNJUST judge's motive ("lest she wear me out") inside the parable
+      told so that they "must always pray, and not give up" (v1). The
+      verse alone casts God as the unjust judge — the parable argues the
+      contrast, not the likeness.
+    citation: 'Luke 18:1-8 (WEB); v1 states the parable''s stated intent.'
+  - ref: 'Malachi 1:9'
+    status: seed-pending-J16
+    matchClasses: [worship, tithing, generosity, adversarial]
+    senseInContext: >-
+      "With this, will he accept any of you?" — sarcasm against polluted
+      offerings, not an assurance of acceptance. Surfaced for an
+      offering/worship query the irony inverts.
+    citation: 'Malachi 1:6-14 (WEB); the rhetorical scorn governs v9.'
