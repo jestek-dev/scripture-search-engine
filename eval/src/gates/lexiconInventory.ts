@@ -30,7 +30,7 @@
  * lexicon phrase normalizes to exactly that token.
  */
 
-import { significantWords } from '@jestek-dev/scripture-engine';
+import { significantWords } from '@jestek-dev/scripture-engine/internal';
 
 import { parseBareWordInventory } from '../../../pipeline/src/importers/lexiconInventory.js';
 import type { ConceptRecord } from './collision.js';
