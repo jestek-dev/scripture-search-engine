@@ -1,0 +1,122 @@
+# GENESIS-PILOT PACK (cluster draft, 2026-08-22) — reconciliation between
+# estranged family members. Genesis-pilot proposal 10: forgiving-others and
+# harmony-with-others cover parts, but neither answers "reconciling with my
+# brother", "family estrangement", "healing a broken family".
+#
+# COLLISION DESIGN (flagged HIGH in the scoping brief): forgiving-others
+# already carries the lexicon entry "reconcile with your brother" — so this
+# lexicon takes the FAMILY-ESTRANGEMENT register and never the forgiveness
+# register: no "forgive" phrasing at all, and the brother phrasings are
+# reunion-shaped, not command-shaped. Measured with the engine's own
+# significantWords vs forgiving-others (5 phrases, 9 tokens): shared phrases
+# 0/5 = 0.000 (limit 0.34); shared tokens {brother} = 1/9 = 0.111 (limit
+# 0.6). (The tokenizer stems "reconciling" and "reconcile" to different
+# tokens — measured, not assumed; only `brother` is genuinely shared.)
+# vs harmony-with-others: ZERO shared phrases and ZERO shared tokens.
+# vs restoration: {restor} 1/8 = 0.125. All under half the limits.
+#
+# Genesis stages this concept: Esau running to embrace Jacob (33:4), Joseph
+# revealing himself (45:1-15), the brothers' fear and Joseph's weeping
+# after the father's death (50:15-21). The NT completes it with the
+# prodigal's father and the waiting altar-gift of Matt 5:23-24. The
+# alternative in the pilot doc — folding into harmony-with-others as a
+# lexicon extension — is answered in notes.md: harmony's lexicon and
+# anchors are general-neighbor commands (Rom 12:18, Eph 4:2-3); the
+# estrangement register (grief-shaped, kin-specific) would distort it.
+#
+# PR #33 lexicon-inventory note: no entry here collapses to a single
+# significant token, so the row is `admitted: []` with skips recorded for
+# the tempting bare words: `family` (spans parenting / godly-marriage /
+# every household text), `brother` (spans Passion narratives and
+# brother-in-Christ usage), `estranged` (viable candidate — admit later
+# only against a measured gap).
+id: family-reconciliation
+label: Family reconciliation
+lexicon:
+  - family reconciliation
+  - estranged from my family
+  - family estrangement
+  - healing a broken family
+  - reunion with my brother
+  - restoring family relationships
+  - reconciling with a family member
+  - when family falls apart
+  # Integration round 2026-08-22: three surface forms the drafted fixtures
+  # measure that the entries above cannot fire. Concept matching requires
+  # every significant token of an entry to appear in the query
+  # (repository.matchConcepts), and the tokenizer stems "reconciling" to
+  # `reconcil` while "reconcile" stays `reconcile` — so forgiving-others'
+  # "reconcile with your brother" entry does NOT fire these queries and no
+  # normalized phrase is shared with it ("reconcil brother" vs
+  # "reconcile brother"; G4 verified clean).
+  - broken family
+  - reconciling with my brother
+  # Felt-need phrasing precedent: "cutting myself" (hope-in-despair),
+  # "failed again" (relapse-and-restoration).
+  - my brother and i dont speak
+anchors:
+  # "But while he was still far off, his father saw him and was moved with
+  # compassion, and ran, fell on his neck, and kissed him... this, your
+  # brother, was dead, and is alive again" (WEB). The fullest family-
+  # reconciliation narrative in Scripture — father, returning son, AND the
+  # estranged elder brother the father goes out to beg (v28). Editorial:
+  # Torrey has no family-reconciliation heading; the parable is anchored
+  # for the reunion frame, not the repentance frame (repentance anchors
+  # Luke 15:7 separately — checked, no range overlap). IN fixture corpus
+  # (Luke 15).
+  - ref: Luke 15:11-32
+    sources: [editorial]
+    weight: 1.0
+  # Torrey FORGIVENESS OF INJURIES "Should be accompanied by > Kindness ::
+  # Genesis 45:5-11"; editorial for the fuller 1-15 scene (the weeping, the
+  # kiss, the brothers talking with him again — v15 is the reconciliation
+  # itself). "God sent me before you to preserve life" (WEB wording from
+  # knowledge — Genesis 45 NOT in pipeline/fixtures/web-subset.json; corpus
+  # extension requested in notes.md).
+  - ref: Genesis 45:1-15
+    sources: [editorial]
+    weight: 0.95
+  # "Esau ran to meet him, embraced him, fell on his neck, kissed him, and
+  # they wept" (WEB wording from knowledge — Genesis 33 NOT in web-subset;
+  # notes.md). Twenty years of fear ended in an embrace — the searcher's
+  # own hoped-for scene. Editorial; Genesis-pilot seed ref.
+  - ref: Genesis 33:4
+    sources: [editorial]
+    weight: 0.9
+  # Torrey FORGIVENESS OF INJURIES "Exemplified > Joseph :: Genesis 50:20,
+  # Genesis 50:21"; editorial for the 15-21 scene (the brothers' fear that
+  # the reconciliation died with the father, and Joseph's tears and kind
+  # answer — reconciliation outlasting the patriarch). (Genesis 50 NOT in
+  # web-subset; notes.md.)
+  - ref: Genesis 50:15-21
+    sources: [editorial]
+    weight: 0.9
+  # "First be reconciled to your brother, and then come and offer your
+  # gift" (WEB). Jesus ranks reconciliation ahead of worship. Editorial:
+  # in Matt 5 "brother" is wider than kin, but the family case is its
+  # first and hardest instance; forgiving-others carries the command's
+  # forgiveness side without anchoring this verse (checked — no concept
+  # anchors 5:23-24 today). IN corpus (Matthew 5).
+  - ref: Matthew 5:23-24
+    sources: [editorial]
+    weight: 0.85
+  # "He will turn the hearts of the fathers to the children, and the
+  # hearts of the children to their fathers" (WEB wording from knowledge —
+  # Malachi 4 NOT in web-subset; notes.md). The canon's closing promise is
+  # a family-reconciliation promise (echoed in Luke 1:17). Editorial.
+  - ref: Malachi 4:5-6
+    sources: [editorial]
+    weight: 0.7
+  # "Perhaps he was therefore separated from you for a while that you
+  # would have him forever, no longer as a slave, but... a beloved
+  # brother" (WEB wording from knowledge — Philemon NOT in web-subset;
+  # notes.md). Household estrangement healed by received-as-brother;
+  # DEBATABLE (household, not blood kin) — flagged for Jesse in notes.md.
+  # Ref format follows the "3 John 1:2" single-chapter precedent.
+  - ref: Philemon 1:15-18
+    sources: [editorial]
+    weight: 0.6
+related:
+  - forgiving-others
+  - harmony-with-others
+  - restoration

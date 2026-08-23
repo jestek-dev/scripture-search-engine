@@ -1,0 +1,47 @@
+{
+  "id": "prosperity-blessing",
+  "query": "blessing",
+  "additionalQueries": [
+    "gods blessing"
+  ],
+  "status": "active",
+  "note": [
+    "DOCTRINE-NEGATIVE FIXTURE (prosperity family; drafted 2026-08-22 with",
+    "the new blessing pack - blessing is THE magnet topic for prosperity",
+    "misuse, so the pack ships with its own guard). The mustNotRank list is",
+    "the point: each entry is a classic prosperity proof-text pairing for a",
+    "blessing query, and every forbidden verse IS in the fixture corpus so",
+    "the assertion cannot pass vacuously. The verses are Scripture and may",
+    "rank honestly elsewhere (Mal 3:10 for tithing queries, Phil 4:19 on",
+    "gods-provision); what is forbidden is the query->verse pairing that",
+    "frames them as a blessing technique. Criteria: docs/DOCTRINAL-BASIS.md",
+    "§3.",
+    "",
+    "Mal 3:10 is the sharpest case: the verse literally contains 'blessing'",
+    "('I will... pour you out a blessing'), so it is a live lexical",
+    "candidate for this query - exactly the pairing the seed-faith frame",
+    "recruits. Deut 28:1-14, the other classic quarry, is NOT in the",
+    "fixture corpus; forbidding it here would pass vacuously, so it is",
+    "handled by exclusion from the pack's anchors instead (see the pack",
+    "header and notes.md).",
+    "",
+    "Note: the p6 stack carries prosperity fixtures of its own (e.g.",
+    "favor-of-god.json) - if both land, this fixture stands independently;",
+    "ids do not collide."
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Malachi 3:10",
+      "why": "Tithe-transaction proof-text: 'bring the whole tithe... I will pour out a blessing' recruited as a return-on-giving mechanism for a blessing query - the seed-faith frame DOCTRINAL-BASIS.md §3 excludes. The verse ranks honestly for tithing queries."
+    },
+    {
+      "reference": "Luke 6:38",
+      "why": "'Give, and it will be given to you... pressed down, shaken together' recruited as a give-to-get blessing formula. The verse's own context is mercy and generosity mirroring the Father's, not a return-on-investment mechanism."
+    },
+    {
+      "reference": "Philippians 4:19",
+      "why": "'My God will supply every need of yours' - written to a church that had just given sacrificially - recruited as an unconditional blessing guarantee (DOCTRINAL-BASIS.md §3). It ranks honestly on gods-provision."
+    }
+  ]
+}

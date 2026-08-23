@@ -29,6 +29,21 @@ lexicon:
   - humility
   - humble yourselves
   - god exalts the humble
+  # Pride extension (Genesis-pilot round, 2026-08-22). Measured gap:
+  # "pride" reaches only descriptive scatter (Ps 10:4, 73:6, Ezek 33:28 —
+  # no chip), and the teaching verses tokenize to `proud`, unreachable
+  # from the query token `pride`. Bare word per the NEEDS-JESSE §1.6d
+  # option-3 precedent; one-token discount applies. G8-probe-checked:
+  # neither entry shares a token with any of the 25 committed probes
+  # (the ot-prophets-justly probe that killed the walk-humbly entries
+  # has tokens {do, justly, love, mercy, walk, humbly} — disjoint).
+  - pride
+  # The Jas 4:6 / 1 Pet 5:5 wording searchers quote; {god, resist, proud}
+  # — three tokens, no collapse. Babel ("make a name for ourselves",
+  # Gen 11:4) is deliberately NOT phrased in: it collapses to
+  # {make, name} and "name" belongs to quoted-verse territory
+  # (ot-histories-humble probe contains both tokens).
+  - god resists the proud
   # Round-2 book admission 2026-08-18: the drafted "walk humbly" /
   # "act justly love mercy" lexicon entries were DROPPED by the integrator
   # on G8 evidence — they fired this concept for the ot-prophets-justly
