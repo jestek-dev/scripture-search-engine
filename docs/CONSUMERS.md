@@ -46,7 +46,29 @@ stability promise — an app importing it has left the contract.
 
 2. **Fetch and verify the artifact** with
    `@jestek-dev/scripture-artifact-client` (this repo's `artifact-client/`
-   workspace — the same code the repo's own workbench runs):
+   workspace — the same code the repo's own workbench runs).
+
+   **Obtaining it today:** `@jestek-dev/scripture-artifact-client` (and
+   `@jestek-dev/scripture-conformance-kit`, used further down) are **not yet
+   published to npm** — trusted publishing is configured for the engine
+   package only, and publishing the two support packages is a separate
+   decision that rides with the terminus release train (P7.6). Until they
+   are published, install them from a git checkout of this repository by
+   workspace path:
+
+   ```bash
+   git clone https://github.com/jestek-dev/scripture-search-engine
+   cd scripture-search-engine && npm ci && npm run build:engine
+   npm pack --workspace artifact-client   # -> jestek-dev-scripture-artifact-client-<ver>.tgz
+   npm pack --workspace conformance      # -> jestek-dev-scripture-conformance-kit-<ver>.tgz
+   # then, in your app:
+   npm i ../scripture-search-engine/jestek-dev-scripture-artifact-client-<ver>.tgz
+   ```
+
+   (`npm pack` runs each workspace's build; vendoring the built workspace
+   directory into your repo works too.) Pin the checkout to the release tag
+   you are pinning anyway. When the packages reach npm, replace the tarball
+   dependency with the registry version — the import sites do not change.
 
    ```ts
    import { readFile } from 'node:fs/promises';
@@ -198,8 +220,9 @@ contract gains the corresponding text if it binds all consumers.
 
 Determinism is promised on every platform, and your app should not take that
 on faith: run the conformance kit (`conformance/` in this repo,
-`@jestek-dev/scripture-conformance-kit`) once per re-pin, on the runtime you
-actually ship (Hermes/JSC over OP-SQLite):
+`@jestek-dev/scripture-conformance-kit` — not yet on npm; obtain it from a
+git checkout as described in Quickstart step 2) once per re-pin, on the
+runtime you actually ship (Hermes/JSC over OP-SQLite):
 
 ```ts
 import { runConformance } from '@jestek-dev/scripture-conformance-kit';
