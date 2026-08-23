@@ -1,0 +1,37 @@
+# book-name-variants.yaml — MS-4 (plan P8.4). Book-name spellings worth
+# probing at population scale. NO expectations are recorded here: at
+# generation time each variant's normalized key is checked against
+# bookAliasRows() — the SOURCE of the runtime alias table — so a variant
+# the engine resolves expects the resolved reference, and one it does not
+# expects the TYPED invalid-reference outcome (the §5 typed-kind
+# commitment). The list can therefore never drift from the alias policy:
+# the policy IS the oracle.
+variants:
+  # curated-misspelling aliases already in the book table (must resolve)
+  - { book: Genesis, variant: Genisis }
+  - { book: Deuteronomy, variant: Duetoronomy }
+  - { book: Deuteronomy, variant: Dueteronomy }
+  - { book: Deuteronomy, variant: Deutoronomy }
+  - { book: Philippians, variant: Phillipians }
+  - { book: 'Song of Solomon', variant: 'Songs of Solomon' }
+  # common misspellings whose status the alias table decides
+  - { book: Revelation, variant: Revelations }
+  - { book: Ecclesiastes, variant: Ecclesiastis }
+  - { book: Ecclesiastes, variant: Ecclesiates }
+  - { book: Galatians, variant: Galations }
+  - { book: Colossians, variant: Collosians }
+  - { book: Corinthians, variant: Corinthans, numbered: true }
+  - { book: Thessalonians, variant: Thesalonians, numbered: true }
+  - { book: Matthew, variant: Mathew }
+  - { book: Habakkuk, variant: Habakuk }
+  - { book: Zephaniah, variant: Zephania }
+  - { book: Philemon, variant: Philemone }
+  - { book: Isaiah, variant: Isiah }
+  - { book: Jeremiah, variant: Jeremaiah }
+  - { book: Leviticus, variant: Levitcus }
+  - { book: Hebrews, variant: Hebrew }
+  # fake books (must type as invalid — never resolve, never guess silently)
+  - { book: null, variant: Hezekiah }
+  - { book: null, variant: 'Second Opinions' }
+  - { book: null, variant: Paul }
+  - { book: null, variant: Israelites }

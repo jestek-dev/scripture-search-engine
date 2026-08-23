@@ -1,0 +1,67 @@
+/**
+ * Counter-based deterministic randomness for the universe compiler (MS-2).
+ *
+ * NO global RNG, NO floats: splitmix64 over BigInt is platform-identical by
+ * construction (integer arithmetic masked to 64 bits), and every decision
+ * stream is seeded independently by
+ * `sha256(SEED ‖ grammarId ‖ conceptId ‖ slot ‖ counter)`, so the universe is
+ * STABLE UNDER EXTENSION: adding a grammar or a concept never shifts any
+ * other line's decisions, and sweep-to-sweep diffs stay meaningful.
+ */
+import { sha256Hex } from './canonical.js';
+
+const MASK64 = (1n << 64n) - 1n;
+
+/** One splitmix64 stream. Never share a stream across decisions that must
+ *  be independent — mint a new one per (grammar, cell, slot) instead. */
+export class DecisionStream {
+  private state: bigint;
+
+  constructor(seed64: bigint) {
+    this.state = seed64 & MASK64;
+  }
+
+  /** Next 64-bit value. */
+  next(): bigint {
+    this.state = (this.state + 0x9e3779b97f4a7c15n) & MASK64;
+    let z = this.state;
+    z = ((z ^ (z >> 30n)) * 0xbf58476d1ce4e5b9n) & MASK64;
+    z = ((z ^ (z >> 27n)) * 0x94d049bb133111ebn) & MASK64;
+    return (z ^ (z >> 31n)) & MASK64;
+  }
+
+  /** Integer in [0, bound). Float-free. */
+  nextBelow(bound: number): number {
+    if (!Number.isInteger(bound) || bound < 1) throw new Error(`bound must be >= 1, got ${bound}`);
+    return Number(this.next() % BigInt(bound));
+  }
+
+  /** Deterministic pick from a non-empty list. */
+  pick<T>(items: readonly T[]): T {
+    if (items.length === 0) throw new Error('pick from empty list');
+    return items[this.nextBelow(items.length)]!;
+  }
+
+  /**
+   * Deterministic sample WITHOUT replacement of up to `count` items,
+   * preserving the input order of the chosen items (so output ordering never
+   * depends on the draw sequence).
+   */
+  sample<T>(items: readonly T[], count: number): T[] {
+    if (count >= items.length) return [...items];
+    const chosen = new Set<number>();
+    while (chosen.size < count) chosen.add(this.nextBelow(items.length));
+    return items.filter((_, index) => chosen.has(index));
+  }
+}
+
+/**
+ * Mint the stream for one decision site. Parts identify the site
+ * (grammarId, conceptId, slot, counter, …); the same parts always yield the
+ * same stream, and distinct parts yield independent streams.
+ */
+export function decisionStream(seed: string, ...parts: readonly (string | number)[]): DecisionStream {
+  const material = [seed, ...parts.map(String)].join('\u0000');
+  const digest = sha256Hex(material);
+  return new DecisionStream(BigInt(`0x${digest.slice(0, 16)}`));
+}

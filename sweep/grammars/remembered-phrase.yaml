@@ -1,0 +1,21 @@
+# MS-3: remembered-phrase class (battery F3/F16 history) — half-remembered
+# lines people type from memory. Cells come from the committed
+# words/remembered-phrases.yaml list (each row names the concept whose
+# anchors should surface, where one exists).
+#
+# The plan's second feed —3–6-token n-grams of anchored-verse WEB text —
+# is corpus-derived and lands as a committed list when generated against the
+# minted corpus (see impl notes / J43 floors); the curated phrase feed is
+# complete now.
+id: remembered-phrase
+category: remembered-phrase
+source: list
+listRef: remembered-phrases
+perTemplateCap: 1
+templates:
+  - text: '{label}'
+    register: church-member
+  - text: 'verse that says {label}'
+    register: church-member
+  - text: 'where does the bible say {label}'
+    register: church-member

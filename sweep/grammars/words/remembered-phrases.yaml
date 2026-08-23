@@ -1,0 +1,61 @@
+# remembered-phrases.yaml — MS-3 (plan P8.3). Reviewed with J65's batch.
+#
+# Half-remembered lines people type from memory (battery classes F3/F16).
+# Rows with conceptId expect that pack's curated anchors; rows without one
+# compile with expectation `none` and feed the measured-gap channel. The
+# corpus-derived n-gram feed (3–6-token n-grams of anchored-verse WEB
+# text) is generated against the minted corpus later; this curated seed
+# list stands on its own.
+rows:
+  - { text: be anxious for nothing, conceptId: remembered-anxious-for-nothing }
+  - { text: do not be anxious about anything, conceptId: remembered-anxious-for-nothing }
+  - { text: all things work together for good, conceptId: remembered-all-things-for-good }
+  - { text: all things for good, conceptId: remembered-all-things-for-good }
+  - { text: faith is the assurance of things hoped for, conceptId: remembered-faith-as-assurance }
+  - { text: substance of things hoped for, conceptId: remembered-faith-as-assurance }
+  - { text: faith like a mustard seed, conceptId: remembered-faith-like-a-mustard-seed }
+  - { text: faith as small as a mustard seed, conceptId: remembered-faith-like-a-mustard-seed }
+  - { text: fruit of the spirit love joy peace, conceptId: remembered-fruit-of-the-spirit }
+  - { text: love joy peace patience kindness, conceptId: remembered-fruit-of-the-spirit }
+  - { text: put on the whole armor of god, conceptId: remembered-full-armor-of-god }
+  - { text: armor of god verse, conceptId: remembered-full-armor-of-god }
+  - { text: count it all joy, conceptId: remembered-joy-in-trials }
+  - { text: consider it pure joy when you face trials, conceptId: remembered-joy-in-trials }
+  - { text: looking to jesus the author and finisher, conceptId: remembered-looking-to-jesus }
+  - { text: fix our eyes on jesus, conceptId: remembered-looking-to-jesus }
+  - { text: be not conformed to this world, conceptId: remembered-transformed-not-conformed }
+  - { text: transformed by the renewing of your mind, conceptId: remembered-transformed-not-conformed }
+  - { text: work as unto the lord, conceptId: remembered-work-as-for-the-lord }
+  - { text: whatever you do work at it with all your heart, conceptId: remembered-work-as-for-the-lord }
+  - { text: god will make a way of escape, conceptId: remembered-a-way-of-escape }
+  - { text: no temptation has overtaken you, conceptId: remembered-a-way-of-escape }
+  - { text: be still and know that i am god }
+  - { text: i can do all things through christ, conceptId: strength-in-weakness }
+  - { text: my grace is sufficient for you, conceptId: strength-in-weakness }
+  - { text: strength is made perfect in weakness, conceptId: strength-in-weakness }
+  - { text: the lord is my shepherd }
+  - { text: for i know the plans i have for you }
+  - { text: trust in the lord with all your heart, conceptId: trust-in-god }
+  - { text: lean not on your own understanding, conceptId: trust-in-god }
+  - { text: love is patient love is kind, conceptId: loving-others }
+  - { text: perfect love casts out fear, conceptId: fear-not }
+  - { text: fear not for i am with you, conceptId: fear-not }
+  - { text: cast all your cares on him, conceptId: remembered-anxious-for-nothing }
+  - { text: come to me all who are weary, conceptId: rest-for-the-weary }
+  - { text: i will give you rest, conceptId: rest-for-the-weary }
+  - { text: the joy of the lord is my strength, conceptId: joy-in-the-lord }
+  - { text: they that wait upon the lord shall renew their strength }
+  - { text: on wings like eagles }
+  - { text: the prodigal son }
+  - { text: the good samaritan }
+  - { text: the lost sheep }
+  - { text: ask and it will be given, conceptId: asking-in-gods-will }
+  - { text: seek first the kingdom of god }
+  - { text: narrow is the gate }
+  - { text: build your house on the rock, conceptId: building-on-the-rock }
+  - { text: wise man built his house on the rock, conceptId: building-on-the-rock }
+  - { text: the cornerstone the builders rejected, conceptId: christ-the-cornerstone }
+  - { text: a new heaven and a new earth, conceptId: new-heaven-and-earth }
+  - { text: he will wipe away every tear, conceptId: new-heaven-and-earth }
+  - { text: nothing can separate us from the love of god, conceptId: gods-love }
+  - { text: for god so loved the world, conceptId: gods-love }

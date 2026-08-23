@@ -1,0 +1,58 @@
+# adversarial-slogans.yaml — MS-3 (plan P8.3). PENDING JESSE'S SKIM (J65).
+#
+# Slogans, misquotes, and out-of-context uses the engine must not confirm.
+# Rows may carry mustNotLead — references that must NOT lead the results,
+# each one a documented negative-context sense checked against MS-7's
+# watchlist (attribution of sense, never a theology score). Rows with
+# conceptId expect an ALREADY-LANDED corrective/teaching concept's anchors;
+# whether the engine ships correctives at all remains Jesse's editorial
+# call (J9) — a row here tests curation, it never decides it. Seed set;
+# grows by reviewed PR toward the plan's ~200 target with J65's batch
+# review.
+rows:
+  # prosperity-gospel slogans — the engine must not proof-text prosperity
+  - { text: god wants me to be rich, conceptId: contentment, mustNotLead: ['Malachi 1:9'] }
+  - { text: name it and claim it, conceptId: asking-in-gods-will }
+  - { text: speak wealth into existence, conceptId: asking-in-gods-will }
+  - { text: give to get a hundredfold return, conceptId: generosity }
+  - { text: your best life now, conceptId: heavenly-reward }
+  - { text: god will make you healthy and wealthy, conceptId: contentment }
+  - { text: sow a seed and reap a miracle, conceptId: generosity }
+  # phrases people believe are in the Bible but are not
+  - { text: god helps those who help themselves, conceptId: gods-provision }
+  - { text: this too shall pass }
+  - { text: god will never give you more than you can handle, conceptId: remembered-a-way-of-escape }
+  - { text: cleanliness is next to godliness }
+  - { text: money is the root of all evil, conceptId: contentment }
+  - { text: follow your heart, conceptId: trust-in-god }
+  - { text: everything happens for a reason, conceptId: providence }
+  - { text: god just wants me to be happy, conceptId: joy-in-the-lord }
+  # out-of-context uses of real verses
+  - { text: i can do all things verse for winning my game, conceptId: strength-in-weakness }
+  - { text: jeremiah 29 11 promise for my career }
+  - { text: judge not so nobody can tell me anything, conceptId: self-deception }
+  - { text: where two or three are gathered god must answer, conceptId: asking-in-gods-will }
+  - { text: ask anything in my name means anything i want, conceptId: asking-in-gods-will }
+  # sense-inverted / negative-context bait (the MS-7 watchlist classes)
+  - { text: verse that says god deceived the people, mustNotLead: ['Jeremiah 4:10'] }
+  - { text: bible says comforters are miserable, mustNotLead: ['Job 16:2'] }
+  - { text: nothing ever changes so why try, conceptId: hope-in-despair, mustNotLead: ['Ecclesiastes 1:9'] }
+  - { text: verse about wearing god out with prayer, conceptId: prayer, mustNotLead: ['Luke 18:5'] }
+  - { text: does god accept any offering i bring, mustNotLead: ['Malachi 1:9'] }
+  # works-salvation and license
+  - { text: good people go to heaven, conceptId: grace-not-earned }
+  - { text: i am a good person so i am fine, conceptId: grace-not-earned }
+  - { text: earn your way to heaven, conceptId: grace-not-earned }
+  - { text: once forgiven i can sin all i want, conceptId: obedience-to-the-word }
+  - { text: grace means sin does not matter, conceptId: obedience-to-the-word }
+  # self-and-culture slogans
+  - { text: the universe has your back, conceptId: providence }
+  - { text: manifest your destiny, conceptId: providence }
+  - { text: you are enough on your own, conceptId: identity-in-christ }
+  - { text: believe in yourself bible verse, conceptId: trust-in-god }
+  - { text: god is whatever you imagine him to be, conceptId: deity-of-christ }
+  - { text: all religions lead to god, conceptId: salvation }
+  - { text: karma is in the bible, conceptId: grace-not-earned }
+  - { text: the lord works in mysterious ways so stop asking, conceptId: wrestling-with-god }
+  - { text: love means never judging anything, conceptId: loving-others }
+  - { text: hate the sin love the sinner verse }

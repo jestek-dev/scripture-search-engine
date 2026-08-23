@@ -1,0 +1,178 @@
+# theological-glossary.yaml — MS-3 (plan P8.3). Reviewed with J65's batch.
+#
+# ~150 theological terms church members and pastors actually search. Rows
+# with conceptId expect that pack's curated anchors; rows WITHOUT one
+# compile with expectation `none` — that residue is the DESIGNED
+# measured-gap feed back to curation (a term the ontology cannot yet
+# answer is recorded, never passed silently). Mapping a term to a concept
+# here is a test expectation only; it never ships and never scores
+# theology.
+rows:
+  - { text: atonement, conceptId: the-cross }
+  - { text: justification, conceptId: justification-by-faith }
+  - { text: justification by faith, conceptId: justification-by-faith }
+  - { text: sanctification, conceptId: spiritual-growth }
+  - { text: salvation, conceptId: salvation }
+  - { text: redemption, conceptId: salvation }
+  - { text: grace, conceptId: grace-not-earned }
+  - { text: mercy }
+  - { text: repentance, conceptId: repentance }
+  - { text: regeneration, conceptId: new-creation }
+  - { text: born again, conceptId: new-creation }
+  - { text: incarnation, conceptId: incarnation }
+  - { text: trinity, conceptId: trinity }
+  - { text: deity of christ, conceptId: deity-of-christ }
+  - { text: resurrection, conceptId: resurrection }
+  - { text: second coming, conceptId: second-coming }
+  - { text: rapture, conceptId: caught-up-together }
+  - { text: baptism, conceptId: baptism }
+  - { text: communion, conceptId: lords-supper }
+  - { text: eucharist, conceptId: lords-supper }
+  - { text: covenant, conceptId: covenant }
+  - { text: election }
+  - { text: predestination }
+  - { text: providence, conceptId: providence }
+  - { text: sovereignty }
+  - { text: omniscience }
+  - { text: omnipotence }
+  - { text: omnipresence, conceptId: presence-of-god }
+  - { text: holiness, conceptId: holiness }
+  - { text: righteousness }
+  - { text: imputed righteousness }
+  - { text: propitiation, conceptId: the-cross }
+  - { text: reconciliation }
+  - { text: adoption }
+  - { text: glorification }
+  - { text: eternal life }
+  - { text: heaven, conceptId: new-heaven-and-earth }
+  - { text: hell, conceptId: hell }
+  - { text: judgment, conceptId: divine-judgment }
+  - { text: judgment seat, conceptId: judgment-seat-of-christ }
+  - { text: millennium }
+  - { text: eschatology, conceptId: second-coming }
+  - { text: gospel }
+  - { text: evangelism, conceptId: sharing-your-faith }
+  - { text: discipleship, conceptId: spiritual-growth }
+  - { text: sanctuary }
+  - { text: tabernacle }
+  - { text: temple }
+  - { text: priesthood }
+  - { text: high priest }
+  - { text: sacrifice, conceptId: the-cross }
+  - { text: passover }
+  - { text: sabbath, conceptId: sabbath-rest }
+  - { text: tithe, conceptId: tithing }
+  - { text: firstfruits, conceptId: tithing }
+  - { text: stewardship, conceptId: generosity }
+  - { text: worship, conceptId: worship }
+  - { text: praise, conceptId: praise }
+  - { text: thanksgiving, conceptId: thanksgiving }
+  - { text: intercession, conceptId: prayer }
+  - { text: supplication, conceptId: prayer }
+  - { text: fasting }
+  - { text: meditation, conceptId: delight-in-the-word }
+  - { text: scripture, conceptId: studying-the-word }
+  - { text: inspiration of scripture }
+  - { text: inerrancy }
+  - { text: revelation }
+  - { text: prophecy, conceptId: dreams-and-visions }
+  - { text: prophet }
+  - { text: apostle }
+  - { text: disciple }
+  - { text: messiah }
+  - { text: christ }
+  - { text: son of man }
+  - { text: son of god, conceptId: deity-of-christ }
+  - { text: lamb of god, conceptId: the-cross }
+  - { text: holy spirit, conceptId: holy-spirit-the-comforter }
+  - { text: comforter, conceptId: holy-spirit-the-comforter }
+  - { text: paraclete, conceptId: holy-spirit-the-comforter }
+  - { text: spiritual gifts, conceptId: spiritual-gifts }
+  - { text: fruit of the spirit, conceptId: remembered-fruit-of-the-spirit }
+  - { text: tongues }
+  - { text: healing, conceptId: prayer-for-healing }
+  - { text: miracles }
+  - { text: signs and wonders }
+  - { text: kingdom of god }
+  - { text: kingdom of heaven }
+  - { text: church }
+  - { text: body of christ }
+  - { text: fellowship, conceptId: gathering-together }
+  - { text: communion of saints, conceptId: gathering-together }
+  - { text: elder }
+  - { text: deacon }
+  - { text: ordination }
+  - { text: great commission, conceptId: sharing-your-faith }
+  - { text: missions, conceptId: nations-and-peoples }
+  - { text: gentiles, conceptId: nations-and-peoples }
+  - { text: israel }
+  - { text: law and gospel }
+  - { text: ten commandments, conceptId: the-ten-commandments }
+  - { text: moral law, conceptId: the-ten-commandments }
+  - { text: legalism, conceptId: grace-not-earned }
+  - { text: antinomianism }
+  - { text: sin, conceptId: sin }
+  - { text: original sin, conceptId: sin }
+  - { text: total depravity }
+  - { text: temptation, conceptId: remembered-a-way-of-escape }
+  - { text: spiritual warfare, conceptId: remembered-full-armor-of-god }
+  - { text: armor of god, conceptId: remembered-full-armor-of-god }
+  - { text: satan, conceptId: resisting-the-devil }
+  - { text: demons, conceptId: resisting-the-devil }
+  - { text: angels }
+  - { text: image of god, conceptId: image-of-god }
+  - { text: imago dei, conceptId: image-of-god }
+  - { text: creation, conceptId: creation }
+  - { text: fall of man, conceptId: sin }
+  - { text: flood, conceptId: divine-judgment }
+  - { text: exodus }
+  - { text: exile }
+  - { text: remnant }
+  - { text: jubilee }
+  - { text: wisdom literature, conceptId: wisdom-from-god }
+  - { text: proverbs, conceptId: wisdom-from-god }
+  - { text: psalms of lament }
+  - { text: beatitudes }
+  - { text: sermon on the mount }
+  - { text: parables }
+  - { text: golden rule, conceptId: loving-others }
+  - { text: greatest commandment, conceptId: loving-others }
+  - { text: agape, conceptId: gods-love }
+  - { text: assurance, conceptId: assurance-of-salvation }
+  - { text: perseverance, conceptId: do-not-lose-heart }
+  - { text: perseverance of the saints }
+  - { text: backsliding, conceptId: relapse-and-restoration }
+  - { text: restoration, conceptId: restoration }
+  - { text: renewal, conceptId: restoration }
+  - { text: transformation, conceptId: remembered-transformed-not-conformed }
+  - { text: humility, conceptId: humble-exaltation }
+  - { text: pride, conceptId: humble-exaltation }
+  - { text: obedience, conceptId: obedience-to-the-word }
+  - { text: surrender, conceptId: surrender-to-god }
+  - { text: lordship, conceptId: surrender-to-god }
+  - { text: calling }
+  - { text: vocation, conceptId: work-and-diligence }
+  - { text: sabbath rest, conceptId: sabbath-rest }
+  - { text: eternal security }
+  - { text: apostasy }
+  - { text: blasphemy }
+  - { text: idolatry, conceptId: love-not-the-world }
+  - { text: worldliness, conceptId: love-not-the-world }
+  - { text: hypocrisy, conceptId: self-deception }
+  - { text: discernment, conceptId: wisdom-from-god }
+  - { text: doctrine }
+  - { text: heresy }
+  - { text: creed }
+  - { text: liturgy }
+  - { text: benediction, conceptId: benediction }
+  - { text: doxology, conceptId: praise }
+  - { text: hallelujah, conceptId: praise }
+  - { text: hosanna }
+  - { text: amen }
+  - { text: selah }
+  - { text: shalom, conceptId: peace-of-god }
+  - { text: jehovah }
+  - { text: yahweh }
+  - { text: el shaddai }
+  - { text: emmanuel, conceptId: incarnation }
+  - { text: abba }

@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    // No rootDir/outDir: this package never emits. Like eval/, it typechecks
+    // against the engine's SOURCE so a harness change and an engine change
+    // are always validated against each other.
+    "noEmit": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@jestek-dev/scripture-engine/internal": ["../engine/src/internal.ts"],
+      "@jestek-dev/scripture-artifact-client": ["../artifact-client/src/index.ts"],
+      "@jestek-dev/scripture-engine": ["../engine/src/index.ts"]
+    }
+  },
+  "include": ["src", "test", "scripts"]
+}

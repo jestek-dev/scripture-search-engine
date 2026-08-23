@@ -1,0 +1,150 @@
+# felt-need-map.yaml — MS-3 (plan P8.3). PENDING JESSE'S SKIM (J65).
+#
+# Each frame maps a felt need, phrased as the first-person clause a church
+# member actually types, to the concept(s) whose curated anchors should
+# answer it. This file is pastoral judgment AS DATA: reviewable line by
+# line, validated against live concept ids at compile time (fail-closed),
+# and it NEVER ships — it only decides sweep test expectations. Jesse
+# strikes or amends any row before the first certified run (J65); rows are
+# a seed set and grow by reviewed PR.
+#
+# crisisAdjacent: true marks frames in the crisis register (self-harm,
+# abuse, death, acute despair). These are deliberately INCLUDED — harmful
+# #1s cost most exactly here — and the tag routes every such line to the
+# tiered human-review policy (MS-9); committed digests show them as
+# category + id, not verbatim text (J69).
+frames:
+  - topic: i am anxious all the time
+    expectedConcepts: [remembered-anxious-for-nothing, peace-of-god]
+  - topic: i cannot sleep because i am worried
+    expectedConcepts: [remembered-anxious-for-nothing, rest-for-the-weary]
+  - topic: i am worried about money
+    expectedConcepts: [gods-provision, contentment]
+  - topic: i just lost my job
+    expectedConcepts: [gods-provision, trust-in-god]
+  - topic: my marriage is falling apart
+    expectedConcepts: [betrayal-and-marriage-crisis, godly-marriage]
+  - topic: my spouse cheated on me
+    expectedConcepts: [betrayal-and-marriage-crisis, forgiving-others]
+    crisisAdjacent: true
+  - topic: i am thinking about divorce
+    expectedConcepts: [marriage-divorce-teaching, godly-marriage]
+  - topic: my mother just died
+    expectedConcepts: [grief-and-loss, near-to-the-brokenhearted]
+    crisisAdjacent: true
+  - topic: i am grieving and it will not stop
+    expectedConcepts: [grief-and-loss, god-of-all-comfort]
+    crisisAdjacent: true
+  - topic: my friend is dying
+    expectedConcepts: [serious-illness-and-dying, hope-in-despair]
+    crisisAdjacent: true
+  - topic: i was told i have cancer
+    expectedConcepts: [serious-illness-and-dying, prayer-for-healing]
+    crisisAdjacent: true
+  - topic: we lost the baby
+    expectedConcepts: [pregnancy-and-child-loss, near-to-the-brokenhearted]
+    crisisAdjacent: true
+  - topic: we cannot get pregnant
+    expectedConcepts: [waiting-for-a-child, wrestling-with-god]
+  - topic: i feel completely alone
+    expectedConcepts: [loneliness, presence-of-god]
+  - topic: i feel like nobody sees me
+    expectedConcepts: [god-sees-my-suffering, loneliness]
+  - topic: i feel worthless
+    expectedConcepts: [identity-in-christ, image-of-god]
+    crisisAdjacent: true
+  - topic: i want to give up
+    expectedConcepts: [do-not-lose-heart, hope-in-despair]
+    crisisAdjacent: true
+  - topic: everything feels hopeless
+    expectedConcepts: [hope-in-despair, hope-in-god]
+    crisisAdjacent: true
+  - topic: i am so tired of everything
+    expectedConcepts: [rest-for-the-weary, do-not-lose-heart]
+  - topic: i am burned out
+    expectedConcepts: [rest-for-the-weary, sabbath-rest]
+  - topic: i am afraid of dying
+    expectedConcepts: [fear-not, resurrection]
+  - topic: i am scared about the future
+    expectedConcepts: [fear-not, trust-in-god]
+  - topic: i keep failing the same sin
+    expectedConcepts: [relapse-and-restoration, remembered-a-way-of-escape]
+  - topic: i relapsed again
+    expectedConcepts: [relapse-and-restoration, freedom-from-bondage]
+    crisisAdjacent: true
+  - topic: i am struggling with addiction
+    expectedConcepts: [freedom-from-bondage, remembered-a-way-of-escape]
+    crisisAdjacent: true
+  - topic: i am tempted and i do not think i can resist
+    expectedConcepts: [remembered-a-way-of-escape, resisting-the-devil]
+  - topic: i am struggling with lust
+    expectedConcepts: [sexual-purity, self-control]
+  - topic: i do not feel forgiven
+    expectedConcepts: [forgiveness-of-sins, assurance-of-salvation]
+  - topic: i have done something terrible
+    expectedConcepts: [forgiveness-of-sins, repentance]
+    crisisAdjacent: true
+  - topic: i doubt god is even real
+    expectedConcepts: [doubt, gods-faithfulness]
+  - topic: i do not know if i am really saved
+    expectedConcepts: [assurance-of-salvation, salvation]
+  - topic: god feels far away
+    expectedConcepts: [presence-of-god, hunger-for-god]
+  - topic: my prayers are not being answered
+    expectedConcepts: [asking-in-gods-will, wrestling-with-god]
+  - topic: i cannot forgive them for what they did
+    expectedConcepts: [forgiving-others, harmony-with-others]
+  - topic: my family will not speak to me
+    expectedConcepts: [family-reconciliation, harmony-with-others]
+  - topic: my parents are getting old and need care
+    expectedConcepts: [caring-for-aging-parents, honesty]
+  - topic: my child has walked away from the faith
+    expectedConcepts: [parenting, trust-in-god]
+  - topic: i do not know how to raise my kids
+    expectedConcepts: [parenting, wisdom-from-god]
+  - topic: i was treated unjustly and no one cares
+    expectedConcepts: [refuge-and-justice-for-the-oppressed, god-sees-my-suffering]
+  - topic: i am being bullied at work
+    expectedConcepts: [refuge-and-justice-for-the-oppressed, pleasing-god-not-people]
+  - topic: i am jealous of everyone around me
+    expectedConcepts: [envy-and-jealousy, contentment]
+  - topic: i compare myself to others constantly
+    expectedConcepts: [envy-and-jealousy, identity-in-christ]
+  - topic: i cannot stop saying things i regret
+    expectedConcepts: [taming-the-tongue, self-control]
+  - topic: i am angry all the time
+    expectedConcepts: [self-control, peace-of-god]
+  - topic: i do not know what god wants me to do
+    expectedConcepts: [guidance, wisdom-from-god]
+  - topic: i have a big decision to make
+    expectedConcepts: [guidance, trust-in-god]
+  - topic: i am suffering for being a christian
+    expectedConcepts: [suffering-for-christ, remembered-joy-in-trials]
+  - topic: church people hurt me
+    expectedConcepts: [forgiving-others, harmony-with-others]
+  - topic: i feel too weak to keep serving
+    expectedConcepts: [strength-in-weakness, rest-for-the-weary]
+  - topic: my life is falling apart
+    expectedConcepts: [refuge-in-trouble, hope-in-despair]
+    crisisAdjacent: true
+  - topic: i am overwhelmed by everything on me
+    expectedConcepts: [rest-for-the-weary, remembered-anxious-for-nothing]
+  - topic: i feel guilty all the time
+    expectedConcepts: [forgiveness-of-sins, grace-not-earned]
+  - topic: i keep doubting my salvation after failing
+    expectedConcepts: [assurance-of-salvation, grace-not-earned]
+  - topic: someone i love is in the hospital
+    expectedConcepts: [prayer-for-healing, gods-protection]
+  - topic: i am waiting and nothing is changing
+    expectedConcepts: [wrestling-with-god, gods-faithfulness]
+  - topic: i lost everything in a disaster
+    expectedConcepts: [refuge-in-trouble, gods-provision]
+    crisisAdjacent: true
+  - topic: i am ashamed of my past
+    expectedConcepts: [new-creation, forgiveness-of-sins]
+  - topic: i do not fit in anywhere
+    expectedConcepts: [identity-in-christ, gathering-together]
+  - topic: my faith feels dry and dead
+    expectedConcepts: [hunger-for-god, spiritual-growth]
+  - topic: i am afraid to share my faith
+    expectedConcepts: [sharing-your-faith, fear-not]

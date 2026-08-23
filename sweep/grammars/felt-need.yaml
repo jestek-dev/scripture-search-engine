@@ -1,0 +1,38 @@
+# MS-3: felt-need class (battery grade D+ history — the worst-risk class,
+# made exhaustive rather than sampled). One cell per frame of
+# words/felt-need-map.yaml; frame topics are first-person clauses ("my
+# marriage is falling apart") so every template composes grammatically.
+# Expectation: the frame's expectedConcepts' anchors — pastoral judgment AS
+# DATA, reviewed by Jesse (J65), never shipped.
+id: felt-need
+category: felt-need
+source: felt-need-map
+perTemplateCap: 1
+templates:
+  - text: '{label}'
+    register: church-member
+  - text: 'what does the bible say when {label}'
+    register: church-member
+  - text: 'bible verses for when {label}'
+    register: church-member
+  - text: 'scripture for when {label}'
+    register: church-member
+  - text: 'is there hope when {label}'
+    register: church-member
+  - text: 'what should i read when {label}'
+    register: church-member
+  - text: 'does god care that {label}'
+    register: church-member
+  - text: 'encouragement when {label}'
+    register: church-member
+  - text: 'comfort when {label}'
+    register: church-member
+  - text: 'how do i keep going when {label}'
+    register: church-member
+  # pastor: counseling-preparation phrasings over the same frames
+  - text: 'passage for counseling someone when {label}'
+    register: pastor
+  - text: 'verses for a member when {label}'
+    register: pastor
+  - text: 'text for a hospital visit when {label}'
+    register: pastor

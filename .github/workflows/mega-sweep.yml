@@ -1,0 +1,245 @@
+name: Mega-sweep
+
+# MS-6 (plan P8.6): the sweep is a button anyone can press — pinned and
+# archived, never a heroic session. workflow_dispatch ONLY: the full sweep
+# reads the released artifact and runs 10^5 queries; it is not a per-PR
+# gate (the gauntlet is).
+#
+# FAIL-CLOSED PRECONDITIONS: the first job runs the certified-precondition
+# check (terminus identity minted for THIS engine version; J43 sweep
+# numbers signed). When they do not hold the job FAILS with each
+# not-applicable reason printed — a sweep that cannot run certifiably
+# reports not-applicable-with-a-reason; it never passes vacuously
+# (CLAUDE.md gate discipline). Interim shakedown belongs to
+# `runFullSweep --interim-shakedown` locally, not to this button.
+#
+# AI grading is deliberately NOT in this workflow: it needs credentials
+# and a human trigger (MS-8). The needs-ai-grade queue is emitted as an
+# artifact instead.
+on:
+  workflow_dispatch:
+    inputs:
+      spot_percent:
+        description: 'Determinism-spot sub-universe size (percent of queryIds)'
+        required: false
+        default: '1'
+
+concurrency:
+  group: mega-sweep
+  cancel-in-progress: false
+
+jobs:
+  preconditions:
+    name: certified preconditions (fail-closed)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build --workspace engine
+      - name: Check terminus identity + J43 numbers
+        # Exits 2 with every not-applicable reason when unmet — the whole
+        # workflow stops here rather than sweeping an unpinned identity.
+        run: node node_modules/tsx/dist/cli.mjs sweep/scripts/checkPreconditions.ts
+
+  universe:
+    name: compile + derive the run universe
+    needs: preconditions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build --workspace engine
+      - name: Universe freshness (regenerate-and-compare)
+        run: npm run universe-freshness --workspace sweep
+      - name: Build the full run universe (Rings 0+1+2)
+        run: node node_modules/tsx/dist/cli.mjs sweep/scripts/buildRunUniverse.ts --out run-universe.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: run-universe
+          path: run-universe.jsonl
+          retention-days: 30
+
+  sweep:
+    name: sweep shard ${{ matrix.shard }}/8
+    needs: universe
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build --workspace engine
+      - run: npm run build --workspace artifact-client
+      - uses: actions/download-artifact@v4
+        with:
+          name: run-universe
+      - name: Fetch the released artifact (sha-verified, exactly as fetchArtifact does)
+        run: node node_modules/tsx/dist/cli.mjs sweep/scripts/fetchReleaseArtifact.ts --dest sweep-run/content.db
+      - name: Run shard
+        run: >
+          npm run sweep --workspace sweep --
+          --artifact sweep-run/content.db
+          --descriptor sweep-run/content-artifact.json
+          --universe run-universe.jsonl
+          --out sweep-run/out
+          --shard ${{ matrix.shard }} --of-shards 8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sweep-shard-${{ matrix.shard }}
+          path: sweep-run/out/
+          retention-days: 30
+
+  merge:
+    name: byte-stable merge
+    needs: sweep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: sweep-shard-*
+          merge-multiple: true
+          path: sweep-run/out
+      - run: npm run build --workspace engine
+      - name: Merge shards (purity-checked)
+        run: node node_modules/tsx/dist/cli.mjs sweep/scripts/mergeCli.ts --dir sweep-run/out --of-shards 8
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sweep-merged
+          path: |
+            sweep-run/out/snapshot-merged.jsonl
+            sweep-run/out/manifest-merged.json
+          retention-days: 90
+
+  grade-l1:
+    name: Layer-1 grading + needs-ai-grade queue
+    needs: merge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build --workspace engine
+      - uses: actions/download-artifact@v4
+        with:
+          name: run-universe
+      - uses: actions/download-artifact@v4
+        with:
+          name: sweep-merged
+          path: sweep-run/out
+      - name: Grade
+        run: >
+          npm run grade-l1 --workspace sweep --
+          --universe run-universe.jsonl
+          --snapshot sweep-run/out/snapshot-merged.jsonl
+          --out sweep-run/grades
+      - uses: actions/upload-artifact@v4
+        with:
+          name: layer1-grades
+          path: sweep-run/grades/
+          retention-days: 90
+
+  determinism-spot:
+    name: determinism spot (${{ matrix.os }}, run ${{ matrix.run }})
+    needs: universe
+    # The G2 pattern at sweep scale: a seeded 1% sub-universe runs twice on
+    # ubuntu and once on windows; the report job byte-compares all three
+    # canonical hashes. Cross-OS byte-equality at 10^5 scale is the
+    # strongest determinism evidence the project will ever have.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            run: 1
+          - os: ubuntu-latest
+            run: 2
+          - os: windows-latest
+            run: 1
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm run build --workspace engine
+      - run: npm run build --workspace artifact-client
+      - name: Build seeded spot universe
+        shell: bash
+        run: >
+          node node_modules/tsx/dist/cli.mjs sweep/scripts/buildRunUniverse.ts
+          --out spot-universe.jsonl --spot-percent ${{ inputs.spot_percent }}
+      - name: Fetch the released artifact
+        shell: bash
+        run: node node_modules/tsx/dist/cli.mjs sweep/scripts/fetchReleaseArtifact.ts --dest sweep-run/content.db
+      - name: Run spot sweep
+        shell: bash
+        run: >
+          npm run sweep --workspace sweep --
+          --artifact sweep-run/content.db
+          --descriptor sweep-run/content-artifact.json
+          --universe spot-universe.jsonl
+          --out spot-out --merge
+      - name: Record canonical hash
+        shell: bash
+        run: >
+          node -e "const m=require('./spot-out/manifest-merged.json');
+          require('fs').writeFileSync('spot-hash-${{ matrix.os }}-${{ matrix.run }}.txt', m.canonicalSnapshotSha256 + '\n');"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: spot-hash-${{ matrix.os }}-${{ matrix.run }}
+          path: spot-hash-${{ matrix.os }}-${{ matrix.run }}.txt
+
+  report:
+    name: run report (byte-identity verdict)
+    needs: [merge, grade-l1, determinism-spot]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: spot-hash-*
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: layer1-grades
+          path: grades
+      - name: Determinism verdict — all three spot hashes byte-equal
+        run: |
+          cat spot-hash-*.txt
+          if [ "$(sort -u spot-hash-*.txt | wc -l)" != "1" ]; then
+            echo "DETERMINISM SPOT FAILED: canonical hashes differ across runs/OSes"
+            exit 1
+          fi
+          echo "determinism spot: byte-equal across two ubuntu runs and one windows run"
+      - name: Summarize
+        run: |
+          echo '## Mega-sweep run' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat grades/layer1-summary.json >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Raw snapshots ride this run as artifacts; certified runs are promoted to sweep-snapshots-<YYYY-MM> release assets under J68.' >> "$GITHUB_STEP_SUMMARY"
