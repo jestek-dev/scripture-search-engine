@@ -1,0 +1,36 @@
+{
+  "id": "hymn-blessed-assurance",
+  "query": "blessed assurance",
+  "status": "active",
+  "note": [
+    "QR-6 (P5.5) curated hymn alias — Fanny J. Crosby, 'Blessed Assurance'",
+    "(1873, public domain). Measured gap 2026-08-22 pre-change: 'blessed",
+    "assurance' #1 was Numbers 6:27 on passage_terms noise (2.53); the",
+    "first-line and refrain registers were token noise ('this is my story this",
+    "is my song' #1 Psalms 121:1 via the word 'song'). No concept fired on any",
+    "register.",
+    "",
+    "Target: assurance-of-salvation — the hymn's subject ('blessed assurance,",
+    "Jesus is mine... heir of salvation, purchase of God') is exactly the",
+    "concept's assurance language; anchors are the passages that NAME",
+    "assurance (1 John 5:11-13 is the letter's own stated purpose). Doctrinal",
+    "neutrality note carried from the concept: assurance language, never",
+    "perseverance-debate party vocabulary; the chip names the hymn index as",
+    "the source and adjudicates nothing.",
+    "",
+    "Written fixture-first (pending, failing); promoted in the 0.13.0 flip",
+    "commit that made it pass."
+  ],
+  "expectedTop": [
+    {
+      "ref": "1 John 5:11-13",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Hymn: \"Blessed Assurance\" → Theme: Assurance of salvation"
+    }
+  ],
+  "additionalQueries": [
+    "blessed assurance jesus is mine",
+    "this is my story this is my song"
+  ]
+}

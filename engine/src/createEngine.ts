@@ -29,6 +29,8 @@ import {
   tokenEvidence,
 } from './intents/lexical.js';
 import {
+  aliasConceptEvidence,
+  aliasPassageEvidence,
   conceptAnchorEvidence,
   conceptCueEvidence,
   crossReferenceEvidence,
@@ -38,8 +40,14 @@ import {
   relatedConceptEvidence,
   translationVariantEvidence,
 } from './intents/concept.js';
+import {
+  deleteVariants,
+  pickCorrection,
+  spellingEditBudget,
+} from './intents/spelling.js';
+import { normalizedPhrase, significantWordsWithSurface } from './tokenizer/index.js';
 import { DEFAULT_LIMIT, rank, type RankOptions } from './ranking/rank.js';
-import { polishChipsForDisplay } from './reasons/display.js';
+import { pinCorrectionCitations, polishChipsForDisplay } from './reasons/display.js';
 
 /**
  * Extra candidates ranked beyond the caller's limit so that collapsing a run
@@ -58,6 +66,7 @@ import type {
   ResearchResult,
   ScriptureVerse,
   SongInput,
+  SpellingCorrection,
 } from './types.js';
 
 export interface EngineOptions {
@@ -110,7 +119,12 @@ export interface ScriptureEngine {
   readonly engineVersion: string;
 }
 
-const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5', '6']);
+// '8' (CO-3 PR 1): the pericopes capability schema. The engine can OPEN a
+// v8 artifact and read its pericope tiling (CorpusRepository.hasPericopes /
+// pericopesContaining), but nothing in discover() calls those reads yet —
+// v8 output is bit-identical to v7 output by construction, and the grouping
+// behavior lands with the PR 2 ENGINE_VERSION bump.
+const SUPPORTED_SCHEMA_VERSIONS = new Set(['1', '2', '3', '4', '5', '6', '7', '8']);
 
 /**
  * Lyric tokens admitted to forSong(). A full lyric sheet is hundreds of
@@ -147,6 +161,13 @@ export async function createEngine(
 
   const hasPassageTerms = await conceptRepository.hasPassageTerms();
   const hasTranslationTokens = await conceptRepository.hasTranslationTokens();
+  // Presence-probed like the other optional layers: a v6 artifact has no
+  // spelling tables and the engine gracefully does not correct (0.12.0/QR-5).
+  const hasSpellingIndex = await repository.hasSpellingIndex();
+  // Presence-AND-ROWS probed (0.13.0/QR-6): schema v7 ships curated_aliases
+  // EMPTY, and 0.13.0 over such an artifact must behave exactly as 0.12.0
+  // did. Rebuilding without alias rows IS the rollback.
+  const hasCuratedAliases = await conceptRepository.hasCuratedAliases();
   const documentCount = await repository.documentCount();
   const identity = {
     engineVersion: ENGINE_VERSION,
@@ -154,7 +175,20 @@ export async function createEngine(
     layerFingerprint: meta.layerFingerprint,
   };
 
-  async function discover(query: string): Promise<readonly DiscoveryResult[]> {
+  /**
+   * The discovery ladder. `correctSpelling` is true ONLY on the `research()`
+   * path (0.12.0/QR-5): themes() stays exact-curated, forSong() lyrics are
+   * never corrected, and reference-shaped inputs never get here at all (the
+   * reference short-circuit runs first). Corrections are returned alongside
+   * the results so the outcome can carry the machine-readable citation.
+   */
+  async function discover(
+    query: string,
+    correctSpelling = false,
+  ): Promise<{
+    readonly results: readonly DiscoveryResult[];
+    readonly corrections: readonly SpellingCorrection[];
+  }> {
     const verses = new Map<string, ScriptureVerse>();
     // targetId -> the curated anchor spans that produced it.
     const anchorSpans = new Map<string, Set<string>>();
@@ -230,15 +264,75 @@ export async function createEngine(
 
     // Steps 3-4 — tokens with proximity. Normalization is inherent: the
     // shared tokenizer folds inflection and archaic forms on both sides.
-    const tokens = significantWords(query);
+    //
+    // Cited spelling correction (0.12.0/QR-5) runs FIRST, before any token
+    // step, and only on the research() path: a typed token with corpus df 0
+    // that exists in NO vocabulary (corpus tokens, book aliases, lexicon
+    // tokens, translation tokens, Layer B verse terms — the OOV gate)
+    // substitutes the unique
+    // in-policy winner of the precomputed SymSpell lookup, verified by the
+    // bounded integer Damerau DP under the ONE edit-policy table. Corrected
+    // tokens then flow through every step below unchanged, and every
+    // substitution is CITED — on the token chips (typed surface form, never
+    // the stem) and in the returned corrections list. A word in ANY
+    // vocabulary is never rewritten. The whole-query FTS phrase step above
+    // stays uncorrected (documented v1 cut).
+    let tokens = significantWords(query);
+    const corrections: SpellingCorrection[] = [];
+    const correctionCitations = new Map<string, string>();
+    let precomputedFrequencies: ReadonlyMap<string, number> | null = null;
+    if (correctSpelling && hasSpellingIndex && tokens.length > 0) {
+      const typedFrequencies = await repository.tokenDocumentCounts(tokens);
+      const zeroDf = tokens.filter((token) => (typedFrequencies.get(token) ?? 0) === 0);
+      if (zeroDf.length === 0) {
+        precomputedFrequencies = typedFrequencies;
+      } else {
+        const inVocabulary = await repository.spellingTermsPresent(zeroDf);
+        const substitutions = new Map<string, string>();
+        for (const pair of significantWordsWithSurface(query)) {
+          if ((typedFrequencies.get(pair.token) ?? 0) > 0) continue;
+          if (inVocabulary.has(pair.token)) continue;
+          const bound = spellingEditBudget(pair.token.length);
+          if (bound === 0) continue;
+          const candidates = await repository.spellingCandidates(
+            deleteVariants(pair.token, bound),
+          );
+          const winner = pickCorrection(pair.token, candidates, bound);
+          if (!winner) continue;
+          substitutions.set(pair.token, winner.term);
+          if (!correctionCitations.has(winner.term)) {
+            correctionCitations.set(winner.term, pair.surface);
+          }
+          corrections.push({
+            typed: pair.surface,
+            corrected: winner.term,
+            distance: winner.distance,
+          });
+        }
+        if (substitutions.size > 0) {
+          // Substitute in place, then re-deduplicate preserving first
+          // occurrence: a correction may land on a term the query already
+          // contains, and one term must contribute once.
+          const seen = new Set<string>();
+          tokens = tokens
+            .map((token) => substitutions.get(token) ?? token)
+            .filter((token) => (seen.has(token) ? false : (seen.add(token), true)));
+        } else {
+          precomputedFrequencies = typedFrequencies;
+        }
+      }
+    }
     let tokenFrequencies: ReadonlyMap<string, number> = new Map();
     let tokenIdfTotal = 0;
     if (tokens.length > 0) {
-      tokenFrequencies = await repository.tokenDocumentCounts(tokens);
+      tokenFrequencies = precomputedFrequencies ?? (await repository.tokenDocumentCounts(tokens));
       tokenIdfTotal = queryIdfTotal(tokens, tokenFrequencies, documentCount);
       for (const match of await repository.searchTokens(tokens, documentCount)) {
         verses.set(targetIdFor(match), match);
-        contributions.push({ verse: match, evidence: tokenEvidence(match, tokenIdfTotal) });
+        contributions.push({
+          verse: match,
+          evidence: tokenEvidence(match, tokenIdfTotal, correctionCitations),
+        });
       }
     }
 
@@ -405,6 +499,60 @@ export async function createEngine(
       }
     }
 
+    // Step 5b — curated phrase/hymn aliases (0.13.0/QR-6). Whole-query
+    // EQUALITY on the TYPED query's normalizedPhrase (stopwords kept, no
+    // stemming — see tokenizer), never containment and never the
+    // spelling-corrected token stream: the alias key is a curated claim
+    // about exactly this string, and brittleness to extra words is accepted
+    // BY DESIGN. This is the shape concept_lexicon structurally cannot
+    // carry ("it is well with my soul" -> `well soul`; "how great thou art"
+    // -> `great`). A concept-target alias surfaces the target's own curated
+    // anchors — honestly weighted by the anchors' reviewed weights — under
+    // the existing concept_anchor family (no new SignalFamily; the budgets
+    // roster is untouched); a verse-range alias surfaces the named passage.
+    // Every chip names the hymn and the source; nothing is adjudicated.
+    if (hasCuratedAliases) {
+      const aliasKey = normalizedPhrase(query);
+      if (aliasKey.length > 0) {
+        for (const alias of await conceptRepository.matchAliases(aliasKey)) {
+          if (alias.conceptId !== null) {
+            const anchors = dedupeConceptAnchors(
+              await conceptRepository.anchorVerses([alias.conceptId]),
+            );
+            for (const anchor of anchors) {
+              verses.set(targetIdFor(anchor), anchor);
+              // Same span key the concept step uses, so a verse surfaced by
+              // both merges into one governing span and collapseAnchorRuns
+              // still presents the passage a human named.
+              const spans = anchorSpans.get(targetIdFor(anchor)) ?? new Set<string>();
+              spans.add(
+                `${anchor.conceptId}:${anchor.anchorStartVerseId}-${anchor.anchorEndVerseId}`,
+              );
+              anchorSpans.set(targetIdFor(anchor), spans);
+              contributions.push({
+                verse: anchor,
+                evidence: [aliasConceptEvidence(alias, anchor)],
+              });
+            }
+          } else if (alias.startVerseId !== null && alias.endVerseId !== null) {
+            for (const verse of await conceptRepository.aliasRangeVerses(
+              alias.startVerseId,
+              alias.endVerseId,
+            )) {
+              verses.set(targetIdFor(verse), verse);
+              const spans = anchorSpans.get(targetIdFor(verse)) ?? new Set<string>();
+              spans.add(`alias:${alias.id}:${alias.startVerseId}-${alias.endVerseId}`);
+              anchorSpans.set(targetIdFor(verse), spans);
+              contributions.push({
+                verse,
+                evidence: [aliasPassageEvidence(alias, verse)],
+              });
+            }
+          }
+        }
+      }
+    }
+
     // Rank with headroom, collapse, THEN cut to the limit. Collapsing after the
     // cut would hand back fewer results than asked for: a four-verse anchor run
     // inside the top 25 becomes one row, and the three freed slots stay empty
@@ -420,7 +568,7 @@ export async function createEngine(
         limit: limit + COLLAPSE_HEADROOM,
       },
     );
-    return (
+    const results = (
       collapseAnchorRuns(
         ranked.map((result) => {
           const verse = verses.get(result.targetId)!;
@@ -444,18 +592,34 @@ export async function createEngine(
         // untouched: its only chip family (cross_reference, votes >= 1
         // against the corpus maximum) cannot produce a chip below the
         // display minimum, and passage_terms never appears there.
+        //
+        // Then the correction-citation pin (0.12.0/QR-5 round-2): on a
+        // corrected query EVERY result must visibly cite every correction —
+        // a result surfaced through concept/passage evidence has no
+        // decorated token chip, and a citation only the machine-readable
+        // corrections field carries is not "shown" (J31, covenant 5). Same
+        // display seam, same guarantees: labels only, never points, scores
+        // or order.
         .map((result) => {
-          const polished = polishChipsForDisplay(result.reasons);
+          const polished = pinCorrectionCitations(
+            polishChipsForDisplay(result.reasons),
+            corrections,
+          );
           return polished === result.reasons ? result : { ...result, reasons: polished };
         })
     );
+    return { results, corrections };
   }
 
   async function relatedFor(reference: string): Promise<RelatedResult> {
       const trimmed = reference.trim();
       const attempt = await repository.resolveReference(trimmed);
       if (attempt.kind !== 'resolved') {
-        return { kind: 'invalid-reference', query: trimmed, ...identity };
+        // Same posture as passage(): lookups never fall through, and the
+        // did-you-mean citation travels when one validated.
+        return attempt.kind === 'invalid-reference' && attempt.suggestion
+          ? { kind: 'invalid-reference', query: trimmed, suggestion: attempt.suggestion, ...identity }
+          : { kind: 'invalid-reference', query: trimmed, ...identity };
       }
       const resolved = attempt.reference;
 
@@ -548,10 +712,37 @@ export async function createEngine(
         };
       }
       if (attempt.kind === 'invalid-reference') {
-        return { kind: 'invalid-reference', query: trimmed, ...identity };
+        // Bare-number shapes with no resolving book and no citable
+        // suggestion fall through to discovery (0.11.0/QR-4, J36):
+        // "plans 29 11" is a Jeremiah 29:11 memory query, and dead-ending it
+        // served nobody. Explicit-separator queries state reference intent
+        // and stay typed invalid, carrying the did-you-mean when one
+        // validated (suggestion only — never a silently opened guess, J35).
+        if (attempt.fallthroughToDiscovery) {
+          const discovered = await discover(trimmed, true);
+          return {
+            kind: 'discovery',
+            query: trimmed,
+            results: discovered.results,
+            ...(discovered.corrections.length > 0
+              ? { corrections: discovered.corrections }
+              : {}),
+            ...identity,
+          };
+        }
+        return attempt.suggestion
+          ? { kind: 'invalid-reference', query: trimmed, suggestion: attempt.suggestion, ...identity }
+          : { kind: 'invalid-reference', query: trimmed, ...identity };
       }
 
-      return { kind: 'discovery', query: trimmed, results: await discover(trimmed), ...identity };
+      const discovered = await discover(trimmed, true);
+      return {
+        kind: 'discovery',
+        query: trimmed,
+        results: discovered.results,
+        ...(discovered.corrections.length > 0 ? { corrections: discovered.corrections } : {}),
+        ...identity,
+      };
     },
 
     async themes(query: string): Promise<readonly ConceptMatch[]> {
@@ -604,7 +795,11 @@ export async function createEngine(
           ...identity,
         };
       }
-      return { kind: 'invalid-reference', query: trimmed, ...identity };
+      // A lookup has nothing to fall through to, so every non-resolution is
+      // typed invalid here — but the did-you-mean citation still travels.
+      return attempt.kind === 'invalid-reference' && attempt.suggestion
+        ? { kind: 'invalid-reference', query: trimmed, suggestion: attempt.suggestion, ...identity }
+        : { kind: 'invalid-reference', query: trimmed, ...identity };
     },
 
     related: relatedFor,
@@ -621,7 +816,10 @@ export async function createEngine(
       if (input.lyrics) parts.push(significantWords(input.lyrics).slice(0, MAX_LYRIC_TOKENS).join(' '));
       const query = parts.join(' ').trim();
 
-      const results = query === '' ? [] : await discover(query);
+      // forSong() never corrects (0.12.0/QR-5): lyrics are quoted text, not a
+      // fallible typed query, and a silent rewrite inside a song's own words
+      // is exactly the failure mode the correction feature forbids.
+      const results = query === '' ? [] : (await discover(query)).results;
 
       // A foundational reference is a claim the writer made about the song, so
       // its curated edges are admitted alongside discovery — but never as the

@@ -173,15 +173,55 @@ export function normalizeToken(raw: string): string | null {
  * set form used for overlap scoring and concept-lexicon matching.
  */
 export function significantWords(text: string): string[] {
+  return significantWordsWithSurface(text).map((entry) => entry.token);
+}
+
+/**
+ * The same significant-token set, each token paired with the SURFACE form it
+ * was normalized from — the first raw word (lowercased, punctuation-stripped)
+ * that produced it. Added for the spelling-correction citation (0.12.0/QR-5):
+ * a correction chip must cite what the user actually typed ("beleived"),
+ * never the stem the tokenizer made of it ("beleiv").
+ *
+ * This is a PAIRING, not a second tokenizer: `significantWords` delegates
+ * here, the token stream is byte-identical to what it always was (invariance-
+ * tested), and there is still no options parameter. TOKENIZER_VERSION stays
+ * 1.0.0.
+ */
+export function significantWordsWithSurface(
+  text: string,
+): { token: string; surface: string }[] {
   const seen = new Set<string>();
-  const result: string[] = [];
+  const result: { token: string; surface: string }[] = [];
   for (const raw of rawWords(text)) {
     const token = normalizeToken(raw);
     if (token === null || seen.has(token)) continue;
     seen.add(token);
-    result.push(token);
+    result.push({ token, surface: raw });
   }
   return result;
+}
+
+/**
+ * Whole-query phrase normalization for the curated alias table
+ * (0.13.0/QR-6): lowercase, apostrophes removed, punctuation folded to
+ * spaces, whitespace collapsed — and NOTHING else. Stopwords are KEPT and no
+ * stemming, archaic folding, or lemma lookup applies, because the phrases
+ * this key serves are exactly the stopword-heavy lines the token pipeline
+ * cannot represent ("it is well with my soul" -> `well soul`). Matching is
+ * whole-string EQUALITY against curated_aliases.normalized_raw, never
+ * containment, so the minimal normalization is the safety property: the less
+ * this folds, the less an alias can accidentally swallow.
+ *
+ * This is an ADDITIVE surface over the same `rawWords` core every other
+ * tokenizer output uses — not a second tokenizer, and there is still no
+ * options parameter. The token stream is untouched (invariance-tested) and
+ * TOKENIZER_VERSION stays 1.0.0. The pipeline's alias importer imports THIS
+ * function (never a mirror), so build-side keys and query-side keys cannot
+ * drift.
+ */
+export function normalizedPhrase(text: string): string {
+  return rawWords(text).join(' ');
 }
 
 /**

@@ -1,0 +1,156 @@
+/**
+ * P5.6 / CO-3 PR 1 — pericope CAPABILITY, end to end against the hermetic
+ * fixture artifact (schema v8, engine still 0.13.0).
+ *
+ * What this file pins is the capability-only split being REAL:
+ * 1. the v8 artifact opens and carries a pericope tiling the engine can
+ *    read (hasPericopes / pericopesContaining), with the James 1 golden
+ *    tiling and its SUMMED boundary votes intact end to end;
+ * 2. the reads have ZERO call sites in discover(): research output over
+ *    the shipped artifact is byte-identical to output over the same
+ *    artifact with its pericopes table dropped — the ordering cannot
+ *    depend on data nothing consumes;
+ * 3. the degrade path: no table (a v7-shaped artifact) or an emptied table
+ *    reads as "no pericopes", the rollback story for PR 2.
+ */
+
+import { copyFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+import { DatabaseSync } from 'node:sqlite';
+import { beforeAll, afterAll, describe, expect, it } from 'vitest';
+
+import {
+  CorpusRepository,
+  createEngine,
+  type ResearchResult,
+} from '@jestek-dev/scripture-engine';
+import { buildFixtureDatabase } from '../../pipeline/src/buildFixtureDb.js';
+
+import { openCorpus } from '../src/nodeSqlitePort.js';
+
+let fixtureDirectory: string;
+let fixturePath: string;
+
+const JAS = (verse: number): number => 59_001_000 + verse;
+
+beforeAll(() => {
+  fixtureDirectory = mkdtempSync(join(tmpdir(), 'scripture-pericopes-'));
+  const built = buildFixtureDatabase(join(fixtureDirectory, `fixture-${process.pid}.db`));
+  fixturePath = built.path;
+});
+
+afterAll(() => {
+  rmSync(fixtureDirectory, { force: true, recursive: true, maxRetries: 3, retryDelay: 100 });
+});
+
+describe('schema v8 artifact carries a readable pericope tiling', () => {
+  it('hasPericopes is true and the James 1 golden tiling round-trips with SUMMED votes', async () => {
+    const port = openCorpus(fixturePath);
+    const repository = new CorpusRepository(port);
+    try {
+      expect(await repository.hasPericopes()).toBe(true);
+      const spans = await repository.pericopesContaining([JAS(1), JAS(10), JAS(27)]);
+      expect(spans).toEqual([
+        { startVerseId: JAS(1), endVerseId: JAS(1), boundaryVotes: 13, sourceId: 'openbible-sections' },
+        { startVerseId: JAS(2), endVerseId: JAS(18), boundaryVotes: 19, sourceId: 'openbible-sections' },
+        { startVerseId: JAS(19), endVerseId: JAS(27), boundaryVotes: 16, sourceId: 'openbible-sections' },
+      ]);
+    } finally {
+      await port.close();
+    }
+  });
+
+  it('the min..max batch window never returns a pericope containing none of the asked verses', async () => {
+    const port = openCorpus(fixturePath);
+    const repository = new CorpusRepository(port);
+    try {
+      // 1:1 and 1:27 span the whole chapter, but 1:2-18 contains neither.
+      const spans = await repository.pericopesContaining([JAS(1), JAS(27)]);
+      expect(spans.map((span) => span.startVerseId)).toEqual([JAS(1), JAS(19)]);
+    } finally {
+      await port.close();
+    }
+  });
+
+  it('an empty ask is answered without touching the database', async () => {
+    const port = openCorpus(fixturePath);
+    const repository = new CorpusRepository(port);
+    try {
+      expect(await repository.pericopesContaining([])).toEqual([]);
+    } finally {
+      await port.close();
+    }
+  });
+});
+
+describe('zero call sites — ordering cannot depend on the table', () => {
+  const strip = (result: ResearchResult): unknown =>
+    JSON.parse(JSON.stringify(result));
+
+  it('research output is byte-identical with the pericopes table dropped (the v7-shaped degrade)', async () => {
+    const doctoredPath = join(fixtureDirectory, `doctored-no-pericopes-${process.pid}.db`);
+    copyFileSync(fixturePath, doctoredPath);
+    const doctored = new DatabaseSync(doctoredPath);
+    try {
+      doctored.exec('DROP INDEX idx_pericopes_range; DROP TABLE pericopes;');
+    } finally {
+      doctored.close();
+    }
+
+    const queries = [
+      'hearing and doing',
+      'faith without works',
+      'his loving kindness endures forever',
+      'count it all joy',
+      'be doers of the word',
+      'it is well with my soul',
+      'John 3:16',
+    ];
+
+    const withTable = await createEngine(openCorpus(fixturePath));
+    const withoutTable = await createEngine(openCorpus(doctoredPath));
+    try {
+      for (const query of queries) {
+        expect(strip(await withoutTable.research(query)), query).toEqual(
+          strip(await withTable.research(query)),
+        );
+      }
+    } finally {
+      await withTable.close();
+      await withoutTable.close();
+    }
+
+    const port = openCorpus(doctoredPath);
+    const repository = new CorpusRepository(port);
+    try {
+      expect(await repository.hasPericopes()).toBe(false);
+      // pericopesContaining is deliberately NOT graceful about a missing
+      // table: the probe is the guard (hasCuratedAliases precedent), and a
+      // caller that skips it should fail loudly, not read silence.
+      expect(await repository.pericopesContaining([])).toEqual([]);
+      await expect(repository.pericopesContaining([JAS(1)])).rejects.toThrow(/pericopes/);
+    } finally {
+      await port.close();
+    }
+  });
+
+  it('an emptied table also reads as "no pericopes" — the presence-and-rows probe', async () => {
+    const doctoredPath = join(fixtureDirectory, `doctored-empty-pericopes-${process.pid}.db`);
+    copyFileSync(fixturePath, doctoredPath);
+    const doctored = new DatabaseSync(doctoredPath);
+    try {
+      doctored.exec('DELETE FROM pericopes;');
+    } finally {
+      doctored.close();
+    }
+    const port = openCorpus(doctoredPath);
+    const repository = new CorpusRepository(port);
+    try {
+      expect(await repository.hasPericopes()).toBe(false);
+    } finally {
+      await port.close();
+    }
+  });
+});

@@ -1,0 +1,181 @@
+# CURATED HYMN/PHRASE ALIAS PACK — QR-6 starter pack (P5.5, 0.13.0).
+#
+# What this is: whole-query EQUALITY keys mapping a typed hymn title or
+# remembered line to the hymn's scriptural home — the fix-shape for queries
+# the token pipeline structurally cannot represent ("it is well with my
+# soul" normalizes to `well soul`; the audit's ad7 harmful-#1 class). Each
+# phrase becomes ONE curated_aliases row. Matching is equality on
+# normalizedPhrase (stopwords kept, no stemming), NEVER containment, so a
+# row can only answer the exact line it names — brittleness to extra words
+# is accepted BY DESIGN, and no bare word is ever a trigger (the importer
+# rejects phrases under two raw words — the F5 class).
+#
+# Copyright posture (J37): this starter pack is PD-ONLY — every hymn below
+# was published in the United States before 1930 and is public domain; the
+# per-hymn `provenance` records title, author, year, and first publication.
+# Titles and short phrases are not copyrightable (US Copyright Office
+# Circular 33), but no in-copyright hymn ships here at all until Jesse
+# rules J37 (title-only vs PD-only). "How Great Thou Art" (Hine's English
+# text, © 1949/1953) is therefore ABSENT — its pending fixture
+# (eval/golden/hymn-how-great-thou-art.json) is the specification awaiting
+# that ruling. Hymnary.org's index is not openly licensed and was not used
+# (J38).
+#
+# Theology (covenant 6): each target is the hymn's actual scriptural basis,
+# honestly weighted; the chip reports that THIS pack (LH editorial,
+# public-domain hymn index) names the connection and adjudicates nothing.
+# Every row rides the J13 line-by-line review; rows considered and
+# MEASURED OUT (no gap, or an alias would demote a better themed answer)
+# are recorded at the bottom of this file.
+#
+# weight is the editorial prior that the exact typed phrase means this hymn
+# AND that this hymn names the target: 1.0 for titles and first lines
+# (unambiguous), 0.9 for interior/refrain lines.
+
+sourceId: hymn-aliases
+
+hymns:
+  - title: It Is Well with My Soul
+    author: Horatio G. Spafford
+    year: 1873
+    provenance: >-
+      Text written 1873; first published with Philip P. Bliss's tune
+      "Ville du Havre" in Gospel Hymns No. 2 (Biglow & Main, 1876).
+      Public domain (pre-1930 US publication).
+    # J10 target: hope-in-god is the plan's RECOMMENDED home (alternatives
+    # flagged, not decided: peace-of-god was the 08-14 plan's target; a
+    # dedicated remembered pack is the third option). Note for the ruling:
+    # the ad7 battery's provisional judged psalms (Ps 42:11, 62:1-2, 103:1-5,
+    # 46:1-3) are not hope-in-god anchors — if Jesse wants the audit-named
+    # pastoral psalms to lead, that is a different target choice or a
+    # concept-anchor addition, both his call.
+    concept: hope-in-god
+    phrases:
+      # The title/refrain — the audit's ad7 query verbatim.
+      - phrase: it is well with my soul
+        weight: 1.0
+      # First-line register, as people actually truncate it. Measured
+      # pre-change: answered only by a bare-word peace cue.
+      - phrase: when peace like a river
+        weight: 0.9
+      # The full first line. "attendeth" is OOV for QR-5, so this row also
+      # exercises the alias-plus-correction interplay (pinned in
+      # eval/test/hymn-aliases.test.ts, not the fixture, because the
+      # correction citation decorates the chip label).
+      - phrase: when peace like a river attendeth my way
+        weight: 1.0
+
+  - title: The Solid Rock
+    author: Edward Mote
+    year: 1834
+    provenance: >-
+      "My Hope Is Built on Nothing Less", written c. 1834; published in
+      Mote's Hymns of Praise (1836); commonly titled "The Solid Rock" with
+      William B. Bradbury's 1863 tune. Public domain (pre-1930 US
+      publication).
+    # Target: christ-the-cornerstone — Mote's own title for the hymn is
+    # "The Immutable Basis of a Sinner's Hope"; the claim is christological
+    # (Christ himself the foundation), the cornerstone locator's subject.
+    # J13 alternatives where two fit: building-on-the-rock (supplies the
+    # sinking-sand imagery but is the hearing-and-doing parable) and
+    # hope-in-god (Heb 6:19). Equality matching means no `rock`/`foundation`
+    # lexicon entry is added anywhere — the cornerstone pack's G4
+    # distinctness design is untouched.
+    concept: christ-the-cornerstone
+    phrases:
+      - phrase: the solid rock
+        weight: 1.0
+      - phrase: my hope is built on nothing less
+        weight: 1.0
+      - phrase: on christ the solid rock i stand
+        weight: 0.9
+      - phrase: all other ground is sinking sand
+        weight: 0.9
+
+  - title: Blessed Assurance
+    author: Fanny J. Crosby
+    year: 1873
+    provenance: >-
+      Written 1873 to Phoebe P. Knapp's tune; first published in Palmer's
+      Guide to Holiness and Revival Miscellany (July 1873). Public domain
+      (pre-1930 US publication).
+    # Target: assurance-of-salvation — "heir of salvation, purchase of
+    # God" is the concept's own assurance language; 1 John 5:11-13 (the
+    # letter's stated purpose) is its lead anchor. Doctrinal neutrality per
+    # the concept's own header: assurance language, never
+    # perseverance-debate vocabulary.
+    concept: assurance-of-salvation
+    phrases:
+      - phrase: blessed assurance
+        weight: 1.0
+      - phrase: blessed assurance jesus is mine
+        weight: 1.0
+      # Refrain line, hymn-specific wording.
+      - phrase: this is my story this is my song
+        weight: 0.9
+
+  - title: Turn Your Eyes upon Jesus
+    author: Helen Howarth Lemmel
+    year: 1922
+    provenance: >-
+      Written 1922; published in Glad Songs (British National Sunday
+      School Union, 1922) and in US hymnals from 1924. Public domain
+      (pre-1930 US publication).
+    # Target: remembered-looking-to-jesus — the hymn IS Heb 12:1-2's
+    # look-to-Jesus theme, the concept that already owns "fixing our eyes
+    # on Jesus".
+    concept: remembered-looking-to-jesus
+    phrases:
+      - phrase: turn your eyes upon jesus
+        weight: 1.0
+      # Second refrain line, hymn-specific. Measured pre-change #1 was
+      # James 1:23 — the MIRROR verse, sense-adjacent noise.
+      - phrase: look full in his wonderful face
+        weight: 0.9
+
+  - title: What a Friend We Have in Jesus
+    author: Joseph M. Scriven
+    year: 1855
+    provenance: >-
+      Poem written 1855; published in Horace L. Hastings's Social Hymns,
+      Original and Selected (1865); Charles C. Converse's tune 1868.
+      Public domain (pre-1930 US publication).
+    # Target: prayer — the hymn's argument is the privilege of carrying
+    # everything to God in prayer (commonly cited basis Php 4:6, a prayer
+    # anchor). J13 alternative where two fit: friendship (John 15:13-15
+    # fits the title's image; the hymn's substance is pray-about-it).
+    concept: prayer
+    phrases:
+      - phrase: what a friend we have in jesus
+        weight: 1.0
+
+  - title: A Mighty Fortress Is Our God
+    author: Martin Luther
+    year: 1529
+    provenance: >-
+      "Ein feste Burg ist unser Gott" (c. 1529), Luther's versification of
+      Psalm 46; standard English translation by Frederick H. Hedge (1853).
+      Public domain (pre-1930 US publication).
+    # Target: refuge-in-trouble — the concept that owns Psalms 46:1-3 at
+    # weight 1.0. The cleanest mapping in the pack: the hymn is Psalm 46.
+    concept: refuge-in-trouble
+    phrases:
+      - phrase: a mighty fortress
+        weight: 1.0
+      - phrase: a mighty fortress is our god
+        weight: 1.0
+
+# CONSIDERED AND MEASURED OUT (recorded for the J13 review; measured
+# 2026-08-22 on the pre-change fixture bed, scratch log impl-p5):
+# - "o soul are you weary and troubled" (Turn Your Eyes' first line):
+#   rest-for-the-weary already answers it well (#1 Isaiah 40:31,
+#   concept_anchor 10.80); an alias would demote a good themed answer.
+# - "take it to the lord in prayer" (What a Friend's refrain): Theme:
+#   Prayer already leads (#1 1 Thess 5:16-18, concept_anchor 21.72). No gap.
+# - "Amazing Grace" (Newton 1779) as a family: "amazing grace" already
+#   leads with Theme: Grace, not earned (#1 Eph 2:8-9, 23.31). No gap.
+# - "Great Is Thy Faithfulness" (Chisholm 1923) as a family: the concept
+#   lexicon's "great is your faithfulness" normalizes to the same tokens as
+#   "great is thy faithfulness" (thy/your are stopwords) — full-query
+#   parity already answers at 40.00 (#1 Lam 3:22-23). No gap; an alias row
+#   would double-chip one fact.

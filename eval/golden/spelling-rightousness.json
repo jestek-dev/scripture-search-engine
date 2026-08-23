@@ -1,0 +1,20 @@
+{
+  "id": "spelling-rightousness",
+  "query": "rightousness",
+  "status": "active",
+  "note": [
+    "QR-5 (P5.4) cited spelling correction — battery ms3, an audit F: 'rightousness' is a silent-empty discovery today. The -ness misspelling is untouched by the stemmer (ends in -ss), so the whole typed word (length 12 -> edit budget 2) is the correction key: unique in-policy winner 'righteousness' at Damerau distance 1 (missing 'e'), cited on the chip with the typed surface form.",
+    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Romans 6:20",
+      "withinTop": 3,
+      "requiredReasonLabel": "Shared word: righteousness (corrected from \"rightousness\")"
+    },
+    {
+      "ref": "Matthew 5:6",
+      "withinTop": 10
+    }
+  ]
+}

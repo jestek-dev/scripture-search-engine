@@ -1,0 +1,21 @@
+{
+  "id": "spelling-comfort-guard",
+  "query": "comfort",
+  "status": "active",
+  "note": [
+    "QR-5 (P5.4) known-word negative guard, second plan-named word ('pray'/'comfort' never rewritten — separate fixture because additionalQueries share one expectation list and the two words target different passages). 'comfort' is in-vocabulary; the exact undecorated 'Shared word: comfort' chip pins that no correction and no chip decoration ever touches it.",
+    "ACTIVE from birth — pins already-true behavior; see spelling-known-word-guard."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Matthew 5:4",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Shared word: comfort"
+    },
+    {
+      "ref": "2 Corinthians 1:3-4",
+      "withinTop": 3
+    }
+  ]
+}

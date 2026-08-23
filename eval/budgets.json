@@ -25,9 +25,23 @@
       "2026-08-08: openbible-topics and openbible-xrefs. a.openbible.info rolls",
       "its files weekly with no upstream archive, so our checksummed copies are",
       "the only ones in existence. Closing this needs a Release upload, which no",
-      "build script can perform — see docs/NEEDS-JESSE.md §1.8."
+      "build script can perform — see docs/NEEDS-JESSE.md §1.8.",
+      "",
+      "2026-08-22 (P5.6/CO-3 PR 1): openbible-sections joins on the identical",
+      "grounds — same host, same rolling path, same missing upstream archive.",
+      "DISCLOSED DEVIATION: the 08-14 plan §6 #7 wanted Jesse's Release upload",
+      "FIRST and archiveUrl set with no new entry here, on the premise that",
+      "source-drift had emptied this list; at tip it had not (both siblings",
+      "remain acknowledged and no manifest sets archiveUrl). No archive exists",
+      "to point at, and inventing a URL would be worse than acknowledging.",
+      "When Jesse uploads the snapshots, all three flip to archiveUrl together",
+      "and this list finally empties."
     ],
-    "acknowledgedUnarchivedRollingSources": ["openbible-topics", "openbible-xrefs"]
+    "acknowledgedUnarchivedRollingSources": [
+      "openbible-sections",
+      "openbible-topics",
+      "openbible-xrefs"
+    ]
   },
   "size": {
     "totalArtifactBytes": 167772160,
@@ -38,6 +52,10 @@
       "concept_related": 4194304,
       "concepts": 4194304,
       "cross_references": 25165824,
+      "curated_aliases": 1048576,
+      "pericopes": 1048576,
+      "spelling_deletes": 12582912,
+      "spelling_terms": 1048576,
       "token_stats": 2097152,
       "verse_terms": 104857600,
       "verse_tokens": 20971520,
@@ -47,6 +65,16 @@
       "verses_fts_docsize": 2097152,
       "verses_fts_idx": 2097152
     },
+    "$comment_spelling": [
+      "Schema v7 (QR-5/P5.4, plan-stated values riding the J31 review):",
+      "spelling_terms 1 MiB, spelling_deletes 12 MiB, curated_aliases 1 MiB.",
+      "curated_aliases ships EMPTY at v7 (QR-6 populates it). The full-corpus",
+      "size check runs at the next mint; fixture scale is validated now. If the",
+      "ED-2 delete table busts its budget on the full corpus, the REVIEWED",
+      "mitigation ladder applies in order (each step a reviewed data change,",
+      "never a silent tweak): (1) df >= 2 floor on corpus-origin vocabulary;",
+      "(2) ED-2 depth only at term length >= 10; (3) ED 1 everywhere."
+    ],
     "$comment_perTable": [
       "Per-table byte budgets, INCLUDING each table's indexes \u2014 an index ships with",
       "its table and grows with it, so budgeting the table alone would miss two",
@@ -213,6 +241,32 @@
     },
     "mrr10": null,
     "goodOrBetterTop3Rate": null,
+    "$comment_qr8": [
+      "QR-8 (P5.7): the ms/ref battery rows as budget-bound ACCEPTANCE",
+      "CRITERIA, wired into the G12 rank-metrics row. Two booleans, null",
+      "until baselined per the same E5 discipline as every quality threshold",
+      "above (a non-null value with no independently approved rank-metrics",
+      "baseline fails G12 structurally; the flip PR quotes a real >=3-run",
+      "history and rides J42 sign-off — merge = sign-off, never a guess).",
+      "While null the criteria report 'not-applicable — thresholds unset',",
+      "measured and reported, never a hollow pass. Rollback of a flipped",
+      "value is null-with-tombstone.",
+      "",
+      "spelling.noSilentEmpty (true when enforced): every misspelling-",
+      "category battery query returns cited-correction results, a resolved",
+      "reference, a suggestion-bearing invalid-reference, or fallthrough",
+      "discovery — never a bare empty. The tripwire for corrections quietly",
+      "ceasing to fire: disabling OOV substitution empties the ms rows and",
+      "flips the enforced criterion to REJECT (the documented E9 mutation",
+      "check, demonstrated in the threshold-flip PR).",
+      "",
+      "references.grammarCoverage (true when enforced): every reference-",
+      "adjacent battery row resolves as a reference (graded E), and every",
+      "tiers.referenceGrammar pinned row resolves to exactly its expected",
+      "passage label."
+    ],
+    "spelling": { "noSilentEmpty": null },
+    "references": { "grammarCoverage": null },
     "battery": {
       "$comment_categoryFloors": [
         "Structural minimums, not quality thresholds: the nine seed counts of",

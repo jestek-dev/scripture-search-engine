@@ -12,10 +12,12 @@ import { describe, expect, it } from 'vitest';
 
 import {
   CHIP_DISPLAY_MIN_POINTS,
+  correctionCitation,
   PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
+  pinCorrectionCitations,
   polishChipsForDisplay,
 } from '../src/index.js';
-import type { Reason } from '../src/index.js';
+import type { Reason, SpellingCorrection } from '../src/index.js';
 
 const chip = (family: Reason['family'], points: number, label = `${family} chip`): Reason => ({
   family,
@@ -89,5 +91,69 @@ describe('polishChipsForDisplay', () => {
     for (let i = 0; i < 5; i += 1) {
       expect(JSON.stringify(polishChipsForDisplay(input))).toBe(once);
     }
+  });
+});
+
+describe('pinCorrectionCitations (0.12.0/QR-5 round-2 — every correction visibly cited)', () => {
+  const correction = (typed: string, corrected: string): SpellingCorrection => ({
+    typed,
+    corrected,
+    distance: 1,
+  });
+
+  it('decorates the strongest chip when no displayed chip carries the citation', () => {
+    // The harm case: hello -> "hell" surfaces Theme: Hell rows whose evidence
+    // is concept-anchor only — no decorated token chip anywhere the user
+    // looks. The strongest chip must carry the query-level citation.
+    const out = pinCorrectionCitations(
+      [chip('concept_anchor', 22, 'Theme: Hell'), chip('cross_reference', 2)],
+      [correction('hello', 'hell')],
+    );
+    expect(out.map((reason) => reason.label)).toEqual([
+      'Theme: Hell (query corrected from "hello")',
+      'cross_reference chip',
+    ]);
+    // Labels only: families, points and order are untouched.
+    expect(out.map((reason) => [reason.family, reason.points])).toEqual([
+      ['concept_anchor', 22],
+      ['cross_reference', 2],
+    ]);
+  });
+
+  it('leaves a result untouched (same reference) when a token chip already cites the correction', () => {
+    const input = [
+      chip('concept_anchor', 22, 'Theme: Grace, not earned'),
+      chip('token_overlap', 4, `Shared word: grace (${correctionCitation('grade')})`),
+    ];
+    expect(pinCorrectionCitations(input, [correction('grade', 'grace')])).toBe(input);
+  });
+
+  it('cites every missing correction, and only the missing ones', () => {
+    // Two corrections; the displayed chips cite one of them — the pin adds
+    // exactly the other. J31 says every correction shown, not one of them.
+    const out = pinCorrectionCitations(
+      [
+        chip('token_overlap', 4, `Shared word: grace (${correctionCitation('grade')})`),
+        chip('concept_anchor', 2, 'Theme: Hell'),
+      ],
+      [correction('grade', 'grace'), correction('hello', 'hell')],
+    );
+    expect(out.map((reason) => reason.label)).toEqual([
+      `Shared word: grace (${correctionCitation('grade')}) (query corrected from "hello")`,
+      'Theme: Hell',
+    ]);
+  });
+
+  it('no-ops on empty corrections, empty reasons, and is idempotent', () => {
+    const input = [chip('concept_anchor', 22)];
+    expect(pinCorrectionCitations(input, [])).toBe(input);
+    expect(pinCorrectionCitations([], [correction('hello', 'hell')])).toEqual([]);
+    const once = pinCorrectionCitations(input, [correction('hello', 'hell')]);
+    // The pinned label itself satisfies the citation check on a second pass.
+    expect(pinCorrectionCitations(once, [correction('hello', 'hell')])).toBe(once);
+  });
+
+  it('shares its citation string with the token-chip decoration (one wording to review)', () => {
+    expect(correctionCitation('beleived')).toBe('corrected from "beleived"');
   });
 });

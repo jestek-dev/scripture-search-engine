@@ -163,9 +163,19 @@ Alignment tier 1, per-verse-heading shape: 'PSALM <roman>.' section headings wit
 
 ## Scripture text, topical data and cross-references
 
+### OpenBible.info Bible Section Counts
+
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
+- **Source:** <https://a.openbible.info/data/bible-section-counts.txt>
+- **Checksum:** `5e9e838d0226c6106ff8c578aa5c1cb8fa8b206f0fb83f784aa1613cc50e26e8`
+
+Creative Commons Attribution 4.0, the standard license OpenBible.info applies to its published datasets (announcement post and site footer; same posture as the two admitted OpenBible sources). Attribution required in shipped output.
+
+Section-placement counts by OpenBible.info, used under CC BY 4.0. Counts ONLY: each row is a candidate section span and the number of the 20 surveyed translations whose headings mark it - no heading text and no verse text of any translation is present, which is what keeps the copyrighted expression of those translations out of this file entirely. Boundary counts must be DERIVED as the sum over rows sharing a start verse (the per-row vote for one exact span is a different number and the two must never be conflated). The upstream URL is a rolling 'latest' path with no archival versioning, so this checksum IS our snapshot (verified live 2026-08-14 and re-verified byte-identical 2026-08-22); re-downloading later may produce a different file and must be re-admitted as a change. Re-verify the hash at fetch time.
+
 ### OpenBible.info Topical Bible
 
-- **Rights:** CC BY 4.0 — **attribution required**
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/topic-scores.zip>
 - **Checksum:** `2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60`
 
@@ -175,7 +185,7 @@ Topical data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info
 
 ### OpenBible.info Cross References
 
-- **Rights:** CC BY 4.0 — **attribution required**
+- **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/cross-references.zip>
 - **Checksum:** `36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829`
 
@@ -213,6 +223,7 @@ can declare that lineage, which keeps the engine from counting the same
 scholarship twice as independent evidence.
 
 - **LH editorial** — Authored for this dataset. LH holds all rights. Drafted with AI assistance offline and admitted by human review; no AI runs at query time.
+- **LH editorial (public-domain hymn index)** — Authored for this dataset (QR-6, 2026-08-22). LH holds all rights to the alias rows themselves. Every hymn indexed in the starter pack is verifiably public domain in the United States (pre-1930 publication; per-row provenance in ontology/aliases/hymn-lines.yaml). Titles and short first-line phrases are not copyrightable (US Copyright Office Circular 33), and no hymn lyrics beyond a title or a first-line/refrain phrase are stored. Hymnary.org's index is not openly licensed and was not used (J38).
 - **Nave's Topical Bible** — Public domain by age (Orville J. Nave, Topical Bible, 1897; Nave died 1917). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).
 - **Cross-translation vocabulary (KJV, ESV, NIV, NLT)** — DERIVED INDEX ONLY. No translation text is stored or shipped. What this source contributes is, per verse, the set of word STEMS appearing in some English translation of that verse but not in the shipped one — unordered, deduplicated, stopwords removed, stemmed, and merged across all four sources so no single translation's contribution is separable. There is no word order, no punctuation and no function words, so the prose cannot be reconstructed from it. KJV is public domain (eBible.org verse-per-line export). ESV, NIV and NLT are copyrighted; licensed copies held by Jesse Freeman were read ONCE, locally, to derive this index, and never entered this repository or the artifact. The relationship is that of a search index to the works it indexes rather than a copy of them. Recorded here in full because the distinction is the entire basis on which this source is admitted, and a reader must be able to check it rather than take it on trust.
 - **Treasury of Scripture Knowledge** — Public domain by age (published 1830s). Not directly imported; declared so that sources deriving from it can express that lineage for correlation budgeting (G7).

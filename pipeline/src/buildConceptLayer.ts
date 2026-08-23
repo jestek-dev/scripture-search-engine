@@ -14,11 +14,20 @@ import type { CompiledOntology } from './importers/ontologyImporter.js';
 import type { CrossReferenceRow, TopicAnchorRow } from './importers/openbibleImporter.js';
 import { scoreToWeight } from './importers/openbibleImporter.js';
 import type { SqliteDatabase } from './buildCorpus.js';
+import type { PericopeRow } from './buildPericopes.js';
 
 export interface ConceptLayerInput {
   readonly ontology: CompiledOntology;
   readonly topicRows: readonly TopicAnchorRow[];
   readonly crossReferences: readonly CrossReferenceRow[];
+  /**
+   * Derived pericope tiling (schema v8, CO-3 PR 1) — ALREADY derived over
+   * this artifact's present verses by buildPericopes.ts; inserted verbatim
+   * and fed per-record into the layer fingerprint, because a re-tiled
+   * corpus returns differently-grouped results once PR 2 lands and a
+   * consumer must be able to tell that happened.
+   */
+  readonly pericopes?: readonly PericopeRow[];
   readonly manifests: ManifestSet;
   /** Verse ids present in this artifact; anything outside is dropped. */
   readonly presentVerseIds: ReadonlySet<number>;
@@ -46,6 +55,7 @@ export interface ConceptLayerResult {
   readonly editorialAnchors: number;
   readonly topicAnchors: number;
   readonly crossReferences: number;
+  readonly pericopes: number;
   readonly verseTerms: number;
   readonly translationTokens: number;
   readonly droppedOutOfCorpus: number;
@@ -84,6 +94,7 @@ export function buildConceptLayer(
   // to remember not to release.
   const topicCited = input.ontology.topicSubscriptions.length > 0 ? ['openbible-topics'] : [];
   const xrefCited = input.crossReferences.length > 0 ? ['openbible-xrefs'] : [];
+  const pericopeCited = (input.pericopes ?? []).length > 0 ? ['openbible-sections'] : [];
   const termCited = [
     ...new Set((input.verseTerms ?? []).flatMap((term) => term.sourceIds.split('+'))),
   ];
@@ -93,6 +104,7 @@ export function buildConceptLayer(
       ...input.ontology.citedSourceIds,
       ...topicCited,
       ...xrefCited,
+      ...pericopeCited,
       ...termCited,
     ],
     tier: 'public_distribution',
@@ -124,10 +136,15 @@ export function buildConceptLayer(
     `INSERT INTO cross_references(from_verse_id, to_start_verse_id, to_end_verse_id, source_id, votes)
      VALUES (?, ?, ?, ?, ?)`,
   );
+  const insertPericope = database.prepare(
+    `INSERT INTO pericopes(start_verse_id, end_verse_id, boundary_votes, source_id)
+     VALUES (?, ?, ?, ?)`,
+  );
 
   let editorialAnchors = 0;
   let topicAnchors = 0;
   let crossReferences = 0;
+  let pericopes = 0;
   let verseTerms = 0;
   let translationTokens = 0;
   let dropped = 0;
@@ -207,6 +224,18 @@ export function buildConceptLayer(
       );
       crossReferences += 1;
     }
+    // Pericope rows are derived over the present verses upstream
+    // (buildPericopes.ts checks its tiling invariants there), so they are
+    // inserted verbatim — a drop here would silently break the tiling.
+    for (const pericope of input.pericopes ?? []) {
+      insertPericope.run(
+        pericope.startVerseId,
+        pericope.endVerseId,
+        pericope.boundaryVotes,
+        'openbible-sections',
+      );
+      pericopes += 1;
+    }
     for (const term of input.verseTerms ?? []) {
       if (!input.presentVerseIds.has(term.verseId)) {
         dropped += 1;
@@ -278,10 +307,23 @@ export function buildConceptLayer(
   )) {
     feed(['r', edge.conceptId, edge.relatedId]);
   }
+  // Pericope rows join the fingerprint PER-RECORD (CO-3 PR 1): the derived
+  // tiling is a deterministic function of (source rows, threshold, present
+  // verses), and a change to any of the three — a re-rolled upstream file,
+  // a threshold edit, a corpus change — re-groups results once PR 2 lands.
+  // Rows arrive already sorted by verse id from the derivation; sorted again
+  // here so the fingerprint never depends on a caller's ordering.
+  for (const pericope of [...(input.pericopes ?? [])].sort(
+    (a, b) => a.startVerseId - b.startVerseId,
+  )) {
+    feed(['p', pericope.startVerseId, pericope.endVerseId, pericope.boundaryVotes]);
+  }
   // translationTokens joins the fingerprint because it changes RESULTS:
   // admitting another translation's vocabulary makes verses reachable that
   // were not before, and a consumer must be able to tell that happened.
-  feed(['counts', topicAnchors, crossReferences, verseTerms, translationTokens]);
+  // The pericope count joined in the same move (CO-3 PR 1) — this widening
+  // moves EVERY layer fingerprint once, sanctioned and baselined in-train.
+  feed(['counts', topicAnchors, crossReferences, verseTerms, translationTokens, pericopes]);
   const layerFingerprint = hash.digest('hex');
 
   // Written with REPLACE because the corpus build already populated meta.
@@ -296,6 +338,7 @@ export function buildConceptLayer(
     editorialAnchors,
     topicAnchors,
     crossReferences,
+    pericopes,
     verseTerms,
     translationTokens,
     droppedOutOfCorpus: dropped,

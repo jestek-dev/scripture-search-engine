@@ -8,7 +8,9 @@ import { BOOKS, findBook } from '../src/books.js';
 
 interface FixtureSelectionRow {
   readonly book: string;
-  readonly chapters: readonly number[];
+  readonly chapters?: readonly number[];
+  /** Single-verse selections as "chapter:verse" (P5.2/QR-3). */
+  readonly verses?: readonly string[];
   readonly why: string;
 }
 
@@ -54,7 +56,10 @@ function normalizeSelection(
     const book = findBook(entry.book);
     if (!book) throw new Error(`Unknown selection book ${entry.book}`);
     const bucket = chaptersByBook.get(book.id) ?? new Set<number>();
-    for (const chapter of entry.chapters) bucket.add(chapter);
+    for (const chapter of entry.chapters ?? []) bucket.add(chapter);
+    // A verse-level selection contributes its chapter to the chapter
+    // universe; exactness of WHICH verses is asserted separately below.
+    for (const locator of entry.verses ?? []) bucket.add(Number(locator.split(':')[0]));
     chaptersByBook.set(book.id, bucket);
   }
 
@@ -101,16 +106,48 @@ describe('committed WEB fixture selection', () => {
     expect(fixture.selection).toEqual(SELECTION);
   });
 
-  it('commits exactly 5,667 unique verses in canonical order for the selected chapter universe', () => {
+  it('commits exactly 5,669 unique verses in canonical order for the selected chapter universe', () => {
     const fixture = readFixture();
     const expectedSelection = normalizeSelection(SELECTION);
     const committedSelection = normalizeSelection(fixture.selection);
     const actualSelection = actualFixtureChapters(fixture.verses);
 
-    expect(fixture.verses).toHaveLength(5667);
-    expect(new Set(fixture.verses.map((verse) => `${verse.book}:${verse.chapter}:${verse.verse}`)).size).toBe(5667);
+    expect(fixture.verses).toHaveLength(5669);
+    expect(new Set(fixture.verses.map((verse) => `${verse.book}:${verse.chapter}:${verse.verse}`)).size).toBe(5669);
     expect(committedSelection).toEqual(expectedSelection);
     expect(actualSelection).toEqual(expectedSelection);
+
+    // Verse-level selections must stay verse-level: a chapter reachable ONLY
+    // through a verses: entry commits exactly the listed verses, never the
+    // whole chapter (the P5.2 churn budget is per-verse, not per-chapter).
+    const chapterSelected = new Map<number, Set<number>>();
+    const verseSelected = new Map<number, Map<number, Set<number>>>();
+    for (const entry of SELECTION) {
+      const book = findBook(entry.book);
+      if (!book) throw new Error(`Unknown selection book ${entry.book}`);
+      const chapterBucket = chapterSelected.get(book.id) ?? new Set<number>();
+      for (const chapter of entry.chapters ?? []) chapterBucket.add(chapter);
+      chapterSelected.set(book.id, chapterBucket);
+      for (const locator of entry.verses ?? []) {
+        const [chapterText, verseText] = locator.split(':');
+        const chapter = Number(chapterText);
+        const perBook = verseSelected.get(book.id) ?? new Map<number, Set<number>>();
+        const perChapter = perBook.get(chapter) ?? new Set<number>();
+        perChapter.add(Number(verseText));
+        perBook.set(chapter, perChapter);
+        verseSelected.set(book.id, perBook);
+      }
+    }
+    for (const [bookId, perBook] of verseSelected) {
+      for (const [chapter, expectedVerses] of perBook) {
+        if (chapterSelected.get(bookId)?.has(chapter)) continue;
+        const committed = fixture.verses
+          .filter((verse) => verse.book === bookId && verse.chapter === chapter)
+          .map((verse) => verse.verse)
+          .sort((left, right) => left - right);
+        expect(committed).toEqual([...expectedVerses].sort((left, right) => left - right));
+      }
+    }
 
     for (const [index, verse] of fixture.verses.entries()) {
       expect(BOOKS[verse.book - 1]?.name).toBe(verse.book_name);

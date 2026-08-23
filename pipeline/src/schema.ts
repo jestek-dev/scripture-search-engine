@@ -18,8 +18,19 @@
  *      corroboration is checked per verse, because authors do not chop
  *      Scripture into the same pieces (Maclaren's Psalm 23:1-6 essay vs
  *      Spurgeon's verse-by-verse notes never matched under exact span keys).
+ * v7 — Phase 5 (QR-5, 0.12.0): precomputed spelling index
+ *      (spelling_terms + spelling_deletes, built by buildSpellingIndex.ts)
+ *      and curated_aliases, shipped EMPTY here and populated by QR-6
+ *      (0.13.0, no schema bump — the concept-XOR-verse-range invariant lives
+ *      in the DDL from day one). Schema slot per the 2026-08-20 plan's §2.2
+ *      version-train decision: v7 = spelling, v8 = pericope.
+ * v8 — Phase 5 (CO-3 PR 1, capability only): derived pericope tiling
+ *      (pericopes table, built by buildPericopes.ts from OpenBible.info
+ *      section counts). The engine READS it but nothing in discover() calls
+ *      the read yet — ordering is bit-identical to v7 and the grouping
+ *      behavior lands with ENGINE_VERSION 0.14.0 in PR 2.
  */
-export const SCHEMA_VERSION = '6';
+export const SCHEMA_VERSION = '8';
 
 /**
  * `verses.id` (plain rowid) is the true primary key, NOT `verse_id`. The
@@ -242,6 +253,91 @@ CREATE INDEX idx_verse_translation_tokens_verse ON verse_translation_tokens(vers
 
 CREATE INDEX idx_verse_terms_term ON verse_terms(term, pmi DESC);
 CREATE INDEX idx_verse_terms_verse ON verse_terms(verse_id);
+
+/*
+ * ---- Deterministic cited spelling correction (schema v7, QR-5) ----
+ *
+ * The artifact's whole known-word vocabulary: corpus tokens ∪ book aliases ∪
+ * lexicon tokens ∪ translation tokens ∪ verse terms (Layer B; gate-only —
+ * a verse_terms-only word is protected from correction but contributes no
+ * delete rows, so it is never proposed AS a correction), each row
+ * carrying its origins. Doubles
+ * as the runtime's OOV gate — a query token present here is IN vocabulary and
+ * is NEVER corrected — and as the candidate roster the delete index proposes
+ * from. document_count is the corpus df (summed over translations); 0 for
+ * vocabulary-only origins. Built by buildSpellingIndex.ts from rows already
+ * in this database: derived data, no new upstream source, fed per-record into
+ * the layer fingerprint.
+ */
+CREATE TABLE spelling_terms (
+  term TEXT PRIMARY KEY,
+  document_count INTEGER NOT NULL,
+  origins TEXT NOT NULL
+);
+
+/*
+ * SymSpell-style precomputed delete variants: every string reachable from a
+ * term by deleting up to dictionaryDeleteDepth(length) characters, INCLUDING
+ * the term itself (the identity row is what lets a candidate reachable purely
+ * by deleting from the QUERY side match). Depth is derived from the ONE
+ * edit-policy table, never guessed — see engine/src/intents/spelling.ts. The
+ * index only PROPOSES candidates; the runtime re-verifies every one with the
+ * bounded integer Damerau DP before it may substitute.
+ */
+CREATE TABLE spelling_deletes (
+  delete_key TEXT NOT NULL,
+  term TEXT NOT NULL REFERENCES spelling_terms(term)
+);
+
+CREATE INDEX idx_spelling_deletes_key ON spelling_deletes(delete_key);
+
+/*
+ * Curated phrase/hymn aliases — SHIPPED EMPTY at v7, populated by QR-6
+ * (0.13.0, no schema bump; the engine guards on a presence-and-rows probe).
+ * The concept-XOR-verse-range invariant is in the DDL from day one: an alias
+ * targets exactly one of a curated concept or an explicit verse range, never
+ * both, never neither. normalized_raw is the whole-query EQUALITY key
+ * (stopwords kept); title and locator surface verbatim in explanations, which
+ * is why they are first-class columns rather than an opaque blob.
+ */
+CREATE TABLE curated_aliases (
+  id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL,
+  normalized_raw TEXT NOT NULL UNIQUE,
+  concept_id TEXT REFERENCES concepts(id),
+  start_verse_id INTEGER,
+  end_verse_id INTEGER,
+  source_id TEXT NOT NULL,
+  weight REAL NOT NULL,
+  locator TEXT,
+  CHECK (
+    (concept_id IS NOT NULL AND start_verse_id IS NULL AND end_verse_id IS NULL) OR
+    (concept_id IS NULL AND start_verse_id IS NOT NULL AND end_verse_id IS NOT NULL)
+  )
+);
+
+/*
+ * Derived pericope tiling (schema v8, CO-3 PR 1). One row per pericope:
+ * within each book the rows are disjoint, ordered, and tile every present
+ * verse (invariants enforced by buildPericopes.ts, which derives them from
+ * OpenBible.info candidate section spans at the reviewed boundary-vote
+ * threshold plus forced book starts).
+ *
+ * boundary_votes is the SUMMED boundary vote at start_verse_id — how many of
+ * the 20 surveyed translations' section placements start here, summed over
+ * candidate spans sharing this start verse. It is a countable structural
+ * fact, NEVER a relevance score, and never the per-row vote of one exact
+ * span; it is stored so the engine's grouping explanation and the shipped
+ * data cannot disagree.
+ */
+CREATE TABLE pericopes (
+  start_verse_id INTEGER NOT NULL,
+  end_verse_id INTEGER NOT NULL,
+  boundary_votes INTEGER NOT NULL,
+  source_id TEXT NOT NULL
+);
+
+CREATE INDEX idx_pericopes_range ON pericopes(start_verse_id, end_verse_id);
 `;
 
 /**

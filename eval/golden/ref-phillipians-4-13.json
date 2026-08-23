@@ -1,6 +1,6 @@
 {
   "id": "ref-phillipians-4-13",
-  "status": "pending",
+  "status": "active",
   "note": [
     "Battery row ms4 (search-quality audit 2026-08-20): \"Phillipians 4:13\" — the common double-l misspelling — dead-ends as INVALID-REFERENCE today with no guidance. Written fixture-first; QR-3's curated book-alias rows make it RESOLVE (which beats a correction), and that commit activates this fixture."
   ],

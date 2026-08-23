@@ -1,0 +1,22 @@
+{
+  "id": "spelling-known-word-guard",
+  "query": "pray",
+  "status": "active",
+  "note": [
+    "QR-5 (P5.4) — the plan-named known-word NEGATIVE fixture, the eighth of the plan's eight: a KNOWN word is never rewritten. 'pray' is in-vocabulary (corpus df > 0), so the OOV gate forbids correction — even though 'prey' sits one edit away. The exact undecorated chip label 'Shared word: pray' is the assertion: any rewriting or chip decoration ('corrected from ...') breaks exact equality and turns this guard red.",
+    "ACTIVE from birth: it pins behavior that is already true (correction must never fire here), so it protects from day one — pending status would make it decoration. The OOV gate is THE invariant of QR-5: wrong-word -> wrong-scripture is this engine's worst failure class, and the gate is what keeps a spelling feature from ever touching a word the user actually typed correctly."
+  ],
+  "expectedTop": [
+    {
+      "ref": "1 Thessalonians 5:16-18",
+      "withinTop": 3,
+      "requiredReasonLabel": "Shared word: pray"
+    },
+    {
+      "ref": "Matthew 6:9-13",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Prayer"
+    }
+  ]
+}

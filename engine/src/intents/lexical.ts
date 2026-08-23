@@ -8,6 +8,7 @@
  */
 
 import type { Candidate } from '../ranking/rank.js';
+import { correctionCitation } from '../reasons/display.js';
 import type { Evidence } from '../reasons/types.js';
 import { significantWords } from '../tokenizer/index.js';
 import type { TokenMatch } from '../corpus/repository.js';
@@ -175,10 +176,24 @@ const PRECISION_SMOOTHING = 2;
  * by inverse document frequency expresses that without anyone having to
  * hand-maintain a list of which words are important.
  */
-export function tokenEvidence(match: TokenMatch, queryIdfTotal: number): Evidence[] {
+export function tokenEvidence(
+  match: TokenMatch,
+  queryIdfTotal: number,
+  correctionCitations?: ReadonlyMap<string, string>,
+): Evidence[] {
   const evidence: Evidence[] = [];
   const coverage = queryIdfTotal > 0 ? Math.min(1, match.idfSum / queryIdfTotal) : 0;
   if (coverage <= 0) return evidence;
+
+  // Cited corrections (0.12.0/QR-5): a token that reached this verse only
+  // because an out-of-vocabulary typed word was corrected must SAY so, on the
+  // chip, citing the surface form the user typed — never the stem. Silence
+  // here would be a corrected query pretending to be an exact one, the
+  // theological failure mode the feature's design forbids.
+  const display = (token: string): string => {
+    const typed = correctionCitations?.get(token);
+    return typed === undefined ? token : `${token} (${correctionCitation(typed)})`;
+  };
 
   // Coverage alone is RECALL — "did the verse contain what I asked for?" —
   // and it saturates at 1.0 for every verse containing all the query's
@@ -202,8 +217,8 @@ export function tokenEvidence(match: TokenMatch, queryIdfTotal: number): Evidenc
     family: 'token_overlap',
     label:
       match.matchedTokens.length === 1
-        ? `Shared word: ${match.matchedTokens[0]}`
-        : `Shared words: ${match.matchedTokens.join(', ')}`,
+        ? `Shared word: ${display(match.matchedTokens[0]!)}`
+        : `Shared words: ${match.matchedTokens.map(display).join(', ')}`,
     strength: coverage * precision,
   });
 

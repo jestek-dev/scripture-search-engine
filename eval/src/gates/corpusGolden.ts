@@ -42,6 +42,16 @@ export interface CorpusExpectation {
   readonly withinTop?: WithinTop;
   readonly requiredReasonFamily?: string;
   readonly requiredReasonLabel?: string;
+  /**
+   * P5.6 (CO-3) PR 1 capability: the expectation additionally demands that
+   * the hit be a GROUPED result whose grouping provenance cites this source
+   * (e.g. "openbible-sections" for the pericope path, "editorial" for the
+   * anchor-collapse path). Enforcement is FAIL-CLOSED from day one: the
+   * engine emits no grouping until the PR 2 behavior lands, so an ACTIVE
+   * fixture carrying this field fails rather than silently passing — a
+   * capability field must never be decoration (CLAUDE.md gate discipline).
+   */
+  readonly requiredGroupingSourceId?: string;
 }
 
 export interface PreferredOrder {
@@ -127,6 +137,7 @@ interface NormalizedExpectation {
   readonly range: { start: number; end: number };
   readonly requiredReasonFamily?: string;
   readonly requiredReasonLabel?: string;
+  readonly requiredGroupingSourceId?: string;
 }
 
 interface NormalizedPreferredOrder {
@@ -200,6 +211,7 @@ const EXPECTATION_FIELDS = new Set([
   'withinTop',
   'requiredReasonFamily',
   'requiredReasonLabel',
+  'requiredGroupingSourceId',
 ]);
 const PREFERRED_ORDER_FIELDS = new Set(['above', 'below', 'withinTop']);
 const MUST_NOT_RANK_FIELDS = new Set(['ref', 'reference', 'why']);
@@ -359,7 +371,11 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
         );
         continue;
       }
-      for (const field of ['requiredReasonFamily', 'requiredReasonLabel'] as const) {
+      for (const field of [
+        'requiredReasonFamily',
+        'requiredReasonLabel',
+        'requiredGroupingSourceId',
+      ] as const) {
         if (expectation[field] !== undefined && (typeof expectation[field] !== 'string' || !expectation[field].trim())) {
           findings.push(fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.${field} must be a non-empty string`));
         }
@@ -393,6 +409,9 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
           : {}),
         ...(typeof expectation.requiredReasonLabel === 'string'
           ? { requiredReasonLabel: expectation.requiredReasonLabel }
+          : {}),
+        ...(typeof expectation.requiredGroupingSourceId === 'string'
+          ? { requiredGroupingSourceId: expectation.requiredGroupingSourceId }
           : {}),
       });
     }
@@ -993,6 +1012,35 @@ async function runOneQuery(
           { query, ref: expectation.ref, withinTop: expectation.withinTop },
         ),
       );
+    }
+
+    if (expectation.requiredGroupingSourceId !== undefined) {
+      // P5.6 PR 1 capability, fail-closed by construction: the engine does
+      // not emit result grouping until the PR 2 behavior lands, so this read
+      // is structural (the §5 `grouping` field does not exist on
+      // DiscoveryResult yet) and the check CANNOT pass today. That is the
+      // point — an active fixture demanding grouping provenance must fail
+      // until the mechanism it names exists and cites the named source, and
+      // when PR 2 adds the typed field this code enforces it unchanged.
+      const satisfied = hits.some((hit) => {
+        const grouping = (
+          hit as { grouping?: { provenance?: { sourceId?: unknown } } }
+        ).grouping;
+        return grouping?.provenance?.sourceId === expectation.requiredGroupingSourceId;
+      });
+      if (!satisfied) {
+        findings.push(
+          fixtureFinding(
+            fixture.id,
+            'G3_EXPECTED_TOP_GROUPING_SOURCE',
+            `${expectation.ref} ranks for "${query}" but is not a grouped result ` +
+              `citing '${expectation.requiredGroupingSourceId}' grouping provenance. ` +
+              'A passage grouped by the wrong mechanism — or not grouped at all — ' +
+              'is a failure: the grouping explanation is part of the contract.',
+            { query, ref: expectation.ref, withinTop: expectation.withinTop },
+          ),
+        );
+      }
     }
   }
 

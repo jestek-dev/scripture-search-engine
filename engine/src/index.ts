@@ -21,6 +21,8 @@ export {
   MAX_CANDIDATES,
   MAX_PHRASE_LENGTH,
   type CorpusMeta,
+  type CuratedAliasRow,
+  type PericopeRow,
   type PhraseMatch,
   type TokenMatch,
 } from './corpus/repository.js';
@@ -38,25 +40,46 @@ export {
 } from './intents/lexical.js';
 
 export {
+  aliasConceptEvidence,
+  aliasPassageEvidence,
   dedupeConceptAnchors,
   PASSAGE_TERM_PMI_HALF_SATURATION,
   sourceLabel,
 } from './intents/concept.js';
 
 export {
+  deleteVariants,
+  dictionaryDeleteDepth,
+  pickCorrection,
+  SPELLING_EDIT1_MAX_TOKEN_LENGTH,
+  SPELLING_MIN_TOKEN_LENGTH,
+  spellingEditBudget,
+  type PickedCorrection,
+  type SpellingCandidate,
+} from './intents/spelling.js';
+
+export {
+  normalizedPhrase,
   normalizeToken,
   significantWords,
+  significantWordsWithSurface,
   tokenStream,
   TOKENIZER_ARCHAIC_FORM_COUNT,
   TOKENIZER_STOPWORD_COUNT,
 } from './tokenizer/index.js';
 
 export {
+  damerauLevenshtein,
+  editDistanceBudget,
   normalizeBookAlias,
   resolveReference,
   resolveReferenceAttempt,
+  SUGGESTION_EDIT1_MAX_KEY_LENGTH,
+  SUGGESTION_MIN_KEY_LENGTH,
+  type BookAliasEntry,
   type ReferenceResolutionAttempt,
   type ReferenceResolver,
+  type ReferenceSuggestion,
   type ResolvedBook,
   type ResolvedReference,
 } from './reference/reference.js';
@@ -75,6 +98,8 @@ export {
 export {
   CHIP_DISPLAY_MIN_POINTS,
   PASSAGE_TERM_CHIP_DISPLAY_FLOOR,
+  correctionCitation,
+  pinCorrectionCitations,
   polishChipsForDisplay,
 } from './reasons/display.js';
 
@@ -109,4 +134,5 @@ export type {
   ResultIdentity,
   ScripturePassage,
   ScriptureVerse,
+  SpellingCorrection,
 } from './types.js';

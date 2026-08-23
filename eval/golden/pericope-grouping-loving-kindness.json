@@ -1,0 +1,45 @@
+{
+  "id": "pericope-grouping-loving-kindness",
+  "query": "his loving kindness endures forever",
+  "status": "pending",
+  "note": [
+    "P5.6 (CO-3) pericope grouping, PR 1 fixtures-first (2026-08-22, pending,",
+    "failing by design). The WEB prints this refrain in all 26 verses of",
+    "Psalm 136; each is an exact_phrase hit (authoritative, deliberately",
+    "exempt from per-chapter thinning) and NO curated anchor touches",
+    "Psalm 136 — so the existing anchor collapse can never group them and the",
+    "top of the list spends slot after slot on fragments of one psalm.",
+    "",
+    "Target: verse hits inside one section of Scripture — as marked by the",
+    "section headings of 20 surveyed translations (OpenBible.info section",
+    "counts, CC BY) — merge into one passage-level result whose grouping",
+    "explanation cites the summed boundary vote at the section's start verse.",
+    "Psalm 136 derives as a single pericope (summed boundary vote 12 at",
+    "136:1, verified against the pinned 2026-08-14 source snapshot), so ONLY",
+    "the pericope path can satisfy requiredGroupingSourceId here — an",
+    "improvement attributable to the pre-existing anchor collapse cannot",
+    "fake this fixture green. That is the PR 2 measured-effect attribution",
+    "instance the plan demands.",
+    "",
+    "VACUITY DISCLOSURE: Psalm 136 is absent from the fixture corpus, so on",
+    "the hermetic bed this fixture measures nothing until either Psalm 136",
+    "joins the fixture corpus or a release-artifact battery run exists —",
+    "same standing doctrine as it-is-well.json's Jer 4:10 guard. Written for",
+    "the release corpus; flip to active only in the PR 2 commit that makes",
+    "it pass there, with the measured top-10 in the PR body.",
+    "",
+    "Grouping contributes ZERO points: the grouped row's score is the max of",
+    "its members, never a sum — a passage must not outrank by having more",
+    "mediocre verses. The reference must span the HITS, never the whole",
+    "pericope. Nothing theological is adjudicated: the grouping cites a",
+    "countable structural fact (how many of 20 translations start a section",
+    "at this verse)."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Psalms 136:1-26",
+      "withinTop": 3,
+      "requiredGroupingSourceId": "openbible-sections"
+    }
+  ]
+}

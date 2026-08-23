@@ -1,0 +1,41 @@
+{
+  "id": "hymn-mighty-fortress",
+  "query": "a mighty fortress is our god",
+  "status": "active",
+  "note": [
+    "QR-6 (P5.5) curated hymn alias — Martin Luther, 'Ein feste Burg ist unser",
+    "Gott' (1529); English translation 'A Mighty Fortress Is Our God' by",
+    "Frederick H. Hedge (1853). Both public domain. Measured gap 2026-08-22",
+    "pre-change: #1 Psalms 91:2 on bare token overlap ('fortress') — right",
+    "neighborhood, no concept, no attribution, and the hymn's own psalm",
+    "(Psalm 46, which Luther titled the hymn after) nowhere in the lead.",
+    "",
+    "Target: refuge-in-trouble — the concept that owns Psalms 46:1-3 at weight",
+    "1.0. The cleanest hymn-to-scripture mapping in the pack: the hymn is a",
+    "versification of Psalm 46.",
+    "",
+    "Written fixture-first (pending, failing); promoted in the 0.13.0 flip",
+    "commit that made it pass.",
+    "",
+    "AMENDED before activation (disclosed, 2026-08-22): the pending draft",
+    "pinned Psalms 46:1-3 withinTop 1, but the measured post-change ordering",
+    "puts Psalms 91:1-2 first — the SAME hymn chip (0.95 anchor) plus honest",
+    "lexical evidence ('my refuge and my fortress' shares the query's words).",
+    "Forcing 46:1-3 over that would mean tuning weights to adjudicate between",
+    "two curated anchors of one concept, which the engine never does",
+    "(covenant 6). The fixture therefore pins the hymn's own psalm within the",
+    "top 3 with the curated chip required (schema windows are 1/3/5/10; the measured rank is #2) — the alias mechanism's actual",
+    "guarantee — not a #1 the evidence does not support."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Psalms 46:1-3",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Hymn: \"A Mighty Fortress Is Our God\" → Theme: Refuge in trouble"
+    }
+  ],
+  "additionalQueries": [
+    "a mighty fortress"
+  ]
+}

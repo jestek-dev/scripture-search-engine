@@ -11,9 +11,14 @@
  * reader can weigh it accordingly.
  */
 
-import type { ConceptAnchorRow, CrossReferenceRow } from '../corpus/repository.js';
+import type {
+  ConceptAnchorRow,
+  CrossReferenceRow,
+  CuratedAliasRow,
+} from '../corpus/repository.js';
 import { significantWords } from '../tokenizer/index.js';
 import type { Evidence } from '../reasons/types.js';
+import type { ScriptureVerse } from '../types.js';
 
 function conceptSpecificity(matchedTokenCount: number): number {
   return Math.min(1, 0.55 + 0.15 * Math.max(0, matchedTokenCount - 1));
@@ -218,6 +223,60 @@ export function isThinBareWordConceptCue(
 }
 
 /**
+ * Curated phrase/hymn alias evidence, concept-target arm (0.13.0/QR-6).
+ *
+ * Files under the EXISTING concept_anchor family — no new SignalFamily, so
+ * the reviewed budgets roster is untouched and the alias claim competes
+ * under exactly the authority a curated concept naming already has. Strength
+ * is the alias row's weight (the editorial prior that this whole query
+ * names this hymn and this hymn names this theme) times the anchor's own
+ * curated weight — the anchors keep their reviewed ordering among
+ * themselves. No specificity or coverage discount applies because whole-
+ * query EQUALITY matching is full-query parity by construction: the query
+ * IS the phrase.
+ *
+ * The label carries the full attribution chain — hymn title, then the theme
+ * — because the explanation is the contract (covenant 5) and the chip must
+ * say on whose word the connection stands (covenant 6: a curated source
+ * names it; the engine adjudicates nothing).
+ */
+export function aliasConceptEvidence(alias: CuratedAliasRow, anchor: ConceptAnchorRow): Evidence {
+  return {
+    family: 'concept_anchor',
+    label: `Hymn: "${alias.title}" → Theme: ${anchor.conceptLabel}`,
+    strength:
+      Math.max(0, Math.min(1, alias.weight)) * Math.max(0, Math.min(1, anchor.weight)),
+    provenance: {
+      sourceId: alias.sourceId,
+      label: sourceLabel(alias.sourceId),
+      ...(alias.locator ? { locator: alias.locator } : {}),
+      weight: alias.weight,
+    },
+  };
+}
+
+/**
+ * Alias evidence, verse-range arm: the alias names an explicit passage
+ * rather than a concept (the schema XOR's other side — for a hymn whose
+ * scriptural basis is one passage no curated concept represents). Same
+ * family, same authority reasoning; the passage label itself is the result
+ * row's reference, so the chip carries only the hymn attribution.
+ */
+export function aliasPassageEvidence(alias: CuratedAliasRow, _verse: ScriptureVerse): Evidence {
+  return {
+    family: 'concept_anchor',
+    label: `Hymn: "${alias.title}"`,
+    strength: Math.max(0, Math.min(1, alias.weight)),
+    provenance: {
+      sourceId: alias.sourceId,
+      label: sourceLabel(alias.sourceId),
+      ...(alias.locator ? { locator: alias.locator } : {}),
+      weight: alias.weight,
+    },
+  };
+}
+
+/**
  * Evidence for a concept reached one hop away in the curated graph.
  *
  * Deliberately filed under the WEAK `concept_lexicon` family rather than
@@ -403,10 +462,21 @@ function sourceLabel(sourceId: string): string {
   switch (sourceId) {
     case 'editorial':
       return 'LH editorial';
+    case 'hymn-aliases':
+      // The QR-6 curated hymn/phrase alias pack: hand-authored rows over
+      // public-domain hymns, reviewed like any concept pack (J13). The label
+      // says both halves — whose judgment (ours) and what class of source
+      // (a public-domain hymn index) — so a reader can weigh it.
+      return 'LH editorial (public-domain hymn index)';
     case 'openbible-topics':
       return 'OpenBible topical votes (CC BY)';
     case 'openbible-xrefs':
       return 'OpenBible cross-references (CC BY)';
+    case 'openbible-sections':
+      // P5.6 (CO-3): pericope grouping provenance. Unreachable until the
+      // PR 2 behavior emits grouped results; labeled from day one so the
+      // capability PR ships a complete display mapping.
+      return 'OpenBible section boundaries (CC BY)';
     case 'tsk':
       return 'Treasury of Scripture Knowledge (public domain)';
     case 'web':

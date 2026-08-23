@@ -111,6 +111,65 @@ export function importCrossReferences(
 }
 
 /**
+ * One candidate section span with its translation count (P5.6/CO-3).
+ *
+ * IMPORTANT DERIVATION RULE: `votes` is the per-row count for this EXACT
+ * span. The number the artifact stores and the engine cites is the summed
+ * boundary vote at a section's start verse — the sum over rows sharing that
+ * start verse (see buildPericopes.ts). The two numbers must never be
+ * conflated: James 1:19's summed boundary vote is 16 while the per-row vote
+ * for the exact span 1:19-27 is 13.
+ */
+export interface SectionSpanRow {
+  readonly startVerseId: number;
+  readonly endVerseId: number;
+  readonly votes: number;
+}
+
+/**
+ * `Start OSIS \t End OSIS \t Verse-after-end OSIS \t Count` with one
+ * `#`-prefixed header line (bible-section-counts.txt). The third column
+ * exists for the site's Sankey rendering and is deliberately ignored here.
+ * Counts are "how many of 20 surveyed translations mark this span as a
+ * section" — a countable structural fact, never a relevance score. Rows
+ * with a non-positive or non-integer count are rejected loudly: the source
+ * publishes to a rolling URL, and a rejected-row count is how a silent
+ * upstream format change fails the build instead of thinning the data.
+ */
+export function importSectionCounts(contents: string): {
+  readonly rows: readonly SectionSpanRow[];
+  readonly report: ImportReport;
+} {
+  const rows: SectionSpanRow[] = [];
+  const samples: string[] = [];
+  let rejected = 0;
+
+  for (const line of splitLines(contents)) {
+    if (line.startsWith('#')) continue;
+    const parts = line.split('\t');
+    if (parts.length < 4) {
+      rejected += 1;
+      if (samples.length < MAX_SAMPLES) samples.push(line.slice(0, 80));
+      continue;
+    }
+    const start = parseOsisRange(parts[0]!);
+    const end = parseOsisRange(parts[1]!);
+    const votes = Number(parts[3]);
+    if (!start || !end || !Number.isInteger(votes) || votes < 1) {
+      rejected += 1;
+      if (samples.length < MAX_SAMPLES) samples.push(line.slice(0, 80));
+      continue;
+    }
+    rows.push({
+      startVerseId: start.startVerseId,
+      endVerseId: end.startVerseId,
+      votes,
+    });
+  }
+  return { rows, report: { accepted: rows.length, rejected, rejectionSamples: samples } };
+}
+
+/**
  * Normalizes an OpenBible quality score into a 0..1 prior.
  *
  * Explicitly a PRIOR, not a probability: it reflects what visitors to one

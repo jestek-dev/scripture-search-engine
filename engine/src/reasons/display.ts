@@ -12,6 +12,7 @@
  */
 
 import type { Reason } from './types.js';
+import type { SpellingCorrection } from '../types.js';
 
 /**
  * Chips display their points at one decimal. Below this value a chip prints
@@ -53,6 +54,56 @@ export const PASSAGE_TERM_CHIP_DISPLAY_FLOOR = 0.7;
  * Returns the input array unchanged (same reference) when nothing is
  * withheld, so untouched results stay byte-identical.
  */
+/**
+ * The correction citation a chip label carries for one corrected token —
+ * shared between tokenEvidence's decoration and the display-level pin below,
+ * so "is this correction visibly cited?" is checked against the exact string
+ * that renders it.
+ */
+export function correctionCitation(typed: string): string {
+  return `corrected from "${typed}"`;
+}
+
+/**
+ * Guarantee every correction is VISIBLY cited on a result of a corrected
+ * query (0.12.0/QR-5 round-2, J31: "every correction shown"; covenant 5:
+ * explanations are the contract).
+ *
+ * The token-chip decoration (`Shared word: hell (corrected from "hello")`)
+ * only exists on results whose evidence includes the corrected token's
+ * token_overlap chip. Exactly the harm-class corrections tend to surface
+ * results through concept/passage evidence instead — `hello` → "hell" ranks
+ * pages of `Theme: Hell` rows with no visible trace that the query was
+ * rewritten. A citation the user cannot see is not a citation, so this pin
+ * runs LAST (after polish, like the last-chip rule) and decorates the
+ * strongest chip of any result whose displayed chips do not already carry
+ * every correction: `Theme: Hell (query corrected from "hello")`.
+ *
+ * The wording is query-level on purpose: on a mixed query ("gods forgivness")
+ * a result may rank on the UNcorrected tokens alone, so claiming the result
+ * matched via the correction would be false — what is always true, for every
+ * result of the response, is that the QUERY was corrected. Display-only by
+ * construction: points, scores, order and the page are already decided;
+ * labels change, families and points never do.
+ *
+ * Returns the input array unchanged (same reference) when every correction
+ * is already visible, so untouched results stay byte-identical.
+ */
+export function pinCorrectionCitations(
+  reasons: readonly Reason[],
+  corrections: readonly SpellingCorrection[],
+): readonly Reason[] {
+  if (reasons.length === 0 || corrections.length === 0) return reasons;
+  const missing = corrections.filter(
+    (correction) =>
+      !reasons.some((reason) => reason.label.includes(correctionCitation(correction.typed))),
+  );
+  if (missing.length === 0) return reasons;
+  const cited = missing.map((correction) => `"${correction.typed}"`).join(', ');
+  const [strongest, ...rest] = reasons;
+  return [{ ...strongest!, label: `${strongest!.label} (query corrected from ${cited})` }, ...rest];
+}
+
 export function polishChipsForDisplay(reasons: readonly Reason[]): readonly Reason[] {
   if (reasons.length === 0) return reasons;
   const kept = reasons.filter(

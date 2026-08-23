@@ -48,6 +48,7 @@ import {
   DOCTRINAL_REVIEWS_PATH,
   FLAGGED_PAIRINGS_PATH,
 } from './gates/doctrinalGuardrail.js';
+import { lexiconInventoryCheck as bareWordInventoryCheck } from './gates/lexiconInventory.js';
 import {
   correlationGroups,
   isFileUrl,
@@ -74,6 +75,7 @@ import {
   computeRankMetrics,
   deriveGoldenRankJudgments,
   detectNoMeasurableEffect,
+  evaluateBatteryAcceptance,
   evaluateRankQuality,
   probeHarmfulRefPresence,
   runBattery,
@@ -983,6 +985,19 @@ async function main(): Promise<void> {
     const rankQualityOutcome = probeRun.rankMetrics !== null && rankQuality.thresholds !== null
       ? evaluateRankQuality(rankQuality.thresholds, probeRun.rankMetrics)
       : null;
+    // QR-8 (P5.7): the ms/ref acceptance criteria ride the same G12 row,
+    // evaluated exactly when the battery executed and the reviewed block
+    // validated. The tiers block supplies the reference-grammar label pins;
+    // when it is unavailable the enforced grammar criterion is unmeasurable
+    // (fail-closed), never half-checked.
+    const batteryAcceptance = probeRun.batteryOutcomes !== null && rankQuality.thresholds !== null
+      ? evaluateBatteryAcceptance({
+          thresholds: rankQuality.thresholds,
+          validated: battery.validated,
+          outcomes: probeRun.batteryOutcomes,
+          referenceGrammarPins: validateTiersBlock(budgets.tiers).config?.referenceGrammar ?? null,
+        })
+      : null;
     const probeGates = probeRun.gates;
     const g3 = mergeGateResults('Golden regression', [
       goldenGate(fixtures),
@@ -1041,6 +1056,23 @@ async function main(): Promise<void> {
               ontologyCompiled: ontologyErrors.length === 0,
               watchlistFileContents: flaggedPairingsContents,
             }),
+            // The bare-word inventory rides G4 like the pairing watchlist —
+            // it grades the compiled ontology — but BLOCKS: a concept
+            // cannot ship without an explicit bare-word decision ("a pack
+            // with no fixtures is rejected structurally", applied to bare
+            // words). Skipped when the ontology failed to compile: the rows
+            // key by compiled concept id, and grading them against a
+            // half-compiled ontology would report phantom findings.
+            ontologyErrors.length > 0
+              ? notApplicable(
+                  'G4-collision',
+                  'Lexicon bare-word inventory',
+                  'ontology failed to compile; the inventory check needs compiled concept ids',
+                )
+              : bareWordInventoryCheck({
+                  concepts,
+                  inventoryFileContents: lexiconInventoryContents,
+                }),
           ]);
     // G2 is the determinism contract: the in-process replay AND the committed
     // ordering snapshot ride one roster row via mergeGateResults, the same way
@@ -1089,6 +1121,7 @@ async function main(): Promise<void> {
               probeRun.rankMetrics,
               probeRun.noEffect?.findings ?? [],
               rankQualityOutcome ?? undefined,
+              batteryAcceptance ?? undefined,
             );
       })(),
     ];

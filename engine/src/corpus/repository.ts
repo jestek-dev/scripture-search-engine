@@ -10,6 +10,7 @@
 import {
   normalizeBookAlias,
   resolveReferenceAttempt,
+  type BookAliasEntry,
   type ReferenceResolver,
   type ResolvedBook,
   type ResolvedReference,
@@ -94,6 +95,19 @@ export interface TokenMatch extends ScriptureVerse {
   readonly distinctTokenCount: number;
 }
 
+/**
+ * One derived pericope (schema v8, CO-3 PR 1). `boundaryVotes` is the
+ * summed boundary vote at `startVerseId` — a countable structural fact
+ * (how many of the 20 surveyed translations start a section there), never
+ * a relevance score.
+ */
+export interface PericopeRow {
+  readonly startVerseId: number;
+  readonly endVerseId: number;
+  readonly boundaryVotes: number;
+  readonly sourceId: string;
+}
+
 export interface CorpusMeta {
   readonly schemaVersion: string;
   readonly tokenizerVersion: string;
@@ -111,6 +125,16 @@ export interface CorpusMeta {
 
 export class CorpusRepository implements ReferenceResolver {
   constructor(private readonly database: ContentQueryPort) {}
+
+  /**
+   * The alias vocabulary for the reference did-you-mean (0.11.0/QR-4),
+   * fetched through the port once per repository instance and cached: ~270
+   * rows that cannot change under a running engine (the artifact is
+   * immutable), so re-reading them per query would be waste, and caching
+   * keeps the engine's no-I/O covenant intact — the ONE read still goes
+   * through ContentQueryPort.
+   */
+  private bookAliasCache: readonly BookAliasEntry[] | null = null;
 
   async close(): Promise<void> {
     await this.database.close();
@@ -168,6 +192,23 @@ export class CorpusRepository implements ReferenceResolver {
       [bookId, chapter, verse],
     );
     return result.rows.length > 0;
+  }
+
+  async listBookAliases(): Promise<readonly BookAliasEntry[]> {
+    if (this.bookAliasCache) return this.bookAliasCache;
+    const result = await this.database.execute(
+      `SELECT a.alias_key AS aliasKey, b.id AS bookId, b.name AS bookName,
+              b.chapter_count AS chapterCount
+       FROM book_aliases a JOIN books b ON b.id = a.book_id
+       ORDER BY a.alias_key`,
+    );
+    this.bookAliasCache = result.rows.map((row) => ({
+      aliasKey: str(row, 'aliasKey'),
+      bookId: num(row, 'bookId'),
+      bookName: str(row, 'bookName'),
+      chapterCount: num(row, 'chapterCount'),
+    }));
+    return this.bookAliasCache;
   }
 
   async resolveReference(input: string) {
@@ -319,6 +360,127 @@ export class CorpusRepository implements ReferenceResolver {
     );
     return new Map(result.rows.map((row) => [str(row, 'token'), num(row, 'df')]));
   }
+
+  /**
+   * Whether this artifact carries the precomputed spelling index
+   * (schema v7, 0.12.0/QR-5). Presence-probed like the other optional
+   * layers: a v6 artifact simply has no tables, the probe returns false, and
+   * the engine gracefully does not correct — behaving exactly as the
+   * pre-spelling engine did. That probe IS the rollback story: rebuild the
+   * artifact without the tables and behavior reverts with no engine change.
+   */
+  async hasSpellingIndex(): Promise<boolean> {
+    try {
+      const result = await this.database.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'spelling_terms'",
+      );
+      return result.rows.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Whether this artifact carries the derived pericope tiling (schema v8,
+   * CO-3 PR 1). Presence-and-rows probed like the other optional layers: a
+   * v7 artifact has no table, an emptied table disables the (future)
+   * grouping step silently, and behavior reverts to pre-pericope output
+   * with no engine change — the probe IS the rollback story.
+   */
+  async hasPericopes(): Promise<boolean> {
+    try {
+      const table = await this.database.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'pericopes'",
+      );
+      if (table.rows.length === 0) return false;
+      const rows = await this.database.execute('SELECT 1 AS present FROM pericopes LIMIT 1');
+      return rows.rows.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * The pericopes containing any of the given verse ids, batched as ONE
+   * bounded query over the ranked window (G11): the window's min..max verse
+   * span overlaps few pericopes, and the caller maps verses to rows. Rows
+   * come back ordered by start verse for platform-stable iteration.
+   *
+   * NO CALL SITES in discover() yet (CO-3 PR 1 capability): the grouping
+   * behavior that consumes this lands with the PR 2 ENGINE_VERSION bump.
+   * boundaryVotes is the summed boundary vote at the pericope's start verse
+   * — the countable fact the artifact stores, so a future explanation and
+   * the shipped data cannot disagree.
+   */
+  async pericopesContaining(verseIds: readonly number[]): Promise<readonly PericopeRow[]> {
+    const unique = [...new Set(verseIds)];
+    if (unique.length === 0) return [];
+    const result = await this.database.execute(
+      `SELECT start_verse_id AS startVerseId, end_verse_id AS endVerseId,
+              boundary_votes AS boundaryVotes, source_id AS sourceId
+       FROM pericopes
+       WHERE end_verse_id >= ? AND start_verse_id <= ?
+       ORDER BY start_verse_id`,
+      [Math.min(...unique), Math.max(...unique)],
+    );
+    const spans = result.rows.map((row) => ({
+      startVerseId: num(row, 'startVerseId'),
+      endVerseId: num(row, 'endVerseId'),
+      boundaryVotes: num(row, 'boundaryVotes'),
+      sourceId: str(row, 'sourceId'),
+    }));
+    // The min..max window can overlap pericopes containing none of the
+    // asked-for verses; keep only real containers so the caller's mapping
+    // stays honest.
+    return spans.filter((span) =>
+      unique.some((verseId) => verseId >= span.startVerseId && verseId <= span.endVerseId),
+    );
+  }
+
+  /**
+   * Which of the given tokens exist in the artifact's spelling vocabulary
+   * (corpus tokens ∪ book aliases ∪ lexicon tokens ∪ translation tokens ∪
+   * Layer B verse terms).
+   * This is the OOV gate's second half: a token with corpus df 0 that is
+   * still a known name or curated word is IN vocabulary and never corrected.
+   */
+  async spellingTermsPresent(tokens: readonly string[]): Promise<ReadonlySet<string>> {
+    const unique = [...new Set(tokens)];
+    if (unique.length === 0) return new Set();
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `SELECT term FROM spelling_terms WHERE term IN (${placeholders})`,
+      unique,
+    );
+    return new Set(result.rows.map((row) => str(row, 'term')));
+  }
+
+  /**
+   * Dictionary terms whose precomputed delete variants intersect the given
+   * keys — the SymSpell candidate lookup (0.12.0/QR-5). Proposes only: every
+   * candidate is re-verified with the bounded Damerau DP before it may win
+   * (see intents/spelling.ts). ORDER BY term for a platform-stable row order,
+   * though the picker is proven row-order independent anyway.
+   */
+  async spellingCandidates(
+    deleteKeys: readonly string[],
+  ): Promise<readonly { term: string; documentCount: number }[]> {
+    const unique = [...new Set(deleteKeys)];
+    if (unique.length === 0) return [];
+    const placeholders = unique.map(() => '?').join(', ');
+    const result = await this.database.execute(
+      `SELECT DISTINCT d.term AS term, t.document_count AS documentCount
+       FROM spelling_deletes d
+       JOIN spelling_terms t ON t.term = d.term
+       WHERE d.delete_key IN (${placeholders})
+       ORDER BY d.term`,
+      unique,
+    );
+    return result.rows.map((row) => ({
+      term: str(row, 'term'),
+      documentCount: num(row, 'documentCount'),
+    }));
+  }
 }
 
 /** Longest fragment length worth searching; below this, phrases are noise. */
@@ -396,6 +558,27 @@ export interface CrossReferenceRow extends ScriptureVerse {
   readonly fromVerseId: number;
   readonly sourceId: string;
   readonly votes: number;
+}
+
+/**
+ * One curated phrase/hymn alias (0.13.0/QR-6): a whole-query key mapping to
+ * exactly one of a curated concept or an explicit verse range (the schema's
+ * XOR CHECK). `title` and `locator` surface verbatim in the explanation chip
+ * — the attribution IS the product here (covenant 6: the engine reports that
+ * a named source connects this phrase to this target; it adjudicates
+ * nothing).
+ */
+export interface CuratedAliasRow {
+  readonly id: number;
+  readonly title: string;
+  readonly conceptId: string | null;
+  /** Label of the target concept; null exactly when conceptId is null. */
+  readonly conceptLabel: string | null;
+  readonly startVerseId: number | null;
+  readonly endVerseId: number | null;
+  readonly sourceId: string;
+  readonly weight: number;
+  readonly locator: string | null;
 }
 
 /**
@@ -716,6 +899,87 @@ export class ConceptRepository {
       "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='verse_terms'",
     );
     return num(result.rows[0] ?? { n: 0 }, 'n') > 0;
+  }
+
+  /**
+   * Whether this artifact carries any curated phrase/hymn aliases
+   * (0.13.0/QR-6). Presence-AND-ROWS probed, deliberately stricter than the
+   * other layer probes: schema v7 ships the table EMPTY (QR-5), and an
+   * engine that ran the alias step against an empty table would pay a query
+   * per research() call for nothing — and, more importantly, the rollback
+   * story is "rebuild without alias rows", which must restore pre-QR-6
+   * behavior exactly. No table, or an empty one, and 0.13.0 behaves as
+   * 0.12.0 did.
+   */
+  async hasCuratedAliases(): Promise<boolean> {
+    try {
+      const table = await this.database.execute(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'curated_aliases'",
+      );
+      if (table.rows.length === 0) return false;
+      const rows = await this.database.execute('SELECT 1 AS present FROM curated_aliases LIMIT 1');
+      return rows.rows.length > 0;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * The curated aliases whose whole-query key equals the given normalized
+   * phrase. EQUALITY, never containment — the line that keeps a curated
+   * phrase table from becoming a hidden second ranking system; brittleness
+   * to extra words is accepted BY DESIGN. `normalized_raw` is UNIQUE, so
+   * this returns at most one row; it is typed as a list so the caller does
+   * not encode that schema fact.
+   */
+  async matchAliases(normalizedQuery: string): Promise<readonly CuratedAliasRow[]> {
+    if (!normalizedQuery) return [];
+    const result = await this.database.execute(
+      `SELECT a.id AS id, a.title AS title, a.concept_id AS conceptId,
+              c.label AS conceptLabel,
+              a.start_verse_id AS startVerseId, a.end_verse_id AS endVerseId,
+              a.source_id AS sourceId, a.weight AS weight, a.locator AS locator
+       FROM curated_aliases a
+       LEFT JOIN concepts c ON c.id = a.concept_id
+       WHERE a.normalized_raw = ?
+       ORDER BY a.id`,
+      [normalizedQuery],
+    );
+    return result.rows.map((row) => ({
+      id: num(row, 'id'),
+      title: str(row, 'title'),
+      conceptId: typeof row['conceptId'] === 'string' ? row['conceptId'] : null,
+      conceptLabel: typeof row['conceptLabel'] === 'string' ? row['conceptLabel'] : null,
+      startVerseId: typeof row['startVerseId'] === 'number' ? row['startVerseId'] : null,
+      endVerseId: typeof row['endVerseId'] === 'number' ? row['endVerseId'] : null,
+      sourceId: str(row, 'sourceId'),
+      weight: num(row, 'weight'),
+      locator: typeof row['locator'] === 'string' ? row['locator'] : null,
+    }));
+  }
+
+  /**
+   * Verses of an explicit alias verse range (the XOR's other arm). A range
+   * absent from this corpus returns no rows — the alias then contributes
+   * nothing, honestly, rather than being guessed at.
+   */
+  async aliasRangeVerses(
+    startVerseId: number,
+    endVerseId: number,
+  ): Promise<readonly ScriptureVerse[]> {
+    const result = await this.database.execute(
+      `SELECT v.id AS id, v.verse_id AS verseId,
+              v.translation_id AS translationId, t.code AS translationCode,
+              v.book_id AS bookId, b.name AS bookName,
+              v.chapter AS chapter, v.verse AS verse, v.text AS text
+       FROM verses v
+       JOIN translations t ON t.id = v.translation_id
+       JOIN books b ON b.id = v.book_id
+       WHERE v.verse_id BETWEEN ? AND ?
+       ORDER BY v.verse_id, t.code`,
+      [startVerseId, endVerseId],
+    );
+    return result.rows.map(mapVerse);
   }
 
   async hasConceptLayer(): Promise<boolean> {

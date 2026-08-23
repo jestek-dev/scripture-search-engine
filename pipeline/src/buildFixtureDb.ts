@@ -19,6 +19,15 @@ import {
   type ConceptLayerResult,
 } from './buildConceptLayer.js';
 import { buildCorpus, type SqliteDatabase } from './buildCorpus.js';
+import {
+  buildSpellingIndex,
+  type SpellingIndexResult,
+  type SqliteReadWriteDatabase,
+} from './buildSpellingIndex.js';
+import { buildAliasLayer, type AliasLayerResult } from './buildAliasLayer.js';
+import { derivePericopes } from './buildPericopes.js';
+import type { SectionSpanRow } from './importers/openbibleImporter.js';
+import { compileHymnAliases } from './importers/aliasImporter.js';
 import { compileOntology } from './importers/ontologyImporter.js';
 import type {
   CrossReferenceRow,
@@ -36,7 +45,9 @@ const FIXTURE_JSON = join(PIPELINE_ROOT, 'fixtures', 'web-subset.json');
 const WEB_MANIFEST = join(PIPELINE_ROOT, 'manifests', 'web.json');
 const MANIFEST_DIR = join(PIPELINE_ROOT, 'manifests');
 const ONTOLOGY_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'concepts');
+const ALIASES_DIR = join(PIPELINE_ROOT, '..', 'ontology', 'aliases');
 const OPENBIBLE_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-subset.json');
+const SECTIONS_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'openbible-sections-subset.json');
 const PASSAGE_TERMS_SUBSET = join(PIPELINE_ROOT, 'fixtures', 'passage-terms-subset.json');
 const TRANSLATION_TOKENS = join(PIPELINE_ROOT, 'fixtures', 'translation-tokens.json');
 
@@ -54,6 +65,14 @@ function loadOntologyFiles(): { name: string; contents: string }[] {
     .filter((name) => name.endsWith('.yaml'))
     .sort()
     .map((name) => ({ name, contents: readFileSync(join(ONTOLOGY_DIR, name), 'utf8') }));
+}
+
+function loadAliasFiles(): { name: string; contents: string }[] {
+  if (!existsSync(ALIASES_DIR)) return [];
+  return readdirSync(ALIASES_DIR)
+    .filter((name) => name.endsWith('.yaml'))
+    .sort()
+    .map((name) => ({ name, contents: readFileSync(join(ALIASES_DIR, name), 'utf8') }));
 }
 
 interface FixtureFile extends VerseArraySource {
@@ -74,7 +93,21 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
   readonly verseCount: number;
   readonly corpusFingerprint: string;
   readonly distinctTokenCount: number;
+  /**
+   * NOTE: conceptLayer.layerFingerprint is the PRE-spelling value and
+   * spelling.layerFingerprint the PRE-alias value; the artifact's final
+   * layer identity (meta layer_fingerprint) is aliases.layerFingerprint,
+   * which chains concept → spelling → aliases (QR-6; equal to the spelling
+   * value when no alias rows ship).
+   */
   readonly conceptLayer: ConceptLayerResult | null;
+  readonly spelling: SpellingIndexResult;
+  /**
+   * QR-6 curated aliases, chained LAST: the artifact's final layer identity
+   * is aliases.layerFingerprint (equal to spelling.layerFingerprint exactly
+   * when no alias rows shipped — the rollback/empty-pack no-op).
+   */
+  readonly aliases: AliasLayerResult;
   readonly ontologyErrors: readonly string[];
 } {
   const fixture = JSON.parse(readFileSync(FIXTURE_JSON, 'utf8')) as FixtureFile;
@@ -164,12 +197,26 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
     }
 
     const presentVerseIds = new Set(translation.verses.map((verse) => verse.verseId));
+
+    // Pericope tiling (schema v8, CO-3 PR 1): derived from the committed
+    // corpus-scoped section-counts subset — hermetic for the same reason
+    // as the OpenBible subset above. The derivation re-runs here rather
+    // than shipping derived rows in the fixture file, so fixture and
+    // release artifacts exercise the same code path.
+    const sectionRows = existsSync(SECTIONS_SUBSET)
+      ? (JSON.parse(readFileSync(SECTIONS_SUBSET, 'utf8')) as {
+          sectionRows: SectionSpanRow[];
+        }).sectionRows
+      : [];
+    const pericopes = derivePericopes(sectionRows, presentVerseIds);
+
     const conceptLayer =
       ontology.concepts.length > 0
         ? buildConceptLayer(database as unknown as SqliteDatabase, {
             ontology,
             topicRows,
             crossReferences,
+            pericopes,
             manifests: loadManifests(),
             presentVerseIds,
             verseTerms,
@@ -177,12 +224,42 @@ export function buildFixtureDatabase(targetPath: string = FIXTURE_DB_PATH): {
           })
         : null;
 
+    // Spelling index next-to-last (schema v7): it reads the vocabulary back
+    // out of everything written above and chains the layer fingerprint, so
+    // the gauntlet's hermetic artifact carries the same tables a release
+    // does.
+    const spelling = buildSpellingIndex(database as unknown as SqliteReadWriteDatabase);
+
+    // Curated aliases LAST (QR-6, 0.13.0 — no schema bump): reviewed pack
+    // rows compiled against the ontology just written, chained onto the
+    // spelling fingerprint. An empty pack set is a byte-level no-op.
+    const aliasFiles = loadAliasFiles();
+    const compiledAliases = compileHymnAliases(
+      aliasFiles,
+      new Set(ontology.concepts.map((concept) => concept.id)),
+      // The double-chip guard needs the compiled lexicon: an alias phrase
+      // reaching full lexicon parity with its own target concept is refused.
+      ontology.lexicon,
+    );
+    if (compiledAliases.errors.length > 0) {
+      throw new Error(
+        `buildFixtureDb: alias pack errors:\n  ${compiledAliases.errors.join('\n  ')}`,
+      );
+    }
+    const aliases = buildAliasLayer(
+      database as unknown as SqliteReadWriteDatabase,
+      compiledAliases.rows,
+      loadManifests(),
+    );
+
     return {
       path: targetPath,
       verseCount: result.verseCount,
       corpusFingerprint: result.corpusFingerprint,
       distinctTokenCount: result.distinctTokenCount,
       conceptLayer,
+      spelling,
+      aliases,
       ontologyErrors: errors,
     };
   } finally {
@@ -204,9 +281,14 @@ if (process.argv[1] && process.argv[1].endsWith('buildFixtureDb.ts')) {
           `  editorial anchors: ${result.conceptLayer.editorialAnchors}\n` +
           `  openbible topic anchors: ${result.conceptLayer.topicAnchors}\n` +
           `  cross references: ${result.conceptLayer.crossReferences}\n` +
+          `  pericopes: ${result.conceptLayer.pericopes}\n` +
           `  verse terms: ${result.conceptLayer.verseTerms}\n` +
           `  translation tokens: ${result.conceptLayer.translationTokens}\n` +
           `  dropped (outside fixture corpus): ${result.conceptLayer.droppedOutOfCorpus}\n`
-        : '  concept layer: none\n'),
+        : '  concept layer: none\n') +
+      `  spelling terms: ${result.spelling.termCount}\n` +
+      `  spelling delete rows: ${result.spelling.deleteRowCount}\n` +
+      `  curated aliases: ${result.aliases.aliasCount}\n` +
+      `  layer fingerprint (final, post-alias): ${result.aliases.layerFingerprint}\n`,
   );
 }

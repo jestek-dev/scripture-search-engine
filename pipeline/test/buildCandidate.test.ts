@@ -38,6 +38,14 @@ import {
   type ReviewedSourceSnapshot,
 } from '../src/buildCandidate.js';
 import { buildFixtureDatabase } from '../src/buildFixtureDb.js';
+import { aliasLayerFingerprint, readCuratedAliasRows } from '../src/buildAliasLayer.js';
+import {
+  assembleSpellingVocabulary,
+  readSpellingVocabularySources,
+  spellingLayerFingerprint,
+  type SqliteReadWriteDatabase,
+} from '../src/buildSpellingIndex.js';
+import { compileOntology, type CompiledOntology } from '../src/importers/ontologyImporter.js';
 import { manifestFingerprint, type ManifestSet, type SourceManifest } from '../src/provenance/manifest.js';
 
 const REPOSITORY_ROOT = resolve(import.meta.dirname, '..', '..');
@@ -315,6 +323,50 @@ function mergeDraftProposal(): {
   };
 }
 
+/**
+ * The PRE-v8 concept-layer fingerprint feed, reimplemented verbatim from the
+ * pre-CO-3 writer (buildConceptLayer before the pericope wiring): the same
+ * c/l/a/r records, NO 'p' records, and the 4-field counts record. This is
+ * the independent expectation the mirror's readPericopeRows -> null branch
+ * must reproduce byte for byte for older reviewed bases.
+ */
+function preV8ConceptFingerprint(
+  ontology: CompiledOntology,
+  counts: {
+    topicAnchors: number;
+    crossReferences: number;
+    verseTerms: number;
+    translationTokens: number;
+  },
+): string {
+  const hash = createHash('sha256');
+  const feed = (parts: readonly (string | number)[]): void => {
+    const record = parts.join(' ');
+    hash.update(String(record.length));
+    hash.update(' ');
+    hash.update(record);
+  };
+  for (const concept of [...ontology.concepts].sort((a, b) => (a.id < b.id ? -1 : 1))) {
+    feed(['c', concept.id, concept.label]);
+  }
+  for (const entry of [...ontology.lexicon].sort((a, b) =>
+    a.conceptId !== b.conceptId ? (a.conceptId < b.conceptId ? -1 : 1) : a.normalized < b.normalized ? -1 : 1)) {
+    feed(['l', entry.conceptId, entry.normalized]);
+  }
+  for (const anchor of [...ontology.anchors].sort((a, b) =>
+    a.conceptId !== b.conceptId
+      ? (a.conceptId < b.conceptId ? -1 : 1)
+      : a.startVerseId - b.startVerseId || (a.sourceId < b.sourceId ? -1 : 1))) {
+    feed(['a', anchor.conceptId, anchor.startVerseId, anchor.endVerseId, anchor.sourceId, anchor.weight]);
+  }
+  for (const edge of [...ontology.related].sort((a, b) =>
+    a.conceptId !== b.conceptId ? (a.conceptId < b.conceptId ? -1 : 1) : a.relatedId < b.relatedId ? -1 : 1)) {
+    feed(['r', edge.conceptId, edge.relatedId]);
+  }
+  feed(['counts', counts.topicAnchors, counts.crossReferences, counts.verseTerms, counts.translationTokens]);
+  return hash.digest('hex');
+}
+
 function request(proposal: unknown, outputName: string, snapshot = reviewedSources): CandidateBuildRequest {
   return {
     formatVersion: 1,
@@ -406,6 +458,89 @@ describe('isolated candidate builder', () => {
       .toEqual(await ordering(first.databasePath, 'candidate quality phrase'));
     expect(sha256(readFileSync(baseDatabasePath))).toBe(baseSha);
   }, 60_000);
+
+  it('mirrors a pre-v8 base byte-for-byte: readPericopeRows null restores the exact pre-pericope fingerprint feed', async () => {
+    // The buildCandidate compatibility story for older reviewed bases
+    // (CO-3 PR 1): a base built before schema v8 has no pericopes table,
+    // so the reviewer-side mirror must reproduce the PRE-v8 concept feed —
+    // no 'p' records, 4-field counts record — byte for byte. The expected
+    // fingerprint is reimplemented here independently from the pre-change
+    // writer's algorithm, so the mirror's null branch is checked against
+    // the old bytes, not against itself.
+    const preBasePath = join(sandbox, 'pre-v8-base.db');
+    copyFileSync(baseDatabasePath, preBasePath);
+    const database = new DatabaseSync(preBasePath);
+    database.exec('DROP TABLE pericopes');
+    const count = (sql: string): number =>
+      Number((database.prepare(sql).get() as { count: number }).count);
+    const counts = {
+      topicAnchors: count("SELECT COUNT(*) AS count FROM concept_anchors WHERE source_id = 'openbible-topics'"),
+      crossReferences: count('SELECT COUNT(*) AS count FROM cross_references'),
+      verseTerms: count('SELECT COUNT(*) AS count FROM verse_terms'),
+      translationTokens: count('SELECT COUNT(*) AS count FROM verse_translation_tokens'),
+    };
+    const compiled = compileOntology(
+      reviewedSources.files
+        .filter((file) => file.path.startsWith('ontology/concepts/'))
+        .map((file) => ({ name: file.path.split('/').pop()!, contents: file.contents })),
+    );
+    expect(compiled.errors).toEqual([]);
+    const readWrite = database as unknown as SqliteReadWriteDatabase;
+    const preV8Fingerprint = aliasLayerFingerprint(
+      spellingLayerFingerprint(
+        preV8ConceptFingerprint(compiled.ontology, counts),
+        assembleSpellingVocabulary(readSpellingVocabularySources(readWrite)),
+      ),
+      readCuratedAliasRows(readWrite),
+    );
+    database.prepare('INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)').run('layer_fingerprint', preV8Fingerprint);
+    database.prepare('INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)').run('schema_version', '7');
+    database.close();
+    const preDescriptorPath = join(sandbox, 'pre-v8-base.json');
+    writeFileSync(preDescriptorPath, `${JSON.stringify({
+      ...baseDescriptor,
+      schemaVersion: '7',
+      layerFingerprint: preV8Fingerprint,
+      databaseSha256: sha256(readFileSync(preBasePath)),
+      databaseBytes: statSync(preBasePath).size,
+    })}\n`);
+
+    // Positive: the mirror's readPericopeRows -> null branch reproduces the
+    // independently computed pre-v8 chain, so the base verifies and the
+    // candidate builds — carrying the pre-v8 shape forward.
+    const built = await buildCandidate({
+      ...request(lexiconProposal('pre v8 mirror phrase'), 'pre-v8-mirror'),
+      baseDatabasePath: preBasePath,
+      baseDescriptorPath: preDescriptorPath,
+    });
+    expect(built.status).toBe('BUILT');
+    const candidateDatabase = new DatabaseSync(built.databasePath, { readOnly: true });
+    expect(Number((candidateDatabase.prepare(
+      "SELECT COUNT(*) AS count FROM sqlite_master WHERE type = 'table' AND name = 'pericopes'",
+    ).get() as { count: number }).count)).toBe(0);
+    candidateDatabase.close();
+
+    // Negative control: the same dropped-table base still advertising its
+    // v8 fingerprint must be REFUSED by the mirror — the 'p' records and
+    // the widened counts field are load-bearing bytes, not decoration.
+    const droppedOnlyPath = join(sandbox, 'pre-v8-dropped-only.db');
+    copyFileSync(baseDatabasePath, droppedOnlyPath);
+    const droppedOnly = new DatabaseSync(droppedOnlyPath);
+    droppedOnly.exec('DROP TABLE pericopes');
+    droppedOnly.close();
+    const droppedOnlyDescriptorPath = join(sandbox, 'pre-v8-dropped-only.json');
+    writeFileSync(droppedOnlyDescriptorPath, `${JSON.stringify({
+      ...baseDescriptor,
+      databaseSha256: sha256(readFileSync(droppedOnlyPath)),
+      databaseBytes: statSync(droppedOnlyPath).size,
+    })}\n`);
+    await expect(buildCandidate({
+      ...request(lexiconProposal('pre v8 mirror phrase'), 'pre-v8-dropped-only'),
+      baseDatabasePath: droppedOnlyPath,
+      baseDescriptorPath: droppedOnlyDescriptorPath,
+    })).rejects.toMatchObject({ code: 'SOURCE_SNAPSHOT_MISMATCH' });
+    expect(sha256(readFileSync(baseDatabasePath))).toBe(baseSha);
+  }, 120_000);
 
   it('returns a verified cache hit and rebuilds a cache whose database bytes were tampered', async () => {
     const proposal = lexiconProposal('cache verification phrase');

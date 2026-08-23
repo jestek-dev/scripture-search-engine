@@ -1,0 +1,11 @@
+{
+  "id": "hymn-aliases",
+  "label": "LH editorial (public-domain hymn index)",
+  "rightsClass": "editorial",
+  "licenseRecord": "Authored for this dataset (QR-6, 2026-08-22). LH holds all rights to the alias rows themselves. Every hymn indexed in the starter pack is verifiably public domain in the United States (pre-1930 publication; per-row provenance in ontology/aliases/hymn-lines.yaml). Titles and short first-line phrases are not copyrightable (US Copyright Office Circular 33), and no hymn lyrics beyond a title or a first-line/refrain phrase are stored. Hymnary.org's index is not openly licensed and was not used (J38).",
+  "sourceUrl": "",
+  "sha256": "",
+  "bytes": 0,
+  "maxTier": "public_distribution",
+  "attributionNote": "Marks curated hymn/phrase alias rows: LH's own editorial judgment that a whole typed query names a public-domain hymn and that the hymn's scriptural basis is the row's target. The chip names this source so the reader can weigh the claim; the engine reports the connection and adjudicates nothing (J13 reviews every row; J37 governs the copyright posture for any future non-PD title-only rows)."
+}

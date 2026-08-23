@@ -10,6 +10,7 @@
  */
 
 import type { Reason } from './reasons/types.js';
+import type { ReferenceSuggestion } from './reference/reference.js';
 
 export type ContentScalar = string | number | boolean | null | ArrayBuffer | ArrayBufferView;
 
@@ -72,13 +73,49 @@ export interface DiscoveryResult {
   readonly reasons: readonly Reason[];
 }
 
+/**
+ * One cited spelling correction (0.12.0/QR-5). Corrections are never silent:
+ * every substituted token is reported with the SURFACE form the user typed
+ * (never the stem the tokenizer made of it), the vocabulary term substituted,
+ * and the verified integer Damerau distance that justifies it — the same
+ * citation the token chips render as `(corrected from "<typed>")`.
+ */
+export interface SpellingCorrection {
+  /** What the user typed (lowercased surface form), e.g. "beleived". */
+  readonly typed: string;
+  /** The vocabulary term substituted, e.g. "believ". */
+  readonly corrected: string;
+  /** Verified integer Damerau–Levenshtein distance — the citation. */
+  readonly distance: number;
+}
+
 export type ResearchOutcome =
   | { readonly kind: 'reference'; readonly passage: ScripturePassage }
-  | { readonly kind: 'invalid-reference'; readonly query: string }
+  | {
+      readonly kind: 'invalid-reference';
+      readonly query: string;
+      /**
+       * Additive (0.11.0/QR-4): a cited did-you-mean on the dead end — the
+       * unique in-policy near-miss book, the validated reference it implies,
+       * and the edit distance that justifies the guess. Suggestion only:
+       * the engine NEVER silently opens a guessed passage; consumers render
+       * it as a question ("did you mean Philippians 4:13?").
+       */
+      readonly suggestion?: ReferenceSuggestion;
+    }
   | {
       readonly kind: 'discovery';
       readonly query: string;
       readonly results: readonly DiscoveryResult[];
+      /**
+       * Additive (0.12.0/QR-5): present iff `research()` substituted
+       * corrections for out-of-vocabulary tokens — the machine-readable
+       * citation consumers render (J32). Absent means nothing was corrected;
+       * a word in ANY vocabulary is never rewritten (the OOV gate).
+       * `forSong()` never corrects, so its discovery outcome never carries
+       * this field.
+       */
+      readonly corrections?: readonly SpellingCorrection[];
     };
 
 export type ResearchResult = ResearchOutcome & ResultIdentity;
@@ -95,7 +132,12 @@ export interface ConceptMatch {
 /** `engine.passage()` — a lookup, with invalid references typed rather than thrown. */
 export type PassageResult =
   | ({ readonly kind: 'passage'; readonly passage: ScripturePassage } & ResultIdentity)
-  | ({ readonly kind: 'invalid-reference'; readonly query: string } & ResultIdentity);
+  | ({
+      readonly kind: 'invalid-reference';
+      readonly query: string;
+      /** Additive (0.11.0/QR-4): see ResearchOutcome's invalid-reference. */
+      readonly suggestion?: ReferenceSuggestion;
+    } & ResultIdentity);
 
 /**
  * `engine.related()` — what a curated source connects to a passage.
@@ -112,7 +154,12 @@ export type RelatedResult =
       readonly concepts: readonly ConceptMatch[];
       readonly results: readonly DiscoveryResult[];
     } & ResultIdentity)
-  | ({ readonly kind: 'invalid-reference'; readonly query: string } & ResultIdentity);
+  | ({
+      readonly kind: 'invalid-reference';
+      readonly query: string;
+      /** Additive (0.11.0/QR-4): see ResearchOutcome's invalid-reference. */
+      readonly suggestion?: ReferenceSuggestion;
+    } & ResultIdentity);
 
 /**
  * Multi-field input for `engine.forSong()`.

@@ -96,10 +96,10 @@ const SYNTHETIC_WATCHLIST = [
 describe('doctrinal review records check (merged into G1)', () => {
   it('passes on the real repository data — every manifest has a row, no orphans', () => {
     const ids = realManifestIds();
-    expect(ids.length).toBe(19);
+    expect(ids.length).toBe(21);
     const result = doctrinalReviewRecordsCheck(ids, realReviewsYaml());
     expect(result.status).toBe('pass');
-    expect(result.summary).toContain('all 19 source(s)');
+    expect(result.summary).toContain('all 21 source(s)');
     expect(result.metrics?.['doctrinalReviewFlags']).toBe(0);
   });
 

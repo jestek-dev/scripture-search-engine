@@ -81,6 +81,73 @@ describe('passage()', () => {
   });
 });
 
+describe('reference suggestion surface (0.11.0/QR-4)', () => {
+  it('resolves the space-separated phone-typed form as an ordinary reference', async () => {
+    const result = await engine.research('John 3 16');
+    expect(result.kind).toBe('reference');
+    if (result.kind !== 'reference') return;
+    expect(result.passage.reference).toBe('John 3:16');
+  });
+
+  it('cites a did-you-mean on an un-curated misspelling — suggestion only, never auto-resolve', async () => {
+    const result = await engine.research('filipians 4:13');
+    // The typed kind stays invalid-reference: an edit-distance guess must
+    // never silently open a passage. The suggestion is the citation.
+    expect(result.kind).toBe('invalid-reference');
+    if (result.kind !== 'invalid-reference') return;
+    expect(result.suggestion).toEqual({
+      book: 'Philippians',
+      reference: 'Philippians 4:13',
+      distance: 2,
+    });
+  });
+
+  it('falls through to discovery for bare-number memory queries', async () => {
+    const result = await engine.research('plans 29 11');
+    expect(result.kind).toBe('discovery');
+  });
+
+  it('carries the suggestion on passage() lookups too', async () => {
+    const result = await engine.passage('filipians 4:13');
+    expect(result.kind).toBe('invalid-reference');
+    if (result.kind !== 'invalid-reference') return;
+    expect(result.suggestion?.book).toBe('Philippians');
+    // Lookups never fall through: there is no discovery to fall to.
+    const bare = await engine.passage('plans 29 11');
+    expect(bare.kind).toBe('invalid-reference');
+  });
+});
+
+describe('corrections surface (0.12.0/QR-5, J32)', () => {
+  it('carries a machine-readable corrections list when an OOV token was substituted', async () => {
+    const result = await engine.research('forgivness');
+    expect(result.kind).toBe('discovery');
+    if (result.kind !== 'discovery') return;
+    expect(result.results.length).toBeGreaterThan(0);
+    // typed = the surface form as typed; distance = the verified integer
+    // Damerau distance. This is the citation all three apps render.
+    expect(result.corrections).toEqual([
+      { typed: 'forgivness', corrected: 'forgiveness', distance: 1 },
+    ]);
+  });
+
+  it('omits the field entirely when nothing was corrected — absence needs no handling', async () => {
+    const result = await engine.research('pray');
+    if (result.kind !== 'discovery') throw new Error('expected discovery');
+    expect('corrections' in result).toBe(false);
+  });
+
+  it('never rewrites a word that exists in any vocabulary (the OOV gate)', async () => {
+    // 'prey' is one edit from 'pray'; a known word must never be corrected,
+    // and a correction chip must never decorate its results.
+    const result = await engine.research('comfort');
+    if (result.kind !== 'discovery') throw new Error('expected discovery');
+    expect(result.corrections).toBeUndefined();
+    const labels = result.results.flatMap((entry) => entry.reasons.map((reason) => reason.label));
+    expect(labels.some((label) => label.includes('corrected from'))).toBe(false);
+  });
+});
+
 describe('related()', () => {
   it('reports the concepts whose curated anchors include the passage', async () => {
     const result = await engine.related('Psalm 46:1');

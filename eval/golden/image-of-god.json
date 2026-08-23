@@ -1,0 +1,44 @@
+{
+  "id": "image-of-god",
+  "query": "made in gods image",
+  "additionalQueries": [
+    "image of god",
+    "imago dei",
+    "likeness of god"
+  ],
+  "status": "active",
+  "note": [
+    "GENESIS-PILOT FIXTURE (14-concept wave, drafted 2026-08-22).",
+    "Fixtures-first for the new image-of-god concept; PENDING until the",
+    "pack lands, then flip active in the same PR (pending fixtures do not",
+    "count for G3 coverage). Intended path: eval/golden/image-of-god.json.",
+    "",
+    "Gen 1:26-27 IS in the fixture corpus (Genesis 1 present on main) and",
+    "contains 'image'/'likeness' lexically - requiredReasonFamily is",
+    "concept_anchor so the assertion is that the curated anchor put it",
+    "there, not passage_terms luck.",
+    "",
+    "Col 1:15 ('the image of the invisible God') is a live lexical",
+    "competitor for the 'image of god' query; it is this pack's own anchor",
+    "at weight 0.8, so it may rank close behind - listed alsoAcceptable,",
+    "never above the charter text (weight order 1.0 vs 0.8 encodes that)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 1:26-27",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Made in God's image"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Genesis 5:1-3",
+    "Colossians 1:15",
+    "Colossians 3:10",
+    "Romans 8:29"
+  ],
+  "coversConcepts": [
+    "image-of-god"
+  ]
+}
