@@ -1,0 +1,44 @@
+{
+  "id": "creation-first-cause",
+  "query": "god created the universe",
+  "status": "active",
+  "additionalQueries": [
+    "did the universe have a beginning",
+    "everything has a cause"
+  ],
+  "note": [
+    "Apologetics wave batch 3 (2026-08-25), fixtures-first: first-cause /",
+    "cosmological query family on the EXISTING creation pack (map entry 2,",
+    "extend-not-mint — no maker-of-all-things id, map Declined #3).",
+    "Measured gap before the extension (2026-08-25): 'god created the",
+    "universe' returned Gen 1:1 #1 by exact phrase with NO curated chip",
+    "(right passage, wrong reason — the G3 failure class); 'did the",
+    "universe have a beginning' returned beginn-token scatter (Eccl 3:11",
+    "#1, no chip); 'everything has a cause' returned token scatter",
+    "(Eph 5:24 #1, no chip).",
+    "TOKENIZER DECISION (G-4, logged): the map's headline query 'who made",
+    "god' collapses to the containment pair {made, god} — ubiquitous in the",
+    "corpus (god-made-X occurs across Genesis, Psalms, the epistles) — the",
+    "2026-08-08 accident class, so NO lexicon entry carries it and the",
+    "query is deliberately not asserted here. Its honest #1 (Ps 90:2, the",
+    "unmade Maker) is outside the pinned corpus; the register rides the",
+    "pending companion creation-who-made-god.json.",
+    "Argument names (kalam, cosmological) stay out of lexicon and queries",
+    "per the map: concept-shaped ids, user-shaped phrasings only."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 1:1",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 17:24-25",
+    "Psalms 19:1",
+    "John 1:3"
+  ],
+  "coversConcepts": [
+    "creation"
+  ]
+}

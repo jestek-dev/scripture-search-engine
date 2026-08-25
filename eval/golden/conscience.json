@@ -1,0 +1,45 @@
+{
+  "id": "conscience",
+  "query": "law written on the heart",
+  "status": "active",
+  "additionalQueries": [
+    "conscience in the bible",
+    "how do people know right from wrong"
+  ],
+  "note": [
+    "Apologetics wave batch 3 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id conscience (Theme J row in tag-gaps-review.md) — merged only by",
+    "Jesse's admission of this draft PR (plan G-3). God's law written on",
+    "every human heart, the inner witness that accuses and excuses",
+    "(moral-argument query family, phrased as users ask it).",
+    "Measured gap before the pack (2026-08-25): 'law written on the heart'",
+    "returned Rom 2:29 #1 on a translation variant and Rom 2:15 #2 on",
+    "lexical evidence only — no curated chip anywhere; 'conscience'",
+    "returned bare-token scatter across 1 Cor 10 / Rom 13 with Rom 2:15 at",
+    "#7, chipless; 'how do people know right from wrong' returned",
+    "know/right token scatter (Matt 6:3 #1).",
+    "The bare word 'conscience' is a deliberate single-word lexicon entry",
+    "(the subject noun IS the concept — creation/resurrection precedent),",
+    "admitted in ontology/lexicon-inventory.yaml with this fixture as its",
+    "measure.",
+    "G4 BOUNDARY (logged in the pack): 'without excuse' stays in",
+    "those-who-never-heard.yaml; the Rom 2:14-15 dual anchor with that",
+    "pack is the map's recorded Decision 3 design, not drift."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 2:14-15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Conscience — the law written on hearts"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 2:16",
+    "Romans 1:32",
+    "Micah 6:8"
+  ],
+  "coversConcepts": [
+    "conscience"
+  ]
+}

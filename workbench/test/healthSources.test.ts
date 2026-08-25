@@ -109,10 +109,14 @@ describe('health source semantics', () => {
     // + the 6 apologetics-wave batch-2 packs (2026-08-25: no-other-god,
     // gods-unchanging-nature, supremacy-of-christ, i-am-sayings,
     // the-first-and-the-last, honor-the-son — each with an active
-    // demonstrating fixture in the same change).
+    // demonstrating fixture in the same change)
+    // + the 4 apologetics-wave batch-3 packs (2026-08-25:
+    // creation-testifies, design-in-creation, conscience,
+    // the-breath-of-life — each with an active demonstrating fixture in
+    // the same change).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(137);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(137);
+    expect(coverage).toHaveLength(141);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(141);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

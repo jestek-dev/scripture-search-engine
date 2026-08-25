@@ -13,6 +13,21 @@ lexicon:
   # type; the one-token specificity discount in conceptAnchorEvidence (0.55)
   # keeps the claim humble relative to a multi-word match.
   - creation
+  # APOLOGETICS WAVE EXTENSION (batch 3, 2026-08-25) — first-cause /
+  # who-made-God query family (critic-approved apologetics concept map,
+  # entry 2: extend-not-mint; no maker-of-all-things id, map Declined #3).
+  # Fixture-first: creation-first-cause.json committed pending-and-failing
+  # before these entries existed. Argument names (kalam, cosmological) are
+  # deliberately absent per the map — concept-shaped ids, user phrasings.
+  # TOKENIZER DECLINE (G-4, verified with the engine's significantWords):
+  # the map's headline phrasing "who made god" collapses to the containment
+  # pair {made, god} — ubiquitous across the corpus (god-made-X in Genesis,
+  # Psalms, the epistles), the 2026-08-08 accident class — NOT added; that
+  # register's honest text (Ps 90:2) is anchored below and its query rides
+  # the pending companion creation-who-made-god.json.
+  - god created the universe
+  - did the universe have a beginning
+  - everything has a cause
 anchors:
   - ref: Genesis 1:1
     sources: [editorial]
@@ -31,4 +46,48 @@ anchors:
     weight: 0.75
   - ref: Jeremiah 10:12
     sources: [torrey]
+    weight: 0.65
+  # APOLOGETICS WAVE EXTENSION (batch 3, 2026-08-25) — whole-canon
+  # first-cause anchors. All extension anchors [editorial] per the map (its
+  # research citations corroborate; they are never engine sources).
+  #
+  # "The God who made the world and all things in it... he himself gives to
+  # all life and breath and all things." (WEB, in corpus). Creator aseity
+  # preached to philosophers — God needs nothing and gives everything, the
+  # owns-and-sustains clause in the Bible's own engagement with Greek
+  # thought.
+  - ref: Acts 17:24-25
+    sources: [editorial]
+    weight: 0.85
+  # "Before the mountains were born... even from everlasting to
+  # everlasting, you are God." (WEB wording — Psalm 90 NOT in web-subset.)
+  # The Maker himself is unmade — the honest scriptural answer to 'who made
+  # God'. DUAL ANCHOR with gods-unchanging-nature (batch 2, 0.95 there):
+  # everlasting-deity register there, who-made-God register here.
+  # Assertion rides creation-who-made-god.json (pending) and the re-pin.
+  - ref: Psalms 90:2
+    sources: [editorial]
+    weight: 0.8
+  # "I am the LORD, who makes all things; who alone stretches out the
+  # heavens; who spreads out the earth by myself" (WEB wording — Isaiah 44
+  # NOT in web-subset). Sole unassisted creatorship in the anti-idol
+  # polemic. DUAL ANCHOR with no-other-god (batch 2, 0.8 there): monotheism
+  # register there, creation register here (map's recorded dual list).
+  - ref: Isaiah 44:24
+    sources: [editorial]
+    weight: 0.7
+  # "For every house is built by someone; but he who built all things is
+  # God." (WEB wording — Hebrews 3 NOT in web-subset). The one place
+  # Scripture states the builder inference in argument form. Context caveat
+  # (map, kept): in Heb 3 it serves the Moses/Christ comparison, not a
+  # standalone proof — yet it asserts, as a general truth, that all things
+  # have God as builder.
+  - ref: Hebrews 3:4
+    sources: [editorial]
+    weight: 0.7
+  # "you created all things, and because of your desire they existed and
+  # were created!" (WEB wording — Revelation 4 NOT in web-subset).
+  # Contingency of everything on the Creator's will, taught doxologically.
+  - ref: Revelation 4:11
+    sources: [editorial]
     weight: 0.65

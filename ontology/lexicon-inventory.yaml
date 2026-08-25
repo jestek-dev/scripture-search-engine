@@ -660,6 +660,16 @@ concepts:
     # "head of the corner") stay multi-token.
     admitted: [cornerstone]
 
+  - id: conscience
+    # 2026-08-25 apologetics wave batch 3: row authored with the pack
+    # (fixture-first, conscience.json). Bare `conscience` is a deliberate
+    # single-word entry — the subject noun IS the concept
+    # (creation/resurrection precedent); the word occurs in the WEB text
+    # (Rom 2:15, 1 Cor 10, 1 Pet 3) and the measured gap showed the bare
+    # query returning chipless token scatter. Every other entry keeps
+    # >= 2 significant tokens.
+    admitted: [conscience]
+
   - id: contentment
     # 2026-08-18 harvest, all deliberate per the in-file comments:
     # contentment/content are the concept's own subject words; wealth,
@@ -681,6 +691,23 @@ concepts:
     # 2026-08-08 decision table: names the doctrine, not a general word.
     admitted: [creation]
 
+  - id: creation-testifies
+    # 2026-08-25 apologetics wave batch 3: row authored with the pack
+    # (fixture-first, creation-testifies.json). Every entry keeps >= 2
+    # significant tokens with a distinctive member; no bare word fires
+    # today.
+    skipped:
+      - token: nature
+        reason: >-
+          Generic across registers (human nature, divine nature, natural
+          world); the testify/prove/reveal pairings carry the concept.
+      - token: witness
+        reason: >-
+          Bare `witness` belongs to sharing-your-faith's acknowledged
+          "be my witnesses" collapse; this pack must never claim the
+          generic witness query. "the witness of creation" keeps the
+          distinctive pair.
+
   - id: deity-of-christ
     skipped:
       - token: deity
@@ -698,6 +725,16 @@ concepts:
           language), deferred pending a measured gap — the word also carries
           a contemporary-practice sense the pack does not answer. The
           "meditate on ..." phrase forms carry it today.
+
+  - id: design-in-creation
+    # 2026-08-25 apologetics wave batch 3: row authored with the pack
+    # (fixture-first, design-in-creation.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires today.
+    skipped:
+      - token: design
+        reason: >-
+          Generic verb/noun ("designed", schemes, patterns); the
+          universe/intelligent/order pairings carry the concept.
 
   - id: disputable-matters
     skipped:
@@ -1546,6 +1583,22 @@ concepts:
     # thanksgiving: 2026-08-08 decision table (distinct from the verb "give
     # thanks"). gratitude: deliberate one-word entry.
     admitted: [thanksgiving, gratitude]
+
+  - id: the-breath-of-life
+    # 2026-08-25 apologetics wave batch 3: row authored with the pack
+    # (fixture-first, the-breath-of-life.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires today.
+    skipped:
+      - token: soul
+        reason: >-
+          Bare `soul` spans the psalmic my-soul language (thirst, rest,
+          praise — hunger-for-god and rest-for-the-weary carry those
+          registers); the humans/body/breath pairings carry this concept.
+      - token: breath
+        reason: >-
+          Praise's "let everything that has breath praise him" register
+          would be hijacked; "the breath of life" keeps the namesake
+          pair.
 
   - id: the-cross
     # the cross: 2026-08-08 decision table ("the token `cross` in a

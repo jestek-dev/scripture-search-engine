@@ -1,0 +1,99 @@
+# APOLOGETICS WAVE (batch 3, 2026-08-25) — NEW-MINT-CONDITIONAL (map
+# entry 6; map Decision 4 recommends mint and this pack builds that
+# default; if Jesse rules extend-instead, every anchor moves onto
+# image-of-god unchanged and the fixture re-cuts in the same commit).
+#
+# Human beings live by God-breathed spirit — more than dust, a soul/
+# spirit given by God, distinct from the body and returning to him.
+# DOCTRINAL NOTE (map, recorded): takes no position on dichotomy vs
+# trichotomy or philosophical-dualism debates — the gist stays at the
+# texts' level, and the engine adjudicates nothing (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial] (map corroborations: gq-soul,
+# equip-soul — never engine sources).
+#
+# G4 BOUNDARY: zero shared phrases with image-of-god (the conditional
+# parent) — its lexicon is image/dignity-shaped, this one soul/breath-
+# shaped; shared tokens {human} only.
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens: {human, soul}, {body, soul}, {breath, life},
+# {happen, spirit, death}, {mind, brain}. Bare `soul` and bare `breath`
+# are skipped in ontology/lexicon-inventory.yaml with reasons (bare
+# `soul` would hijack the psalmic my-soul language; bare `breath`
+# belongs to praise's "let everything that has breath praise him").
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: the-breath-of-life
+label: The breath of life
+lexicon:
+  # The question form.
+  - do humans have souls
+  # The anthropology pair as users type it.
+  - body and soul
+  # Gen 2:7's own phrase — the concept's namesake.
+  - the breath of life
+  # Eccl 12:7's register, question-shaped.
+  - what happens to the spirit at death
+  # The materialism question brought as asked (names no school).
+  - is the mind just the brain
+anchors:
+  # "The LORD God formed man from the dust of the ground, and breathed
+  # into his nostrils the breath of life; and man became a living soul."
+  # (WEB, in corpus). Dust plus divine breath makes 'a living soul' — the
+  # namesake text. NEPHESH CAVEAT (map, kept honest): nephesh here means
+  # the whole living person (animals are also 'living souls' in Gen 1),
+  # so this anchor teaches God-breathed life; the distinct-spirit claim
+  # rests on the Eccl 12:7 / Matt 10:28 anchors below.
+  - ref: Genesis 2:7
+    sources: [editorial]
+    weight: 1.0
+  # "though our outward person is decaying, yet our inward person is
+  # renewed day by day." (WEB, in corpus). Paul's lived body/inner-person
+  # distinction, aimed at endurance in suffering (context kept). SPAN
+  # DESIGN (recorded): the map's entry is '2 Cor 4:16, 18' — the anchor
+  # ref grammar carries no comma lists, so v16 (the inward/outward verse)
+  # anchors and v18's seen/unseen contrast is recorded here. Deliberate
+  # span split vs why-god-allows-suffering (batch 4), which anchors
+  # 4:17-18 for the affliction-works-glory register. EXISTING CLAIMANTS
+  # (recorded): pastoral-serious-illness (0.9) and do-not-lose-heart
+  # (0.85) both anchor 2 Cor 4:16-18 for their own registers — this
+  # narrower v16 claim is the anthropology register only, weighted at the
+  # pack floor accordingly.
+  - ref: 2 Corinthians 4:16
+    sources: [editorial]
+    weight: 0.7
+  # "the dust returns to the earth as it was, and the spirit returns to
+  # God who gave it." (WEB wording — Ecclesiastes 12 NOT in web-subset).
+  # Gen 2:7 run in reverse at death — the body/spirit distinction stated
+  # by the text itself. Assertion rides
+  # breath-of-life-spirit-returns.json (pending) and the re-pin.
+  - ref: Ecclesiastes 12:7
+    sources: [editorial]
+    weight: 0.9
+  # "Don't be afraid of those who kill the body, but are not able to kill
+  # the soul." (WEB wording — Matthew 10 NOT in web-subset). The
+  # strongest dominical statement that the person is not exhausted by the
+  # body. Context kept (map): it grounds fearless confession, never
+  # reduced to an anthropology datum.
+  - ref: Matthew 10:28
+    sources: [editorial]
+    weight: 0.85
+  # "The LORD, who stretches out the heavens... and forms the spirit of
+  # man within him" (WEB wording — Zechariah 12 NOT in web-subset). The
+  # human spirit as distinct divine workmanship, in a formal
+  # creation-credential formula.
+  - ref: Zechariah 12:1
+    sources: [editorial]
+    weight: 0.7
+  # "But there is a spirit in man, and the Spirit of the Almighty gives
+  # them understanding." (WEB wording — Job 32 NOT in web-subset). ELIHU
+  # CAVEAT (map, kept): an uncorrected but human speaker; the claim is
+  # consonant with and carried by Gen 2:7 / Prov 20:27 — low weight
+  # accordingly.
+  - ref: Job 32:8
+    sources: [editorial]
+    weight: 0.6
+related:
+  - image-of-god
+  - creation

@@ -1,0 +1,37 @@
+{
+  "id": "creation-who-made-god",
+  "query": "who made god",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 3, 2026-08-25) — the",
+    "who-made-God register of the creation extension. The honest #1 is",
+    "Psalms 90:2 ('from everlasting to everlasting, you are God' — the",
+    "Maker himself is unmade), anchored [editorial] on creation and dual",
+    "with gods-unchanging-nature (batch 2). DOUBLY BLOCKED, both named:",
+    "(1) CORPUS: Psalm 90 is absent from pipeline/fixtures/web-subset.json",
+    "(docs/corpus-payload-dependency.md, BLOCKED 2026-08-21) — flips only",
+    "when the corpus-expansion PR lands Psalm 90 (re-pin payload P4.15).",
+    "(2) LEXICON: 'who made god' collapses to the containment pair",
+    "{made, god}, declined under G-4 (the 2026-08-08 accident class — it",
+    "would fire creation on every god-made-X query). Activation therefore",
+    "ALSO needs a reviewed lexicon route for this query — Jesse's call at",
+    "the re-pin, recorded here so the gap stays visible rather than",
+    "silently unreachable.",
+    "Referenced by gods-unchanging-nature.json's note (batch 2) as 'the",
+    "creation-side pending companion of batch 3'."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 90:2",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Genesis 1:1",
+    "Acts 17:24-25"
+  ],
+  "coversConcepts": [
+    "creation"
+  ]
+}

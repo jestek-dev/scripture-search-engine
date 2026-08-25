@@ -1,0 +1,35 @@
+{
+  "id": "design-in-creation-job",
+  "query": "where were you when i laid the foundations of the earth",
+  "status": "pending",
+  "additionalQueries": [
+    "laws of the heavens"
+  ],
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 3, 2026-08-25) — the",
+    "whirlwind-speech register of design-in-creation. BLOCKED ON CORPUS:",
+    "Job 38 is absent from pipeline/fixtures/web-subset.json",
+    "(docs/corpus-payload-dependency.md, BLOCKED 2026-08-21).",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that",
+    "lands Job 38-41 (re-pin payload P4.15) — the same payload the",
+    "deferred leviathan-and-behemoth fixture rides. The pack anchors",
+    "Job 38:4 and Job 38:33 [editorial] now as anchors-with-note; the",
+    "theodicy function of the speeches belongs to why-god-allows-suffering",
+    "(map Declined #36 — that pack anchors Job 1/42, not Job 38, so no",
+    "dual exists). On activation re-cut the expected lead to what is",
+    "honest for each query."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Job 38:4",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Job 38:33"
+  ],
+  "coversConcepts": [
+    "design-in-creation"
+  ]
+}
