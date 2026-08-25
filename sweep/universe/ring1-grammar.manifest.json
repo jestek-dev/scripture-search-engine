@@ -3,7 +3,7 @@
   "schema": "scripture-search-engine/sweep-universe-manifest/v1",
   "universeVersion": "1.0.0",
   "seed": "scripture-sweep-universe-v1",
-  "fingerprint": "c3bece72b8812723f798185ffe53d5a47b1d2f3191110486306fd17475a913b8",
+  "fingerprint": "08789ae2cf267f5f69a77a3c269e75f5a7e86408c986d0c52ee7500c2589a7f3",
   "lineCount": 8516,
   "countsByGenerator": {
     "adversarial": 40,
