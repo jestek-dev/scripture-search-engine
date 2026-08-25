@@ -277,6 +277,42 @@ describe('compile-judgments — routing (§5)', () => {
     expect(outcome.report).toContain('npm run gauntlet -- --update-baseline');
   });
 
+  it('tolerates verse-level subset selections without granting chapter membership', async () => {
+    // The real pipeline/fixtures/web-subset.json carries verse-level entries
+    // (P5.2/QR-3, e.g. Song of Solomon `verses: ["2:1"]`) that have no
+    // `chapters` array at all; the compiler used to crash on them
+    // ("TypeError: selection.chapters is not iterable", flagged in PR #49).
+    // A verse-level sample of Psalms 46:1 also must not count as chapter
+    // membership — only that one verse is in the fixture corpus, so the
+    // chapter-granular proposal for the judged passage still stands.
+    const subset = {
+      ...SUBSET,
+      selection: [
+        ...SUBSET.selection,
+        { book: 'Psalms', verses: ['46:1'], why: 'P5.2/QR-3: single-verse sample' },
+        { book: 'Song of Solomon', verses: ['2:1'], why: 'P5.2/QR-3: single-verse sample' },
+      ],
+    };
+    await writeFile(
+      path.join(root, 'pipeline', 'fixtures', 'web-subset.json'),
+      `${JSON.stringify(subset, null, 2)}\n`,
+    );
+
+    const outcome = await compileJudgments(root);
+    expect(outcome.proposedSelections).toEqual([
+      { book: 'Genesis', chapters: [5], why: 'workbench judgment: hearing and doing (2026-08-01)' },
+      { book: 'Psalms', chapters: [46], why: 'workbench judgment: hearing and doing (2026-08-01)' },
+      { book: 'John', chapters: [3], why: 'workbench judgment: shelter in the storm (2026-08-02)' },
+    ]);
+
+    // The verse-level entries round-trip untouched; proposals append after them.
+    const written = JSON.parse(
+      await readFile(path.join(root, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8'),
+    ) as typeof subset;
+    expect(written.selection.slice(0, subset.selection.length)).toEqual(subset.selection);
+    expect(written.selection.slice(subset.selection.length)).toEqual(outcome.proposedSelections);
+  });
+
   it('warns per judgment made under a layerFingerprint that is no longer current', async () => {
     const outcome = await compileJudgments(root);
     expect(outcome.warnings).toHaveLength(1);
