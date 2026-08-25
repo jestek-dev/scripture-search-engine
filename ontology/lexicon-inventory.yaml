@@ -809,6 +809,21 @@ concepts:
           now owns bare "work" (2026-08-18, deliberate); the faith-vs-works
           doctrine pack must not also fire on it.
 
+  - id: false-prophets
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, false-prophets.json). NO bare "test"/"testing"
+    # tokens (map Declined #30, matching the testing pack's recorded
+    # decline); "test the spirits" is the admitted multi-word form. No
+    # lexicon entry collapses to a single significant token.
+    skipped:
+      - token: test
+        reason: >-
+          The testing pack owns the God-tests-his-people sense and
+          itself declined the bare token (too many non-devotional
+          senses); admitting it here would fire a warning concept on
+          every test-vocabulary query. The multi-word forms
+          "test the spirits" ({test, spirit}) carry this concept.
+
   - id: family-reconciliation
     # PR #41 (2026-08-22 Genesis pilot): a phrase-forms pack — no lexicon
     # entry collapses to a single significant token.
@@ -875,6 +890,17 @@ concepts:
     # 2026-08-18 harvest: deliberate bare entry — the concept's own subject
     # noun.
     admitted: [generosity]
+
+  - id: giving-an-answer
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, giving-an-answer.json). Bare "apologetics" is a
+    # deliberate single-word entry — §1.6d option-3 / trinity "godhead"
+    # precedent: the word appears in no WEB verse, so no lexical rung
+    # reaches the practice without it; measured gap showed the bare-ish
+    # query "apologetics in the bible" returning preached-vocabulary
+    # scatter with no curated chip. Every other entry keeps >= 2
+    # significant tokens.
+    admitted: [apologetics]
 
   - id: god-of-all-comfort
     # 2026-08-18 harvest: deliberate bare entry — closes the 2026-08-13
@@ -1095,6 +1121,20 @@ concepts:
     # multiple significant tokens.
     admitted: [incarnation]
 
+  - id: jesus-the-only-way
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, jesus-the-only-way.json). No lexicon entry
+    # collapses to a single significant token.
+    skipped:
+      - token: name
+        reason: >-
+          The map's "no other name" collapses to bare {name} (no/other
+          are stopwords) — the 2026-08-08 accident class. Declined;
+          salvation owns the reachable phrase "no other name under
+          heaven" ({name, heaven}) and the register stays reachable
+          there, with this pack's Acts 4:12 anchor keeping the
+          exclusivity chip beside it.
+
   - id: joy-in-the-lord
     # 2026-08-08 decision table.
     admitted: [joy]
@@ -1203,6 +1243,21 @@ concepts:
           top to this pack's anchors — the exact hijack
           deification-guard-you-are-gods.json exists to forbid.
 
+  - id: no-other-gospel
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, no-other-gospel.json). No lexicon entry collapses
+    # to a single significant token.
+    skipped:
+      - token: gospel
+        reason: >-
+          The concept's own name form "no other gospel" collapses to
+          bare {gospel} (no/other are stopwords) — declined, 2026-08-08
+          accident class: a bare {gospel} trigger would fire this
+          warning concept on every gospel-vocabulary query
+          (sharing-your-faith's "how to share the gospel",
+          those-who-never-heard's "never heard the gospel"). The
+          another/different/angel/complete phrasings carry the concept.
+
   - id: obedience-to-the-word
     # 2026-08-08 decision table: the concept's own subject.
     admitted: [obedience]
@@ -1227,6 +1282,14 @@ concepts:
     # is the modern vocabulary of this struggle, and "approval of others"
     # normalizes to the bare token anyway.
     admitted: [approval]
+
+  - id: power-of-gods-word
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, power-of-gods-word.json). A phrase-forms pack — no
+    # lexicon entry collapses to a single significant token; the generic
+    # "gods word" / "the word of god" pairs stay with studying-the-word
+    # (recorded round-2 split), and every entry here carries a
+    # distinctive permanence/efficacy token.
 
   - id: praise
     # 2026-08-08 decision table: previously reachable only via
@@ -1724,6 +1787,13 @@ concepts:
     # trust: 2026-08-08 decision table. confidence: 2026-08-18 round-2
     # admission, deliberate ("the Confidence topics' register").
     admitted: [trust, confidence]
+
+  - id: trustworthiness-of-scripture
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, trustworthiness-of-scripture.json). A phrase-forms
+    # pack — no lexicon entry collapses to a single significant token;
+    # this pack speaks of "the bible"/"scripture" and leaves the
+    # "gods word" phrasings to studying-the-word / power-of-gods-word.
 
   - id: victory-in-christ
     # victory: 2026-08-08 decision table. conqueror: kept collapse of "more

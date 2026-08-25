@@ -1,0 +1,125 @@
+# APOLOGETICS WAVE (batch 5, 2026-08-25) — NEW-MINT. Merged only by
+# Jesse's admission of this PR.
+#
+# Salvation is found in Christ alone — the one way to the Father, the one
+# saving name, the one mediator between God and men. The exclusivity
+# register, distinct from salvation's how-can-I-be-saved register. The
+# engine reports that a curated source names these passages for the
+# claim; it never adjudicates between religions (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial]; the map's research citations
+# (truthforlife/gotquestions on pluralism) corroborate and are never
+# engine sources. Torrey's ACCESS TO GOD row for John 14:6 is claimed by
+# salvation [torrey]; no outline row matches this pack's exclusivity
+# claim (trinity precedent forbids relabeling).
+#
+# TOKENIZER DISCIPLINE (G-4, engine-verified): the map's "no other name"
+# collapses to bare {name} (2026-08-08 accident class) — DECLINED;
+# salvation already owns the reachable form "no other name under heaven"
+# ({name, heaven}) and anchors Acts 4:12, so the register stays reachable
+# there while THIS pack's Acts 4:12 anchor keeps the exclusivity chip
+# beside it. Skipped row in ontology/lexicon-inventory.yaml. Every
+# shipped entry keeps >= 2 significant tokens.
+id: jesus-the-only-way
+label: Jesus the only way
+lexicon:
+  # The question form ({jesu, way}); "is jesus the only way to god" fires
+  # it by containment.
+  - is jesus the only way
+  # The pluralism question, as searched.
+  - do all religions lead to god
+  # 1 Tim 2:5's own register.
+  - one mediator between god and men
+  # The destination form ({way, heaven}).
+  - the only way to heaven
+anchors:
+  # "I am the way, the truth, and the life. No one comes to the Father,
+  # except through me." (WEB, in corpus). The Farewell-discourse answer to
+  # Thomas's "how can we know the way?" (14:5) — the exclusive clause is
+  # the verse's own second half, not an inference. DUAL ANCHOR with
+  # salvation's John 14:6 [torrey] 0.9 (the how-can-I-be-saved register;
+  # its lexicon carries "i am the way the truth and the life"): this pack
+  # claims the exclusivity register. Lexicons disjoint, so each fires only
+  # on its own queries.
+  - ref: John 14:6
+    sources: [editorial]
+    weight: 1.0
+  # "There is salvation in no one else, for there is no other name under
+  # heaven that is given among men, by which we must be saved!" (WEB, in
+  # corpus). Peter before the council about the crucified and risen Jesus
+  # (4:10-11). DUAL ANCHOR with salvation's Acts 4:12 [editorial] 0.9 —
+  # same design as John 14:6 above.
+  - ref: Acts 4:12
+    sources: [editorial]
+    weight: 0.95
+  # "One who believes in the Son has eternal life, but one who disobeys
+  # the Son won't see life" (WEB, in corpus). The two-outcome structure —
+  # life or remaining wrath — turns entirely on the Son.
+  - ref: John 3:36
+    sources: [editorial]
+    weight: 0.8
+  # "He who has the Son has the life. He who doesn't have God's Son
+  # doesn't have the life." (WEB, in corpus). Life located in the Son, so
+  # that having him and having life are one. NEIGHBOUR NOTE:
+  # assurance-of-salvation anchors the overlapping 1 John 5:11-13 span
+  # (assurance register); this pack claims vv11-12's exclusivity logic —
+  # spans differ by design.
+  - ref: 1 John 5:11-12
+    sources: [editorial]
+    weight: 0.8
+  # "The times of ignorance therefore God overlooked. But now he commands
+  # that all people everywhere should repent... he will judge the world in
+  # righteousness by the man whom he has ordained... in that he has raised
+  # him from the dead." (WEB, in corpus). Athens: universal repentance,
+  # one appointed man, assurance by resurrection — where the pluralism
+  # question meets its apostolic answer. TRIPLE NEIGHBOUR NOTE:
+  # divine-judgment anchors the same 17:30-31 span (judgment register),
+  # repentance anchors 17:30, resurrection anchors 17:31 [editorial] 0.75
+  # (batch 1) — this pack claims the one-appointed-man exclusivity
+  # register; all chips honest. CROSS EDGES: those-who-never-heard
+  # (reciprocal related edge lands in this batch) and the resurrection
+  # family.
+  - ref: Acts 17:30-31
+    sources: [editorial]
+    weight: 0.75
+  # "Enter in by the narrow gate... How narrow is the gate and the way is
+  # restricted that leads to life! There are few who find it." (WEB, in
+  # corpus). CAVEAT (map, two-ways register): in the Sermon the narrow
+  # gate is entering life on Jesus' terms; the anchor claims the two-ways
+  # structure and "few find it", not a bare exclusivism slogan.
+  - ref: Matthew 7:13-14
+    sources: [editorial]
+    weight: 0.7
+  # "For there is one God and one mediator between God and men, the man
+  # Christ Jesus, who gave himself as a ransom for all" (WEB wording,
+  # current edition — 1 Timothy 2 NOT in web-subset; re-check at re-pin).
+  # UNIVERSAL-OFFER-KEPT comment (map): the context (2:1-4, God "desires
+  # all people to be saved") holds exclusivity and the universal offer in
+  # the same breath — the concept keeps both. Cross-ref the pending
+  # mediator tag-gap row (Job 9:33 register; not built in this wave).
+  - ref: 1 Timothy 2:5-6
+    sources: [editorial]
+    weight: 0.9
+  # "There is no other God besides me, a just God and a Savior... Look to
+  # me, and be saved, all the ends of the earth" (WEB wording, current
+  # edition — Isaiah 45 NOT in web-subset; re-check at re-pin). BOUNDARY
+  # (map / no-other-god's own comment): this pack claims the exclusive-
+  # Savior register joined to the universal call; the monotheism register
+  # belongs to no-other-god's Isa 45:21-22 [editorial] 0.85 — deliberate
+  # dual, each pack its half.
+  - ref: Isaiah 45:21-22
+    sources: [editorial]
+    weight: 0.75
+  # "I am the door. If anyone enters in by me, he will be saved" (WEB
+  # wording, current edition — John 10 NOT in web-subset; re-check at
+  # re-pin). The shepherd discourse's door image. CROSS-REF i-am-sayings
+  # (batch 2): that pack's saying-locator register does not anchor 10:9;
+  # this pack claims the entry-to-salvation register.
+  - ref: John 10:9
+    sources: [editorial]
+    weight: 0.7
+related:
+  - salvation
+  - those-who-never-heard
+  - no-other-god
+  - deity-of-christ

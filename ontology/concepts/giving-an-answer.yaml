@@ -1,0 +1,111 @@
+# APOLOGETICS WAVE (batch 5, 2026-08-25) — NEW-MINT-conditional (map
+# Decision 8 recommends mint; anchor-disjointness from sharing-your-faith
+# verified by the map — ZERO shared anchors; the mint-vs-extend flag rides
+# the PR decision table, and if Jesse rules extend-instead these anchors
+# fold into sharing-your-faith unchanged). Merged only by Jesse's
+# admission of this PR.
+#
+# The believer's readiness to give a gentle, reasoned answer for the hope
+# of the gospel to anyone who asks. The MANNER is part of the claim
+# (1 Pet 3:15's "with humility and fear"), not a garnish — nothing here
+# licenses combativeness.
+#
+# Attribution: ALL anchors [editorial]; the map's research citations
+# (crossway/apologeticsforthechurch on 1 Pet 3:15) corroborate and are
+# never engine sources. Torrey's verified outline carries no row for this
+# claim.
+#
+# LEXICON BOUNDARY (G-4): sharing-your-faith (the conditional parent)
+# owns the evangelism phrasings ("witnessing", "how to share the gospel",
+# "tell others about jesus") — NO share/tell/witness phrasings here; this
+# pack speaks the answer/defense register. TOKENIZER DECISIONS (logged in
+# the fixture): bare "apologetics" ADMITTED (trinity/godhead §1.6d
+# option-3 precedent — the word appears in no WEB verse, so no lexical
+# rung reaches the practice without it; inventory row ships with the
+# pack). "how to defend my faith" / "how do i defend my faith" collapse
+# to the same {defend, faith} set as "defend the faith" — one entry
+# carries all three forms (worker duplicate-set rule).
+id: giving-an-answer
+label: Giving an answer
+lexicon:
+  # 1 Pet 3:15's charge, as remembered and as searched.
+  - always be ready to give an answer
+  - give an answer for your hope
+  # The practice's own register ({defend, faith} carries "how to defend my
+  # faith" and "how do i defend my faith" by identical-set containment).
+  - defend the faith
+  # Single-token entry, deliberate (§1.6d option-3; the one-token
+  # specificity discount keeps the claim humble). The discipline's own
+  # name — appears in no WEB verse, so only curation can route it.
+  - apologetics
+anchors:
+  # "Always be ready to give an answer to everyone who asks you a reason
+  # concerning the hope that is in you, with humility and fear" (WEB, in
+  # corpus). The apologia charge itself: readiness, a reason, and the
+  # governing manner — humility and fear, a good conscience (v16). The
+  # manner is part of the claim.
+  - ref: 1 Peter 3:15
+    sources: [editorial]
+    weight: 1.0
+  # "for three Sabbath days reasoned with them from the Scriptures,
+  # explaining and demonstrating that the Christ had to suffer and rise
+  # again" (WEB, in corpus). Anti-tagging check passed (map): the
+  # narrative depicts reasoned persuasion as Paul's custom — not merely a
+  # passage recruited by apologists.
+  - ref: Acts 17:2-3
+    sources: [editorial]
+    weight: 0.85
+  # "both in my bonds and in the defense and confirmation of the Good
+  # News, you all are partakers with me of grace." (WEB, in corpus).
+  # "The defense and confirmation of the Good News" — Paul's own category
+  # for the work, shared with the whole church.
+  - ref: Philippians 1:7
+    sources: [editorial]
+    weight: 0.8
+  # "knowing that I am appointed for the defense of the Good News." (WEB,
+  # in corpus). VERSIFICATION NOTE (map): WEB follows the majority-text
+  # order of vv16-17; this clause appears at v16 in critical-text
+  # versions.
+  - ref: Philippians 1:17
+    sources: [editorial]
+    weight: 0.75
+  # "throwing down imaginations and every high thing that is exalted
+  # against the knowledge of God" (WEB, in corpus). CAVEAT (map, kept):
+  # the context (10:3-4) is Paul's conflict with opponents of his
+  # ministry, a warfare metaphor; the honest claim is that arguments
+  # raised against the knowledge of God are to be demolished. NEVER
+  # licenses combativeness — 1 Pet 3:15's humility clause governs the
+  # register. NEIGHBOUR NOTE: victory-in-christ anchors the overlapping
+  # 2 Cor 10:4-5 span (spiritual-warfare register); this pack claims
+  # v10:5's arguments register — spans differ by design.
+  - ref: 2 Corinthians 10:5
+    sources: [editorial]
+    weight: 0.7
+  # "Let your speech always be with grace, seasoned with salt, that you
+  # may know how you ought to answer each one." (WEB wording, current
+  # edition — Colossians 4 NOT in web-subset; re-check at re-pin).
+  # Addressed to conduct "toward those who are outside" (4:5).
+  - ref: Colossians 4:6
+    sources: [editorial]
+    weight: 0.85
+  # "I am not crazy, most excellent Festus, but boldly declare words of
+  # truth and reasonableness." (WEB wording, current edition — Acts 26
+  # NOT in web-subset; re-check at re-pin). Inside a formal defense
+  # before Agrippa: truth and reasonableness as the apostle's own
+  # description of his speech.
+  - ref: Acts 26:25
+    sources: [editorial]
+    weight: 0.7
+  # "holding to the faithful word... that he may be able to exhort in the
+  # sound doctrine, and to convict those who contradict him." (WEB
+  # wording, current edition — Titus 1 NOT in web-subset; re-check at
+  # re-pin). DECISION 8 SUB-CALL (map boundary note, kept at LOW weight):
+  # elder-qualification context — the ability to answer contradiction is
+  # required of overseers specifically; the decision table offers rehoming
+  # to the pending contending-for-the-faith row.
+  - ref: Titus 1:9
+    sources: [editorial]
+    weight: 0.5
+related:
+  - sharing-your-faith
+  - jesus-the-only-way

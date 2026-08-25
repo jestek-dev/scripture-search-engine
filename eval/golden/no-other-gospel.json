@@ -1,0 +1,42 @@
+{
+  "id": "no-other-gospel",
+  "query": "another gospel",
+  "status": "active",
+  "additionalQueries": [
+    "even if an angel preaches another gospel"
+  ],
+  "note": [
+    "Apologetics wave batch 5 (2026-08-25), fixtures-first: NEW-MINT",
+    "no-other-gospel (map Decision 7 rides the PR decision table) — merged",
+    "only by Jesse's admission of this PR. Measured gap before the pack",
+    "(2026-08-25): 'another gospel' returned {another}-token scatter",
+    "(1 Thess 4:18, Col 3:9) with Gal 1:8 in no top-10; 'even if an angel",
+    "preaches another gospel' returned 2 Cor 10:16 #1 and Gal 1:6 #4 on",
+    "lexical evidence only — no curated chip anywhere.",
+    "TOKENIZER DECISION (G-4, logged): the concept's own name form 'no",
+    "other gospel' collapses to the bare token {gospel} (no/other are",
+    "stopwords) — DECLINED (2026-08-08 accident class; bare {gospel} would",
+    "fire this warning concept on every gospel-vocabulary query, e.g.",
+    "sharing-your-faith's 'how to share the gospel' register). Skipped row",
+    "in ontology/lexicon-inventory.yaml. The reachable forms keep a",
+    "distinctive second token: {another, gospel}, {different, gospel},",
+    "{even, angel, preach}, {gospel, complete}.",
+    "THIN-BED NOTE (plan F-3): only ONE in-corpus anchor (Gal 1:8) — the",
+    "2 Cor 11 / Jude / Deut 4 / Prov 30 / Rev 22 anchors are outside",
+    "web-subset and ride the corpus re-pin. Said so in the PR body."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Galatians 1:8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: No other gospel"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Galatians 1:6"
+  ],
+  "coversConcepts": [
+    "no-other-gospel"
+  ]
+}

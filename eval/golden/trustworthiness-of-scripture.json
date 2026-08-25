@@ -1,0 +1,39 @@
+{
+  "id": "trustworthiness-of-scripture",
+  "query": "is the bible reliable",
+  "status": "active",
+  "additionalQueries": [
+    "is the bible true",
+    "all scripture is god breathed"
+  ],
+  "note": [
+    "Apologetics wave batch 5 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id trustworthiness-of-scripture (Theme C) — merged only by Jesse's",
+    "admission of this PR (plan G-3). Measured gap before the pack",
+    "(2026-08-25): 'is the bible reliable' returned pure preached-vocabulary",
+    "scatter (Ps 42:6, Ps 9:18, John 11:35 — the token {bible} appears in no",
+    "WEB verse); 'is the bible true' returned John 8:16/8:14 token overlap on",
+    "{true}; 'all scripture is god breathed' returned Gal 3:8/3:16 lexical",
+    "rows — Ps 19:7-9 appeared in no top-10 and no curated chip fired.",
+    "THIN-BED NOTE (plan F-3): only ONE in-corpus anchor (Ps 19:7-9) — the",
+    "naming text 2 Tim 3:16-17 is outside web-subset and rides the pending",
+    "companion trustworthiness-god-breathed.json. The pack's measured",
+    "coverage widens with the corpus re-pin; said so in the PR body.",
+    "DUAL-CLAIM NOTE: studying-the-word anchors Ps 19:7-11 [torrey] in the",
+    "engagement register; this pack anchors the 19:7-9 span [editorial] in",
+    "the trustworthiness register (the psalm's own predicates: perfect,",
+    "sure, right, pure, true). Spans differ by design; both chips are",
+    "honest on shared-span queries."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 19:7-9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Scripture is trustworthy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "trustworthiness-of-scripture"
+  ]
+}

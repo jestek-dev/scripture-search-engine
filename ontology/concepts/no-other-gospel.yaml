@@ -1,0 +1,109 @@
+# APOLOGETICS WAVE (batch 5, 2026-08-25) — NEW-MINT (map Decision 7 carried
+# as a PR decision row: Jude 1:3 coordination with the pending
+# contending-for-the-faith tag-gap row — this pack claims the once-for-all
+# FINALITY register; that row keeps the contend/guard register; if Jesse
+# prefers one concept, this pack can absorb it. One decision, not two
+# mints). Merged only by Jesse's admission of this PR.
+#
+# The gospel received from the apostles is final and complete; any
+# different "good news" — whoever brings it, even an angel from heaven —
+# is rejected. Stated as what the texts say; the gist names no modern
+# group or movement (plan G-4; map Decision 13 is Jesse's call).
+#
+# Attribution: ALL anchors [editorial]; the map's research citations
+# (bib.irr.org / gotquestions on Rev 22:18-19) corroborate and are never
+# engine sources. Torrey's verified outline carries no row for this claim.
+#
+# THIN IN-CORPUS BED (plan F-3, named for the PR): only Gal 1:8 is in
+# web-subset. NO MEASURABLE EFFECT in the Admission Report => this pack
+# does not merge (moves to the DEFER list, pending fixtures kept).
+#
+# TOKENIZER DISCIPLINE (G-4, engine-verified): the concept's own name form
+# "no other gospel" collapses to bare {gospel} (no/other are stopwords) —
+# DECLINED, 2026-08-08 accident class; bare {gospel} would hijack every
+# gospel-vocabulary query (sharing-your-faith's "how to share the gospel",
+# those-who-never-heard's "never heard the gospel"). Skipped row in
+# ontology/lexicon-inventory.yaml. Every shipped entry keeps a distinctive
+# second token.
+id: no-other-gospel
+label: No other gospel
+lexicon:
+  # Gal 1:6-9's own category, as quoted and as searched.
+  - another gospel
+  - a different gospel
+  # The angel clause ({even, angel, preach}) — fires on the full
+  # remembered form "even if an angel preaches another gospel" by
+  # containment.
+  - even if an angel preaches
+  # The finality question form.
+  - is the gospel complete
+anchors:
+  # "But even though we, or an angel from heaven, should preach to you any
+  # 'good news' other than that which we preached to you, let him be
+  # cursed." (WEB, in corpus). Written against rival teachers in Galatia
+  # (1:6-7): the test is content-identity with the received gospel, and
+  # the messenger's rank — apostle or angel — cannot legitimize a
+  # different message. The passage's own argument, not an application.
+  # The pack's one in-corpus anchor.
+  - ref: Galatians 1:8
+    sources: [editorial]
+    weight: 1.0
+  # "if he who comes preaches another Jesus whom we didn't preach... or a
+  # different 'good news' which you didn't accept" (WEB wording, current
+  # edition — 2 Corinthians 11 NOT in web-subset; re-check at re-pin).
+  # The text's own three-part category: another Jesus, a different
+  # spirit, a different good news. Pending companion fixture
+  # no-other-gospel-another-jesus.json rides the corpus expansion.
+  - ref: 2 Corinthians 11:4
+    sources: [editorial]
+    weight: 0.9
+  # "For such men are false apostles... even Satan masquerades as an angel
+  # of light." (WEB wording, current edition — 2 Corinthians 11 NOT in
+  # web-subset; re-check at re-pin). Angelic appearance does not
+  # authenticate a message. NO-GROUP-NAMING comment (map): stated as what
+  # the text says of Paul's rivals; names no modern group.
+  - ref: 2 Corinthians 11:13-14
+    sources: [editorial]
+    weight: 0.8
+  # "contend earnestly for the faith which was once for all delivered to
+  # the saints." (WEB wording, current edition — Jude NOT in web-subset;
+  # re-check at re-pin). "Once for all delivered" is the finality claim
+  # this pack anchors; the contend/guard register is the pending
+  # contending-for-the-faith row's (map Decision 7 — see header).
+  - ref: Jude 1:3
+    sources: [editorial]
+    weight: 0.8
+  # "You shall not add to the word which I command you, neither shall you
+  # take away from it" (WEB wording, current edition — Deuteronomy 4 NOT
+  # in web-subset; re-check at re-pin). CAVEAT (map, statutes context): in
+  # context the command concerns the statutes Israel received; the honest
+  # claim is the principle that God's word is not to be supplemented or
+  # diminished by human addition. Whole-canon application is application,
+  # not the verse's own claim.
+  - ref: Deuteronomy 4:2
+    sources: [editorial]
+    weight: 0.75
+  # "Don't you add to his words, lest he reprove you, and you be found a
+  # liar." (WEB wording, current edition — Proverbs 30 NOT in web-subset;
+  # re-check at re-pin). The add-nothing principle in wisdom register,
+  # following directly on Prov 30:5 (anchored under
+  # trustworthiness-of-scripture — the split is each verse's own claim).
+  - ref: Proverbs 30:6
+    sources: [editorial]
+    weight: 0.7
+  # "if anyone adds to them, God will add to him the plagues which are
+  # written in this book" (WEB wording, current edition — Revelation 22
+  # NOT in web-subset; re-check at re-pin). CAVEAT (map, kept verbatim in
+  # spirit — the anchor's honest shape): "the words of the book of this
+  # prophecy" is Revelation itself (broad consensus, incl. conservative
+  # treatments). Anchored as the canon's CLOSING INSTANCE of the
+  # add-nothing principle (echoing Deut 4:2; Prov 30:6), never as a
+  # whole-Bible proof-text — hence the lowest weight in the pack, below
+  # the Galatians/2 Corinthians anchors.
+  - ref: Revelation 22:18-19
+    sources: [editorial]
+    weight: 0.6
+related:
+  - false-prophets
+  - trustworthiness-of-scripture
+  - grace-not-earned

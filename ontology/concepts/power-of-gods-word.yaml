@@ -1,0 +1,105 @@
+# APOLOGETICS WAVE (batch 5, 2026-08-25) — PENDING-TAG-GAP id (Theme C row
+# in tag-gaps-review.md). Building this pack does not preempt Jesse's
+# vocabulary review: nothing enters the vocabulary except by his merge of
+# this same draft PR — merging IS admitting the id (plan G-3).
+#
+# God's word endures forever, cannot be broken, and accomplishes what he
+# sends it to do — the permanence/efficacy register, distinct from
+# studying-the-word's engagement register and
+# trustworthiness-of-scripture's veracity register.
+#
+# Attribution: ALL anchors [editorial]. The verified Torrey outline was
+# checked: its Heb 4:12 row is already claimed by studying-the-word
+# [torrey]; no outline row matches this pack's permanence/efficacy claim
+# (trinity precedent forbids relabeling).
+#
+# LEXICON BOUNDARY (G-4): studying-the-word owns the generic "gods word" /
+# "the word of god" ({gods, word} / {word, god}); every entry here carries
+# a distinctive permanence/efficacy token (stand+forever, pass+away,
+# return+void, cannot+broken, power). Queries containing "gods word ..."
+# honestly fire studying-the-word too — dual surfacing by design, chips
+# both truthful. TOKENIZER DECISION (logged in the fixture): the plan's
+# "the word will not return void" would not fire on the shorter "it will
+# not return void"; the minimal reachable entry {return, void} ships
+# instead. No entry collapses to a single significant token.
+id: power-of-gods-word
+label: The power of God's word
+lexicon:
+  # Isa 40:8's own register, as searched.
+  - gods word stands forever
+  # Matt 24:35's remembered form.
+  - my words will not pass away
+  # Isa 55:11's remembered form (NIV/KJV memory says "void"; the WEB has
+  # "return to me void" — same tokens). Minimal set {return, void} so both
+  # "it will not return void" and "the word will not return void" reach it.
+  - will not return void
+  # John 10:35's parenthesis, as quoted.
+  - scripture cannot be broken
+  # The concept's name form.
+  - power of gods word
+anchors:
+  # "The grass withers, the flower fades; but the word of our God stands
+  # forever." (WEB, in corpus). The comfort chapter's ground — everything
+  # human withers; the word stands.
+  - ref: Isaiah 40:8
+    sources: [editorial]
+    weight: 1.0
+  # "so is my word that goes out of my mouth: it will not return to me
+  # void, but it will accomplish that which I please" (WEB, in corpus).
+  # Efficacy as God's own simile — like rain and snow, the word does what
+  # it is sent to do.
+  - ref: Isaiah 55:10-11
+    sources: [editorial]
+    weight: 0.95
+  # "Heaven and earth will pass away, but my words will not pass away."
+  # (WEB, in corpus). CAVEAT (map): teaches the indestructible certainty
+  # of Jesus' words, not a claim about manuscript transmission — the
+  # transmission application is attributed commentary, never the gist.
+  # DUAL CLAIM with studying-the-word's Matt 24:35 [editorial] 0.7 (rehomed
+  # there 2026-08-18 for the permanence of Christ's words); this pack is
+  # that register's proper home going forward — both chips honest,
+  # consolidation offered in the PR decision table.
+  - ref: Matthew 24:35
+    sources: [editorial]
+    weight: 0.9
+  # "not even one smallest letter or one tiny pen stroke shall in any way
+  # pass away from the law, until all things are accomplished." (WEB, in
+  # corpus). Jesus' estimate of the law's permanence, inside his claim to
+  # fulfill rather than destroy (5:17).
+  - ref: Matthew 5:18
+    sources: [editorial]
+    weight: 0.85
+  # "For the word of God is living and active, and sharper than any
+  # two-edged sword" (WEB, in corpus). The efficacy register — the word as
+  # living agent. DUAL CLAIM with studying-the-word's Heb 4:12 [torrey]
+  # 0.95 (engagement register); deliberate, commented both sides of the
+  # design (plan G-8).
+  - ref: Hebrews 4:12
+    sources: [editorial]
+    weight: 0.85
+  # "The grass withers, and its flower falls; but the Lord's word endures
+  # forever." (WEB, in corpus). Isa 40 quoted and applied by an apostle to
+  # the preached gospel — the enduring word identified with the message
+  # the readers received.
+  - ref: 1 Peter 1:24-25
+    sources: [editorial]
+    weight: 0.8
+  # "and the Scripture can't be broken" (WEB wording, current edition —
+  # John 10 NOT in web-subset; re-check at re-pin). DISPUTED-TEXT HANDLING
+  # (map, verbatim in spirit): ONLY the unbreakability parenthesis is
+  # anchored — Jesus' argument leans on a single word of Ps 82 being
+  # indissoluble. The "you are gods" deification misuse is never anchored
+  # anywhere (deification-guard.json locks that; the a-fortiori argument
+  # lives in deity-of-christ's John 10:30-33 justification comment).
+  - ref: John 10:35
+    sources: [editorial]
+    weight: 0.75
+  # "LORD, your word is settled in heaven forever." (WEB wording, current
+  # edition — Psalm 119 NOT in web-subset; re-check at re-pin). Permanence
+  # located in God's own settled decree.
+  - ref: Psalms 119:89
+    sources: [editorial]
+    weight: 0.8
+related:
+  - trustworthiness-of-scripture
+  - studying-the-word

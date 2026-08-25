@@ -198,18 +198,18 @@
       "conceptId": "abiding-in-christ"
     },
     {
-      "queryId": "concept-register:00a863582965ebfb",
-      "query": "verses on god of all comfort",
+      "queryId": "concept-register:007cf7a51e95d90f",
+      "query": "help me understand scripture is trustworthy",
       "register": "church-member",
       "expectationKind": "concept-anchors",
-      "conceptId": "god-of-all-comfort"
+      "conceptId": "trustworthiness-of-scripture"
     },
     {
-      "queryId": "concept-register:00ad060f4688a3b4",
-      "query": "scripture about struggling with god",
+      "queryId": "concept-register:00a76b1542823238",
+      "query": "scripture about is the gospel complete",
       "register": "church-member",
       "expectationKind": "concept-anchors",
-      "conceptId": "wrestling-with-god"
+      "conceptId": "no-other-gospel"
     }
   ],
   "felt-need": [
@@ -370,7 +370,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
+      "query": "how does the incarnation relate to trinity — father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"

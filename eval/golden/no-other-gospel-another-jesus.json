@@ -1,0 +1,31 @@
+{
+  "id": "no-other-gospel-another-jesus",
+  "query": "another jesus",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 5, 2026-08-25) — the",
+    "another-Jesus register of no-other-gospel (2 Cor 11:4: another Jesus,",
+    "a different spirit, a different 'good news' — the text's own",
+    "three-part category). BLOCKED ON CORPUS: 2 Corinthians 11 is absent",
+    "from pipeline/fixtures/web-subset.json",
+    "(docs/corpus-payload-dependency.md, BLOCKED 2026-08-21), so this",
+    "assertion would pass vacuously if active.",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that lands",
+    "2 Corinthians 11 (re-pin payload P4.15). The pack anchors 2 Cor 11:4",
+    "[editorial] at 0.9 and 2 Cor 11:13-14 [editorial] at 0.8 (no-group-",
+    "naming comment) now as anchors-with-note."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Corinthians 11:4",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Galatians 1:8"
+  ],
+  "coversConcepts": [
+    "no-other-gospel"
+  ]
+}

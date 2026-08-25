@@ -117,10 +117,14 @@ describe('health source semantics', () => {
     // + the 4 apologetics-wave batch-4 packs (2026-08-25:
     // why-god-allows-suffering, suffering-of-the-righteous,
     // prosperity-of-the-wicked, resurrection-of-the-dead — each with an
-    // active demonstrating fixture in the same change).
+    // active demonstrating fixture in the same change)
+    // + the 6 apologetics-wave batch-5 packs (2026-08-25:
+    // trustworthiness-of-scripture, power-of-gods-word, no-other-gospel,
+    // false-prophets, jesus-the-only-way, giving-an-answer — each with
+    // an active demonstrating fixture in the same change).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(145);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(145);
+    expect(coverage).toHaveLength(151);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(151);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });
