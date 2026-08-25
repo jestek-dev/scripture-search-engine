@@ -39,6 +39,20 @@ lexicon:
   - human dignity
   # Gen 1:26 / 5:1's own second term.
   - likeness of god
+  # APOLOGETICS WAVE EXTENSION (batch 1, 2026-08-25) — the
+  # dignity/human-uniqueness query family from the critic-approved
+  # apologetics concept map. VERIFY-GAP-FIRST measured (2026-08-25,
+  # image-of-god-sanctity.json pending-and-failing): 'why is human life
+  # sacred' returned bare lexical scatter with no curated chip and
+  # 'what makes humans different from animals' put Gen 1:26 at #2 on
+  # translation-variant evidence only — the pack was unreachable from
+  # this register. No anchor changes: all four map anchors were already
+  # carried. Widths under the one tokenizer: {human, life, sacr},
+  # {sanctity, life}, {make, human, different, animal} — no single-token
+  # collapse, no shared phrase with identity-in-christ or creation.
+  - human life is sacred
+  - sanctity of life
+  - what makes humans different from animals
 anchors:
   # "God said, 'Let's make man in our image, after our likeness'... God
   # created man in his own image. In God's image he created him; male and

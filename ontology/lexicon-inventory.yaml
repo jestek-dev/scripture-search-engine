@@ -1526,7 +1526,12 @@ concepts:
     # god" — reworded from "three in one" precisely to AVOID a bare
     # {three} collapse, pack REWORD note) keep multiple significant
     # tokens.
-    admitted: [trinity]
+    # 2026-08-25 apologetics wave batch 1: bare `godhead` admitted —
+    # same §1.6d option-3 shape as `trinity` (the word appears in no WEB
+    # verse, so no lexical rung reaches the doctrine without it);
+    # fixture-first per trinity-godhead.json (measured gap: the bare
+    # query returned preached-vocabulary scatter with no curated chip).
+    admitted: [trinity, godhead]
 
   - id: trust-in-god
     # trust: 2026-08-08 decision table. confidence: 2026-08-18 round-2

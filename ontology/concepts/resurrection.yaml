@@ -17,6 +17,18 @@ lexicon:
   - resurrection power
   - raised with christ
   - newness of life
+  # APOLOGETICS WAVE EXTENSION (batch 1, 2026-08-25) — bodily-evidence
+  # register (map Decision 1: extend, no witnesses-of-the-resurrection
+  # mint). Fixture-measured by resurrection-bodily-evidence.json.
+  # TOKENIZER DECLINE (G-4): the map's 'flesh and bones' reduces to the
+  # containment pair {flesh, bone}, which would fire this concept on the
+  # remembered Gen 2:23 wedding text ('bone of my bones...', Genesis 2 in
+  # corpus) — the quoted-verse hijack class flesh-and-blood-quote-guard
+  # records — and no fixture query exercises it: not added.
+  - evidence for the resurrection
+  - was the resurrection bodily
+  - witnesses of the resurrection
+  - jesus appeared to his disciples
 anchors:
   - ref: Luke 24:5-6
     sources: [editorial]
@@ -49,6 +61,105 @@ anchors:
   # RESURRECTION OF CHRIST, THE ("Saints Shall rise in the likeness of").
   - ref: Romans 6:5
     sources: [torrey]
+    weight: 0.8
+  # APOLOGETICS WAVE EXTENSION (batch 1, 2026-08-25) — the bodily,
+  # witnessed event: appearances, named eyewitnesses, and the apostolic
+  # insistence that everything hangs on it. All extension anchors are
+  # [editorial] per the critic-approved apologetics concept map (its
+  # research citations corroborate; they are never engine sources).
+  # Fixture-first: resurrection-bodily-evidence.json committed
+  # pending-and-failing before these anchors existed.
+  #
+  # "he appeared to Cephas, then to the twelve. Then he appeared to over
+  # five hundred brothers at once..." (WEB, in corpus). The received early
+  # creed's eyewitness list — named and living witnesses; the passage
+  # teaches the witnessed resurrection, and its evidential use in
+  # apologetics is downstream of what it says. SPAN SPLIT from the map's
+  # 1 Cor 15:3-6, measured 2026-08-25: anchoring v3 here handed a
+  # related-theme bonus to the-cross's own 1 Cor 15:3 anchor and displaced
+  # Romans 5:8 from #1 on the reviewed 'atonement' fixture — v3 ('died for
+  # our sins') stays the-cross's, v4 ('raised on the third day') stays this
+  # pack's existing [torrey] anchor, and the appearances list v5-6 anchors
+  # the evidence register without double-counting either.
+  - ref: 1 Corinthians 15:5-6
+    sources: [editorial]
+    weight: 0.8
+  # "If Christ has not been raised, then our preaching is in vain and your
+  # faith also is in vain." (WEB, in corpus). Paul stakes the faith's truth
+  # on a falsifiable historical claim. MAP SPAN NOTE: the map's entry is
+  # '1 Cor 15:14, 17' — the anchor ref grammar carries no comma lists, so
+  # v14 anchors the register and v17 ('you are still in your sins') is
+  # recorded here as its continuation, not silently widened to 15:14-17.
+  # Weight 0.8 (map said 0.85), measured 2026-08-25: at 0.85 this anchor
+  # sat 0.03 points below Romans 8:11 on the reviewed 'resurrection power'
+  # top-5 window — a coin-flip margin the extension has no right to ride.
+  - ref: 1 Corinthians 15:14
+    sources: [editorial]
+    weight: 0.8
+  # "See my hands and my feet, that it is truly me. Touch me and see, for a
+  # spirit doesn't have flesh and bones, as you see that I have." (WEB, in
+  # corpus). The risen Jesus's own contrast — not 'a spirit' but flesh and
+  # bones offered for touch, answering the disciples' fear (v37) and the
+  # spiritual-resurrection-only reading.
+  - ref: Luke 24:39
+    sources: [editorial]
+    weight: 0.95
+  # "They gave him a piece of a broiled fish... He took them, and ate in
+  # front of them." (WEB, in corpus). Eating in front of them is Luke's
+  # deliberate physical demonstration, narrated as evidence (v41).
+  - ref: Luke 24:42-43
+    sources: [editorial]
+    weight: 0.85
+  # "he also showed himself alive after he suffered, by many proofs,
+  # appearing to them over a period of forty days" (WEB, in corpus). The
+  # canon itself framing the appearances evidentially.
+  - ref: Acts 1:3
+    sources: [editorial]
+    weight: 0.8
+  # "his soul wasn't left in Hades, and his flesh didn't see decay. This
+  # Jesus God raised up, to which we all are witnesses." (WEB, in corpus).
+  # The first public apostolic sermon rests on collective eyewitness and
+  # defines the resurrection in terms of flesh. The pack's existing
+  # Acts 2:24 [torrey] anchor is untouched — this is its own anchor for
+  # the witness register, not a widening.
+  - ref: Acts 2:31-32
+    sources: [editorial]
+    weight: 0.8
+  # "he has given assurance to all men, in that he has raised him from the
+  # dead." (WEB, in corpus). To a pagan audience Paul offers the
+  # resurrection as God's public assurance — Scripture's own model of
+  # resurrection-as-apologetic. Cross edge: jesus-the-only-way (batch 5)
+  # anchors Acts 17:30-31 for the repentance-command register.
+  - ref: Acts 17:31
+    sources: [editorial]
+    weight: 0.75
+  # "that which we have seen with our eyes... and our hands touched" (WEB,
+  # in corpus). First-person sensory testimony opening a letter whose
+  # stated purpose is testimony. Scope caveat carried honestly: the
+  # referent is the whole incarnate life of the Word, not the resurrection
+  # appearances alone — hence the pack floor.
+  - ref: 1 John 1:1-2
+    sources: [editorial]
+    weight: 0.7
+  # "Reach here your finger, and see my hands... My Lord and my God!" (WEB
+  # wording — John 20 NOT in web-subset; assertion rides the pending
+  # companion resurrection-bodily-john.json and the corpus re-pin). The
+  # wounds of the crucified body on the risen one — continuity of the same
+  # body. The confession itself is deity-of-christ ground (dual anchored
+  # there at 0.95); here it carries the touch-the-wounds evidence.
+  - ref: John 20:27-28
+    sources: [editorial]
+    weight: 0.9
+  # "Destroy this temple, and in three days I will raise it up... But he
+  # spoke of the temple of his body." (WEB wording — John 2 NOT in
+  # web-subset; rides the same pending companion). The evangelist's own
+  # gloss fixes the referent: a bodily resurrection predicted, per the
+  # text's explicit interpretation. MAP SPAN NOTE: the map's entry is
+  # 'John 2:19, 21' (v20 deliberately dropped) — comma lists are not in
+  # the anchor ref grammar, so v19 anchors and v21's gloss is recorded
+  # here rather than widening to 2:19-21.
+  - ref: John 2:19
+    sources: [editorial]
     weight: 0.8
 related:
   - the-cross

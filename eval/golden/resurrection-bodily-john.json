@@ -1,0 +1,36 @@
+{
+  "id": "resurrection-bodily-john",
+  "query": "jesus said destroy this temple and in three days i will raise it up",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 1, 2026-08-25) — the Johannine",
+    "bodily-resurrection texts. BLOCKED ON CORPUS: John 2 and John 20 are",
+    "absent from pipeline/fixtures/web-subset.json, so these assertions would",
+    "pass vacuously if active (docs/corpus-payload-dependency.md, BLOCKED",
+    "2026-08-21).",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that lands",
+    "John 2 and John 20 (re-pin payload P4.15). The pack anchors John 2:19",
+    "and John 20:27-28 [editorial] now with anchors-with-note comments; the",
+    "map's 'John 2:19, 21' span is recorded in the pack comment (comma lists",
+    "are not in the anchor ref grammar).",
+    "The query is the remembered wording of the temple scene; the",
+    "touch-the-wounds scene (John 20:27-28) is asserted by the",
+    "deity-of-christ-thomas pending companion and re-cuts with it. On",
+    "activation verify the quoted-verse discipline (the verse being quoted",
+    "leads, the concept chip attends rather than displaces —",
+    "flesh-and-blood-quote-guard precedent) and re-cut to what is honest."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 2:19",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 20:27-28"
+  ],
+  "coversConcepts": [
+    "resurrection"
+  ]
+}

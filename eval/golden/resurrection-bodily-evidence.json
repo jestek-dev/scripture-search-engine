@@ -1,0 +1,48 @@
+{
+  "id": "resurrection-bodily-evidence",
+  "query": "evidence for the resurrection",
+  "status": "active",
+  "additionalQueries": [
+    "was the resurrection bodily",
+    "witnesses of the resurrection",
+    "jesus appeared to his disciples"
+  ],
+  "note": [
+    "Apologetics wave batch 1 (2026-08-25), fixtures-first: the",
+    "bodily-evidence register of the existing resurrection pack (map",
+    "Decision 1 resolved: extend, no witnesses-of-the-resurrection mint).",
+    "Measured gap before the extension: Luke 24:39 ('touch me and see, for a",
+    "spirit doesn't have flesh and bones') is in corpus but unanchored and",
+    "absent from every top-10 above; 'jesus appeared to his disciples'",
+    "returned only proximity scatter with no curated chip anywhere.",
+    "All new anchors are [editorial] per the concept map.",
+    "TOKENIZER DECISIONS (G-4, logged for Jesse): the map's candidate phrase",
+    "'flesh and bones' reduces to the containment pair {flesh, bone}, which",
+    "would fire this concept on the remembered Gen 2:23 wedding text ('bone",
+    "of my bones and flesh of my flesh', Genesis 2 in corpus) — a",
+    "quoted-verse hijack of the class flesh-and-blood-quote-guard.json",
+    "records — and no fixture query exercises it: NOT added. The map's",
+    "suggested additionalQuery 'touch me and see' is a verbatim quote of",
+    "Luke 24:39 itself, whose honest top reason is lexical, not",
+    "concept_anchor — NOT asserted here (a quoted verse's top belongs to the",
+    "verse being quoted).",
+    "Reason family only (no label pin): resurrection.json pins the label."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 24:39",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 15:5-6",
+    "Luke 24:42-43",
+    "Acts 1:3",
+    "Acts 2:31-32",
+    "Acts 17:31"
+  ],
+  "coversConcepts": [
+    "resurrection"
+  ]
+}

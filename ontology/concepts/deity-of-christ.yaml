@@ -13,6 +13,19 @@ lexicon:
   - is jesus god
   - the word was god
   - christ is god
+  # APOLOGETICS WAVE EXTENSION (batch 1, 2026-08-25) — claims-register
+  # phrasings, fixture-measured by deity-of-christ-claims.json.
+  # TOKENIZER DECLINES (G-4, one tokenizer): the map's 'before abraham was
+  # i am' collapses to the bare token {abraham} (was/i/am are stopwords)
+  # and would fire this concept on every Abraham narrative query — the WEB
+  # wording 'before abraham came into existence' lives in i-am-sayings
+  # (batch 2) instead. 'my lord and my god' reduces to the ubiquitous
+  # containment pair {lord, god} — the {god, flesh} failure class the
+  # flesh-and-blood-quote-guard records — so the Thomas confession is
+  # reachable only through the pending companion fixture until the John 20
+  # re-pin lands.
+  - is jesus god in the flesh
+  - fullness of deity
 anchors:
   # "In the beginning was the Word... and the Word was God."
   - ref: John 1:1
@@ -35,6 +48,99 @@ anchors:
   # frame is the Spirit's declaring, the deity claim is embedded.
   - ref: John 16:15
     sources: [torrey]
+    weight: 0.6
+  # APOLOGETICS WAVE EXTENSION (batch 1, 2026-08-25) — claims register from
+  # the critic-approved apologetics concept map. All extension anchors are
+  # [editorial]: Torrey's CHRIST IS GOD outline does not carry these rows,
+  # and the map's research citations are corroboration, never engine
+  # sources. Fixture-first: eval/golden/deity-of-christ-claims.json was
+  # committed pending-and-failing before these anchors existed.
+  #
+  # "Most certainly, I tell you, before Abraham came into existence, I AM."
+  # (WEB, in corpus). Present-tense existence before Abraham — 'I AM',
+  # capitalized by the WEB itself, marking the Exodus 3:14 allusion
+  # (standard consensus reading, signposted); the hearers' move to stone
+  # him (8:59) shows they heard a divine claim. DELIBERATE DUAL ANCHOR with
+  # i-am-sayings (batch 2), which owns the saying-locator register at 1.0;
+  # here the anchor carries the deity claim itself (John 1:1-3 trinity
+  # precedent for cross-concept anchoring).
+  - ref: John 8:58
+    sources: [editorial]
+    weight: 0.95
+  # "All things were made through him. Without him, nothing was made that
+  # has been made." (WEB, in corpus). The exhaustive made/unmade line:
+  # everything in the category 'made things' was made through the Word, so
+  # the Word cannot belong to that category — the standard consensus
+  # reading of the verse's own logic. Dual claim with creation's John 1:3
+  # anchor (creation register there; the uncreated-Word claim here).
+  - ref: John 1:3
+    sources: [editorial]
+    weight: 0.85
+  # "looking for the blessed hope and appearing of the glory of our great
+  # God and Savior, Jesus Christ" (WEB, in corpus). The WEB text itself
+  # joins 'our great God and Savior' as one pair of titles borne by 'Jesus
+  # Christ'; the one-article Greek construction stays out of display
+  # wording — the plain English carries the point.
+  - ref: Titus 2:13
+    sources: [editorial]
+    weight: 0.8
+  # "Thomas answered him, 'My Lord and my God!' ..." (WEB wording —
+  # John 20 NOT in web-subset; assertion rides the pending companion
+  # deity-of-christ-thomas.json and the corpus re-pin). Thomas addresses
+  # the risen Jesus as 'my God' and Jesus blesses the belief rather than
+  # correcting it. Dual with honor-the-son (batch 2), which carries the
+  # worship-practice register.
+  - ref: John 20:28-29
+    sources: [editorial]
+    weight: 0.95
+  # "I and the Father are one... you, being a man, make yourself God" (WEB
+  # wording — John 10 NOT in web-subset). His audience understood a claim
+  # to deity and answered with the blasphemy charge. Ps 82 / John 10:34
+  # handling (disputed-texts table): Jesus' Psalm 82 reply is an
+  # a-fortiori argument, not a retraction — he restates the claim at
+  # 10:38; Psalm 82 itself is never anchored to this or any deification
+  # concept (deification-guard.json locks that).
+  - ref: John 10:30-33
+    sources: [editorial]
+    weight: 0.9
+  # "For in him all the fullness of the Deity dwells bodily" (WEB wording —
+  # Colossians 2 NOT in web-subset). Not a portion but all the fullness,
+  # dwelling bodily.
+  - ref: Colossians 2:9
+    sources: [editorial]
+    weight: 0.9
+  # "glorify me with your own self with the glory which I had with you
+  # before the world existed" (WEB wording — John 17 NOT in web-subset).
+  # Pre-existence and shared divine glory in his own prayer.
+  - ref: John 17:5
+    sources: [editorial]
+    weight: 0.85
+  # "existing in the form of God, didn't consider equality with God a thing
+  # to be grasped" (WEB wording — Philippians 2 NOT in web-subset).
+  # Consensus reading signposted: 'emptied himself' is renunciation of
+  # privilege by taking servanthood, not subtraction of deity. SPAN SPLIT:
+  # the exaltation half (2:9-11) is anchored under honor-the-son (batch 2).
+  - ref: Philippians 2:6-7
+    sources: [editorial]
+    weight: 0.85
+  # "His name will be called Wonderful Counselor, Mighty God..." (WEB
+  # wording — Isaiah 9 NOT in web-subset). Attributed-fact handling per
+  # the map: Isa 10:21 uses the identical 'Mighty God' title for the God
+  # of Jacob one chapter later, so within Isaiah's usage it is not a
+  # lesser-divinity category; the identification of the child with Jesus
+  # is NT-attributed fact (Matt 4:15-16 cites Isa 9:1-2), never
+  # adjudicated fulfillment — no fulfillment tag lands on Isaiah 9 itself.
+  - ref: Isaiah 9:6
+    sources: [editorial]
+    weight: 0.7
+  # "out of you one will come out to me who is to be ruler in Israel; whose
+  # goings out are from of old, from ancient times" (WEB wording — Micah 5
+  # NOT in web-subset). Flagged honestly: the WEB reads weaker than the
+  # KJV's 'from everlasting'; the justification claims ancient
+  # pre-existence language only, and the Bethlehem citation (Matt 2:5-6)
+  # is attributed fact, not a fulfillment tag on Micah 5.
+  - ref: Micah 5:2
+    sources: [editorial]
     weight: 0.6
 related:
   - creation
