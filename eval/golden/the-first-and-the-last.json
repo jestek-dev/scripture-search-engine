@@ -1,0 +1,43 @@
+{
+  "id": "the-first-and-the-last",
+  "query": "alpha and omega",
+  "status": "active",
+  "additionalQueries": [
+    "who is the alpha and omega",
+    "the beginning and the end"
+  ],
+  "note": [
+    "Apologetics wave batch 2 (2026-08-25), fixtures-first: NEW-MINT",
+    "conditional (map Decision 10 recommends mint on the title-locator",
+    "precedent; mint-vs-fold decision row for Jesse). Measured gap before",
+    "the pack (2026-08-25): 'alpha and omega' returned only THREE results",
+    "(Rev 21:6, Rev 1:8, Rev 1:11) with no curated chip and no path to the",
+    "identification chain; 'the first and the last' put Rev 1:17 #1 on",
+    "exact-phrase evidence, chipless.",
+    "REMOVED QUERY + PHRASE (measured, trinity 'three in one' precedent):",
+    "the lexicon initially carried 'the first and the last' ({first, last}),",
+    "and measured post-pack it hijacked the remembered Matt 19:30 register —",
+    "'the last will be first' returned Rev 1:17-18 #1 (47.9) with Matt 19:30",
+    "demoted to #5. The phrase is removed from the pack, this fixture no",
+    "longer asserts that literal query (its honest #1 is Rev 1:17 by exact",
+    "phrase, which it already achieves lexically), and",
+    "first-shall-be-last-guard.json locks the healed state. The concept",
+    "stays reachable via 'alpha and omega' and 'the beginning and the end'."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Revelation 1:17-18",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The First and the Last"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Revelation 1:8",
+    "Revelation 21:6",
+    "Isaiah 41:4"
+  ],
+  "coversConcepts": [
+    "the-first-and-the-last"
+  ]
+}

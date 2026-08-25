@@ -1,0 +1,43 @@
+{
+  "id": "no-other-god",
+  "query": "no god besides me",
+  "status": "active",
+  "additionalQueries": [
+    "how many gods are there",
+    "can humans become gods"
+  ],
+  "note": [
+    "Apologetics wave batch 2 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id no-other-god (Theme C, Isaiah-minted row) — merged only by Jesse's",
+    "admission of this PR (plan G-3; alternate id god-alone in the decision",
+    "table). Measured gap before the pack (2026-08-25): 'no god besides me'",
+    "returned Isa 26:13 + preached-vocabulary scatter with no curated chip;",
+    "'how many gods are there' returned token scatter (Gal 6:16 #1); 'can",
+    "humans become gods' returned translation-variant scatter — Isa 43:10,",
+    "Isa 43:11, and Deut 6:4 appeared in no top-10.",
+    "TOKENIZER DECISIONS (G-4, logged): the natural phrasings 'is there only",
+    "one god' / 'there is no other god' collapse to the bare token {god} and",
+    "'the lord is one' to {lord} — none is admitted (the 2026-08-08 accident",
+    "class; the ph6-B harm token), so those query forms are deliberately not",
+    "asserted here; the queries below are the reachable forms that keep a",
+    "distinctive token.",
+    "'can humans become gods' is asserted HERE (the concept is the honest",
+    "answer surface); the Ps 82:6 demotion discipline for the same query",
+    "lives in deification-guard.json (same batch, map Decision 12 / F-1)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 43:10",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: No other God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Deuteronomy 6:4",
+    "Isaiah 43:11"
+  ],
+  "coversConcepts": [
+    "no-other-god"
+  ]
+}

@@ -880,6 +880,17 @@ concepts:
     # fixture-backed (gods-provision-famine.json).
     admitted: [provision, famine]
 
+  - id: gods-unchanging-nature
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, gods-unchanging-nature.json). Every phrase keeps
+    # >= 2 significant tokens by design; no bare word fires today.
+    skipped:
+      - token: change
+        reason: >-
+          Generic verb across the canon (changed garments, changed wages,
+          times and seasons); the question forms ("does god change",
+          "i the lord do not change") carry the concept.
+
   - id: grace-not-earned
     # 2026-08-08 decision table: theologically specific.
     admitted: [grace]
@@ -956,6 +967,18 @@ concepts:
     # ("lies", "lie").
     admitted: [honesty, lying, lie]
 
+  - id: honor-the-son
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, honor-the-son.json). Every entry contains a
+    # jesus/son token; no bare word fires today.
+    skipped:
+      - token: worship
+        reason: >-
+          Bare `worship` is the worship concept's reviewed admitted token
+          (its inventory row); this pack is the jesus-directed practice
+          register and must never claim the generic worship query. The
+          multi-token jesus phrasings carry it.
+
   - id: hope-in-despair
     # NEEDS-JESSE §1.6d option 3 single words. "cutting" is the collapse of
     # "cutting myself" ("myself" is a stopword); kept deliberately — in this
@@ -994,6 +1017,19 @@ concepts:
           Spans literal famine and bread narratives across the canon; the
           "hunger for god" / "thirst for god" phrase forms and the dry-season
           phrasings carry the concept.
+
+  - id: i-am-sayings
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, i-am-sayings.json). 'i'/'am' are stopwords, so the
+    # topic's natural name "i am sayings" collapses to the bare verb stem
+    # `say` — declined in the pack (G-4); no bare word fires today.
+    skipped:
+      - token: say
+        reason: >-
+          The ubiquitous speech verb — a bare trigger (or the {say, jesu}
+          containment pair) would fire this concept on every "what did
+          jesus say about X" query. The statement/bread/abraham phrasings
+          carry the concept.
 
   - id: identity-in-christ
     # 2026-08-18 harvest, §1.6d option-3 pattern: a distinctive modern word
@@ -1109,6 +1145,26 @@ concepts:
           second-coming adjacency, and the canon's pervasive usage); the
           "new heaven(s)" and "new jerusalem" phrase forms carry this
           concept.
+
+  - id: no-other-god
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, no-other-god.json + the deification-guard pair).
+    # The natural phrasings "there is no other god" / "is there only one
+    # god" collapse to bare {god} and "the lord is one" to bare {lord} —
+    # all declined in the pack (G-4, the 2026-08-08 accident class); no
+    # bare word fires today.
+    skipped:
+      - token: god
+        reason: >-
+          The commonest token in the corpus; the 2026-08-08 accident
+          class verbatim. The besides/many-gods/true-god phrasings carry
+          the concept.
+      - token: gods
+        reason: >-
+          A bare `gods` trigger would fire this concept on the verbatim
+          Ps 82:6 quote query "you are gods" and hand the quoted verse's
+          top to this pack's anchors — the exact hijack
+          deification-guard-you-are-gods.json exists to forbid.
 
   - id: obedience-to-the-word
     # 2026-08-08 decision table: the concept's own subject.
@@ -1441,6 +1497,18 @@ concepts:
           forms carry the concept. Plausible future admission, deferred
           pending a measured gap.
 
+  - id: supremacy-of-christ
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, supremacy-of-christ.json). The map's "christ above
+    # all" collapsed to bare {christ} and was reworded in the pack (G-4);
+    # no bare word fires today.
+    skipped:
+      - token: christ
+        reason: >-
+          Bare `christ` spans the whole NT and belongs to no single
+          doctrine pack; the firstborn/supremacy/image phrasings carry
+          the concept.
+
   - id: suffering-for-christ
     # 2026-08-18 harvest: "suffering" is a deliberate bare entry (the
     # pack's own subject word; god-sees-my-suffering records the matching
@@ -1490,6 +1558,22 @@ concepts:
     # only the curated entry can; 'atoning sacrifice' is the WEB's own
     # wording at 1 John 2:2 / 4:10.
     admitted: [cross, atonement, propitiation]
+
+  - id: the-first-and-the-last
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, the-first-and-the-last.json). The title's own form
+    # "the first and the last" ({first, last}) was REMOVED after it
+    # measurably hijacked the remembered Matt 19:30 register — see the
+    # pack's REMOVED PHRASE note and first-shall-be-last-guard.json. The
+    # two remaining entries keep >= 2 significant tokens; no bare word
+    # fires today.
+    skipped:
+      - token: first
+        reason: >-
+          Ubiquitous ordinal ("seek first", "first day", "first fruits"),
+          and even the paired {first, last} form proved a measured hijack
+          of "the last will be first" (guard-locked); only "alpha and
+          omega" and "the beginning and the end" carry the concept.
 
   - id: the-lords-discipline
     # 2026-08-18 harvest: "chastening" deliberate bare entry (the KJV-family

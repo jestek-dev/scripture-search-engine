@@ -286,6 +286,12 @@
   ],
   "golden-verbatim": [
     {
+      "queryId": "golden-verbatim:01230e3d9f4b9b60",
+      "query": "you are gods",
+      "expectationKind": "concept-anchors",
+      "conceptId": "deification-guard-you-are-gods"
+    },
+    {
       "queryId": "golden-verbatim:0163977d087e5919",
       "query": "covenant promises",
       "expectationKind": "concept-anchors",
@@ -338,12 +344,6 @@
       "query": "the lord bless you and keep you",
       "expectationKind": "concept-anchors",
       "conceptId": "benediction"
-    },
-    {
-      "queryId": "golden-verbatim:06603df273b5e65e",
-      "query": "famine in the land",
-      "expectationKind": "concept-anchors",
-      "conceptId": "gods-provision-famine"
     }
   ],
   "multi-concept": [
@@ -567,6 +567,13 @@
       "conceptId": "obedience-to-the-word"
     },
     {
+      "queryId": "worship-planning:00931a318fc9254a",
+      "query": "benediction on honor the son",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "honor-the-son"
+    },
+    {
       "queryId": "worship-planning:0250d083ba1179f1",
       "query": "opening scripture for a service on fell back into sin",
       "register": "worship-leader",
@@ -621,13 +628,6 @@
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
       "conceptId": "presence-of-god"
-    },
-    {
-      "queryId": "worship-planning:03b51854a825f694",
-      "query": "songs about god tests his people",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "testing"
     }
   ]
 }

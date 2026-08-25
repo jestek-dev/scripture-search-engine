@@ -1,0 +1,31 @@
+{
+  "id": "supremacy-of-christ-hebrews1",
+  "query": "is jesus greater than the angels",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 2, 2026-08-25) — the",
+    "Hebrews 1 catena of supremacy-of-christ. BLOCKED ON CORPUS: Hebrews 1",
+    "is absent from pipeline/fixtures/web-subset.json",
+    "(docs/corpus-payload-dependency.md, BLOCKED 2026-08-21).",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that lands",
+    "Hebrews 1 (re-pin payload P4.15). The pack anchors Heb 1:3, 1:8, and",
+    "1:10-12 [editorial] now as anchors-with-note (the Ps 102 application is",
+    "the author of Hebrews' own attributed citation, stated as such in the",
+    "pack comment). On activation re-cut the expected lead to what is",
+    "honest for the query."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hebrews 1:3",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 1:8",
+    "Hebrews 1:10-12"
+  ],
+  "coversConcepts": [
+    "supremacy-of-christ"
+  ]
+}

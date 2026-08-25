@@ -1,0 +1,100 @@
+# APOLOGETICS WAVE (batch 2, 2026-08-25) — NEW-MINT-conditional (map
+# Decision 9 recommends mint: the query family is devotional-practice-
+# shaped, distinct from identity-shaped deity queries; the mint-vs-extend
+# call is a PR decision row for Jesse — if he rules extend, anchors fold
+# into deity-of-christ unchanged).
+#
+# The Father wills that all honor the Son as they honor the Father; the
+# risen Jesus rightly receives worship. THIN IN-CORPUS SET (2 anchors —
+# plan flag F-3): admissible (one active in-corpus assertion satisfies
+# G3), named honestly in the PR; the namesake text John 5:22-23 is
+# corpus-blocked and rides the pending companion.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): "worship of jesus" normalizes to
+# the same set as "should we worship jesus" ({worship, jesu}) and is not
+# duplicated. Every entry contains a jesus/son token, keeping the boundary
+# with the worship pack (which owns generic worship phrasings and the bare
+# `worship` token — its inventory decision, not this pack's).
+# "praying to jesus" ({pray, jesu}) is the widest entry — no committed
+# probe or fixture query carries both tokens (checked); first to narrow if
+# churn ever names it.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: honor-the-son
+label: Honor the Son
+lexicon:
+  - should we worship jesus
+  - honor the son
+  - jesus received worship
+  - praying to jesus
+anchors:
+  # "behold, Jesus met them, saying, 'Rejoice!' They came and took hold of
+  # his feet, and worshiped him." (WEB, in corpus). The risen Jesus
+  # accepts worship — a deliberate narrative contrast with angels and
+  # apostles, who refuse it (Rev 19:10; 22:8-9 'Worship God';
+  # Acts 10:25-26 — contrast refs live HERE in the comment, never as
+  # anchors). Every faithful creature deflects worship; Jesus receives it
+  # — descriptive of the texts, stated as the consensus observation it is.
+  - ref: Matthew 28:9
+    sources: [editorial]
+    weight: 0.9
+  # "When they saw him, they bowed down to him; but some doubted." (WEB,
+  # in corpus). The Eleven's prostration — and the narrator's candor about
+  # doubt strengthens the report's honesty.
+  - ref: Matthew 28:17
+    sources: [editorial]
+    weight: 0.8
+  # "the Father judges no one, but he has given all judgment to the Son,
+  # that all may honor the Son, even as they honor the Father." (WEB
+  # wording — John 5 NOT in web-subset; ASSERTION-BLOCKED: the namesake
+  # text rides the pending companion honor-the-son-john5.json and the
+  # re-pin). The equivalence is the verse's own wording, not an inference.
+  - ref: John 5:22-23
+    sources: [editorial]
+    weight: 1.0
+  # "Therefore God also highly exalted him... that at the name of Jesus
+  # every knee should bow... to the glory of God the Father." (WEB wording
+  # — Philippians 2 NOT in web-subset). DISPUTED TEXT comment (map):
+  # universal homage directed at Jesus, echoing Isa 45:23 — Yahweh's oath
+  # about himself — and glorifying rather than rivaling the Father; the
+  # exaltation is of the humbled incarnate Christ of vv6-8, so it
+  # presupposes rather than confers divine status (standard consensus
+  # reading, signposted; the Isa 45:23 echo stated as an echo, never read
+  # back onto Isaiah 45's tags). SPAN SPLIT: deity-of-christ (batch 1)
+  # anchors 2:6-7.
+  - ref: Philippians 2:9-11
+    sources: [editorial]
+    weight: 0.9
+  # "Thomas answered him, 'My Lord and my God!'" (WEB wording — John 20
+  # NOT in web-subset). DUAL ANCHOR with deity-of-christ (0.95 there):
+  # identity register there, worship-practice register here.
+  - ref: John 20:28-29
+    sources: [editorial]
+    weight: 0.85
+  # "When he again brings in the firstborn into the world he says, 'Let
+  # all the angels of God worship him.'" (WEB wording — Hebrews 1 NOT in
+  # web-subset). Worship ordered by the Father; 'firstborn' carries the
+  # rank sense established at Col 1:15/18 (supremacy-of-christ, same
+  # batch — split comment).
+  - ref: Hebrews 1:6
+    sources: [editorial]
+    weight: 0.85
+  # "Those who were in the boat came and worshiped him" (WEB wording —
+  # Matthew 14 NOT in web-subset). Worship joined to confession, received
+  # without correction.
+  - ref: Matthew 14:33
+    sources: [editorial]
+    weight: 0.7
+  # "I heard every created thing... saying, 'To him who sits on the throne
+  # and to the Lamb be the blessing...'" (WEB wording — Revelation 5 NOT
+  # in web-subset). EVERY-CREATED-THING comment: the choir is every
+  # created thing, placing the Lamb on the receiving side of creation's
+  # worship, not among the worshipers.
+  - ref: Revelation 5:13
+    sources: [editorial]
+    weight: 0.8
+related:
+  - worship
+  - deity-of-christ

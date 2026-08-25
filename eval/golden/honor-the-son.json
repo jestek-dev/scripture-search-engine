@@ -1,0 +1,39 @@
+{
+  "id": "honor-the-son",
+  "query": "should we worship jesus",
+  "status": "active",
+  "additionalQueries": [
+    "did jesus receive worship"
+  ],
+  "note": [
+    "Apologetics wave batch 2 (2026-08-25), fixtures-first: NEW-MINT",
+    "conditional (map Decision 9 recommends mint — devotional-practice",
+    "register, distinct from identity-shaped deity queries; decision row",
+    "for Jesse, fold-into-deity-of-christ reversal is cheap). Measured gap",
+    "before the pack (2026-08-25): both queries returned only the generic",
+    "worship pack's anchors (Ps 95:6 / John 4:23-24 leading) — Matt 28:9",
+    "and Matt 28:17, the two in-corpus received-worship scenes, appeared in",
+    "no top-10.",
+    "THIN IN-CORPUS SET (plan flag F-3): two in-corpus anchors; the",
+    "namesake John 5:22-23 is corpus-blocked and rides the pending",
+    "companion honor-the-son-john5.json. Named honestly in the PR.",
+    "The generic worship concept legitimately also fires on these queries",
+    "(bare `worship` is its reviewed inventory decision); this fixture",
+    "asserts the jesus-directed scene leads with THIS pack's chip, within",
+    "the window."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 28:9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Honor the Son"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 28:17"
+  ],
+  "coversConcepts": [
+    "honor-the-son"
+  ]
+}

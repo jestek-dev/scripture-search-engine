@@ -1,0 +1,30 @@
+{
+  "id": "deification-guard-you-are-gods",
+  "query": "you are gods",
+  "status": "active",
+  "note": [
+    "GUARD FIXTURE, companion to deification-guard.json (apologetics wave",
+    "batch 2, 2026-08-25; map Decision 12 / plan F-1). For the VERBATIM",
+    "quote query, Ps 82:6 is an honest lexical result and belongs near the",
+    "top on token evidence alone — the map expected it at #1; measured",
+    "2026-08-25 (pre- and post-pack): Exodus 20:3 leads on preached",
+    "vocabulary and Ps 82:6 sits #2 on exact-phrase evidence, so the honest",
+    "window asserted is top 3 with a token-family reason.",
+    "What this locks: no pack anywhere anchors Ps 82:6 (map Declined #12),",
+    "so the verse must keep ranking on LEXICAL evidence for its own quote —",
+    "if a future pack anchors it, either a concept chip displaces the",
+    "token-family reason or the deification-guard demotion breaks, and this",
+    "pair of guards names the regression. The no-other-god lexicon",
+    "deliberately admits no bare `gods` token (skipped with reason in",
+    "ontology/lexicon-inventory.yaml) precisely so this quote query keeps",
+    "returning the quoted verse rather than a doctrine pack's anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 82:6",
+      "withinTop": 3,
+      "requiredReasonFamily": "token_overlap"
+    }
+  ],
+  "expectedWithinTop": 3
+}

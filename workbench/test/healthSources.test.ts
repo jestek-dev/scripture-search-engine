@@ -105,10 +105,14 @@ describe('health source semantics', () => {
     // trinity + incarnation (2026-08-21 Phase-4 P4.4/P4.5 doctrinal
     // locator packs) + baptism + christ-the-cornerstone + doubt
     // (2026-08-21 Phase-4 P4.10a/P4.10b/P4.10c) +
-    // caring-for-aging-parents (2026-08-22 Phase-4 P4.6, the fn13 fix).
+    // caring-for-aging-parents (2026-08-22 Phase-4 P4.6, the fn13 fix)
+    // + the 6 apologetics-wave batch-2 packs (2026-08-25: no-other-god,
+    // gods-unchanging-nature, supremacy-of-christ, i-am-sayings,
+    // the-first-and-the-last, honor-the-son — each with an active
+    // demonstrating fixture in the same change).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(131);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(131);
+    expect(coverage).toHaveLength(137);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(137);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

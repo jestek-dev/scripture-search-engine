@@ -1,0 +1,27 @@
+{
+  "id": "honor-the-son-john5",
+  "query": "honor the son as the father",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 2, 2026-08-25) — the",
+    "namesake text of honor-the-son. BLOCKED ON CORPUS: John 5 is absent",
+    "from pipeline/fixtures/web-subset.json",
+    "(docs/corpus-payload-dependency.md, BLOCKED 2026-08-21), so this",
+    "assertion would pass vacuously if active.",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that lands",
+    "John 5 (re-pin payload P4.15). The pack anchors John 5:22-23",
+    "[editorial] at 1.0 now as an anchor-with-note — 'that all may honor",
+    "the Son, even as they honor the Father': the equivalence is the",
+    "verse's own wording, not an inference."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 5:22-23",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "honor-the-son"
+  ]
+}

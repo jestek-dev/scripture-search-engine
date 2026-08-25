@@ -1,0 +1,92 @@
+# APOLOGETICS WAVE (batch 2, 2026-08-25) — PENDING-TAG-GAP id (Theme K,
+# Colossians-minted row; admission rides Jesse's merge of this draft PR,
+# plan G-3). Christ preeminent over all — image of the invisible God,
+# agent and goal of creation, head of the church. The disputed-text
+# handling IS the pack: prototokos-as-rank is stated as the standard
+# conservative-evangelical consensus it is, signposted, and every anchor
+# is [editorial] so the framing is visibly LH's judgment (the engine
+# reports the claim and its source; it adjudicates nothing).
+#
+# TOKENIZER DISCIPLINE (G-4, verified): the map's "christ above all"
+# collapses to the bare token {christ} and is REWORDED to "is christ
+# supreme over all" ({christ, supreme}); "all things were created through
+# him" keeps {thing, creat} — close to creation.yaml's "all things were
+# made through him" ({thing, made}) but token-distinct; measured, and
+# dropped first if G4 ever flags the pair.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: supremacy-of-christ
+label: The supremacy of Christ
+lexicon:
+  # The verse's own title phrase — also the JW-conversation entry point.
+  - firstborn of all creation
+  - supremacy of christ
+  # Reworded from the map's "christ above all" (bare {christ} collapse).
+  - is christ supreme over all
+  # Col 1:15's first clause. Fires image-of-god too (its "image of god"
+  # containment) — deliberate: both concepts honestly claim Col 1:15, and
+  # the chips say which source claims what.
+  - image of the invisible god
+  # Col 1:16's summary clause ({thing, creat} — see width note above).
+  - all things were created through him
+anchors:
+  # "He is the image of the invisible God, the firstborn of all creation."
+  # (WEB, in corpus). DISPUTED TEXT — handled per the map: 'firstborn'
+  # (prototokos) is a title of rank — preeminent heir over all creation —
+  # not first-created: grounded in v16 (all things without remainder
+  # created through him and for him, placing him outside the created
+  # category), v18's own purpose gloss ('that in all things he might have
+  # the preeminence'), and the OT rank-usage of Ps 89:27 (David appointed
+  # 'firstborn'). The WEB, matching the Greek, reads 'all things', not
+  # 'all other things'. Contested; editorial-attributed so the framing is
+  # visibly LH's judgment, stated as the standard consensus it is.
+  # CROSS-CONCEPT DUAL: image-of-god anchors Col 1:15 [torrey] at 0.8 for
+  # the image register — deliberate (map dual-anchor list).
+  - ref: Colossians 1:15
+    sources: [editorial]
+    weight: 1.0
+  # "For by him all things were created... All things have been created
+  # through him and for him." (WEB, in corpus). The 'For' grounds v15:
+  # Creator of all cannot be a member of 'all'.
+  - ref: Colossians 1:16
+    sources: [editorial]
+    weight: 0.95
+  # "He is before all things, and in him all things are held together."
+  # (WEB, in corpus). Priority and present sustaining — sustainer, not
+  # first member. [editorial] per critic round 1 of the map.
+  - ref: Colossians 1:17
+    sources: [editorial]
+    weight: 0.9
+  # "...who is the beginning, the firstborn from the dead, that in all
+  # things he might have the preeminence." (WEB, in corpus). The hymn's
+  # purpose clause defines the register of 'firstborn' — manifestly rank
+  # language (he is not the first person ever to be dead).
+  - ref: Colossians 1:18
+    sources: [editorial]
+    weight: 0.9
+  # "His Son is the radiance of his glory, the very image of his
+  # substance, and upholding all things by the word of his power" (WEB
+  # wording — Hebrews 1 NOT in web-subset; rides the re-pin with the
+  # pending companion fixture).
+  - ref: Hebrews 1:3
+    sources: [editorial]
+    weight: 0.85
+  # "But of the Son he says, 'Your throne, O God, is forever and ever.'"
+  # (WEB wording — Hebrews 1 NOT in web-subset). The Father addresses the
+  # Son as God, in the chapter arguing his superiority to angels.
+  - ref: Hebrews 1:8
+    sources: [editorial]
+    weight: 0.85
+  # "You, Lord, in the beginning, laid the foundation of the earth...
+  # but you are the same." (WEB wording — Hebrews 1 NOT in web-subset).
+  # ATTRIBUTED CITATION comment: Hebrews applies Psalm 102's address to
+  # Yahweh to the Son — the author of Hebrews' own attributed citation,
+  # stated as such (Ps 102:25-27 itself is anchored under
+  # gods-unchanging-nature, same batch).
+  - ref: Hebrews 1:10-12
+    sources: [editorial]
+    weight: 0.85
+related:
+  - image-of-god
+  - deity-of-christ
+  - creation
