@@ -1121,6 +1121,34 @@ concepts:
     # multiple significant tokens.
     admitted: [incarnation]
 
+  - id: jehovahs-witness-evangelism
+    # 2026-08-25 apologetics master-tag addition (Decision D13 approved
+    # by Jesse 2026-08-25; fixture-first,
+    # jehovahs-witness-evangelism.json). No lexicon entry collapses to a
+    # single significant token: "jehovahs witness" keeps {jehovah,
+    # witness} and "watchtower society" keeps {watchtower, society}.
+    # ("jw" was declined structurally — significantWords drops it to
+    # nothing, so no row can carry it; recorded in the pack + fixture.)
+    skipped:
+      - token: jehovah
+        reason: >-
+          A devotional name query ("jehovah", "jehovah jireh") must not
+          fire a movement-evangelism concept — wrong-register hijack.
+          The two-token entry "jehovahs witness" carries the movement
+          register instead.
+      - token: watchtower
+        reason: >-
+          The WEB itself uses "watchtower" (Isa 21:8, Isa 32:14 —
+          outside the current subset, arriving with the corpus re-pin):
+          a bare trigger would hijack the biblical watchman/watchtower
+          vocabulary the moment those chapters land. "watchtower
+          society" carries the movement register safely.
+      - token: witness
+        reason: >-
+          Bare {witness} stays with sharing-your-faith (acknowledged
+          collapse, pre-existing on main); this pack fires only when
+          "jehovah" accompanies it.
+
   - id: jesus-the-only-way
     # 2026-08-25 apologetics wave batch 5: row authored with the pack
     # (fixture-first, jesus-the-only-way.json). No lexicon entry
@@ -1190,6 +1218,17 @@ concepts:
           (fixture first — never add data because it exists); the pack is
           reachable today by its question phrasings. Bare "marriage" belongs
           to godly-marriage (2026-08-18).
+
+  - id: mormon-evangelism
+    # 2026-08-25 apologetics master-tag addition (Decision D13 approved
+    # by Jesse 2026-08-25; fixture-first, mormon-evangelism.json). Three
+    # deliberate bare entries, §1.6d option-3 / apologetics + godhead
+    # precedent — none of the three words appears in any WEB verse, so
+    # no lexical rung reaches the movement register without them.
+    # "mormons" shares the stem of "mormon"; "mormonism" keeps its own
+    # stem (the tokenizer does not strip -ism); the multi-token entry
+    # "latter day saints" keeps {latter, day, saint} and needs no row.
+    admitted: [mormon, mormonism, lds]
 
   - id: nations-and-peoples
     # PR #41 (2026-08-22 Genesis pilot): "all nations" collapses to the

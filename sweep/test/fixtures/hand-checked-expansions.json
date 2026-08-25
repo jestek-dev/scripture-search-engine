@@ -370,7 +370,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity — father, son, and spirit",
+      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"
@@ -386,6 +386,13 @@
       "queryId": "multi-concept:009e376cb0e9e185",
       "query": "sermon connecting the deity of christ and salvation",
       "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "deity-of-christ"
+    },
+    {
+      "queryId": "multi-concept:010b0bcaf4aa6dd7",
+      "query": "verses about the deity of christ and mormon evangelism",
+      "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "deity-of-christ"
     },
@@ -409,13 +416,6 @@
       "register": "pastor",
       "expectationKind": "concept-anchors",
       "conceptId": "deity-of-christ"
-    },
-    {
-      "queryId": "multi-concept:019c4fd3e2a1ec65",
-      "query": "how does do not be afraid relate to god's protection",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "fear-not"
     }
   ],
   "remembered-phrase": [

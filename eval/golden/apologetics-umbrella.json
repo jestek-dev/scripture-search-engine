@@ -1,0 +1,67 @@
+{
+  "id": "apologetics-umbrella",
+  "query": "apologetics",
+  "status": "active",
+  "note": [
+    "Apologetics wave master-tag addition (2026-08-25), fixtures-first:",
+    "Decision D13 extension APPROVED by Jesse 2026-08-25 — 'apologetics'",
+    "as a master query should surface the broader apologetics family, not",
+    "only the giving-an-answer pack. DESIGN DECISION (logged): no separate",
+    "'apologetics' master concept is minted — bare 'apologetics' already",
+    "resolves to giving-an-answer (batch 5, reviewed mapping + inventory",
+    "row), and a second concept over the same use-case would be exactly",
+    "the G4 near-duplicate the skill warns about. Instead the umbrella is",
+    "carried by EXTENDING giving-an-answer's related edges to the family",
+    "the schema already supports (related edges are weak concept_lexicon",
+    "evidence, weight x 0.5): creation-testifies, design-in-creation,",
+    "why-god-allows-suffering, resurrection, trustworthiness-of-scripture",
+    "join the existing sharing-your-faith and jesus-the-only-way edges.",
+    "Measured gap before the extension (2026-08-25, fixture artifact):",
+    "'apologetics' returned giving-an-answer's five in-corpus anchors",
+    "(1 Pet 3:15 #1) followed by Related-theme rows for jesus-the-only-way",
+    "and sharing-your-faith ONLY — creation-witness, suffering,",
+    "resurrection-evidence, and Scripture-trustworthiness content was",
+    "unreachable from the umbrella word (Ps 19:1-2, Luke 24:5-6, Job 1:21,",
+    "Ps 19:7-9 in no top-25). The 1 Pet 3:15 lead assertion protects the",
+    "reviewed giving-an-answer fixture's charge: the umbrella must widen",
+    "the tail, never displace the head. ASSERTION NOTE (measured while",
+    "still pending, logged): the resurrection register surfaces at #6 as",
+    "Acts 17:31 — it carries a DOUBLE related bonus (He is risen + Jesus",
+    "the only way) and outranks the single-edge rows; Luke 24:5-6 sits at",
+    "#11 on the 6.00-tie in canonical order, outside the largest",
+    "assertable window (10). The assertion therefore names Acts 17:31 for",
+    "the He-is-risen chip; Luke 24:5-6 moves to alsoAcceptable."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Peter 3:15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 1
+    },
+    {
+      "reference": "Psalms 19:1-2",
+      "requiredReasonFamily": "concept_lexicon",
+      "requiredReasonLabel": "Related theme: Creation testifies",
+      "withinTop": 10
+    },
+    {
+      "reference": "Acts 17:31",
+      "requiredReasonFamily": "concept_lexicon",
+      "requiredReasonLabel": "Related theme: He is risen",
+      "withinTop": 10
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 24:5-6",
+    "Psalms 19:7-9",
+    "Job 1:21",
+    "Proverbs 3:19-20",
+    "John 14:6",
+    "Acts 1:8"
+  ],
+  "coversConcepts": [
+    "giving-an-answer"
+  ]
+}

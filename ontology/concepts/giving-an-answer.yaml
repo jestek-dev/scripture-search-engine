@@ -109,3 +109,18 @@ anchors:
 related:
   - sharing-your-faith
   - jesus-the-only-way
+  # APOLOGETICS MASTER-TAG EXTENSION (2026-08-25, Decision D13 extension
+  # approved by Jesse): bare "apologetics" is this pack's reviewed entry,
+  # so the umbrella query must surface the broader apologetics family —
+  # carried by these one-directional related edges (weak concept_lexicon
+  # evidence, weight x 0.5) rather than a second near-duplicate concept.
+  # Fixture-first: apologetics-umbrella.json measured Ps 19:1-2,
+  # Luke 24:5-6, Job 1:21, Ps 19:7-9 in no top-25 for "apologetics"
+  # before these edges. Declared HERE, the edges leave every
+  # sub-concept's own queries untouched (worker-2 one-directional
+  # precedent, decision row 22).
+  - creation-testifies
+  - design-in-creation
+  - why-god-allows-suffering
+  - resurrection
+  - trustworthiness-of-scripture

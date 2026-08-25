@@ -1,0 +1,126 @@
+# APOLOGETICS WAVE — MASTER TAG (2026-08-25). Decision D13
+# (movement-naming lexicon) APPROVED and extended by Jesse 2026-08-25:
+# "I'd like someone to be able to search Mormon or jehovas witness
+# evangelism or apologetics and get those results. We can keep the sub
+# tags you made, but I'd like to group them under that master tag."
+# Merged only by Jesse's admission of this PR.
+#
+# A MASTER (umbrella) concept naming a use-case, not a doctrine: the
+# passages most frequently studied when discussing faith with Latter-day
+# Saints. It groups the existing sub-concepts without replacing them —
+# every anchor below is a deliberate DUAL anchor with its home pack
+# (established wave practice), and the related edges pull each
+# sub-concept's fuller anchor bed in as weak Related-theme evidence when
+# the movement query fires. The description stays descriptive and
+# charitable (docs/DOCTRINAL-BASIS.md): the engine reports that an
+# editorial source names these passages for this study context and says
+# so on the chip; it never adjudicates against any group (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial] — grouping passages under an
+# audience/task heading is LH's own curatorial judgment, on the record.
+#
+# TOKENIZER DECISIONS (G-4, engine-verified with significantWords;
+# logged in mormon-evangelism.json):
+#   - bare "mormon" ADMITTED ({mormon} appears in no WEB verse — the
+#     apologetics/godhead §1.6d option-3 precedent; no lexical rung can
+#     reach the movement register without it). "mormons" shares the stem;
+#     "mormon evangelism", "what do mormons believe", "witnessing to
+#     mormons" all fire by containment — none is a separate entry
+#     (worker duplicate/superset rule).
+#   - "mormonism" ADMITTED as its own bare entry (the tokenizer does not
+#     strip -ism; distinct stem, also in no WEB verse).
+#   - "lds" ADMITTED bare (in no WEB verse).
+#   - "latter day saints" keeps three significant tokens {latter, day,
+#     saint} — each biblical vocabulary alone, but no plausible scripture
+#     query carries all three together, so the entry has no hijack
+#     surface.
+#   - sharing-your-faith keeps bare {witness} and bare {evangelism}
+#     untouched: this pack claims neither, and on "witnessing to
+#     mormons" / "mormon evangelism" the two concepts deliberately fire
+#     side by side (generic evangelism passages beside the
+#     movement-specific bed).
+#
+# RELATED-EDGE NOTE: edges are one-directional by declaration (worker-2
+# precedent, decision row 22) — declaring them HERE means movement
+# queries surface the sub-concepts' anchors weakly; the sub-concepts'
+# own queries are untouched, so no reviewed fixture moves. virgin-birth
+# is in Jesse's grouping list but remains corpus-blocked DEFER (no
+# concept exists to point an edge at — a dangling edge id would not
+# compile); the edge lands with that concept in the corpus-expansion PR
+# (P4.15), noted in the decision table.
+id: mormon-evangelism
+label: Mormon evangelism
+lexicon:
+  # The movement's common name, as searched ("mormons" shares the stem;
+  # all longer forms fire by containment).
+  - mormon
+  # Distinct stem under the shared tokenizer (-ism is not stripped).
+  - mormonism
+  # The initialism, as typed ("jw" for the sibling pack tokenizes to
+  # nothing; "lds" survives, so it can carry an entry).
+  - lds
+  # The movement's own preferred name; three significant tokens, no
+  # hijack surface (see header).
+  - latter day saints
+anchors:
+  # "though we, or an angel from heaven, should preach to you any 'good
+  # news' other than that which we preached to you, let him be cursed."
+  # (WEB, in corpus). DUAL with no-other-gospel (home, 1.0): the
+  # finality-of-the-gospel register this study context most often opens
+  # with. Stated purely as what the verse says.
+  - ref: Galatians 1:8
+    sources: [editorial]
+    weight: 1.0
+  # "Before me there was no God formed, neither will there be after me."
+  # (WEB, in corpus). DUAL with no-other-god (home, 1.0) and
+  # gods-unchanging-nature (0.8): the monotheism register — the honest
+  # answer-ground for exaltation questions; deification-guard.json's
+  # discipline governs (the engine reports the text, never argues).
+  - ref: Isaiah 43:10
+    sources: [editorial]
+    weight: 0.95
+  # "For by grace you have been saved through faith... not of works, that
+  # no one would boast." (WEB, in corpus). DUAL with grace-not-earned
+  # (home, 1.0): the grace-alone register.
+  - ref: Ephesians 2:8-9
+    sources: [editorial]
+    weight: 0.95
+  # "All things were made through him. Without him, nothing was made that
+  # has been made." (WEB, in corpus). DUAL with deity-of-christ (home,
+  # 0.85): the uncreated-Word register.
+  - ref: John 1:3
+    sources: [editorial]
+    weight: 0.85
+  # "our great God and Savior, Jesus Christ" (WEB, in corpus). DUAL with
+  # deity-of-christ (home, 0.8).
+  - ref: Titus 2:13
+    sources: [editorial]
+    weight: 0.8
+  # "The law of the LORD is perfect, restoring the soul..." (WEB, in
+  # corpus). DUAL with trustworthiness-of-scripture (home, 1.0): the
+  # sufficiency-and-trustworthiness register.
+  - ref: Psalms 19:7-9
+    sources: [editorial]
+    weight: 0.8
+  # "baptizing them in the name of the Father and of the Son and of the
+  # Holy Spirit" (WEB, in corpus). DUAL with trinity (home, 1.0): the
+  # one-name-three-persons register.
+  - ref: Matthew 28:19
+    sources: [editorial]
+    weight: 0.75
+  # "Beware of false prophets... By their fruits you will know them."
+  # (WEB, in corpus). DUAL with false-prophets (home, 1.0): the testing
+  # register — kept lowest here; the sub-concept carries the fuller
+  # discernment bed, and the application-in-fixtures-never-gist
+  # discipline recorded there governs this dual too.
+  - ref: Matthew 7:15-16
+    sources: [editorial]
+    weight: 0.7
+related:
+  - deity-of-christ
+  - no-other-god
+  - trinity
+  - grace-not-earned
+  - no-other-gospel
+  - trustworthiness-of-scripture
+  - false-prophets

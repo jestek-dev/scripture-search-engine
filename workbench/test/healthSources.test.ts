@@ -122,9 +122,12 @@ describe('health source semantics', () => {
     // trustworthiness-of-scripture, power-of-gods-word, no-other-gospel,
     // false-prophets, jesus-the-only-way, giving-an-answer — each with
     // an active demonstrating fixture in the same change).
+    // + the 2 apologetics master-tag packs (2026-08-25, Decision D13
+    // approved by Jesse: mormon-evangelism, jehovahs-witness-evangelism
+    // — each with an active demonstrating fixture in the same change).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(151);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(151);
+    expect(coverage).toHaveLength(153);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(153);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

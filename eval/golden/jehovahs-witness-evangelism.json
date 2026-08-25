@@ -1,0 +1,71 @@
+{
+  "id": "jehovahs-witness-evangelism",
+  "query": "jehovahs witness",
+  "status": "active",
+  "additionalQueries": [
+    "witnessing to jehovahs witnesses",
+    "watchtower society"
+  ],
+  "note": [
+    "Apologetics wave master-tag addition (2026-08-25), fixtures-first:",
+    "Decision D13 (movement-naming lexicon) APPROVED and extended by Jesse",
+    "2026-08-25 (master tags grouping the kept sub-concepts). This fixture",
+    "measures the master concept jehovahs-witness-evangelism, which groups",
+    "the existing sub-concepts (deity-of-christ, resurrection [bodily",
+    "register], honor-the-son, the-first-and-the-last, i-am-sayings,",
+    "false-prophets, supremacy-of-christ) under one movement-named umbrella",
+    "via dual anchors + one-directional related edges. Measured gap before",
+    "the pack (2026-08-25, fixture artifact): 'jehovahs witness' collapsed",
+    "to the bare token {witness} ({jehovah} is OOV — the WEB says LORD) and",
+    "was owned entirely by sharing-your-faith (Acts 1:8 #1, generic",
+    "evangelism results, no movement-specific chip); 'watchtower society'",
+    "returned pure preached-vocabulary {society} scatter (1 Cor 10:17 #1,",
+    "no curated chip). TOKENIZER DECISIONS (G-4, engine-verified with",
+    "significantWords): 'jehovahs witness' keeps two significant tokens",
+    "{jehovah, witness} — it can never fire on the bare query 'witness',",
+    "so sharing-your-faith's acknowledged bare-{witness} collapse is",
+    "untouched (collision check below). \"jehovah's witnesses\", 'jehovahs",
+    "witnesses', and 'witnessing to jehovahs witnesses' all normalize to",
+    "the identical set — one entry carries every form (worker",
+    "duplicate-set rule); the additionalQuery asserts the witnessing-to",
+    "form. Bare 'jehovah' DECLINED: a devotional name query ('jehovah',",
+    "'jehovah jireh') must not fire a movement-evangelism concept —",
+    "wrong-register hijack; inventory skip row. Bare 'watchtower'",
+    "DECLINED: the WEB itself uses 'watchtower' (Isa 21:8, Isa 32:14 —",
+    "outside the current subset, arriving with the corpus re-pin), so a",
+    "bare trigger would hijack the biblical watchman/watchtower vocabulary",
+    "the moment those chapters land; 'watchtower society' {watchtower,",
+    "society} carries the movement register safely; inventory skip row.",
+    "'jw' DECLINED structurally: significantWords('jw') is empty — the",
+    "tokenizer drops it, so no lexicon entry can ever fire on it (logged",
+    "here because no inventory row can carry a token the tokenizer",
+    "discards)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 1:1",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Jehovah's Witness evangelism"
+    },
+    {
+      "reference": "Revelation 1:17-18",
+      "requiredReasonFamily": "concept_anchor",
+      "withinTop": 10
+    },
+    {
+      "reference": "Luke 24:39",
+      "requiredReasonFamily": "concept_anchor",
+      "withinTop": 10
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 8:58",
+    "Colossians 1:16",
+    "Matthew 28:9",
+    "Matthew 24:24"
+  ],
+  "coversConcepts": [
+    "jehovahs-witness-evangelism"
+  ]
+}
