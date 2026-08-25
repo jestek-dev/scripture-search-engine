@@ -4,11 +4,13 @@
   "rightsClass": "public_domain",
   "licenseRecord": "Public domain. The WEB text may be freely copied, modified, and distributed. See https://ebible.org/engwebp/copyright.htm",
   "sourceUrl": "https://ebible.org/Scriptures/engwebp_vpl.zip",
-  "sha256": "3458ca34420c0547ec01b3dbda58a10a2d8fc511bdcd2e047ddd17fbe860b7b6",
-  "bytes": 4281524,
+  "rollingSourceUrl": true,
+  "archiveUrl": "https://github.com/jestek-dev/scripture-search-engine/releases/download/source-snapshots-2026-08/engwebp_vpl-2026-08.zip",
+  "sha256": "b6f55cc787b1201b68dcfde8a1216e1a61ae6b3cc38748456cf58bdb5e95fc1c",
+  "bytes": 4281529,
   "maxTier": "public_distribution",
   "attributionNote": "\"World English Bible\" and \"WEB\" are trademarks of eBible.org / the WEB project. The TEXT is public domain, but a modified version must not be distributed under the \"World English Bible\" name without permission. Recorded here rather than flattened into a bare public-domain claim, because the trademark constraint survives the copyright dedication.",
-  "retrievedAt": "2026-07-29",
-  "provenanceNote": "RE-ADMITTED 2026-07-29. The previous record pinned sha256 ceaffd30..9dc6ce3b for a 6,094,545-byte JSON export whose download URL was never captured - sourceUrl held only eBible's landing page. That checksum was unverifiable and the corpus unreproducible: a receipt with no way to re-obtain the goods. This record pins eBible's own canonical verse-per-line publication, which has a stable direct URL and can be re-fetched and re-verified by anyone. The text differs from the old export: of the 828 verses previously committed as fixtures, 243 were byte-identical, 390 differed only in typography (straight vs curly quotation marks, which the tokenizer discards), and 195 carried genuine WEB revisions ('put forth grass' -> 'yield grass', 'Let us make man' -> 'Let us make' contracted). The old export was an older revision of the translation.",
-  "contentSha256": "335445efdbbda8e4e0e9740c088f1f915c7940ea05914212631c693643554a1c"
+  "retrievedAt": "2026-08-25",
+  "provenanceNote": "RE-ADMITTED 2026-08-25 (re-pin PR-alpha, plan P2.1/RH-3; process docs/source-repins.md). The 2026-07-29 pin (3458ca34..., 4,281,524 B, content 335445ef...) stopped being served: the upstream URL rolls near-daily - observed archive hashes 3073fead... (2026-08-14), 8b1f7bf0... (2026-08-20 audit), c860b546... (2026-08-20), b6f55cc7... (2026-08-21, unchanged at the 2026-08-25 capture) - with the unpacked content fingerprint moving to 944e3883.... Delta measured with pipeline/scripts/webDelta.ts before this edit: IDENTICAL over the subset witness's 5,726 compared verses (0 changed/added/removed); 79 golden-fixture-asserted verses lie outside the witness and were NOT compared - re-verified post-re-pin by the gauntlet against the re-pinned corpus. Old-bytes archive search outcome: local pipeline/sources copies absent; the documented Wayback CDX search is egress-blocked from the preparing environment and remains OPEN with Jesse (A5b) - the loss of the 3458ca34... bytes is NOT signed off here. rollingSourceUrl added (drift is the demonstration); archiveUrl pins the errand's verified release asset. Prior re-admission (2026-07-29, from the unverifiable ceaffd30..9dc6ce3b JSON export) is recorded in git history of this file.",
+  "contentSha256": "944e3883ca8120cdd6c62c0524ce45f156c9b48bd19d98bc0b7cce8524cf475b"
 }

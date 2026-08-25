@@ -106,16 +106,20 @@ describe('committed WEB fixture selection', () => {
     expect(fixture.selection).toEqual(SELECTION);
   });
 
-  it('commits exactly 5,727 unique verses in canonical order for the selected chapter universe', () => {
+  it('commits exactly 5,726 unique verses in canonical order for the selected chapter universe', () => {
     // 5,669 through P5.2; +58 at P5.6 PR 2 (Psalm 136's 26 + Genesis 11's 32,
-    // the pericope-grouping fixture targets).
+    // the pericope-grouping fixture targets); -1 at the 2026-08-25 re-pin:
+    // the fixture is now generated straight from the pinned VPL zip, whose
+    // importer omits textless references, so the empty Luke 17:36 entry the
+    // earlier USFM-extension path had carried is no longer emitted (the
+    // WEB delta report proved every other verse byte-identical).
     const fixture = readFixture();
     const expectedSelection = normalizeSelection(SELECTION);
     const committedSelection = normalizeSelection(fixture.selection);
     const actualSelection = actualFixtureChapters(fixture.verses);
 
-    expect(fixture.verses).toHaveLength(5727);
-    expect(new Set(fixture.verses.map((verse) => `${verse.book}:${verse.chapter}:${verse.verse}`)).size).toBe(5727);
+    expect(fixture.verses).toHaveLength(5726);
+    expect(new Set(fixture.verses.map((verse) => `${verse.book}:${verse.chapter}:${verse.verse}`)).size).toBe(5726);
     expect(committedSelection).toEqual(expectedSelection);
     expect(actualSelection).toEqual(expectedSelection);
 
