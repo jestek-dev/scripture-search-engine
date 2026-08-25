@@ -1,6 +1,6 @@
 {
-  "corpusFingerprint": "d2846ff36ccd7ffb7a12d525cf3f26aeaf5a81427b014a96da9ff2a903a5d1fe",
-  "layerFingerprint": "954f04dcf15acbe9fcdd7ce3e22697de52e03a0e33da36eb1d7fa6d8ec1cbd51",
+  "corpusFingerprint": "644b241cdec3f18f41d6dba60ad2e500be3de435a93745f426408b400aef5e68",
+  "layerFingerprint": "2b85fa88a1e19840b9cc00e65da7e8e77a8cb3bdf5e3c49bcdb8fe9fcdf0f959",
   "engineVersion": "0.14.0",
   "observations": [
     {
@@ -163,7 +163,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 0.305903,
-      "meanTopScore": 30.061847
+      "meanTopScore": 30.061844
     },
     {
       "id": "narrow-house-rock",
@@ -249,7 +249,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 0.068757,
-      "meanTopScore": 50.900186
+      "meanTopScore": 50.900183
     },
     {
       "id": "ot-blessing",
@@ -266,8 +266,8 @@
         "WEB:50004006"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.150719,
-      "meanTopScore": 28.584702
+      "weakReasonShare": 0.150718,
+      "meanTopScore": 28.584699
     },
     {
       "id": "ot-narrative-ruth",
@@ -293,8 +293,8 @@
         "WEB:19046010"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.313824,
-      "meanTopScore": 8.744109
+      "weakReasonShare": 0.313823,
+      "meanTopScore": 8.744105
     },
     {
       "id": "ot-histories-humble",
@@ -312,7 +312,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 0.393948,
-      "meanTopScore": 13.959194
+      "meanTopScore": 13.95919
     },
     {
       "id": "ot-wisdom-trust",
@@ -330,7 +330,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 0.16427,
-      "meanTopScore": 23.866277
+      "meanTopScore": 23.866278
     },
     {
       "id": "ot-wisdom-time",
@@ -348,7 +348,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 0.564883,
-      "meanTopScore": 9.192932
+      "meanTopScore": 9.192928
     },
     {
       "id": "ot-prophets-servant",
@@ -365,8 +365,8 @@
         "WEB:19103012"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.400369,
-      "meanTopScore": 6.670765
+      "weakReasonShare": 0.400368,
+      "meanTopScore": 6.670761
     },
     {
       "id": "ot-prophets-plans",
@@ -384,7 +384,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 0.226431,
-      "meanTopScore": 17.690125
+      "meanTopScore": 17.690124
     },
     {
       "id": "ot-prophets-justly",
@@ -402,7 +402,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 7.821491
+      "meanTopScore": 7.821468
     },
     {
       "id": "ot-adversarial-census",
@@ -420,7 +420,7 @@
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 4.054023
+      "meanTopScore": 4.05401
     }
   ]
 }
