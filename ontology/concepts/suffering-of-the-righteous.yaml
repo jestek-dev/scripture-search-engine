@@ -1,0 +1,104 @@
+# APOLOGETICS WAVE (batch 4, 2026-08-25) — PENDING-TAG-GAP id (Theme F
+# row in tag-gaps-review.md; map entry 10). Building this pack does not
+# preempt Jesse's vocabulary review: merging this draft PR IS admitting
+# the id (plan G-3). The righteous do suffer — Scripture's candid witness
+# that affliction is not proportional to godliness. The engine reports
+# what the texts teach and adjudicates nothing (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial] (map corroborations:
+# knowingscripture, TGC, Matthew Henry via blueletterbible — never engine
+# sources).
+#
+# G4 BOUNDARY: suffering-for-christ owns bare 'suffering' and the
+# persecution register; why-god-allows-suffering (same batch) owns the
+# why/allow question family. This pack's phrasings all carry
+# righteous/affliction/punishment tokens. Token sets (G-4, verified):
+# {righteou, suffer}, {many, affliction, righteou},
+# {good, people, suffer}, {suffer, punishment}. PLAN FALLBACK (recorded):
+# if G4 flags 'why do good people suffer' against
+# why-god-allows-suffering's {bad, thing, happen, good, people}, that
+# entry drops first — the sets differ ({good, people, suffer} vs a
+# five-token set) and the batch-4 G4 run stayed clean, so it ships.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: suffering-of-the-righteous
+label: The righteous suffer
+lexicon:
+  # The claim as stated.
+  - the righteous suffer
+  # Ps 34:19's own words.
+  - many are the afflictions of the righteous
+  # The lay form.
+  - why do good people suffer
+  # The pastoral misreading this concept answers (descriptive, not
+  # polemical — the anchors carry the texts that deny the calculus).
+  - suffering is not punishment
+anchors:
+  # "Have you considered my servant, Job? For there is no one like him on
+  # the earth, a blameless and an upright man" (WEB, in corpus). God
+  # himself certifies Job's integrity BEFORE the suffering — the book's
+  # argument depends on the sufferer being righteous, dismantling the
+  # friends' retribution theology. SPAN DESIGN (recorded): testing anchors
+  # Job 1:8-12 [editorial] for the heavenly-court trial frame; this
+  # single-verse row claims the certified-righteous-sufferer register —
+  # deliberate overlap at v8, two honest registers.
+  - ref: Job 1:8
+    sources: [editorial]
+    weight: 1.0
+  # "Many are the afflictions of the righteous, but the LORD delivers him
+  # out of them all." (WEB, in corpus). Both halves in one verse.
+  # NO-EXEMPTION GUARD (map, named prosperity-framing exclusion):
+  # 'delivers him out of them all' is testimony of God's faithfulness,
+  # never a formula of exemption — the justification carries that edge.
+  # DUAL NOTE: refuge-in-trouble anchors this verse [torrey] at 0.7 for
+  # the deliverance register; this row claims the
+  # affliction-is-not-anomalous register.
+  - ref: Psalms 34:19
+    sources: [editorial]
+    weight: 0.9
+  # "He still maintains his integrity, although you incited me against
+  # him, to ruin him without cause." (WEB wording — Job 2 NOT in
+  # web-subset). God's own words: the ruin was 'without cause' — the text
+  # itself denies the suffering was deserved.
+  - ref: Job 2:3
+    sources: [editorial]
+    weight: 0.9
+  # "Shall we receive good at the hand of God, and shall we not receive
+  # evil?... Job didn't sin with his lips." (WEB wording — Job 2 NOT in
+  # web-subset). Righteousness within suffering, not just before it.
+  - ref: Job 2:10
+    sources: [editorial]
+    weight: 0.8
+  # "Yes, for your sake we are killed all day long. We are regarded as
+  # sheep for the slaughter." (WEB wording — Psalm 44 NOT in web-subset).
+  # A whole-psalm protest that covenant faithfulness did not prevent
+  # catastrophe. MAP SPAN NOTE: the map's entry is 'Ps 44:17, 22' — no
+  # comma lists in the ref grammar, so v22 anchors and v17 ('yet we
+  # haven't forgotten you') is recorded here. Paul's use of v22 in
+  # Rom 8:36 is attributed NT use, never read back onto the psalm (map).
+  - ref: Psalms 44:22
+    sources: [editorial]
+    weight: 0.7
+  # "there is a righteous man who perishes in his righteousness, and
+  # there is a wicked man who lives long in his evildoing." (WEB wording
+  # — Ecclesiastes 7 NOT in web-subset). The Preacher's observed data
+  # point against any tidy righteousness-equals-outcomes scheme.
+  - ref: Ecclesiastes 7:15
+    sources: [editorial]
+    weight: 0.7
+  # "why do you tolerate those who deal treacherously and keep silent
+  # when the wicked swallows up the man who is more righteous than he"
+  # (WEB wording — Habakkuk 1 NOT in web-subset). The prophet puts the
+  # theodicy question to God from God's own holiness — canonical warrant
+  # that the question itself is faithful speech. ANCHORED ONCE (map,
+  # recorded): also serves prosperity-of-the-wicked, which reaches it via
+  # the related edge below — never-mint-twice discipline applied to
+  # anchors.
+  - ref: Habakkuk 1:13
+    sources: [editorial]
+    weight: 0.75
+related:
+  - why-god-allows-suffering
+  - prosperity-of-the-wicked
+  - suffering-for-christ
+  - god-sees-my-suffering

@@ -113,10 +113,14 @@ describe('health source semantics', () => {
     // + the 4 apologetics-wave batch-3 packs (2026-08-25:
     // creation-testifies, design-in-creation, conscience,
     // the-breath-of-life — each with an active demonstrating fixture in
-    // the same change).
+    // the same change)
+    // + the 4 apologetics-wave batch-4 packs (2026-08-25:
+    // why-god-allows-suffering, suffering-of-the-righteous,
+    // prosperity-of-the-wicked, resurrection-of-the-dead — each with an
+    // active demonstrating fixture in the same change).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(141);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(141);
+    expect(coverage).toHaveLength(145);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(145);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

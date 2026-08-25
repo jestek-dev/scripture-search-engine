@@ -1,0 +1,42 @@
+{
+  "id": "prosperity-of-the-wicked",
+  "query": "why do the wicked prosper",
+  "status": "active",
+  "additionalQueries": [
+    "evil people succeed"
+  ],
+  "note": [
+    "Apologetics wave batch 4 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id prosperity-of-the-wicked (Theme E row in tag-gaps-review.md) —",
+    "merged only by Jesse's admission of this draft PR (plan G-3).",
+    "Scripture's open grievance that the wicked flourish, and where the",
+    "psalmists take it (Ps 73's sanctuary hinge as the model resolution).",
+    "Measured gap before the pack (2026-08-25): 'why do the wicked prosper'",
+    "returned Ps 73:16 #1 on a translation variant with Ps 73:12 #3 and",
+    "Ps 73:3 #4 on lexical evidence only — no curated chip anywhere; 'evil",
+    "people succeed' returned translation-variant scatter (1 Pet 3:16 #1).",
+    "PROSPERITY-GUARD DISCIPLINE (named per the plan): the prosperity-*",
+    "guard family polices prosperity-gospel pairings; its mustNotRank refs",
+    "(Luke 6:38, Mal 3:10, Phil 4:19, Mark 11:24, John 14:13-14) are NOT",
+    "anchored here and none of this pack's entries fires on a bare",
+    "'prosperity'/'wealth' query (every entry needs the wicked/evil",
+    "tokens). The batch-4 gauntlet run must show those guards still green;",
+    "recorded in the batch log."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 73:3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The prosperity of the wicked"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 73:16-17",
+    "Psalms 73:12",
+    "Psalms 37:35-36"
+  ],
+  "coversConcepts": [
+    "prosperity-of-the-wicked"
+  ]
+}

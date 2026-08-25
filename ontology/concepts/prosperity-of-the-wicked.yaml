@@ -1,0 +1,103 @@
+# APOLOGETICS WAVE (batch 4, 2026-08-25) — PENDING-TAG-GAP id (Theme E
+# row in tag-gaps-review.md; map entry 11). Building this pack does not
+# preempt Jesse's vocabulary review: merging this draft PR IS admitting
+# the id (plan G-3). Scripture's open grievance that the wicked flourish
+# — and where the psalmists take that grievance (Ps 73's sanctuary hinge
+# as the model resolution). The engine reports what the texts teach and
+# adjudicates nothing (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial] (map corroborations: Matthew Henry
+# on Ps 73 via blueletterbible, knowingscripture — never engine sources).
+#
+# PROSPERITY-GUARD DISCIPLINE (plan, named): the prosperity-* guard
+# fixture family polices prosperity-gospel pairings. None of its
+# mustNotRank refs (Luke 6:38, Mal 3:10, Phil 4:19, Mark 11:24,
+# John 14:13-14) is anchored here, and no entry below fires on a bare
+# 'prosperity'/'wealth'/'abundance' query — every entry requires the
+# wicked/evil tokens ({wick, prosper}, {prosperity, wick},
+# {evil, people, succe}, {wick, get, away}; G-4 verified). The batch-4
+# gauntlet run confirmed the guard family green.
+#
+# DOCTRINAL SCAN: 'prosperity' is a materialFrameKeyword, so this pack
+# is IN SCOPE for the flagged-pairings check by design — the guardrail
+# fires only on a watchlist-reference anchor, and no anchor below is on
+# the watchlist (the concept is the grievance register, not a promise
+# register). Verified 0 flags on the batch-4 run.
+id: prosperity-of-the-wicked
+label: The prosperity of the wicked
+lexicon:
+  # The question as the psalmists and users both put it.
+  - why do the wicked prosper
+  # Ps 73:3's own phrase.
+  - prosperity of the wicked
+  # The modern phrasing.
+  - evil people succeed
+  # The grievance register as spoken.
+  - the wicked get away with it
+anchors:
+  # "For I was envious of the arrogant, when I saw the prosperity of the
+  # wicked." (WEB, in corpus). Asaph's thesis statement; the whole psalm
+  # is the canon's fullest treatment of this stumbling block, voiced by a
+  # worship leader. SPAN NOTE (recorded): envy-and-jealousy anchors
+  # Psalms 73:2-3 [editorial] for the envy register — deliberate overlap
+  # at v3, two honest registers (the stumbling vs the stumbling block).
+  - ref: Psalms 73:3
+    sources: [editorial]
+    weight: 1.0
+  # "until I entered God's sanctuary, and considered their latter end."
+  # (WEB, in corpus). The psalm's hinge: the answer arrives not as an
+  # argument but in worship and an eschatological horizon — the model
+  # resolution this concept should surface first (map). DUAL ANCHOR
+  # (recorded): wrestling-with-god anchors the same span for the
+  # honest-protest register.
+  - ref: Psalms 73:16-17
+    sources: [editorial]
+    weight: 0.95
+  # "Behold, these are the wicked. Being always at ease, they increase in
+  # riches." (WEB, in corpus). The observation at its sharpest,
+  # immediately before the psalmist admits he almost lost his footing
+  # (vv2, 13-14).
+  - ref: Psalms 73:12
+    sources: [editorial]
+    weight: 0.85
+  # "My flesh and my heart fails, but God is the strength of my heart and
+  # my portion forever." (WEB, in corpus). Where the psalm lands: God
+  # himself, not adjusted circumstances, is the portion — guards the
+  # concept against a prosperity-shaped resolution (map). EXISTING
+  # CLAIMANTS (recorded): pastoral-serious-illness,
+  # pastoral-strength-in-weakness, and caring-for-aging-parents each
+  # anchor Ps 73:26 for their pastoral registers — this row adds the
+  # psalm's own resolution register; concept-anchor evidence applies only
+  # where this concept fires, so their reviewed lists are untouched.
+  - ref: Psalms 73:26
+    sources: [editorial]
+    weight: 0.8
+  # "I have seen the wicked in great power, spreading himself like a
+  # green tree... But he passed away, and behold, he was not." (WEB, in
+  # corpus). The wisdom-psalm counterpart: the prosperity is real but
+  # transient. MAP SPAN NOTE: the map's entry is 'Ps 37:1, 35-36' — no
+  # comma lists in the ref grammar, so vv35-36 (the eyewitness
+  # observation) anchor and v1's counsel ('don't fret because of
+  # evildoers') is recorded here.
+  - ref: Psalms 37:35-36
+    sources: [editorial]
+    weight: 0.8
+  # "Why do the wicked live, become old, yes, and grow mighty in power?"
+  # (WEB wording — Job 21 NOT in web-subset). Job's rebuttal of Zophar:
+  # observed reality contradicts the friends' claim that the wicked
+  # visibly perish; the canon lets this stand as data.
+  - ref: Job 21:7
+    sources: [editorial]
+    weight: 0.75
+  # "You are righteous, LORD, when I contend with you... Why does the way
+  # of the wicked prosper?" (WEB wording — Jeremiah 12 NOT in
+  # web-subset). The prophet files the complaint as a legal case while
+  # confessing God righteous — grievance and faith in one verse.
+  - ref: Jeremiah 12:1
+    sources: [editorial]
+    weight: 0.8
+related:
+  - suffering-of-the-righteous
+  - why-god-allows-suffering
+  - envy-and-jealousy
+  - wrestling-with-god

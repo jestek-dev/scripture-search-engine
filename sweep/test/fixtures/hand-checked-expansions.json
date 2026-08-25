@@ -602,6 +602,13 @@
       "conceptId": "walking-in-the-light"
     },
     {
+      "queryId": "worship-planning:031c44e09c30c9a8",
+      "query": "benediction on the prosperity of the wicked",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "prosperity-of-the-wicked"
+    },
+    {
       "queryId": "worship-planning:03444d8711201a70",
       "query": "setlist theme nations in the bible",
       "register": "worship-leader",
@@ -621,13 +628,6 @@
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
       "conceptId": "spiritual-growth"
-    },
-    {
-      "queryId": "worship-planning:0383ce9fc81bc023",
-      "query": "responsive reading about hope in despair",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "hope-in-despair"
     }
   ]
 }

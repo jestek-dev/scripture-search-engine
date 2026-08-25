@@ -1,0 +1,139 @@
+# APOLOGETICS WAVE (batch 4, 2026-08-25) — PENDING-TAG-GAP id (Theme B
+# row in tag-gaps-review.md; map entry 13). Building this pack does not
+# preempt Jesse's vocabulary review: merging this draft PR IS admitting
+# the id (plan G-3). Takes the general-resurrection half of map
+# Decision 1 (resolved: the existing resurrection pack was extended with
+# the bodily-evidence register in batch 1 — no
+# witnesses-of-the-resurrection mint — and this id carries the promised
+# resurrection of the dead, Christ as first fruits, and the believer's
+# embodied hope). The engine reports what the texts teach and
+# adjudicates nothing (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial] (map corroborations:
+# catholic.com QA, evidenceunseen, crossexamined, TGC — never engine
+# sources).
+#
+# G4 BOUNDARY vs resurrection — the wave's top collision risk, designed
+# not discovered: resurrection owns bare 'resurrection', 'raised from
+# the dead', 'he is risen', 'i am the resurrection and the life'. This
+# pack takes the of-the-dead / resurrection-body / first-fruits forms.
+# TOKENIZER DECLINE (G-4, verified): the planned 'will the dead be
+# raised' normalizes to {dead, rais} — the IDENTICAL containment set as
+# resurrection's 'raised from the dead' — a duplicate firing set across
+# two packs; NOT added. Remaining sets: {resurrection, dead},
+# {resurrection, body}, {happen, bodi, die}, {first, fruit, sleep} — no
+# entry duplicates any resurrection set, and NO bare 'resurrection'
+# token lives here (skipped in ontology/lexicon-inventory.yaml).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: resurrection-of-the-dead
+label: The resurrection of the dead
+lexicon:
+  # The concept's name in the text itself (Acts 24:15; 1 Cor 15:42).
+  - resurrection of the dead
+  # The 1 Cor 15:35-49 question family.
+  - resurrection body
+  # The lay form of the same question.
+  - what happens to our bodies when we die
+  # 1 Cor 15:20's own image ({first, fruit, sleep}).
+  - first fruits of those who sleep
+anchors:
+  # "So also is the resurrection of the dead. The body is sown
+  # perishable; it is raised imperishable... It is sown a natural body;
+  # it is raised a spiritual body." (WEB, in corpus). The fullest
+  # canonical description of the resurrection body: fourfold
+  # sown/raised continuity-with-transformation, the subject of every
+  # clause the body. HANDLING NOTE (map, kept): 'spiritual body' is
+  # sometimes read as immaterial; the passage's own contrast is
+  # perishable/imperishable — the sown/raised structure is stated and
+  # the text carries it; any fuller anti-immaterial gloss stays
+  # [editorial].
+  - ref: 1 Corinthians 15:42-44
+    sources: [editorial]
+    weight: 0.95
+  # "But now Christ has been raised from the dead. He became the first
+  # fruit of those who are asleep." (WEB, in corpus). The load-bearing
+  # link between the two resurrection concepts — the same harvest the
+  # dead in Christ will join; this verse is why the two-id split has a
+  # principled boundary (map). DELIBERATE DUAL (recorded): the existing
+  # resurrection pack anchors 1 Cor 15:20 [torrey] at 0.75 for the
+  # Easter-event register; this row claims the first-fruits promise
+  # register.
+  - ref: 1 Corinthians 15:20
+    sources: [editorial]
+    weight: 1.0
+  # "I am the resurrection and the life. He who believes in me will
+  # still live, even if he dies." (WEB, in corpus). Resurrection hope
+  # located in Jesus's person, spoken to a grieving Martha at a real
+  # grave. DECISION 17 DEFAULT (map, recorded): dual with i-am-sayings'
+  # John 11:25 (batch 2, saying-locator register; spans deliberately
+  # differ — vv25-26 here carry the believes-in-me promise).
+  # pastoral-grief-and-loss anchors the same vv25-26 span for the
+  # comfort register — three honest registers, all recorded.
+  - ref: John 11:25-26
+    sources: [editorial]
+    weight: 0.85
+  # "we don't want you to be ignorant... concerning those who have
+  # fallen asleep, so that you don't grieve like the rest, who have no
+  # hope. For if we believe that Jesus died and rose again, even so God
+  # will bring with him those who have fallen asleep in Jesus." (WEB, in
+  # corpus). The pastoral payload of the doctrine: grief with hope,
+  # grounded in Christ's resurrection. CROSS EDGE (map): caught-up-
+  # together owns vv16-17; pastoral-grief-and-loss and
+  # caring-for-aging-parents also anchor vv13-14 for their pastoral
+  # registers — recorded.
+  - ref: 1 Thessalonians 4:13-14
+    sources: [editorial]
+    weight: 0.8
+  # "Many of those who sleep in the dust of the earth will awake, some
+  # to everlasting life, and some to shame and everlasting contempt."
+  # (WEB wording — Daniel 12 NOT in web-subset). The OT's clearest
+  # resurrection text, in its own context without NT read-back (map).
+  - ref: Daniel 12:2
+    sources: [editorial]
+    weight: 0.9
+  # "all who are in the tombs will hear his voice and will come out;
+  # those who have done good, to the resurrection of life; and those who
+  # have done evil, to the resurrection of judgment." (WEB wording —
+  # John 5 NOT in web-subset). A universal, tomb-emptying resurrection
+  # to two outcomes at Jesus's own voice. TWO-OUTCOMES NOTE (map, kept):
+  # borders divine-judgment / hell — cross edges below, justification
+  # descriptive per the no-adjudication rule.
+  - ref: John 5:28-29
+    sources: [editorial]
+    weight: 0.85
+  # "there will be a resurrection of the dead, both of the just and
+  # unjust." (WEB wording — Acts 24 NOT in web-subset). Paul before
+  # Felix states the general resurrection as shared hope — the phrase is
+  # the concept's name in the text.
+  - ref: Acts 24:15
+    sources: [editorial]
+    weight: 0.8
+  # "who will change the body of our humiliation to be conformed to the
+  # body of his glory" (WEB wording — Philippians 3 NOT in web-subset).
+  # The believer's hope is a changed body conformed to Christ's
+  # glorified body — embodiment, not escape from it.
+  - ref: Philippians 3:20-21
+    sources: [editorial]
+    weight: 0.8
+  # "But as for me, I know that my Redeemer lives... After my skin is
+  # destroyed, then I will see God in my flesh" (WEB wording — Job 19
+  # NOT in web-subset). CAVEAT ANCHOR (map Decision 16, verbatim
+  # intent): the Hebrew of v26 is famously difficult and 'from my
+  # flesh' (apart from it) is a live scholarly reading — this anchors
+  # the hope-beyond-death register as the WEB text reads, dispute noted,
+  # at low weight, NEVER a load-bearing bodily-resurrection proof.
+  - ref: Job 19:25-27
+    sources: [editorial]
+    weight: 0.4
+related:
+  # ONE-DIRECTION EDGE (measured deviation from the plan's both-ways
+  # design, recorded in resurrection.yaml's related comment): the
+  # reciprocal edge on resurrection gave its every query a related-theme
+  # bonus on this pack's 1 Cor 15:20 and regressed the reviewed
+  # resurrection-power fixture (Rom 8:11 out of top 5); this outgoing
+  # edge alone keeps the family navigable without touching the reviewed
+  # Easter surface.
+  - resurrection
+  - caught-up-together
+  - hope-in-god

@@ -1258,6 +1258,25 @@ concepts:
     # how people search this topic.
     admitted: [government]
 
+  - id: prosperity-of-the-wicked
+    # 2026-08-25 apologetics wave batch 4: row authored with the pack
+    # (fixture-first, prosperity-of-the-wicked.json). Every entry keeps
+    # >= 2 significant tokens requiring the wicked/evil member; no bare
+    # word fires today — by design, because the prosperity-* guard
+    # family polices exactly the bare queries below.
+    skipped:
+      - token: prosperity
+        reason: >-
+          A materialFrameKeyword and the prosperity-* guard family's own
+          probe surface; a bare trigger would put this pack's anchors
+          under prosperity-gospel queries the guards police. The
+          wicked-paired forms carry the concept.
+      - token: wicked
+        reason: >-
+          Generic across judgment/justice registers (divine-judgment,
+          refuge-and-justice); the prosper/succeed pairings carry the
+          concept.
+
   - id: pregnancy-and-child-loss
     # NEEDS-JESSE §1.6d option 3 single words.
     admitted: [miscarriage, stillbirth]
@@ -1423,6 +1442,22 @@ concepts:
     # exactly right.
     admitted: [resurrection, risen]
 
+  - id: resurrection-of-the-dead
+    # 2026-08-25 apologetics wave batch 4: row authored with the pack
+    # (fixture-first, resurrection-of-the-dead.json). The wave's top
+    # collision risk, designed: resurrection owns the bare tokens.
+    skipped:
+      - token: resurrection
+        reason: >-
+          The resurrection concept's reviewed admitted bare token — the
+          Easter-event register must keep the bare query. This pack's
+          of-the-dead / body / first-fruits pairings carry the
+          general-resurrection register.
+      - token: dead
+        reason: >-
+          Ubiquitous ("dead in trespasses", "mourn the dead"); only the
+          resurrection-paired forms carry this concept.
+
   - id: sabbath-rest
     # PR #41 (2026-08-22 Genesis pilot): deliberate bare entry per the
     # in-file comment (§1.6d option-3 register: the word IS the concept
@@ -1551,6 +1586,21 @@ concepts:
     # pack's own subject word; god-sees-my-suffering records the matching
     # skip); persecution/persecuted deliberate bare entries.
     admitted: [suffering, persecution, persecuted]
+
+  - id: suffering-of-the-righteous
+    # 2026-08-25 apologetics wave batch 4: row authored with the pack
+    # (fixture-first, suffering-of-the-righteous.json). Every entry
+    # keeps >= 2 significant tokens; no bare word fires today.
+    skipped:
+      - token: righteous
+        reason: >-
+          Generic across the wisdom/justice corpus; the suffer/affliction
+          pairings carry the concept.
+      - token: affliction
+        reason: >-
+          Owned lexically by the comfort registers (god-of-all-comfort's
+          preached vocabulary); "many are the afflictions of the
+          righteous" keeps the distinctive triple.
 
   - id: surrender-to-god
     # surrender: 2026-08-08 decision table (devotional register). deny:
@@ -1702,6 +1752,22 @@ concepts:
           Jesse's 2026-07-29 ruling scoped this concept to the ethical sense
           precisely because "light" spans both senses; admitting the bare
           token would undo that decision (2026-08-08 decision table).
+
+  - id: why-god-allows-suffering
+    # 2026-08-25 apologetics wave batch 4: row authored with the pack
+    # (fixture-first, why-god-allows-suffering.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires today.
+    skipped:
+      - token: suffering
+        reason: >-
+          suffering-for-christ's reviewed admitted bare token — the
+          persecution register keeps the bare query (its inventory row);
+          this pack's why/allow question forms carry the theodicy
+          register beside it.
+      - token: evil
+        reason: >-
+          Generic moral vocabulary across the canon; "problem of evil"
+          keeps the distinctive pair.
 
   - id: wisdom-from-god
     # 2026-08-18 harvest: deliberate bare entries per the in-file comment

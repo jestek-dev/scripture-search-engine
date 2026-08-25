@@ -1,0 +1,138 @@
+# APOLOGETICS WAVE (batch 4, 2026-08-25) — NEW-MINT (critic-approved
+# apologetics concept map, entry 9; the mint IS map Decision 2 and is
+# admitted only by Jesse's merge of this draft PR). Scripture's own
+# answers — and its refusals to answer — to why a good, sovereign God
+# permits evil and suffering. The engine reports what curated sources
+# name and adjudicates nothing (CLAUDE.md #6).
+#
+# RECORDED FALLBACK (map Decision 2): if the gauntlet shows G8 churn
+# (umbrella too broad), fold this lexicon into suffering-of-the-righteous
+# and prosperity-of-the-wicked. Batch-4 run: 25/25 probes stable, 0%
+# churn — the fallback was not needed.
+#
+# DECISION 15 DEFAULT (map, reversible): Rom 8:28 and Rev 21:4 are NOT
+# anchored here — display ownership stays with
+# remembered-all-things-for-good and new-heaven-and-earth; this pack
+# reaches them via the related edges below. The decision table offers
+# Jesse the upgrade to low-weight dual anchors.
+#
+# Attribution: ALL anchors [editorial] (map corroborations: TGC
+# problem-of-evil essay, knowingscripture, frame-poythress — research
+# URLs, never engine sources).
+#
+# G4 BOUNDARY: suffering-for-christ owns bare 'suffering' and the
+# persecution register (its admitted bare token keeps its claim on every
+# suffer-query — this pack surfaces beside it, never instead of it).
+# suffering-of-the-righteous (same batch) is lexicon-disjoint: its
+# righteous/affliction phrasings vs this pack's why/allow/bad-things
+# phrasings share only the token {suffer} / {good, people} across sets
+# that never duplicate a containment set.
+#
+# TOKENIZER DISCIPLINE (G-4, verified with the engine's significantWords):
+# {do, god, allow, suffer}, {bad, thing, happen, good, people},
+# {problem, evil}, {god, hurt}, {god, lett, happen} — every entry keeps
+# >= 2 significant tokens with a distinctive member. Bare `suffering` is
+# skipped in ontology/lexicon-inventory.yaml (suffering-for-christ's
+# admitted token); bare `evil` skipped with reason.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: why-god-allows-suffering
+label: Why God allows suffering
+lexicon:
+  # The question as users type it.
+  - why does god allow suffering
+  # The lay form of the theodicy question.
+  - why do bad things happen to good people
+  # The philosophy classroom's name for it — lexicon territory, the id
+  # stays concept-shaped (map note).
+  - problem of evil
+  # The pastoral form.
+  - where is god when it hurts
+  # The in-the-moment form.
+  - why is god letting this happen
+anchors:
+  # "Naked I came out of my mother's womb... The LORD gave, and the LORD
+  # has taken away. Blessed be the LORD's name." (WEB, in corpus). Job has
+  # just lost children and property to an assault permitted but bounded by
+  # God (1:12); the book poses innocent suffering as sharply as any
+  # philosopher and answers first with worship, not explanation. DUAL
+  # ANCHOR (recorded): surrender-to-god carries Job 1:21 [torrey] at 0.6
+  # for the response register, and testing.yaml's recorded comment assigns
+  # the verse's response to it — this row claims the theodicy-question
+  # register (the book's first answer), a third honest register.
+  - ref: Job 1:21
+    sources: [editorial]
+    weight: 1.0
+  # "the sufferings of this present time are not worthy to be compared
+  # with the glory which will be revealed toward us." (WEB, in corpus).
+  # Present suffering real but outweighed and temporary within God's
+  # redemptive arc — an eschatological, not explanatory, answer (creation
+  # groaning, vv19-23). DUAL NOTE: pastoral-serious-illness anchors this
+  # verse for the comfort register — recorded.
+  - ref: Romans 8:18
+    sources: [editorial]
+    weight: 0.9
+  # "our light affliction, which is for the moment, works for us more and
+  # more exceedingly an eternal weight of glory" (WEB, in corpus). Paul,
+  # cataloguing real afflictions (vv8-12), teaches suffering as productive
+  # within God's economy — the soul-building register. SPAN DESIGN
+  # (recorded): the-breath-of-life (batch 3) anchors 2 Cor 4:16 for the
+  # inward/outward anthropology; this row takes vv17-18. EXISTING
+  # CLAIMANTS: pastoral-serious-illness (0.9) and do-not-lose-heart
+  # (0.85) anchor 2 Cor 4:16-18 for their own registers — recorded, four
+  # honest registers of one passage.
+  - ref: 2 Corinthians 4:17-18
+    sources: [editorial]
+    weight: 0.85
+  # "let them also who suffer according to the will of God in doing good
+  # entrust their souls to him, as to a faithful Creator." (WEB, in
+  # corpus). Some suffering is 'according to the will of God' and the
+  # response is entrusting oneself to a faithful Creator. PERSECUTION
+  # BORDER CAVEAT (map, kept): the chapter's suffering is primarily
+  # persecution (vv12-16) — suffering-for-christ's ground; kept because
+  # v19 states the principle at the level of suffering in doing good
+  # generally.
+  - ref: 1 Peter 4:19
+    sources: [editorial]
+    weight: 0.75
+  # "you meant evil against me, but God meant it for good, to save many
+  # people alive" (WEB wording — Genesis 50 NOT in web-subset). The
+  # clearest canonical statement that God sovereignly works through evil
+  # he does not excuse.
+  - ref: Genesis 50:20
+    sources: [editorial]
+    weight: 0.9
+  # "I had heard of you by the hearing of the ear, but now my eye sees
+  # you." (WEB wording — Job 42 NOT in web-subset). God's answer to Job is
+  # his own presence and unsearchable governance (chs 38-41), not a
+  # disclosed reason; the book never tells Job about chapter 1 —
+  # Scripture's mystery-shaped answer. MAP SPAN NOTE: the map's entry is
+  # 'Job 42:2, 5' — the anchor ref grammar carries no comma lists, so v5
+  # (the encounter-resolution verse) anchors and v2's no-purpose-restrained
+  # confession is recorded here.
+  - ref: Job 42:5
+    sources: [editorial]
+    weight: 0.8
+  # "Rabbi, who sinned, this man or his parents...? Jesus answered, 'This
+  # man didn't sin, nor did his parents, but that the works of God might
+  # be revealed in him.'" (WEB wording — John 9 NOT in web-subset). Jesus
+  # rejects the suffering-equals-punishment calculus for this man.
+  # THIS-CASE CAVEAT (map, kept): he answers this case, not every case —
+  # never generalized into 'all suffering exists to display miracles'.
+  - ref: John 9:2-3
+    sources: [editorial]
+    weight: 0.8
+  # "Do you think that these Galileans were worse sinners...? I tell you,
+  # no, but unless you repent..." (WEB wording — Luke 13 NOT in
+  # web-subset). On two current calamities Jesus denies the victims were
+  # worse sinners and turns the question into a summons to repentance —
+  # Scripture's own handling of 'why did this disaster happen'.
+  - ref: Luke 13:2-5
+    sources: [editorial]
+    weight: 0.8
+related:
+  - remembered-all-things-for-good
+  - new-heaven-and-earth
+  - suffering-of-the-righteous
+  - prosperity-of-the-wicked
+  - testing

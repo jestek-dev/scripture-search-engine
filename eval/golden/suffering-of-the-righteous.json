@@ -1,0 +1,39 @@
+{
+  "id": "suffering-of-the-righteous",
+  "query": "why do the righteous suffer",
+  "status": "active",
+  "additionalQueries": [
+    "many are the afflictions of the righteous"
+  ],
+  "note": [
+    "Apologetics wave batch 4 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id suffering-of-the-righteous (Theme F row in tag-gaps-review.md) —",
+    "merged only by Jesse's admission of this draft PR (plan G-3).",
+    "Scripture's candid witness that affliction is not proportional to",
+    "godliness.",
+    "Measured gap before the pack (2026-08-25): 'why do the righteous",
+    "suffer' returned only the suffering-for-christ persecution register",
+    "(1 Pet 4:12-16 #1 via its admitted bare 'suffering' token) — Job 1:8",
+    "and Ps 34:19 appeared in no top-10; 'many are the afflictions of the",
+    "righteous' returned Ps 34:19 #1 by exact phrase with NO curated chip",
+    "(right passage, wrong reason — the G3 failure class).",
+    "G4 BOUNDARY: this pack's lexicon stays disjoint from",
+    "why-god-allows-suffering (same batch) — the token sets are recorded",
+    "in the pack comment, with the plan's fallback ('why do good people",
+    "suffer' drops first if G4 flags) noted there."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Job 1:8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The righteous suffer"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 34:19"
+  ],
+  "coversConcepts": [
+    "suffering-of-the-righteous"
+  ]
+}
