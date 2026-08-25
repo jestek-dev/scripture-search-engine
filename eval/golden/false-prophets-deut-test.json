@@ -1,0 +1,35 @@
+{
+  "id": "false-prophets-deut-test",
+  "query": "how do you know if a prophet is from god",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 5, 2026-08-25) — the",
+    "Deuteronomy prophet-test register of false-prophets (Deut 18:21-22:",
+    "the statute's own criterion, framed as an answer to the audience's own",
+    "question in v21; Deut 13:1-3: a fulfilled sign does not validate a",
+    "prophet who calls to other gods — the doctrinal test outranks the sign",
+    "test). BLOCKED ON CORPUS: Deuteronomy 13 and 18 are absent from",
+    "pipeline/fixtures/web-subset.json (docs/corpus-payload-dependency.md,",
+    "BLOCKED 2026-08-21), so these assertions would pass vacuously if",
+    "active.",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that lands",
+    "Deuteronomy 13 + 18 (re-pin payload P4.15). Application of the test to",
+    "any modern movement lives in fixtures and the PR narrative, never in",
+    "gist wording (map's disputed-texts row; the pack's",
+    "application-in-fixtures-never-gist comment)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Deuteronomy 18:21-22",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Deuteronomy 13:1-3",
+    "Matthew 7:15-16"
+  ],
+  "coversConcepts": [
+    "false-prophets"
+  ]
+}

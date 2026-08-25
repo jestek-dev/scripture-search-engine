@@ -1,0 +1,118 @@
+# APOLOGETICS WAVE (batch 3, 2026-08-25) — NEW-MINT (critic-approved
+# apologetics concept map, entry 1). The mint itself rides map Decision 3
+# (the general-revelation dual-anchor design) and is admitted only by
+# Jesse's merge of this draft PR. Creation itself is God's ongoing witness
+# to every person — the heavens, the seasons, and providence declare the
+# Creator. The engine reports which curated source names each passage and
+# adjudicates nothing about anyone's response (CLAUDE.md #6).
+#
+# REUSE CHECK (map, recorded): `creation` teaches the act of making;
+# `those-who-never-heard` owns the fate-of-the-unevangelized question. The
+# witness register is distinct — this pack.
+#
+# Attribution: ALL anchors [editorial] — the map's research citations
+# (routledge, manning-20, ap-teleo, crossexamined) corroborate and are
+# never engine sources.
+#
+# G4 BOUNDARY (deliberate exclusions, commented so the disjointness reads
+# as design): "the heavens declare the glory of god" stays in
+# creation.yaml; "general revelation" and "without excuse" stay in
+# those-who-never-heard.yaml. The three lexicons share only {creation,
+# god} against creation and nothing against those-who-never-heard.
+#
+# TOKENIZER DISCIPLINE (G-4, verified with the engine's significantWords):
+# every entry below keeps >= 2 significant tokens with a distinctive
+# member: {creation, point, god}, {nature, testify, god},
+# {do, nature, prove, god, exist}, {witness, creation},
+# {god, reveal, nature}. Bare `nature` and bare `witness` are skipped in
+# ontology/lexicon-inventory.yaml with reasons (bare `witness` belongs to
+# sharing-your-faith's acknowledged "be my witnesses" collapse).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist; no
+# materialFrameKeyword appears in id, label, or lexicon.
+id: creation-testifies
+label: Creation testifies
+lexicon:
+  # The claim as a searcher states it.
+  - creation points to god
+  # The witness register's own verb.
+  - nature testifies to god
+  # The question form.
+  - does nature prove god exists
+  # Ps 19's substance in topical phrasing.
+  - the witness of creation
+  # Rom 1:19-20's substance as typed.
+  - god revealed in nature
+anchors:
+  # "The heavens declare the glory of God... Day after day they pour out
+  # speech, and night after night they display knowledge." (WEB, in
+  # corpus). Wordless, continuous cosmic testimony — the concept's
+  # namesake text, teaching it directly. SPAN NOTE: creation.yaml anchors
+  # Psalms 19:1 [editorial] for the act-of-making register; this wider
+  # v1-2 span carries the testimony register — deliberate overlapping
+  # claim, two honest registers (map Decision 3 family). WEB v1 carries
+  # the merged superscription before the body text (map note).
+  - ref: Psalms 19:1-2
+    sources: [editorial]
+    weight: 1.0
+  # "There is no speech nor language where their voice is not heard."
+  # (WEB, in corpus). Universality of the witness — the every-person
+  # scope the concept claims.
+  - ref: Psalms 19:3
+    sources: [editorial]
+    weight: 0.85
+  # "the invisible things of him since the creation of the world are
+  # clearly seen... that they may be without excuse" (WEB, in corpus).
+  # Paul's own doctrine of general revelation. Context kept (map caveat):
+  # in 1:18-32 the witness is suppressed, not persuasive unto faith. DUAL
+  # ANCHOR (map Decision 3, recorded design): those-who-never-heard
+  # carries Romans 1:18-20 [torrey] at 1.0 for the never-heard register;
+  # this narrower v19-20 span carries the witness register.
+  - ref: Romans 1:19-20
+    sources: [editorial]
+    weight: 0.95
+  # "He made from one blood every nation... that they should seek the
+  # Lord, if perhaps they might reach out for him and find him" (WEB, in
+  # corpus). The Areopagus address states the purpose of the created
+  # order. MAP DUAL NOTE (Decision 3): the map dual-anchors this text
+  # with those-who-never-heard; that pack's batch-1 extension was a
+  # measured NO-GAP (its existing lexicon already carries the register),
+  # so the never-heard side reaches this text via the related edge below
+  # instead of a duplicate anchor. EXISTING CLAIMANTS (recorded):
+  # nations-and-peoples anchors Acts 17:26-27 and providence Acts
+  # 17:26-28 — three honest registers of one text; this row claims only
+  # the seek-and-find witness clause.
+  - ref: Acts 17:26-27
+    sources: [editorial]
+    weight: 0.8
+  # "he didn't leave himself without witness, in that he did good and
+  # gave you rains from the sky and fruitful seasons" (WEB wording —
+  # Acts 14 NOT in web-subset). Paul at Lystra, to pagans with no
+  # Scripture — the concept's exact claim in the Bible's own missionary
+  # practice.
+  - ref: Acts 14:16-17
+    sources: [editorial]
+    weight: 0.8
+  # "When I consider your heavens... what is man, that you think of him?"
+  # (WEB wording — Psalm 8 NOT in web-subset). The sky-witness producing
+  # right creaturely response. SPLIT NOTE (map): the human-dignity
+  # register belongs to image-of-god, which anchors Psalms 8:4-6
+  # [editorial]; this row claims the witness of vv3-4 — the overlap at v4
+  # is recorded, each pack claiming its own register.
+  - ref: Psalms 8:3-4
+    sources: [editorial]
+    weight: 0.65
+  # "ask the animals now, and they will teach you... Who doesn't know
+  # that in all these, the LORD's hand has done this" (WEB wording —
+  # Job 12 NOT in web-subset). CAVEAT (map, verbatim intent): this is
+  # Job's retort to Zophar — even the animals know the LORD's hand does
+  # everything, including the calamity under dispute; the premise it
+  # teaches is affirmed, but never flattened into a serene nature-hymn.
+  # Low weight accordingly.
+  - ref: Job 12:7-9
+    sources: [editorial]
+    weight: 0.6
+related:
+  - creation
+  - those-who-never-heard
+  - design-in-creation

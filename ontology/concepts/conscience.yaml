@@ -1,0 +1,98 @@
+# APOLOGETICS WAVE (batch 3, 2026-08-25) — PENDING-TAG-GAP id (Theme J
+# row in tag-gaps-review.md; map entry 4). Building this pack does not
+# preempt Jesse's vocabulary review: nothing enters the vocabulary except
+# by his merge of this same draft PR — merging IS admitting the id (plan
+# G-3). Per the brief's own instruction the row is extended rather than
+# double-minting conscience-and-moral-law (map Declined #4).
+#
+# God's law written on every human heart — the inner witness that accuses
+# and excuses, making right and wrong knowable to those who never
+# received Scripture (moral-argument query family). The engine reports
+# what the texts teach and adjudicates nothing (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial] (map corroborations: namb-moral,
+# gq-moral, routledge, crossexamined — never engine sources).
+#
+# G4 BOUNDARY: "without excuse" stays in those-who-never-heard.yaml
+# (deliberate exclusion); the Rom 2:14-15 dual anchor with that pack is
+# the map's recorded Decision 3 design, not drift. Lexicons are fully
+# disjoint.
+#
+# TOKENIZER DISCIPLINE (G-4, verified with the engine's significantWords):
+# "conscience" is a deliberate single-word entry — the subject noun IS
+# the concept (the creation/resurrection bare-token precedent), admitted
+# in ontology/lexicon-inventory.yaml and measured by conscience.json.
+# "law written on their hearts" and the query form "law written on the
+# heart" normalize to the same set {law, written, heart} — one entry
+# carries both. The other entries keep >= 2 significant tokens:
+# {moral, law}, {people, know, right, wrong}.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: conscience
+label: Conscience — the law written on hearts
+lexicon:
+  # The subject noun (deliberate bare word, see header).
+  - conscience
+  # Rom 2:15's own phrase; also carries the singular query form (same
+  # token set).
+  - law written on their hearts
+  # The moral-argument register as users type it.
+  - moral law
+  # The question form.
+  - how do people know right from wrong
+anchors:
+  # "(for when Gentiles who don't have the law do by nature the things of
+  # the law... they show the work of the law written in their hearts,
+  # their conscience testifying with them...)" (WEB, in corpus). The
+  # moral-argument tradition's central text actually teaches its premise.
+  # Context kept (map): it serves Paul's indictment — all are accountable
+  # — exactly the register this concept claims. DUAL ANCHOR (map Decision
+  # 3, recorded design): those-who-never-heard anchors the same span
+  # [editorial] at 0.9 for the never-heard register.
+  - ref: Romans 2:14-15
+    sources: [editorial]
+    weight: 1.0
+  # "in the day when God will judge the secrets of men, according to my
+  # Good News, by Jesus Christ." (WEB, in corpus). Completes the
+  # sentence: the inner witness has a Judge — moral accountability, not
+  # mere moral feeling. (those-who-never-heard's recorded design keeps
+  # its own anchor at 2:14-15; the map's wider 2:14-16 span is served by
+  # this separate v16 anchor rather than widening a reviewed span.)
+  - ref: Romans 2:16
+    sources: [editorial]
+    weight: 0.85
+  # "who, knowing the ordinance of God, that those who practice such
+  # things are worthy of death, not only do the same, but also approve of
+  # those who practice them." (WEB, in corpus). Moral knowledge possessed
+  # and suppressed — real even where it does not govern.
+  - ref: Romans 1:32
+    sources: [editorial]
+    weight: 0.75
+  # "He has shown you, O man, what is good. What does the LORD require of
+  # you, but to act justly, to love mercy, and to walk humbly with your
+  # God?" (WEB, in corpus). 'He has shown you, O man' — the good as
+  # shown, addressed generically. CAVEAT (map, kept): the courtroom scene
+  # addresses covenant Israel, who had special revelation — never
+  # overclaimed as a pure natural-law text. DUAL NOTE: humble-exaltation
+  # anchors this verse for the walk-humbly register — two honest
+  # registers, recorded.
+  - ref: Micah 6:8
+    sources: [editorial]
+    weight: 0.7
+  # "He has also set eternity in their hearts, yet so that man can't find
+  # out the work that God has done" (WEB, in corpus). The implanted inner
+  # reach toward what outlasts us, paired honestly with the verse's own
+  # limit clause. DECISION 5 FLAG (map, verbatim intent): anchored for
+  # the inner-witness register, not as a moral-law text — if Jesse rules
+  # the row strictly moral-conscience, this anchor moves or drops.
+  - ref: Ecclesiastes 3:11
+    sources: [editorial]
+    weight: 0.6
+  # "The spirit of man is the LORD's lamp, searching all his innermost
+  # parts." (WEB wording — Proverbs 20 NOT in web-subset). Proverbs'
+  # one-verse anthropology of the examining inner witness.
+  - ref: Proverbs 20:27
+    sources: [editorial]
+    weight: 0.7
+related:
+  - those-who-never-heard

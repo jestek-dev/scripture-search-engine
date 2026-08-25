@@ -1,0 +1,45 @@
+{
+  "id": "false-prophets",
+  "query": "how to recognize a false prophet",
+  "status": "active",
+  "additionalQueries": [
+    "test the spirits",
+    "false teachers"
+  ],
+  "note": [
+    "Apologetics wave batch 5 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id false-prophets (Theme B; map Decision 6: ONE concept absorbing",
+    "false-teachers, built under this id — the recorded alternate split is",
+    "a PR decision row; 2 Pet 2:1 is the textual bridge) — merged only by",
+    "Jesse's admission of this PR (plan G-3). Measured gap before the pack",
+    "(2026-08-25): 'how to recognize a false prophet' returned Acts 13:6 #1",
+    "(exact phrase 'a false prophet' — the Elymas narrative, an honest",
+    "lexical result but no answer to the how-question) with Matt 7:15 #2",
+    "chipless; 'test the spirits' returned 1 John 4:1 #1 by exact phrase,",
+    "chipless (wrong-reason class); 'false teachers' returned",
+    "translation-variant and token scatter (Acts 20:29, Isa 43:27) with no",
+    "curated chip anywhere.",
+    "TOKENIZER DISCIPLINE (G-4): NO bare 'test'/'testing' tokens (map",
+    "Declined #30, matching the testing pack's own recorded decline);",
+    "'test the spirits' ({test, spirit}) is the admitted multi-word form.",
+    "The plan's aside 'test all things' is NOT shipped as lexicon ({test,",
+    "thing} — generic second token, unexercised by any fixture query);",
+    "1 Thess 5:20-21 still carries the register as an anchor. Logged."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 7:15-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: False prophets and teachers"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 John 4:1",
+    "Matthew 24:24",
+    "1 Thessalonians 5:20-21"
+  ],
+  "coversConcepts": [
+    "false-prophets"
+  ]
+}

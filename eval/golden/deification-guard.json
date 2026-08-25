@@ -1,0 +1,39 @@
+{
+  "id": "deification-guard",
+  "query": "can humans become gods",
+  "status": "active",
+  "additionalQueries": [
+    "will i become a god"
+  ],
+  "note": [
+    "GUARD FIXTURE (apologetics wave batch 2, 2026-08-25; map Decision 12,",
+    "all four map drafts concurred; ships in the same batch as the",
+    "no-other-god pack). Psalm 82:6 ('I said, \"You are gods...\"', in",
+    "corpus) is Scripture and is never suppressed; what this guard forbids",
+    "is Ps 82:6 LEADING the conceptual become-gods queries, where the honest",
+    "curated answer surface is no-other-god's anchor set (Isa 43:10 etc. —",
+    "asserted by no-other-god.json for the same query).",
+    "ASSERTION TYPE (decision row F-1): the map asked for mustNotRank; this",
+    "ships as mustNotLead per Jesse's recorded 2026-08-15 assertion-type",
+    "ruling (Job 16:2 / Eccl 1:9: honest lexical results are 'demoted, never",
+    "forbidden', and assertion-type hardening is his call, not an",
+    "implementer's). He can harden it to mustNotRank by editing this file.",
+    "No pack anywhere anchors Ps 82:6 (map Declined #12 and the",
+    "disputed-texts table: Jesus' John 10:34 use is an a-fortiori argument,",
+    "handled inside deity-of-christ's John 10:30-33 justification comment",
+    "only). The verbatim quote query 'you are gods' is locked separately by",
+    "deification-guard-you-are-gods.json — it cannot share this fixture",
+    "because every assertion here applies to every query, and for the",
+    "verbatim quote Ps 82:6 belongs at the top.",
+    "Measured pre-pack (2026-08-25): Ps 82:6 absent from both queries'",
+    "top-10 (translation-variant scatter led), so the guard opens green and",
+    "locks the healthy state against any future pack reaching for Ps 82:6."
+  ],
+  "mustNotLead": [
+    {
+      "reference": "Psalms 82:6",
+      "withinTop": 1,
+      "why": "The deification proof-text misuse: for conceptual become-gods queries the honest curated answer is the no-other-god anchor set (Isa 43:10: 'Before me there was no God formed, neither will there be after me'); Ps 82:6 may rank as the honest lexical hit it is, but must not lead — demoted, never forbidden, per the recorded 2026-08-15 assertion-type ruling and map Decision 12."
+    }
+  ]
+}

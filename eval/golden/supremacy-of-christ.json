@@ -1,0 +1,43 @@
+{
+  "id": "supremacy-of-christ",
+  "query": "firstborn of all creation",
+  "status": "active",
+  "additionalQueries": [
+    "is christ supreme over all"
+  ],
+  "note": [
+    "Apologetics wave batch 2 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id supremacy-of-christ (Theme K, Colossians-minted row) — merged only",
+    "by Jesse's admission of this PR (plan G-3). Measured gap before the",
+    "pack (2026-08-25): 'firstborn of all creation' put Col 1:15 #1 on bare",
+    "exact-phrase evidence with NO curated chip — the disputed text ranked",
+    "with no provenance-visible handling, which is exactly what this pack",
+    "exists to fix (the chip is the claim, editorial-attributed).",
+    "TOKENIZER DECISION (G-4, logged): the map's 'christ above all'",
+    "collapses to the bare token {christ} and is reworded to 'is christ",
+    "supreme over all' ({christ, supreme}).",
+    "QUERY-SET DECISION: 'image of the invisible god' stays a lexicon entry",
+    "but is not an asserted query here — it fires image-of-god too (whose",
+    "[torrey] Col 1:15 anchor is a deliberate cross-concept dual), and this",
+    "fixture pins THIS pack's label, so its asserted queries are the ones",
+    "unambiguous to the supremacy register.",
+    "Pending companion supremacy-of-christ-hebrews1.json carries the",
+    "Hebrews 1 catena (out of corpus; rides the re-pin)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Colossians 1:15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The supremacy of Christ"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Colossians 1:16",
+    "Colossians 1:17",
+    "Colossians 1:18"
+  ],
+  "coversConcepts": [
+    "supremacy-of-christ"
+  ]
+}

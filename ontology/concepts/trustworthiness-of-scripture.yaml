@@ -1,0 +1,116 @@
+# APOLOGETICS WAVE (batch 5, 2026-08-25) — PENDING-TAG-GAP id (Theme C row
+# in tag-gaps-review.md). Building this pack does not preempt Jesse's
+# vocabulary review: nothing enters the vocabulary except by his merge of
+# this same draft PR — merging IS admitting the id (plan G-3).
+#
+# Scripture is God-breathed, flawless, and true — trustworthy in what it
+# affirms and sufficient to equip God's people for every good work. The
+# engine reports that a curated source names these passages for the
+# concept; it never adjudicates the doctrine (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial] — the map's research citations
+# (puritanboard/jimmyakin threads on 2 Tim 3:16) corroborate and are never
+# engine sources; the verified Torrey outline set (SCRIPTURES, THE) was
+# checked — its rows for Ps 19:7ff are claimed by studying-the-word
+# [torrey] in the engagement register, and no outline row matches this
+# pack's trustworthiness claim, so relabeling is forbidden (trinity
+# precedent).
+#
+# THIN IN-CORPUS BED (plan F-3, named for the PR): only Ps 19:7-9 is in
+# web-subset — every other anchor ships as anchor-with-note and the
+# measured coverage arrives with the corpus re-pin. If the Admission
+# Report says NO MEASURABLE EFFECT, this pack does not merge and moves to
+# the DEFER list with its pending fixture kept.
+#
+# LEXICON BOUNDARY (G-4): this pack speaks of "the bible" / "scripture";
+# the "gods word" phrasings belong to studying-the-word (engagement) and
+# power-of-gods-word (permanence/efficacy) — zero shared phrases by
+# design. No entry collapses to a single significant token.
+id: trustworthiness-of-scripture
+label: Scripture is trustworthy
+lexicon:
+  # The apologetic question forms, as a searcher types them.
+  - is the bible trustworthy
+  - is the bible reliable
+  - is the bible true
+  # 2 Tim 3:16's own register ("Every Scripture is God-breathed") — the
+  # naming text is outside the corpus (see anchor note); the phrase still
+  # routes the query to the concept's in-corpus representatives.
+  - all scripture is god breathed
+  # The concept's name form ({trustworthiness, scripture} — distinctive).
+  - trustworthiness of scripture
+anchors:
+  # "The LORD's law is perfect, restoring the soul... The LORD's ordinances
+  # are true, and righteous altogether." (WEB, in corpus). The psalm's
+  # second panel: after creation's wordless speech (19:1-6), the written
+  # word is perfect, sure, right, pure, true. DUAL CLAIM with
+  # studying-the-word's Ps 19:7-11 [torrey] (engagement register): spans
+  # differ by design — this pack claims the 19:7-9 predicates in the
+  # trustworthiness register. The pack's one in-corpus anchor.
+  - ref: Psalms 19:7-9
+    sources: [editorial]
+    weight: 1.0
+  # "Every Scripture is God-breathed and profitable... that each person who
+  # belongs to God may be complete, thoroughly equipped for every good
+  # work." (WEB wording from the current edition — 2 Timothy 3 NOT in
+  # web-subset; re-check at the WEB re-pin, map Decision 20). CAVEAT (map,
+  # kept verbatim in spirit): the verse claims sufficiency-to-equip, not
+  # canon closure; wider sola-scriptura freight is a contested inference
+  # and stays out of the gist. Map weight 1.0 shipped 0.95 per plan.
+  - ref: 2 Timothy 3:16-17
+    sources: [editorial]
+    weight: 0.95
+  # "no prophecy ever came by the will of man, but holy men of God spoke,
+  # being moved by the Holy Spirit." (WEB wording, current edition —
+  # 2 Peter NOT in web-subset; re-check at re-pin). Peter's own account of
+  # Scripture's origin, grounding the prophetic word's reliability (1:19).
+  - ref: 2 Peter 1:20-21
+    sources: [editorial]
+    weight: 0.85
+  # "Sanctify them in your truth. Your word is truth." (WEB wording,
+  # current edition — John 17 NOT in web-subset; re-check at re-pin).
+  # Jesus' own predication, in prayer rather than polemic.
+  - ref: John 17:17
+    sources: [editorial]
+    weight: 0.85
+  # "we didn't follow cunningly devised fables... but we were eyewitnesses
+  # of his majesty." (WEB wording, current edition — 2 Peter NOT in
+  # web-subset; re-check at re-pin). The not-myth, eyewitness register
+  # ONLY — the apostolic message's explicit historical claim.
+  - ref: 2 Peter 1:16
+    sources: [editorial]
+    weight: 0.8
+  # "The LORD's words are flawless words, as silver refined in a clay
+  # furnace" (WEB wording, current edition — Psalm 12 NOT in web-subset;
+  # re-check at re-pin). Set against the flattering, double-hearted speech
+  # of men (12:2-4) — the contrast is the psalm's point.
+  - ref: Psalms 12:6
+    sources: [editorial]
+    weight: 0.8
+  # "All of your words are truth. Every one of your righteous ordinances
+  # endures forever." (WEB wording, current edition — Psalm 119 NOT in
+  # web-subset; re-check at re-pin). The psalm's summary predication of
+  # truth over the whole of God's words.
+  - ref: Psalms 119:160
+    sources: [editorial]
+    weight: 0.8
+  # "Every word of God is flawless. He is a shield to those who take
+  # refuge in him." (WEB wording, current edition — Proverbs 30 NOT in
+  # web-subset; re-check at re-pin). Agur's confession; v6 (the
+  # add-nothing clause) is anchored under no-other-gospel — the split is
+  # each verse's own claim.
+  - ref: Proverbs 30:5
+    sources: [editorial]
+    weight: 0.8
+  # "having traced the course of all things accurately from the first...
+  # that you might know the certainty" (WEB wording, current edition —
+  # Luke 1 NOT in web-subset; re-check at re-pin). Luke's preface:
+  # eyewitness sources, careful investigation, certainty as the goal —
+  # Scripture's own description of its historical method.
+  - ref: Luke 1:3-4
+    sources: [editorial]
+    weight: 0.75
+related:
+  - studying-the-word
+  - power-of-gods-word
+  - no-other-gospel

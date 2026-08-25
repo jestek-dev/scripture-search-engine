@@ -112,6 +112,13 @@
       "conceptId": "pregnancy-and-child-loss"
     },
     {
+      "queryId": "bare-word:040eb379271f55d0",
+      "query": "intelligent",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "design-in-creation"
+    },
+    {
       "queryId": "bare-word:04b447783afe5bfd",
       "query": "opportunity",
       "register": "church-member",
@@ -131,13 +138,6 @@
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "freedom-from-bondage"
-    },
-    {
-      "queryId": "bare-word:063bffb4b52b2315",
-      "query": "ways",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "relapse-and-restoration"
     }
   ],
   "concept-register": [
@@ -198,18 +198,18 @@
       "conceptId": "abiding-in-christ"
     },
     {
-      "queryId": "concept-register:00a863582965ebfb",
-      "query": "verses on god of all comfort",
+      "queryId": "concept-register:007cf7a51e95d90f",
+      "query": "help me understand scripture is trustworthy",
       "register": "church-member",
       "expectationKind": "concept-anchors",
-      "conceptId": "god-of-all-comfort"
+      "conceptId": "trustworthiness-of-scripture"
     },
     {
-      "queryId": "concept-register:00ad060f4688a3b4",
-      "query": "scripture about struggling with god",
+      "queryId": "concept-register:00a76b1542823238",
+      "query": "scripture about is the gospel complete",
       "register": "church-member",
       "expectationKind": "concept-anchors",
-      "conceptId": "wrestling-with-god"
+      "conceptId": "no-other-gospel"
     }
   ],
   "felt-need": [
@@ -286,6 +286,12 @@
   ],
   "golden-verbatim": [
     {
+      "queryId": "golden-verbatim:01230e3d9f4b9b60",
+      "query": "you are gods",
+      "expectationKind": "concept-anchors",
+      "conceptId": "deification-guard-you-are-gods"
+    },
+    {
       "queryId": "golden-verbatim:0163977d087e5919",
       "query": "covenant promises",
       "expectationKind": "concept-anchors",
@@ -322,6 +328,12 @@
       "conceptId": "parenting"
     },
     {
+      "queryId": "golden-verbatim:04f4966dc8ff537d",
+      "query": "how do people know right from wrong",
+      "expectationKind": "concept-anchors",
+      "conceptId": "conscience"
+    },
+    {
       "queryId": "golden-verbatim:054d503938ede98d",
       "query": "wages of sin",
       "expectationKind": "concept-anchors",
@@ -332,18 +344,6 @@
       "query": "image of god",
       "expectationKind": "concept-anchors",
       "conceptId": "image-of-god"
-    },
-    {
-      "queryId": "golden-verbatim:057dd4ff1dc1834c",
-      "query": "the lord bless you and keep you",
-      "expectationKind": "concept-anchors",
-      "conceptId": "benediction"
-    },
-    {
-      "queryId": "golden-verbatim:06603df273b5e65e",
-      "query": "famine in the land",
-      "expectationKind": "concept-anchors",
-      "conceptId": "gods-provision-famine"
     }
   ],
   "multi-concept": [
@@ -370,7 +370,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity — father, son, and spirit",
+      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"
@@ -386,6 +386,13 @@
       "queryId": "multi-concept:009e376cb0e9e185",
       "query": "sermon connecting the deity of christ and salvation",
       "register": "pastor",
+      "expectationKind": "concept-anchors",
+      "conceptId": "deity-of-christ"
+    },
+    {
+      "queryId": "multi-concept:010b0bcaf4aa6dd7",
+      "query": "verses about the deity of christ and mormon evangelism",
+      "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "deity-of-christ"
     },
@@ -409,13 +416,6 @@
       "register": "pastor",
       "expectationKind": "concept-anchors",
       "conceptId": "deity-of-christ"
-    },
-    {
-      "queryId": "multi-concept:019c4fd3e2a1ec65",
-      "query": "how does do not be afraid relate to god's protection",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "fear-not"
     }
   ],
   "remembered-phrase": [
@@ -567,6 +567,20 @@
       "conceptId": "obedience-to-the-word"
     },
     {
+      "queryId": "worship-planning:00931a318fc9254a",
+      "query": "benediction on honor the son",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "honor-the-son"
+    },
+    {
+      "queryId": "worship-planning:01c22d7c54a69fe9",
+      "query": "benediction on design in creation",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "design-in-creation"
+    },
+    {
       "queryId": "worship-planning:0250d083ba1179f1",
       "query": "opening scripture for a service on fell back into sin",
       "register": "worship-leader",
@@ -588,6 +602,13 @@
       "conceptId": "walking-in-the-light"
     },
     {
+      "queryId": "worship-planning:031c44e09c30c9a8",
+      "query": "benediction on the prosperity of the wicked",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "prosperity-of-the-wicked"
+    },
+    {
       "queryId": "worship-planning:03444d8711201a70",
       "query": "setlist theme nations in the bible",
       "register": "worship-leader",
@@ -595,39 +616,18 @@
       "conceptId": "nations-and-peoples"
     },
     {
+      "queryId": "worship-planning:036ecc4f74ef57a2",
+      "query": "opening scripture for a service on in the beginning god created",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "creation"
+    },
+    {
       "queryId": "worship-planning:03829e2cf6a77fff",
       "query": "setlist theme grow in christ",
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
       "conceptId": "spiritual-growth"
-    },
-    {
-      "queryId": "worship-planning:0383ce9fc81bc023",
-      "query": "responsive reading about hope in despair",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "hope-in-despair"
-    },
-    {
-      "queryId": "worship-planning:038e79f50aee7341",
-      "query": "setlist theme comparison",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "contentment"
-    },
-    {
-      "queryId": "worship-planning:03b2b66bd3149be2",
-      "query": "responsive reading about the presence of god",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "presence-of-god"
-    },
-    {
-      "queryId": "worship-planning:03b51854a825f694",
-      "query": "songs about god tests his people",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "testing"
     }
   ]
 }

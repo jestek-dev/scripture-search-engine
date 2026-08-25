@@ -1,0 +1,120 @@
+# APOLOGETICS WAVE (batch 5, 2026-08-25) — PENDING-TAG-GAP id (Theme B row
+# in tag-gaps-review.md; map Decision 6: ONE concept under this id absorbs
+# the recorded false-teachers alternate — 2 Pet 2:1 names the OT
+# phenomenon and the church-age phenomenon as one continuum in a single
+# sentence, the textual ground for the merge; the split-out alternate is a
+# PR decision row). Merged only by Jesse's admission of this PR (plan G-3).
+#
+# Scripture's own tests for anyone who claims to speak for God —
+# fulfillment, fidelity to the true God, confession of Christ, and fruits —
+# and its warnings against false prophets and teachers. The engine reports
+# the tests the texts state; it never applies them to any person or
+# movement (CLAUDE.md #6; application lives in fixtures and the PR
+# narrative, never in gist wording — map's disputed-texts row).
+#
+# NON-ADJUDICATION (map / DOCTRINAL-BASIS §4): 1 Thess 5:20-21 keeps the
+# balanced apostolic register — testing commanded without contempt for
+# prophecy — so the concept adjudicates no continuationist question.
+#
+# Attribution: ALL anchors [editorial]; the map's research citations
+# (gotquestions/crivoice/gobible) corroborate and are never engine
+# sources. Torrey's verified outline was checked; no row is claimed.
+#
+# TOKENIZER DISCIPLINE (G-4): NO bare "test"/"testing" tokens (map
+# Declined #30 — matching the testing pack's own recorded decline; that
+# pack owns the God-tests-his-people sense). "test the spirits"
+# ({test, spirit}) is the admitted multi-word form. "test all things" is
+# NOT shipped ({test, thing} — generic second token, unexercised by any
+# fixture query); 1 Thess 5:20-21 carries the register as an anchor.
+# No entry collapses to a single significant token.
+id: false-prophets
+label: False prophets and teachers
+lexicon:
+  - false prophets
+  # The church-age half of the Decision-6 merge (2 Pet 2:1's own pairing).
+  - false teachers
+  # 1 John 4:1's command form — the admitted multi-word test phrase.
+  - test the spirits
+  # Matt 7:16's remembered form ({fruit, know}).
+  - by their fruits you will know them
+  # The how-question form ({recognize, false, prophet}).
+  - how to recognize a false prophet
+anchors:
+  # "Beware of false prophets, who come to you in sheep's clothing... By
+  # their fruits you will know them." (WEB, in corpus). Jesus' fruits test
+  # in the Sermon's closing warnings — appearance deceives; outcomes
+  # testify.
+  - ref: Matthew 7:15-16
+    sources: [editorial]
+    weight: 1.0
+  # "don't believe every spirit, but test the spirits, whether they are of
+  # God, because many false prophets have gone out into the world." (WEB,
+  # in corpus). The command to test, with vv2-3 supplying the confessional
+  # criterion (Jesus Christ come in the flesh).
+  - ref: 1 John 4:1
+    sources: [editorial]
+    weight: 0.95
+  # "For false christs and false prophets will arise, and they will show
+  # great signs and wonders, so as to lead astray, if possible, even the
+  # chosen ones." (WEB, in corpus). Great signs cannot authenticate a
+  # messenger — Jesus' own Olivet warning.
+  - ref: Matthew 24:24
+    sources: [editorial]
+    weight: 0.9
+  # "Don't despise prophecies. Test all things, and hold firmly that which
+  # is good." (WEB, in corpus). The balanced apostolic register — testing
+  # commanded without contempt for prophecy; why this concept adjudicates
+  # no continuationist question (see header).
+  - ref: 1 Thessalonians 5:20-21
+    sources: [editorial]
+    weight: 0.8
+  # "examining the Scriptures daily to see whether these things were so."
+  # (WEB, in corpus). Anti-tagging check passed (map): the narrator
+  # commends the practice ("more noble") — the passage depicts testing
+  # claims against Scripture, it is not merely used for it. CROSS-REF
+  # studying-the-word (the daily-examination register borders it; that
+  # pack does not anchor this verse).
+  - ref: Acts 17:11
+    sources: [editorial]
+    weight: 0.75
+  # "When a prophet speaks in the LORD's name, if the thing doesn't
+  # follow, nor happen, that is the thing which the LORD has not spoken."
+  # (WEB wording, current edition — Deuteronomy 18 NOT in web-subset;
+  # re-check at re-pin). The statute's own criterion, framed as an answer
+  # to the audience's own question (v21). APPLICATION-IN-FIXTURES-NEVER-
+  # GIST (map's disputed-texts row): applying the test to any modern
+  # movement is fixture/PR territory, never this comment or any display
+  # gist. Pending companion false-prophets-deut-test.json.
+  - ref: Deuteronomy 18:21-22
+    sources: [editorial]
+    weight: 0.95
+  # "If a prophet... gives you a sign or a wonder, and the sign or the
+  # wonder comes to pass... 'Let's go after other gods'... you shall not
+  # listen" (WEB wording, current edition — Deuteronomy 13 NOT in
+  # web-subset; re-check at re-pin). The companion statute: a fulfilled
+  # sign does not validate a prophet who calls to other gods — the
+  # doctrinal test outranks the sign test.
+  - ref: Deuteronomy 13:1-3
+    sources: [editorial]
+    weight: 0.9
+  # "But false prophets also arose among the people, as false teachers
+  # will also be among you" (WEB wording, current edition — 2 Peter NOT in
+  # web-subset; re-check at re-pin). THE MERGE'S BRIDGE VERSE (map
+  # Decision 6): OT false prophets and church-age false teachers named as
+  # one continuum in one sentence.
+  - ref: 2 Peter 2:1
+    sources: [editorial]
+    weight: 0.85
+  # "Turn to the law and to the covenant! If they don't speak according to
+  # this word, surely there is no morning for them." (WEB wording, current
+  # edition — Isaiah 8 NOT in web-subset; re-check at re-pin). In context
+  # (8:19) the alternative on offer is consulting mediums and wizards; the
+  # measure of any voice is whether it speaks according to this word.
+  # Cross-ref: the pending occult-and-divination tag-gap row (not built in
+  # this wave).
+  - ref: Isaiah 8:20
+    sources: [editorial]
+    weight: 0.7
+related:
+  - no-other-gospel
+  - studying-the-word

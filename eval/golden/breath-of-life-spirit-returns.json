@@ -1,0 +1,36 @@
+{
+  "id": "breath-of-life-spirit-returns",
+  "query": "the spirit returns to god who gave it",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 3, 2026-08-25) — the",
+    "distinct-spirit register of the-breath-of-life: dust and spirit part",
+    "ways at death and the spirit returns to the God who gave it.",
+    "BLOCKED ON CORPUS: Ecclesiastes 12 and Matthew 10 are absent from",
+    "pipeline/fixtures/web-subset.json (docs/corpus-payload-dependency.md,",
+    "BLOCKED 2026-08-21).",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that",
+    "lands Ecclesiastes 12 and Matthew 10 (re-pin payload P4.15). The",
+    "pack anchors Eccl 12:7 and Matt 10:28 [editorial] now as",
+    "anchors-with-note. The register is honestly measurable only on that",
+    "bed — Gen 2:7's nephesh is the whole living person (the pack's own",
+    "caveat), so the distinct-spirit claim rests on exactly these",
+    "corpus-blocked texts; saying so here is the point of this companion.",
+    "On activation re-cut the expected lead to what is honest for the",
+    "query."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ecclesiastes 12:7",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 10:28",
+    "Genesis 2:7"
+  ],
+  "coversConcepts": [
+    "the-breath-of-life"
+  ]
+}

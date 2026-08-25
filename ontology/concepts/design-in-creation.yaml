@@ -1,0 +1,107 @@
+# APOLOGETICS WAVE (batch 3, 2026-08-25) — NEW-MINT (critic-approved
+# apologetics concept map, entry 3). The world is made with wisdom, order,
+# and purpose — fixed ordinances govern the heavens, the earth is formed
+# to be inhabited, human beings are deliberately woven together. The id
+# names what the texts teach, never the modern argument; no anchor is
+# claimed to teach fine-tuning physics (map's recorded scope note), and
+# the engine adjudicates nothing (CLAUDE.md #6).
+#
+# REUSE CHECK (map, recorded): not covered by creation (the act, not the
+# orderedness), wisdom-from-god (wisdom for living), or any tag-gap row.
+#
+# Attribution: ALL anchors [editorial] (map corroborations: ap-teleo,
+# thirdmill-job, manning-20, brief-6.1 — never engine sources).
+#
+# G4 BOUNDARY: "fearfully and wonderfully made" stays in creation.yaml
+# (deliberate exclusion). Shared tokens vs creation: {made, world,
+# universe, creation} — measured under budget; vs wisdom-from-god: only
+# {wisdom}, and that pack's admitted bare token keeps its own claim on
+# wisdom queries.
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens with a distinctive member: {world, made, wisdom},
+# {universe, design}, {intelligent, design}, {laws, nature, bible},
+# {order, creation}. Bare `design` is skipped in
+# ontology/lexicon-inventory.yaml with a reason.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: design-in-creation
+label: Design in creation
+lexicon:
+  # Prov 3:19's claim as a searcher types it.
+  - the world was made with wisdom
+  # The question form.
+  - is the universe designed
+  # The modern debate's own name — lexicon territory per the map; the
+  # anchors teach made-with-wisdom, not the argument.
+  - intelligent design
+  # Job 38:33's own phrase ("laws of the heavens") in the register users
+  # bring.
+  - laws of nature in the bible
+  # The orderedness register.
+  - order in creation
+anchors:
+  # "By wisdom the LORD founded the earth. By understanding, he
+  # established the heavens. By his knowledge, the depths were broken up"
+  # (WEB, in corpus). Creation executed by wisdom, understanding,
+  # knowledge — orderedness located in the Maker's mind, the concept's
+  # core claim. (Prov 8's personified-Wisdom chapter is deliberately NOT
+  # anchored — map Declined #8, Ezek-28 precedent; this text teaches the
+  # design substance without the dispute.)
+  - ref: Proverbs 3:19-20
+    sources: [editorial]
+    weight: 1.0
+  # "If my covenant of day and night fails, if I have not appointed the
+  # ordinances of heaven and earth" (WEB, in corpus). The fixed
+  # ordinances are so reliable God stakes covenant promises on them.
+  # CAVEAT (map, kept): the passage's point is covenant certainty to
+  # Israel — the appointed natural order is the premise, not the topic;
+  # the protasis completes in v26.
+  - ref: Jeremiah 33:25
+    sources: [editorial]
+    weight: 0.8
+  # "You knit me together in my mother's womb... I am fearfully and
+  # wonderfully made." (WEB, in corpus). Design brought down to the
+  # individual person — deliberate personal formation, no embryology
+  # claim (map note). DUAL ANCHOR with creation (0.9 there, act-of-making
+  # register); identity-in-christ and two pastoral packs also claim
+  # Ps 139:13 spans for their own registers — recorded, each pack's
+  # register distinct.
+  - ref: Psalms 139:13-14
+    sources: [editorial]
+    weight: 0.75
+  # "Where were you when I laid the foundations of the earth?" (WEB
+  # wording — Job 38 NOT in web-subset). The whirlwind speech's
+  # architectural imagery: the earth deliberately laid, man unqualified
+  # to audit it. The theodicy function of the speeches belongs to
+  # why-god-allows-suffering (map Declined #36 — that pack anchors
+  # Job 1/42, not Job 38, so no dual exists). Assertion rides
+  # design-in-creation-job.json (pending) and the re-pin.
+  - ref: Job 38:4
+    sources: [editorial]
+    weight: 0.8
+  # "Do you know the laws of the heavens? Can you establish its dominion
+  # over the earth?" (WEB wording — Job 38 NOT in web-subset).
+  # Scripture's own phrase 'laws of the heavens' — a lawlike created
+  # order man neither wrote nor administers.
+  - ref: Job 38:33
+    sources: [editorial]
+    weight: 0.7
+  # "who formed the earth... didn't create it a waste, who formed it to
+  # be inhabited" (WEB wording — Isaiah 45 NOT in web-subset). Explicit
+  # purpose-of-the-world statement. BOUNDARY (map, recorded): the
+  # no-other-God clause of the same verse belongs to no-other-god
+  # (batch 2 anchors Isaiah 45:21-22, not this verse) — shared chapter,
+  # two honest registers.
+  - ref: Isaiah 45:18
+    sources: [editorial]
+    weight: 0.8
+  # "LORD, how many are your works! In wisdom, you have made them all."
+  # (WEB wording — Psalm 104 NOT in web-subset). The creation-psalm's
+  # summary verse after 23 verses of ecosystem detail.
+  - ref: Psalms 104:24
+    sources: [editorial]
+    weight: 0.7
+related:
+  - creation
+  - creation-testifies

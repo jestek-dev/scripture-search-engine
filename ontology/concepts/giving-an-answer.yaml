@@ -1,0 +1,289 @@
+# APOLOGETICS WAVE (batch 5, 2026-08-25) — NEW-MINT-conditional (map
+# Decision 8 recommends mint; anchor-disjointness from sharing-your-faith
+# verified by the map — ZERO shared anchors; the mint-vs-extend flag rides
+# the PR decision table, and if Jesse rules extend-instead these anchors
+# fold into sharing-your-faith unchanged). Merged only by Jesse's
+# admission of this PR.
+#
+# The believer's readiness to give a gentle, reasoned answer for the hope
+# of the gospel to anyone who asks. The MANNER is part of the claim
+# (1 Pet 3:15's "with humility and fear"), not a garnish — nothing here
+# licenses combativeness.
+#
+# Attribution: ALL anchors [editorial]; the map's research citations
+# (crossway/apologeticsforthechurch on 1 Pet 3:15) corroborate and are
+# never engine sources. Torrey's verified outline carries no row for this
+# claim.
+#
+# LEXICON BOUNDARY (G-4): sharing-your-faith (the conditional parent)
+# owns the evangelism phrasings ("witnessing", "how to share the gospel",
+# "tell others about jesus") — NO share/tell/witness phrasings here; this
+# pack speaks the answer/defense register. TOKENIZER DECISIONS (logged in
+# the fixture): bare "apologetics" ADMITTED (trinity/godhead §1.6d
+# option-3 precedent — the word appears in no WEB verse, so no lexical
+# rung reaches the practice without it; inventory row ships with the
+# pack). "how to defend my faith" / "how do i defend my faith" collapse
+# to the same {defend, faith} set as "defend the faith" — one entry
+# carries all three forms (worker duplicate-set rule).
+id: giving-an-answer
+label: Giving an answer
+lexicon:
+  # 1 Pet 3:15's charge, as remembered and as searched.
+  - always be ready to give an answer
+  - give an answer for your hope
+  # The practice's own register ({defend, faith} carries "how to defend my
+  # faith" and "how do i defend my faith" by identical-set containment).
+  - defend the faith
+  # Single-token entry, deliberate (§1.6d option-3; the one-token
+  # specificity discount keeps the claim humble). The discipline's own
+  # name — appears in no WEB verse, so only curation can route it.
+  - apologetics
+anchors:
+  # "Always be ready to give an answer to everyone who asks you a reason
+  # concerning the hope that is in you, with humility and fear" (WEB, in
+  # corpus). The apologia charge itself: readiness, a reason, and the
+  # governing manner — humility and fear, a good conscience (v16). The
+  # manner is part of the claim.
+  - ref: 1 Peter 3:15
+    sources: [editorial]
+    weight: 1.0
+  # "for three Sabbath days reasoned with them from the Scriptures,
+  # explaining and demonstrating that the Christ had to suffer and rise
+  # again" (WEB, in corpus). Anti-tagging check passed (map): the
+  # narrative depicts reasoned persuasion as Paul's custom — not merely a
+  # passage recruited by apologists.
+  - ref: Acts 17:2-3
+    sources: [editorial]
+    weight: 0.85
+  # "both in my bonds and in the defense and confirmation of the Good
+  # News, you all are partakers with me of grace." (WEB, in corpus).
+  # "The defense and confirmation of the Good News" — Paul's own category
+  # for the work, shared with the whole church.
+  - ref: Philippians 1:7
+    sources: [editorial]
+    weight: 0.8
+  # "knowing that I am appointed for the defense of the Good News." (WEB,
+  # in corpus). VERSIFICATION NOTE (map): WEB follows the majority-text
+  # order of vv16-17; this clause appears at v16 in critical-text
+  # versions.
+  - ref: Philippians 1:17
+    sources: [editorial]
+    weight: 0.75
+  # "throwing down imaginations and every high thing that is exalted
+  # against the knowledge of God" (WEB, in corpus). CAVEAT (map, kept):
+  # the context (10:3-4) is Paul's conflict with opponents of his
+  # ministry, a warfare metaphor; the honest claim is that arguments
+  # raised against the knowledge of God are to be demolished. NEVER
+  # licenses combativeness — 1 Pet 3:15's humility clause governs the
+  # register. NEIGHBOUR NOTE: victory-in-christ anchors the overlapping
+  # 2 Cor 10:4-5 span (spiritual-warfare register); this pack claims
+  # v10:5's arguments register — spans differ by design.
+  - ref: 2 Corinthians 10:5
+    sources: [editorial]
+    weight: 0.7
+  # "Let your speech always be with grace, seasoned with salt, that you
+  # may know how you ought to answer each one." (WEB wording, current
+  # edition — Colossians 4 NOT in web-subset; re-check at re-pin).
+  # Addressed to conduct "toward those who are outside" (4:5).
+  - ref: Colossians 4:6
+    sources: [editorial]
+    weight: 0.85
+  # "I am not crazy, most excellent Festus, but boldly declare words of
+  # truth and reasonableness." (WEB wording, current edition — Acts 26
+  # NOT in web-subset; re-check at re-pin). Inside a formal defense
+  # before Agrippa: truth and reasonableness as the apostle's own
+  # description of his speech.
+  - ref: Acts 26:25
+    sources: [editorial]
+    weight: 0.7
+  # "holding to the faithful word... that he may be able to exhort in the
+  # sound doctrine, and to convict those who contradict him." (WEB
+  # wording, current edition — Titus 1 NOT in web-subset; re-check at
+  # re-pin). DECISION 8 SUB-CALL (map boundary note, kept at LOW weight):
+  # elder-qualification context — the ability to answer contradiction is
+  # required of overseers specifically; the decision table offers rehoming
+  # to the pending contending-for-the-faith row.
+  - ref: Titus 1:9
+    sources: [editorial]
+    weight: 0.5
+  # ------------------------------------------------------------------
+  # JESSE'S BARE-'APOLOGETICS' LIST (2026-08-25 scoping correction,
+  # rescope commit): Jesse supplied a 19-passage list for the bare
+  # 'apologetics' query — general defense-of-the-faith only, never
+  # movement-specific verses (those stay behind movement-qualified
+  # queries; guards in apologetics-umbrella.json). Items already
+  # anchored above kept their reviewed spans/weights: 1 Pet 3:15 (his
+  # 3:15-16 — v16's manner clause is in the gist), Titus 1:9,
+  # 2 Cor 10:5, Col 4:6 (his Col 4:5-6), Phil 1:17 (his 'Phil 1:16' —
+  # WEB majority-text versification carries the defense clause at v17).
+  # All rows below [editorial]: Jesse's own curation, on the record.
+  # Weights are priors keyed loosely to his ordering. Every WEB quote
+  # verified against the current edition; out-of-corpus rows are marked
+  # and ride the pending companion apologetics-umbrella-expansion.json
+  # (docs/corpus-payload-dependency.md).
+  # ------------------------------------------------------------------
+  # "contend earnestly for the faith which was once for all delivered
+  # to the saints." (WEB wording, current edition — Jude NOT in
+  # web-subset; re-check at re-pin). Jesse's #2. DUAL with
+  # no-other-gospel (which anchors Jude 1:3 for the
+  # once-for-all-delivered register); this row claims the contending
+  # register — the defense charge itself.
+  - ref: Jude 1:3
+    sources: [editorial]
+    weight: 0.9
+  # "The Lord's servant must not quarrel, but be gentle toward all,
+  # able to teach, patient, in gentleness correcting those who oppose
+  # him. Perhaps God may give them repentance leading to a full
+  # knowledge of the truth" (WEB, in corpus). The manner-of-answering
+  # register: correction without quarreling, aimed at the opponent's
+  # recovery, with God giving the repentance. Jesse's #4. OVERLAP NOTE:
+  # harmony-with-others anchors 2 Timothy 2:24 alone (the
+  # don't-quarrel register); this wider v24-26 span carries the
+  # correcting-opponents register — two honest registers of one text.
+  - ref: 2 Timothy 2:24-26
+    sources: [editorial]
+    weight: 0.85
+  # "On some have compassion, making a distinction" (WEB wording,
+  # current edition — Jude NOT in web-subset; re-check at re-pin).
+  # Jesse's #5. SCOPE kept honest: the verse commands differentiated
+  # mercy toward the wavering, inside Jude's contend-for-the-faith
+  # charge (v3) — the compassion side of the defense, not a method
+  # text; low weight accordingly. doubt.yaml records Jude 1:22 as its
+  # own corpus-blocked candidate (mercy-on-doubters register) — spans
+  # will coexist as two honest registers when that lands.
+  - ref: Jude 1:22
+    sources: [editorial]
+    weight: 0.6
+  # "John... sent them to Jesus, saying, 'Are you the one who is
+  # coming...?' ... 'Go and tell John the things which you have seen
+  # and heard: that the blind receive their sight...'" (WEB wording,
+  # current edition — Luke 7 NOT in web-subset; re-check at re-pin).
+  # Jesse's #6. Jesus answers the Baptist's doubt with checkable,
+  # observed works rather than rebuke — Scripture's own model of an
+  # evidential answer given to an honest questioner.
+  - ref: Luke 7:19-22
+    sources: [editorial]
+    weight: 0.7
+  # "therefore I have declared it to you from of old; before it came to
+  # pass I showed it to you; lest you should say, 'My idol has done
+  # them...'" (WEB wording, current edition — Isaiah 48 NOT in
+  # web-subset; re-check at re-pin). Jesse's #7. CONTEXT verified and
+  # kept: God is addressing obstinate Israel (48:4) and states his own
+  # reason for foretelling — so that idols could claim no credit.
+  # Predictive prophecy as God's self-authentication; the gist claims
+  # exactly that and no more.
+  - ref: Isaiah 48:5
+    sources: [editorial]
+    weight: 0.65
+  # "spoke boldly for a period of three months, reasoning and
+  # persuading... reasoning daily in the school of Tyrannus... so that
+  # all those who lived in Asia heard the word" (WEB wording, current
+  # edition — Acts 19 NOT in web-subset; re-check at re-pin). Jesse's
+  # #8. Sustained public reasoning as apostolic practice — the same
+  # anti-tagging check Acts 17:2-3 passed: the narrative depicts it as
+  # Paul's custom.
+  - ref: Acts 19:8-10
+    sources: [editorial]
+    weight: 0.7
+  # "he powerfully refuted the Jews, publicly showing by the Scriptures
+  # that Jesus was the Christ." (WEB wording, current edition — Acts 18
+  # NOT in web-subset; re-check at re-pin). Jesse's #9. Apollos's
+  # public demonstration from the Scriptures — argument in service of
+  # the church ("he greatly helped those who had believed", v27).
+  - ref: Acts 18:27-28
+    sources: [editorial]
+    weight: 0.75
+  # "Be careful that you don't let anyone rob you through his
+  # philosophy and vain deceit, after the tradition of men... and not
+  # after Christ." (WEB wording, current edition — Colossians 2 NOT in
+  # web-subset; re-check at re-pin). Jesse's #11. SCOPE kept honest: a
+  # warning to believers — the discernment side of the defense, naming
+  # the arguments 2 Cor 10:5 says are to be demolished; not a license
+  # to dismiss reasoning as such (v8 targets deceit "not after
+  # Christ").
+  - ref: Colossians 2:8
+    sources: [editorial]
+    weight: 0.65
+  # "having traced the course of all things accurately from the
+  # first, to write to you in order... that you might know the
+  # certainty concerning the things in which you were instructed."
+  # (WEB wording, current edition — Luke 1 NOT in web-subset; re-check
+  # at re-pin). Jesse's #12. The Gospel's own stated method — eyewitness
+  # sources, careful investigation, orderly account — with certainty as
+  # its stated purpose.
+  - ref: Luke 1:1-4
+    sources: [editorial]
+    weight: 0.75
+  # "For we didn't follow cunningly devised fables when we made known
+  # to you the power and coming of our Lord Jesus Christ, but we were
+  # eyewitnesses of his majesty." (WEB wording, current edition —
+  # 2 Peter NOT in web-subset; re-check at re-pin). Jesse's #13. DUAL
+  # with trustworthiness-of-scripture (which anchors 2 Peter 1:16 for
+  # the not-fables register); this row claims the eyewitness-testimony
+  # ground of the answer given.
+  - ref: 2 Peter 1:16
+    sources: [editorial]
+    weight: 0.7
+  # "That which was from the beginning, that which we have heard, that
+  # which we have seen with our eyes... we declare to you" (WEB, in
+  # corpus). Jesse's #14. First-person sensory testimony, declared so
+  # that others may share the fellowship. OVERLAP NOTE: resurrection
+  # anchors the narrower 1 John 1:1-2 span (sensory-testimony register
+  # with its recorded whole-incarnate-life caveat, which governs this
+  # row too); this v1-3 span adds the declare-to-you clause — the
+  # testimony given outward.
+  - ref: 1 John 1:1-3
+    sources: [editorial]
+    weight: 0.7
+  # "I delivered to you first of all that which I also received... he
+  # appeared to over five hundred brothers at once, most of whom remain
+  # until now" (WEB, in corpus). Jesse's #15. The received creed plus
+  # the enumerated, then-living witnesses — the checkable-witnesses
+  # clause is the apologetic register this row claims. OVERLAP NOTE:
+  # resurrection anchors 1 Corinthians 15:4 and 15:5-6 (and the-cross
+  # 15:3) for their own registers; this wider v3-8 span carries the
+  # whole witness list as one claim — deliberate overlapping spans,
+  # each honest.
+  - ref: 1 Corinthians 15:3-8
+    sources: [editorial]
+    weight: 0.75
+  # "the wrath of God is revealed... because that which is known of God
+  # is revealed in them... the invisible things of him since the
+  # creation of the world are clearly seen... that they may be without
+  # excuse." (WEB, in corpus). Jesse's #16. General revelation as the
+  # ground an answer can appeal to. CAVEAT carried (creation-testifies
+  # map caveat governs here too): in 1:18-32 the witness is suppressed,
+  # not persuasive unto faith. DUAL: those-who-never-heard carries
+  # Romans 1:18-20 [torrey] at 1.0 (never-heard register);
+  # creation-testifies anchors the narrower v19-20 (witness register).
+  - ref: Romans 1:18-20
+    sources: [editorial]
+    weight: 0.65
+  # "The heavens declare the glory of God... Their voice has gone out
+  # through all the earth" (WEB, in corpus). Jesse's #17. The wordless
+  # universal witness an answer can point to. OVERLAP NOTE:
+  # creation-testifies anchors Psalms 19:1-2 and 19:3 (testimony and
+  # universality registers) and creation anchors 19:1 (act-of-making);
+  # this wider v1-4 span is Jesse's own cut for the apologetics-list
+  # register — deliberate overlapping claim, map Decision 3 family.
+  - ref: Psalms 19:1-4
+    sources: [editorial]
+    weight: 0.6
+related:
+  - sharing-your-faith
+  - jesus-the-only-way
+  # APOLOGETICS MASTER-TAG EXTENSION (2026-08-25, Decision D13 extension
+  # approved by Jesse): bare "apologetics" is this pack's reviewed entry,
+  # so the umbrella query must surface the broader apologetics family —
+  # carried by these one-directional related edges (weak concept_lexicon
+  # evidence, weight x 0.5) rather than a second near-duplicate concept.
+  # Fixture-first: apologetics-umbrella.json measured Ps 19:1-2,
+  # Luke 24:5-6, Job 1:21, Ps 19:7-9 in no top-25 for "apologetics"
+  # before these edges. Declared HERE, the edges leave every
+  # sub-concept's own queries untouched (worker-2 one-directional
+  # precedent, decision row 22).
+  - creation-testifies
+  - design-in-creation
+  - why-god-allows-suffering
+  - resurrection
+  - trustworthiness-of-scripture

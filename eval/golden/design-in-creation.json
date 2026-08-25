@@ -1,0 +1,41 @@
+{
+  "id": "design-in-creation",
+  "query": "is the universe designed",
+  "status": "active",
+  "additionalQueries": [
+    "intelligent design",
+    "the world was made with wisdom"
+  ],
+  "note": [
+    "Apologetics wave batch 3 (2026-08-25), fixtures-first: NEW-MINT",
+    "design-in-creation (map entry 3; reuse check recorded there — not",
+    "creation's act-of-making register, not wisdom-from-god's",
+    "wisdom-for-living). The id names what the texts teach (the world made",
+    "with wisdom, order, purpose), never the modern argument; no anchor is",
+    "claimed to teach fine-tuning physics.",
+    "Measured gap before the pack (2026-08-25): 'is the universe designed'",
+    "and 'intelligent design' returned preached-vocabulary scatter with no",
+    "curated chip anywhere (John 13:12 / Heb 11:3 leads); 'the world was",
+    "made with wisdom' returned John 1:10 #1 by exact phrase and James 1:5",
+    "#2 via wisdom-from-god's bare 'wisdom' token — Prov 3:19-20, the",
+    "wisdom-founded-the-earth text itself, appeared in no top-10.",
+    "The wisdom-from-god chip on such queries is that pack's admitted bare",
+    "token working as reviewed; this fixture asserts the design register",
+    "surfaces beside it, not instead of it."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Proverbs 3:19-20",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Design in creation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jeremiah 33:25",
+    "Psalms 139:13-14"
+  ],
+  "coversConcepts": [
+    "design-in-creation"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "id": "resurrection-of-the-dead",
+  "query": "resurrection of the dead",
+  "status": "active",
+  "additionalQueries": [
+    "resurrection body",
+    "what happens to our bodies when we die"
+  ],
+  "note": [
+    "Apologetics wave batch 4 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id resurrection-of-the-dead (Theme B row in tag-gaps-review.md) —",
+    "merged only by Jesse's admission of this draft PR (plan G-3). Takes",
+    "the general-resurrection half of map Decision 1 (resolved: extend",
+    "resurrection for the bodily-evidence register — done in batch 1 — and",
+    "reuse this pending id for the general resurrection and believer's",
+    "hope). MEASURED DEVIATION from the plan's both-directions related",
+    "edge: only this pack's outgoing edge to resurrection ships — the",
+    "reciprocal edge gave every resurrection-fired query a related-theme",
+    "bonus on this pack's 1 Cor 15:20 and regressed the reviewed",
+    "resurrection-power fixture (Rom 8:11 out of its top-5 window);",
+    "recorded in both packs and the PR decision table.",
+    "Measured gap before the pack (2026-08-25): 'resurrection of the dead'",
+    "returned 1 Cor 15:12-13 / 15:42 / 15:21 by exact phrase, chipless,",
+    "with the resurrection pack's Easter anchors below them (Rom 1:4 #7,",
+    "Theme: He is risen — the event register, not the believer's-hope",
+    "register); 'resurrection body' returned only He-is-risen results;",
+    "'what happens to our bodies when we die' returned the",
+    "pastoral-serious-illness (God in the valley) register — an honest",
+    "pastoral neighbour, with no resurrection-body teaching row anywhere.",
+    "This fixture asserts the general-resurrection register surfaces",
+    "beside those registers, not instead of them.",
+    "LEXICON BOUNDARY vs resurrection (the wave's top collision risk, the",
+    "plan's own flag): resurrection owns bare 'resurrection', 'raised from",
+    "the dead', 'he is risen', 'i am the resurrection and the life'. The",
+    "planned entry 'will the dead be raised' was DECLINED under G-4: it",
+    "normalizes to {dead, rais} — the identical containment set as",
+    "resurrection's existing 'raised from the dead' — a duplicate firing",
+    "set across two packs (the near-duplicate class G4 exists to prevent),",
+    "so that query form is deliberately not asserted here."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Corinthians 15:42-44",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The resurrection of the dead"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 15:20",
+    "1 Thessalonians 4:13-14",
+    "John 11:25-26"
+  ],
+  "coversConcepts": [
+    "resurrection-of-the-dead"
+  ]
+}

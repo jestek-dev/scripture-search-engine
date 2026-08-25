@@ -1,0 +1,74 @@
+# APOLOGETICS WAVE (batch 2, 2026-08-25) — PENDING-TAG-GAP id (Theme C row
+# in tag-gaps-review.md; admission rides Jesse's merge of this draft PR,
+# plan G-3). God is eternally and unchangeably God — from everlasting, not
+# a man, without variation. Honest answer-ground for eternal-progression
+# queries; the engine reports what the texts teach, never argues.
+#
+# Attribution: ALL anchors [editorial] (map corroborations:
+# aomin-mormon-verses, scoping-brief — never engine sources).
+#
+# TOKENIZER DISCIPLINE (G-4, verified): "god does not change" normalizes to
+# the identical token set as "does god change" ({do, god, change}) and is
+# not duplicated; "from everlasting to everlasting" collapses to the single
+# stem {everlast} and is declined; no phrase below collapses to one token.
+# "the same yesterday today and forever" (Heb 13:8, in corpus) is left out
+# per the map: Heb 13:8 is not a map anchor here, and an unanchored lexicon
+# phrase would point the concept at a verse it cannot honestly chip.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: gods-unchanging-nature
+label: God's unchanging nature
+lexicon:
+  # The question form ({do, god, change}).
+  - does god change
+  # Mal 3:6's own first-person register ({lord, change}).
+  - i the lord do not change
+  # The eternal-progression question, phrased as the claim is brought
+  # (names no movement — plan G-4).
+  - was god ever a man
+anchors:
+  # "For I, the LORD, don't change; therefore you, sons of Jacob, are not
+  # consumed." (WEB, in corpus). Unchangeableness in first person — and in
+  # context the ground of covenant mercy.
+  - ref: Malachi 3:6
+    sources: [editorial]
+    weight: 1.0
+  # "Every good gift... coming down from the Father of lights, with whom
+  # can be no variation nor turning shadow." (WEB, in corpus). Change not
+  # merely absent but impossible ('can be no').
+  - ref: James 1:17
+    sources: [editorial]
+    weight: 0.9
+  # "Before me there was no God formed, neither will there be after me."
+  # (WEB, in corpus). DUAL ANCHOR with no-other-god (its 1.0 keystone):
+  # here the claim is the no-attained-godhood register — godhood is not a
+  # class beings enter, in either direction of time.
+  - ref: Isaiah 43:10
+    sources: [editorial]
+    weight: 0.8
+  # "Before the mountains were born... even from everlasting to
+  # everlasting, you are God." (WEB wording — Psalm 90 NOT in web-subset).
+  # Deity is not attained; no direction of time in which he is other than
+  # God. DUAL ANCHOR with creation (batch 3 extension: who-made-God text).
+  - ref: Psalms 90:2
+    sources: [editorial]
+    weight: 0.95
+  # "God is not a man, that he should lie..." (WEB wording — Numbers 23
+  # NOT in web-subset). CONTRAST-OF-NATURE CAVEAT (map, verbatim intent):
+  # the verse's contextual point is God's reliability of word, not a
+  # treatise on divine embodiment; anchored for the contrast-of-nature
+  # ground the text actually asserts.
+  - ref: Numbers 23:19
+    sources: [editorial]
+    weight: 0.9
+  # "They will perish, but you will endure... you are the same. Your years
+  # will have no end." (WEB wording — Psalm 102 NOT in web-subset).
+  # Mutability belongs to the made, immutability to the Maker. Hebrews
+  # 1:10-12 applies these words to the Son — anchored under
+  # supremacy-of-christ (same batch) as the author's attributed citation.
+  - ref: Psalms 102:25-27
+    sources: [editorial]
+    weight: 0.85
+related:
+  - gods-faithfulness
+  - no-other-god

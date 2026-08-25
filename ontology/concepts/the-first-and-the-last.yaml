@@ -1,0 +1,104 @@
+# APOLOGETICS WAVE (batch 2, 2026-08-25) — NEW-MINT-conditional (map
+# Decision 10 recommends mint on the title-locator precedent
+# (christ-the-cornerstone); the mint-vs-fold-into-deity-of-christ call is
+# a PR decision row for Jesse — reversal is cheap: anchors move unchanged).
+#
+# 'The first and the last' / 'the Alpha and Omega' — the divine self-title
+# of Yahweh in Isaiah, borne by the risen Jesus in Revelation. A title
+# LOCATOR: the pack locates the title's soundings and lets the texts carry
+# the identification chain (Rev 1:17-18 → 2:8 → 22:12-13 → 22:20).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER NOTE (G-4, verified): "the beginning and the end" keeps
+# {beginn, end}; "alpha and omega" keeps {alpha, omega}; "who is the alpha
+# and omega" normalizes to the same set as "alpha and omega" and is not
+# duplicated.
+#
+# REMOVED PHRASE (2026-08-25, measured — trinity "three in one" D-1
+# precedent, fix by removing the harm): the title's own form "the first
+# and the last" reduces to the containment pair {first, last}, and
+# measured on the fixture bed it hijacked the remembered humility register
+# "the last will be first" / "the first shall be last" (Matt 19:30) —
+# Rev 1:17-18 (47.9) and Isa 41:4 (43.1) took #1-#2 and Matt 19:30's
+# honest lexical lead fell to #5. The phrase is removed; the healed state
+# is locked by first-shall-be-last-guard.json. HONEST TRADEOFF (J12-class,
+# named for the PR body): the literal query "the first and the last" no
+# longer fires this concept — its honest #1 remains Rev 1:17 by exact
+# phrase (measured), and the concept stays reachable via "alpha and
+# omega" and "the beginning and the end". Reaching the title a bit less
+# easily is accepted; hijacking a quoted teaching is not.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: the-first-and-the-last
+label: The First and the Last
+lexicon:
+  - alpha and omega
+  - the beginning and the end
+anchors:
+  # "I am the first and the last, and the Living one. I was dead, and
+  # behold, I am alive forever and ever... I have the keys of Death and of
+  # Hades." (WEB, in corpus). The speaker claiming Isaiah's title
+  # self-identifies as the one who was dead and is alive — unambiguously
+  # the risen Jesus. The concept's hinge verse.
+  - ref: Revelation 1:17-18
+    sources: [editorial]
+    weight: 1.0
+  # "'I am the Alpha and the Omega,' says the Lord God, 'who is and who
+  # was and who is to come, the Almighty.'" (WEB, in corpus).
+  # SPEAKER-SCOPE HONESTY (map): many readers take 1:8's speaker as the
+  # Father — the concept's argument rests on the chain that follows
+  # (1:17-18; 2:8; 22:12-13, 20), not on this verse alone.
+  - ref: Revelation 1:8
+    sources: [editorial]
+    weight: 0.85
+  # "Who has worked and done it, calling the generations from the
+  # beginning? I, the LORD, the first, and with the last, I am he." (WEB,
+  # in corpus). The title's first sounding.
+  - ref: Isaiah 41:4
+    sources: [editorial]
+    weight: 0.85
+  # "I am the Alpha and the Omega, the Beginning and the End. I will give
+  # freely to him who is thirsty from the spring of the water of life."
+  # (WEB, in corpus). The enthroned speaker stacks the title's forms and
+  # attaches the living-water promise.
+  - ref: Revelation 21:6
+    sources: [editorial]
+    weight: 0.8
+  # "I am the first, and I am the last; and besides me there is no God."
+  # (WEB wording — Isaiah 44 NOT in web-subset). EACH-CLAIMS-HALF comment:
+  # DUAL ANCHOR with no-other-god (same batch) — Isaiah's own logic makes
+  # the title exclusive; that pack claims the exclusivity clause, this one
+  # the title.
+  - ref: Isaiah 44:6
+    sources: [editorial]
+    weight: 0.9
+  # "Listen to me, O Jacob... I am he. I am the first. I am also the
+  # last." (WEB wording — Isaiah 48 NOT in web-subset). The third Isaian
+  # sounding, joined to the 'I am he' formula.
+  - ref: Isaiah 48:12
+    sources: [editorial]
+    weight: 0.8
+  # "The first and the last, who was dead, and has come to life says these
+  # things" (WEB wording — Revelation 2 NOT in web-subset). A second
+  # independent witness inside Revelation.
+  - ref: Revelation 2:8
+    sources: [editorial]
+    weight: 0.8
+  # "I am the Alpha and the Omega, the First and the Last, the Beginning
+  # and the End." (WEB wording — Revelation 22 NOT in web-subset). The
+  # coming Judge claims all three forms at once; rides the re-pin with the
+  # pending companion fixture.
+  - ref: Revelation 22:12-13
+    sources: [editorial]
+    weight: 0.9
+  # "He who testifies these things says, 'Yes, I am coming soon.' ...
+  # Come, Lord Jesus!" (WEB wording — Revelation 22 NOT in web-subset).
+  # IDENTIFICATION-CHAIN comment: the book's own closing names the
+  # 'I am coming' speaker — attributed to the text, not imposed on it.
+  - ref: Revelation 22:20
+    sources: [editorial]
+    weight: 0.7
+related:
+  - deity-of-christ
+  - no-other-god

@@ -1,0 +1,118 @@
+{
+  "id": "apologetics-umbrella",
+  "query": "apologetics",
+  "status": "active",
+  "note": [
+    "Apologetics wave master-tag addition (2026-08-25), fixtures-first:",
+    "Decision D13 extension APPROVED by Jesse 2026-08-25 — 'apologetics'",
+    "as a master query should surface the broader apologetics family, not",
+    "only the giving-an-answer pack. DESIGN DECISION (logged): no separate",
+    "'apologetics' master concept is minted — bare 'apologetics' already",
+    "resolves to giving-an-answer (batch 5, reviewed mapping + inventory",
+    "row), and a second concept over the same use-case would be exactly",
+    "the G4 near-duplicate the skill warns about.",
+    "SCOPING CORRECTION (Jesse, 2026-08-25, verbatim requirement): 'Just",
+    "to be clear, just searching apologetics shouldn't give specific",
+    "Mormon or jehovas witness verses' — those stay behind",
+    "movement-qualified queries ('mormon apologetics', 'mormon",
+    "evangelism', 'jehovahs witness', ...). Bare 'apologetics' should",
+    "give general defense-of-the-faith passages; Jesse supplied a",
+    "19-passage list (1 Pet 3:15-16, Jude 3, Titus 1:9, 2 Tim 2:24-26,",
+    "Jude 22, Luke 7:19-22, Isa 48:5, Acts 19:8-10, Acts 18:27-28,",
+    "2 Cor 10:5, Col 2:8, Luke 1:1-4, 2 Pet 1:16, 1 John 1:1-3,",
+    "1 Cor 15:3-8, Rom 1:18-20, Ps 19:1-4, Col 4:5-6, Phil 1:16). The",
+    "in-corpus members are asserted below as [editorial] anchors of",
+    "giving-an-answer; the out-of-corpus members ride the pending",
+    "companion apologetics-umbrella-expansion.json (corpus re-pin,",
+    "docs/corpus-payload-dependency.md).",
+    "SEPARATION GUARDS: measured at 20bd084 — bare 'apologetics' showed",
+    "NO movement content in the top 10 (giving-an-answer has no related",
+    "edge to either movement master, the masters' edges are declared on",
+    "themselves and are one-directional, and the lexicons share no",
+    "token). The mustNotRank rows below keep it that way: each names a",
+    "movement-master flagship whose only honest route into this query",
+    "would be a future edge or lexicon change routing a movement master",
+    "into bare 'apologetics' — exactly what Jesse ruled out.",
+    "ASSERTION NOTE (supersedes the 20bd084 note): the earlier",
+    "Related-theme assertions (Ps 19:1-2 Creation testifies, Acts 17:31",
+    "He is risen) proved the umbrella related edges before Jesse's list",
+    "landed. With the in-corpus list members now direct anchors, the top",
+    "10 fills with Theme rows and the related-edge tail sits below the",
+    "largest assertable window (10); those rows move to alsoAcceptable.",
+    "The related edges themselves remain (tail enrichment)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Peter 3:15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 1
+    },
+    {
+      "reference": "2 Timothy 2:24-26",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 10
+    },
+    {
+      "reference": "1 Corinthians 15:3-8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 10
+    },
+    {
+      "reference": "1 John 1:1-3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 10
+    },
+    {
+      "reference": "Romans 1:18-20",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 10
+    },
+    {
+      "reference": "Psalms 19:1-4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 10
+    }
+  ],
+  "expectedWithinTop": 10,
+  "mustNotRank": [
+    {
+      "reference": "Galatians 1:8",
+      "why": "Mormon-evangelism flagship anchor (home: no-other-gospel, unrelated to giving-an-answer). Jesse 2026-08-25: bare 'apologetics' must not give movement-specific verses; this ref reaching the window means a movement master got routed into the bare query."
+    },
+    {
+      "reference": "Isaiah 43:10",
+      "why": "Mormon-evangelism flagship anchor (home: no-other-god, unrelated to giving-an-answer). Same Jesse 2026-08-25 separation ruling."
+    },
+    {
+      "reference": "John 1:1",
+      "why": "Jehovah's-Witness-evangelism flagship anchor (home: deity-of-christ, unrelated to giving-an-answer). Same Jesse 2026-08-25 separation ruling."
+    },
+    {
+      "reference": "John 8:58",
+      "why": "Jehovah's-Witness-evangelism flagship anchor (homes: deity-of-christ / i-am-sayings, both unrelated to giving-an-answer). Same Jesse 2026-08-25 separation ruling."
+    }
+  ],
+  "alsoAcceptable": [
+    "Acts 17:2-3",
+    "Philippians 1:7",
+    "Philippians 1:17",
+    "2 Corinthians 10:5",
+    "Acts 17:31",
+    "Psalms 19:1-2",
+    "Luke 24:5-6",
+    "Psalms 19:7-9",
+    "Job 1:21",
+    "Proverbs 3:19-20",
+    "John 14:6",
+    "Acts 1:8"
+  ],
+  "coversConcepts": [
+    "giving-an-answer"
+  ]
+}

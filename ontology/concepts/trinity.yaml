@@ -88,6 +88,18 @@ lexicon:
   # counting queries (see REWORD note above). This form keeps three
   # significant tokens {three, person, god}.
   - three persons one god
+  # APOLOGETICS WAVE EXTENSION (batch 1, 2026-08-25), VERIFY-GAP-FIRST
+  # measured (trinity-godhead.json pending-and-failing): 'godhead' returned
+  # only preached-vocabulary scatter with no curated chip (the word appears
+  # in no WEB verse — the same gap class as bare 'trinity'), and 'is the
+  # holy spirit a person' was carried entirely by holy-spirit-the-comforter
+  # with Matt 28:19 absent from the top 10. 'one god in three persons'
+  # already passed (identical token set to the entry above) and is NOT
+  # added. 'godhead' is a deliberate one-word entry like 'trinity' —
+  # distinctive teaching-register term, acknowledged in
+  # ontology/lexicon-inventory.yaml.
+  - godhead
+  - is the holy spirit a person
 anchors:
   # "Go and make disciples of all nations, baptizing them in the name of
   # the Father and of the Son and of the Holy Spirit" (WEB). The baptismal
@@ -141,6 +153,27 @@ anchors:
   - ref: John 1:1-3
     sources: [editorial]
     weight: 0.7
+  # APOLOGETICS WAVE EXTENSION (batch 1, 2026-08-25). "I will pray to the
+  # Father, and he will give you another Counselor... the Spirit of truth"
+  # (WEB, in corpus). The Spirit is 'another Counselor' — personal like the
+  # Son, given by the Father at the Son's asking: three persons acting in
+  # one sentence, exactly this pack's locator design. [editorial] like
+  # every trinity anchor (no Torrey TRINITY topic — see attribution note).
+  # Dual claim with holy-spirit-the-comforter's John 14:16-17 anchor
+  # (Comforter register there; the persons-together locator here) —
+  # measured pre-add: that pack's chip already carried the verse to #2 for
+  # 'is the holy spirit a person' while this pack was unreachable.
+  # Corpus-deferred wants extended: 2 Cor 13:14 (recorded above) AND
+  # Matt 3:16-17 (the baptism scene — all three present and distinct; both
+  # ride the re-pin payload P4.15).
+  - ref: John 14:16-17
+    sources: [editorial]
+    weight: 0.7
 related:
   - deity-of-christ
   - holy-spirit-the-comforter
+  # Apologetics wave batch 2 (2026-08-25), decision row F-2: the Shema's
+  # oneness-pole duty is served by no-other-god's Deut 6:4 anchor plus this
+  # edge — cheap, reversible, honest — instead of anchoring Deut 6:4 here
+  # against the pack's recorded sense-inversion decision.
+  - no-other-god

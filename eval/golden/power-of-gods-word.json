@@ -1,0 +1,50 @@
+{
+  "id": "power-of-gods-word",
+  "query": "gods word stands forever",
+  "status": "active",
+  "additionalQueries": [
+    "it will not return void",
+    "scripture cannot be broken"
+  ],
+  "note": [
+    "Apologetics wave batch 5 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id power-of-gods-word (Theme C) — merged only by Jesse's admission of",
+    "this PR (plan G-3). Measured gap before the pack (2026-08-25): 'gods",
+    "word stands forever' fired studying-the-word's {gods, word} containment",
+    "(2 Tim 2:15 / Heb 4:12 / Ps 19:7-11 / Matt 24:35 took the top 4) with",
+    "Isa 40:8 — the verse that SAYS it — at #5 on bare token overlap,",
+    "chipless (wrong-reason class); 'it will not return void' returned",
+    "Isa 55:11 #1 lexically, chipless, with {return}-token scatter behind",
+    "it; 'scripture cannot be broken' returned {broken}-token scatter",
+    "(Ps 34:20, Ps 147:3) — John 10:35 is outside the corpus and no curated",
+    "concept carried the permanence/efficacy register at all.",
+    "TOKENIZER DECISION (G-4, logged): the plan's phrase 'the word will not",
+    "return void' ({word, return, void}) would NOT fire on the common",
+    "shorter form 'it will not return void' ({return, void}) — containment",
+    "runs lexicon-into-query. The pack ships the minimal reachable entry",
+    "'will not return void' ({return, void}); the longer form is covered by",
+    "containment. Deviation from the plan's literal phrase list, logged.",
+    "DUAL-CLAIM NOTE: Matt 24:35 and Heb 4:12 are deliberately dual with",
+    "studying-the-word (engagement register, [torrey]/[editorial]); this",
+    "pack claims the permanence/efficacy register. Lexicons stay disjoint",
+    "(theirs is study/engagement phrasing)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 40:8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The power of God's word"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 55:10-11",
+    "Matthew 24:35",
+    "1 Peter 1:24-25",
+    "Matthew 5:18",
+    "Hebrews 4:12"
+  ],
+  "coversConcepts": [
+    "power-of-gods-word"
+  ]
+}

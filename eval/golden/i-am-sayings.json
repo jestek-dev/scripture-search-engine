@@ -1,0 +1,45 @@
+{
+  "id": "i-am-sayings",
+  "query": "the i am statements of jesus",
+  "status": "active",
+  "additionalQueries": [
+    "i am the bread of life",
+    "before abraham came into existence"
+  ],
+  "note": [
+    "Apologetics wave batch 2 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id i-am-sayings (Theme K, John-minted row) — merged only by Jesse's",
+    "admission of this PR (plan G-3). Measured gap before the pack",
+    "(2026-08-25): 'the i am statements of jesus' returned bare jesu-token",
+    "scatter (Matt 19:11 #1 on a translation variant); 'i am the bread of",
+    "life' returned bread/life token scatter (Matt 6:11 #1) — no curated",
+    "chip anywhere; John 6:35 itself is outside the pinned corpus.",
+    "TOKENIZER DECISIONS (G-4, logged): 'i'/'am' are stopwords, so the",
+    "plan's query 'i am sayings of jesus' reduces to {say, jesu} — a",
+    "containment set that would make the concept fire on every 'what did",
+    "jesus say about X' query if admitted as a lexicon phrase, and 'i am",
+    "sayings' alone collapses to the bare verb stem {say}. Both DECLINED;",
+    "'the i am statements of jesus' ({statement, jesu}) is the admitted",
+    "reachable form and this fixture's main query.",
+    "BOUNDARY: 'i am the resurrection and the life' lives in",
+    "resurrection.yaml (excluded here, G4); 'before abraham came into",
+    "existence' (WEB wording, 3 tokens) lives HERE while deity-of-christ",
+    "declined the collapsing 'before abraham was i am' entirely (batch 1",
+    "log). John 8:58 is the deliberate dual anchor across the two packs."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 8:58",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The 'I am' sayings"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 8:24",
+    "John 11:25"
+  ],
+  "coversConcepts": [
+    "i-am-sayings"
+  ]
+}

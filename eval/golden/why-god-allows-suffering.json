@@ -1,0 +1,47 @@
+{
+  "id": "why-god-allows-suffering",
+  "query": "why does god allow suffering",
+  "status": "active",
+  "additionalQueries": [
+    "why do bad things happen to good people",
+    "where is god when it hurts"
+  ],
+  "note": [
+    "Apologetics wave batch 4 (2026-08-25), fixtures-first: NEW-MINT",
+    "why-god-allows-suffering (map entry 9; the mint is map Decision 2 and",
+    "is admitted only by Jesse's merge of this draft PR; the map's recorded",
+    "G8 fallback — fold the lexicon into suffering-of-the-righteous /",
+    "prosperity-of-the-wicked — stands if churn appears). Scripture's own",
+    "answers, and its refusals to answer; the engine reports what curated",
+    "sources name and adjudicates nothing (CLAUDE.md #6).",
+    "Measured gap before the pack (2026-08-25): 'why does god allow",
+    "suffering' returned the suffering-for-christ pack's persecution",
+    "register (1 Pet 3:17 #1, Theme: Suffering with Christ, via its",
+    "admitted bare 'suffering' token) — an honest neighbour, but Job 1:21 /",
+    "Rom 8:18 / 2 Cor 4:17-18 appeared in no top-10 and no theodicy",
+    "register existed; 'why do bad things happen to good people' returned",
+    "good/thing token scatter (Gal 6:6 #1); 'where is god when it hurts'",
+    "returned hurt-token scatter (2 Cor 7:9 #1). This fixture asserts the",
+    "theodicy register surfaces beside the persecution register, not",
+    "instead of it.",
+    "DECISION 15 DEFAULT (map, reversible): Rom 8:28 and Rev 21:4 are NOT",
+    "anchored here — ownership stays with remembered-all-things-for-good",
+    "and new-heaven-and-earth; this pack reaches them via related edges."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Job 1:21",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Why God allows suffering"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 8:18",
+    "2 Corinthians 4:17-18",
+    "1 Peter 4:19"
+  ],
+  "coversConcepts": [
+    "why-god-allows-suffering"
+  ]
+}

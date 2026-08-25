@@ -1,0 +1,33 @@
+{
+  "id": "deity-of-christ-thomas",
+  "query": "my lord and my god",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 1, 2026-08-25) — the Thomas",
+    "confession register of deity-of-christ. BLOCKED ON CORPUS: John 20 is",
+    "absent from pipeline/fixtures/web-subset.json, so this assertion would",
+    "pass vacuously if active (docs/corpus-payload-dependency.md, BLOCKED",
+    "2026-08-21).",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that lands",
+    "John 20 (re-pin payload P4.15). The pack anchors John 20:28-29",
+    "[editorial] now (anchors-with-note precedent: image-of-god Gen 9:6).",
+    "The lexicon deliberately does NOT carry 'my lord and my god': it",
+    "reduces to the ubiquitous containment pair {lord, god} under the one",
+    "tokenizer and would fire the concept on any query containing both",
+    "tokens (the {god, flesh} failure class flesh-and-blood-quote-guard",
+    "records). At activation, decide between (a) leaving the verbatim query",
+    "to lexical retrieval — John 20:28 will then be in corpus and is the",
+    "honest exact-phrase #1 — or (b) a guarded multi-token phrasing; (a) is",
+    "the recorded recommendation."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 20:28-29",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "deity-of-christ"
+  ]
+}

@@ -1,0 +1,70 @@
+# APOLOGETICS WAVE (batch 2, 2026-08-25) — PENDING-TAG-GAP id (Theme K,
+# John-minted row; admission rides Jesse's merge of this draft PR, plan
+# G-3). Jesus' 'I am' declarations in John — the predicated sayings and
+# the absolute uses; a saying-LOCATOR pack (christ-the-cornerstone /
+# trinity precedent), never a doctrine-scorer.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): 'i'/'am' are stopwords, so the
+# map's "i am sayings" collapses to the bare ubiquitous verb stem {say} —
+# it would fire this concept on every "what did jesus say about X" query —
+# DECLINED; "the i am statements of jesus" ({statement, jesu}) is the
+# admitted reachable form. EXCLUDED phrases: "i am the resurrection and
+# the life" lives in resurrection.yaml (G4 phrase-collision avoidance; the
+# John 11:25 anchor below still carries the text); "before abraham was
+# i am" collapses to bare {abraham} — the WEB's own wording below keeps
+# three tokens and lives HERE, while deity-of-christ (batch 1) declined
+# the phrase entirely (recorded boundary: the saying-locator register is
+# this pack's identity).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: i-am-sayings
+label: The 'I am' sayings
+lexicon:
+  # The reachable form of the topic query ({statement, jesu}).
+  - the i am statements of jesus
+  # John 8:58's WEB wording ({abraham, came, existence}).
+  - before abraham came into existence
+  # The first predicated saying ({bread, life}).
+  - i am the bread of life
+anchors:
+  # "Most certainly, I tell you, before Abraham came into existence, I AM."
+  # (WEB, in corpus). The absolute use at full strength — the WEB's
+  # capitalized 'I AM' marks the Exodus 3:14 allusion (standard consensus
+  # reading, signposted). DUAL ANCHOR with deity-of-christ (0.95 there,
+  # batch 1): the deity claim there, the saying-locator register here.
+  - ref: John 8:58
+    sources: [editorial]
+    weight: 1.0
+  # "I am the resurrection and the life. He who believes in me will still
+  # live, even if he dies." (WEB, in corpus). Jesus does not say he will
+  # perform the resurrection but that he IS it. Map Decision 17 default:
+  # dual with resurrection-of-the-dead's John 11:25-26 (batch 4; spans
+  # deliberately differ — single verse here, the locator claim).
+  - ref: John 11:25
+    sources: [editorial]
+    weight: 0.9
+  # "unless you believe that I am he, you will die in your sins." (WEB, in
+  # corpus). WEB-SUPPLIES-'HE' CAVEAT (map): the Greek is the bare 'I am';
+  # the justification claims only what the English shows, with the fuller
+  # ego-eimi observation signposted as a reading.
+  - ref: John 8:24
+    sources: [editorial]
+    weight: 0.85
+  # "I am the bread of life. Whoever comes to me will not be hungry" (WEB
+  # wording — John 6 NOT in web-subset). The first predicated saying.
+  - ref: John 6:35
+    sources: [editorial]
+    weight: 0.85
+  # "Jesus said to them, 'I am he.'... they went backward and fell to the
+  # ground." (WEB wording — John 18 NOT in web-subset).
+  # CONSENSUS-READING-SIGNPOSTED comment: the divine-name connection is
+  # the standard consensus reading of John's narration; the falling is
+  # simply what the text says.
+  - ref: John 18:5-6
+    sources: [editorial]
+    weight: 0.8
+related:
+  - deity-of-christ
+  - resurrection

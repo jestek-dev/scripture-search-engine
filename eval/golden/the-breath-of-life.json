@@ -1,0 +1,42 @@
+{
+  "id": "the-breath-of-life",
+  "query": "do humans have souls",
+  "status": "active",
+  "additionalQueries": [
+    "the breath of life",
+    "body and soul"
+  ],
+  "note": [
+    "Apologetics wave batch 3 (2026-08-25), fixtures-first: NEW-MINT",
+    "the-breath-of-life (map entry 6, CONDITIONAL — map Decision 4",
+    "recommends mint; if Jesse rules extend-instead every anchor moves",
+    "onto image-of-god unchanged, and this fixture re-cuts its label in",
+    "the same commit). Human beings live by God-breathed spirit; the pack",
+    "takes no position on dichotomy vs trichotomy or philosophical-dualism",
+    "debates (map's recorded doctrinal note).",
+    "Measured gap before the pack (2026-08-25): 'do humans have souls'",
+    "returned soul-token scatter (Ps 121:7 #1; Gen 2:7 #3 on preached",
+    "vocabulary only, chipless); 'the breath of life' returned Gen 2:7 #1",
+    "by exact phrase with NO curated chip (right passage, wrong reason —",
+    "the G3 failure class); 'body and soul' returned Mic 6:7 / 1 Thess",
+    "5:23 lexical results with no concept anywhere.",
+    "The distinct-spirit register (Eccl 12:7, Matt 10:28) is honestly",
+    "measurable only after the corpus re-pin — it rides the pending",
+    "companion breath-of-life-spirit-returns.json, and that limit is",
+    "stated there rather than papered over here."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 2:7",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The breath of life"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "2 Corinthians 4:16"
+  ],
+  "coversConcepts": [
+    "the-breath-of-life"
+  ]
+}

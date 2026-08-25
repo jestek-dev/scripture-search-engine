@@ -660,6 +660,16 @@ concepts:
     # "head of the corner") stay multi-token.
     admitted: [cornerstone]
 
+  - id: conscience
+    # 2026-08-25 apologetics wave batch 3: row authored with the pack
+    # (fixture-first, conscience.json). Bare `conscience` is a deliberate
+    # single-word entry — the subject noun IS the concept
+    # (creation/resurrection precedent); the word occurs in the WEB text
+    # (Rom 2:15, 1 Cor 10, 1 Pet 3) and the measured gap showed the bare
+    # query returning chipless token scatter. Every other entry keeps
+    # >= 2 significant tokens.
+    admitted: [conscience]
+
   - id: contentment
     # 2026-08-18 harvest, all deliberate per the in-file comments:
     # contentment/content are the concept's own subject words; wealth,
@@ -681,6 +691,23 @@ concepts:
     # 2026-08-08 decision table: names the doctrine, not a general word.
     admitted: [creation]
 
+  - id: creation-testifies
+    # 2026-08-25 apologetics wave batch 3: row authored with the pack
+    # (fixture-first, creation-testifies.json). Every entry keeps >= 2
+    # significant tokens with a distinctive member; no bare word fires
+    # today.
+    skipped:
+      - token: nature
+        reason: >-
+          Generic across registers (human nature, divine nature, natural
+          world); the testify/prove/reveal pairings carry the concept.
+      - token: witness
+        reason: >-
+          Bare `witness` belongs to sharing-your-faith's acknowledged
+          "be my witnesses" collapse; this pack must never claim the
+          generic witness query. "the witness of creation" keeps the
+          distinctive pair.
+
   - id: deity-of-christ
     skipped:
       - token: deity
@@ -698,6 +725,16 @@ concepts:
           language), deferred pending a measured gap — the word also carries
           a contemporary-practice sense the pack does not answer. The
           "meditate on ..." phrase forms carry it today.
+
+  - id: design-in-creation
+    # 2026-08-25 apologetics wave batch 3: row authored with the pack
+    # (fixture-first, design-in-creation.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires today.
+    skipped:
+      - token: design
+        reason: >-
+          Generic verb/noun ("designed", schemes, patterns); the
+          universe/intelligent/order pairings carry the concept.
 
   - id: disputable-matters
     skipped:
@@ -772,6 +809,21 @@ concepts:
           now owns bare "work" (2026-08-18, deliberate); the faith-vs-works
           doctrine pack must not also fire on it.
 
+  - id: false-prophets
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, false-prophets.json). NO bare "test"/"testing"
+    # tokens (map Declined #30, matching the testing pack's recorded
+    # decline); "test the spirits" is the admitted multi-word form. No
+    # lexicon entry collapses to a single significant token.
+    skipped:
+      - token: test
+        reason: >-
+          The testing pack owns the God-tests-his-people sense and
+          itself declined the bare token (too many non-devotional
+          senses); admitting it here would fire a warning concept on
+          every test-vocabulary query. The multi-word forms
+          "test the spirits" ({test, spirit}) carry this concept.
+
   - id: family-reconciliation
     # PR #41 (2026-08-22 Genesis pilot): a phrase-forms pack — no lexicon
     # entry collapses to a single significant token.
@@ -839,6 +891,17 @@ concepts:
     # noun.
     admitted: [generosity]
 
+  - id: giving-an-answer
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, giving-an-answer.json). Bare "apologetics" is a
+    # deliberate single-word entry — §1.6d option-3 / trinity "godhead"
+    # precedent: the word appears in no WEB verse, so no lexical rung
+    # reaches the practice without it; measured gap showed the bare-ish
+    # query "apologetics in the bible" returning preached-vocabulary
+    # scatter with no curated chip. Every other entry keeps >= 2
+    # significant tokens.
+    admitted: [apologetics]
+
   - id: god-of-all-comfort
     # 2026-08-18 harvest: deliberate bare entry — closes the 2026-08-13
     # audit's "comforter"/"comfort" reachability gap on the comfort side
@@ -879,6 +942,17 @@ concepts:
     # (rest-for-the-weary precedent: the word IS the situation),
     # fixture-backed (gods-provision-famine.json).
     admitted: [provision, famine]
+
+  - id: gods-unchanging-nature
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, gods-unchanging-nature.json). Every phrase keeps
+    # >= 2 significant tokens by design; no bare word fires today.
+    skipped:
+      - token: change
+        reason: >-
+          Generic verb across the canon (changed garments, changed wages,
+          times and seasons); the question forms ("does god change",
+          "i the lord do not change") carry the concept.
 
   - id: grace-not-earned
     # 2026-08-08 decision table: theologically specific.
@@ -956,6 +1030,18 @@ concepts:
     # ("lies", "lie").
     admitted: [honesty, lying, lie]
 
+  - id: honor-the-son
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, honor-the-son.json). Every entry contains a
+    # jesus/son token; no bare word fires today.
+    skipped:
+      - token: worship
+        reason: >-
+          Bare `worship` is the worship concept's reviewed admitted token
+          (its inventory row); this pack is the jesus-directed practice
+          register and must never claim the generic worship query. The
+          multi-token jesus phrasings carry it.
+
   - id: hope-in-despair
     # NEEDS-JESSE §1.6d option 3 single words. "cutting" is the collapse of
     # "cutting myself" ("myself" is a stopword); kept deliberately — in this
@@ -995,6 +1081,19 @@ concepts:
           "hunger for god" / "thirst for god" phrase forms and the dry-season
           phrasings carry the concept.
 
+  - id: i-am-sayings
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, i-am-sayings.json). 'i'/'am' are stopwords, so the
+    # topic's natural name "i am sayings" collapses to the bare verb stem
+    # `say` — declined in the pack (G-4); no bare word fires today.
+    skipped:
+      - token: say
+        reason: >-
+          The ubiquitous speech verb — a bare trigger (or the {say, jesu}
+          containment pair) would fire this concept on every "what did
+          jesus say about X" query. The statement/bread/abraham phrasings
+          carry the concept.
+
   - id: identity-in-christ
     # 2026-08-18 harvest, §1.6d option-3 pattern: a distinctive modern word
     # absent from the WEB text, and the bare word IS this concept.
@@ -1021,6 +1120,48 @@ concepts:
     # registers ("word became flesh", "god became man/flesh") keep
     # multiple significant tokens.
     admitted: [incarnation]
+
+  - id: jehovahs-witness-evangelism
+    # 2026-08-25 apologetics master-tag addition (Decision D13 approved
+    # by Jesse 2026-08-25; fixture-first,
+    # jehovahs-witness-evangelism.json). No lexicon entry collapses to a
+    # single significant token: "jehovahs witness" keeps {jehovah,
+    # witness} and "watchtower society" keeps {watchtower, society}.
+    # ("jw" was declined structurally — significantWords drops it to
+    # nothing, so no row can carry it; recorded in the pack + fixture.)
+    skipped:
+      - token: jehovah
+        reason: >-
+          A devotional name query ("jehovah", "jehovah jireh") must not
+          fire a movement-evangelism concept — wrong-register hijack.
+          The two-token entry "jehovahs witness" carries the movement
+          register instead.
+      - token: watchtower
+        reason: >-
+          The WEB itself uses "watchtower" (Isa 21:8, Isa 32:14 —
+          outside the current subset, arriving with the corpus re-pin):
+          a bare trigger would hijack the biblical watchman/watchtower
+          vocabulary the moment those chapters land. "watchtower
+          society" carries the movement register safely.
+      - token: witness
+        reason: >-
+          Bare {witness} stays with sharing-your-faith (acknowledged
+          collapse, pre-existing on main); this pack fires only when
+          "jehovah" accompanies it.
+
+  - id: jesus-the-only-way
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, jesus-the-only-way.json). No lexicon entry
+    # collapses to a single significant token.
+    skipped:
+      - token: name
+        reason: >-
+          The map's "no other name" collapses to bare {name} (no/other
+          are stopwords) — the 2026-08-08 accident class. Declined;
+          salvation owns the reachable phrase "no other name under
+          heaven" ({name, heaven}) and the register stays reachable
+          there, with this pack's Acts 4:12 anchor keeping the
+          exclusivity chip beside it.
 
   - id: joy-in-the-lord
     # 2026-08-08 decision table.
@@ -1078,6 +1219,17 @@ concepts:
           reachable today by its question phrasings. Bare "marriage" belongs
           to godly-marriage (2026-08-18).
 
+  - id: mormon-evangelism
+    # 2026-08-25 apologetics master-tag addition (Decision D13 approved
+    # by Jesse 2026-08-25; fixture-first, mormon-evangelism.json). Three
+    # deliberate bare entries, §1.6d option-3 / apologetics + godhead
+    # precedent — none of the three words appears in any WEB verse, so
+    # no lexical rung reaches the movement register without them.
+    # "mormons" shares the stem of "mormon"; "mormonism" keeps its own
+    # stem (the tokenizer does not strip -ism); the multi-token entry
+    # "latter day saints" keeps {latter, day, saint} and needs no row.
+    admitted: [mormon, mormonism, lds]
+
   - id: nations-and-peoples
     # PR #41 (2026-08-22 Genesis pilot): "all nations" collapses to the
     # bare token `nation` ("all" is a stopword) — deliberate per the
@@ -1110,6 +1262,41 @@ concepts:
           "new heaven(s)" and "new jerusalem" phrase forms carry this
           concept.
 
+  - id: no-other-god
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, no-other-god.json + the deification-guard pair).
+    # The natural phrasings "there is no other god" / "is there only one
+    # god" collapse to bare {god} and "the lord is one" to bare {lord} —
+    # all declined in the pack (G-4, the 2026-08-08 accident class); no
+    # bare word fires today.
+    skipped:
+      - token: god
+        reason: >-
+          The commonest token in the corpus; the 2026-08-08 accident
+          class verbatim. The besides/many-gods/true-god phrasings carry
+          the concept.
+      - token: gods
+        reason: >-
+          A bare `gods` trigger would fire this concept on the verbatim
+          Ps 82:6 quote query "you are gods" and hand the quoted verse's
+          top to this pack's anchors — the exact hijack
+          deification-guard-you-are-gods.json exists to forbid.
+
+  - id: no-other-gospel
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, no-other-gospel.json). No lexicon entry collapses
+    # to a single significant token.
+    skipped:
+      - token: gospel
+        reason: >-
+          The concept's own name form "no other gospel" collapses to
+          bare {gospel} (no/other are stopwords) — declined, 2026-08-08
+          accident class: a bare {gospel} trigger would fire this
+          warning concept on every gospel-vocabulary query
+          (sharing-your-faith's "how to share the gospel",
+          those-who-never-heard's "never heard the gospel"). The
+          another/different/angel/complete phrasings carry the concept.
+
   - id: obedience-to-the-word
     # 2026-08-08 decision table: the concept's own subject.
     admitted: [obedience]
@@ -1134,6 +1321,14 @@ concepts:
     # is the modern vocabulary of this struggle, and "approval of others"
     # normalizes to the bare token anyway.
     admitted: [approval]
+
+  - id: power-of-gods-word
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, power-of-gods-word.json). A phrase-forms pack — no
+    # lexicon entry collapses to a single significant token; the generic
+    # "gods word" / "the word of god" pairs stay with studying-the-word
+    # (recorded round-2 split), and every entry here carries a
+    # distinctive permanence/efficacy token.
 
   - id: praise
     # 2026-08-08 decision table: previously reachable only via
@@ -1164,6 +1359,25 @@ concepts:
     # the WEB text, so no lexical rung can serve the query, and the word is
     # how people search this topic.
     admitted: [government]
+
+  - id: prosperity-of-the-wicked
+    # 2026-08-25 apologetics wave batch 4: row authored with the pack
+    # (fixture-first, prosperity-of-the-wicked.json). Every entry keeps
+    # >= 2 significant tokens requiring the wicked/evil member; no bare
+    # word fires today — by design, because the prosperity-* guard
+    # family polices exactly the bare queries below.
+    skipped:
+      - token: prosperity
+        reason: >-
+          A materialFrameKeyword and the prosperity-* guard family's own
+          probe surface; a bare trigger would put this pack's anchors
+          under prosperity-gospel queries the guards police. The
+          wicked-paired forms carry the concept.
+      - token: wicked
+        reason: >-
+          Generic across judgment/justice registers (divine-judgment,
+          refuge-and-justice); the prosper/succeed pairings carry the
+          concept.
 
   - id: pregnancy-and-child-loss
     # NEEDS-JESSE §1.6d option 3 single words.
@@ -1330,6 +1544,22 @@ concepts:
     # exactly right.
     admitted: [resurrection, risen]
 
+  - id: resurrection-of-the-dead
+    # 2026-08-25 apologetics wave batch 4: row authored with the pack
+    # (fixture-first, resurrection-of-the-dead.json). The wave's top
+    # collision risk, designed: resurrection owns the bare tokens.
+    skipped:
+      - token: resurrection
+        reason: >-
+          The resurrection concept's reviewed admitted bare token — the
+          Easter-event register must keep the bare query. This pack's
+          of-the-dead / body / first-fruits pairings carry the
+          general-resurrection register.
+      - token: dead
+        reason: >-
+          Ubiquitous ("dead in trespasses", "mourn the dead"); only the
+          resurrection-paired forms carry this concept.
+
   - id: sabbath-rest
     # PR #41 (2026-08-22 Genesis pilot): deliberate bare entry per the
     # in-file comment (§1.6d option-3 register: the word IS the concept
@@ -1441,11 +1671,38 @@ concepts:
           forms carry the concept. Plausible future admission, deferred
           pending a measured gap.
 
+  - id: supremacy-of-christ
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, supremacy-of-christ.json). The map's "christ above
+    # all" collapsed to bare {christ} and was reworded in the pack (G-4);
+    # no bare word fires today.
+    skipped:
+      - token: christ
+        reason: >-
+          Bare `christ` spans the whole NT and belongs to no single
+          doctrine pack; the firstborn/supremacy/image phrasings carry
+          the concept.
+
   - id: suffering-for-christ
     # 2026-08-18 harvest: "suffering" is a deliberate bare entry (the
     # pack's own subject word; god-sees-my-suffering records the matching
     # skip); persecution/persecuted deliberate bare entries.
     admitted: [suffering, persecution, persecuted]
+
+  - id: suffering-of-the-righteous
+    # 2026-08-25 apologetics wave batch 4: row authored with the pack
+    # (fixture-first, suffering-of-the-righteous.json). Every entry
+    # keeps >= 2 significant tokens; no bare word fires today.
+    skipped:
+      - token: righteous
+        reason: >-
+          Generic across the wisdom/justice corpus; the suffer/affliction
+          pairings carry the concept.
+      - token: affliction
+        reason: >-
+          Owned lexically by the comfort registers (god-of-all-comfort's
+          preached vocabulary); "many are the afflictions of the
+          righteous" keeps the distinctive triple.
 
   - id: surrender-to-god
     # surrender: 2026-08-08 decision table (devotional register). deny:
@@ -1479,6 +1736,22 @@ concepts:
     # thanks"). gratitude: deliberate one-word entry.
     admitted: [thanksgiving, gratitude]
 
+  - id: the-breath-of-life
+    # 2026-08-25 apologetics wave batch 3: row authored with the pack
+    # (fixture-first, the-breath-of-life.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires today.
+    skipped:
+      - token: soul
+        reason: >-
+          Bare `soul` spans the psalmic my-soul language (thirst, rest,
+          praise — hunger-for-god and rest-for-the-weary carry those
+          registers); the humans/body/breath pairings carry this concept.
+      - token: breath
+        reason: >-
+          Praise's "let everything that has breath praise him" register
+          would be hijacked; "the breath of life" keeps the namesake
+          pair.
+
   - id: the-cross
     # the cross: 2026-08-08 decision table ("the token `cross` in a
     # scripture engine is unambiguous"). atonement: deliberate one-word
@@ -1490,6 +1763,22 @@ concepts:
     # only the curated entry can; 'atoning sacrifice' is the WEB's own
     # wording at 1 John 2:2 / 4:10.
     admitted: [cross, atonement, propitiation]
+
+  - id: the-first-and-the-last
+    # 2026-08-25 apologetics wave batch 2: row authored with the pack
+    # (fixture-first, the-first-and-the-last.json). The title's own form
+    # "the first and the last" ({first, last}) was REMOVED after it
+    # measurably hijacked the remembered Matt 19:30 register — see the
+    # pack's REMOVED PHRASE note and first-shall-be-last-guard.json. The
+    # two remaining entries keep >= 2 significant tokens; no bare word
+    # fires today.
+    skipped:
+      - token: first
+        reason: >-
+          Ubiquitous ordinal ("seek first", "first day", "first fruits"),
+          and even the paired {first, last} form proved a measured hijack
+          of "the last will be first" (guard-locked); only "alpha and
+          omega" and "the beginning and the end" carry the concept.
 
   - id: the-lords-discipline
     # 2026-08-18 harvest: "chastening" deliberate bare entry (the KJV-family
@@ -1526,12 +1815,24 @@ concepts:
     # god" — reworded from "three in one" precisely to AVOID a bare
     # {three} collapse, pack REWORD note) keep multiple significant
     # tokens.
-    admitted: [trinity]
+    # 2026-08-25 apologetics wave batch 1: bare `godhead` admitted —
+    # same §1.6d option-3 shape as `trinity` (the word appears in no WEB
+    # verse, so no lexical rung reaches the doctrine without it);
+    # fixture-first per trinity-godhead.json (measured gap: the bare
+    # query returned preached-vocabulary scatter with no curated chip).
+    admitted: [trinity, godhead]
 
   - id: trust-in-god
     # trust: 2026-08-08 decision table. confidence: 2026-08-18 round-2
     # admission, deliberate ("the Confidence topics' register").
     admitted: [trust, confidence]
+
+  - id: trustworthiness-of-scripture
+    # 2026-08-25 apologetics wave batch 5: row authored with the pack
+    # (fixture-first, trustworthiness-of-scripture.json). A phrase-forms
+    # pack — no lexicon entry collapses to a single significant token;
+    # this pack speaks of "the bible"/"scripture" and leaves the
+    # "gods word" phrasings to studying-the-word / power-of-gods-word.
 
   - id: victory-in-christ
     # victory: 2026-08-08 decision table. conqueror: kept collapse of "more
@@ -1560,6 +1861,22 @@ concepts:
           Jesse's 2026-07-29 ruling scoped this concept to the ethical sense
           precisely because "light" spans both senses; admitting the bare
           token would undo that decision (2026-08-08 decision table).
+
+  - id: why-god-allows-suffering
+    # 2026-08-25 apologetics wave batch 4: row authored with the pack
+    # (fixture-first, why-god-allows-suffering.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires today.
+    skipped:
+      - token: suffering
+        reason: >-
+          suffering-for-christ's reviewed admitted bare token — the
+          persecution register keeps the bare query (its inventory row);
+          this pack's why/allow question forms carry the theodicy
+          register beside it.
+      - token: evil
+        reason: >-
+          Generic moral vocabulary across the canon; "problem of evil"
+          keeps the distinctive pair.
 
   - id: wisdom-from-god
     # 2026-08-18 harvest: deliberate bare entries per the in-file comment

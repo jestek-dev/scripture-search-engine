@@ -1,0 +1,47 @@
+{
+  "id": "giving-an-answer",
+  "query": "always be ready to give an answer",
+  "status": "active",
+  "additionalQueries": [
+    "how do i defend my faith",
+    "apologetics in the bible"
+  ],
+  "note": [
+    "Apologetics wave batch 5 (2026-08-25), fixtures-first: NEW-MINT-",
+    "conditional (map Decision 8 recommends mint; anchor-disjointness from",
+    "sharing-your-faith verified by the map — the mint-vs-extend flag rides",
+    "the PR decision table). Merged only by Jesse's admission of this PR.",
+    "Measured gap before the pack (2026-08-25): 'always be ready to give an",
+    "answer' returned 1 Pet 3:15 #1 by exact phrase, CHIPLESS (the",
+    "wrong-reason class — a result that ranks correctly with the wrong",
+    "reason is a G3 failure, CLAUDE.md #5), with do-not-lose-heart's",
+    "acknowledged bare-{give} collapse supplying the rest of the top 8;",
+    "'how do i defend my faith' was owned by the faith packs (Heb 11:6,",
+    "Rom 10:17) with 1 Pet 3:15 in no top-10; 'apologetics in the bible'",
+    "returned pure preached-vocabulary scatter ({apologetic} appears in no",
+    "WEB verse — no lexical rung reaches the practice without curation).",
+    "TOKENIZER DECISIONS (G-4, logged): bare 'apologetics' is ADMITTED",
+    "(single-word entry, trinity/godhead precedent — the word appears in no",
+    "WEB verse, so no lexical rung reaches the concept without it;",
+    "inventory row with the pack). 'how to defend my faith' / 'how do i",
+    "defend my faith' collapse to the identical set {defend, faith} as",
+    "'defend the faith' — one entry carries all three forms, the query form",
+    "asserted here (worker-precedent duplicate-set rule)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Peter 3:15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 17:2-3",
+    "Philippians 1:7",
+    "2 Corinthians 10:5"
+  ],
+  "coversConcepts": [
+    "giving-an-answer"
+  ]
+}

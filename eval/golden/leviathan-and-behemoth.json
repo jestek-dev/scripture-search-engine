@@ -1,0 +1,45 @@
+{
+  "id": "leviathan-and-behemoth",
+  "query": "leviathan",
+  "status": "pending",
+  "additionalQueries": [
+    "behemoth",
+    "dinosaurs in the bible"
+  ],
+  "note": [
+    "APOLOGETICS WAVE batch 6 closure (2026-08-25): DEFERRED concept",
+    "(plan §3.8) — measured-gap record for a future leviathan-and-behemoth",
+    "concept, unpardonable-sin pattern. BLOCKED ON CORPUS: every map anchor",
+    "(Job 40:15, 40:19, 41:1, 41:11, 41:33-34; Ps 104:26) is outside",
+    "pipeline/fixtures/web-subset.json (docs/corpus-payload-dependency.md,",
+    "BLOCKED 2026-08-21) — zero in-corpus anchors means no active fixture",
+    "could demonstrate the pack, so G3 would structurally reject it and the",
+    "gauntlet could only report a vacuous or no-effect verdict. The concept",
+    "pack is therefore deliberately NOT in this PR.",
+    "ACTIVATION NOTE: land the concept pack, the Job 40-41 + Psalm 104",
+    "chapters, and a coversConcepts claim TOGETHER in the corpus-expansion",
+    "PR (re-pin payload P4.15). Gist discipline for that PR: the creature",
+    "descriptions are located, identification-FREE — no",
+    "dinosaur/crocodile/hippo/mythology adjudication in gist or label (the",
+    "antichrist/Ezekiel-28 identification-free precedents); the",
+    "dinosaurs-in-the-bible query is answered by locating what the text",
+    "says, never by ruling on what the creatures were (CLAUDE.md #6).",
+    "PR decision-table row carries the deferral for Jesse."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Job 41:1",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Leviathan and behemoth"
+    },
+    {
+      "reference": "Job 40:15",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Job 41:33-34",
+    "Psalms 104:26"
+  ]
+}

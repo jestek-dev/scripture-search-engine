@@ -1,0 +1,116 @@
+# APOLOGETICS WAVE — MASTER TAG (2026-08-25). Decision D13
+# (movement-naming lexicon) APPROVED and extended by Jesse 2026-08-25
+# (master tags grouping the kept sub-concepts; see
+# mormon-evangelism.yaml for his words verbatim). Merged only by Jesse's
+# admission of this PR.
+#
+# A MASTER (umbrella) concept naming a use-case, not a doctrine: the
+# passages most frequently studied when discussing faith with Jehovah's
+# Witnesses. It groups the existing sub-concepts without replacing them —
+# every anchor below is a deliberate DUAL anchor with its home pack, and
+# the related edges pull each sub-concept's fuller anchor bed in as weak
+# Related-theme evidence when the movement query fires. The description
+# stays descriptive and charitable (docs/DOCTRINAL-BASIS.md): the engine
+# reports that an editorial source names these passages for this study
+# context and says so on the chip; it never adjudicates against any
+# group (CLAUDE.md #6).
+#
+# Attribution: ALL anchors [editorial] — grouping passages under an
+# audience/task heading is LH's own curatorial judgment, on the record.
+#
+# TOKENIZER DECISIONS (G-4, engine-verified with significantWords;
+# logged in jehovahs-witness-evangelism.json):
+#   - "jehovahs witness" keeps two significant tokens {jehovah, witness}
+#     and therefore can NEVER fire on the bare query "witness" —
+#     sharing-your-faith's acknowledged bare-{witness} collapse is
+#     untouched. "jehovah's witnesses", "jehovahs witnesses", and
+#     "witnessing to jehovahs witnesses" normalize to the identical set:
+#     one entry carries every form (worker duplicate-set rule).
+#   - bare "jehovah" DECLINED: a devotional name query ("jehovah",
+#     "jehovah jireh") must not fire a movement-evangelism concept —
+#     wrong-register hijack; inventory skip row.
+#   - bare "watchtower" DECLINED: the WEB itself uses "watchtower"
+#     (Isa 21:8, Isa 32:14 — outside the current subset, arriving with
+#     the corpus re-pin), so a bare trigger would hijack the biblical
+#     watchman/watchtower vocabulary the moment those chapters land (the
+#     the-first-and-the-last title-phrase hijack class, caught there by
+#     measurement). "watchtower society" {watchtower, society} carries
+#     the movement register safely; inventory skip row.
+#   - "jw" DECLINED structurally: significantWords("jw") is empty — the
+#     tokenizer drops the token, so no lexicon entry could ever fire on
+#     it (no inventory row can carry a token the tokenizer discards;
+#     recorded here and in the fixture instead).
+#
+# RELATED-EDGE NOTE: edges are one-directional by declaration (worker-2
+# precedent, decision row 22) — movement queries surface the
+# sub-concepts' anchors weakly; the sub-concepts' own queries are
+# untouched. In particular the edge to resurrection declared HERE does
+# not reopen the reviewed resurrection-power regression that row 22
+# records (that harm came from an edge declared ON resurrection).
+id: jehovahs-witness-evangelism
+label: Jehovah's Witness evangelism
+lexicon:
+  # The movement's name; one entry carries every apostrophe/plural/
+  # witnessing-to form by identical-set normalization (see header).
+  - jehovahs witness
+  # The movement's publishing organization, as searched; the two-token
+  # form is the safe register (bare "watchtower" declined — see header).
+  - watchtower society
+anchors:
+  # "In the beginning was the Word, and the Word was with God, and the
+  # Word was God." (WEB, in corpus). DUAL with deity-of-christ (home,
+  # 1.0): the verse this study context most often opens with; the WEB
+  # rendering itself carries the point — no translation polemic in the
+  # gist.
+  - ref: John 1:1
+    sources: [editorial]
+    weight: 1.0
+  # "Most certainly, I tell you, before Abraham came into existence,
+  # I AM." (WEB, in corpus). DUAL with deity-of-christ (0.95) and
+  # i-am-sayings (home of the saying-locator register, 1.0).
+  - ref: John 8:58
+    sources: [editorial]
+    weight: 0.95
+  # "I am the first and the last, and the Living one. I was dead, and
+  # behold, I am alive forever more" (WEB, in corpus). DUAL with
+  # the-first-and-the-last (home, 1.0): the title register — the healed
+  # lexicon state locked by first-shall-be-last-guard governs that pack;
+  # this dual adds no phrase, only the anchor.
+  - ref: Revelation 1:17-18
+    sources: [editorial]
+    weight: 0.9
+  # "See my hands and my feet, that it is truly me. Touch me and see,
+  # for a spirit doesn't have flesh and bones, as you see that I have."
+  # (WEB, in corpus). DUAL with resurrection (home of the bodily
+  # register, 0.95, Decision 1).
+  - ref: Luke 24:39
+    sources: [editorial]
+    weight: 0.9
+  # "For by him all things were created... all things have been created
+  # through him and for him." (WEB, in corpus). DUAL with
+  # supremacy-of-christ (home, 0.95): the all-things-created register.
+  - ref: Colossians 1:16
+    sources: [editorial]
+    weight: 0.85
+  # "they came and took hold of his feet, and worshiped him" — and he
+  # accepts it (WEB, in corpus). DUAL with honor-the-son (home, 0.9):
+  # the worship-practice register.
+  - ref: Matthew 28:9
+    sources: [editorial]
+    weight: 0.8
+  # "there will arise false christs, and false prophets... so as to lead
+  # astray, if possible, even the chosen ones." (WEB, in corpus). DUAL
+  # with false-prophets (home, 0.9) — kept lowest here; the sub-concept
+  # carries the fuller discernment bed and its recorded
+  # application-in-fixtures-never-gist discipline governs this dual too.
+  - ref: Matthew 24:24
+    sources: [editorial]
+    weight: 0.7
+related:
+  - deity-of-christ
+  - resurrection
+  - honor-the-son
+  - the-first-and-the-last
+  - i-am-sayings
+  - false-prophets
+  - supremacy-of-christ

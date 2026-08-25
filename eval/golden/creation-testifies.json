@@ -1,0 +1,48 @@
+{
+  "id": "creation-testifies",
+  "query": "does nature prove god exists",
+  "status": "active",
+  "additionalQueries": [
+    "creation points to god",
+    "god revealed in nature"
+  ],
+  "note": [
+    "Apologetics wave batch 3 (2026-08-25), fixtures-first: NEW-MINT",
+    "creation-testifies (map entry 1; the mint itself rides map Decision 3",
+    "— the general-revelation dual-anchor design — and is admitted only by",
+    "Jesse's merge of this draft PR). Creation as God's ongoing witness to",
+    "every person; the engine reports which curated source names each",
+    "passage and adjudicates nothing (CLAUDE.md #6).",
+    "Measured gap before the pack (2026-08-25): 'does nature prove god",
+    "exists' returned do/god token scatter (Heb 11:6 #1, no curated chip);",
+    "'god revealed in nature' returned reveal-token scatter (Rom 8:19 #1;",
+    "Rom 1:18-19 and Rom 1:20 appeared on lexical evidence only); 'creation",
+    "points to god' fired the neighbouring creation pack via its bare",
+    "'creation' token (Gen 1:1 #1, Theme: Creation) but NO witness-register",
+    "concept existed — Ps 19:1-2's testimony register was unreachable with",
+    "its own reason. That neighbouring firing is design, not collision: the",
+    "two packs stay token-disjoint apart from {creation, god} and this",
+    "fixture pins the witness label alongside it.",
+    "G4 BOUNDARY (logged in the pack): 'the heavens declare the glory of",
+    "god' stays in creation.yaml; 'general revelation' and 'without excuse'",
+    "stay in those-who-never-heard.yaml — deliberate exclusions here."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 19:1-2",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Creation testifies"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 1:19-20",
+    "Acts 17:26-27",
+    "Psalms 19:3",
+    "Genesis 1:1",
+    "Psalms 19:1"
+  ],
+  "coversConcepts": [
+    "creation-testifies"
+  ]
+}

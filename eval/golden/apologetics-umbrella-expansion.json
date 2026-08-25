@@ -1,0 +1,52 @@
+{
+  "id": "apologetics-umbrella-expansion",
+  "query": "apologetics",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics master-tag rescope, 2026-08-25) — the",
+    "out-of-corpus members of Jesse's 2026-08-25 bare-'apologetics' list",
+    "(scoping correction; see apologetics-umbrella.json for the ruling and",
+    "the in-corpus assertions). BLOCKED ON CORPUS: Jude, Luke 1, Luke 7,",
+    "Isaiah 48, Acts 18-19, Colossians 2, and 2 Peter are absent from",
+    "pipeline/fixtures/web-subset.json (docs/corpus-payload-dependency.md,",
+    "BLOCKED 2026-08-21), so these assertions would pass vacuously if",
+    "active. The anchors ship NOW on giving-an-answer [editorial]",
+    "(anchors-with-note precedent: image-of-god Gen 9:6); this fixture is",
+    "what measures them.",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR (re-pin",
+    "payload P4.15). Only Jude 1:3 (weight 0.9, Jesse's #2) is asserted —",
+    "at activation ~22 anchors compete for the 10-row window and the",
+    "0.7-0.75 band (Luke 1:1-4, Acts 18:27-28, Luke 7:19-22, 2 Pet 1:16,",
+    "Acts 19:8-10) lands on the canonical-order tie bubble; re-measure at",
+    "activation before asserting any of them (they are listed in",
+    "alsoAcceptable, not asserted). Jesse's list items already anchored",
+    "before the rescope and also out of corpus: Titus 1:9, Colossians 4:6",
+    "(his Col 4:5-6), Philippians 1:17 (his Phil 1:16 — WEB",
+    "majority-text versification carries the defense clause at v17)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jude 1:3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 10
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jude 1:22",
+    "Luke 7:19-22",
+    "Isaiah 48:5",
+    "Acts 19:8-10",
+    "Acts 18:27-28",
+    "Colossians 2:8",
+    "Luke 1:1-4",
+    "2 Peter 1:16",
+    "Titus 1:9",
+    "Colossians 4:6",
+    "Acts 26:25"
+  ],
+  "coversConcepts": [
+    "giving-an-answer"
+  ]
+}

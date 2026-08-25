@@ -1,0 +1,38 @@
+{
+  "id": "gods-unchanging-nature",
+  "query": "does god change",
+  "status": "active",
+  "additionalQueries": [
+    "was god ever a man",
+    "i the lord do not change"
+  ],
+  "note": [
+    "Apologetics wave batch 2 (2026-08-25), fixtures-first: PENDING-TAG-GAP",
+    "id gods-unchanging-nature (Theme C) — merged only by Jesse's admission",
+    "of this PR (plan G-3). Measured gap before the pack (2026-08-25):",
+    "'does god change' returned proximity scatter (Heb 4:10 #1) and 'was god",
+    "ever a man' translation-variant scatter — Mal 3:6 and Jas 1:17 appeared",
+    "in no top-10, with no curated chip anywhere.",
+    "'was god ever a man' is the eternal-progression claim phrased as it is",
+    "brought; it names no movement (plan G-4). The map's Ps 90:2 ('from",
+    "everlasting to everlasting') is the most direct single text but Psalm",
+    "90 is outside the pinned corpus — it ships as an anchor-with-note and",
+    "its assertion rides the creation-side pending companion of batch 3",
+    "('creation-who-made-god') and the re-pin."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Malachi 3:6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's unchanging nature"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "James 1:17",
+    "Isaiah 43:10"
+  ],
+  "coversConcepts": [
+    "gods-unchanging-nature"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "first-shall-be-last-guard",
+  "query": "the last will be first",
+  "status": "active",
+  "additionalQueries": [
+    "the first shall be last"
+  ],
+  "note": [
+    "GUARD FIXTURE (apologetics wave batch 2, 2026-08-25;",
+    "flesh-and-blood-quote-guard / peter-denial precedent). The",
+    "the-first-and-the-last pack's draft lexicon carried the title's own",
+    "form 'the first and the last', which reduces to the containment pair",
+    "{first, last} under the one tokenizer and fired the concept on the",
+    "remembered Matt 19:30/20:16 humility register. Measured hijacked state",
+    "(2026-08-25, fixture bed): Rev 1:17-18 #1 @47.9 ('Theme: The First and",
+    "the Last'), Isa 41:4 #2 @43.1, Rev 1:8 #3, Rev 21:6 #4, with the true",
+    "verse Matthew 19:30 demoted to #5 @11.9 — the wrong-concept-#1 harm",
+    "class. Healed by removing the phrase from the pack in the same commit",
+    "as this guard; measured healed state: Matt 19:30 #1 @11.9 on token",
+    "evidence, Isa 41:4 #2 (an HONEST lexical result — 'I, the LORD, the",
+    "first, and with the last' — so it is deliberately NOT guarded),",
+    "Rev 1:17 out of the top 3.",
+    "The mustNotLead entry names the measured #1 hijacker; window 3 because",
+    "the pack's anchors occupied #1-#4."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 19:30",
+      "withinTop": 1,
+      "requiredReasonFamily": "token_overlap"
+    }
+  ],
+  "expectedWithinTop": 1,
+  "mustNotLead": [
+    {
+      "reference": "Revelation 1:17-18",
+      "withinTop": 3,
+      "why": "the-first-and-the-last's 1.0 hinge anchor, the measured #1 hijacker (47.9) of the remembered Matt 19:30 register via the {first, last} containment of the removed lexicon phrase; a remembered teaching's top belongs to the teaching, never to a title-locator pack's anchor list"
+    }
+  ]
+}

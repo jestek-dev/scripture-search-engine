@@ -1,0 +1,38 @@
+{
+  "id": "image-of-god-sanctity",
+  "query": "why is human life sacred",
+  "status": "active",
+  "additionalQueries": [
+    "what makes humans different from animals",
+    "sanctity of life"
+  ],
+  "note": [
+    "Apologetics wave batch 1 (2026-08-25), VERIFY-GAP-FIRST probe for the",
+    "(Renamed from the draft id image-of-god-dignity: an active fixture of that name already measures the 'human dignity' register — this one measures the sanctity/human-uniqueness register.)",
+    "image-of-god extension. The pack already carries all four map anchors",
+    "(Gen 1:26-27, Gen 9:6, Ps 8:4-6, Jas 3:9) — the only candidate additions",
+    "are the dignity/human-uniqueness query phrasings. Measured before any",
+    "change (2026-08-25): 'why is human life sacred' returns bare lexical",
+    "scatter with no curated chip (Gen 1:26-27 absent); 'what makes humans",
+    "different from animals' puts Gen 1:26 at #2 on translation-variant",
+    "evidence only, no chip. The gap is real; the lexicon additions close it.",
+    "Gen 9:6 is outside the pinned corpus, so it is not assertable here",
+    "(G-2); it stays an anchor-with-note in the pack.",
+    "Reason family only (no label pin): image-of-god's demonstrating fixture",
+    "pins the label."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 1:26-27",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Genesis 5:1-3",
+    "Colossians 1:15"
+  ],
+  "coversConcepts": [
+    "image-of-god"
+  ]
+}

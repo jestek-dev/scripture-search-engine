@@ -1,0 +1,126 @@
+# APOLOGETICS WAVE (batch 2, 2026-08-25) — PENDING-TAG-GAP id (Theme C,
+# Isaiah-minted row in tag-gaps-review.md). Building this pack does not
+# preempt Jesse's vocabulary review: nothing enters the vocabulary except by
+# his merge of this same draft PR — merging IS admitting the id (plan G-3;
+# recorded alternate id `god-alone` carried as a PR decision row; the
+# idolatry-overlap question stays open per map Decision 14).
+#
+# There is one God only — none formed before him, none after, none besides.
+# Also the honest answer-ground for exaltation / humans-becoming-gods
+# queries: the engine reports what the texts say, never argues (CLAUDE.md
+# #6); deification-guard.json (same batch) locks the Ps 82:6 discipline.
+#
+# Attribution: ALL anchors [editorial] — the map's research citations
+# (str-mormon-verses, aomin-mormon-verses, scoping-brief) corroborate and
+# are never engine sources; Torrey's verified outline set was checked and
+# carries no row for these pairings under this concept's claim.
+#
+# TOKENIZER DISCIPLINE (G-4, verified with the engine's significantWords):
+# the natural phrasings "there is no other god" and "is there only one god"
+# both collapse to the bare token {god}, and "the lord is one" to {lord} —
+# the 2026-08-08 accident class and the recorded ph6-B harm token. NONE is
+# admitted; the phrases below all keep >= 2 significant tokens with a
+# distinctive member: {god, besid}, {many, gods}, {true, god},
+# {human, become, gods}. Bare `god`/`gods` are skipped in
+# ontology/lexicon-inventory.yaml with reasons (bare `gods` would fire this
+# concept on the verbatim Ps 82:6 quote query "you are gods" and hijack the
+# honest lexical result the deification guard protects).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist; no
+# materialFrameKeyword appears in id, label, or lexicon.
+id: no-other-god
+label: No other God
+lexicon:
+  # Isa 44:8 / 45:21's own register, as a searcher types it.
+  - no god besides me
+  # The comparative-religions question form.
+  - how many gods are there
+  # John 17:3's register ("the only true God") — the confession form.
+  - the only true god
+  # The deification claim register, phrased as the claim is brought
+  # (names no movement — plan G-4); the honest answer surface is this
+  # pack's Isa 43:10, and deification-guard.json rides this entry.
+  - humans become gods
+anchors:
+  # "Before me there was no God formed, neither will there be after me."
+  # (WEB, in corpus). God's own testimony excludes gods in both directions
+  # of time — in context the ground of Israel's witness against the idols
+  # (43:9-12). Keystone text for become-gods queries, stated purely as what
+  # the verse says. DUAL ANCHOR with gods-unchanging-nature (same batch),
+  # which carries the no-attained-godhood register at 0.8.
+  - ref: Isaiah 43:10
+    sources: [editorial]
+    weight: 1.0
+  # "Hear, Israel: The LORD is our God. The LORD is one." (WEB, in corpus).
+  # The Shema. CROSS-DESIGN NOTE (decision row F-2): trinity deliberately
+  # does NOT anchor this verse (its recorded sense-inversion sweep declined
+  # the Shema to keep locator distinct from doctrine-scorer); the
+  # oneness-pole duty lives HERE, and trinity reaches it through its
+  # related edge to this pack.
+  - ref: Deuteronomy 6:4
+    sources: [editorial]
+    weight: 0.95
+  # "I myself am the LORD. Besides me, there is no savior." (WEB, in
+  # corpus). Exclusive saviorhood — the NT confession of Jesus as Savior is
+  # handled under deity-of-christ, not read back into Isaiah 43's tags.
+  - ref: Isaiah 43:11
+    sources: [editorial]
+    weight: 0.9
+  # "I am the first, and I am the last; and besides me there is no God."
+  # (WEB wording — Isaiah 44 NOT in web-subset). The first-and-last title
+  # paired in the same breath with exclusivity — DUAL ANCHOR with
+  # the-first-and-the-last (same batch): each pack claims its half.
+  - ref: Isaiah 44:6
+    sources: [editorial]
+    weight: 0.9
+  # "Is there a God besides me? Indeed, there is not. I don't know any
+  # other Rock." (WEB wording — Isaiah 44 NOT in web-subset). The
+  # strongest closure against undiscovered gods.
+  - ref: Isaiah 44:8
+    sources: [editorial]
+    weight: 0.85
+  # "It was shown to you so that you might know that the LORD is God.
+  # There is no one else besides him." (WEB wording — Deuteronomy 4 NOT in
+  # web-subset). The exodus signs' stated purpose.
+  - ref: Deuteronomy 4:35
+    sources: [editorial]
+    weight: 0.85
+  # "There is no other God besides me... Look to me, and be saved, all the
+  # ends of the earth" (WEB wording — Isaiah 45 NOT in web-subset).
+  # Monotheism stated as invitation. BOUNDARY COMMENT: the Savior register
+  # of 45:21-22 belongs to jesus-the-only-way (batch 5); this pack claims
+  # the no-other-God clause.
+  - ref: Isaiah 45:21-22
+    sources: [editorial]
+    weight: 0.85
+  # "I am God, and there is no other. I am God, and there is none like me."
+  # (WEB wording — Isaiah 46 NOT in web-subset). Against plural gods and
+  # against godhood as an attainable class.
+  - ref: Isaiah 46:9
+    sources: [editorial]
+    weight: 0.8
+  # "I am the LORD, who makes all things; who alone stretches out the
+  # heavens; who spreads out the earth by myself" (WEB wording — Isaiah 44
+  # NOT in web-subset). Creation as solo work — DUAL ANCHOR with creation
+  # (batch 3 extension); the NT places the Word inside that solo act
+  # (John 1:3; Col 1:16), stated in the NT anchors, never read back here.
+  - ref: Isaiah 44:24
+    sources: [editorial]
+    weight: 0.8
+  # "that all the peoples of the earth may know that the LORD himself is
+  # God. There is no one else." (WEB wording — 1 Kings 8 NOT in
+  # web-subset). The temple dedication's missionary aim.
+  - ref: 1 Kings 8:60
+    sources: [editorial]
+    weight: 0.7
+  # "For all the gods of the peoples are idols, but the LORD made the
+  # heavens." (WEB wording — Psalm 96 NOT in web-subset). The psalm's own
+  # contrast: Maker vs idols.
+  - ref: Psalms 96:5
+    sources: [editorial]
+    weight: 0.7
+related:
+  - gods-unchanging-nature
+  - deity-of-christ
+  - trinity
+  - creation

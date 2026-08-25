@@ -1,0 +1,43 @@
+{
+  "id": "trinity-godhead",
+  "query": "one god in three persons",
+  "status": "active",
+  "additionalQueries": [
+    "godhead",
+    "is the holy spirit a person"
+  ],
+  "note": [
+    "Apologetics wave batch 1 (2026-08-25), VERIFY-GAP-FIRST probe for the",
+    "trinity extension (light). Measured before any change (2026-08-25):",
+    "'one god in three persons' already passes (Matt 28:19 #1, trinity chip —",
+    "the existing 'three persons one god' entry normalizes to the same token",
+    "set); 'godhead' returns preached-vocabulary scatter with no curated chip",
+    "anywhere (the word appears in no WEB verse, exactly the bare-'trinity'",
+    "gap class); 'is the holy spirit a person' is carried entirely by",
+    "holy-spirit-the-comforter with Matt 28:19 absent from the top 10. The",
+    "gap is the two latter queries.",
+    "Deut 6:4 is NOT added to the pack despite the map's suggestion: the",
+    "pack's recorded sense-inversion sweep deliberately declined the Shema",
+    "('recruiting it here would blur locator into doctrine-scorer') — a",
+    "repo pack's recorded design decision outranks the map; surfaced as",
+    "decision row F-2. Matt 3:16-17 and 2 Cor 13:14 are outside the pinned",
+    "corpus and stay in the pack's corpus-deferred note.",
+    "Reason family only (no label pin): trinity.json pins the label."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 28:19",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 14:16-17",
+    "1 Peter 1:2",
+    "Acts 2:32-33",
+    "2 Corinthians 1:21-22"
+  ],
+  "coversConcepts": [
+    "trinity"
+  ]
+}

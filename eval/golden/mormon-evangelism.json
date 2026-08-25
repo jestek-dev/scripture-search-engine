@@ -1,0 +1,70 @@
+{
+  "id": "mormon-evangelism",
+  "query": "mormon evangelism",
+  "status": "active",
+  "additionalQueries": [
+    "what do mormons believe",
+    "witnessing to mormons"
+  ],
+  "note": [
+    "Apologetics wave master-tag addition (2026-08-25), fixtures-first:",
+    "Decision D13 (movement-naming lexicon) APPROVED and extended by Jesse",
+    "2026-08-25 — 'I'd like someone to be able to search Mormon or jehovas",
+    "witness evangelism or apologetics and get those results. We can keep",
+    "the sub tags you made, but I'd like to group them under that master",
+    "tag.' This fixture measures the master concept mormon-evangelism,",
+    "which groups the existing sub-concepts (deity-of-christ, no-other-god,",
+    "trinity, grace-not-earned, no-other-gospel,",
+    "trustworthiness-of-scripture, false-prophets) under one",
+    "movement-named umbrella via dual anchors + one-directional related",
+    "edges. Measured gap before the pack (2026-08-25, fixture artifact):",
+    "'mormon evangelism' fired only sharing-your-faith's bare-{evangelism}",
+    "collapse (Acts 1:8 #1, generic evangelism results, no",
+    "movement-specific chip); 'what do mormons believe' returned pure",
+    "{believe} token scatter (John 14:29 #1, no curated chip anywhere) —",
+    "the token {mormon} appears in no WEB verse; 'witnessing to mormons'",
+    "was owned entirely by sharing-your-faith's bare-{witness} collapse.",
+    "TOKENIZER DECISIONS (G-4, engine-verified with significantWords):",
+    "bare 'mormon' ADMITTED ({mormon} appears in no WEB verse — the",
+    "apologetics/godhead §1.6d option-3 precedent; 'mormons' shares the",
+    "stem, and the longer forms 'mormon evangelism', 'what do mormons",
+    "believe', 'witnessing to mormons' all fire by containment, so none is",
+    "a separate entry — worker duplicate/superset rule). 'mormonism' keeps",
+    "its own stem (the tokenizer does not strip -ism) and is a separate",
+    "admitted bare entry. 'lds' admitted bare (appears in no WEB verse).",
+    "'latter day saints' keeps three significant tokens {latter, day,",
+    "saint} — all three biblical vocabulary individually, but no plausible",
+    "scripture query carries all three together, so no hijack surface.",
+    "Sharing-your-faith deliberately keeps bare {witness} and bare",
+    "{evangelism} — this pack claims neither; on the witnessing/evangelism",
+    "query forms both concepts fire side by side by design."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Galatians 1:8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Mormon evangelism"
+    },
+    {
+      "reference": "Isaiah 43:10",
+      "requiredReasonFamily": "concept_anchor",
+      "withinTop": 10
+    },
+    {
+      "reference": "Ephesians 2:8-9",
+      "requiredReasonFamily": "concept_anchor",
+      "withinTop": 10
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 1:3",
+    "Titus 2:13",
+    "Psalms 19:7-9",
+    "Matthew 28:19",
+    "Matthew 7:15-16"
+  ],
+  "coversConcepts": [
+    "mormon-evangelism"
+  ]
+}

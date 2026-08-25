@@ -1,0 +1,33 @@
+{
+  "id": "trustworthiness-god-breathed",
+  "query": "all scripture is god breathed",
+  "status": "pending",
+  "note": [
+    "PENDING COMPANION (apologetics wave batch 5, 2026-08-25) — the",
+    "God-breathed register of trustworthiness-of-scripture. BLOCKED ON",
+    "CORPUS: 2 Timothy 3 is absent from pipeline/fixtures/web-subset.json",
+    "(docs/corpus-payload-dependency.md, BLOCKED 2026-08-21), so this",
+    "assertion would pass vacuously if active.",
+    "ACTIVATION NOTE: flips to active in the corpus-expansion PR that lands",
+    "2 Timothy 3 (re-pin payload P4.15). The pack anchors 2 Tim 3:16-17",
+    "[editorial] now as an anchor-with-note at 0.95 with the",
+    "sufficiency-not-canon-closure caveat (map: the verse claims",
+    "sufficiency-to-equip, not canon closure; wider sola-scriptura freight",
+    "stays out of the gist). On activation this verse is the expected",
+    "verbatim-register lead for the God-breathed query; until then the",
+    "active fixture asserts the in-corpus representative Ps 19:7-9."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Timothy 3:16-17",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 19:7-9"
+  ],
+  "coversConcepts": [
+    "trustworthiness-of-scripture"
+  ]
+}
