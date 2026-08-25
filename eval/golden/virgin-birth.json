@@ -1,0 +1,42 @@
+{
+  "id": "virgin-birth",
+  "query": "virgin birth",
+  "status": "pending",
+  "additionalQueries": [
+    "conceived by the holy spirit",
+    "born of a virgin"
+  ],
+  "note": [
+    "APOLOGETICS WAVE batch 6 closure (2026-08-25): DEFERRED concept",
+    "(plan §3.26) — measured-gap record for a future virgin-birth concept",
+    "(or an incarnation extension — map Decision 11 stays live),",
+    "unpardonable-sin pattern. BLOCKED ON CORPUS: every map anchor is",
+    "outside pipeline/fixtures/web-subset.json (Matthew 1 entire, Luke 1,",
+    "Isaiah 7, Galatians 4; docs/corpus-payload-dependency.md, BLOCKED",
+    "2026-08-21) — zero in-corpus anchors means no active fixture could",
+    "demonstrate the pack, so G3 would structurally reject it. The concept",
+    "pack is therefore deliberately NOT in this PR.",
+    "ACTIVATION NOTE: land the concept (or the incarnation extension per",
+    "Jesse's Decision 11 ruling), the Matthew 1 + Luke 1 chapters, and a",
+    "coversConcepts claim TOGETHER in the corpus-expansion PR (re-pin",
+    "payload P4.15). Isa 7:14 discipline for that PR: only ever an",
+    "editorial-attributed anchor under the messianic-prophecy locator rule",
+    "(the almah/parthenos debate is attributed commentary, never gist).",
+    "PR decision-table row carries the deferral for Jesse."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 1:18",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The virgin birth"
+    },
+    {
+      "reference": "Luke 1:34-35",
+      "requiredReasonFamily": "concept_anchor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 1:22-23"
+  ]
+}
