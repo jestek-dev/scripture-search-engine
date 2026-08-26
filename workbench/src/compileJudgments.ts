@@ -113,7 +113,13 @@ export interface JudgmentCompilationPlan extends CompileOutcome {
 }
 
 interface WebSubsetFile {
-  selection: { book: string; chapters: number[]; why: string }[];
+  /**
+   * Chapter-level entries carry `chapters`; verse-level entries (P5.2/QR-3)
+   * carry `verses: ["chapter:verse", …]` instead and no `chapters` at all —
+   * both shapes ship in pipeline/fixtures/web-subset.json (the authoritative
+   * shape is `Selection` in pipeline/scripts/generateFixture.ts).
+   */
+  selection: { book: string; chapters?: number[]; verses?: string[]; why: string }[];
   [key: string]: unknown;
 }
 
@@ -756,7 +762,13 @@ export async function planJudgmentCompilation(
     const book = findBook(selection.book);
     if (!book) continue;
     const set = memberChapters.get(book.id) ?? new Set<number>();
-    for (const chapter of selection.chapters) set.add(chapter);
+    // Verse-level selections sample single verses, not whole chapters, so
+    // they grant no chapter membership: counting them would let a fixture
+    // referencing the REST of that chapter pass as sampled when CI never
+    // loaded those verses. The conservative cost is a chapter-granular
+    // proposal for a chapter the subset already partially covers, which the
+    // human reviews before it lands either way.
+    for (const chapter of selection.chapters ?? []) set.add(chapter);
     memberChapters.set(book.id, set);
   }
 
