@@ -138,9 +138,16 @@ describe('health source semantics', () => {
     // walking-by-the-spirit — each with an active demonstrating fixture in
     // the same change; the batch's two extensions ride providence and
     // gods-love, so they add no ids here).
+    // + the 13 tag-gap rollout batch-3 packs (2026-08-26, Theme E slice of
+    // the adopted tag-gap review: oaths-and-vows, leadership,
+    // fear-of-the-lord, temptation, hardness-of-heart,
+    // money-and-possessions, judging-others, betrayal,
+    // grumbling-and-complaining, kindness, integrity, drunkenness,
+    // favoritism — each with an active demonstrating fixture in the same
+    // change).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(181);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(181);
+    expect(coverage).toHaveLength(194);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(194);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

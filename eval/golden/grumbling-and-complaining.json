@@ -1,0 +1,45 @@
+{
+  "id": "grumbling-and-complaining",
+  "query": "grumbling and complaining",
+  "status": "active",
+  "additionalQueries": [
+    "complaining in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id grumbling-and-complaining (Theme E row, 3 requesting",
+    "books) — engine admission only by Jesse's merge of this PR. The",
+    "murmuring motif is Exodus-Numbers' backbone and none of it was",
+    "reachable. The row's one-or-two question vs the future lament row",
+    "is DECIDED as two registers, recorded here for the Theme H curator:",
+    "this pack is complaint AGAINST God and his leaders (the wilderness",
+    "register, 1 Cor 10:10's own subject); lament is complaint brought",
+    "TO God in faith — wrestling-with-god carries that register today",
+    "and is cross-related, not overlapped. Keystone 1 Cor 10:10 (the",
+    "NT's own reading of the murmuring narratives, in corpus) with",
+    "Exod 14:11-12 as the first murmuring scene in corpus; the dense",
+    "Numbers spine (11; 14; 16-17; 20-21), Exod 15-17, Deut 1:27 and",
+    "Phil 2:14-15 are corpus-blocked riders.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'grumbling and complaining' led with Luke 15:2 translation-variant",
+    "noise, 1 Cor 10:10 at rank 4 CHIPLESS; 'complaining in the bible'",
+    "returned lament-psalm complaint vocabulary (Ps 88, Ps 13, Lam 3) —",
+    "the OTHER register, exactly the confusion the two-register",
+    "decision names."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Corinthians 10:10",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Grumbling and complaining"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Exodus 14:11-12",
+    "James 5:9"
+  ],
+  "coversConcepts": [
+    "grumbling-and-complaining"
+  ]
+}

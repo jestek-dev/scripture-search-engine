@@ -1,0 +1,91 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 5 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The row's own rationale correction, honored as the design: contentment
+# DELIBERATELY owns the bare money tokens ("wealth", "money",
+# "finances", "debt") and the 1 Tim 6 / Matt 6 / Heb 13:5 anchors, so
+# the unserved register is the DANGER-OF-RICHES teaching — "can a rich
+# person be saved", the rich ruler, woe-to-the-rich. This pack is that
+# register, narrowly: multi-token danger phrasings only, ZERO shared
+# tokens with contentment's money vocabulary, and none of contentment's
+# anchors re-anchored (1 Tim 6:9's temptation-and-snare sits inside its
+# 6:6-10 span and stays there; cross-related).
+#
+# The row's check-first alternative (extension of contentment or
+# love-not-the-world) was checked and DECLINED, recorded: extension
+# would answer "can a rich person be saved" with a Contentment chip and
+# the contentment anchor set — the wrong register for a salvation-edge
+# question whose narrative answer (Luke 18:26-27) exists in corpus. The
+# debt texts stay with contentment per the row's own cross-note; the
+# Matthew stewardship row's scope-together question is recorded on that
+# row's deferral (batch 3 ledger).
+#
+# PROSPERITY-GUARD DISCIPLINE: "riches"/"rich" appear in this lexicon
+# only inside danger pairs ({danger, rich}, {deceitfulness, rich},
+# {woe, rich}); no entry fires on bare prosperity vocabulary, and no
+# watchlist reference (Luke 6:38, Mal 3:10, Phil 4:19, Mark 11:24,
+# John 14:13-14) is anchored here. The pack teaches the danger the
+# texts teach — the exact opposite of a return-on-riches frame.
+#
+# Attribution: ALL anchors [editorial].
+id: money-and-possessions
+label: Money and possessions
+lexicon:
+  - can a rich person be saved
+  - rich young ruler
+  - eye of a needle
+  - danger of riches
+  - deceitfulness of riches
+  - woe to the rich
+anchors:
+  # "How hard it is for those who have riches to enter into God's
+  # Kingdom! For it is easier for a camel to enter in through a
+  # needle's eye... 'Then who can be saved?'... 'The things which are
+  # impossible with men are possible with God'" (WEB, in corpus). The
+  # rich ruler narrative through Jesus' own answer to the query this
+  # pack exists for.
+  - ref: Luke 18:18-27
+    sources: [editorial]
+    weight: 1.0
+  # "But woe to you who are rich! For you have received your
+  # consolation" (WEB, in corpus). The plainest danger text in the
+  # canon.
+  - ref: Luke 6:24
+    sources: [editorial]
+    weight: 0.85
+  # "Come now, you rich, weep and howl... You have laid up your
+  # treasure in the last days" (WEB, in corpus). James' prophetic woe —
+  # riches hoarded and trusted, testifying against their owner.
+  - ref: James 5:1-3
+    sources: [editorial]
+    weight: 0.8
+  # "the cares of this age, and the deceitfulness of riches... choke
+  # the word" — the sower's thorns, the phrase this lexicon carries.
+  # (Mark 4 NOT in web-subset; re-check at re-pin.)
+  - ref: Mark 4:19
+    sources: [editorial]
+    weight: 0.85
+  # The rich fool: "the abundance of the things which he possesses...
+  # So is he who lays up treasure for himself, and is not rich toward
+  # God." (Luke 12 NOT in web-subset; re-check at re-pin.)
+  - ref: Luke 12:15-21
+    sources: [editorial]
+    weight: 0.9
+  # "He who loves silver shall not be satisfied with silver" — the
+  # Preacher's verdict on wealth's promise. (Ecclesiastes 5 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Ecclesiastes 5:10
+    sources: [editorial]
+    weight: 0.75
+  # "Don't weary yourself to be rich... riches certainly make
+  # themselves wings" — the earning/keeping register the row names.
+  # (Proverbs 23 NOT in web-subset; re-check at re-pin.)
+  - ref: Proverbs 23:4-5
+    sources: [editorial]
+    weight: 0.7
+related:
+  - contentment
+  - generosity
+  - love-not-the-world

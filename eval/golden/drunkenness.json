@@ -1,0 +1,47 @@
+{
+  "id": "drunkenness",
+  "query": "what does the bible say about drunkenness",
+  "status": "active",
+  "additionalQueries": [
+    "getting drunk"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id drunkenness (Theme E row, 2 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The row's",
+    "check-first route (lexicon extension of self-control) was checked",
+    "and DECLINED, recorded: extension would answer drunkenness queries",
+    "with 2 Tim 1:7 and the soldier/athlete figures — that pack's",
+    "anchors, the wrong texts. The row's register cross-note is",
+    "honored: pastoral-freedom-from-bondage serves the person in",
+    "addiction CRISIS ('alcoholism', 'struggling to stay sober'); this",
+    "pack is the what-does-the-Bible-say TEACHING register, and the",
+    "two are cross-related, never collapsed. Keystone Rom 13:13 (walk",
+    "properly, not in drunkenness; 13:14 stays self-control's,",
+    "cross-noted). Eph 5:18 is deliberately DUAL-ANCHORED with",
+    "holy-spirit-the-comforter — 'Don't be drunken with wine' is the",
+    "verse's own first clause (2 Tim 1:7 precedent, both files note",
+    "it). The teaching keystones Prov 20:1, 23:29-35, 31:4-7 and Isa",
+    "28:1-8 are corpus-blocked riders.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'what does the bible say about drunkenness' returned PURE do/say",
+    "token noise — not one drink text in the top 10."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 13:13",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Drunkenness"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Thessalonians 5:6-8",
+    "Ephesians 5:18",
+    "1 Peter 4:3",
+    "1 Corinthians 6:9-10"
+  ],
+  "coversConcepts": [
+    "drunkenness"
+  ]
+}

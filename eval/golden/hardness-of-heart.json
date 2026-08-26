@@ -1,0 +1,44 @@
+{
+  "id": "hardness-of-heart",
+  "query": "why did god harden pharaohs heart",
+  "status": "active",
+  "additionalQueries": [
+    "hardened heart"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id hardness-of-heart (Theme E row, 8 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. One of the",
+    "most-asked Exodus questions and a common self-examination query.",
+    "The row's gist care is honored: the pack DESCRIBES both directions",
+    "the text carries (Pharaoh hardens his own heart; the LORD hardens",
+    "it) and adjudicates neither. Keystone Ps 95:8 ('Don't harden your",
+    "heart' — Scripture's own second-person warning, in corpus; Heb 4:7",
+    "carries the NT's re-preaching of it). The Exodus 4-11 hardening",
+    "cycle (both voices) is corpus-blocked and rides the re-pin — only",
+    "Exod 14:4, 8, 17 (the LORD's hardening) are in corpus.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'why did god harden pharaohs heart' scattered chiplessly (Heb 4:7,",
+    "Mark 6:52, Ps 73:11 noise; Exod 14:8 at rank 7 by token luck);",
+    "'hardened heart' returned the right verses CHIPLESS (wrong-reason",
+    "class)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 95:8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Hardness of heart"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Exodus 14:4",
+    "Hebrews 4:7",
+    "Ephesians 4:18",
+    "Mark 6:52",
+    "Proverbs 28:14"
+  ],
+  "coversConcepts": [
+    "hardness-of-heart"
+  ]
+}

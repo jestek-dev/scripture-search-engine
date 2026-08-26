@@ -1,0 +1,103 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 22 requesting books — the theme's
+# widest row). Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission happens only by his merge of this PR.
+#
+# Binding the future before God — oaths sworn, vows made and paid — is a
+# recurring biblical practice with no concept. The teaching keystone in
+# corpus is Matt 5:33-37 (Jesus quoting the vow command and forbidding
+# casual swearing), restated at Jas 5:12; the practice side is carried by
+# the Nazirite vow (Num 6) and the vow-psalms in corpus (56; 65; 116).
+# Eccl 5:4-6 (the strongest keep-your-vow text), Num 30, Deut 23:21-23,
+# Judg 11 (Jephthah), Ps 15:4; 76:11; 132:2-5 and Jer 34 are corpus-blocked
+# and ride the re-pin.
+#
+# BOUNDARIES (recorded): Lev 19:12 ("You shall not swear by my name
+# falsely") stays the-name-of-god's anchor — that pack's own register —
+# and Deut 6:13 likewise; both cross-related, not re-anchored. Ruth
+# 1:16-17 (Ruth's oath formula) stays caring-for-aging-parents'. Acts
+# 23:12-14 (the conspirators' curse-vow) rides the re-pin with the row's
+# own care note: route to what Scripture says about binding oaths, not
+# endorsement. Heb 6:13-18 (God's OWN oath) is anchored here — 6:19 stays
+# hope-in-god's, 6:20 priesthood's; disjoint spans.
+#
+# TOKENIZER DISCIPLINE (G-4): "let your yes be yes" normalizes to NOTHING
+# (all stopwords under the shared tokenizer) — recorded structural limit,
+# not papered over; Matt 5:37 is reachable through this pack's anchors
+# instead. Bare `oath` and `vow` are deliberate one-word entries (subject
+# nouns ARE the concept; angels precedent); "vows" stems separately and is
+# carried by "keep your vows".
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: oaths-and-vows
+label: Oaths and vows
+lexicon:
+  - oath
+  - vow
+  - swearing an oath
+  - making a vow
+  - vow to god
+  - keep your vows
+  - oaths in the bible
+anchors:
+  # "'You shall not make false vows, but shall perform to the Lord your
+  # vows'... but I tell you, don't swear at all... let your 'Yes' be
+  # 'Yes' and your 'No' be 'No.'" (WEB, in corpus). Jesus' own teaching
+  # on the practice — the passage every oath query should reach first.
+  - ref: Matthew 5:33-37
+    sources: [editorial]
+    weight: 1.0
+  # "Above all things, my brothers, don't swear... let your 'yes' be
+  # 'yes', and your 'no', 'no'" (WEB, in corpus). The apostolic
+  # restatement.
+  - ref: James 5:12
+    sources: [editorial]
+    weight: 0.95
+  # "Your vows are on me, God. I will give thank offerings to you"
+  # (WEB, in corpus). The psalter's vow-paying register.
+  - ref: Psalms 56:12
+    sources: [editorial]
+    weight: 0.8
+  # "I will pay my vows to the LORD, yes, in the presence of all his
+  # people" (WEB, in corpus). Vows paid publicly, in worship.
+  - ref: Psalms 116:14
+    sources: [editorial]
+    weight: 0.75
+  # "When either man or woman shall make a special vow, the vow of a
+  # Nazirite..." (WEB, in corpus). The law's fullest voluntary-vow
+  # institution; Num 6:24-26 (the blessing) stays benediction's —
+  # disjoint spans.
+  - ref: Numbers 6:1-8
+    sources: [editorial]
+    weight: 0.7
+  # "men indeed swear by a greater one... God, being determined to show
+  # more abundantly... interposed with an oath" (WEB, in corpus). God's
+  # own oath — what human oath-taking gestures at, kept to vv16-18
+  # (6:19 stays hope-in-god's, 6:20 priesthood's).
+  - ref: Hebrews 6:16-18
+    sources: [editorial]
+    weight: 0.7
+  # "When you vow a vow to God, don't defer to pay it... It is better
+  # that you should not vow, than that you should vow and not pay" —
+  # the keep-your-vow keystone. (Ecclesiastes 5 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Ecclesiastes 5:4-5
+    sources: [editorial]
+    weight: 0.95
+  # "When a man vows a vow to the LORD, or swears an oath to bind his
+  # soul with a bond, he shall not break his word" — the law's own
+  # statement. (Numbers 30 NOT in web-subset; re-check at re-pin.)
+  - ref: Numbers 30:2
+    sources: [editorial]
+    weight: 0.85
+  # "He who... swears to his own hurt, and doesn't change" — the
+  # oath-keeper in the LORD's tent. (Psalm 15 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Psalms 15:4
+    sources: [editorial]
+    weight: 0.7
+related:
+  - the-name-of-god
+  - honesty
+  - obedience-to-the-word

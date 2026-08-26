@@ -1,0 +1,76 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 2 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Favoritism in the Bible" / "showing partiality" is a plain lay query
+# with no vocabulary home; James 2:1-9 is Scripture's direct treatment
+# and is in corpus whole (2:13 stays mercy's, 2:14-26 faith-and-works' —
+# disjoint spans).
+#
+# BOUNDARIES: Rom 2:11 ("there is no partiality with God") sits inside
+# divine-judgment's Rom 2:5-11 span and is NOT re-anchored — Eph 6:9 and
+# Col 3:25 carry the same witness free and clear. Lev 19:15 is anchored
+# (19:12 stays the-name-of-god's, 19:26/31 occult-and-divination's,
+# 19:33-34 hospitality's — verse-disjoint claims on a shared chapter,
+# idolatry precedent). Acts 10:34-35 (gentile-inclusion's own text —
+# cross-note for that future row), Deut 10:17, Prov 18:5; 24:23 and Jas
+# 3:17 are corpus-blocked riders.
+#
+# TOKENIZER NOTE (G-4): bare "favoritism" and "partiality" are
+# deliberate one-word entries (inventory rows) — both are the WEB's own
+# words for the sin and no other concept speaks either stem.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: favoritism
+label: Favoritism
+lexicon:
+  - favoritism
+  - partiality
+  - showing partiality
+  - favoritism in the bible
+  - god shows no partiality
+anchors:
+  # "don't hold the faith of our glorious Lord Jesus Christ with
+  # partiality... if you show partiality, you commit sin" (WEB, in
+  # corpus). Scripture's direct treatment: the gold ring and the poor
+  # man, the royal law, the verdict.
+  - ref: James 2:1-9
+    sources: [editorial]
+    weight: 1.0
+  # "You shall not be partial to the poor, nor show favoritism to the
+  # great; but you shall judge your neighbor in righteousness" (WEB, in
+  # corpus). The law's own even-handedness — partiality forbidden in
+  # BOTH directions.
+  - ref: Leviticus 19:15
+    sources: [editorial]
+    weight: 0.9
+  # "To show partiality is not good, yet a man will do wrong for a
+  # piece of bread" (WEB, in corpus).
+  - ref: Proverbs 28:21
+    sources: [editorial]
+    weight: 0.8
+  # "he who is both their Master and yours is in heaven, and there is
+  # no partiality with him" (WEB, in corpus). God's own impartiality as
+  # the ground of ours (Rom 2:11 stays divine-judgment's).
+  - ref: Ephesians 6:9
+    sources: [editorial]
+    weight: 0.75
+  # "he who does wrong will receive again for the wrong that he has
+  # done, and there is no partiality" (WEB, in corpus).
+  - ref: Colossians 3:25
+    sources: [editorial]
+    weight: 0.7
+  # "Truly I perceive that God doesn't show favoritism; but in every
+  # nation he who fears him and works righteousness is acceptable to
+  # him" — Peter at Cornelius' house; also the future
+  # gentile-inclusion row's text, cross-noted. (Acts 10 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Acts 10:34-35
+    sources: [editorial]
+    weight: 0.85
+related:
+  - justification-by-faith
+  - loving-others
+  - divine-judgment

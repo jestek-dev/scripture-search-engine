@@ -1,0 +1,45 @@
+{
+  "id": "judging-others",
+  "query": "judge not",
+  "status": "active",
+  "additionalQueries": [
+    "judging others"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id judging-others (Theme E row, 4 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. One of the",
+    "most-typed Bible queries; disputable-matters covers gray-area",
+    "liberty but not the judge-not command itself, and divine-judgment's",
+    "lexicon (judgment/wrath stems) shares no token with the judge/judg",
+    "stems these queries collapse to. Both core phrasings collapse to",
+    "single significant tokens under the one tokenizer ('judge not' ->",
+    "judge; 'judging others' -> judg), acknowledged as intended rows in",
+    "ontology/lexicon-inventory.yaml. Every requested ref is IN corpus",
+    "— the review's only fully-in-corpus Theme E row. Rom 2:1-3 is",
+    "anchored (2:5-11 stays divine-judgment's); Rom 14:10-12 stays",
+    "judgment-seat-of-christ's; Jas 2:13 stays mercy's; Luke 6:37 stays",
+    "forgiving-others' (all cross-noted, none re-anchored).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'judge not' returned John 8:15 / Matt 7:1-2 / Luke 6:37 by bare",
+    "token, CHIPLESS; 'judging others' the same wrong-reason scatter."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 7:1-5",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Judging others"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 6:41-42",
+    "James 4:11-12",
+    "Romans 14:4",
+    "Romans 14:13",
+    "Romans 2:1-3"
+  ],
+  "coversConcepts": [
+    "judging-others"
+  ]
+}

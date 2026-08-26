@@ -1,0 +1,108 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 8 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Pharaoh hardened his heart" is one of the most-asked Exodus questions
+# and a common self-examination query ("is my heart hardened?"). GIST
+# CARE, per the row's own note: the text carries BOTH directions —
+# Pharaoh hardens his own heart (Exod 8:15, 32; 9:34) and the LORD
+# hardens it (Exod 4:21; 9:12; 14:4) — so this pack DESCRIBES both and
+# adjudicates neither. Only the LORD-hardens texts of Exod 14 are in
+# corpus; the full cycle rides the re-pin.
+#
+# The row's staged extension note ("check a lexicon extension of
+# repentance or sin first") was checked and DECLINED, recorded:
+# repentance's lexicon is the turning register and sin's the
+# wages-diagnosis register; neither speaks harden vocabulary, and
+# answering "hardened heart" with Rom 6:23 would be the wrong text.
+# Reads together, per the row, with Ezekiel's new-heart text (Ezek
+# 11:19, corpus-blocked rider) and Deuteronomy's
+# circumcision-of-the-heart row (Theme I, unbuilt) — cross-noted for
+# that curator.
+#
+# BOUNDARIES: Rom 2:5 ("hardness and unrepentant heart") sits inside
+# divine-judgment's Rom 2:5-11 span — not re-anchored. Matt 19:8
+# ("because of your hardness of heart") sits inside
+# pastoral-marriage-divorce-teaching's Matt 19:3-9 — not re-anchored.
+# Prov 28:14's fears half is fear-of-the-lord's (same batch); the
+# hardens half is this pack's — one claim each, recorded both files.
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant tokens
+# ({harden, heart}, {hardness, heart}, {god, harden, pharaoh, heart}).
+# No bare word fires.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: hardness-of-heart
+label: Hardness of heart
+lexicon:
+  - hardened heart
+  - hardness of heart
+  - god hardened pharaohs heart
+  - do not harden your hearts
+  - is my heart hardened
+anchors:
+  # "Don't harden your heart, as at Meribah, as in the day of Massah in
+  # the wilderness" (WEB, in corpus). Scripture's own second-person
+  # warning — the self-examination query's honest first answer. Kept to
+  # v8 with v7's "Today, oh that you would hear his voice!" left to its
+  # neighbors (95:3 god-reigns, 95:6 worship — disjoint claims).
+  - ref: Psalms 95:8
+    sources: [editorial]
+    weight: 1.0
+  # "he again defines a certain day, 'today'... 'Today if you will hear
+  # his voice, don't harden your hearts'" (WEB, in corpus). Hebrews
+  # re-preaching Ps 95 — the warning still speaking.
+  - ref: Hebrews 4:7
+    sources: [editorial]
+    weight: 0.9
+  # "I will harden Pharaoh's heart, and he will follow after them; and
+  # I will get honor over Pharaoh" (WEB, in corpus). The LORD's own
+  # stated hardening, purpose included — reported in the text's own
+  # voice, adjudicating nothing. The self-hardening half of the cycle
+  # (Exod 8:15, 32; 9:34) is corpus-blocked and rides the re-pin.
+  - ref: Exodus 14:4
+    sources: [editorial]
+    weight: 0.85
+  # "being darkened in their understanding, alienated from the life of
+  # God... because of the hardening of their hearts" (WEB, in corpus).
+  # The NT's diagnosis register.
+  - ref: Ephesians 4:18
+    sources: [editorial]
+    weight: 0.8
+  # "they hadn't understood about the loaves, but their hearts were
+  # hardened" (WEB, in corpus). Hardness in the disciples themselves —
+  # the word is not only for Pharaoh.
+  - ref: Mark 6:52
+    sources: [editorial]
+    weight: 0.75
+  # "Blessed is the man who always fears; but one who hardens his heart
+  # falls into trouble" (WEB, in corpus). The wisdom register;
+  # dual-noted with fear-of-the-lord (same batch) — one claim each.
+  - ref: Proverbs 28:14
+    sources: [editorial]
+    weight: 0.7
+  # "Pharaoh's heart was hardened, and he didn't listen to them, as the
+  # LORD had spoken" — the cycle's refrain. (Exodus 7 NOT in
+  # web-subset; re-check at re-pin, with 8:15, 32; 9:12, 34; 10:1, 20.)
+  - ref: Exodus 7:13-14
+    sources: [editorial]
+    weight: 0.85
+  # "I will take the stony heart out of their flesh, and will give them
+  # a heart of flesh" — the answer text the row itself names. (Ezekiel
+  # 11 NOT in web-subset; re-check at re-pin; reads with the future
+  # new-heart row.)
+  - ref: Ezekiel 11:19
+    sources: [editorial]
+    weight: 0.8
+  # "he who hardens his neck will be destroyed suddenly, and that
+  # without remedy." (Proverbs 29 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Proverbs 29:1
+    sources: [editorial]
+    weight: 0.7
+related:
+  - repentance
+  - obedience-to-the-word
+  - fear-of-the-lord

@@ -1,0 +1,89 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 3 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Betrayed by family" / "betrayed by a friend" are heavy pastoral
+# queries with no home: pastoral-betrayal-and-marriage-crisis is
+# marriage-specific — every one of its lexicon entries carries a spouse
+# token. This pack is the general register: friend and kin betrayal, and
+# the Judas narrative that locate queries mean.
+#
+# DUAL ANCHOR, deliberate and recorded in both files: Ps 55:12-14 is
+# pastoral-betrayal-and-marriage-crisis's 1.0 anchor and this pack's
+# keystone — the psalm names betrayal by an intimate more precisely than
+# anything else in Scripture, and both registers are honest claims on it
+# (prosperity-of-the-wicked / wrestling-with-god Ps 73 precedent). Its
+# other anchors (55:20-22 &c.) stay that pack's alone.
+#
+# TOKENIZER DESIGN, measured: NO bare `betray` entry — the betray stem
+# appears in every marriage-crisis query ("betrayed by my spouse"), and
+# a bare token would fire this pack's Judas anchors on a person in
+# marriage crisis. The bare noun "betrayal" stems SEPARATELY (`betrayal`
+# vs `betray` under the shared stemmer, verified) and is admitted as a
+# one-word entry (inventory row) — it cannot reach the crisis queries.
+#
+# Esther checked and declined per the row's own flag (Haman is an open
+# enemy, not friend-or-kin betrayal). Ps 41:9 ("who ate bread with me"),
+# Ps 109:4-5, 2 Sam 15:12, 31 (Ahithophel) and Obad 1:10-14 are
+# corpus-blocked riders; John 13:18 quotes Ps 41:9 in corpus and carries
+# it meanwhile.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: betrayal
+label: Betrayal
+lexicon:
+  - betrayal
+  - betrayed by a friend
+  - betrayed by family
+  - betrayal in the bible
+  - who betrayed jesus
+  - judas betrays jesus
+anchors:
+  # "For it was not an enemy who insulted me... But it was you, a man
+  # like me, my companion, and my familiar friend. We took sweet
+  # fellowship together" (WEB, in corpus). The canon's most precise
+  # naming of intimate betrayal; DUAL with
+  # pastoral-betrayal-and-marriage-crisis (recorded both files).
+  - ref: Psalms 55:12-14
+    sources: [editorial]
+    weight: 1.0
+  # "'He who eats bread with me has lifted up his heel against me.'...
+  # he was troubled in spirit, and testified, 'Most certainly I tell
+  # you that one of you will betray me'" (WEB, in corpus). Jesus
+  # naming his betrayal with Ps 41:9's own words.
+  - ref: John 13:18-21
+    sources: [editorial]
+    weight: 0.9
+  # "Judas, do you betray the Son of Man with a kiss?" (WEB, in
+  # corpus).
+  - ref: Luke 22:47-48
+    sources: [editorial]
+    weight: 0.85
+  # "he who betrayed him had given them a sign... 'Whoever I kiss, he
+  # is the one'... Jesus said to him, 'Friend, why are you here?'"
+  # (WEB, in corpus). The arrest — betrayal answered with "Friend."
+  - ref: Matthew 26:47-50
+    sources: [editorial]
+    weight: 0.8
+  # "Even my own familiar friend, in whom I trusted, who ate bread with
+  # me, has lifted up his heel against me" — the verse John 13:18
+  # quotes. (Psalm 41 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 41:9
+    sources: [editorial]
+    weight: 0.9
+  # "In return for my love, they are my adversaries; but I am in
+  # prayer." (Psalm 109 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 109:4-5
+    sources: [editorial]
+    weight: 0.7
+  # Ahithophel, David's own counselor, with Absalom in the conspiracy.
+  # (2 Samuel 15 NOT in web-subset; re-check at re-pin.)
+  - ref: 2 Samuel 15:12
+    sources: [editorial]
+    weight: 0.65
+related:
+  - betrayal-and-marriage-crisis
+  - friendship
+  - forgiving-others

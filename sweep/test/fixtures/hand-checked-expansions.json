@@ -370,7 +370,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
+      "query": "how does the incarnation relate to trinity — father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"
@@ -390,6 +390,13 @@
       "conceptId": "deity-of-christ"
     },
     {
+      "queryId": "multi-concept:00e75eb22e774083",
+      "query": "integrity and the righteous suffer",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "integrity"
+    },
+    {
       "queryId": "multi-concept:010b0bcaf4aa6dd7",
       "query": "verses about the deity of christ and mormon evangelism",
       "register": "church-member",
@@ -404,18 +411,11 @@
       "conceptId": "the-house-of-god"
     },
     {
-      "queryId": "multi-concept:0146bea567de0732",
-      "query": "sermon connecting god's guidance and wisdom from god",
-      "register": "pastor",
+      "queryId": "multi-concept:013d3d9a375e4d3c",
+      "query": "how does betrayal relate to friendship",
+      "register": "church-member",
       "expectationKind": "concept-anchors",
-      "conceptId": "guidance"
-    },
-    {
-      "queryId": "multi-concept:0170d965bebede44",
-      "query": "sermon connecting god of all comfort and loneliness",
-      "register": "pastor",
-      "expectationKind": "concept-anchors",
-      "conceptId": "god-of-all-comfort"
+      "conceptId": "betrayal"
     }
   ],
   "remembered-phrase": [
@@ -560,6 +560,13 @@
   ],
   "worship-planning": [
     {
+      "queryId": "worship-planning:00154883aa792cb9",
+      "query": "benediction on hardness of heart",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "hardness-of-heart"
+    },
+    {
       "queryId": "worship-planning:0032812301ef1379",
       "query": "responsive reading about hearing and doing",
       "register": "worship-leader",
@@ -621,13 +628,6 @@
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
       "conceptId": "gods-love"
-    },
-    {
-      "queryId": "worship-planning:031116800d46a03f",
-      "query": "responsive reading about angels",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "angels"
     }
   ]
 }
