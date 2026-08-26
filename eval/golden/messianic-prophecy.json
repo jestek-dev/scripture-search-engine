@@ -1,0 +1,46 @@
+{
+  "id": "messianic-prophecy",
+  "query": "messianic prophecy",
+  "status": "active",
+  "additionalQueries": [
+    "prophecies about jesus",
+    "the branch prophecy"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id messianic-prophecy (Theme B row, 6 requesting books),",
+    "ABSORBING the-branch (the review's own offered fold: 'could",
+    "alternatively fold into a messianic-prophecy pack ... decide one",
+    "design before minting' — one design decided here; never a second",
+    "id). Engine admission only by Jesse's merge of this PR.",
+    "Measured gap before the pack (2026-08-26, fixture corpus):",
+    "'messianic prophecy' returned prophecy-token scatter (1 Thess 5:20",
+    "#1); 'prophecies about jesus' pure jesu-token noise (John 8:25 #1);",
+    "'the branch prophecy' returned Neh 8:15 ('olive branches') and Rom",
+    "11's grafting branches — homonym noise with the title unreachable.",
+    "LOCATOR DESIGN (covenant #6, per the log's own rule): every anchor",
+    "comment states 'the NT cites this passage' as attributed fact, never",
+    "adjudicated fulfillment; the gist describes, the engine reports.",
+    "BOUNDARY (decided before minting, as the row requires): this pack",
+    "does NOT anchor Isa 42-53 — the servant songs belong to",
+    "servant-of-the-lord (same batch) and Isa 53:5's atonement register",
+    "to the-cross. Ps 22; 110; 118:22-26; Isa 7:14; 9:1-7; 11:1-10; Dan",
+    "7:13-14; Zech 9:9; 12:10; Jer 23:5-6; Zech 3:8; 6:12-13 are",
+    "corpus-blocked and ride the re-pin as noted anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 33:14-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Messianic prophecy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 16:10",
+    "Psalms 40:6-8"
+  ],
+  "coversConcepts": [
+    "messianic-prophecy"
+  ]
+}

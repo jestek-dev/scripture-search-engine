@@ -112,6 +112,13 @@
       "conceptId": "pregnancy-and-child-loss"
     },
     {
+      "queryId": "bare-word:039b1751609c7754",
+      "query": "testament",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "messianic-prophecy"
+    },
+    {
       "queryId": "bare-word:040eb379271f55d0",
       "query": "intelligent",
       "register": "church-member",
@@ -119,25 +126,18 @@
       "conceptId": "design-in-creation"
     },
     {
+      "queryId": "bare-word:046b34e558dbffcc",
+      "query": "booth",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "appointed-feasts"
+    },
+    {
       "queryId": "bare-word:04b447783afe5bfd",
       "query": "opportunity",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "stewardship-of-days"
-    },
-    {
-      "queryId": "bare-word:04efaf080f5a3e74",
-      "query": "four",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "serious-illness-and-dying"
-    },
-    {
-      "queryId": "bare-word:056dc4cc3470ead9",
-      "query": "addiction",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "freedom-from-bondage"
     }
   ],
   "concept-register": [
@@ -184,6 +184,13 @@
       "conceptId": "refuge-and-justice-for-the-oppressed"
     },
     {
+      "queryId": "concept-register:006a980da9784d82",
+      "query": "verses on the priesthood",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "priesthood"
+    },
+    {
       "queryId": "concept-register:006ed4e163e21997",
       "query": "bible verses about all things god works for the good",
       "register": "church-member",
@@ -203,13 +210,6 @@
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "trustworthiness-of-scripture"
-    },
-    {
-      "queryId": "concept-register:00a76b1542823238",
-      "query": "scripture about is the gospel complete",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "no-other-gospel"
     }
   ],
   "felt-need": [
@@ -370,7 +370,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
+      "query": "how does the incarnation relate to trinity — father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"
@@ -397,6 +397,13 @@
       "conceptId": "deity-of-christ"
     },
     {
+      "queryId": "multi-concept:011515cea0bf13e6",
+      "query": "how does the house of god relate to worship",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "the-house-of-god"
+    },
+    {
       "queryId": "multi-concept:0146bea567de0732",
       "query": "sermon connecting god's guidance and wisdom from god",
       "register": "pastor",
@@ -409,13 +416,6 @@
       "register": "pastor",
       "expectationKind": "concept-anchors",
       "conceptId": "god-of-all-comfort"
-    },
-    {
-      "queryId": "multi-concept:018384a69a1ff1b1",
-      "query": "sermon connecting the deity of christ and the incarnation",
-      "register": "pastor",
-      "expectationKind": "concept-anchors",
-      "conceptId": "deity-of-christ"
     }
   ],
   "remembered-phrase": [
@@ -574,6 +574,20 @@
       "conceptId": "honor-the-son"
     },
     {
+      "queryId": "worship-planning:0093ae249b74a6d8",
+      "query": "responsive reading about messianic prophecy",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "messianic-prophecy"
+    },
+    {
+      "queryId": "worship-planning:01485d0fcad402ec",
+      "query": "benediction on god's plan for israel",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "gods-plan-for-israel"
+    },
+    {
       "queryId": "worship-planning:01c22d7c54a69fe9",
       "query": "benediction on design in creation",
       "register": "worship-leader",
@@ -614,20 +628,6 @@
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
       "conceptId": "nations-and-peoples"
-    },
-    {
-      "queryId": "worship-planning:036ecc4f74ef57a2",
-      "query": "opening scripture for a service on in the beginning god created",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "creation"
-    },
-    {
-      "queryId": "worship-planning:03829e2cf6a77fff",
-      "query": "setlist theme grow in christ",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "spiritual-growth"
     }
   ]
 }

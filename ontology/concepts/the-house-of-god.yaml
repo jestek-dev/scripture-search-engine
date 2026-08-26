@@ -1,0 +1,87 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme A row in tag-gaps-review.md, 6 requesting books; absorbs the
+# staged gods-dwelling-place fold per the log). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission happens only by his merge of this PR.
+#
+# God's house — the dwelling-of-God theme that runs tabernacle → temple
+# → Haggai's latter-glory promise → the church as habitation.
+# EXTENSION CHECK (the row's own flag, run before minting): worship's
+# and presence-of-god's lexicons carry no house/temple/dwelling surface
+# form, and measurement confirmed neither serves the query ('the house
+# of god' returned proximity scatter, Acts 2:36 #1). Minted.
+# The Ezekiel fold's glory-vs-dwelling flag is recorded: no glory-of-god
+# pack exists yet; when that later-batch row is curated, weigh the
+# overlap then (this pack claims dwelling, not glory).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens ({house, god}, {house, lord}, {temple, bible},
+# {gods, dwell, place}). Bare `temple` is deliberately NOT an entry
+# (skipped row: the body-as-temple sense is a different register this
+# pack must never claim). {house} and {lord}/{god(s)} are common tokens
+# but no neighbor shares a phrase; worst pair stays far under limits.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: the-house-of-god
+label: The house of God
+lexicon:
+  - the house of god
+  - house of the lord
+  - the temple in the bible
+  - gods dwelling place
+anchors:
+  # "I have heard your prayer, and have chosen this place for myself
+  # for a house of sacrifice... if my people who are called by my name
+  # will humble themselves... I have chosen and made this house holy,
+  # that my name may be there forever" (WEB, in corpus). God's own
+  # answer at the temple dedication — the house chosen, his name and
+  # eyes and heart there.
+  - ref: 2 Chronicles 7:12-16
+    sources: [editorial]
+    weight: 1.0
+  # "One thing I have asked of the LORD... that I may dwell in the
+  # LORD's house all the days of my life" (WEB, in corpus). The
+  # psalmist's one desire — the house as where God is sought.
+  - ref: Psalms 27:4
+    sources: [editorial]
+    weight: 0.9
+  # "the whole building, fitted together, grows into a holy temple in
+  # the Lord; in whom you also are built together for a habitation of
+  # God in the Spirit." (WEB, in corpus). Where the theme lands in the
+  # NT — the church as God's dwelling. HONEST OVERLAP (recorded):
+  # christ-the-cornerstone anchors the containing Eph 2:19-22 for the
+  # cornerstone title; this 21-22 claim is the habitation clause.
+  - ref: Ephesians 2:21-22
+    sources: [editorial]
+    weight: 0.85
+  # "Is it a time for you yourselves to dwell in your paneled houses,
+  # while this house lies waste?" register — the minting book's summons
+  # to build, with the latter-glory promise (2:9). (Haggai NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Haggai 1:3-9
+    sources: [editorial]
+    weight: 0.9
+  # The latter glory of this house greater than the former. (Haggai
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Haggai 2:6-9
+    sources: [editorial]
+    weight: 0.8
+  # The returned exiles rebuild the house — foundation laid with praise.
+  # (Ezra 3 NOT in web-subset; re-check at re-pin.)
+  - ref: Ezra 3:8-11
+    sources: [editorial]
+    weight: 0.7
+  # The vision's climax: "the LORD's glory came into the house" and the
+  # city's new name, "The LORD is there" — the staged
+  # gods-dwelling-place fold's own texts. (Ezekiel 43 / 48 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Ezekiel 43:4-7
+    sources: [editorial]
+    weight: 0.75
+related:
+  - worship
+  - presence-of-god
+  - gathering-together
+  - christ-the-cornerstone

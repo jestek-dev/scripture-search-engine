@@ -1,0 +1,43 @@
+{
+  "id": "priesthood",
+  "query": "high priest",
+  "status": "active",
+  "additionalQueries": [
+    "royal priesthood",
+    "priests in the old testament"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id priesthood (Theme A row, 9 requesting books) — engine",
+    "admission only by Jesse's merge of this PR. Measured gap before the",
+    "pack (2026-08-26, fixture corpus): 'high priest' returned Heb 4:14 #1",
+    "by exact phrase but CHIPLESS (wrong-reason class) and verse-by-verse",
+    "(the 4:14-16 confession-and-throne-of-grace unit never surfaced as a",
+    "unit), with narrative Caiaphas hits (John 11:49, Matt 26:3)",
+    "interleaved; 'priests in the old testament' had no curated home.",
+    "REGISTER DESIGN (the Hebrews merge's binding note, decided here): ONE",
+    "id spans the OT institution and Christ's high-priestly office —",
+    "Heb 2:17-18; 5:1-10; 7:11-28 (the intercession register, 'Jesus prays",
+    "for me') are corpus-blocked and ride the re-pin as noted anchors.",
+    "The Job `mediator` row (log) is cross-noted, deliberately not built",
+    "or absorbed here."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hebrews 4:14-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The priesthood"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 10:19-22",
+    "Hebrews 6:20",
+    "1 Peter 2:5",
+    "1 Peter 2:9",
+    "Deuteronomy 33:8-11"
+  ],
+  "coversConcepts": [
+    "priesthood"
+  ]
+}

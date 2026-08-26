@@ -23,6 +23,18 @@ lexicon:
   - guilt
   - guilty
   - condemnation
+  # TAG-GAP ROLLOUT batch 1 (2026-08-26): the confession-of-sin Theme A
+  # row resolved as its own standing advice directs — a lexicon
+  # extension HERE, not a new id (this pack already anchors 1 John 1:9,
+  # Ps 32:5 and Isa 1:18; a sibling concept would dilute exactly the
+  # anchors G4 protects). Extended here and NOT on repentance: the
+  # shared-phrase rule forbids both, and the searcher's question —
+  # what happens when I confess — is this pack's answer. The noun
+  # tokens are distinct under the one tokenizer ("confession" does not
+  # stem to "confess"), so both forms are carried. Fixture:
+  # confession-of-sin.json.
+  - confess your sins
+  - confession of sin
 anchors:
   - ref: Psalms 103:12
     sources: [editorial]
@@ -70,6 +82,16 @@ anchors:
   - ref: Psalms 32:1-2
     sources: [torrey]
     weight: 0.85
+  # "For I know my transgressions. My sin is constantly before me.
+  # Against you, and you only, I have sinned" (WEB, verified in
+  # web-subset). The psalter's own confession — David naming the sin
+  # before the God who forgives it. Added with the confession-of-sin
+  # lexicon extension (TAG-GAP batch 1, 2026-08-26); vv10-12 belong to
+  # pastoral-relapse-and-restoration and v7 to its refuge register —
+  # this 3-4 span claims only the confession itself.
+  - ref: Psalms 51:3-4
+    sources: [editorial]
+    weight: 0.8
   # "You, Lord, are good, and ready to forgive." Torrey: PARDON ("Is
   # granted Readily").
   - ref: Psalms 86:5

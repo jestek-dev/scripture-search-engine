@@ -1,0 +1,124 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme A row in tag-gaps-review.md, 24 requesting books — the log's
+# most-merged row; "never a second row"). Adopted as display vocabulary by
+# Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission happens
+# only by his merge of this PR — building the pack decides nothing.
+#
+# The worship of idols and other gods — command-law spine (Exod 20; Lev
+# 19:4; Deut 7), the prophets' idol-satires (Isa 40-41; 44; Jer 10),
+# narrative laboratory (Judges/Kings), and the NT close (1 John 5:21;
+# Rev 21:8). `worship` covers the positive side only (the row's own
+# rationale); the OBJECT register lives here — the relationship register
+# (spiritual-adultery) and the monotheism claim (no-other-god, live) are
+# deliberately separate concepts, cross-linked below. The idols-in-the-
+# heart register (Ezek 14:3) and the golden-calf narrative (Exod 32) are
+# corpus-blocked; see the deferred anchors at the end.
+#
+# Attribution: ALL anchors [editorial] (the tag-gap log and review are
+# research corroboration, never engine sources).
+#
+# TOKENIZER DISCIPLINE (G-4, verified with the engine's significantWords):
+# "idolatry" is the concept's own subject noun, a deliberate bare entry
+# (inventory row admitted: [idolatry]). "false gods" keeps {false, gods};
+# bare `gods` NEVER fires this concept (no-other-god's recorded hazard:
+# it would hijack the deification guard's "you are gods" query) — the
+# skipped row records it. No multi-word entry collapses to one token.
+# Worst neighbor overlaps: no-other-god (shared {god(s)} via "false
+# gods"), worship ({worship} via "worship of idols"), false-prophets
+# ({false}) — 1 shared token each, far under the 0.6 limit; zero shared
+# phrases anywhere.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: idolatry
+label: Idolatry
+lexicon:
+  # The subject noun itself — what people type (inventory row).
+  - idolatry
+  - idols in the bible
+  - worship of idols
+  # The most-searched idolatry narrative, by name; its own text (Exod 32)
+  # is corpus-blocked, so the curated rung is what answers until then.
+  - golden calf
+  # The remembered command-language form ("graven image" is the classic
+  # English of Exod 20:4; WEB reads "engraved image" at Deut 7:25).
+  - graven image
+  - false gods
+anchors:
+  # "You shall have no other gods before me. You shall not make for
+  # yourselves an idol... you shall not bow yourself down to them, nor
+  # serve them" (WEB, in corpus). The first and second commandments —
+  # the command-law spine's head. HONEST OVERLAP (recorded): the
+  # containing range Exod 20:1-17 is the-ten-commandments' lookup
+  # anchor, Exod 20:8-11 sabbath-rest's, Exod 20:12
+  # caring-for-aging-parents' — the chapter honestly carries all four
+  # claims on four different spans.
+  - ref: Exodus 20:3-6
+    sources: [editorial]
+    weight: 1.0
+  # "the customs of the peoples are vanity; for one cuts a tree out of
+  # the forest... They are like a palm tree, of turned work, and don't
+  # speak... Don't be afraid of them; for they can't do evil, neither is
+  # it in them to do good." (WEB, in corpus). The idol-satire register —
+  # Jeremiah's mockery of what a made god cannot do.
+  - ref: Jeremiah 10:3-5
+    sources: [editorial]
+    weight: 0.9
+  # "To whom then will you liken God? ... A workman has cast an image,
+  # and the goldsmith overlays it with gold" (WEB, in corpus). The trial
+  # speeches' opening question — incomparability against the workshop.
+  - ref: Isaiah 40:18-20
+    sources: [editorial]
+    weight: 0.85
+  # "How long will you waver between the two sides? If the LORD is God,
+  # follow him; but if Baal, then follow him." (WEB, in corpus).
+  # Elijah's Carmel challenge — the narrative laboratory's sharpest
+  # sentence; divided worship named as the issue.
+  - ref: 1 Kings 18:21
+    sources: [editorial]
+    weight: 0.85
+  # "Don't turn to idols, nor make molten gods for yourselves. I am the
+  # LORD your God." (WEB, in corpus). The holiness-code command form.
+  - ref: Leviticus 19:4
+    sources: [editorial]
+    weight: 0.75
+  # "You shall burn the engraved images of their gods with fire...
+  # for it is an abomination to the LORD your God." (WEB, in corpus).
+  # The no-tolerance statute — idolatry as snare.
+  - ref: Deuteronomy 7:25-26
+    sources: [editorial]
+    weight: 0.7
+  # "stubbornness is as idolatry and teraphim" (WEB, in corpus). The
+  # widened register: rebellion against God's word judged AS idolatry —
+  # Samuel to Saul.
+  - ref: 1 Samuel 15:23
+    sources: [editorial]
+    weight: 0.65
+  # "Little children, keep yourselves from idols." (WEB, in corpus).
+  # The NT's last word on the subject — John's closing charge.
+  - ref: 1 John 5:21
+    sources: [editorial]
+    weight: 0.8
+  # "The LORD saw it... they provoked him to jealousy with strange gods"
+  # register — the golden-calf narrative itself. (Exodus 32 NOT in
+  # web-subset — no quote claimed here; the chapter is the "golden calf"
+  # query's own text and becomes this pack's narrative keystone at the
+  # re-pin.)
+  - ref: Exodus 32:1-8
+    sources: [editorial]
+    weight: 0.9
+  # The fullest idol-satire in Scripture — the workman's fire, half for
+  # baking, half for a god. (Isaiah 44 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Isaiah 44:9-20
+    sources: [editorial]
+    weight: 0.85
+  # "these men have taken their idols into their heart" register — the
+  # idols-in-the-heart text the log names. (Ezekiel 14 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Ezekiel 14:3-7
+    sources: [editorial]
+    weight: 0.7
+related:
+  - no-other-god
+  - worship
+  - the-ten-commandments

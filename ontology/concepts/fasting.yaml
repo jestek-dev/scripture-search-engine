@@ -1,0 +1,88 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme A row in tag-gaps-review.md, 12 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The practice of fasting — Jesus' teaching on secret fasting (Matt
+# 6:16-18), fasting in worship and commissioning (Acts 13:2-3), and the
+# OT's penitential and petitionary fasts (corpus-blocked, deferred
+# anchors below). The row's rationale: `repentance` covers the turning
+# of the heart, not the practice, and no id names fasting anywhere.
+# Esther's fasting-without-any-named-prayer reticence (Esth 4:16; 9:31)
+# is the log's own caveat and rides with that deferred anchor rather
+# than being smoothed over. 1 Kgs 21:9-12 (a fast as cover for judicial
+# murder) was checked and NOT anchored in this first cut: a cautionary
+# ref the log records, better added when its chapter is assertable.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): "fasting" stems to the bare
+# token `fast` (inventory row admitted: [fast], with the hold-fast
+# homonym noted); "when you fast" ALSO collapses to {fast} — Matt
+# 6:16-17's own repeated clause, acknowledged in the collapses table.
+# All other entries keep >= 2 significant tokens ({fast, bible},
+# {fast, prayer}, {biblical, fast}). Worst neighbor overlap: prayer
+# ({prayer} via "fasting and prayer") — 1 shared token, zero shared
+# phrases.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: fasting
+label: Fasting
+lexicon:
+  # The subject noun (bare stem `fast` — inventory row).
+  - fasting
+  - fasting in the bible
+  # The paired practice as people search it.
+  - fasting and prayer
+  # Matt 6:16-17's own clause (collapses to {fast} — acknowledged).
+  - when you fast
+  - biblical fasting
+anchors:
+  # "when you fast, don't be like the hypocrites... But you, when you
+  # fast, anoint your head and wash your face, so that you are not seen
+  # by men to be fasting, but by your Father who is in secret" (WEB, in
+  # corpus). Jesus' one sustained teaching on the practice — assumed
+  # ('when', not 'if'), reoriented to the Father who sees in secret.
+  - ref: Matthew 6:16-18
+    sources: [editorial]
+    weight: 1.0
+  # "As they served the Lord and fasted, the Holy Spirit said,
+  # 'Separate Barnabas and Saul for me'... when they had fasted and
+  # prayed and laid their hands on them, they sent them away." (WEB, in
+  # corpus). Fasting in worship and commissioning — the church's
+  # practice, not only the individual's.
+  - ref: Acts 13:2-3
+    sources: [editorial]
+    weight: 0.9
+  # Isaiah's fast God chooses — loosing bonds, sharing bread — the
+  # chapter every fasting study reaches. (Isaiah 58 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Isaiah 58:3-7
+    sources: [editorial]
+    weight: 0.95
+  # "Turn to me with all your heart, and with fasting, and with
+  # weeping" register — the penitential corporate fast. (Joel NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Joel 2:12-15
+    sources: [editorial]
+    weight: 0.85
+  # Esther's three-day fast before the throne room — fasting without
+  # any named prayer, the book's defining reticence (log caveat carried
+  # verbatim in intent). (Esther NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Esther 4:15-16
+    sources: [editorial]
+    weight: 0.75
+  # Daniel's mourning-and-petition fasts. (Daniel NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Daniel 9:3
+    sources: [editorial]
+    weight: 0.7
+  # Ezra's fast for a safe journey — petition with self-humbling.
+  # (Ezra NOT in web-subset; re-check at re-pin.)
+  - ref: Ezra 8:21-23
+    sources: [editorial]
+    weight: 0.7
+related:
+  - prayer
+  - repentance

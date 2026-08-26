@@ -1,0 +1,38 @@
+{
+  "id": "fasting",
+  "query": "fasting",
+  "status": "active",
+  "additionalQueries": [
+    "fasting and prayer"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id fasting (Theme A row, 12 requesting books) — engine",
+    "admission only by Jesse's merge of this PR. Measured gap before the",
+    "pack (2026-08-26, fixture corpus): 'fasting' returned single-verse",
+    "token hits (Matt 6:17 #1, Matt 17:21, Mark 9:29) with no curated chip",
+    "— the teaching unit Matt 6:16-18 never surfaced as a unit;",
+    "'fasting and prayer' was carried entirely by the prayer concept",
+    "(1 Cor 7:5 exact phrase #1, then Theme: Prayer anchors) with the",
+    "practice's own texts absent.",
+    "The practice's OT spine (Isa 58:3-7; Joel 2:12; Esth 4:16; Dan 9:3;",
+    "Ezra 8:21; Neh 1:4) is corpus-blocked and rides the re-pin as noted",
+    "anchors; Esther's fasting-without-named-prayer reticence is carried",
+    "in the pack comment per the log."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 6:16-18",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Fasting"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 13:2-3",
+    "Luke 18:9-14"
+  ],
+  "coversConcepts": [
+    "fasting"
+  ]
+}

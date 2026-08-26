@@ -1,0 +1,68 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme B row in tag-gaps-review.md, Romans-minted: "three full
+# chapters of Romans answer this and users ask it constantly").
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission happens only by his merge of
+# this PR.
+#
+# GIST DISCIPLINE (the row's own rule, honored + CLAUDE.md #6): the
+# wording stays descriptive of Rom 9-11's OWN claims — God has not
+# rejected his people; a remnant by grace; a partial hardening until
+# the fullness of the Gentiles; the gifts and calling irrevocable —
+# and adjudicates no eschatology (millennial views are the log's
+# stated non-criterion). Esther's national-preservation theme was
+# routed by the log to persecuted-for-gods-word (deferred row), not
+# here — the doctrinal register kept clean, per the log.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens ({god, reject, israel}, {israel, saved}, {israel,
+# church}, {gods, plan, israel}). Shared with restoration-of-israel:
+# {israel, god(s)} (2 tokens, ratio under limit; zero shared phrases —
+# the reject/saved/church/plan members are distinctive). Shared with
+# salvation: {saved} (1 token).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: gods-plan-for-israel
+label: "God's plan for Israel"
+lexicon:
+  - has god rejected israel
+  - will israel be saved
+  - israel and the church
+  - gods plan for israel
+anchors:
+  # "did God reject his people? May it never be! ... God didn't reject
+  # his people, whom he foreknew." (WEB, in corpus). The chapter's own
+  # opening question and answer — the query in the text's words. Kept
+  # to vv1-2: the remnant pack (same batch) anchors 11:4-5.
+  - ref: Romans 11:1-2
+    sources: [editorial]
+    weight: 1.0
+  # "a partial hardening has happened to Israel, until the fullness of
+  # the Gentiles has come in, and so all Israel will be saved...
+  # concerning the election, they are beloved for the fathers' sake.
+  # For the gifts and the calling of God are irrevocable." (WEB, in
+  # corpus). The mystery stated — quoted as the text states it, with
+  # no timetable or scheme adjudicated.
+  - ref: Romans 11:25-29
+    sources: [editorial]
+    weight: 0.95
+  # "my heart's desire and my prayer to God is for Israel, that they
+  # may be saved." (WEB, in corpus). Paul's own prayer — the pastoral
+  # register of the same question.
+  - ref: Romans 10:1
+    sources: [editorial]
+    weight: 0.75
+  # "I could wish that I myself were accursed... for my relatives
+  # according to the flesh, who are Israelites; whose is the adoption,
+  # the glory, the covenants" — the argument's opening lament and
+  # Israel's privileges. (Romans 9 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Romans 9:1-5
+    sources: [editorial]
+    weight: 0.9
+related:
+  - remnant
+  - restoration-of-israel
+  - nations-and-peoples
