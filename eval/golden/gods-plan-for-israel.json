@@ -1,0 +1,42 @@
+{
+  "id": "gods-plan-for-israel",
+  "query": "has god rejected israel",
+  "status": "active",
+  "additionalQueries": [
+    "will israel be saved",
+    "israel and the church"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id gods-plan-for-israel (Theme B row, Romans-minted:",
+    "'three full chapters of Romans answer this and users ask it",
+    "constantly') — engine admission only by Jesse's merge of this PR.",
+    "Measured gap before the pack (2026-08-26, fixture corpus): 'has god",
+    "rejected israel' returned proximity scatter (1 Thess 4:8 #1, 1 Pet",
+    "2:4 #2 — 'rejected by men'!) with Rom 11:1 buried at #3 chipless;",
+    "'will israel be saved' was carried entirely by Theme: Salvation",
+    "(Eph 2:8 #1 and five more) — personal-soteriology answers to a",
+    "redemptive-history question, with Rom 11:25-29 absent; 'israel and",
+    "the church' pure israel-token scatter.",
+    "GIST DISCIPLINE (the row's own rule, honored): wording stays",
+    "descriptive of Rom 11's own claims and adjudicates no eschatology",
+    "(millennial views are a stated non-criterion). Rom 9:1-5 and 10:1's",
+    "companion 9:1-3 lament are corpus-blocked (Romans 9 absent) and",
+    "ride the re-pin as noted anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 11:1-2",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's plan for Israel"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 11:25-29",
+    "Romans 10:1"
+  ],
+  "coversConcepts": [
+    "gods-plan-for-israel"
+  ]
+}

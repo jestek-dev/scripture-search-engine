@@ -1,0 +1,39 @@
+{
+  "id": "remnant",
+  "query": "what is the remnant in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "remnant of israel"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id remnant (Theme B row, 13 requesting books — 'the",
+    "load-bearing hope word of the prophets') — engine admission only by",
+    "Jesse's merge of this PR. Measured gap before the pack (2026-08-26,",
+    "fixture corpus): 'what is the remnant in the bible' returned Isa 1:9",
+    "#1 by bare token, CHIPLESS (wrong-reason class), with",
+    "preached-vocabulary noise (Ps 42:6, John 11:35 on 'bible')",
+    "interleaved; 'remnant of israel' likewise had no curated home.",
+    "1 Kgs 19:18 and Rom 11:4-5 — the reserved-seven-thousand text and",
+    "Paul's own remnant-by-grace reading of it — carry the doctrine",
+    "across the testaments inside the corpus; the prophets' phrase",
+    "witnesses (Isa 10:20-22; Mic 5:7-8; Zeph 3:12-13; Jer 23:3) are",
+    "corpus-blocked and ride the re-pin as noted anchors. Malachi's",
+    "no-remnant-word caveat is carried in the pack comment per the log."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 1:9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The remnant"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Kings 19:18",
+    "Romans 11:4-5"
+  ],
+  "coversConcepts": [
+    "remnant"
+  ]
+}

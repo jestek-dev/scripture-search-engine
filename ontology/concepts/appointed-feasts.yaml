@@ -1,0 +1,81 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme A row in tag-gaps-review.md, 6 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The appointed feasts — the LORD's festal calendar as a system (WEB
+# Ezra 3:5: "set feasts"). BOUNDARY (log, honored): scoped to
+# complement, not absorb, passover — Passover-specific queries go
+# there; calendar-as-a-system queries land here. The one-wider-feasts
+# merge stays flagged as the reviewer's call (Leviticus doc Decisions
+# #45) and is NOT decided by this pack. Purim (Esth 9:20-32) is the
+# log's own caveat case — instituted outside the law of Moses, imposed
+# by the Jews on themselves — carried with that deferred anchor, not
+# smoothed over. Isa 1:14 ("my soul hates your appointed feasts") is
+# deliberately NOT anchored here: that is empty-worship's rejection
+# context.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens ({appoint, feast}, {feast, lord}, {feast,
+# tabernacl}, {feast, booth}, {biblical, feast}). Shared with passover:
+# {feast} (1 token, zero shared phrases). Bare `feast` is deliberately
+# NOT an entry (skipped row: wedding/banquet senses abound).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: appointed-feasts
+label: The appointed feasts
+lexicon:
+  - appointed feasts
+  - feasts of the lord
+  # The feast's common English name — the WEB itself says "booths" /
+  # "temporary shelters", so only a curated rung carries this query.
+  - feast of tabernacles
+  - feast of booths
+  - biblical feasts
+anchors:
+  # "They found written in the law how the LORD had commanded by Moses
+  # that the children of Israel should dwell in booths in the feast of
+  # the seventh month... All the assembly... made temporary shelters...
+  # There was very great gladness." (WEB, in corpus). The feast of
+  # booths rediscovered and kept — the calendar obeyed with joy.
+  - ref: Nehemiah 8:13-18
+    sources: [editorial]
+    weight: 1.0
+  # "the set feasts of the LORD... These are the appointed feasts of
+  # the LORD" register — the calendar chapter itself: sabbath,
+  # Passover, firstfruits, weeks, trumpets, atonement, booths. The
+  # pack's keystone once the corpus carries it. (Leviticus 23 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Leviticus 23:1-44
+    sources: [editorial]
+    weight: 0.95
+  # The offerings-by-appointment calendar. (Numbers 28-29 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Numbers 28:16-31
+    sources: [editorial]
+    weight: 0.7
+  # The three pilgrimage feasts — "three times in a year all of your
+  # males shall appear before the LORD". (Deuteronomy 16 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Deuteronomy 16:16-17
+    sources: [editorial]
+    weight: 0.8
+  # "the feast of tabernacles, as it is written... all the set feasts
+  # of the LORD" — the restored community resumes the calendar. (Ezra 3
+  # NOT in web-subset; re-check at re-pin. WEB wording note from the
+  # log: "set feasts".)
+  - ref: Ezra 3:4-6
+    sources: [editorial]
+    weight: 0.7
+  # Purim instituted — outside the law of Moses, imposed by the Jews on
+  # themselves, not commanded by the LORD (the log's caveat, carried).
+  # (Esther 9 NOT in web-subset; re-check at re-pin.)
+  - ref: Esther 9:20-28
+    sources: [editorial]
+    weight: 0.6
+related:
+  - passover
+  - sabbath-rest
+  - worship

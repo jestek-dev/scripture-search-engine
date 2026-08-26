@@ -1,0 +1,42 @@
+{
+  "id": "servant-of-the-lord",
+  "query": "suffering servant",
+  "status": "active",
+  "additionalQueries": [
+    "servant songs"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id servant-of-the-lord (Theme B row, Isaiah-minted;",
+    "suffering-servant the recorded alternate id) — engine admission only",
+    "by Jesse's merge of this PR. Measured gap before the pack",
+    "(2026-08-26, fixture corpus): 'suffering servant' was carried",
+    "entirely by Theme: Suffering with Christ (1 Pet 4:12-16 #1 and five",
+    "more) — an honest neighbor but the wrong register for a servant-song",
+    "study query, with Isa 53 absent from the top entirely; 'servant",
+    "songs' returned homonym noise (Rom 6:20 'servant of sin', Ps 121:1",
+    "on 'song').",
+    "GIST DISCIPLINE (the row's own wording rule, honored): the pack",
+    "describes the servant on the text's own terms and signposts the",
+    "historic messianic reading as attributed fact (the NT's own",
+    "citations), adjudicating nothing.",
+    "BOUNDARY (decided before minting, as the row requires):",
+    "messianic-prophecy (same batch) does not anchor Isa 42-53; the",
+    "atonement register of Isa 53:5 stays the-cross's claim (its 1.0",
+    "anchor stands — this pack's 53:1-12 editorial range is a deliberate",
+    "dual under the servant-figure register). The other three songs (Isa",
+    "42:1-9; 49:1-13; 50:4-11) and the 52:13-15 prologue are",
+    "corpus-blocked and ride the re-pin as noted anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 53:1-12",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The servant of the LORD"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "servant-of-the-lord"
+  ]
+}

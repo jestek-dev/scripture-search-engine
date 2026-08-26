@@ -1,0 +1,37 @@
+{
+  "id": "clean-and-unclean",
+  "query": "clean and unclean animals",
+  "status": "active",
+  "additionalQueries": [
+    "kosher laws in the bible",
+    "purity laws"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id clean-and-unclean (Theme A row, 3 requesting books;",
+    "purity-laws the log's recorded alternate id) — engine admission only",
+    "by Jesse's merge of this PR. Measured gap before the pack",
+    "(2026-08-26, fixture corpus): 'clean and unclean animals' reached",
+    "Deut 14:3-4 #1 via translation-variant + preached vocabulary but",
+    "CHIPLESS and fragmentary (the 14:3-21 category-system unit never",
+    "surfaced as a unit), with leprosy/demon 'unclean' hits (Mark 1:40,",
+    "Mark 5:8, Luke 6:18) interleaved — a sense mix a curated chip",
+    "disambiguates; 'kosher laws in the bible' and 'purity laws' had no",
+    "home ('kosher' appears in no WEB verse).",
+    "The system's own chapters (Lev 11-15; Num 5; 19; 31:19-24) are",
+    "corpus-blocked and ride the re-pin as noted anchors. holiness keeps",
+    "the call-to-be-holy register (log: it covers the call, not the",
+    "category system)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Deuteronomy 14:3-21",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Clean and unclean"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "clean-and-unclean"
+  ]
+}

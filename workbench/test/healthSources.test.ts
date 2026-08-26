@@ -125,9 +125,15 @@ describe('health source semantics', () => {
     // + the 2 apologetics master-tag packs (2026-08-25, Decision D13
     // approved by Jesse: mormon-evangelism, jehovahs-witness-evangelism
     // — each with an active demonstrating fixture in the same change).
+    // + the 15 tag-gap rollout batch-1 packs (2026-08-26, Themes A-B of the
+    // adopted tag-gap review: idolatry, fasting, empty-worship, priesthood,
+    // passover, the-house-of-god, appointed-feasts, clean-and-unclean,
+    // remnant, day-of-the-lord, restoration-of-israel, messianic-prophecy,
+    // antichrist, servant-of-the-lord, gods-plan-for-israel — each with an
+    // active demonstrating fixture in the same change).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(153);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(153);
+    expect(coverage).toHaveLength(168);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(168);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

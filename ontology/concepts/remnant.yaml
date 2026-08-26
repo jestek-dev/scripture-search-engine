@@ -1,0 +1,86 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme B row in tag-gaps-review.md, 13 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The remnant — "the load-bearing hope word of the prophets": the
+# preserved few through judgment, kept by grace. In-corpus the doctrine
+# is carried across both testaments by one thread: Isa 1:9 (the word),
+# 1 Kgs 19:18 (the reserved seven thousand), Rom 11:4-5 (Paul quoting
+# that very text: "a remnant according to the election of grace").
+# Malachi's caveat rides its deferred anchor: Mal 3:16-18 is a theme
+# witness, not a phrase witness (the book never uses a remnant word) —
+# the log's lower-confidence flag, carried.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): "remnant" is the concept's own
+# subject noun, a deliberate bare entry (inventory row admitted:
+# [remnant]) — the word occurs in the WEB text (Isa 1:9) and the
+# measured gap showed the bare-ish query returning chipless token
+# scatter. Other entries keep >= 2 significant tokens ({remnant,
+# bible}, {remnant, israel}, {remnant, return}). Shared with
+# restoration-of-israel / gods-plan-for-israel: {israel} (1 token,
+# zero shared phrases).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: remnant
+label: The remnant
+lexicon:
+  # The subject noun (inventory row).
+  - remnant
+  - remnant in the bible
+  - remnant of israel
+  # Isaiah's own doctrine-name (shear-jashub, Isa 10:21-22 register).
+  - a remnant will return
+anchors:
+  # "Unless the LORD of Armies had left to us a very small remnant, we
+  # would have been as Sodom" (WEB, in corpus). The doctrine's namesake
+  # book, first chapter — survival itself is the LORD's leaving.
+  - ref: Isaiah 1:9
+    sources: [editorial]
+    weight: 1.0
+  # "Yet I reserved seven thousand in Israel, all the knees of which
+  # have not bowed to Baal" (WEB, in corpus). The reserved remnant in
+  # narrative — God's answer to Elijah's 'I alone am left'.
+  - ref: 1 Kings 19:18
+    sources: [editorial]
+    weight: 0.9
+  # "'I have reserved for myself seven thousand men'... Even so too at
+  # this present time also there is a remnant according to the election
+  # of grace." (WEB, in corpus). Paul's own reading of 1 Kgs 19:18 —
+  # the NT names the remnant and grounds it in grace. Kept to vv4-5:
+  # gods-plan-for-israel (same batch) anchors 11:1-2; no span overlap.
+  - ref: Romans 11:4-5
+    sources: [editorial]
+    weight: 0.95
+  # "The remnant of Israel... will return, to the Mighty God" — the
+  # shear-jashub doctrine stated in its own book. (Isaiah 10 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Isaiah 10:20-22
+    sources: [editorial]
+    weight: 0.9
+  # "I will surely assemble... the remnant of Israel" — the shepherd
+  # gathering the remnant. (Micah NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Micah 2:12
+    sources: [editorial]
+    weight: 0.75
+  # "I will leave among you an afflicted and poor people, and they
+  # will take refuge in the LORD's name" — Zephaniah's remnant, the
+  # book's key thought. (Zephaniah NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Zephaniah 3:12-13
+    sources: [editorial]
+    weight: 0.8
+  # "I will gather the remnant of my flock... and they will be
+  # fruitful and multiply" — the remnant under the coming shepherds,
+  # beside the Branch promise. (Jeremiah 23 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Jeremiah 23:3-4
+    sources: [editorial]
+    weight: 0.8
+related:
+  - gods-plan-for-israel
+  - restoration-of-israel
+  - gods-faithfulness

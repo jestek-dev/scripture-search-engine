@@ -1,0 +1,47 @@
+{
+  "id": "antichrist",
+  "query": "who is the antichrist",
+  "status": "active",
+  "additionalQueries": [
+    "the man of sin"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id antichrist (Theme B row, 3 requesting books; absorbs",
+    "the staged antichrist-and-man-of-lawlessness and",
+    "antichrist-and-the-beast folds) — engine admission only by Jesse's",
+    "merge of this PR. Measured gap before the pack (2026-08-26, fixture",
+    "corpus): 'who is the antichrist' returned the 1 John verses",
+    "lexically (2:22 #1, 2:18 #2) but CHIPLESS and verse-by-verse",
+    "(wrong-reason class); 'the man of sin' was a WRONG-ANSWER case —",
+    "Theme: Sin and its wages led (Rom 5:12/6:23), a soteriology answer",
+    "to a who-is-the-figure question, with 2 Thess 2 absent from the",
+    "corpus and no bridge to 1 John's naming texts.",
+    "THE BINDING LEXICON RULE (2 Thess fold + Revelation merge, honored):",
+    "the lexicon carries ALL THREE word families — antichrist / man of",
+    "sin & lawlessness / beast & false prophet — or a query family goes",
+    "unserved; 2 Thess 2:1-12 and Rev 13:1-18; 19:19-20 are",
+    "corpus-blocked and ride the re-pin as noted anchors. 'mark of the",
+    "beast' is deliberately NOT a lexicon entry until Rev 13 is in",
+    "corpus (the honest first answer for it cannot surface yet).",
+    "NO-IDENTIFICATION RULE (log, honored): the pack describes the",
+    "figure as the texts do and endorses no historical or modern",
+    "identification; Daniel's little-horn texts are NOT anchored (the",
+    "log's own deliberate withholding)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 John 2:18",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The antichrist"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 John 2:22-23",
+    "1 John 4:2-3"
+  ],
+  "coversConcepts": [
+    "antichrist"
+  ]
+}

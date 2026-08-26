@@ -1,0 +1,97 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme B row in tag-gaps-review.md, 8 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The restoration of Israel — return from exile, the regathering, the
+# rebuilt city. REGISTER RESOLUTION (the recorded Isaiah-block TENSION,
+# resolved at this minting with both readings in view as the log asks):
+# the existing `restoration` id KEEPS the personal renewal-prayer
+# register unchanged ("restore my soul", Ps 23:3); THIS pack carries
+# national restoration; the two are cross-linked via related:, never
+# via shared lexicon — no bare restore/restoration entry lives here,
+# so the bare queries stay with the personal register and the
+# israel-naming queries reach this one. Measurement confirmed the gap
+# was a live wrong-answer (Ps 23:3 led 'restoration of israel').
+# Companion row `exile-and-captivity` (§1(e) BORDERLINE routing call)
+# stays with Jesse — this pack deliberately carries no exile/captivity
+# lexicon so that call is not preempted.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): entries keep >= 2 significant
+# tokens ({restoration, israel}, {god, restore, israel}, {regather,
+# israel}, {god, gather, israel}). Shared with restoration:
+# {restoration/restore} (1-2 common-stem tokens across DIFFERENT
+# phrases, zero shared phrases — each query fires exactly one register
+# because israel/gather members are distinctive). Shared with
+# gathering-together: {gather}; with nations-and-peoples: none of its
+# phrases. All far under limits.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports what the promises say; when and how they resolve is
+# adjudicated nowhere (gods-plan-for-israel carries Rom 11's own NT
+# claims — related edge).
+id: restoration-of-israel
+label: The restoration of Israel
+lexicon:
+  - restoration of israel
+  - will god restore israel
+  - regathering of israel
+  - god will gather israel
+anchors:
+  # "Behold, I will bring them from the north country, and gather them
+  # from the uttermost parts of the earth... 'He who scattered Israel
+  # will gather him, and keep him, as a shepherd does his flock.'"
+  # (WEB, in corpus). The regathering promise in full voice — father to
+  # Israel, shepherd to the flock.
+  - ref: Jeremiah 31:8-11
+    sources: [editorial]
+    weight: 1.0
+  # "I will turn again your captivity, and I will gather you from all
+  # the nations... I will bring you again to the place from where I
+  # caused you to be carried away captive." (WEB, in corpus). The
+  # seventy-years promise's own restoration clause. Kept to v14: the
+  # famous v11 ("thoughts of peace") is hope-in-god's anchor — no span
+  # overlap, no dilution.
+  - ref: Jeremiah 29:14
+    sources: [editorial]
+    weight: 0.9
+  # "The LORD builds up Jerusalem. He gathers together the outcasts of
+  # Israel." (WEB, in corpus). The psalter's one-verse summary. Kept to
+  # v2: v3 (heals the broken-hearted) is the pastoral packs' claim.
+  - ref: Psalms 147:2
+    sources: [editorial]
+    weight: 0.8
+  # "Don't be afraid, for I am with you. I will bring your offspring
+  # from the east, and gather you from the west... Bring my sons from
+  # far away" (WEB, in corpus). The gathering promise in Isaiah's
+  # comfort register.
+  - ref: Isaiah 43:5-7
+    sources: [editorial]
+    weight: 0.85
+  # The valley of dry bones — "I will open your graves... and bring
+  # you into the land of Israel": the text's own interpretation is
+  # national restoration (the log's staged note; dry-bones queries are
+  # resurrection-of-the-dead's recorded cross-reference). (Ezekiel 37
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Ezekiel 37:11-14
+    sources: [editorial]
+    weight: 0.9
+  # "I will take you from among the nations... and I will bring you
+  # into your own land" — with the new heart beside it. (Ezekiel 36
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Ezekiel 36:24-28
+    sources: [editorial]
+    weight: 0.85
+  # "the LORD your God will turn your captivity... and will return and
+  # gather you from all the peoples" — the covenant's own restoration
+  # clause. (Deuteronomy 30 NOT in web-subset; re-check at re-pin.)
+  - ref: Deuteronomy 30:1-5
+    sources: [editorial]
+    weight: 0.8
+related:
+  - remnant
+  - gods-plan-for-israel
+  - restoration
+  - covenant

@@ -1,0 +1,44 @@
+{
+  "id": "idolatry",
+  "query": "idolatry",
+  "status": "active",
+  "additionalQueries": [
+    "idols in the bible",
+    "golden calf"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id idolatry (Theme A row, 24 requesting books — the",
+    "review's most-merged row) — engine admission only by Jesse's merge of",
+    "this PR. Measured gap before the pack (2026-08-26, fixture corpus):",
+    "'idolatry' returned token scatter (1 Cor 10:14 #1, Col 3:5 #2 — honest",
+    "lexical hits, no curated chip anywhere); 'idols in the bible' likewise",
+    "(1 Cor 10:19 #1); 'golden calf' returned Rev 21:15 #1 (shared word:",
+    "golden — a wrong answer) with the command-law spine (Exod 20:3-6)",
+    "unreachable because it never says 'idolatry'. The command texts, the",
+    "prophets' idol-satires, and Elijah's challenge carry the theme in",
+    "words lexical search cannot bridge.",
+    "Register notes carried from the log: command-law spine (Exodus,",
+    "Leviticus, Deuteronomy), narrative laboratory (Judges/Kings),",
+    "idols-in-the-heart (Ezek 14:3, corpus-blocked). Golden-calf narrative",
+    "(Exod 32) is corpus-blocked and rides the re-pin as a noted anchor."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Exodus 20:3-6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Idolatry"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jeremiah 10:3-5",
+    "Isaiah 40:18-20",
+    "1 Kings 18:21",
+    "Leviticus 19:4",
+    "1 John 5:21"
+  ],
+  "coversConcepts": [
+    "idolatry"
+  ]
+}

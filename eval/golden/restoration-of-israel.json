@@ -1,0 +1,50 @@
+{
+  "id": "restoration-of-israel",
+  "query": "restoration of israel",
+  "status": "active",
+  "additionalQueries": [
+    "will god restore israel"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id restoration-of-israel (Theme B row, 8 requesting",
+    "books) — engine admission only by Jesse's merge of this PR. Measured",
+    "gap before the pack (2026-08-26, fixture corpus): a WRONG-ANSWER",
+    "case, exactly the register tension the review records — 'restoration",
+    "of israel' returned Theme: Restoration and renewal (the personal",
+    "renewal-prayer register) at #1-#3 (Ps 23:3 'restore my soul' led a",
+    "national-restoration query), with the national texts absent;",
+    "'will god restore israel' identical.",
+    "The mustNotLead guard is real, not vacuous: Ps 23:3 is in-corpus and",
+    "led before the pack.",
+    "REGISTER RESOLUTION (the recorded Isaiah-block TENSION, decided",
+    "here): `restoration` keeps the personal renewal-prayer register",
+    "unchanged; this pack carries national restoration; cross-linked via",
+    "related:, never via shared lexicon (no bare restore/restoration",
+    "entry here). The theme's largest OT block (Ezek 34; 36:24-38; 37;",
+    "Deut 30:1-10; Zech 8) is corpus-blocked and rides the re-pin as",
+    "noted anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 31:8-11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The restoration of Israel"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jeremiah 29:14",
+    "Psalms 147:2",
+    "Isaiah 43:5-7"
+  ],
+  "mustNotLead": [
+    {
+      "reference": "Psalms 23:3",
+      "why": "the personal renewal-prayer register ('restore my soul') led this national-restoration query before the pack — the exact hijack the review's register tension records; demoted, never forbidden"
+    }
+  ],
+  "coversConcepts": [
+    "restoration-of-israel"
+  ]
+}

@@ -1,0 +1,76 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme A row in tag-gaps-review.md, 3 requesting books; purity-laws
+# the log's recorded alternate id). Adopted as display vocabulary by
+# Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission happens
+# only by his merge of this PR.
+#
+# The clean/unclean category system — dietary law and ceremonial purity.
+# The row's rationale: heavy lay queries ("kosher laws", "why couldn't
+# Israelites eat pork", "purity laws") with no home; `holiness` covers
+# the call to be holy, not the category system. The system's own
+# chapters (Lev 11-15; Num 5; 19) are corpus-blocked; Deut 14:3-21 — in
+# corpus — is the dietary law's second statement and carries the
+# fixture. The NT boundary texts (Mark 7:14-23; Acts 10:9-16) are also
+# corpus-blocked and ride the re-pin: they are anchored as the texts
+# where Scripture itself takes the category system up, stated
+# descriptively (what the texts say, no supersession scoring).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens ({clean, unclean}, {clean, unclean, animal},
+# {kosher, laws, bible}, {purity, laws}, {ceremonially, unclean}).
+# Shared with holiness: {purity} (1 token — holiness admits bare
+# `purity`; the {purity, laws} pair never fires on the bare query).
+# Zero shared phrases anywhere.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: clean-and-unclean
+label: Clean and unclean
+lexicon:
+  - clean and unclean
+  - clean and unclean animals
+  # The modern query word — "kosher" appears in no WEB verse; only a
+  # curated rung serves it.
+  - kosher laws in the bible
+  - purity laws
+  - ceremonially unclean
+anchors:
+  # "You shall not eat any abominable thing. These are the animals
+  # which you may eat... The pig, because it has a split hoof but
+  # doesn't chew the cud, is unclean to you... for you are a holy
+  # people to the LORD your God." (WEB, in corpus). The dietary law's
+  # second statement — the category system grounded in Israel's
+  # holiness (14:2, 21 frame the list with it).
+  - ref: Deuteronomy 14:3-21
+    sources: [editorial]
+    weight: 1.0
+  # The system's fullest statement — every category of land, water and
+  # air creature, closed with its own rationale: "be holy, for I am
+  # holy". The pack's keystone once the corpus carries it. (Leviticus
+  # 11 NOT in web-subset; re-check at re-pin.)
+  - ref: Leviticus 11:1-47
+    sources: [editorial]
+    weight: 0.95
+  # "make a distinction between the holy and the common, and between
+  # the unclean and the clean" — the priests' teaching charge, the
+  # system's stated purpose. (Leviticus 10 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Leviticus 10:10
+    sources: [editorial]
+    weight: 0.8
+  # Jesus on defilement — "nothing outside of the man that going into
+  # him can defile him" register, with Mark's own comment. Anchored
+  # descriptively as where Scripture takes the category system up.
+  # (Mark 7 NOT in web-subset; re-check at re-pin.)
+  - ref: Mark 7:14-23
+    sources: [editorial]
+    weight: 0.85
+  # Peter's sheet vision — "What God has cleansed, you must not call
+  # unclean." Same descriptive rule. (Acts 10 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Acts 10:9-16
+    sources: [editorial]
+    weight: 0.8
+related:
+  - holiness

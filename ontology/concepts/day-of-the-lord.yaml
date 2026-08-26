@@ -1,0 +1,97 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme B row in tag-gaps-review.md, 11 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The day of the LORD — the prophets' named day of reckoning, and the
+# NT's use of the same phrase. The row's rationale: `divine-judgment`
+# is broader and never surfaces the phrase; `second-coming` is the NT
+# event and would be a read-back on the OT texts. The phrase's densest
+# OT books (Zephaniah, Joel, Amos, Obadiah, Zech 14, Isa 13, Mal 4)
+# are corpus-blocked — their anchors ride the re-pin; in corpus the
+# theme is carried by 1 Thess 5:1-3 (the phrase itself) and Mal 3:1-2
+# (the day of his coming, the refiner). The Daniel end-times row's
+# merge question ("if the vocabulary decision merges...") is NOT
+# decided here: that row is deferred (ledger batch 1), and this pack
+# is the log's own Obadiah-minted row under its own name. Habakkuk's
+# checked-and-declined stands (its nearest language is adjacent, not
+# this theme).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens ({day, lord}, {great, terrible, day, lord},
+# {great, day, lord}). No bare entry: `day` and `lord` are the
+# 2026-08-08 accident class (guidance's acknowledged bare-`lord`
+# collapse is the measured hijack this pack's fixture guards against).
+# Shared with divine-judgment: {day} (1 token); with second-coming:
+# zero tokens. Zero shared phrases anywhere.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. No
+# timetable claim anywhere (mirrors divine-judgment's neutrality
+# design; millennial schemas are stated non-criteria).
+id: day-of-the-lord
+label: The day of the LORD
+lexicon:
+  - the day of the lord
+  # Joel 2:31 / Mal 4:5's remembered form.
+  - great and terrible day of the lord
+  - the great day of the lord
+anchors:
+  # "the day of the Lord comes like a thief in the night. For when they
+  # are saying, 'Peace and safety,' then sudden destruction will come"
+  # (WEB, in corpus). The NT states the phrase and its suddenness.
+  # DELIBERATE DUAL (recorded): second-coming anchors 1 Thess 5:2
+  # [torrey] for the return-of-Christ register; this 5:1-3 editorial
+  # range claims the named-phrase register — the phrase the OT row
+  # exists to serve.
+  - ref: 1 Thessalonians 5:1-3
+    sources: [editorial]
+    weight: 1.0
+  # "But who can endure the day of his coming? And who will stand when
+  # he appears? For he is like a refiner's fire" (WEB, in corpus). The
+  # day as refining — Malachi's form of the question the prophets keep
+  # asking (Joel 2:11: "who can endure it?").
+  - ref: Malachi 3:1-2
+    sources: [editorial]
+    weight: 0.9
+  # "The great day of the LORD is near... a day of wrath, a day of
+  # distress and anguish" — the theme's densest book per verse (the
+  # log's own note). (Zephaniah NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Zephaniah 1:14-18
+    sources: [editorial]
+    weight: 0.95
+  # "Alas for the day! For the day of the LORD is at hand" — Joel's
+  # alarm, and 2:31's great-and-terrible form. (Joel NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Joel 2:1-11
+    sources: [editorial]
+    weight: 0.9
+  # "Woe to you who desire the day of the LORD! ... It is darkness,
+  # and not light" — the day turned against presumption. (Amos NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Amos 5:18-20
+    sources: [editorial]
+    weight: 0.85
+  # "For the day of the LORD is near all the nations" — the
+  # minting row's own text. (Obadiah NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Obadiah 1:15
+    sources: [editorial]
+    weight: 0.8
+  # "Behold, the day of the LORD comes, cruel, with wrath and fierce
+  # anger" — the oracle against Babylon's form. (Isaiah 13 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Isaiah 13:6-13
+    sources: [editorial]
+    weight: 0.8
+  # "Behold, the day comes, burning like a furnace... the great and
+  # terrible day of the LORD" — Malachi's close, with Elijah promised
+  # before it. (Malachi 4 NOT in web-subset; re-check at re-pin.)
+  - ref: Malachi 4:1-5
+    sources: [editorial]
+    weight: 0.85
+related:
+  - divine-judgment
+  - second-coming

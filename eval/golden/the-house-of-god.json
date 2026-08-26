@@ -1,0 +1,40 @@
+{
+  "id": "the-house-of-god",
+  "query": "the house of god",
+  "status": "active",
+  "additionalQueries": [
+    "gods dwelling place"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id the-house-of-god (Theme A row, 6 requesting books;",
+    "absorbs the staged gods-dwelling-place fold per the log) — engine",
+    "admission only by Jesse's merge of this PR.",
+    "EXTENSION CHECK (the row's own flag, run first): neither worship's",
+    "nor presence-of-god's lexicon carries any house/temple/dwelling",
+    "surface form, and the measured result confirms neither serves the",
+    "query. Measured gap before the pack (2026-08-26, fixture corpus):",
+    "'the house of god' returned pure proximity scatter — Acts 2:36 #1,",
+    "Exod 20:2 #2 ('house of bondage'!), 2 Cor 5:1 — no curated chip;",
+    "'gods house' likewise (Heb 10:21 #1 chipless).",
+    "The minting books' own texts (Hag 1-2; Ezek 40-48; Ezra; 1-2 Chr",
+    "except 2 Chr 7; Neh 10/13) are corpus-blocked and ride the re-pin as",
+    "noted anchors. Glory-vs-dwelling overlap flag from the Ezekiel fold",
+    "is recorded in the pack comment (no glory-of-god pack exists yet)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Chronicles 7:12-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The house of God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 27:4",
+    "Ephesians 2:21-22"
+  ],
+  "coversConcepts": [
+    "the-house-of-god"
+  ]
+}

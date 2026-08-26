@@ -1,0 +1,38 @@
+{
+  "id": "appointed-feasts",
+  "query": "feast of tabernacles",
+  "status": "active",
+  "additionalQueries": [
+    "feasts of the lord",
+    "biblical feasts"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id appointed-feasts (Theme A row, 6 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. Measured gap",
+    "before the pack (2026-08-26, fixture corpus): 'feast of tabernacles'",
+    "reached Neh 8:14 #1 only through Layer B preached vocabulary",
+    "(tabernacl), verse-by-verse and CHIPLESS — the WEB itself says",
+    "'temporary shelters'/'booths', so no lexical rung carries the",
+    "query's own wording; 'feasts of the lord' and 'biblical feasts' had",
+    "no curated home at all.",
+    "BOUNDARY (Leviticus doc Decisions #45, honored): complements, never",
+    "absorbs, passover — Passover-specific queries go there; the",
+    "calendar-as-a-system queries land here. The calendar chapters",
+    "themselves (Lev 23; Num 28-29; Deut 16:1-17; Ezra 3:4-6; Esth",
+    "9:20-32) are corpus-blocked and ride the re-pin as noted anchors;",
+    "Purim's outside-the-law-of-Moses caveat is carried in the pack",
+    "comment per the log."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Nehemiah 8:13-18",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The appointed feasts"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "appointed-feasts"
+  ]
+}

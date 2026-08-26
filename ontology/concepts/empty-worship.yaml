@@ -1,0 +1,110 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme A row in tag-gaps-review.md, 9 requesting books; the log's
+# primary id — religious-hypocrisy is the recorded alternate, carried in
+# the label). Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission happens only by his merge of this
+# PR. Five threads staged this as `hypocrisy` and folded here.
+#
+# Worship and piety performed for show, or offered while justice and
+# obedience are withheld — why God rejects worship. SCOPE (the Matthew
+# drafters' flag, decided at this minting): broader than worship-service
+# acts — religion performed for show generally (alms, prayer, fasting
+# postures: Matt 6:1-2, 5), because the queries and the texts run that
+# wide. Gal 2:11-14 is NOT anchored: the Galatians block's own register
+# note reads it as conduct inconsistency under peer pressure, not piety
+# performed for show. Neither `worship` (positive register) nor
+# `self-deception` (the inward mechanism) answers the searcher asking
+# why God rejects worship — the row's rationale, confirmed by
+# measurement (the worship pack led 'empty worship' before this pack).
+# Prov 16:6's atonement-vocabulary saying stays OUT (log §3: routed
+# decision recorded there).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens ({empty, worship}, {religiou, hypocrisy}, {going,
+# motion}, {hypocrit, bible}, {vain, worship}, {lip, service}). Shared
+# with worship: {worship} only (1 token, well under limit; zero shared
+# phrases) — bare `worship` stays worship's acknowledged trigger and
+# never fires this pack.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: empty-worship
+label: Empty worship and hypocrisy
+lexicon:
+  - empty worship
+  - religious hypocrisy
+  - going through the motions
+  - hypocrites in the bible
+  # Isa 1:13's own register ("vain offerings").
+  - vain worship
+  - lip service
+anchors:
+  # "Bring no more vain offerings... I can't stand evil assemblies...
+  # when you make many prayers, I will not hear. Your hands are full of
+  # blood. Wash yourselves... Seek justice." (WEB, in corpus). God
+  # refusing his own commanded worship — the canon's fullest statement
+  # of why. NOTE: v14's "appointed feasts" belongs to THIS rejection
+  # context; the appointed-feasts pack deliberately does not anchor it.
+  - ref: Isaiah 1:11-17
+    sources: [editorial]
+    weight: 1.0
+  # "they hear your words, but don't do them; for with their mouth they
+  # show much love, but their heart goes after their gain... you are to
+  # them as a very lovely song" (WEB, in corpus). Sermon-appreciation as
+  # performance. DELIBERATE DUAL (recorded): obedience-to-the-word
+  # anchors 33:31-32 for the hearing-without-doing register; this
+  # 30-32 range claims the worship-as-entertainment register — both
+  # honest, different frames.
+  - ref: Ezekiel 33:30-32
+    sources: [editorial]
+    weight: 0.9
+  # The Pharisee and the tax collector — "convinced of their own
+  # righteousness... 'God, I thank you that I am not like the rest of
+  # men'" (WEB, in corpus). Self-exhibiting prayer judged; the humbled
+  # sinner justified.
+  - ref: Luke 18:9-14
+    sources: [editorial]
+    weight: 0.85
+  # "when you do merciful deeds, don't sound a trumpet before yourself,
+  # as the hypocrites do" (WEB, in corpus). Piety for show, named.
+  - ref: Matthew 6:1-2
+    sources: [editorial]
+    weight: 0.8
+  # "you shall not be as the hypocrites, for they love to stand and
+  # pray... that they may be seen by men" (WEB, in corpus). The prayer
+  # half of the same teaching; prayer's own Matt 6:6 anchor (the secret
+  # room) is the positive counterpart and stays with prayer.
+  - ref: Matthew 6:5
+    sources: [editorial]
+    weight: 0.75
+  # "He who turns away his ear from hearing the law, even his prayer is
+  # an abomination." (WEB, in corpus). The proverb's version of Isa
+  # 1:15 — worship divorced from obedience.
+  - ref: Proverbs 28:9
+    sources: [editorial]
+    weight: 0.7
+  # "you tithe mint and rue... but you bypass justice and God's love...
+  # hypocrites! For you are like hidden graves" (WEB, in corpus). The
+  # woes — meticulous observance beside bypassed justice.
+  - ref: Luke 11:42-44
+    sources: [editorial]
+    weight: 0.7
+  # "this people draws near with their mouth... but they have removed
+  # their heart far from me" register — the verse Jesus quotes of his
+  # own generation (Matt 15:8-9, also corpus-blocked). (Isaiah 29 NOT
+  # in web-subset; re-check at re-pin.)
+  - ref: Isaiah 29:13
+    sources: [editorial]
+    weight: 0.9
+  # "I hate, I despise your feasts... But let justice roll on like
+  # rivers" register — the prophets' densest rejection oracle. (Amos
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Amos 5:21-24
+    sources: [editorial]
+    weight: 0.85
+related:
+  - worship
+  - self-deception
+  - obedience-to-the-word
+  - pleasing-god-not-people

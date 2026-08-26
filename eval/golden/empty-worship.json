@@ -1,0 +1,47 @@
+{
+  "id": "empty-worship",
+  "query": "empty worship",
+  "status": "active",
+  "additionalQueries": [
+    "religious hypocrisy",
+    "going through the motions"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id empty-worship (Theme A row, 9 requesting books; the",
+    "log's primary id, religious-hypocrisy the recorded alternate) —",
+    "engine admission only by Jesse's merge of this PR. Measured gap",
+    "before the pack (2026-08-26, fixture corpus): 'empty worship' was a",
+    "WRONG-ANSWER case — the worship pack's bare `worship` token fired and",
+    "Ps 95:6 ('come, let's worship') led, the positive register answering",
+    "a why-does-God-reject-worship question; 'religious hypocrisy'",
+    "returned preached-vocabulary scatter (1 Pet 2:1 #1, chipless);",
+    "'going through the motions' returned pure token noise (Ps 121:8 #1",
+    "on 'going'). Isa 1:11-17 — God refusing his own commanded worship —",
+    "appeared nowhere.",
+    "SCOPE (the Matthew flag, decided here): piety performed for show",
+    "generally, not worship-service acts only — Matt 6:1-2, 5 are",
+    "anchored. Gal 2:11-14 is NOT anchored: the Galatians block's own",
+    "register note (conduct inconsistency under peer pressure, not piety",
+    "for show) reads it out of this concept's scope."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 1:11-17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Empty worship and hypocrisy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ezekiel 33:30-32",
+    "Luke 18:9-14",
+    "Proverbs 28:9",
+    "Matthew 6:1-2",
+    "Matthew 6:5",
+    "Luke 11:42-44"
+  ],
+  "coversConcepts": [
+    "empty-worship"
+  ]
+}

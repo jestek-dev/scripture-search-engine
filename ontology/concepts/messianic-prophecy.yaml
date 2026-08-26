@@ -1,0 +1,121 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme B row in tag-gaps-review.md, 6 requesting books), ABSORBING
+# the-branch (2 books) — the review's own offered fold ("could
+# alternatively fold into a messianic-prophecy pack; decide one design
+# before minting"): one design decided at this minting, never a second
+# id; the branch lexicon and Jer 33:14-16 anchor live here. Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# LOCATOR DESIGN (the row's own rule + CLAUDE.md #6): the pack locates
+# passages the NT itself cites of Christ, stated as ATTRIBUTED FACT
+# ("Acts 2 quotes this psalm") — never adjudicated fulfillment. The
+# engine reports which curated source names a passage; the historic
+# messianic reading is signposted, not scored.
+#
+# BOUNDARY (decided before minting, as the row requires): this pack
+# does NOT anchor Isa 42-53 — servant-of-the-lord (same batch) carries
+# the servant songs and the-cross keeps Isa 53:5's atonement register.
+# Ps 95:7-11 (NT-quoted but a warning text, not a messianic promise)
+# was checked and declined. Ps 82:6 stays with the deification-guard
+# discipline (never anchored here). Isa 4:2 rides the Branch deferred
+# anchors per the log's cross-note.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): entries keep >= 2 significant
+# tokens ({messianic, prophecy}, {prophecy, jesu}, {old, testament,
+# prophecy, christ}, {branch, prophecy}, {branch, bible}). Bare
+# `branch` is deliberately NOT an entry (skipped row: John 15's vine
+# branches and Rom 11's grafted branches are different senses; the
+# measured homonym noise confirms). Shared with false-prophets /
+# day-of-the-lord etc.: {prophecy} appears only in multi-word pairs.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: messianic-prophecy
+label: Messianic prophecy
+lexicon:
+  - messianic prophecy
+  - prophecies about jesus
+  - old testament prophecies about christ
+  # The folded the-branch row's query family.
+  - the branch prophecy
+  - who is the branch in the bible
+anchors:
+  # "I will cause a Branch of righteousness to grow up to David. He
+  # will execute justice and righteousness in the land... The LORD our
+  # righteousness." (WEB, in corpus). The Branch title's promise — the
+  # folded row's in-corpus home (its Jer 23:5-6 sibling and Zech 3:8;
+  # 6:12-13 are deferred below).
+  - ref: Jeremiah 33:14-16
+    sources: [editorial]
+    weight: 1.0
+  # "you will not leave my soul in Sheol, neither will you allow your
+  # holy one to see corruption." (WEB, in corpus). ATTRIBUTED FACT:
+  # Acts 2:25-31 (in corpus) quotes this psalm at Pentecost — "he
+  # foreseeing this, spoke about the resurrection of the Christ".
+  # Kept to v10: v11 is joy-in-the-lord's anchor.
+  - ref: Psalms 16:10
+    sources: [editorial]
+    weight: 0.9
+  # "Sacrifice and offering you didn't desire... Then I said, 'Behold,
+  # I have come. It is written about me in the book in the scroll. I
+  # delight to do your will, my God.'" (WEB, in corpus). ATTRIBUTED
+  # FACT: Hebrews 10:5-10 (in corpus) reads this psalm as the words of
+  # Christ coming into the world.
+  - ref: Psalms 40:6-8
+    sources: [editorial]
+    weight: 0.85
+  # "The virgin will conceive, and bear a son, and shall call his name
+  # Immanuel" — ATTRIBUTED FACT: Matt 1:22-23 cites it. (Isaiah 7 NOT
+  # in web-subset; re-check at re-pin. The virgin-birth pending fixture
+  # from the apologetics wave rides the same corpus dependency.)
+  - ref: Isaiah 7:14
+    sources: [editorial]
+    weight: 0.9
+  # "to us a child is born... Wonderful Counselor, Mighty God" — the
+  # child on David's throne. (Isaiah 9 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Isaiah 9:6-7
+    sources: [editorial]
+    weight: 0.9
+  # "a shoot out of the stock of Jesse... the Spirit of the LORD will
+  # rest on him" — the Davidic figure of the peaceable kingdom.
+  # (Isaiah 11 NOT in web-subset; re-check at re-pin.)
+  - ref: Isaiah 11:1-10
+    sources: [editorial]
+    weight: 0.8
+  # The pierced-hands psalm of the crucifixion narratives — ATTRIBUTED
+  # FACT: quoted at Matt 27:35, 46. (Psalm 22 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Psalms 22:1-18
+    sources: [editorial]
+    weight: 0.9
+  # "The LORD says to my lord, 'Sit at my right hand'" — the NT's
+  # most-quoted psalm verse (Matt 22:44 and parallels). (Psalm 110 NOT
+  # in web-subset; re-check at re-pin.)
+  - ref: Psalms 110:1-4
+    sources: [editorial]
+    weight: 0.9
+  # "your King comes to you... lowly, and riding on a donkey" —
+  # ATTRIBUTED FACT: Matt 21:4-5 cites it of Palm Sunday. (Zechariah 9
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Zechariah 9:9
+    sources: [editorial]
+    weight: 0.85
+  # "my servant, the Branch" / "the man whose name is the Branch...
+  # he will build the LORD's temple" — the folded row's Zechariah
+  # texts. (Zechariah 3 / 6 NOT in web-subset; re-check at re-pin.)
+  - ref: Zechariah 6:12-13
+    sources: [editorial]
+    weight: 0.8
+  # "one like a son of man came with the clouds of the sky... his
+  # dominion is an everlasting dominion" — the title Jesus takes for
+  # himself (Matt 26:64, attributed fact). (Daniel 7 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Daniel 7:13-14
+    sources: [editorial]
+    weight: 0.85
+related:
+  - servant-of-the-lord
+  - christ-the-cornerstone
