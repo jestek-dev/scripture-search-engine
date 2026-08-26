@@ -1,0 +1,40 @@
+# REMEMBERED-PHRASING PACK — alias-mining batch 1 (2026-08-26, whole-Bible
+# coverage plan §2.3 item 2 / §4.3; battery re-grade seed row ph12).
+#
+# PD-ONLY WORDING (decision #4/#5 defaults): every phrase below is the
+# verbatim wording of the American Standard Version (1901, public domain) —
+# no ESV/NIV/NLT-derived wording anywhere in this pack.
+#   - "no weapon that is formed against thee shall prosper" — ASV,
+#     Isaiah 54:17a. The WEB reads "will prevail"; 'prosper' is the
+#     register people remember and type (battery ph12).
+#   - "every tongue that shall rise against thee in judgment" — ASV,
+#     Isaiah 54:17b. Its query already led lexically (exact phrase); the
+#     entry's value is the honest curated chip on the same verse and the
+#     second clause of the same remembered promise — recorded so the
+#     admission evidence is read correctly.
+#
+# ONE anchor per pack, deliberately (the remembered-* design): both clauses
+# name exactly one verse. ADDITIVE on purpose: gods-protection keeps its
+# reviewed anchors and weights untouched (Isaiah 54:17 at 0.85 under its
+# Psalm 91:9-12 range at 1.0 — the ph12 'anchor-data decision' the pending
+# no-weapon.json defers stays deferred), and every phrase here carries a
+# token the short query 'no weapon formed against me' lacks, so the ACTIVE
+# gods-protection.json's admitted ordering for that query cannot move.
+#
+# SOUNDNESS: the verse's own "heritage of the LORD's servants" clause keeps
+# the promise covenantal, not incantational (gods-protection's header
+# reasoning); the chip reports that LH editorial names this passage for
+# this remembered phrasing — it adjudicates nothing.
+id: remembered-no-weapon-shall-prosper
+label: No weapon formed against you
+lexicon:
+  - no weapon that is formed against thee shall prosper
+  - every tongue that shall rise against thee in judgment
+anchors:
+  # "No weapon that is formed against you will prevail; and you will
+  # condemn every tongue that rises against you in judgment" (WEB).
+  - ref: Isaiah 54:17
+    sources: [editorial]
+    weight: 1.0
+related:
+  - gods-protection
