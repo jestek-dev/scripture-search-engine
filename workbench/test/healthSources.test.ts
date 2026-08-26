@@ -152,9 +152,18 @@ describe('health source semantics', () => {
     // vengeance, governing-authorities, care-for-widows,
     // bondservants-and-masters, individual-responsibility — each with an
     // active demonstrating fixture in the same change).
+    // + the 15 tag-gap rollout batch-5 packs (2026-08-26, Themes H-I of
+    // the adopted tag-gap review: lament, unanswered-prayer,
+    // comforting-others, aging-and-old-age, slander-and-false-accusation,
+    // shame, discipleship, loving-god, servanthood, backsliding,
+    // seeking-god, putting-god-first, good-works, complacency,
+    // watchman-and-warning — each with an active demonstrating fixture in
+    // the same change; the batch's three extensions ride
+    // rest-for-the-weary, glory-of-god, and freedom-from-bondage, so they
+    // add no ids here).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(208);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(208);
+    expect(coverage).toHaveLength(223);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(223);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

@@ -1,0 +1,43 @@
+{
+  "id": "servanthood",
+  "query": "servanthood in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "washing feet",
+    "serve one another"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id servanthood (Theme I row, 5 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The",
+    "humble-exaltation extension route CHECKED AND DECLINED (humility/",
+    "pride vocabulary, exaltation-reversal anchors — register",
+    "mismatch). 'servant leadership' measured ALREADY leadership's",
+    "(its anchors with chips) and stays there; Luke 22:24-27 stays its",
+    "keystone. Tokenizer: 'serving others' collapses to bare {serv}",
+    "and 'servant of all' to bare {servant} (head-on subset of",
+    "servant-of-the-lord's lexicon) — both REJECTED as entries;",
+    "structural limits recorded ('last of all and servant of all'",
+    "carries the Mark 9:35 phrasing safely).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'servant of all' had Mark 9:35 rank 1 by exact phrase CHIPLESS",
+    "over servant-token noise; 'serving others' pure serv-token",
+    "scatter (Rom 12:11 rank 1)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Mark 9:35",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Servanthood"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 13:12-15",
+    "Luke 9:46-48",
+    "Luke 17:7-10"
+  ],
+  "coversConcepts": [
+    "servanthood"
+  ]
+}

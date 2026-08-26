@@ -1,0 +1,44 @@
+{
+  "id": "unanswered-prayer",
+  "query": "why doesnt god answer my prayers",
+  "status": "active",
+  "additionalQueries": [
+    "unanswered prayer"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id unanswered-prayer (Theme H row, 4 requesting",
+    "books) — engine admission only by Jesse's merge of this PR.",
+    "Routing decisions recorded in the pack: 'when god is silent' stays",
+    "wrestling-with-god's (pre-existing lexicon fact, verified firing);",
+    "'when god says no' rejected as an entry ({god, say} accident",
+    "class); the famine-of-hearing-gods-word boundary (word withheld vs",
+    "prayer shut out) recorded for that deferred row's re-pin curator.",
+    "2 Cor 12:8-9 is a sibling overlapping serious-illness-and-dying's",
+    "and strength-in-weakness's 12:9-10, recorded in all three files.",
+    "Gist care: the same poem that says 'he shuts out my prayer' (Lam",
+    "3:8) ends 'You heard my voice' (3:56) — the concept must never",
+    "teach that God does not hear.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'why doesnt god answer my prayers' was answered ENTIRELY by",
+    "prayer's how-to-pray anchors (Phil 4:6 rank 1, ask-and-receive",
+    "register — the OPPOSITE of the asker's situation); 'unanswered",
+    "prayer' the same flood; 'when god says no' pure god/say noise",
+    "(Gen 1:3 rank 1)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Corinthians 12:8-9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Unanswered prayer"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Lamentations 3:8",
+    "Lamentations 3:44"
+  ],
+  "coversConcepts": [
+    "unanswered-prayer"
+  ]
+}

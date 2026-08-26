@@ -59,6 +59,9 @@ anchors:
   # provision subordinated to the Kingdom, the exact opposite of
   # provision-as-goal. Editorial for the range: the verified outline
   # (PROVIDENCE, "Trust in") lists 6:33 and 6:34 singly.
+  # SIBLING (tag-gap batch 5, 2026-08-26): putting-god-first claims
+  # Matt 6:33 verse-scoped inside this span — the verse's first clause
+  # is the priorities command. Recorded in both files.
   - ref: Matthew 6:31-33
     sources: [editorial]
     weight: 1.0

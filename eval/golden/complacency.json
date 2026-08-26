@@ -1,0 +1,34 @@
+{
+  "id": "complacency",
+  "query": "lukewarm faith",
+  "status": "active",
+  "additionalQueries": [
+    "complacency in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id complacency (Theme I row, 1 requesting book:",
+    "Zephaniah, corpus-blocked) — engine admission only by Jesse's",
+    "merge of this PR. Minted on the row's own named query family",
+    "('lukewarm faith') with the in-corpus, unclaimed keystone Rev",
+    "3:15-16; the Zeph 1:12 settled-denial register rides the re-pin.",
+    "Laodicea's three-way split honored: Rev 3:17 stays",
+    "self-deception's, 3:19 the-lords-discipline's. Prov 1:32 stays",
+    "declined per the row; Amos 6:1 named for the re-pin curator, not",
+    "anchored (the log's dedupe instruction).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'lukewarm faith' was flooded by faith / faith-and-works anchors",
+    "(Heb 11:6 rank 1) with Rev 3:15-16 nowhere in the top 10."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Revelation 3:15-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Complacency"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "complacency"
+  ]
+}

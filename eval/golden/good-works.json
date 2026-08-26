@@ -1,0 +1,45 @@
+{
+  "id": "good-works",
+  "query": "good works in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "zealous for good works",
+    "good deeds"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id good-works (Theme I row, 1 requesting book: Titus)",
+    "— engine admission only by Jesse's merge of this PR. The",
+    "faith-and-works extension route CHECKED AND DECLINED (the James",
+    "debate register vs the practice register; extension would fire",
+    "the debate apparatus on plain good-deeds queries). Grace-first",
+    "gist per the row (Titus's refrain is always downstream of grace).",
+    "Titus 3:8 stays faith-and-works'; Matt 5:16 faith-and-works';",
+    "Eph 2:10 identity-in-christ's; Gal 6:9-10 do-not-lose-heart's —",
+    "all cross-noted, none re-anchored. Tokenizer: 'good works'",
+    "REJECTED as an entry ({good, work} would fire on every 'all",
+    "things work together for good' query; structural limit recorded",
+    "— the bare query reaches Titus 2:7 by exact phrase, measured",
+    "rank 1).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'good works in the bible' was flooded by work-and-diligence's",
+    "labor-register anchors (Gen 2:15, Eph 4:28) around Titus 2:7 rank",
+    "1 by exact phrase CHIPLESS; Eph 2:10 and Titus 2:14 also",
+    "CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Titus 2:14",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Good works"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Titus 2:7",
+    "Titus 3:14"
+  ],
+  "coversConcepts": [
+    "good-works"
+  ]
+}

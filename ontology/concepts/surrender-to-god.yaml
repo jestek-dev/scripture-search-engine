@@ -21,6 +21,10 @@ anchors:
   - ref: Romans 12:1
     sources: [editorial]
     weight: 1.0
+  # BOUNDARY (tag-gap batch 5, 2026-08-26): discipleship anchors the
+  # ADJACENT verses (Luke 9:57-62; Matt 16:25-26) and neither pack
+  # claims the other's — this pack keeps "take up your cross" /
+  # "deny yourself" and these two anchors. Recorded in both files.
   - ref: Luke 9:23
     sources: [editorial]
     weight: 0.95

@@ -1,0 +1,93 @@
+# TAG-GAP ROLLOUT batch 5 (Theme H, 2026-08-26) — ADOPTED-TAG id
+# (Theme H row in tag-gaps-review.md, 4 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "why doesnt god answer my
+# prayers" was answered entirely by prayer's how-to-pray anchors (Phil
+# 4:6, 1 Thess 5:16-18, Matt 6:9-13 — the ask-and-receive register,
+# the OPPOSITE of what the asker is living); "when god says no"
+# returned pure god/say proximity noise (Gen 1:3 rank 1).
+#
+# LEXICON ROUTING DECISIONS (recorded):
+# - "when god is silent" belongs to wrestling-with-god (a pre-existing
+#   lexicon fact, verified firing) and is NOT claimed here. The
+#   Lamentations staging note's concern — that a when-god-is-silent id
+#   would compete — is resolved by leaving that phrase where it lives.
+# - The famine-of-hearing-gods-word boundary (Amos 8:11-12, word
+#   withheld as judgment vs prayer shut out) is recorded for that row's
+#   re-pin curator as the review directs: this pack takes the
+#   prayer-shut-out register only; the word-withheld register stays
+#   with the deferred Amos row. Settle "when heaven is silent"-family
+#   routing across both when Amos 8 is assertable.
+# - "when god says no" REJECTED as a lexicon entry: it normalizes to
+#   {god, say} and would fire this pack on every "what does god say
+#   about X" query (accident class). The query is served by the
+#   concept's other entries and the fixture asserts on a safe phrasing.
+#
+# SIBLING ANCHOR (recorded in all three files): 2 Cor 12:8-9 overlaps
+# serious-illness-and-dying's and strength-in-weakness's 12:9-10 — the
+# verse's own two movements: v8 the thrice-asked plea (this register),
+# v9 the sufficient-grace answer (theirs). Batch precedent: Luke 18:13,
+# Jer 31:34.
+#
+# GIST CARE (the row's own caveat, honored): the same poem that says
+# "he shuts out my prayer" (Lam 3:8) later testifies "You heard my
+# voice" (3:56). This concept routes to what Scripture says about
+# seasons of unanswered prayer — including answers that are a No or a
+# different provision — and must never teach that God does not hear.
+#
+# CORPUS: in-corpus witnesses 2 Cor 12:8-9, Lam 3:8, Lam 3:44.
+# Corpus-blocked riders: Ps 80:4; Prov 21:13; 1:28 (personified
+# Wisdom's refusal — the staging caveat rides with it); Prov 15:29 (the
+# positive contrast). Prov 28:9 stays empty-worship's anchor (the
+# turned-away-ear judgment register, cross-noted). Ps 88:1-2 stays
+# hope-in-despair's; Ps 88:13-14 wrestling-with-god's.
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens
+# ("unanswered prayer" -> {unanswer, prayer}). No bare "prayer"
+# (prayer's own bare word; inventory skip).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: unanswered-prayer
+label: Unanswered prayer
+lexicon:
+  - unanswered prayer
+  - why doesnt god answer my prayers
+  - when god doesnt answer
+  - god didnt answer my prayer
+anchors:
+  # "I begged the Lord three times that it might depart from me. He has
+  # said to me, 'My grace is sufficient for you'" (WEB, in corpus) —
+  # Scripture's paradigm text: asked three times, answered with grace
+  # instead of removal. Sibling claim across 12:9-10 (see header).
+  - ref: 2 Corinthians 12:8-9
+    sources: [editorial]
+    weight: 1.0
+  # "Yes, when I cry, and call for help, he shuts out my prayer" (WEB,
+  # in corpus) — Scripture saying the unsayable thing the asker is
+  # feeling, inside a poem that ends heard (3:56).
+  - ref: Lamentations 3:8
+    sources: [editorial]
+    weight: 0.9
+  # "You have covered yourself with a cloud, so that no prayer can pass
+  # through" (WEB, in corpus).
+  - ref: Lamentations 3:44
+    sources: [editorial]
+    weight: 0.8
+  # "LORD, God of Armies, how long will you be angry against the prayer
+  # of your people?" (Psalm 80 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 80:4
+    sources: [editorial]
+    weight: 0.7
+  # "Whoever stops his ears at the cry of the poor, he will also cry
+  # out, but shall not be heard" (Proverbs 21 NOT in web-subset;
+  # re-check at re-pin — the shut-ear's own cause named).
+  - ref: Proverbs 21:13
+    sources: [editorial]
+    weight: 0.6
+related:
+  - prayer
+  - wrestling-with-god
+  - strength-in-weakness

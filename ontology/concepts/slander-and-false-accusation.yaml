@@ -1,0 +1,105 @@
+# TAG-GAP ROLLOUT batch 5 (Theme H, 2026-08-26) — ADOPTED-TAG id
+# (Theme H row in tag-gaps-review.md, 2 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "when people lie about
+# you" was HIJACKED by honesty's be-truthful anchors (Col 3:9-10 "don't
+# lie to one another" rank 1 — the asker is the TARGET of lies and gets
+# told not to lie: the inversion class); "falsely accused" and "slander
+# in the bible" returned chipless token scatter (Matt 27:12 narrative
+# luck; Ps 101:5 rank 1 CHIPLESS).
+#
+# REGISTER: being the target of lies and false accusation — the
+# pastoral situation-query. honesty keeps the be-truthful register;
+# taming-the-tongue keeps "gossip" and the speech-discipline register
+# (its bare `gossip` entry untouched — inventory skip recorded here).
+# betrayal-and-marriage-crisis keeps close-relationship betrayal.
+#
+# BOUNDARY NOTES: Matt 5:11 is taken here (the falsely-say-evil text;
+# suffering-for-christ owns 5:10, disjoint by one verse, cross-noted —
+# its for-my-sake register is that pack's territory and the two packs
+# are related). 1 Pet 2:23 (reviled, didn't revile back — the model
+# under false accusation) is free and taken; 2:19-20 stays
+# suffering-for-christ's, 2:24 the-cross's. Ps 86:14 checked and NOT
+# anchored: WEB's wording there is violent men, not slanderers — the
+# anchor would not honestly answer the query (anchor-accuracy covenant).
+#
+# CORPUS: in-corpus witnesses Ps 27:12, Ps 101:5, Ps 56:5, Matt 5:11,
+# 1 Pet 3:16, 1 Pet 2:23. Corpus-blocked riders: Ps 31:13, 35:11,
+# 41:5-9, 52:2-4, 64:3-8, 69:4, 109:2-3, 119:69, 120:2-3, 140:3, 11;
+# Prov 10:18, 25:18, 26:20-22, 30:10 (the Proverbs block's held
+# contingency, resolved to this row).
+#
+# TOKENIZER NOTES (G-4): bare `slander` admitted deliberately (the
+# subject noun IS the concept; it appears in the WEB text, Ps 101:5).
+# "falsely accused" {falsely, accus} and "false accusation" {false,
+# accusation} are distinct stem pairs — both kept so either phrasing
+# fires. No bare "gossip" (taming-the-tongue's), no bare "lie"/"liar"
+# (honesty's territory) — inventory skips with reasons.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: slander-and-false-accusation
+label: Slander and false accusation
+lexicon:
+  - slander
+  - falsely accused
+  - false accusation
+  - when people lie about you
+  - false witnesses against me
+anchors:
+  # "Don't deliver me over to the desire of my adversaries, for false
+  # witnesses have risen up against me, such as breathe out cruelty"
+  # (WEB, in corpus) — the falsely-accused psalmist's own prayer.
+  - ref: Psalms 27:12
+    sources: [editorial]
+    weight: 1.0
+  # "All day long they twist my words. All their thoughts are against
+  # me for evil" (WEB, in corpus). (Ps 56:8 stays
+  # god-sees-my-suffering's; 56:11 fear-not's; 56:12 oaths-and-vows'.)
+  - ref: Psalms 56:5
+    sources: [editorial]
+    weight: 0.95
+  # "I will silence whoever secretly slanders his neighbor" (WEB, in
+  # corpus) — the king's pledge against the slanderer. (Ps 101:2 stays
+  # integrity's.)
+  - ref: Psalms 101:5
+    sources: [editorial]
+    weight: 0.9
+  # "Blessed are you when people reproach you, persecute you, and say
+  # all kinds of evil against you falsely, for my sake" (WEB, in
+  # corpus). Matt 5:10 stays suffering-for-christ's — adjacent verse,
+  # adjacent register, cross-noted in both files.
+  - ref: Matthew 5:11
+    sources: [editorial]
+    weight: 0.85
+  # "...while you are spoken against as evildoers, they may be
+  # disappointed who curse your good way of life in Christ" (WEB, in
+  # corpus) — the answer to slander is a life it cannot stick to.
+  - ref: 1 Peter 3:16
+    sources: [editorial]
+    weight: 0.8
+  # "When he was cursed, he didn't curse back... but committed himself
+  # to him who judges righteously" (WEB, in corpus) — the model under
+  # false accusation. (1 Pet 2:19-20 stays suffering-for-christ's,
+  # 2:24 the-cross's.)
+  - ref: 1 Peter 2:23
+    sources: [editorial]
+    weight: 0.85
+  # "Malicious witnesses rise up against me. They ask me about things
+  # that I don't know about." (Psalm 35 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Psalms 35:11
+    sources: [editorial]
+    weight: 0.7
+  # "He who utters a slander is a fool" and the coals-of-fire sayings.
+  # (Proverbs 10 NOT in web-subset; re-check at re-pin.)
+  - ref: Proverbs 10:18
+    sources: [editorial]
+    weight: 0.6
+related:
+  - honesty
+  - taming-the-tongue
+  - vengeance
+  - suffering-for-christ

@@ -1,0 +1,85 @@
+# TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26) — ADOPTED-TAG id
+# (Theme I row in tag-gaps-review.md, 1 requesting book: Haggai,
+# entirely corpus-blocked). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission happens only by
+# his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "putting god first"
+# returned pure first/god proximity noise (Heb 4:6 translation-variant
+# luck, rank 1). "seek first the kingdom of god" is answered by
+# gods-provision's Matt 6:31-33 anchor with a "God provides" chip —
+# honest for the provision half of the sentence, but nothing names the
+# priorities register the row documents.
+#
+# MINT BASIS: the requesting Haggai texts are blocked, but the row's
+# own rationale names the in-corpus answer text — "the
+# first-place/priorities question Haggai 1 poses (and Matt 6:33
+# answers)". Minting on Matt 6:33 honors the row
+# (governing-authorities in-corpus-twin precedent); the Haggai spine
+# rides the re-pin.
+#
+# SIBLING ANCHOR (recorded in both files): Matt 6:33 is claimed
+# verse-scoped inside gods-provision's Matt 6:31-33 keystone — the
+# verse's own first clause is the priorities command; the surrounding
+# span's provision promise stays where it lives (Exod 20:17 / 2 Chr
+# 7:14 precedent).
+#
+# GUARDRAIL (the row's own note, honored): Hag 1:6-11 / 2:15-19 must
+# be framed as covenant discipline and covenant pledge, never
+# give-to-get — the rider comments below carry it, and no lexicon
+# entry or gist wording implies putting God first purchases outcomes.
+#
+# BOUNDARIES: Matt 6:24 (no man can serve two masters) and 6:19-21
+# stay contentment's; Exod 20:3 stays idolatry's / the
+# ten-commandments'; Prov 3:9 stays tithing's; seeking-god (same
+# batch) carries the seek-his-face devotion register, cross-related.
+# living-for-gods-glory resolved as glory-of-god's extension (same
+# batch) — "a different question," per that row's own note.
+#
+# CORPUS: in-corpus witness Matt 6:33 (narrow one-anchor design;
+# seasons-of-life precedent). Corpus-blocked riders: Hag 1:2-11
+# ("Consider your ways"), Hag 2:15-19, Matt 10:37 (cross-noted to
+# discipleship's rider — that pack carries it).
+#
+# TOKENIZER NOTES (G-4): bare `priority` (priorities) admitted — the
+# subject noun of the query family, no competing concept. "god first"
+# REJECTED as an entry ({god, first} — two near-generic tokens; would
+# fire on "who loved us first"-class queries). Entries otherwise keep
+# >= 2 significant tokens.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword; see
+# GUARDRAIL above.
+id: putting-god-first
+label: Putting God first
+lexicon:
+  - putting god first
+  - priorities
+  - seek first the kingdom
+  - biblical priorities
+anchors:
+  # "But seek first God's Kingdom and his righteousness; and all these
+  # things will be given to you as well" (WEB, in corpus).
+  # Verse-scoped sibling inside gods-provision's Matt 6:31-33 keystone
+  # — recorded in both files.
+  - ref: Matthew 6:33
+    sources: [editorial]
+    weight: 1.0
+  # "Is it a time for you yourselves to dwell in your paneled houses,
+  # while this house lies waste?... Consider your ways" — covenant
+  # discipline, never give-to-get (see GUARDRAIL). (Haggai NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Haggai 1:2-11
+    sources: [editorial]
+    weight: 0.9
+  # "From this day I will bless you" — the covenant pledge that follows
+  # reordered priorities; same guardrail. (Haggai NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Haggai 2:15-19
+    sources: [editorial]
+    weight: 0.7
+related:
+  - seeking-god
+  - contentment
+  - idolatry
+  - surrender-to-god

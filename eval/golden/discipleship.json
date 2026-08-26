@@ -1,0 +1,43 @@
+{
+  "id": "discipleship",
+  "query": "cost of discipleship",
+  "status": "active",
+  "additionalQueries": [
+    "what does it mean to follow jesus"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id discipleship (Theme I row, 10 requesting books —",
+    "the theme's widest) — engine admission only by Jesse's merge of",
+    "this PR. One id across the row's two registers by its own design:",
+    "the Gospels' call-and-cost texts and the epistles' mentoring",
+    "chain (2 Tim 2:2). Boundary with surrender-to-god decided and",
+    "recorded both files: that pack keeps 'take up your cross' /",
+    "'deny yourself' with Luke 9:23 and Matt 16:24; this pack anchors",
+    "the adjacent verses (Luke 9:57-62; Matt 16:25-26) — zero shared",
+    "phrases. Matt 28:19-20 (four packs' anchor already) NOT",
+    "re-anchored; 'make disciples' reaches it lexically.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'cost of discipleship' returned FOUR results, all cost-token",
+    "noise (Ezek 33:33 rank 1); 'what does it mean to follow jesus'",
+    "pure follow/jesus proximity scatter (John 1:37 chipless)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 9:57-62",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Following Jesus"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Mark 1:16-18",
+    "Matthew 16:25-26",
+    "John 8:31-32",
+    "Luke 18:28-30",
+    "2 Timothy 2:2"
+  ],
+  "coversConcepts": [
+    "discipleship"
+  ]
+}

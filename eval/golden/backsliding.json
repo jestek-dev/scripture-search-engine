@@ -1,0 +1,47 @@
+{
+  "id": "backsliding",
+  "query": "falling away from the faith",
+  "status": "active",
+  "additionalQueries": [
+    "backsliding",
+    "drifting from god"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id backsliding (Theme I row, 5 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The",
+    "relapse-and-restoration extension route CHECKED AND DECLINED per",
+    "the row's own 1 Timothy boundary (sobriety/failed-again crisis vs",
+    "drift and apostasy from the faith). GIST CARE: Hebrews' warning",
+    "passages described with their own urgency; the perseverance",
+    "question adjudicated by NEITHER this pack nor",
+    "assurance-of-salvation (cross-related — both witnesses stand;",
+    "hardness-of-heart precedent). 1 Tim 6:10 stays contentment's",
+    "span; 2 Tim 2:19 assurance-of-salvation's; Heb 10:24-25",
+    "gathering-together's.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'backsliding' returned TWO results, both token noise;",
+    "'falling away from the faith' was hijacked by Acts 13:8 (Elymas",
+    "turning the proconsul from the faith — exact-phrase luck, wrong",
+    "event) over faith-pack flood; 'drifting away from god' pure",
+    "away/god proximity noise."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hebrews 6:4-6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Backsliding"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 10:26-27",
+    "Hebrews 12:25",
+    "Hebrews 12:15",
+    "2 Timothy 2:17-18",
+    "Jeremiah 31:22"
+  ],
+  "coversConcepts": [
+    "backsliding"
+  ]
+}

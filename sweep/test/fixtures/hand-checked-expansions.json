@@ -84,6 +84,13 @@
       "conceptId": "hunger-for-god"
     },
     {
+      "queryId": "bare-word:013f54400c82da08",
+      "query": "age",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "aging-and-old-age"
+    },
+    {
       "queryId": "bare-word:018fa96a44715c90",
       "query": "white",
       "register": "church-member",
@@ -105,6 +112,13 @@
       "conceptId": "walking-by-the-spirit"
     },
     {
+      "queryId": "bare-word:02566ed5f41493c2",
+      "query": "neither",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "complacency"
+    },
+    {
       "queryId": "bare-word:0282d9b79f42c74c",
       "query": "face",
       "register": "church-member",
@@ -124,20 +138,6 @@
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "occult-and-divination"
-    },
-    {
-      "queryId": "bare-word:039b1751609c7754",
-      "query": "testament",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "messianic-prophecy"
-    },
-    {
-      "queryId": "bare-word:040eb379271f55d0",
-      "query": "intelligent",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "design-in-creation"
     }
   ],
   "concept-register": [
@@ -198,18 +198,18 @@
       "conceptId": "refuge-and-justice-for-the-oppressed"
     },
     {
+      "queryId": "concept-register:006a2fe81bc685b2",
+      "query": "scripture reading on cost of discipleship",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "discipleship"
+    },
+    {
       "queryId": "concept-register:006a980da9784d82",
       "query": "verses on the priesthood",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "priesthood"
-    },
-    {
-      "queryId": "concept-register:006ed4e163e21997",
-      "query": "bible verses about all things god works for the good",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "remembered-all-things-for-good"
     }
   ],
   "felt-need": [
@@ -304,6 +304,12 @@
       "conceptId": "pregnancy-and-child-loss"
     },
     {
+      "queryId": "golden-verbatim:02d74cc7c5f52ffb",
+      "query": "gentle and humble in heart",
+      "expectationKind": "concept-anchors",
+      "conceptId": "rest-for-the-weary"
+    },
+    {
       "queryId": "golden-verbatim:0328d327bc29789d",
       "query": "favor of God",
       "expectationKind": "concept-anchors",
@@ -334,16 +340,10 @@
       "conceptId": "governing-authorities"
     },
     {
-      "queryId": "golden-verbatim:04f4966dc8ff537d",
-      "query": "how do people know right from wrong",
+      "queryId": "golden-verbatim:0466c456615d4fad",
+      "query": "love the lord your god with all your heart",
       "expectationKind": "concept-anchors",
-      "conceptId": "conscience"
-    },
-    {
-      "queryId": "golden-verbatim:054d503938ede98d",
-      "query": "wages of sin",
-      "expectationKind": "concept-anchors",
-      "conceptId": "sin"
+      "conceptId": "loving-god"
     }
   ],
   "multi-concept": [
@@ -370,7 +370,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
+      "query": "how does the incarnation relate to trinity — father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"
@@ -411,11 +411,11 @@
       "conceptId": "the-house-of-god"
     },
     {
-      "queryId": "multi-concept:013d3d9a375e4d3c",
-      "query": "how does betrayal relate to friendship",
+      "queryId": "multi-concept:0115e44a2981d50d",
+      "query": "verses about following jesus and growing in christ",
       "register": "church-member",
       "expectationKind": "concept-anchors",
-      "conceptId": "betrayal"
+      "conceptId": "discipleship"
     }
   ],
   "remembered-phrase": [
@@ -588,6 +588,13 @@
       "conceptId": "messianic-prophecy"
     },
     {
+      "queryId": "worship-planning:009e47ebf33c62d8",
+      "query": "responsive reading about servanthood",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "servanthood"
+    },
+    {
       "queryId": "worship-planning:013f976606bf8d26",
       "query": "responsive reading about vengeance",
       "register": "worship-leader",
@@ -609,25 +616,18 @@
       "conceptId": "design-in-creation"
     },
     {
+      "queryId": "worship-planning:023c488cadd320ae",
+      "query": "setlist theme the greatest commandment",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "loving-god"
+    },
+    {
       "queryId": "worship-planning:0250d083ba1179f1",
       "query": "opening scripture for a service on fell back into sin",
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
       "conceptId": "relapse-and-restoration"
-    },
-    {
-      "queryId": "worship-planning:0270f50fb20394aa",
-      "query": "opening scripture for a service on rest",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "rest-for-the-weary"
-    },
-    {
-      "queryId": "worship-planning:02c01416d99b32a3",
-      "query": "songs about walking in the light",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "walking-in-the-light"
     }
   ]
 }
