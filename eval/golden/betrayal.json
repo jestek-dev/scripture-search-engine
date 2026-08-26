@@ -1,0 +1,45 @@
+{
+  "id": "betrayal",
+  "query": "betrayed by a friend",
+  "status": "active",
+  "additionalQueries": [
+    "betrayal in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id betrayal (Theme E row, 3 requesting books) — engine",
+    "admission only by Jesse's merge of this PR. 'Betrayed by family /",
+    "by a friend' are heavy pastoral queries with no home:",
+    "pastoral-betrayal-and-marriage-crisis is marriage-specific (its",
+    "every lexicon entry carries a spouse token). Ps 55:12-14 is",
+    "deliberately DUAL-ANCHORED with that pack — the psalm names",
+    "betrayal by an intimate, and both registers are honest claims on",
+    "it (recorded in both files). The Judas narrative carries the",
+    "locate register (John 13:18-21; Matt 26:47-50; Luke 22:47-48, all",
+    "in corpus). Ps 41:9, Ps 109:4-5, 2 Sam 15-16 (Ahithophel/Absalom)",
+    "and Obadiah ride the re-pin. NO bare 'betray' lexicon token —",
+    "measured design: the betray stem appears in every marriage-crisis",
+    "query and a bare token would fire Judas anchors on those; the",
+    "bare noun 'betrayal' stems separately and is safe (inventory row).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'betrayed by a friend' was hijacked by friendship/loving-others",
+    "anchors (John 15:13 led; Ps 55 absent); 'betrayal in the bible'",
+    "returned pure bible-token noise."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 55:12-14",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Betrayal"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 13:18-21",
+    "Matthew 26:47-50",
+    "Luke 22:47-48"
+  ],
+  "coversConcepts": [
+    "betrayal"
+  ]
+}

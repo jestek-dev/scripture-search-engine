@@ -1,0 +1,43 @@
+{
+  "id": "eternal-life",
+  "query": "what is eternal life",
+  "status": "active",
+  "additionalQueries": [
+    "how do i get eternal life"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6: ADOPTED-TAG id eternal-life (Theme K",
+    "row, 1 requesting book: John), resolved as a LEXICON EXTENSION",
+    "of salvation. The register check the row invites: salvation",
+    "already anchors the in-corpus texts an eternal-life query needs",
+    "(John 3:16 — 'that whoever believes in him should not perish,",
+    "but have eternal life' — plus 3:3, 1:12, Acts 16:30-31), and",
+    "John's definition text (17:2-3) with most of the phrase's",
+    "spine (5:24; 6:27-68; 10:28; 20:31) is corpus-blocked. A",
+    "sibling pack would re-anchor salvation's own verses; the",
+    "extension puts the honest chip on them. John 3:36 stays",
+    "jesus-the-only-way's, 11:25-26 resurrection-of-the-dead's,",
+    "4:14 living-water's (all cross-noted).",
+    "Measured gap before the extension (2026-08-26, pending-fixture",
+    "run): 'what is eternal life' and 'how do i get eternal life'",
+    "returned the right verse-family by proximity (1 John 2:25, John",
+    "3:15, Luke 18:30) but every result CHIPLESS — no curated home",
+    "for the phrase John uses dozens of times."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 3:16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Salvation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 3:3",
+    "John 1:12",
+    "Acts 16:30-31"
+  ],
+  "coversConcepts": [
+    "salvation"
+  ]
+}

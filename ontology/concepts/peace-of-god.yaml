@@ -83,6 +83,9 @@ anchors:
   # "whatever things are true... think about these things. ...and the God
   # of peace will be with you" — contiguous with the pack's Phil 4:6-7
   # lead (collapseAnchorRuns applies); the peace promise closes the unit.
+  # SIBLING NOTE (tag-gap batch 4, 2026-08-26): thought-life claims v8
+  # alone for the what-to-think-about register (recorded in both files);
+  # this pack keeps the whole span for the anxiety register.
   - ref: Philippians 4:8-9
     sources: [editorial]
     weight: 0.8

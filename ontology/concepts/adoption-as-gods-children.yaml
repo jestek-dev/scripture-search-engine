@@ -1,0 +1,83 @@
+# TAG-GAP ROLLOUT batch 6 (Theme K, 2026-08-26) — ADOPTED-TAG id
+# (Theme K row, 4 requesting books: Romans, Ephesians, Galatians,
+# Deuteronomy). Adopted as display vocabulary by Jesse's 2026-08-25
+# ruling (CONVENTIONS §11); ENGINE admission only by his merge of
+# this PR.
+#
+# ROUTE CHECK (the row's own alternative: identity-in-christ lexicon
+# extension) run and DECLINED: zero shared vocabulary, and the
+# extension would answer "adopted by god" with Ps 139 workmanship
+# anchors — the adoption METAPHOR (what adoption-motivated searchers,
+# including adoptive parents, actually type — the row) is its own
+# register. Cross-related.
+#
+# BOUNDARIES inside Rom 8 (heavily owned): 8:16 stays
+# assurance-of-salvation's, 8:17 suffering-for-christ's, 8:14 free but
+# left unclaimed (walking-by-the-spirit owns 8:13-14) — this pack
+# anchors 8:15 and 8:23 only, disjoint. Eph 1:5 is a same-batch DUAL
+# with election-and-predestination's 1:4-5 (the verse's two clauses;
+# recorded both files). 1 John 3:1 ("called children of God") stays
+# gods-love's — cross-noted, not claimed.
+#
+# DEUTERONOMY CAVEAT (carried verbatim from the row): Deut 14:1 is an
+# OT Israel-as-God's-children text, not the Pauline adoption metaphor
+# — anchored as that register, described, never read back. Gal 4:4-7
+# and Rom 9:4 ride the re-pin (Galatians 4 / Romans 9 absent).
+#
+# TOKENIZER NOTE (G-4): "adoption" is a deliberate single-word
+# admission — the metaphor's own noun (WEB Rom 8:15, 23; Eph 1:5),
+# distinctive stem; inventory row recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: adoption-as-gods-children
+label: Adopted as God's children
+lexicon:
+  - adoption
+  - adopted by god
+  - adoption in the bible
+  - spirit of adoption
+  - abba father
+  - children of god
+anchors:
+  # "you received the Spirit of adoption, by whom we cry, 'Abba!
+  # Father!'" (WEB, in corpus). The metaphor's naming verse. (8:16
+  # stays assurance-of-salvation's, 8:17 suffering-for-christ's.)
+  - ref: Romans 8:15
+    sources: [editorial]
+    weight: 1.0
+  # "For you are all children of God, through faith in Christ Jesus."
+  # (WEB, in corpus). The status stated flat.
+  - ref: Galatians 3:26
+    sources: [editorial]
+    weight: 0.95
+  # "having predestined us for adoption as children through Jesus
+  # Christ to himself" (WEB, in corpus). DUAL with
+  # election-and-predestination's 1:4-5 (recorded both files): the
+  # choosing there, the adoption here.
+  - ref: Ephesians 1:5
+    sources: [editorial]
+    weight: 0.9
+  # "we ourselves groan within ourselves, waiting for adoption, the
+  # redemption of our body." (WEB, in corpus). Adoption's
+  # already/not-yet horizon, in the text's own words.
+  - ref: Romans 8:23
+    sources: [editorial]
+    weight: 0.85
+  # "You are the children of the LORD your God." (WEB, in corpus).
+  # The OT Israel-as-children register — described as such, not read
+  # back as the Pauline metaphor (the row's own caveat). (14:3-21
+  # stays clean-and-unclean's.)
+  - ref: Deuteronomy 14:1
+    sources: [editorial]
+    weight: 0.7
+  # "God sent out his Son... that we might receive the adoption as
+  # children... crying, 'Abba, Father!'" (Galatians 4 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Galatians 4:4-7
+    sources: [editorial]
+    weight: 0.8
+related:
+  - identity-in-christ
+  - assurance-of-salvation
+  - gods-love

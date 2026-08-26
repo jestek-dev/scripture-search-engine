@@ -1,0 +1,44 @@
+{
+  "id": "seeking-god",
+  "query": "how to seek god",
+  "status": "active",
+  "additionalQueries": [
+    "seek the lord while he may be found"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id seeking-god (Theme I row, the Chronicles home-book",
+    "pair, both corpus-blocked) — engine admission only by Jesse's",
+    "merge of this PR. The row's register check verified:",
+    "hunger-for-god owns thirst/longing, presence-of-god nearness,",
+    "prayer asking — none carries seek/his-face vocabulary. In-corpus",
+    "anchors: Jer 29:12-13 (29:11 stays hope-in-god's), Isa 55:6, Ps",
+    "27:8, and 2 Chr 7:14 as a verse-scoped sibling inside",
+    "the-house-of-god's 7:12-16 (recorded both files). Chronicles",
+    "guardrail honored: seeking as covenant devotion, never a",
+    "technique for outcomes. 'seek me and find me' REJECTED as an",
+    "entry ({seek, find} — prayer's ask-seek-knock territory).",
+    "Three-id design with loving-god / wholehearted-devotion recorded",
+    "in both pack files.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'how to seek god' returned pure seek/god proximity noise (Eccl",
+    "3:15 rank 1); 'seek the lord while he may be found' had Isa 55:6",
+    "rank 1 by exact phrase CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 29:12-13",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Seeking God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 55:6",
+    "Psalms 27:8",
+    "2 Chronicles 7:14"
+  ],
+  "coversConcepts": [
+    "seeking-god"
+  ]
+}

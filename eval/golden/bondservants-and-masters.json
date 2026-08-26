@@ -1,0 +1,45 @@
+{
+  "id": "bondservants-and-masters",
+  "query": "what does the bible say about slavery",
+  "status": "active",
+  "additionalQueries": [
+    "bondservants and masters"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id bondservants-and-masters (Theme G row, 6 requesting",
+    "books) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "A common, weighty query with no concept anywhere in the vocabulary.",
+    "The row's wording caveat is honored doubly (Jeremiah fold): the",
+    "gist routes to what the text actually says \u2014 reciprocal duties,",
+    "work as for the Lord, an impartial Master in heaven \u2014 and never",
+    "reads as endorsement. Philemon (the text the query most needs) is",
+    "corpus-blocked and rides re-pin with the OT release-law register",
+    "(Jer 34:8-22; Exod 21; Deut 15; Lev 25). DUAL anchor recorded both",
+    "files: Eph 6:5-9 (favoritism holds 6:9's no-partiality clause).",
+    "Col 3:23-24 stay remembered-work-as-for-the-lord's /",
+    "pleasing-god-not-people's; Col 3:25 favoritism's (anchor here is",
+    "Col 3:22 alone).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'what does the bible say about slavery' returned pure do/say",
+    "proximity noise (Ps 73:11, Job 1:9) \u2014 not one servant/master text",
+    "in the top 10."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 6:5-9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Bondservants and masters"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Titus 2:9-10",
+    "1 Timothy 6:1-2",
+    "Colossians 3:22"
+  ],
+  "coversConcepts": [
+    "bondservants-and-masters"
+  ]
+}

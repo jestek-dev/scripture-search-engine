@@ -1,0 +1,42 @@
+{
+  "id": "adoption-as-gods-children",
+  "query": "adopted by god",
+  "status": "active",
+  "additionalQueries": [
+    "adoption in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id adoption-as-gods-children (Theme K row, 4",
+    "requesting books). The row's check-first route (identity-in-",
+    "christ lexicon extension) was run and DECLINED: zero shared",
+    "vocabulary, and the extension would answer adoption queries with",
+    "Ps 139 workmanship anchors — wrong register. Boundaries inside",
+    "Rom 8 honored: 8:16 stays assurance-of-salvation's, 8:17",
+    "suffering-for-christ's — this pack anchors 8:15 and 8:23 only.",
+    "Eph 1:5 is a same-batch DUAL with election-and-predestination's",
+    "1:4-5 (the verse's own two clauses; recorded both files). The",
+    "Deuteronomy caveat carried: Deut 14:1 anchored as the OT",
+    "Israel-as-God's-children register, described, not read back.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'adopted by god' chipless translation-variant scatter (Rom 8:23",
+    "rank 1 CHIPLESS); 'adoption in the bible' same class."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 8:15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Adopted as God's children"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Galatians 3:26",
+    "Ephesians 1:5",
+    "Romans 8:23",
+    "Deuteronomy 14:1"
+  ],
+  "coversConcepts": [
+    "adoption-as-gods-children"
+  ]
+}

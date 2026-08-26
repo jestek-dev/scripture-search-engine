@@ -1,0 +1,52 @@
+{
+  "id": "day-of-the-lord",
+  "query": "the day of the lord",
+  "status": "active",
+  "additionalQueries": [
+    "great and terrible day of the lord"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id day-of-the-lord (Theme B row, 11 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. Measured gap",
+    "before the pack (2026-08-26, fixture corpus): 'the day of the lord'",
+    "returned 1 Thess 5:2 #1 by exact phrase, CHIPLESS — and then a",
+    "WRONG-ANSWER hijack: Theme: God's guidance anchors at #2-#4 (Ps",
+    "32:8, Eph 5:17, Ps 37:23) via guidance's acknowledged bare-`lord`",
+    "collapse (the measured ph6-B cause, lexicon-inventory J12 flag);",
+    "'great and terrible day of the lord' (Joel 2:31 / Mal 4:5 wording)",
+    "found its fragment in Acts 2:20 but no theme answer — the phrase's",
+    "own OT texts are absent.",
+    "The mustNotLead guard is real, not vacuous: Ps 32:8 is in-corpus and",
+    "led the hijack window before the pack.",
+    "BOUNDARIES (log, honored): divine-judgment is broader and keeps the",
+    "day-of-judgment vocabulary; second-coming keeps the NT event and",
+    "thief-in-the-night phrasing (its 1 Thess 5:2 torrey anchor stands —",
+    "this pack's 5:1-3 editorial range is a deliberate dual under the",
+    "named-phrase register). The phrase's dense OT texts (Zeph 1:14-18;",
+    "Joel 2:1-11, 31; Amos 5:18-20; Obad 15; Zech 14:1-9; Isa 13:6-13;",
+    "Mal 4:1-5) are corpus-blocked and ride the re-pin as noted anchors.",
+    "The Daniel end-times row's merge question is NOT decided here (that",
+    "row is deferred, ledger batch 1)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Thessalonians 5:1-3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The day of the LORD"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Malachi 3:1-2"
+  ],
+  "mustNotLead": [
+    {
+      "reference": "Psalms 32:8",
+      "why": "guidance's acknowledged bare-`lord` collapse hijacked this query's window before the pack (Ps 32:8 at #2 with Theme: God's guidance); a named prophetic phrase must never be led by an instruction-psalm register mismatch"
+    }
+  ],
+  "coversConcepts": [
+    "day-of-the-lord"
+  ]
+}

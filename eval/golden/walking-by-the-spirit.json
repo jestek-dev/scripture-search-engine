@@ -1,0 +1,40 @@
+{
+  "id": "walking-by-the-spirit",
+  "query": "walk in the spirit",
+  "status": "active",
+  "additionalQueries": [
+    "led by the spirit"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id walking-by-the-spirit (Theme D row, minting book",
+    "Galatians; Rom 8:4-14 named by the row) — engine admission only by",
+    "Jesse's merge of this PR. The row's check-first route (lexicon",
+    "extension of remembered-fruit-of-the-spirit) was checked and",
+    "declined with reasons: that pack is a REMEMBERED-PHRASING pack",
+    "whose own design is ONE narrow anchor (Gal 5:22-23) — extending it",
+    "with walk/led entries and Gal 5:16-18 anchors would break the",
+    "narrow-anchor-narrow-claim rule its file states. Fully in-corpus",
+    "mint: Gal 5:16-18, 5:25, Rom 8:13-14 (v22-23 stays the fruit",
+    "pack's; Rom 8:16 stays assurance-of-salvation's — disjoint spans).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "both queries reached Gal 5:16-18 lexically (proximity / exact",
+    "phrase / preached vocabulary) but CHIPLESS — the pure wrong-reason",
+    "class on both, exactly the G3 contract failure mode."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Galatians 5:16-18",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Walking by the Spirit"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Galatians 5:25",
+    "Romans 8:13-14"
+  ],
+  "coversConcepts": [
+    "walking-by-the-spirit"
+  ]
+}

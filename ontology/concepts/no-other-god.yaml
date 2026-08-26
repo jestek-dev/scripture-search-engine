@@ -57,6 +57,9 @@ anchors:
   # the Shema to keep locator distinct from doctrine-scorer); the
   # oneness-pole duty lives HERE, and trinity reaches it through its
   # related edge to this pack.
+  # BOUNDARY (tag-gap batch 5, 2026-08-26): loving-god anchors Deut
+  # 6:5 — the Shema's opening stays here, the love command there.
+  # Adjacent, disjoint; recorded in both files.
   - ref: Deuteronomy 6:4
     sources: [editorial]
     weight: 0.95

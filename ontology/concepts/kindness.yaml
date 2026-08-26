@@ -1,0 +1,78 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 3 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "What does the Bible say about kindness" is a heavy lay query with no
+# target — the row's own finding, verified: neither loving-others' nor
+# gods-faithfulness' lexicon carries the word. The row's check-first
+# route (lexicon extension of loving-others) was checked and DECLINED,
+# recorded: extension would fire all fourteen love-command anchors on
+# every kindness query and blur the register; a narrow pack keeps the
+# claim narrow, with loving-others cross-related.
+#
+# DUAL ANCHOR, deliberate and recorded in both files: Eph 4:32 is
+# forgiving-others' anchor, and "Be kind to one another" is the verse's
+# own first clause — both claims are the verse's own words (2 Tim 1:7
+# fear-not/self-control precedent).
+#
+# BOUNDARIES: "loving kindness" stays mercy's hesed formula — zero
+# shared phrases (this lexicon's `kindness` and mercy's two-token
+# "loving kindness" entry never collide: a bare kindness query fires
+# only this pack). Gal 5:22 stays remembered-fruit-of-the-spirit's. The
+# hesed narratives the row leads with (Ruth 2:20; 3:10; 2 Sam 9:1-13;
+# 1 Chr 19:2) are corpus-blocked riders — only Ruth 1:8 is in corpus.
+#
+# TOKENIZER NOTE (G-4): bare "kindness" (one-word entry) and the "be
+# kind" -> `kind` collapse are both deliberate, inventory-acknowledged —
+# the subject word IS the concept (angels precedent).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: kindness
+label: Kindness
+lexicon:
+  - kindness
+  - be kind
+  - showing kindness
+  - kindness in the bible
+anchors:
+  # "Put on therefore, as God's chosen ones, holy and beloved, a heart
+  # of compassion, kindness, lowliness, humility, and perseverance"
+  # (WEB, in corpus). Kindness as the put-on garment of the chosen.
+  - ref: Colossians 3:12
+    sources: [editorial]
+    weight: 1.0
+  # "And be kind to one another, tender hearted, forgiving each other"
+  # (WEB, in corpus). DUAL with forgiving-others — the verse's first
+  # clause is this pack's claim, its forgiving clause that pack's
+  # (recorded both files).
+  - ref: Ephesians 4:32
+    sources: [editorial]
+    weight: 0.9
+  # "love your enemies, and do good... for he is kind toward the
+  # unthankful and evil" (WEB, in corpus). Kindness grounded in God's
+  # own — kept to v35 (Luke 6:36 stays mercy's, 6:37 forgiving-others',
+  # 6:31 loving-others'; disjoint verses).
+  - ref: Luke 6:35
+    sources: [editorial]
+    weight: 0.85
+  # "May the LORD deal kindly with you, as you have dealt with the dead
+  # and with me" (WEB, in corpus). The book of hesed's opening blessing
+  # — human kindness named and prayed back. Ruth 1:16-17 stays
+  # caring-for-aging-parents'; disjoint verses.
+  - ref: Ruth 1:8
+    sources: [editorial]
+    weight: 0.75
+  # "Isn't there still anyone of Saul's house, that I may show him
+  # kindness for Jonathan's sake?" — Mephibosheth, the OT's fullest
+  # kindness narrative. (2 Samuel 9 NOT in web-subset; re-check at
+  # re-pin, with Ruth 2:20; 3:10.)
+  - ref: 2 Samuel 9:1-7
+    sources: [editorial]
+    weight: 0.8
+related:
+  - loving-others
+  - mercy
+  - forgiving-others
+  - generosity

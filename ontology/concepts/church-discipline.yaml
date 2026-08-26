@@ -1,0 +1,88 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 5 requesting books: 2 Cor, 1 Cor, Titus, 2 Thess,
+# 1 Tim). Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission only by his merge of this PR.
+#
+# REGISTER (the row's twice-restated boundary honored): this is the
+# ASSEMBLY's handling of sin — the-lords-discipline keeps God's
+# chastening of individuals (Heb 12), receiving-correction keeps
+# personal teachability (Prov 27), forgiving-others keeps the
+# forgiveness half (Matt 18:21-22, its own anchor, untouched).
+# pastoral-relapse-and-restoration keeps the sobriety-crisis register
+# and Gal 6:1-2 (cross-related, not claimed).
+#
+# BOUNDARIES inside the anchor chapters: Matt 18:18 not claimed
+# (binding/loosing, adjacent teaching); 18:20 stays
+# gathering-together's; 2 Cor 7:10 stays repentance's anchor — the
+# 7:8-12 span here is the letter-grief arc and the verse-level overlap
+# is recorded in both files (Rom 13:1-7 dual precedent).
+#
+# CORPUS: in-corpus witnesses Matt 18:15-17 (the row's own anticipated
+# text), Titus 3:10-11, 2 Cor 7:8-12. Corpus-blocked riders: 1 Cor
+# 5:1-13 (the arc's front half), 2 Cor 2:5-11 (forgive-and-restore),
+# 2 Thess 3:14-15, 1 Tim 5:19-21 (elder due process).
+#
+# TOKENIZER NOTE (G-4): "excommunication" is a deliberate single-word
+# admission — distinctive modern word absent from the WEB text
+# (§1.6d option-3 register); inventory row recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist describes the procedure the texts give — private word, witnesses,
+# the assembly, restoration as the aim — and adjudicates no case.
+id: church-discipline
+label: Church discipline
+lexicon:
+  - church discipline
+  - how should the church handle sin
+  - tell it to the church
+  - restoring a fallen believer
+  - excommunication
+anchors:
+  # "If your brother sins against you, go, show him his fault between
+  # you and him alone... take one or two more with you... If he refuses
+  # to listen to them, tell it to the assembly." (WEB, in corpus). The
+  # procedure text itself — the row's rationale anticipated exactly
+  # this passage. (18:18 not claimed; 18:20 stays gathering-together's;
+  # 18:21-22 stays forgiving-others'.)
+  - ref: Matthew 18:15-17
+    sources: [editorial]
+    weight: 1.0
+  # "Avoid a factious man after a first and second warning, knowing
+  # that such a one is perverted and sinful, being self-condemned."
+  # (WEB, in corpus). The avoid-after-warnings procedure.
+  - ref: Titus 3:10-11
+    sources: [editorial]
+    weight: 0.9
+  # "For though I grieved you with my letter, I do not regret it...
+  # you were grieved to repentance... what earnest care it worked in
+  # you." (WEB, in corpus). The severe letter doing its work — the
+  # discipline-then-restoration arc the row is named for. VERSE
+  # OVERLAP: 7:10 (godly sorrow) is repentance's anchor; recorded in
+  # both files, neither harmonized away.
+  - ref: 2 Corinthians 7:8-12
+    sources: [editorial]
+    weight: 0.85
+  # "the arc's front half" (the row) — expel-the-immoral-brother and
+  # the do-not-even-eat instruction. (1 Corinthians 5 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: 1 Corinthians 5:9-13
+    sources: [editorial]
+    weight: 0.7
+  # Forgive-and-comfort "so that he may not be swallowed up with his
+  # excessive sorrow" — the restoration half. (2 Corinthians 2 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: 2 Corinthians 2:5-11
+    sources: [editorial]
+    weight: 0.65
+  # "Don't count him as an enemy, but admonish him as a brother" —
+  # distance commanded yet brotherhood retained. (2 Thessalonians NOT
+  # in web-subset; re-check at re-pin.)
+  - ref: 2 Thessalonians 3:14-15
+    sources: [editorial]
+    weight: 0.6
+related:
+  - the-lords-discipline
+  - forgiving-others
+  - receiving-correction
+  - relapse-and-restoration

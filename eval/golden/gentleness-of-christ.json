@@ -1,0 +1,38 @@
+{
+  "id": "gentleness-of-christ",
+  "query": "gentle and humble in heart",
+  "status": "active",
+  "additionalQueries": [
+    "gentle and lowly"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id gentleness-of-christ (Theme H row, 1 requesting",
+    "book: Matthew), resolved as a LEXICON EXTENSION of",
+    "rest-for-the-weary — the row's only in-corpus text (Matt 11:29)",
+    "is inside that pack's Matt 11:28-30 keystone; a sibling pack",
+    "would dilute the anchor G4 protects (confession-of-sin",
+    "precedent). The row's bruised-reed register (Matt 12:15-21",
+    "quoting Isa 42:1-3) is ENTIRELY corpus-blocked — neither chapter",
+    "in web-subset — and rides the re-pin, where the curator decides",
+    "join-or-mint on the texts themselves.",
+    "Measured gap before the extension (2026-08-26, pending-fixture",
+    "run): 'gentle and humble in heart' returned Matt 11:29 rank 1 by",
+    "exact phrase CHIPLESS (wrong-reason class — right verse, no",
+    "curated claim), then humble-exaltation's humility anchors."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 11:28-30",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Rest for the weary"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 11:29"
+  ],
+  "coversConcepts": [
+    "rest-for-the-weary"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "passover",
+  "query": "passover",
+  "status": "active",
+  "additionalQueries": [
+    "the passover lamb"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id passover (Theme A row, 7 requesting books) — engine",
+    "admission only by Jesse's merge of this PR. Measured gap before the",
+    "pack (2026-08-26, fixture corpus): 'passover' returned single-verse",
+    "token hits (Heb 11:28 #1, John 11:55 #2) with no curated chip and no",
+    "unit answer; 'the passover lamb' returned lamb-token scatter",
+    "(Prov 27:26, Rev 21:22).",
+    "CORPUS NOTE: the feast's own institution texts (Exod 12:1-28; Lev",
+    "23:4-8; Num 9:1-14; Deut 16:1-8; 2 Chr 30; 35; Ezra 6:19-22; 2 Kgs",
+    "23:21-23) are ALL corpus-blocked — they ride the re-pin as noted",
+    "anchors, and Exod 12 becomes this pack's keystone and this fixture's",
+    "first assertion when the corpus carries it (activation note). Until",
+    "then the in-corpus anchors are the Gospels' own Passover-preparation",
+    "narratives, which name the feast explicitly (Luke 22:7-15;",
+    "Matt 26:17-19).",
+    "BOUNDARY (log scoping, honored): lords-supper keeps the NT meal",
+    "(Luke 22:19-20 stays its anchor; spans do not overlap);",
+    "appointed-feasts keeps the calendar-as-a-system queries."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 22:7-15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Passover"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Matthew 26:17-19"
+  ],
+  "coversConcepts": [
+    "passover"
+  ]
+}

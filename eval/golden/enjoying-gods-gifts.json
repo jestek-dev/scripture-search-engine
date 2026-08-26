@@ -1,0 +1,40 @@
+{
+  "id": "enjoying-gods-gifts",
+  "query": "does god want me to enjoy life",
+  "status": "active",
+  "additionalQueries": [
+    "eat drink and enjoy your work"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id enjoying-gods-gifts (Theme E row, 1 requesting book) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "Ecclesiastes' sevenfold refrain falls between existing registers.",
+    "Contentment extension route (the row's own check-first) CHECKED and",
+    "DECLINED: contentment is enough-amid-lack and owns the wealth/money",
+    "vocabulary; enjoyment-as-received-gift is a different claim. The",
+    "row's guardrail honored: gist presents enjoyment as received gift",
+    "(5:19), never hedonism or entitlement. 1 Tim 6:17 stays",
+    "contentment's; Jas 1:17 stays gods-unchanging-nature's. In-corpus",
+    "anchors are Eccl 3:12-13 and 3:22; the refrain's other instances",
+    "(2:24-26; 5:18-20; 8:15; 9:7-9; 11:8-9) are corpus-blocked riders.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'does god want me to enjoy life' reached Eccl 3:22/3:12 only by",
+    "translation-variant luck, CHIPLESS, over do/god proximity noise;",
+    "'eat drink and enjoy your work' had Eccl 3:13 at rank 1 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ecclesiastes 3:12-13",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Enjoying God's gifts"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ecclesiastes 3:22"
+  ],
+  "coversConcepts": [
+    "enjoying-gods-gifts"
+  ]
+}

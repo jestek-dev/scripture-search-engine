@@ -1,0 +1,105 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme A row in tag-gaps-review.md, 9 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The priesthood — the OT institution and Christ's high-priestly office.
+# REGISTER DESIGN (the Hebrews merge's binding note, decided at this
+# minting): ONE id spans both registers, because Hebrews itself reads
+# them as one office and its shadow ("the row now spans the OT
+# institution and Christ's high-priestly office"); the believer-
+# priesthood texts (1 Pet 2:5, 9) join at supporting weight. The Job
+# `mediator` row (log) is a DIFFERENT register — cross-noted here,
+# deliberately not built or absorbed (per the Exodus row: "decide the
+# two together before minting" — decided: kept apart; mediator remains
+# an open later-batch row). The intercession register ("Jesus prays for
+# me", Heb 7:25) is corpus-blocked and rides the re-pin with the Heb 7
+# anchor below.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): "priesthood" is the concept's
+# own subject noun, a deliberate bare entry (inventory row admitted:
+# [priesthood]). Other entries keep >= 2 significant tokens ({high,
+# priest}, {priest, old, testament}, {royal, priesthood}, {great, high,
+# priest}, {jesu, high, priest}). Worst neighbor overlaps: {great} with
+# several packs, {jesu} with jesus-the-only-way — 1 incidental token
+# each, zero shared phrases.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: priesthood
+label: The priesthood
+lexicon:
+  # The subject noun (inventory row).
+  - priesthood
+  - high priest
+  - great high priest
+  - jesus our high priest
+  - priests in the old testament
+  # 1 Pet 2:9's own phrase — the believer-priesthood register.
+  - royal priesthood
+anchors:
+  # "Having then a great high priest who has passed through the
+  # heavens, Jesus, the Son of God... Let's therefore draw near with
+  # boldness to the throne of grace" (WEB, in corpus). The confession
+  # and its comfort — a high priest touched with the feeling of our
+  # infirmities.
+  - ref: Hebrews 4:14-16
+    sources: [editorial]
+    weight: 1.0
+  # "boldness to enter into the holy place by the blood of Jesus...
+  # and having a great priest over God's house, let's draw near" (WEB,
+  # in corpus). DELIBERATE DUAL (recorded): worship anchors this same
+  # range [torrey] for the access-to-God register; this claim is the
+  # great-priest office the access rests on.
+  - ref: Hebrews 10:19-22
+    sources: [editorial]
+    weight: 0.85
+  # "a forerunner Jesus entered for us, having become a high priest
+  # forever after the order of Melchizedek." (WEB, in corpus).
+  # Kept to v20: hope-in-god already anchors v19 (the anchor of the
+  # soul) — adjacent claims, no shared span.
+  - ref: Hebrews 6:20
+    sources: [editorial]
+    weight: 0.8
+  # "You also as living stones are built up as a spiritual house, to be
+  # a holy priesthood, to offer up spiritual sacrifices" (WEB, in
+  # corpus). The believer-priesthood register. HONEST OVERLAP
+  # (recorded): christ-the-cornerstone anchors the containing 1 Pet
+  # 2:4-7 for the stone title; this single-verse claim is the
+  # priesthood clause.
+  - ref: 1 Peter 2:5
+    sources: [editorial]
+    weight: 0.75
+  # "you are a chosen race, a royal priesthood, a holy nation" (WEB, in
+  # corpus). DELIBERATE DUAL (recorded): identity-in-christ anchors
+  # this verse for the who-am-I register; this claim is the priesthood
+  # title itself.
+  - ref: 1 Peter 2:9
+    sources: [editorial]
+    weight: 0.7
+  # "About Levi he said... They shall teach Jacob your ordinances, and
+  # Israel your law. They shall put incense before you, and whole burnt
+  # offering on your altar." (WEB, in corpus). The institution's job
+  # description in Moses' blessing — teaching and altar service.
+  - ref: Deuteronomy 33:8-11
+    sources: [editorial]
+    weight: 0.7
+  # Aaron and his sons set apart to minister — the institution's
+  # founding charge. (Exodus 28-29 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Exodus 28:1
+    sources: [editorial]
+    weight: 0.8
+  # "he is able to save to the uttermost... seeing that he lives
+  # forever to make intercession for them" register — the 'Jesus prays
+  # for me' query family the log names (prayer's bare `intercession`
+  # lexicon entry does not serve it). (Hebrews 7 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Hebrews 7:23-28
+    sources: [editorial]
+    weight: 0.9
+related:
+  - the-cross
+  - worship
+  - holiness

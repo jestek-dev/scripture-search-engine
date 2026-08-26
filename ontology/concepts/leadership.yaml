@@ -1,0 +1,104 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 20 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The row's own check-first route (lexicon extension of wisdom-from-god)
+# was checked and DECLINED: that pack is wisdom-as-God's-gift (Jas 1:5)
+# and speaks no leadership vocabulary; ask-for-wisdom texts are the wrong
+# register for "biblical leadership". Measured before the pack: "biblical
+# leadership" returned ZERO results.
+#
+# ONE id across the row's registers, per the 1 Thessalonians fold's own
+# question ("weigh whether one id serves both query families before
+# minting a second") — servant leadership (Luke 22), the congregation's
+# duty toward leaders (1 Thess 5; Heb 13), and rule by wisdom (Prov 28).
+# The elder/overseer qualification lists (1 Tim 3:1-13; Titus 1:5-9) are
+# corpus-blocked riders under the same id; so are the OT administration
+# spine (Exod 18:13-26; Deut 17:14-20; 1 Kgs 12:6-15) and the shepherd
+# texts (Ps 78:70-72; 2 Sam 23:3-4).
+#
+# BOUNDARIES: Josh 1:1-9 is NOT anchored — Josh 1:8 is
+# delight-in-the-word's and 1:9 is doubly claimed (fear-not,
+# do-not-lose-heart); the commissioning narrative adds no free span worth
+# a fourth claim. Ps 101 goes to integrity (same batch) — the psalm's own
+# register is the blameless heart, not office.
+#
+# TOKENIZER DISCIPLINE (G-4): bare `leadership` is a deliberate one-word
+# entry (distinctive modern stem, absent from the WEB text — NEEDS-JESSE
+# §1.6d option-3 register); every other entry keeps >= 2 significant
+# tokens. Bare `leader` is skipped (inventory row): generic narrative
+# word.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: leadership
+label: Leadership
+lexicon:
+  - leadership
+  - biblical leadership
+  - servant leadership
+  - leadership in the bible
+  - godly leader
+  - qualifications of an elder
+anchors:
+  # "The kings of the nations lord it over them... But not so with you.
+  # Rather, the one who is greater among you, let him become as the
+  # younger, and one who is governing, as one who serves... I am among
+  # you as one who serves" (WEB, in corpus). Jesus' own definition of
+  # leadership, at the last supper table. Luke 22:19-20 stays
+  # lords-supper's/covenant's — disjoint spans.
+  - ref: Luke 22:24-27
+    sources: [editorial]
+    weight: 1.0
+  # "Remember your leaders, men who spoke to you the word of God, and
+  # considering the results of their conduct, imitate their faith"
+  # (WEB, in corpus).
+  - ref: Hebrews 13:7
+    sources: [editorial]
+    weight: 0.9
+  # "Obey your leaders and submit to them, for they watch on behalf of
+  # your souls, as those who will give account" (WEB, in corpus). The
+  # weight of the office stated from the follower's side.
+  - ref: Hebrews 13:17
+    sources: [editorial]
+    weight: 0.85
+  # "know those who labor among you, and are over you in the Lord...
+  # respect and honor them in love for their work's sake" (WEB, in
+  # corpus). The folded honoring-church-leaders register, per the row.
+  - ref: 1 Thessalonians 5:12-13
+    sources: [editorial]
+    weight: 0.8
+  # "In rebellion, a land has many rulers, but order is maintained by a
+  # man of understanding and knowledge" (WEB, in corpus). Proverbs'
+  # rule-by-wisdom register.
+  - ref: Proverbs 28:2
+    sources: [editorial]
+    weight: 0.7
+  # "An overseer must be blameless... one who rules his own house well"
+  # — the elder-qualification list. (1 Timothy 3 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: 1 Timothy 3:1-7
+    sources: [editorial]
+    weight: 0.9
+  # "appoint elders in every city... blameless, God's steward" — the
+  # parallel list. (Titus 1 NOT in web-subset; re-check at re-pin.)
+  - ref: Titus 1:5-9
+    sources: [editorial]
+    weight: 0.85
+  # Jethro's counsel: able men who fear God, over thousands and
+  # hundreds — delegation's founding text. (Exodus 18 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Exodus 18:13-26
+    sources: [editorial]
+    weight: 0.8
+  # "He chose David his servant... So he was their shepherd according
+  # to the integrity of his heart" — the shepherd-leader summary.
+  # (Psalm 78 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 78:70-72
+    sources: [editorial]
+    weight: 0.75
+related:
+  - wisdom-from-god
+  - praying-for-leaders
+  - integrity

@@ -125,9 +125,56 @@ describe('health source semantics', () => {
     // + the 2 apologetics master-tag packs (2026-08-25, Decision D13
     // approved by Jesse: mormon-evangelism, jehovahs-witness-evangelism
     // — each with an active demonstrating fixture in the same change).
+    // + the 15 tag-gap rollout batch-1 packs (2026-08-26, Themes A-B of the
+    // adopted tag-gap review: idolatry, fasting, empty-worship, priesthood,
+    // passover, the-house-of-god, appointed-feasts, clean-and-unclean,
+    // remnant, day-of-the-lord, restoration-of-israel, messianic-prophecy,
+    // antichrist, servant-of-the-lord, gods-plan-for-israel — each with an
+    // active demonstrating fixture in the same change).
+    // + the 13 tag-gap rollout batch-2 packs (2026-08-26, Themes C-D of the
+    // adopted tag-gap review: slow-to-anger, mercy, knowing-god, god-reigns,
+    // the-name-of-god, living-water, glory-of-god, angels,
+    // occult-and-divination, holy-spirit, deliverance-from-demons, satan,
+    // walking-by-the-spirit — each with an active demonstrating fixture in
+    // the same change; the batch's two extensions ride providence and
+    // gods-love, so they add no ids here).
+    // + the 13 tag-gap rollout batch-3 packs (2026-08-26, Theme E slice of
+    // the adopted tag-gap review: oaths-and-vows, leadership,
+    // fear-of-the-lord, temptation, hardness-of-heart,
+    // money-and-possessions, judging-others, betrayal,
+    // grumbling-and-complaining, kindness, integrity, drunkenness,
+    // favoritism — each with an active demonstrating fixture in the same
+    // change).
+    // + the 14 tag-gap rollout batch-4 packs (2026-08-26, Themes E/F/G of
+    // the adopted tag-gap review: seasons-of-life, enjoying-gods-gifts,
+    // receiving-correction, thought-life, trusting-in-man, covetousness,
+    // mortality, justice-and-oppression, sojourners-and-strangers,
+    // vengeance, governing-authorities, care-for-widows,
+    // bondservants-and-masters, individual-responsibility — each with an
+    // active demonstrating fixture in the same change).
+    // + the 15 tag-gap rollout batch-5 packs (2026-08-26, Themes H-I of
+    // the adopted tag-gap review: lament, unanswered-prayer,
+    // comforting-others, aging-and-old-age, slander-and-false-accusation,
+    // shame, discipleship, loving-god, servanthood, backsliding,
+    // seeking-god, putting-god-first, good-works, complacency,
+    // watchman-and-warning — each with an active demonstrating fixture in
+    // the same change; the batch's three extensions ride
+    // rest-for-the-weary, glory-of-god, and freedom-from-bondage, so they
+    // add no ids here).
+    // + the 16 tag-gap rollout batch-6 packs (2026-08-26, Themes J-M of
+    // the adopted tag-gap review: church-discipline,
+    // revival-and-reformation, shepherds-and-the-flock,
+    // unity-of-the-church, supporting-gospel-workers, head-coverings,
+    // singleness, signs-and-wonders, boldness-in-witness,
+    // kingdom-of-heaven, election-and-predestination,
+    // adoption-as-gods-children, ascension, witness-testimony,
+    // light-and-darkness, zion-city-of-god — each with an active
+    // demonstrating fixture in the same change; the batch's four
+    // extensions ride spiritual-gifts, walking-in-the-light, conscience,
+    // and salvation, so they add no ids here).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(153);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(153);
+    expect(coverage).toHaveLength(239);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(239);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

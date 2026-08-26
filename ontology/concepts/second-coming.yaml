@@ -11,6 +11,9 @@ lexicon:
   - every eye will see him
   - maranatha
 anchors:
+  # BATCH-6 SPAN SIBLING (2026-08-26): ascension anchors 1:9-11 for
+  # the departure; this pack keeps the will-come-back promise.
+  # Recorded both files.
   - ref: Acts 1:11
     sources: [editorial]
     weight: 1.0

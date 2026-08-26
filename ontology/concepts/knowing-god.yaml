@@ -1,0 +1,91 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme C row in tag-gaps-review.md, 5 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# Knowing God — the relational, devotional knowledge-of-God register.
+# The row's check-first route (lexicon extension of hunger-for-god) was
+# checked and DECLINED: that pack's own scope note fixes it as the
+# DESIRE register (thirst, longing, dryness), and its anchors would
+# answer knowledge queries with appetite texts. The two cross-relate.
+#
+# The minting books' densest witnesses are corpus-blocked and ride the
+# re-pin: Hos 2:20; 4:1, 6 ("my people are destroyed for lack of
+# knowledge"); 6:3, 6; Jer 9:23-24 ("let him who boasts boast...that
+# he knows me"); 22:15-16; 24:7; Prov 2:5; 9:10; John 17:3. The
+# Exodus/Ezekiel RECOGNITION FORMULA ("that you may know that I am the
+# LORD") carries the row's own staged-register caveat — acknowledgment
+# forced by God's acts, a different register from relational knowing —
+# and is deliberately NOT appended here.
+#
+# SPAN NOTE: covenant owns Jer 31:31-34; this pack claims the narrower
+# v34 — the covenant promise IS "they will all know me" — under the
+# Acts 17:26 sibling precedent (zero shared lexicon phrases; the
+# passage honestly carries both themes).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({know, god}, {know, lord}, {lack, knowledg}). "they will all
+# know me" was considered and REJECTED as an entry: it collapses to
+# bare `know` (they/will/all/me are stopwords), and bare "know" firing
+# this concept would be an accidental net over half the corpus.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: knowing-god
+label: Knowing God
+lexicon:
+  - knowing god
+  - know the lord
+  - what does it mean to know god
+  - knowledge of god
+  - lack of knowledge
+anchors:
+  # "They will no longer each teach his neighbor... saying, 'Know the
+  # LORD;' for they will all know me, from their least to their
+  # greatest" (WEB, in corpus). The new-covenant promise of this exact
+  # register — knowing God no longer secondhand.
+  - ref: Jeremiah 31:34
+    sources: [editorial]
+    weight: 1.0
+  # "This is how we know that we know him: if we keep his
+  # commandments. One who says, 'I know him,' and doesn't keep his
+  # commandments, is a liar" (WEB, in corpus). The apostolic test of
+  # the claim.
+  - ref: 1 John 2:3-4
+    sources: [editorial]
+    weight: 0.9
+  # "If you had known me, you would have known my Father also. From
+  # now on, you know him and have seen him" (WEB, in corpus). Knowing
+  # God is knowing Christ.
+  - ref: John 14:7
+    sources: [editorial]
+    weight: 0.85
+  # "everyone who loves has been born of God and knows God. He who
+  # doesn't love doesn't know God, for God is love" (WEB, in corpus).
+  # Kept to vv7-8; 1 John 4:9-10, 16, 19 are gods-love's anchors — no
+  # span overlap.
+  - ref: 1 John 4:7-8
+    sources: [editorial]
+    weight: 0.8
+  # "My people are destroyed for lack of knowledge" — the row's
+  # headline verse. (Hosea NOT in web-subset; re-check at re-pin.)
+  - ref: Hosea 4:6
+    sources: [editorial]
+    weight: 0.95
+  # "let him who boasts boast in this, that he has understanding, and
+  # knows me" — the one boast worth making. (Jeremiah 9 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Jeremiah 9:23-24
+    sources: [editorial]
+    weight: 0.9
+  # "Let's acknowledge the LORD. Let's press on to know the LORD." —
+  # the register's own imperative. (Hosea NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Hosea 6:3
+    sources: [editorial]
+    weight: 0.85
+related:
+  - hunger-for-god
+  - presence-of-god
+  - the-name-of-god

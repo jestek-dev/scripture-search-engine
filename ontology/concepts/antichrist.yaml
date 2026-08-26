@@ -1,0 +1,100 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme B row in tag-gaps-review.md, 3 requesting books; absorbs the
+# staged antichrist-and-man-of-lawlessness and antichrist-and-the-beast
+# folds per the log). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission happens only by
+# his merge of this PR.
+#
+# THE BINDING LEXICON RULE (2 Thess fold + Revelation merge, honored):
+# 2 Thess 2 never uses the word "antichrist", 1 John never says "man of
+# sin" or "lawlessness", and Revelation's figure is "the beast" — so
+# this lexicon carries ALL THREE word families, or a query family goes
+# unserved. "mark of the beast" is deliberately NOT an entry until
+# Rev 13 is in corpus: its honest first answer (Rev 13:16-18) cannot
+# surface yet, and pointing the query at 1 John instead would be a
+# curated wrong answer.
+#
+# NO-IDENTIFICATION RULE (log, honored + CLAUDE.md #6): the gist
+# describes the figure as the texts do and endorses NO historical or
+# modern identification — in the label, the lexicon, and every comment.
+# Daniel's little-horn texts (Dan 7:8, 20-25; 8:9-12, 23-25; 11:36-45)
+# are NOT anchored: identifying them with the antichrist is precisely
+# the contested identification the log's Daniel block declines to
+# adjudicate (its own deliberate withholding, honored here).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): "antichrist" is the concept's
+# own subject noun, a deliberate bare entry (inventory row admitted:
+# [antichrist]; the word occurs in the WEB text at 1 John 2:18, 22;
+# 4:3 — the measured gap was the wrong-reason class, verses chipless).
+# "who is the antichrist" would collapse to the same single token and
+# is NOT a separate entry. Others keep >= 2 significant tokens ({man,
+# sin}, {man, lawlessness}, {beast, false, prophet}). Shared with sin:
+# {sin} (1 token); with false-prophets: {false, prophet} (2 of its 8 —
+# ratio 0.25, under the 0.6 limit; zero shared phrases; the beast text
+# pairs the two figures, so the token kinship is the texts' own).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: antichrist
+label: The antichrist
+lexicon:
+  # The word's own home is 1 John (inventory row).
+  - antichrist
+  # 2 Thess 2:3's families (WEB: "man of sin"; "lawlessness" is the
+  # chapter's own vocabulary, vv7-8).
+  - the man of sin
+  - man of lawlessness
+  # Revelation's figure-pair (Rev 13; 19:20).
+  - the beast and the false prophet
+anchors:
+  # "as you heard that the Antichrist is coming, even now many
+  # antichrists have arisen. By this we know that it is the final
+  # hour." (WEB, in corpus). The word's first occurrence in Scripture —
+  # one figure expected, many already present.
+  - ref: 1 John 2:18
+    sources: [editorial]
+    weight: 1.0
+  # "Who is the liar but he who denies that Jesus is the Christ? This
+  # is the Antichrist, he who denies the Father and the Son." (WEB, in
+  # corpus). John's own definition — denial of the Son.
+  - ref: 1 John 2:22-23
+    sources: [editorial]
+    weight: 0.95
+  # "every spirit who doesn't confess that Jesus Christ has come in
+  # the flesh is not of God; and this is the spirit of the Antichrist"
+  # (WEB, in corpus). The spirit already in the world — the test is
+  # confessional.
+  - ref: 1 John 4:2-3
+    sources: [editorial]
+    weight: 0.9
+  # The man of sin revealed — "the son of destruction, he who opposes
+  # and exalts himself against all that is called God"; the mystery of
+  # lawlessness already at work; destroyed by the breath of the Lord's
+  # mouth. The staged fold's own text and the second word family's
+  # home. (2 Thessalonians NOT in web-subset; re-check at re-pin.)
+  - ref: 2 Thessalonians 2:1-12
+    sources: [editorial]
+    weight: 0.95
+  # The beast from the sea — the third word family's home; described
+  # as the text describes it, identified with no one. (Revelation 13
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Revelation 13:1-10
+    sources: [editorial]
+    weight: 0.9
+  # The beast and the false prophet taken together at the end — the
+  # figure-pair the lexicon entry names. (Revelation 19 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Revelation 19:19-20
+    sources: [editorial]
+    weight: 0.8
+  # "many deceivers have gone out into the world, those who don't
+  # confess that Jesus Christ came in the flesh. This is the deceiver
+  # and the Antichrist." — the word's fourth occurrence. (2 John NOT
+  # in web-subset; re-check at re-pin.)
+  - ref: 2 John 1:7
+    sources: [editorial]
+    weight: 0.8
+related:
+  - false-prophets
+  - second-coming

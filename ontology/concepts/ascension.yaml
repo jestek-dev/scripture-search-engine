@@ -1,0 +1,78 @@
+# TAG-GAP ROLLOUT batch 6 (Theme K, 2026-08-26) — ADOPTED-TAG id
+# (Theme K row, 2 requesting books: Luke, Acts). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR. "The vocabulary has
+# resurrection and second-coming but nothing for the event between
+# them" (the row) — measured true.
+#
+# SIBLING CLAIMS (both recorded in the sibling files):
+# - Acts 1:9-11 as a SPAN SIBLING of second-coming's 1:11 — the verse
+#   carries both the departure (this row) and the promise of return
+#   (that row); neither reading displaces the other.
+# - Acts 2:33 as a VERSE-SCOPED SIBLING inside trinity's 2:32-33 —
+#   exaltation to the right hand is the ascension's own completion.
+#
+# BOUNDARIES: Luke 24:46-48 stays sharing-your-faith's; Acts 1:4-5
+# holy-spirit's, 1:8 sharing-your-faith's; Acts 2:34-35 (David didn't
+# ascend; sit at my right hand) left inside this row's 2:33 comment
+# rather than anchored — messianic-prophecy territory adjacent.
+# Acts 7:55-56 (Stephen sees the Son of Man standing) corpus-blocked
+# rider; Eph 4:8-10 in corpus and free — anchored.
+#
+# TOKENIZER NOTE (G-4): "ascension" is a deliberate single-word
+# admission — the event's own noun, distinctive stem; inventory row
+# recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: ascension
+label: The Ascension
+lexicon:
+  - ascension
+  - ascension of jesus
+  - jesus taken up to heaven
+  - why did jesus leave
+  - seated at the right hand
+anchors:
+  # "as they were looking, he was taken up, and a cloud received him
+  # out of their sight... This Jesus, who was received up from you
+  # into the sky, will come back in the same way as you saw him going
+  # into the sky." (WEB, in corpus). The fullest ascension narrative
+  # in Scripture (the row). SPAN SIBLING with second-coming's 1:11
+  # (recorded both files).
+  - ref: Acts 1:9-11
+    sources: [editorial]
+    weight: 1.0
+  # "While he blessed them, he withdrew from them and was carried up
+  # into heaven. They worshiped him and returned to Jerusalem with
+  # great joy" (WEB, in corpus). Luke's ending — departure met with
+  # worship and joy, not loss.
+  - ref: Luke 24:50-53
+    sources: [editorial]
+    weight: 0.95
+  # "Being therefore exalted by the right hand of God, and having
+  # received from the Father the promise of the Holy Spirit, he has
+  # poured out this which you now see and hear." (WEB, in corpus).
+  # Where he went and what followed — Peter's answer to the row's
+  # "why did Jesus leave". VERSE-SCOPED SIBLING inside trinity's
+  # 2:32-33 (recorded both files).
+  - ref: Acts 2:33
+    sources: [editorial]
+    weight: 0.9
+  # "When he ascended on high, he led captivity captive, and gave
+  # gifts to people... He who descended is the one who also ascended
+  # far above all the heavens, that he might fill all things." (WEB,
+  # in corpus). The ascent read by an apostle. (4:11-12 stays
+  # spiritual-gifts'.)
+  - ref: Ephesians 4:8-10
+    sources: [editorial]
+    weight: 0.85
+  # Stephen "saw the glory of God, and Jesus standing on the right
+  # hand of God". (Acts 7 NOT in web-subset; re-check at re-pin.)
+  - ref: Acts 7:55-56
+    sources: [editorial]
+    weight: 0.7
+related:
+  - resurrection
+  - second-coming
+  - trinity

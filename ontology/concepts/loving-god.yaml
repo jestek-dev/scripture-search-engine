@@ -1,0 +1,97 @@
+# TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26) — ADOPTED-TAG id
+# (Theme I row in tag-gaps-review.md, 7 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "how to love god" was
+# answered ENTIRELY by gods-love's God-loves-you anchors (Rom 5:8, John
+# 3:16 — the opposite direction; the row's exact diagnosis); "love the
+# lord your god with all your heart" had Deut 6:5 and Matt 22:37 ranks
+# 1-2 by exact phrase CHIPLESS, then the same gods-love flood; "the
+# greatest commandment" had Matt 22:36 rank 1 CHIPLESS.
+#
+# THREE-ID DESIGN DECIDED (carries batch 3's wholehearted-devotion
+# deferral note — "one design across those three ids should be decided
+# together"): the whole-heart devotion vocabulary lands on THIS row
+# (Deut 6:5; Matt 22:37) and on seeking-god (Jer 29:13, same batch);
+# wholehearted-devotion resolves at the re-pin as a lexicon extension
+# of these two rather than a third id, when its own 1 Kgs/1 Chr texts
+# (8:61; 11:4; 28:9...) become assertable. Reversible; recorded here,
+# in seeking-god.yaml, and in the rollout ledger.
+#
+# BOUNDARIES: gods-love keeps bare "love" (Jesse's 2026-08-08 call) and
+# God's-love-for-us; loving-others keeps Matt 22:39 and neighbor-love;
+# no-other-god keeps Deut 6:4 (the Shema's opening — this pack takes
+# 6:5, adjacent and disjoint); obedience-to-the-word keeps John 14:15
+# and 14:21 ("if you love me, keep my commandments" — the
+# love-shown-by-obedience texts live there; 1 John 5:3 is taken HERE as
+# the definitional statement, cross-noted); presence-of-god keeps John
+# 14:23.
+#
+# CORPUS: in-corpus witnesses Matt 22:36-38, Deut 6:5, Ps 116:1,
+# 1 John 5:3. Corpus-blocked riders: Deut 10:12; 11:1; 30:6, 16, 20,
+# Josh 22:5; 23:11, Mark 12:29-33 (the Shema plus "more than all whole
+# burnt offerings"), Luke 10:25-28, John 21:15-17 (the thrice-asked "do
+# you love me?"), Ps 145:20.
+#
+# TOKENIZER NOTES (G-4): the natural entry "how to love god" normalizes
+# to {love, god} — REJECTED: it would fire this pack on every
+# "does god love me" / "gods love" query (the reverse of the inversion
+# this pack exists to fix). STRUCTURAL LIMIT recorded: "how to love
+# god" phrasings reach this pack only via its other entries' tokens;
+# the fixture asserts on the commandment phrasings. "loving god"
+# ({loving, god}) is safe — `loving` stems apart from `love` under the
+# one tokenizer.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: loving-god
+label: Loving God
+lexicon:
+  - loving god
+  - love the lord your god
+  - love god with all your heart
+  - the greatest commandment
+anchors:
+  # "'You shall love the Lord your God with all your heart, with all
+  # your soul, and with all your mind.' This is the first and great
+  # commandment" (WEB, in corpus) — Jesus' own answer to the row's
+  # queries. (Matt 22:39 stays loving-others'.)
+  - ref: Matthew 22:36-38
+    sources: [editorial]
+    weight: 1.0
+  # "You shall love the LORD your God with all your heart, with all
+  # your soul, and with all your might" (WEB, in corpus) — the source
+  # text the Gospels quote. (Deut 6:4 stays no-other-god's — adjacent,
+  # disjoint, recorded both files.)
+  - ref: Deuteronomy 6:5
+    sources: [editorial]
+    weight: 0.95
+  # "For this is loving God, that we keep his commandments. His
+  # commandments are not grievous" (WEB, in corpus) — the definitional
+  # statement. (John 14:15, 21 stay obedience-to-the-word's — the
+  # love-shown-by-obedience texts, cross-noted.)
+  - ref: 1 John 5:3
+    sources: [editorial]
+    weight: 0.9
+  # "I love the LORD, because he listens to my voice" (WEB, in corpus)
+  # — the pray-er's own declaration.
+  - ref: Psalms 116:1
+    sources: [editorial]
+    weight: 0.8
+  # "Now, Israel, what does the LORD your God require of you, but to
+  # fear the LORD your God... to love him, and to serve the LORD your
+  # God with all your heart" (Deuteronomy 10 NOT in web-subset;
+  # re-check at re-pin).
+  - ref: Deuteronomy 10:12
+    sources: [editorial]
+    weight: 0.8
+  # The thrice-asked "Simon, son of Jonah, do you love me?" (John 21
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: John 21:15-17
+    sources: [editorial]
+    weight: 0.75
+related:
+  - gods-love
+  - loving-others
+  - obedience-to-the-word

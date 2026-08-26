@@ -1,0 +1,109 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 14 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "The fear of the LORD" is a heavy, distinct lay query with no concept
+# anywhere in the vocabulary — and the MEASURED before-state proved the
+# review's diagnosis exactly: "what does it mean to fear god" was
+# answered entirely by fear-not's anchors (2 Tim 1:7, Josh 1:9, Isa
+# 41:10), the OPPOSITE intent. This pack carries the piety sense: the
+# reverence Scripture calls the beginning of wisdom and the fitting
+# response to God himself.
+#
+# BOUNDARIES (the row's own flag, honored): wisdom-from-god anchors Prov
+# 9:10, so wisdom-flavored queries land there — that anchor is NOT moved
+# or duplicated; the packs cross-relate. fear-not keeps the divine
+# comfort-command register and every anchor it has; its results ranking
+# beside this pack's on fear queries are honest neighbors. Ps 19:9 ("the
+# fear of the LORD is clean") sits inside trustworthiness-of-scripture's
+# and mormon-evangelism's Ps 19:7-9 spans and reaches the query by exact
+# phrase — not re-anchored. Ps 147:11 stays gods-love's (batch 2
+# extension anchor); Job 1:1, 8 stay with suffering-of-the-righteous and
+# testing.
+#
+# The phrase's keynote texts — Prov 1:7; 9:10; Ps 111:10; 112:1; 128:1;
+# Eccl 12:13; Isa 66:2 — are ALL corpus-blocked; the in-corpus spine is
+# Ps 34:11 (Scripture's own "I will teach you the fear of the LORD"),
+# Ps 33:8, Eccl 3:14, Prov 28:14, Mal 3:16, Jer 10:7.
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant tokens
+# ({fear, lord}, {fear, god}, {reverence, god}, ...). NO bare `fear` —
+# that token is fear-not's territory and the ambiguity is the exact
+# misrouting this pack fixes. Shared-token ratio vs fear-not: 1 shared
+# token (`fear`) — well under the 0.6 limit.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: fear-of-the-lord
+label: The fear of the LORD
+lexicon:
+  - the fear of the lord
+  - fear of god
+  - fearing god
+  - what does it mean to fear god
+  - reverence for god
+  - fear of the lord is the beginning of wisdom
+anchors:
+  # "Come, you children, listen to me. I will teach you the fear of the
+  # LORD" (WEB, in corpus). Scripture's own invitation to learn it —
+  # the psalm then teaches it as everyday uprightness (vv12-14, other
+  # packs' territory; this claim is v11 alone).
+  - ref: Psalms 34:11
+    sources: [editorial]
+    weight: 1.0
+  # "Let all the earth fear the LORD. Let all the inhabitants of the
+  # world stand in awe of him" (WEB, in corpus). The awe register —
+  # fear of the LORD as the creature's fitting posture.
+  - ref: Psalms 33:8
+    sources: [editorial]
+    weight: 0.9
+  # "God has done it, that men should fear before him" (WEB, in
+  # corpus). Ecclesiastes' own ground for reverence: God's works stand
+  # forever.
+  - ref: Ecclesiastes 3:14
+    sources: [editorial]
+    weight: 0.8
+  # "Blessed is the man who always fears; but one who hardens his heart
+  # falls into trouble" (WEB, in corpus). The wisdom-blessing register;
+  # dual-noted with hardness-of-heart (same batch) — the verse's two
+  # halves are the two packs' two subjects, one claim each recorded in
+  # both files.
+  - ref: Proverbs 28:14
+    sources: [editorial]
+    weight: 0.75
+  # "Then those who feared the LORD spoke one with another; and the
+  # LORD listened... a book of memory was written before him for those
+  # who feared the LORD" (WEB, in corpus). The God-ward community of
+  # the fearers, remembered by name.
+  - ref: Malachi 3:16
+    sources: [editorial]
+    weight: 0.75
+  # "Who shouldn't fear you, King of the nations? For it belongs to
+  # you" (WEB, in corpus). Jeremiah's doxology: fear as what is DUE.
+  - ref: Jeremiah 10:7
+    sources: [editorial]
+    weight: 0.7
+  # "The fear of the LORD is the beginning of knowledge; but the
+  # foolish despise wisdom and instruction" — the book's thesis.
+  # (Proverbs 1 NOT in web-subset; re-check at re-pin. Prov 9:10 stays
+  # wisdom-from-god's.)
+  - ref: Proverbs 1:7
+    sources: [editorial]
+    weight: 0.95
+  # "The fear of the LORD is the beginning of wisdom. All those who do
+  # his work have a good understanding" — the psalter's statement of
+  # the same. (Psalm 111 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 111:10
+    sources: [editorial]
+    weight: 0.9
+  # "Fear God and keep his commandments; for this is the whole duty of
+  # man" — the Preacher's conclusion. (Ecclesiastes 12 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Ecclesiastes 12:13
+    sources: [editorial]
+    weight: 0.9
+related:
+  - wisdom-from-god
+  - worship
+  - holiness

@@ -1,0 +1,38 @@
+{
+  "id": "revival-and-reformation",
+  "query": "revival in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "spiritual awakening"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id revival-and-reformation (Theme J row, 4 requesting",
+    "books, ALL corpus-blocked: 2 Kgs/Ezra/2 Chr reform arcs/Neh 9-13",
+    "absent). The row's route-check (lexicon extension on repentance)",
+    "was run and DECLINED: repentance's anchors are the personal-",
+    "turning register (Acts 3:19, 1 John 1:9) — answering 'revival in",
+    "the bible' with them is the wrong register; the corporate-return",
+    "texts in corpus (2 Chr 7:14, Neh 8:1-8, Hab 3:2) are not its",
+    "anchors. Minted narrow on those three witnesses; Josiah/Hezekiah/",
+    "Ezra arcs ride the re-pin.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'revival in the bible' was pure bible-token noise (Ps 42:6 rank",
+    "1); 'spiritual awakening' 1 Cor 15 spiritual-body noise."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Chronicles 7:14",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Revival and reformation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Nehemiah 8:1-8",
+    "Habakkuk 3:2"
+  ],
+  "coversConcepts": [
+    "revival-and-reformation"
+  ]
+}

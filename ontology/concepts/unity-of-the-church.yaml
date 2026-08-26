@@ -1,0 +1,78 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 3 requesting books: Ephesians, John, Acts). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission only by his merge of this PR.
+#
+# COLLISION DESIGNED AROUND (sovereignty->providence precedent
+# adapted): harmony-with-others owns the interpersonal-peace register
+# — its "keep the unity of the spirit" entry and Eph 4:2-3 anchor are
+# untouched and stay its own. This pack is the church-body register
+# the row names ("church unity", "one body in christ") and takes the
+# ADJACENT Eph 4:4-6, plus Eph 2:14-16 and 1 Cor 1:10 — zero shared
+# phrases, disjoint anchors, cross-related (recorded in both files).
+#
+# BOUNDARIES: Eph 2:19-22 stays christ-the-cornerstone's and
+# the-house-of-god's (2:14-16 was unclaimed); John 17:11, 21-23 (the
+# high-priestly prayer) and Acts 15:22-25 (the council's one-accord
+# letter) are corpus-blocked and ride the re-pin, as do the row's
+# listed-not-appended Ps 133 and Phil 2:1-2.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist describes the texts' own ground for unity — one body, one
+# Spirit, one Lord — and takes no side in any church polity question.
+id: unity-of-the-church
+label: Unity of the church
+lexicon:
+  - church unity
+  - one body in christ
+  - unity of believers
+  - divisions in the church
+  # G4 NOTE: "one lord one faith one baptism" was DROPPED as an entry at
+  # authoring — its token set {lord, faith, baptism} put this pack over
+  # the vocabulary-share limit with baptism (measured 67%); the Eph 4:5
+  # phrase is served by exact-phrase retrieval and the anchor below.
+anchors:
+  # "There is one body and one Spirit... one Lord, one faith, one
+  # baptism, one God and Father of all, who is over all and through
+  # all and in us all." (WEB, in corpus). The sevenfold one — the
+  # ground the row's queries reach for. (4:2-3 stays
+  # harmony-with-others'; 4:11-12 spiritual-gifts'.)
+  - ref: Ephesians 4:4-6
+    sources: [editorial]
+    weight: 1.0
+  # "that you all speak the same thing, and that there be no divisions
+  # among you, but that you be perfected together in the same mind"
+  # (WEB, in corpus). The apostolic appeal against parties.
+  - ref: 1 Corinthians 1:10
+    sources: [editorial]
+    weight: 0.95
+  # "For he is our peace, who made both one, and broke down the middle
+  # wall of separation... that he might create in himself one new man
+  # of the two... and might reconcile them both in one body to God
+  # through the cross." (WEB, in corpus). Unity made at the cross, not
+  # negotiated. (2:19-22 stays christ-the-cornerstone's /
+  # the-house-of-god's.)
+  - ref: Ephesians 2:14-16
+    sources: [editorial]
+    weight: 0.9
+  # "that they may be one, even as we are one... that the world may
+  # believe" — the prayer the Acts council enacts. (John 17 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: John 17:21-23
+    sources: [editorial]
+    weight: 0.75
+  # "how good and how pleasant it is for brothers to live together in
+  # unity" (Psalm 133 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 133:1
+    sources: [editorial]
+    weight: 0.65
+  # "being like-minded, having the same love, being of one accord"
+  # (Philippians 2 NOT in web-subset; re-check at re-pin.)
+  - ref: Philippians 2:1-2
+    sources: [editorial]
+    weight: 0.6
+related:
+  - harmony-with-others
+  - gathering-together
+  - loving-others

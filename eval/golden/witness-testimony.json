@@ -1,0 +1,39 @@
+{
+  "id": "witness-testimony",
+  "query": "testimony of john the baptist",
+  "status": "active",
+  "additionalQueries": [
+    "witnesses to jesus"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id witness-testimony (Theme K row, 1 requesting book:",
+    "John). Register per the row: testimony to Jesus' identity —",
+    "sharing-your-faith keeps the believer's-evangelism register",
+    "untouched (cross-related). Boundaries inside John 1 and 3",
+    "honored: 1:29 stays the-cross's, 1:32-33 holy-spirit's, 3:30",
+    "surrender-to-god's — this pack anchors 1:6-8, 1:19-23, 3:26-29,",
+    "8:14-18, all free. John 5:31-47 (the stacked witnesses) is",
+    "corpus-blocked and rides the re-pin.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'testimony of john the baptist' had John 1:19 rank 1 by token",
+    "luck CHIPLESS; 'witnesses to jesus' was hijacked by sharing-",
+    "your-faith's Great-Commission anchors (the row's own diagnosis)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 1:19-23",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Witness and testimony to Jesus"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 1:6-8",
+    "John 3:26-29",
+    "John 8:14-18"
+  ],
+  "coversConcepts": [
+    "witness-testimony"
+  ]
+}

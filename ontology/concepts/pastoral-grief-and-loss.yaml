@@ -63,6 +63,9 @@ anchors:
   - ref: Isaiah 25:8
     sources: [editorial]
     weight: 0.75
+  # DUAL anchor with comforting-others (tag-gap batch 5, 2026-08-26):
+  # the verse is both the griever's comfort text and the comforter's
+  # instruction — recorded in both files (Ps 55:12-14 precedent).
   - ref: Romans 12:15
     sources: [editorial]
     weight: 0.75

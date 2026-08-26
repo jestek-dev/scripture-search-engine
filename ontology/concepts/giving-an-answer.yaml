@@ -77,7 +77,10 @@ anchors:
   # licenses combativeness — 1 Pet 3:15's humility clause governs the
   # register. NEIGHBOUR NOTE: victory-in-christ anchors the overlapping
   # 2 Cor 10:4-5 span (spiritual-warfare register); this pack claims
-  # v10:5's arguments register — spans differ by design.
+  # v10:5's arguments register — spans differ by design. Tag-gap batch 4
+  # (2026-08-26) adds a third register on the passage: thought-life
+  # claims 10:3-5 for the take-every-thought-captive discipling register
+  # (recorded in both files).
   - ref: 2 Corinthians 10:5
     sources: [editorial]
     weight: 0.7

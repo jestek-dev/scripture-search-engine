@@ -1,0 +1,43 @@
+{
+  "id": "vengeance",
+  "query": "revenge in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "vengeance is mine"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id vengeance (Theme G row, 15 requesting books) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "The row's standing wording concern honored: the gist routes to what",
+    "Scripture says about vengeance (leave it to God's wrath; overcome",
+    "evil with good; the imprecatory psalms hand vengeance to God rather",
+    "than take it), never endorsement; the commanded/regulated OT",
+    "registers (Num 31; 35) are described without adjudication and ride",
+    "re-pin. Nah 1:2-3 stays divine-judgment's (its Nah 1:2-6 span;",
+    "slow-to-anger precedent, cross-noted); Isa 61:2 stays",
+    "god-of-all-comfort's; Matt 5:44-45 stays loving-others'.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'revenge in the bible' had Rom 12:19 at rank 1 CHIPLESS over",
+    "revenge passage-term noise; 'vengeance is mine' returned Lam 3:60",
+    "and Heb 10:30 by bare vengeance-token luck, no concept."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 12:19-21",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Vengeance"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Leviticus 19:18",
+    "Hebrews 10:30",
+    "Matthew 5:38-39",
+    "1 Thessalonians 5:15",
+    "Lamentations 3:64-66"
+  ],
+  "coversConcepts": [
+    "vengeance"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "money-and-possessions",
+  "query": "can a rich person be saved",
+  "status": "active",
+  "additionalQueries": [
+    "danger of riches"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id money-and-possessions (Theme E row, 5 requesting",
+    "books) — engine admission only by Jesse's merge of this PR. The",
+    "row's own rationale correction is honored: contentment deliberately",
+    "owns the bare money tokens ('wealth', 'money', 'finances', 'debt')",
+    "and the 1 Tim 6 / Matt 6 anchors, so what remained unserved is the",
+    "DANGER-OF-RICHES register — this pack's lexicon is multi-token",
+    "danger phrasings only, zero shared tokens with contentment's money",
+    "vocabulary, and 1 Tim 6:6-10 / Matt 6:19-24 stay contentment's",
+    "(cross-related). Keystone Luke 18:18-27 (the rich ruler through",
+    "'who then can be saved... possible with God' — Jesus' own answer to",
+    "this fixture's primary query, in corpus). Mark 10:17-27, Luke 12:",
+    "13-21, Luke 16, Eccl 5:10-17 and the Proverbs earning/keeping texts",
+    "are corpus-blocked riders; the debt texts stay with contentment per",
+    "the row's cross-note.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'can a rich person be saved' was hijacked by salvation's anchors",
+    "(Eph 2:8 led; no Luke 18 anywhere) — honest neighbors but the",
+    "question's own narrative answer never surfaced; 'danger of riches'",
+    "scattered chiplessly on the bare 'rich' token."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 18:18-27",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Money and possessions"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 6:24",
+    "James 5:1-3"
+  ],
+  "coversConcepts": [
+    "money-and-possessions"
+  ]
+}

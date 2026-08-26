@@ -21,6 +21,9 @@ anchors:
   # "the Father of mercies and God of all comfort, who comforts us in all
   # our affliction, that we may be able to comfort those..." — the passage
   # that defines the topic, and names comfort as received-then-given.
+  # SIBLING (tag-gap batch 5, 2026-08-26): comforting-others claims
+  # 2 Cor 1:4 verse-scoped inside this span — the verse's own second
+  # clause is the human-practice register. Recorded in both files.
   - ref: 2 Corinthians 1:3-4
     sources: [torrey]
     weight: 1.0

@@ -1,6 +1,6 @@
 {
   "corpusFingerprint": "644b241cdec3f18f41d6dba60ad2e500be3de435a93745f426408b400aef5e68",
-  "layerFingerprint": "2b85fa88a1e19840b9cc00e65da7e8e77a8cb3bdf5e3c49bcdb8fe9fcdf0f959",
+  "layerFingerprint": "b24ea16d304e062f2f4c2a8fd6d55a9727df8b4240b8df5a802cd217c3bbd2a3",
   "engineVersion": "0.14.0",
   "observations": [
     {
@@ -117,17 +117,17 @@
         "WEB:62001007",
         "WEB:62002006",
         "WEB:49005008",
+        "WEB:64001004",
         "WEB:50001027",
         "WEB:51001010",
         "WEB:25003002",
         "WEB:66021024",
         "WEB:43011010",
-        "WEB:19056013",
-        "WEB:43011009"
+        "WEB:19056013"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.335018,
-      "meanTopScore": 23.722405
+      "weakReasonShare": 0.278046,
+      "meanTopScore": 26.533117
     },
     {
       "id": "narrow-hearing-doing",
@@ -219,19 +219,19 @@
       "id": "ot-law-decalogue",
       "top": [
         "WEB:02020017",
-        "WEB:45013009",
         "WEB:45007007",
-        "WEB:05007025",
-        "WEB:44020033",
-        "WEB:45007008",
         "WEB:59004002",
-        "WEB:18031007",
-        "WEB:45007012",
-        "WEB:40006019"
+        "WEB:51003005",
+        "WEB:05007025",
+        "WEB:02020003",
+        "WEB:45013009",
+        "WEB:40006019",
+        "WEB:54006006",
+        "WEB:50004011"
       ],
-      "resultCount": 14,
-      "weakReasonShare": 1,
-      "meanTopScore": 6.067331
+      "resultCount": 25,
+      "weakReasonShare": 0.53642,
+      "meanTopScore": 16.597132
     },
     {
       "id": "ot-law-neighbour",
@@ -394,15 +394,15 @@
         "WEB:51003014",
         "WEB:49005002",
         "WEB:48006016",
+        "WEB:19103011",
         "WEB:19101001",
+        "WEB:19147011",
         "WEB:51003012",
-        "WEB:45014015",
-        "WEB:19116001",
-        "WEB:05007012"
+        "WEB:45014015"
       ],
       "resultCount": 25,
       "weakReasonShare": 1,
-      "meanTopScore": 7.821468
+      "meanTopScore": 8.175351
     },
     {
       "id": "ot-adversarial-census",

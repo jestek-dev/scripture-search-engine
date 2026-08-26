@@ -1,0 +1,43 @@
+{
+  "id": "care-for-widows",
+  "query": "does god care for widows",
+  "status": "active",
+  "additionalQueries": [
+    "bible verses for widows"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id care-for-widows (Theme G row, 7 requesting books) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "Real pastoral queries; pastoral-grief-and-loss serves the griever",
+    "but not the widow-specific care register. The 1 Timothy register",
+    "split honored: caring-for-aging-parents covers the children's duty",
+    "(its Ruth 1:16-17 anchor stays), this pack the care OF widows;",
+    "1 Tim 5:3-16 (the church-practice charter) is corpus-blocked and",
+    "rides re-pin. The row's WEB lexicon note honored: Ruth never says",
+    "'widow' \u2014 the word-anchors come from James and the Psalter, the",
+    "Ruth anchors carry the narrative (Ruth 1:8 stays kindness's).",
+    "Ps 146:9 also names the foreigner \u2014 cross-noted to",
+    "sojourners-and-strangers (same batch), which does not anchor it.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'does god care for widows' returned pure do/god proximity noise",
+    "(Ps 73:11, Heb 4:10) \u2014 not one widow text; 'bible verses for",
+    "widows' returned widow-token scatter with Ruth 1:11 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 146:9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Care for widows"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "James 1:27",
+    "Ruth 1:3-5",
+    "Ruth 1:20-21"
+  ],
+  "coversConcepts": [
+    "care-for-widows"
+  ]
+}

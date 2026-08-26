@@ -32,6 +32,11 @@ anchors:
   - ref: Ephesians 6:11-12
     sources: [torrey]
     weight: 0.75
+  # SIBLING NOTE (tag-gap batch 4, 2026-08-26): three registers share
+  # this passage by design — this pack's 10:4-5 (spiritual-warfare
+  # register), giving-an-answer's 10:5 (arguments register), and
+  # thought-life's 10:3-5 (take-every-thought-captive discipling
+  # register); recorded in all three files.
   - ref: 2 Corinthians 10:4-5
     sources: [torrey]
     weight: 0.7

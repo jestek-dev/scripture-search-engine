@@ -1,0 +1,41 @@
+{
+  "id": "fear-of-the-lord",
+  "query": "what does it mean to fear god",
+  "status": "active",
+  "additionalQueries": [
+    "the fear of the lord"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id fear-of-the-lord (Theme E row, 14 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The review's own",
+    "diagnosis, MEASURED true: 'what does it mean to fear god' was",
+    "answered entirely by fear-not anchors (2 Tim 1:7 led; Josh 1:9, Isa",
+    "41:10, Ps 27 followed) — the OPPOSITE intent. 'the fear of the lord'",
+    "hit Ps 19:9 / Ps 34:11 / 2 Cor 5:11 by exact phrase, CHIPLESS, then",
+    "fell into the same fear-not anchors from rank 4. Keystone Ps 34:11",
+    "('I will teach you the fear of the LORD' — the psalter's own",
+    "invitation to learn it, in corpus). The phrase's keynote texts",
+    "(Prov 1:7; 9:10; Ps 111:10; Eccl 12:13) are corpus-blocked; Prov",
+    "9:10 stays wisdom-from-god's anchor (the row's recorded boundary),",
+    "cross-related. fear-not keeps ranking on these queries by its own",
+    "anchors — honest neighbors, not forbidden."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 34:11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The fear of the LORD"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 33:8",
+    "Ecclesiastes 3:14",
+    "Proverbs 28:14",
+    "Malachi 3:16"
+  ],
+  "coversConcepts": [
+    "fear-of-the-lord"
+  ]
+}

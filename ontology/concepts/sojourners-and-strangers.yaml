@@ -1,0 +1,104 @@
+# TAG-GAP ROLLOUT batch 4 (Theme G, 2026-08-26) — ADOPTED-TAG id
+# (Theme G row in tag-gaps-review.md, 17 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# Living as a foreigner recurs across the patriarchal narratives and
+# matters to displaced readers. Per the Lamentations append the gist
+# covers exile as well as sojourning.
+#
+# EXILE ROUTING (review §1(e), NOT pre-decided here): the 2 Kings
+# exile-and-captivity row is flagged BORDERLINE with the routing call
+# left to Jesse — either route exile refs here with an exile-register
+# note, or mint the separate id and cross-link. This pack records the
+# cross-note and carries the exile register in its gist; it does NOT
+# mint or foreclose the exile id. The 2 Kings row's refs stay with
+# that deferred row.
+#
+# BOUNDARIES, all recorded: Lev 19:33-34 stays hospitality's — that is
+# the WELCOME-the-stranger side; this pack is the BEING-the-stranger
+# side. 1 Pet 2:11 sits inside honesty's 1 Pet 2:11-12 span and is not
+# re-anchored (1 Pet 1:17 carries the foreigners address instead).
+# Jer 29:7 stays praying-for-leaders' (the anchor below stops at 29:6).
+# Ps 146:9's "the LORD preserves the foreigners" clause is
+# care-for-widows' anchor (same batch) — cross-noted, not re-anchored.
+#
+# CORPUS: Heb 11:13-16, Ps 39:12, Jer 29:4-6, Heb 13:14, 1 Pet 1:17 in
+# corpus. The patriarchal spine (Gen 23:4; 47:9), the command layer
+# (Exod 22:21; 23:9; Deut 10:18-19), Ps 137:4, Lam 1:3, Phil 3:20 and
+# 1 Chr 29:15 are corpus-blocked riders.
+#
+# TOKENIZER NOTE (G-4): bare "sojourner" (and "sojourners", same stem)
+# is a deliberate single-word admission — the concept's own subject
+# noun, distinctive, no competing concept speaks it. Bare "foreigner"
+# and "stranger" are inventory SKIPS: both words span hospitality's
+# welcome register and the corpus's ordinary narrative usage.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: sojourners-and-strangers
+label: Sojourners and strangers
+lexicon:
+  - sojourner
+  - sojourners and strangers
+  - strangers and pilgrims
+  - living as a foreigner
+  - citizenship in heaven
+  - this world is not my home
+  - far from home
+anchors:
+  # "having confessed that they were strangers and pilgrims on the
+  # earth... they desire a better country, that is, a heavenly one"
+  # (WEB, in corpus). The register's keystone — the patriarchs' whole
+  # sojourn read in one place. (Heb 11:1/11:6 stay faith's territory —
+  # verse-disjoint.)
+  - ref: Hebrews 11:13-16
+    sources: [editorial]
+    weight: 1.0
+  # "For I am a stranger with you, a foreigner, as all my fathers
+  # were" (WEB, in corpus). The prayed register; Ps 39:4-5 is
+  # mortality's (same batch) — verse-disjoint.
+  - ref: Psalms 39:12
+    sources: [editorial]
+    weight: 0.9
+  # "For we don't have here an enduring city, but we seek that which
+  # is to come" (WEB, in corpus). Heb 13:5 stays contentment's, 13:2
+  # hospitality's, 13:7/13:17 leadership's — verse-disjoint.
+  - ref: Hebrews 13:14
+    sources: [editorial]
+    weight: 0.85
+  # "Build houses and dwell in them. Plant gardens and eat their
+  # fruit... Multiply there, and don't be diminished" (WEB, in
+  # corpus). The exile register — how to LIVE displaced; stops at
+  # v6 because 29:7 is praying-for-leaders' anchor (recorded above).
+  - ref: Jeremiah 29:4-6
+    sources: [editorial]
+    weight: 0.85
+  # "pass the time of your living as foreigners here in reverent fear"
+  # (WEB, in corpus). The NT address to sojourners; 1 Pet 2:11 stays
+  # honesty's span (recorded above).
+  - ref: 1 Peter 1:17
+    sources: [editorial]
+    weight: 0.8
+  # "I am a stranger and a foreigner living with you" — Abraham at
+  # Machpelah, the patriarchal register's plainest sentence. (Genesis
+  # 23 NOT in web-subset; re-check at re-pin.)
+  - ref: Genesis 23:4
+    sources: [editorial]
+    weight: 0.85
+  # "How can we sing the LORD's song in a foreign land?" — the exile
+  # register's cry. (Psalm 137 NOT in web-subset; re-check at re-pin,
+  # alongside the lament row's claim to the psalm.)
+  - ref: Psalms 137:4
+    sources: [editorial]
+    weight: 0.75
+  # "our citizenship is in heaven" — the NT keystone for the
+  # citizenship phrasing. (Philippians 3 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Philippians 3:20
+    sources: [editorial]
+    weight: 0.9
+related:
+  - hospitality
+  - restoration-of-israel
+  - hope-in-god

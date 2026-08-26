@@ -65,6 +65,21 @@ lexicon:
   - gods unseen hand
   - god ordains events
   - nothing happens outside gods control
+  # TAG-GAP ROLLOUT batch 2 (2026-08-26): the sovereignty-of-god Theme C
+  # row resolved as its own standing advice directs — a lexicon+anchor
+  # extension HERE, not a new id (this lexicon already owns the exact
+  # phrases "gods sovereignty", "god is in control" and "sovereign over
+  # all"; a sibling pack would be a head-on G4 collision). The row's gap
+  # is the NATIONS/GOVERNMENTS scale — Isa 40's drop-in-a-bucket court
+  # scene joins the anchors below; Daniel's "strongest anchor set in
+  # Scripture" for it (Dan 2:21; 4:17, 25, 34-35; 5:21) plus Jer 18:1-10;
+  # 27:5-7; 32:17, 27 and Ezra 1:1, 5; 6:22; 7:27 are corpus-blocked and
+  # ride the re-pin as this row's noted anchors. Boundary vs the
+  # god-reigns mint (same batch): kingship DECLARED there, governance
+  # EXERCISED here — zero shared phrases. Fixture: sovereignty-of-god.json.
+  - a drop in the bucket
+  - god rules over the nations
+  - god is in control of governments
 anchors:
   # Torrey PROVIDENCE OF GOD, THE "Is exercised in > Overruling wicked
   # designs for good :: Genesis 45:5-7, Genesis 50:20, Philippians 1:12".
@@ -158,6 +173,24 @@ anchors:
   - ref: Esther 4:14
     sources: [editorial]
     weight: 0.65
+  # "Behold, the nations are like a drop in a bucket... All the nations
+  # are like nothing before him" (WEB, verified in web-subset). The
+  # sovereignty-of-god row's in-corpus keystone: governance at the scale
+  # of nations, Isaiah's courtroom of the God who is not managed by
+  # history. Added TAG-GAP batch 2 (2026-08-26); Isa 40:18-20 stays
+  # idolatry's, 40:29-31 pastoral-strength-in-weakness's, 40:5
+  # glory-of-god's (same batch), 40:1 god-of-all-comfort's — no span
+  # overlap.
+  - ref: Isaiah 40:15-17
+    sources: [editorial]
+    weight: 0.9
+  # "who brings princes to nothing... He merely blows on them, and they
+  # wither" (WEB, verified in web-subset). Rulers held lightly — the
+  # governments half of the row's query family. Added TAG-GAP batch 2
+  # (2026-08-26).
+  - ref: Isaiah 40:23-24
+    sources: [editorial]
+    weight: 0.85
 related:
   - trust-in-god
   - gods-provision

@@ -1,0 +1,87 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 1 requesting book: Acts). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR.
+#
+# REGISTER (the row's own): miracles as ATTESTATION — "a man approved
+# by God to you by mighty works and wonders and signs" —
+# pastoral-prayer-for-healing keeps the personal-crisis register
+# untouched (cross-related, zero shared phrases).
+#
+# BOUNDARIES: Acts 2:24 stays resurrection's; 2:38 baptism's /
+# repentance's; 3:19 repentance's / new-creation's; 4:29 is
+# boldness-in-witness's (same batch — the two halves of the Acts 4
+# prayer split by verse, recorded both files: 4:29 the bold speech,
+# 4:30 the healing hand); 4:31 stays holy-spirit's.
+#
+# CORPUS: in-corpus witnesses Acts 2:22, 2:43, 3:6-8, 4:30, John 3:2.
+# Corpus-blocked riders: Acts 5:12-16, 8:6-7, 9:32-42, 14:3, and
+# John 20:30-31 (signs written that you may believe).
+#
+# TOKENIZER NOTE (G-4): "miracles" is a deliberate single-word
+# admission — the subject noun IS the concept and no other pack
+# speaks the stem; inventory row recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist reports what the texts claim the signs did (attest, draw
+# attention to the risen Jesus) and promises nothing about miracles
+# on demand — Acts 3:6 has no silver or gold in it.
+id: signs-and-wonders
+label: Signs and wonders
+lexicon:
+  - signs and wonders
+  - miracles
+  - miracles in the bible
+  - miracles of jesus
+  - mighty works and wonders
+anchors:
+  # "Jesus of Nazareth, a man approved by God to you by mighty works
+  # and wonders and signs which God did by him among you, even as you
+  # yourselves know" (WEB, in corpus). Peter's own summary of Jesus'
+  # miracles and what they were for — the attestation register in one
+  # verse. (2:24 stays resurrection's.)
+  - ref: Acts 2:22
+    sources: [editorial]
+    weight: 1.0
+  # "Fear came on every soul, and many wonders and signs were done
+  # through the apostles." (WEB, in corpus). The church-age
+  # continuation in its first summary.
+  - ref: Acts 2:43
+    sources: [editorial]
+    weight: 0.9
+  # "I have no silver or gold, but what I have, that I give you. In
+  # the name of Jesus Christ of Nazareth, get up and walk!...
+  # walking, leaping, and praising God." (WEB, in corpus). The
+  # narrative miracle the row's queries want to find.
+  - ref: Acts 3:6-8
+    sources: [editorial]
+    weight: 0.9
+  # "while you stretch out your hand to heal; and that signs and
+  # wonders may be done through the name of your holy Servant Jesus."
+  # (WEB, in corpus). The church asks for the attestation itself.
+  # (4:29 is boldness-in-witness's — the prayer's two halves split by
+  # verse, recorded both files; 4:31 stays holy-spirit's.)
+  - ref: Acts 4:30
+    sources: [editorial]
+    weight: 0.85
+  # "no one can do these signs that you do, unless God is with him."
+  # (WEB, in corpus). Nicodemus draws the signs' own conclusion.
+  - ref: John 3:2
+    sources: [editorial]
+    weight: 0.8
+  # "By the hands of the apostles many signs and wonders were done
+  # among the people." (Acts 5 NOT in web-subset; re-check at re-pin.)
+  - ref: Acts 5:12-16
+    sources: [editorial]
+    weight: 0.7
+  # "Jesus did many other signs... but these are written, that you may
+  # believe" — John's own statement of the signs' purpose. (John 20
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: John 20:30-31
+    sources: [editorial]
+    weight: 0.7
+related:
+  - prayer-for-healing
+  - holy-spirit
+  - power-of-gods-word

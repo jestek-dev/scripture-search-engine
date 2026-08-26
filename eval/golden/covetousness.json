@@ -1,0 +1,41 @@
+{
+  "id": "covetousness",
+  "query": "covetousness in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "wanting what belongs to others"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id covetousness (Theme E row, 1 requesting book: the",
+    "1 Kings thread via Naboth's vineyard, itself corpus-blocked) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "Contentment extension route (the row's own flag) CHECKED and",
+    "DECLINED: contentment is the remedy register and owns wealth/money;",
+    "the sin register (coveting what belongs to another) shares no",
+    "phrase with it. Exod 20:17 is a verse-scoped sibling claim inside",
+    "the-ten-commandments' Exod 20:1-17 span (idolatry/the-name-of-god",
+    "precedent, recorded). Heb 13:5 stays contentment's; Luke 12:15 and",
+    "1 Kgs 21:1-16 are corpus-blocked riders.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'covetousness in the bible' returned covetousness passage-term",
+    "noise, CHIPLESS; 'you shall not covet' had Exod 20:17 at rank 1",
+    "CHIPLESS; 'wanting what belongs to others' was unserved."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Exodus 20:17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Covetousness"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 7:7-8",
+    "Colossians 3:5",
+    "James 4:1-2"
+  ],
+  "coversConcepts": [
+    "covetousness"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "god-reigns",
+  "query": "the lord reigns",
+  "status": "active",
+  "additionalQueries": [
+    "god is king"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id god-reigns (Theme C row, 4 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The enthronement",
+    "register the Psalms delivery predicted: 'The LORD reigns' / 'God is",
+    "king' had no kingship concept to land on. The verbatim",
+    "'The LORD reigns' psalms (93; 96:10; 97:1; 99:1) are ALL",
+    "corpus-blocked and ride the re-pin; in corpus the kingship is",
+    "carried by Ps 10:16, 24:7-10 (the King of glory litany), 95:3,",
+    "146:10, Jer 10:10 and 1 Tim 6:15. Register boundary per the",
+    "recorded keep-as-two-rows call (Contested calls 1(e)): this is the",
+    "OT/doxological kingship register, NOT an NT kingdom-announcement",
+    "concept; Zech 14:9 stays deferred with that decision. Ps 103:19 is",
+    "NOT an anchor (providence owns it); Ps 9:7-8 is NOT an anchor",
+    "(divine-judgment owns the throne-for-judgment span).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'the lord reigns' and 'god is king' both failed to surface Ps",
+    "10:16 in the top 10 at all — with the verbatim enthronement psalms",
+    "corpus-blocked, the kingship register had no route whatsoever."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 10:16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God reigns"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 146:10",
+    "Psalms 95:3",
+    "Psalms 24:7-10",
+    "Jeremiah 10:10"
+  ],
+  "coversConcepts": [
+    "god-reigns"
+  ]
+}

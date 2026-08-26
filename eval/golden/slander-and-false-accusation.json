@@ -1,0 +1,45 @@
+{
+  "id": "slander-and-false-accusation",
+  "query": "falsely accused",
+  "status": "active",
+  "additionalQueries": [
+    "when people lie about you",
+    "slander in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id slander-and-false-accusation (Theme H row, 2",
+    "requesting books) — engine admission only by Jesse's merge of",
+    "this PR. The target-of-lies register; honesty keeps be-truthful,",
+    "taming-the-tongue keeps bare 'gossip', betrayal-and-marriage-",
+    "crisis keeps close-relationship betrayal. Matt 5:11 taken (5:10",
+    "stays suffering-for-christ's, cross-noted both files); Ps 86:14",
+    "checked and NOT anchored (WEB wording is violent men, not",
+    "slanderers — anchor-accuracy covenant).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'when people lie about you' was HIJACKED by honesty's be-truthful",
+    "anchors (Col 3:9-10 'don't lie to one another' rank 1 — the asker",
+    "is the TARGET of lies and gets told not to lie: inversion class);",
+    "'falsely accused' chipless token scatter (Matt 27:12 narrative",
+    "luck rank 1); 'slander in the bible' chipless scatter with Ps",
+    "101:5 rank 1 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 27:12",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Slander and false accusation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 56:5",
+    "Psalms 101:5",
+    "Matthew 5:11",
+    "1 Peter 3:16",
+    "1 Peter 2:23"
+  ],
+  "coversConcepts": [
+    "slander-and-false-accusation"
+  ]
+}

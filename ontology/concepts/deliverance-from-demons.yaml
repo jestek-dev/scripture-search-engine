@@ -1,0 +1,107 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme D row in tag-gaps-review.md, 3 requesting books; Mark
+# carries "Scripture's densest deliverance narrative"). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# Deliverance from demons — the deliverance NARRATIVE register:
+# "demon possession in the Bible", "casting out demons".
+# resisting-the-devil covers the believer's resistance posture, not
+# deliverance (the row's own distinction). The row's overlap flag
+# against pastoral-freedom-from-bondage was checked: that pack is the
+# habitual-sin/addiction register (Rom 6-7; Gal 5:1; 1 Cor 10:13) —
+# zero narrative overlap, cross-related instead.
+#
+# ONE-CONCEPT-OR-TWO vs Daniel's spiritual-warfare row DECIDED as TWO
+# registers (the review's cross-reference asks for exactly this
+# decision): this pack is the Gospels' deliverance narrative;
+# the conflict-itself row stays DEFERRED, corpus-blocked (Dan 10:13,
+# 20-21; 12:1 and Rev 12:7-12 all absent) — and the recorded lexicon
+# fact stands: resisting-the-devil already carries the bare phrase
+# "spiritual warfare", which weighs against a third pack until the
+# conflict texts are assertable. Never the same suggested id twice.
+#
+# JOHN'S CHECKED-NONE RESULT recorded per the row: John narrates no
+# exorcism anywhere. Matthew's whole request list (Matt 8:16, 28-34;
+# 9:32-34; 12:22-29, 43-45) is corpus-blocked and rides the re-pin.
+#
+# GIST RULE: the engine locates the narratives; it renders no verdict
+# on any deliverance practice (CLAUDE.md #6 — the same line
+# resisting-the-devil's file draws).
+#
+# SPAN DISCIPLINE: Mark 5 anchor stops at v15 — sharing-your-faith
+# owns Mark 5:19 (the go-and-tell sending). Luke 11:13 is
+# holy-spirit's (same batch); this pack takes 11:14-22. Mark 9:23-24
+# is doubt's; this pack takes 9:25-29. Luke 9:23 is
+# surrender-to-god's; this pack takes 9:37-43.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({cast, demon}, {demon, possess}, {demon, bibl}, {unclean,
+# spirit}, {deliver, demon}). Bare "demons" was considered and
+# SKIPPED (inventory row): the paired forms carry every natural query
+# in the family, and the bare plural adds only hijack surface for
+# narrative token scatter. Bare "exorcism" likewise SKIPPED — the
+# word never occurs in the WEB text and "casting out demons" is what
+# people type.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: deliverance-from-demons
+label: Deliverance from demons
+lexicon:
+  - casting out demons
+  - demon possession
+  - demons in the bible
+  - unclean spirits
+  - deliverance from demons
+anchors:
+  # The Gerasene demoniac: "My name is Legion, for we are many"... and
+  # the man "sitting, clothed, and in his right mind" (WEB, in
+  # corpus). Scripture's fullest deliverance narrative; v19's sending
+  # stays sharing-your-faith's.
+  - ref: Mark 5:1-15
+    sources: [editorial]
+    weight: 1.0
+  # "a man with an unclean spirit... 'Be quiet, and come out of
+  # him!'... 'with authority he commands even the unclean spirits'"
+  # (WEB, in corpus). The first exorcism in Mark — authority is the
+  # narrator's own point.
+  - ref: Mark 1:23-27
+    sources: [editorial]
+    weight: 0.95
+  # "He was casting out a demon, and it was mute... 'But if I by God's
+  # finger cast out demons, then God's Kingdom has come to you'" (WEB,
+  # in corpus). Jesus' own interpretation of the deliverances — kept
+  # to vv14-22; v13 is holy-spirit's (same batch).
+  - ref: Luke 11:14-22
+    sources: [editorial]
+    weight: 0.9
+  # "'You mute and deaf spirit, I command you, come out of him'...
+  # 'This kind can come out by nothing but by prayer and fasting'"
+  # (WEB, in corpus). The disciples' failure and Jesus' answer;
+  # vv23-24 stay doubt's.
+  - ref: Mark 9:25-29
+    sources: [editorial]
+    weight: 0.85
+  # "Jesus rebuked the unclean spirit, healed the boy, and gave him
+  # back to his father" (WEB, in corpus). Luke's parallel with its own
+  # pastoral ending.
+  - ref: Luke 9:37-43
+    sources: [editorial]
+    weight: 0.8
+  # "They cast out many demons" — the Twelve sent with the same
+  # authority (WEB, in corpus).
+  - ref: Mark 6:13
+    sources: [editorial]
+    weight: 0.75
+  # "he cast out the spirits with a word, and healed all who were
+  # sick" — Matthew's summary. (Matthew 8 NOT in web-subset; re-check
+  # at re-pin, with 8:28-34; 9:32-34; 12:22-29, 43-45.)
+  - ref: Matthew 8:16
+    sources: [editorial]
+    weight: 0.85
+related:
+  - resisting-the-devil
+  - satan
+  - freedom-from-bondage

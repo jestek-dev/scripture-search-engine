@@ -1,0 +1,87 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 3 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The murmuring motif is Exodus-Numbers' backbone and none of it was
+# reachable. ONE-OR-TWO vs the future lament row (Theme H), DECIDED as
+# two registers and recorded for that curator: this pack is complaint
+# AGAINST God and his leaders — the wilderness register, 1 Cor 10:10's
+# own subject; lament is complaint brought TO God in faith
+# (wrestling-with-god carries that register today, cross-related, zero
+# shared vocabulary). The measured before-state showed exactly this
+# confusion: "complaining in the bible" returned the lament psalms'
+# complaint vocabulary (Ps 88; 13; Lam 3) — the other register.
+#
+# The motif's densest texts — Num 11:1; 14:2-4, 27-29; 16:11, 41;
+# 20:2-5; 21:4-5; Exod 15:24; 16:2-3; 17:2-3; Deut 1:27; Phil 2:14-15 —
+# are ALL corpus-blocked and ride the re-pin; in corpus the register is
+# carried by 1 Cor 10:10 (the NT's own reading of those narratives),
+# Exod 14:11-12 (the first murmuring scene), and Jas 5:9.
+#
+# TOKENIZER NOTE (G-4): bare "grumbling" and "complaining" are
+# deliberate one-word entries (inventory rows) — distinctive stems no
+# other concept's lexicon fires on (hospitality's "hospitality without
+# grumbling" is a 3-token entry and stays its own).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: grumbling-and-complaining
+label: Grumbling and complaining
+lexicon:
+  - grumbling
+  - complaining
+  - grumbling and complaining
+  - complaining in the bible
+  - murmuring in the wilderness
+anchors:
+  # "Don't grumble, as some of them also grumbled, and perished by the
+  # destroyer" (WEB, in corpus). The NT's own verdict on the wilderness
+  # murmuring, written "for our admonition" — the register's keystone
+  # while the Numbers spine is corpus-blocked. 1 Cor 10:13 stays
+  # remembered-a-way-of-escape's; disjoint verses.
+  - ref: 1 Corinthians 10:10
+    sources: [editorial]
+    weight: 1.0
+  # "Because there were no graves in Egypt, have you taken us away to
+  # die in the wilderness?" (WEB, in corpus). The first murmuring
+  # scene, at the sea's edge — before the deliverance at 14:13-14
+  # (victory-in-christ's span, disjoint).
+  - ref: Exodus 14:11-12
+    sources: [editorial]
+    weight: 0.9
+  # "Don't grumble, brothers, against one another, so that you won't be
+  # judged" (WEB, in corpus). The register turned toward one another.
+  - ref: James 5:9
+    sources: [editorial]
+    weight: 0.8
+  # "Do all things without murmurings and disputes, that you may become
+  # blameless" — the positive command the NIV-remembered "do everything
+  # without complaining" renders. (Philippians 2 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Philippians 2:14-15
+    sources: [editorial]
+    weight: 0.95
+  # "all the congregation of the children of Israel murmured against
+  # Moses and against Aaron in the wilderness" — the manna scene, where
+  # the LORD answers grumbling with bread. (Exodus 16 NOT in
+  # web-subset; re-check at re-pin, with 15:24; 17:2-3.)
+  - ref: Exodus 16:2-3
+    sources: [editorial]
+    weight: 0.85
+  # "All the children of Israel murmured against Moses and against
+  # Aaron... 'Why does the LORD bring us to this land, to fall by the
+  # sword?'" — the Kadesh rebellion, the motif at its costliest.
+  # (Numbers 14 NOT in web-subset; re-check at re-pin, with 11:1;
+  # 16:11, 41; 20:2-5; 21:4-5.)
+  - ref: Numbers 14:2-4
+    sources: [editorial]
+    weight: 0.9
+# TWO-REGISTER NOTE (batch 3 decision, executed batch 5, 2026-08-26):
+# lament is now minted — complaint TO God lives there; complaint
+# AGAINST God/leaders stays here. Zero shared phrases; cross-related.
+related:
+  - thanksgiving
+  - contentment
+  - wrestling-with-god
+  - lament

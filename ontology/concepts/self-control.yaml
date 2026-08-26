@@ -17,6 +17,9 @@ anchors:
     sources: [editorial]
     weight: 0.9
   # "put on the Lord Jesus Christ, and make no provision for the flesh"
+  # (TAG-GAP batch 3, 2026-08-26: the new `drunkenness` pack anchors the
+  # adjacent Rom 13:13 — disjoint verses, cross-related; its row records
+  # the declined extension-of-self-control route.)
   - ref: Romans 13:14
     sources: [editorial]
     weight: 0.8

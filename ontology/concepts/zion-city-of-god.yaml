@@ -1,0 +1,84 @@
+# TAG-GAP ROLLOUT batch 6 (Theme L, 2026-08-26) — ADOPTED-TAG id
+# (Theme L row, 1 requesting book: Psalms — one row pooling the whole
+# Psalter's Zion refs). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission only by his
+# merge of this PR. The row's own re-verification stands: no
+# Zion/Jerusalem concept existed anywhere in the vocabulary.
+#
+# CORPUS: the great Zion psalms (48; 84; 87; 122; 125-126; 132-134;
+# 137) are ALL corpus-blocked and ride the re-pin. In-corpus
+# witnesses: Ps 46:4-5, Ps 9:11, Ps 65:1, Ps 147:12-14.
+#
+# BOUNDARIES: refuge-in-trouble keeps Ps 46:1-3 and 46:10 ("be
+# still"); god-reigns keeps 146:10 ("Yahweh will reign... your God, O
+# Zion"); restoration-of-israel keeps 147:2 ("The LORD builds up
+# Jerusalem") — this pack anchors 147:12-14, disjoint; worship keeps
+# 65:4 — this pack anchors 65:1; justice-and-oppression keeps 9:18,
+# divine-judgment 9:7-8, the-name-of-god 9:10 — this pack anchors
+# 9:11. Heb 12:22 (heavenly Zion) stays angels' — the row's own
+# note; cross-related to new-heaven-and-earth for the
+# new-Jerusalem horizon instead.
+#
+# TOKENIZER NOTE (G-4): bare "zion" is a deliberate single-word
+# admission — the proper noun IS the concept, present in the WEB
+# corpus bytes; inventory row recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist describes Zion as the psalms sing it — the city God dwells in
+# and defends — and adjudicates no modern political claim.
+id: zion-city-of-god
+label: Zion, the city of God
+lexicon:
+  - zion
+  - city of god
+  - zion in the bible
+  - mount zion
+anchors:
+  # "There is a river, the streams of which make the city of God
+  # glad, the holy place of the tents of the Most High. God is within
+  # her. She shall not be moved." (WEB, in corpus). The city-of-God
+  # verse itself. (46:1-3 and 46:10 stay refuge-in-trouble's.)
+  - ref: Psalms 46:4-5
+    sources: [editorial]
+    weight: 1.0
+  # "Sing praises to the LORD, who dwells in Zion, and declare among
+  # the people what he has done." (WEB, in corpus). (9:7-8 stays
+  # divine-judgment's, 9:10 the-name-of-god's, 9:18
+  # justice-and-oppression's.)
+  - ref: Psalms 9:11
+    sources: [editorial]
+    weight: 0.9
+  # "Praise waits for you, God, in Zion. Vows shall be performed to
+  # you." (WEB, in corpus). (65:4 stays worship's.)
+  - ref: Psalms 65:1
+    sources: [editorial]
+    weight: 0.85
+  # "Praise the LORD, Jerusalem! Praise your God, Zion! For he has
+  # strengthened the bars of your gates... He makes peace in your
+  # borders." (WEB, in corpus). (147:2 stays restoration-of-israel's.)
+  - ref: Psalms 147:12-14
+    sources: [editorial]
+    weight: 0.8
+  # "Beautiful in elevation, the joy of the whole earth, is Mount
+  # Zion... the city of the great King." (Psalm 48 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Psalms 48:1-2
+    sources: [editorial]
+    weight: 0.8
+  # "Glorious things are spoken about you, city of God." (Psalm 87
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 87:1-3
+    sources: [editorial]
+    weight: 0.75
+  # "I was glad when they said to me, 'Let's go to the LORD's
+  # house!'... Pray for the peace of Jerusalem." (Psalm 122 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Psalms 122:1-9
+    sources: [editorial]
+    weight: 0.7
+related:
+  - the-house-of-god
+  - restoration-of-israel
+  - new-heaven-and-earth
+  - god-reigns

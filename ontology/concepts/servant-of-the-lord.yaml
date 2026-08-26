@@ -1,0 +1,85 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme B row in tag-gaps-review.md, Isaiah-minted; suffering-servant
+# the recorded alternate id). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission happens only by
+# his merge of this PR.
+#
+# The servant of the LORD — Isaiah's four servant songs. The row's
+# rationale: "servant songs" / "suffering servant" are extremely common
+# study queries; only the-cross touches Isa 53, and nothing serves the
+# other three songs.
+#
+# GIST DISCIPLINE (the row's own wording rule, honored + CLAUDE.md #6):
+# the pack describes the servant on the text's own terms — chosen,
+# Spirit-endowed, light to the nations, despised, bearing iniquities —
+# and signposts the historic messianic reading as ATTRIBUTED FACT (the
+# NT's own citations: Acts 8:32-35 reads Isa 53 of Jesus; Matt 12:17-21
+# quotes Isa 42), adjudicating nothing.
+#
+# BOUNDARY (decided before minting, as the row requires):
+# messianic-prophecy (same batch) does NOT anchor Isa 42-53; the-cross
+# keeps Isa 53:5's atonement register (its 1.0 anchor stands — this
+# pack's 53:1-12 editorial range is a DELIBERATE DUAL under the
+# servant-figure study register, recorded there and here).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): every entry keeps >= 2
+# significant tokens ({suffer, servant}, {servant, song}, {servant,
+# lord}, {man, sorrow}). Bare `servant` is deliberately NOT an entry
+# (skipped row: servant-of-sin / parable-servant homonyms — the
+# measured noise). Shared with suffering-for-christ: {suffer} (1
+# token; that pack's suffering-as-a-Christian register remains the
+# honest neighbor for 'suffering servant' and keeps its own results).
+# "man of sorrows" is the remembered classic English of Isa 53:3 (WEB:
+# "a man of suffering") — a curated rung is the only bridge.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: servant-of-the-lord
+label: The servant of the LORD
+lexicon:
+  - suffering servant
+  - servant songs
+  - servant of the lord
+  # The remembered (KJV) form of Isa 53:3; WEB reads "a man of
+  # suffering", so only this rung carries the classic query.
+  - man of sorrows
+anchors:
+  # "He was despised and rejected by men, a man of suffering... he was
+  # pierced for our transgressions... my righteous servant will justify
+  # many... he poured out his soul to death" (WEB, in corpus). The
+  # fourth song entire — the servant's rejection, substitution, and
+  # vindication as one movement. ATTRIBUTED FACT: Acts 8:32-35 reads
+  # this passage of Jesus. DELIBERATE DUAL (recorded): the-cross
+  # anchors 53:5 alone for the atonement register.
+  - ref: Isaiah 53:1-12
+    sources: [editorial]
+    weight: 1.0
+  # "Behold, my servant, whom I uphold, my chosen, in whom my soul
+  # delights: I have put my Spirit on him... a bruised reed he will not
+  # break" — the first song. ATTRIBUTED FACT: Matt 12:17-21 quotes it.
+  # (Isaiah 42 NOT in web-subset; re-check at re-pin.)
+  - ref: Isaiah 42:1-9
+    sources: [editorial]
+    weight: 0.9
+  # "you are my servant... I will also give you as a light to the
+  # nations" — the second song. (Isaiah 49 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Isaiah 49:1-13
+    sources: [editorial]
+    weight: 0.85
+  # "The Lord GOD has given me the tongue of those who are taught...
+  # I gave my back to those who beat me" — the third song. (Isaiah 50
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Isaiah 50:4-11
+    sources: [editorial]
+    weight: 0.8
+  # "Behold, my servant will deal wisely... his appearance was marred
+  # more than any man" — the fourth song's prologue. (Isaiah 52 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Isaiah 52:13-15
+    sources: [editorial]
+    weight: 0.85
+related:
+  - messianic-prophecy
+  - the-cross

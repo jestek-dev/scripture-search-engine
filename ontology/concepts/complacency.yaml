@@ -1,0 +1,65 @@
+# TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26) — ADOPTED-TAG id
+# (Theme I row in tag-gaps-review.md, 1 requesting book: Zephaniah,
+# corpus-blocked). Adopted as display vocabulary by Jesse's 2026-08-25
+# ruling (CONVENTIONS §11); ENGINE admission happens only by his merge
+# of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "lukewarm faith" — the
+# row's own named query — was flooded by faith / faith-and-works
+# anchors (Heb 11:6 rank 1; Rev 3:15-16 nowhere in the top 10).
+#
+# MINT BASIS: the requesting text (Zeph 1:12, "settled on their
+# dregs") is corpus-blocked, but the row's why names "lukewarm faith"
+# as the query family and Rev 3:15-16 — in corpus and unclaimed — is
+# its keystone text. Narrow one-anchor design (seasons-of-life
+# precedent); the Zephaniah register rides the re-pin.
+#
+# BOUNDARIES (Laodicea's verses are already split three ways —
+# honored): Rev 3:17 ("you say, I am rich") stays self-deception's;
+# Rev 3:19 ("as many as I love, I reprove and chasten") stays
+# the-lords-discipline's; this pack takes 3:15-16 only, disjoint.
+# Prov 1:32 stays declined per the row's own note (careless ease
+# refusing Wisdom's call — a different register). Amos 6:1 ("at ease
+# in Zion") is the flagged kin text the Amos thread never logged —
+# named here for the re-pin curator, not anchored (the log's
+# dedupe-on-merge instruction honored).
+#
+# CORPUS: in-corpus witness Rev 3:15-16. Corpus-blocked rider: Zeph
+# 1:12 (the requesting text — "the men who are settled on their
+# dregs, who say in their heart, 'The LORD will not do good, neither
+# will he do evil'").
+#
+# TOKENIZER NOTES (G-4): bare `complacency` and bare `lukewarm`
+# admitted — both subject nouns of the query family, `lukewarm` in the
+# WEB corpus bytes (Rev 3:16), neither with a competing concept.
+# "neither hot nor cold" carries the remembered phrasing.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: complacency
+label: Complacency
+lexicon:
+  - complacency
+  - lukewarm
+  - lukewarm faith
+  - spiritual apathy
+  - neither hot nor cold
+anchors:
+  # "because you are lukewarm, and neither hot nor cold, I will vomit
+  # you out of my mouth" (WEB, in corpus) — the register's keystone.
+  # (Rev 3:17 stays self-deception's; 3:19 the-lords-discipline's —
+  # disjoint by design.)
+  - ref: Revelation 3:15-16
+    sources: [editorial]
+    weight: 1.0
+  # "I will punish the men who are settled on their dregs, who say in
+  # their heart, 'The LORD will not do good, neither will he do evil'"
+  # — the requesting row's settled-denial register. (Zephaniah NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Zephaniah 1:12
+    sources: [editorial]
+    weight: 0.85
+related:
+  - self-deception
+  - the-lords-discipline
+  - hardness-of-heart

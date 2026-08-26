@@ -1,0 +1,65 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme D row in tag-gaps-review.md, minting book Galatians, with
+# Rom 8:4-14 named by the row itself). Adopted as display vocabulary
+# by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission
+# happens only by his merge of this PR.
+#
+# Walking by the Spirit — "walk in the Spirit", "led by the Spirit",
+# "life in the Spirit": the Spirit-led daily-walk register. The row's
+# check-first route (lexicon extension of remembered-fruit-of-the-
+# spirit) was checked and DECLINED: that pack is a REMEMBERED-PHRASING
+# pack whose own file fixes its design as ONE narrow anchor (Gal
+# 5:22-23) — "narrow anchor, narrow claim"; loading it with walk/led
+# entries and epistle-span anchors would break the design it states.
+# The two cross-relate: the fruit is what the walk produces.
+#
+# Fully in-corpus mint — the rare row with nothing riding the re-pin.
+#
+# SPAN DISCIPLINE: Gal 5:22-23 stays remembered-fruit-of-the-spirit's;
+# Gal 5:1 and 5:13 stay pastoral-freedom-from-bondage's; Gal 5:19-21
+# stays envy-and-jealousy's — this pack takes 5:16-18 and 5:25 only.
+# Rom 8:16 is assurance-of-salvation's and 8:17 suffering-for-christ's
+# — this pack stops at 8:13-14. Rom 8:1-2 forgiveness's/freedom's,
+# 8:26 the comforter's — untouched.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({walk, spirit}, {led/lead, spirit}, {life, spirit}, {live,
+# spirit}). No bare word fires. Shared token with the Spirit packs:
+# {spirit} — one token, zero shared phrases.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: walking-by-the-spirit
+label: Walking by the Spirit
+lexicon:
+  - walk in the spirit
+  - walking by the spirit
+  - led by the spirit
+  - life in the spirit
+  - live by the spirit
+anchors:
+  # "walk by the Spirit, and you won't fulfill the lust of the flesh.
+  # For the flesh lusts against the Spirit... But if you are led by
+  # the Spirit, you are not under the law" (WEB, in corpus). The
+  # register's charter text.
+  - ref: Galatians 5:16-18
+    sources: [editorial]
+    weight: 1.0
+  # "If we live by the Spirit, let's also walk by the Spirit" (WEB, in
+  # corpus). The imperative that closes the fruit passage — kept
+  # disjoint from vv22-23 (the fruit pack's).
+  - ref: Galatians 5:25
+    sources: [editorial]
+    weight: 0.95
+  # "if by the Spirit you put to death the deeds of the body, you will
+  # live. For as many as are led by the Spirit of God, these are
+  # children of God" (WEB, in corpus). Romans' statement of the same
+  # walk; vv16-18 stay with their packs (header note).
+  - ref: Romans 8:13-14
+    sources: [editorial]
+    weight: 0.9
+related:
+  - remembered-fruit-of-the-spirit
+  - holy-spirit
+  - self-control

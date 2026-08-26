@@ -1,0 +1,83 @@
+# TAG-GAP ROLLOUT batch 4 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 1 requesting book). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Does God want me to enjoy life" — Ecclesiastes' sevenfold refrain
+# (eat, drink, and enjoy good in all your labor: it is the gift of God)
+# falls between existing registers.
+#
+# EXTENSION ROUTE CHECKED AND DECLINED: the row's own check-first is
+# contentment. Contentment is enough-amid-lack and owns the wealth/
+# money/comparison vocabulary (1 Tim 6:6-10, Phil 4:11-13); enjoyment-
+# as-received-gift is a different claim, and the two lexicons share no
+# phrase. 1 Tim 6:17 stays contentment's — its "God, who richly
+# provides us with all things to enjoy" clause is cross-noted here,
+# not re-anchored. Jas 1:17 (every good gift) stays
+# gods-unchanging-nature's.
+#
+# GUARDRAIL (the row's own note, honored): the gist presents enjoyment
+# as received gift (Eccl 5:19), never as hedonism or entitlement. The
+# lexicon deliberately speaks no materialFrameKeyword (no abundance /
+# increase / prosperity vocabulary — checked token by token), and no
+# anchor is on the flagged-pairings watchlist.
+#
+# CORPUS: the refrain's in-corpus instances are Eccl 3:12-13 and 3:22.
+# The other five (2:24-26; 5:18-20; 8:15; 9:7-9; 11:8-9) are
+# corpus-blocked riders on the re-pin.
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens
+# ("does/god/want/me/to" reduce: god is significant; "enjoy life" and
+# "gift of god" are the narrowest forms, 2 tokens each).
+#
+# Attribution: ALL anchors [editorial].
+id: enjoying-gods-gifts
+label: Enjoying God's gifts
+lexicon:
+  - enjoying gods gifts
+  - does god want me to enjoy life
+  - enjoy your work
+  - eat drink and enjoy
+  - is it okay to enjoy life
+  - enjoyment is the gift of god
+anchors:
+  # "there is nothing better for them than to rejoice, and to do good
+  # as long as they live. Also that every man should eat and drink, and
+  # enjoy good in all his labor, is the gift of God" (WEB, in corpus).
+  # The refrain's fullest in-corpus statement — enjoyment received as
+  # gift, exactly the register the row documents. 3:1-8 stays
+  # seasons-of-life's (same batch); 3:11 conscience's; 3:14
+  # fear-of-the-lord's — verse-disjoint claims on a shared chapter.
+  - ref: Ecclesiastes 3:12-13
+    sources: [editorial]
+    weight: 1.0
+  # "there is nothing better than that a man should rejoice in his
+  # works, for that is his portion" (WEB, in corpus).
+  - ref: Ecclesiastes 3:22
+    sources: [editorial]
+    weight: 0.9
+  # "There is nothing better for a man than that he should eat and
+  # drink, and make his soul enjoy good in his labor. This also I saw,
+  # that it is from the hand of God" — the refrain's first statement.
+  # (Ecclesiastes 2 NOT in web-subset; re-check at re-pin.)
+  - ref: Ecclesiastes 2:24-26
+    sources: [editorial]
+    weight: 0.85
+  # "every man to whom God has given riches and wealth... this is the
+  # gift of God" — 5:19 is the row's own guardrail verse: the power to
+  # enjoy is itself given, never earned or demanded. (Ecclesiastes 5
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Ecclesiastes 5:18-20
+    sources: [editorial]
+    weight: 0.85
+  # "Go your way — eat your bread with joy, and drink your wine with a
+  # merry heart; for God has already accepted your works." (Ecclesiastes
+  # 9 NOT in web-subset; re-check at re-pin.)
+  - ref: Ecclesiastes 9:7-9
+    sources: [editorial]
+    weight: 0.75
+related:
+  - contentment
+  - thanksgiving
+  - seasons-of-life
+  - joy-in-the-lord

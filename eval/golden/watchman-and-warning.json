@@ -1,0 +1,40 @@
+{
+  "id": "watchman-and-warning",
+  "query": "watchman in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "responsibility to warn others"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id watchman-and-warning (Theme I row, 1 requesting",
+    "book: Ezekiel, two ranges merged) — engine admission only by",
+    "Jesse's merge of this PR. The sharing-your-faith extension route",
+    "CHECKED AND DECLINED (evangelism vocabulary vs the",
+    "blood-accountability charge — register mismatch). The charge's",
+    "second statement (Ezek 33:1-9) is in corpus and keystone; Acts",
+    "20:26-27 — the row's own named NT companion — in corpus and",
+    "free. Ezek 3:16-21 and the Isaiah watchman motif ride the",
+    "re-pin. Ezek 33:20 stays individual-responsibility's, 33:30-32",
+    "empty-worship's.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'watchman in the bible' returned Ezek 33:7 and 33:1-2 CHIPLESS",
+    "over bible-token noise; 'responsibility to warn others' returned",
+    "warn-token scatter with Luke 9:21 rank 1 (Jesus warning the",
+    "disciples to tell no one — the wrong sense entirely)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ezekiel 33:1-9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The watchman's charge"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 20:26-27"
+  ],
+  "coversConcepts": [
+    "watchman-and-warning"
+  ]
+}

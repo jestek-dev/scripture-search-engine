@@ -1,0 +1,92 @@
+# TAG-GAP ROLLOUT batch 4 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 1 requesting book: the
+# Philippians thread, with 2 Cor 10:5 named as the other anchor).
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission happens only by his merge of
+# this PR.
+#
+# "What should I think about" / "guarding your thoughts" / "take every
+# thought captive" — remembered-transformed-not-conformed is Romans-12
+# verse-memory and self-control is behavior-shaped; nothing serves
+# plain thought-life queries.
+#
+# DUAL ANCHORS, recorded in both files (mercy/Luke 18:13 sibling
+# precedent):
+#   - Phil 4:8 is a verse-scoped sibling claim inside peace-of-god's
+#     Phil 4:8-9 span — that pack carries the whole passage for the
+#     anxiety register ("think about such things" -> the God of peace);
+#     this pack claims v8 for the what-to-think-about register the
+#     verse itself commands.
+#   - 2 Cor 10:3-5 overlaps giving-an-answer's 2 Cor 10:5 (the
+#     apologetic demolish-arguments register); this pack's register is
+#     the discipling of one's own thoughts the remembered phrase names.
+# Rom 12:2 stays remembered-transformed-not-conformed's — no renewing-
+# of-your-mind phrasing here.
+#
+# CORPUS: all five anchors in corpus. Prov 4:23 (guard your heart) and
+# Matt 15:19 (out of the heart come evil thoughts) are corpus-blocked
+# riders.
+#
+# TOKENIZER NOTE (G-4): "what should i think about" was considered and
+# DROPPED — it collapses to bare {think} (should/i/about are
+# stopwords), the 2026-08-08 accident class. "think about these things"
+# ({think, thing}) carries that query family at honest width. Every
+# entry keeps >= 2 significant tokens.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: thought-life
+label: Thought life
+lexicon:
+  - thought life
+  - take every thought captive
+  - guarding your thoughts
+  - think about these things
+  - set your mind on things above
+  - renew my thoughts
+anchors:
+  # "throwing down imaginations and every high thing that is exalted
+  # against the knowledge of God and bringing every thought into
+  # captivity to the obedience of Christ" (WEB, in corpus). The
+  # remembered "take every thought captive" text — DUAL with
+  # giving-an-answer's 2 Cor 10:5 claim (recorded there).
+  - ref: 2 Corinthians 10:3-5
+    sources: [editorial]
+    weight: 1.0
+  # "whatever things are true... honorable... just... pure... lovely...
+  # of good report: if there is any virtue and if there is anything
+  # worthy of praise, think about these things" (WEB, in corpus).
+  # Sibling claim inside peace-of-god's Phil 4:8-9 span (recorded
+  # there) — the canon's direct answer to "what should I think about".
+  - ref: Philippians 4:8
+    sources: [editorial]
+    weight: 0.95
+  # "Set your mind on the things that are above, not on the things that
+  # are on the earth" (WEB, in corpus). Col 3:5 is covetousness's (same
+  # batch); 3:9-25 belong to their standing owners — verse-disjoint
+  # claims on a shared chapter.
+  - ref: Colossians 3:1-2
+    sources: [editorial]
+    weight: 0.9
+  # "Search me, God, and know my heart. Try me, and know my thoughts.
+  # See if there is any wicked way in me" (WEB, in corpus). The prayed
+  # register — thought-life opened to God.
+  - ref: Psalms 139:23-24
+    sources: [editorial]
+    weight: 0.85
+  # "Let the words of my mouth and the meditation of my heart be
+  # acceptable in your sight" (WEB, in corpus). (Ps 19:7-9 stays
+  # trustworthiness-of-scripture's — verse-disjoint.)
+  - ref: Psalms 19:14
+    sources: [editorial]
+    weight: 0.8
+  # "Keep your heart with all diligence, for out of it is the wellspring
+  # of life." (Proverbs 4 NOT in web-subset; re-check at re-pin.)
+  - ref: Proverbs 4:23
+    sources: [editorial]
+    weight: 0.85
+related:
+  - remembered-transformed-not-conformed
+  - self-control
+  - peace-of-god
+  - giving-an-answer

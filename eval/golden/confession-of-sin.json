@@ -1,0 +1,42 @@
+{
+  "id": "confession-of-sin",
+  "query": "confess your sins",
+  "status": "active",
+  "additionalQueries": [
+    "confession of sin"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id confession-of-sin (Theme A row, 6 requesting books),",
+    "resolved as the row's OWN standing advice directs: a LEXICON",
+    "EXTENSION of forgiveness-of-sins, not a new id — that pack already",
+    "anchors 1 John 1:9, Ps 32:5 (Torrey: CONFESSION OF SIN), and Isa",
+    "1:18, so a sibling concept would dilute anchors G4 exists to protect",
+    "(repentance keeps Prov 28:13 and the turning register; the shared",
+    "phrase rule forbids extending both). Ps 51:3-4 joins as the psalm's",
+    "own confession witness.",
+    "Measured gap before the extension (2026-08-26, fixture corpus):",
+    "'confess your sins' returned Jas 5:16 #1 by exact phrase and 1 John",
+    "1:9 #3 by token overlap, all CHIPLESS (wrong-reason class — right",
+    "verses, no curated claim); 'confession of sin' returned scatter (the",
+    "noun tokens confession/confess are distinct under the one tokenizer,",
+    "so neither query could ever fire the concept without these entries)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 John 1:9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's forgiveness"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 32:5",
+    "Psalms 51:3-4",
+    "Proverbs 28:13",
+    "James 5:16"
+  ],
+  "coversConcepts": [
+    "forgiveness-of-sins"
+  ]
+}

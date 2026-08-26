@@ -1,0 +1,43 @@
+{
+  "id": "temptation",
+  "query": "where does temptation come from",
+  "status": "active",
+  "additionalQueries": [
+    "jesus tempted in the wilderness"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id temptation (Theme E row, 10 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The vocabulary",
+    "carried only the response side: remembered-a-way-of-escape owns the",
+    "bare 'temptation'/'tempted' tokens with its deliberate ONE-anchor",
+    "design (1 Cor 10:13), and resisting-the-devil owns 'resist the",
+    "devil'. Nothing carried the diagnosis (Jas 1:13-15) or the Lord's",
+    "own temptation. This pack's lexicon deliberately keeps every entry",
+    ">= 2 significant tokens so the remembered pack's bare tokens stay",
+    "its own; 1 Cor 10:13 is NOT re-anchored (cross-related).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'where does temptation come from' led with 1 Cor 10:13 then fell",
+    "into come/do token noise — Jas 1:14 surfaced only as a",
+    "translation-variant, CHIPLESS; 'jesus tempted in the wilderness'",
+    "never surfaced Mark 1:12-13 in the top 10 (Matt 4 and Luke 4 are",
+    "corpus-blocked and ride the re-pin)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 1:13-15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Temptation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Mark 1:12-13",
+    "Luke 22:40",
+    "Hebrews 4:15",
+    "Genesis 3:1-6"
+  ],
+  "coversConcepts": [
+    "temptation"
+  ]
+}

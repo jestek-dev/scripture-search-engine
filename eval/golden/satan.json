@@ -1,0 +1,48 @@
+{
+  "id": "satan",
+  "query": "satan in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "who is satan in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id satan (Theme D row, Job + 1 Chronicles) — engine",
+    "admission only by Jesse's merge of this PR. The vocabulary carries",
+    "only the response side (resisting-the-devil, which owns the bare",
+    "words 'satan' and 'the devil' and KEEPS them: a provisional move of",
+    "bare 'satan' to this pack measurably regressed that pack's active",
+    "fixture pin of 'satan' -> Jas 4:7 and was reverted in-session — the",
+    "queries this fixture asserts are the ...in-the-bible phrasings the",
+    "new pack owns). Gist stays descriptive, never speculative, per the",
+    "row. Job 1:6-7 is the anchor (the figure's own introduction);",
+    "testing owns Job 1:8-12 and suffering-of-the-righteous owns Job",
+    "1:8 — disjoint spans kept. Job 2:1-7 and 1 Chr 21:1 (reported as",
+    "the WEB gives it, no harmonization against 2 Sam 24:1 — the row's",
+    "own care) are corpus-blocked riders. Ezek 28:12-19 deliberately",
+    "NOT appended, honoring the review's Contested calls 1(e)",
+    "withholding. Zech 3:1-2 stays routed to resisting-the-devil per",
+    "the Zechariah block.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run,",
+    "with the pre-reversal query set 'who is satan' / 'satan in the",
+    "bible'): Job 1:6-7 absent from the top 10 on both — the who-is",
+    "register had no curated route (bare 'satan' routes to",
+    "resisting-the-devil by its fixture-pinned design)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Job 1:6-7",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Satan"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 8:44",
+    "Luke 22:31-32",
+    "Matthew 16:23"
+  ],
+  "coversConcepts": [
+    "satan"
+  ]
+}

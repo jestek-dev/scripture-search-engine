@@ -8,11 +8,17 @@
 # carries all four English renderings plus the John 14-16 titles. This is
 # query language, not verse text — the §1.6d pattern.
 #
-# "holy spirit" lives HERE, not in a separate general concept: §7.7 assigns
-# it to this pack, and a sibling holy-spirit concept would collide with this
-# lexicon in G4. If Jesse later wants a broader Holy Spirit pack (Phillips's
-# topic: Eph 5:18; 1 Cor 3:16, 6:19, 12:4-6; 2 Cor 13:14), "holy spirit"
-# moves there in the same PR — see manifest.md open questions.
+# "holy spirit" LIVED here while no general concept existed. TAG-GAP
+# ROLLOUT batch 2 (2026-08-26): Jesse's 2026-08-25 ruling (CONVENTIONS §11)
+# adopted the broader holy-spirit id this file's original note anticipated,
+# and the note's own instruction is executed in this PR: "holy spirit",
+# "filled with the spirit" and "be filled with the holy spirit" moved to
+# ontology/concepts/holy-spirit.yaml (whose Acts anchors are the filled
+# scenes). This pack keeps the Counselor/Comforter query family and ALL its
+# anchors — the new pack's lexicon deliberately carries none of those
+# renderings (its routing-warning note), so Counselor queries still route
+# only here. Eph 5:18 stays anchored here, reachable via the remaining
+# lexicon.
 id: holy-spirit-the-comforter
 label: The Holy Spirit, the Comforter
 lexicon:
@@ -22,10 +28,9 @@ lexicon:
   - helper
   - advocate
   - spirit of truth
-  - holy spirit
-  # Round-2 book admission 2026-08-18.
-  - filled with the spirit
-  - be filled with the holy spirit
+  # "holy spirit", "filled with the spirit" and "be filled with the holy
+  # spirit" moved to the general holy-spirit pack (batch 2, 2026-08-26) —
+  # see header note.
 anchors:
   # Torrey/Miller admission (drafted 2026-08-18) — anchors from the verified
   # outline: HOLY SPIRIT, THE COMFORTER, THE.
@@ -67,6 +72,9 @@ anchors:
     weight: 0.85
   # "be filled with the Spirit"; Torrey files 5:18 under INDWELLING OF THE
   # HOLY SPIRIT, THE — editorial for this pack's Comforter sense.
+  # DUAL ANCHOR (TAG-GAP batch 3, 2026-08-26): `drunkenness` also anchors
+  # 5:18 — "Don't be drunken with wine" is the verse's own first clause;
+  # the contrast is the verse's own point (recorded both files).
   - ref: Ephesians 5:18
     sources: [editorial]
     weight: 0.75

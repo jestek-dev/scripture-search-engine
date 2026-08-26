@@ -1,0 +1,47 @@
+{
+  "id": "loving-god",
+  "query": "the greatest commandment",
+  "status": "active",
+  "additionalQueries": [
+    "love the lord your god with all your heart"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id loving-god (Theme I row, 7 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The",
+    "greatest-commandment register absent from the vocabulary:",
+    "gods-love is God's love for us (and keeps bare 'love', Jesse's",
+    "2026-08-08 call), loving-others is neighbor-love (keeps Matt",
+    "22:39). Deut 6:5 taken (6:4 stays no-other-god's, adjacent",
+    "disjoint); John 14:15, 21 stay obedience-to-the-word's; 1 John",
+    "5:3 taken as the definitional statement. THREE-ID DESIGN decided",
+    "with seeking-god (batch 3's wholehearted-devotion note executed):",
+    "whole-heart vocabulary lands on these two; wholehearted-devotion",
+    "resolves at re-pin as their lexicon extension, not a third id.",
+    "Tokenizer: 'how to love god' normalizes to {love, god} and is",
+    "REJECTED as an entry — it would fire this pack on every 'does god",
+    "love me' query (reverse inversion); structural limit recorded.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'how to love god' answered ENTIRELY by gods-love's God-loves-you",
+    "anchors (Rom 5:8, John 3:16 — opposite direction, the row's exact",
+    "diagnosis); 'love the lord your god with all your heart' had Deut",
+    "6:5 and Matt 22:37 ranks 1-2 by exact phrase CHIPLESS then the",
+    "same flood; 'the greatest commandment' Matt 22:36 rank 1 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 22:36-38",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Loving God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Deuteronomy 6:5",
+    "1 John 5:3",
+    "Psalms 116:1"
+  ],
+  "coversConcepts": [
+    "loving-god"
+  ]
+}

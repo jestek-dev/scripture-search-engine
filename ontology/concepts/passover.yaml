@@ -1,0 +1,84 @@
+# TAG-GAP ROLLOUT batch 1 (Themes A-B, 2026-08-26) — ADOPTED-TAG id
+# (Theme A row in tag-gaps-review.md, 7 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The Passover — the feast itself. The row's rationale: a heavy, plain
+# lay query (and a Holy Week query) with no concept to land on;
+# `lords-supper` covers the NT meal, and tagging Exod 12 with it would
+# be a later-revelation read-back. CORPUS NOTE: the institution texts
+# (Exod 12; Lev 23:4-8; Num 9; Deut 16:1-8; the Hezekiah/Josiah
+# Passovers) are ALL corpus-blocked — Exod 12 is this pack's keystone
+# and ships as a deferred anchor; the in-corpus anchors are the
+# Gospels' own Passover-preparation narratives, which name the feast
+# explicitly and are honestly Passover passages (Luke 22:7: "the
+# Passover must be sacrificed").
+#
+# BOUNDARIES (log, honored): lords-supper keeps Luke 22:19-20 and the
+# meal's NT institution (no span overlap — this pack stops at v15);
+# appointed-feasts keeps calendar-as-a-system queries (the
+# one-wider-feasts merge stays flagged as the reviewer's call,
+# Leviticus doc Decisions #45 — NOT decided here). the-cross keeps the
+# lamb-of-God atonement register (John 1:29 is its anchor; "the
+# passover lamb" rung here reaches the feast's own texts, and 1 Cor
+# 5:7's your-Passover-sacrificed text is corpus-blocked, deferred).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4, verified): "passover" is the concept's own
+# subject noun, a deliberate bare entry (inventory row admitted:
+# [passover]). Others keep >= 2 significant tokens ({passover, bible},
+# {passover, lamb}, {feast, unleaven, bread}). Shared with
+# appointed-feasts: {feast} (1 token); with the-cross: {lamb} via "the
+# passover lamb" (1 token). Zero shared phrases.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: passover
+label: The Passover
+lexicon:
+  # The subject noun (inventory row).
+  - passover
+  - passover in the bible
+  - the passover lamb
+  - feast of unleavened bread
+anchors:
+  # "The day of unleavened bread came, on which the Passover must be
+  # sacrificed... 'I have earnestly desired to eat this Passover with
+  # you before I suffer'" (WEB, in corpus). The feast kept by Jesus —
+  # preparation through his own words over it; stops at v15 so
+  # lords-supper's institution anchor (22:19-20) stands alone.
+  - ref: Luke 22:7-15
+    sources: [editorial]
+    weight: 0.9
+  # "Where do you want us to prepare for you to eat the Passover? ...
+  # 'I will keep the Passover at your house with my disciples.'" (WEB,
+  # in corpus). Matthew's parallel preparation narrative.
+  - ref: Matthew 26:17-19
+    sources: [editorial]
+    weight: 0.8
+  # The institution itself — lamb, blood on the doorposts, "when I see
+  # the blood, I will pass over you", the memorial ordinance. The
+  # pack's keystone and the fixture's first assertion once the corpus
+  # carries it. (Exodus 12 NOT in web-subset; re-check at re-pin.)
+  - ref: Exodus 12:1-14
+    sources: [editorial]
+    weight: 1.0
+  # The memorial charge to the generations — "you shall tell your son".
+  # (Exodus 12 NOT in web-subset; re-check at re-pin.)
+  - ref: Exodus 12:21-28
+    sources: [editorial]
+    weight: 0.85
+  # The Passover in the appointed-times calendar. (Leviticus 23 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Leviticus 23:4-8
+    sources: [editorial]
+    weight: 0.7
+  # The pilgrimage-feast statute. (Deuteronomy 16 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Deuteronomy 16:1-8
+    sources: [editorial]
+    weight: 0.7
+related:
+  - lords-supper
+  - appointed-feasts
+  - the-cross

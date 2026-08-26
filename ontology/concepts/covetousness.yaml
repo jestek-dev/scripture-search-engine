@@ -1,0 +1,95 @@
+# TAG-GAP ROLLOUT batch 4 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 1 requesting book: 1 Kings, via
+# Naboth's vineyard — itself corpus-blocked). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission happens only by his merge of this PR.
+#
+# "Coveting" / "covetousness in the Bible" / "wanting what others
+# have" have no vocabulary home.
+#
+# EXTENSION ROUTE CHECKED AND DECLINED: the row's own flag offers a
+# contentment extension. Contentment is the remedy register (enough
+# amid lack; it owns wealth/money/love-of-money/comparison and Heb
+# 13:5); the SIN register — coveting what belongs to another — is a
+# different claim, and the two lexicons share no phrase. Cross-related
+# instead.
+#
+# BOUNDARIES: Exod 20:17 is a verse-scoped sibling claim inside
+# the-ten-commandments' Exod 20:1-17 span (idolatry/Exod 20:3-6 and
+# the-name-of-god/Exod 20:7 precedent — recorded here; that pack's
+# lookup register is untouched). Heb 13:5 stays contentment's. Col 3:5
+# is anchored here ("covetousness, which is idolatry" — idolatry
+# cross-related on the verse's own equation); Col 3:1-2 are
+# thought-life's (same batch) — verse-disjoint. Jas 4:7 stays
+# resisting-the-devil's, Jas 4:10 humble-exaltation's, Jas 4:11-12
+# judging-others' — the Jas 4:1-2 claim is verse-disjoint.
+#
+# CORPUS: Exod 20:17, Rom 7:7-8, Col 3:5, Jas 4:1-2 in corpus. Luke
+# 12:15 (beware of covetousness), 1 Kgs 21:1-16 (the minting
+# narrative), Mic 2:1-2 and Deut 5:21 are corpus-blocked riders.
+#
+# TOKENIZER NOTE (G-4): "covetousness" and "coveting" both stem to the
+# bare token `covet` — deliberate single-word admission (the subject
+# noun people type; the WEB's own word; no competing concept speaks the
+# stem). "you shall not covet" also collapses to {covet} (you/shall/
+# not are stopwords) — same deliberate trigger, acknowledged in the
+# inventory. "wanting what others have" was considered and REPHRASED
+# to "wanting what belongs to others" ("others" alone: `other` is a
+# stopword, which would have collapsed the entry to bare {want}).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no materialFrameKeyword in id, label, or lexicon
+# (wealth/money vocabulary deliberately left to contentment); no
+# watchlist anchor.
+id: covetousness
+label: Covetousness
+lexicon:
+  - covetousness
+  - coveting
+  - you shall not covet
+  - covetousness in the bible
+  - wanting what belongs to others
+anchors:
+  # "You shall not covet your neighbor's house. You shall not covet
+  # your neighbor's wife... nor anything that is your neighbor's"
+  # (WEB, in corpus). The tenth commandment — the register's charter;
+  # sibling claim inside the-ten-commandments' Exod 20:1-17 span
+  # (recorded above).
+  - ref: Exodus 20:17
+    sources: [editorial]
+    weight: 1.0
+  # "I wouldn't have known coveting unless the law had said, 'You shall
+  # not covet.' But sin... produced in me all kinds of coveting" (WEB,
+  # in corpus). Paul's own commandment-that-found-him testimony.
+  - ref: Romans 7:7-8
+    sources: [editorial]
+    weight: 0.9
+  # "Put to death therefore your members... evil desire, and
+  # covetousness, which is idolatry" (WEB, in corpus). The verse's own
+  # equation is why idolatry is cross-related below.
+  - ref: Colossians 3:5
+    sources: [editorial]
+    weight: 0.85
+  # "You lust, and don't have. You murder and covet, and can't obtain.
+  # You fight and make war" (WEB, in corpus). Where wanting-what-
+  # belongs-to-others leads — James's diagnosis.
+  - ref: James 4:1-2
+    sources: [editorial]
+    weight: 0.8
+  # "Beware! Keep yourselves from covetousness, for a man's life
+  # doesn't consist of the abundance of the things which he
+  # possesses." (Luke 12 NOT in web-subset; re-check at re-pin.)
+  - ref: Luke 12:15
+    sources: [editorial]
+    weight: 0.9
+  # Naboth's vineyard — the Old Testament's defining narrative of
+  # coveting ripening into theft and murder; the row's minting text.
+  # (1 Kings 21 NOT in web-subset; re-check at re-pin.)
+  - ref: 1 Kings 21:1-16
+    sources: [editorial]
+    weight: 0.8
+related:
+  - contentment
+  - envy-and-jealousy
+  - idolatry
+  - the-ten-commandments

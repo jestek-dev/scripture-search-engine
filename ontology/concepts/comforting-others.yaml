@@ -1,0 +1,97 @@
+# TAG-GAP ROLLOUT batch 5 (Theme H, 2026-08-26) — ADOPTED-TAG id
+# (Theme H row in tag-gaps-review.md, 3 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "what to say to a
+# suffering friend" was hijacked wholesale by suffering-for-christ's
+# persecution anchors (Matt 5:10, 1 Pet 4:12-16 — the wrong register
+# entirely); "comfort one another" returned 1 Thess 4:18 rank 1 by
+# exact phrase CHIPLESS; "weep with those who weep" returned Rom 12:15
+# rank 1 CHIPLESS.
+#
+# REGISTER: the HUMAN practice of comforting — what god-of-all-comfort's
+# own keystone calls being "able to comfort those who are in any
+# affliction" — beside god-of-all-comfort (God comforting us).
+#
+# 1 THESSALONIANS FLAG DECIDED (the row's decide-one-or-two): scope is
+# comfort-in-suffering. The broader build-one-another-up register stays
+# where it lives — 1 Thess 5:11 and Heb 10:24-25 are
+# gathering-together's anchors, untouched and cross-noted.
+#
+# DUAL/SIBLING ANCHORS (recorded in the other files too):
+# - Rom 12:15 DUAL with grief-and-loss — the verse is both the
+#   griever's comfort text and the comforter's instruction (Ps 55:12-14
+#   precedent).
+# - 2 Cor 1:4 verse-scoped sibling inside god-of-all-comfort's 1:3-4
+#   span — the verse's own second clause IS this register ("that we may
+#   be able to comfort those who are in any affliction"). Exod 20:17 /
+#   Luke 18:13 precedent.
+#
+# CORPUS: in-corpus witnesses 1 Thess 4:18, 1 Thess 5:14, Rom 12:15,
+# 2 Cor 1:4. Corpus-blocked riders: Job 2:11-13 (the model — seven
+# days of silence), Job 16:2-5 with 21:34 (the anti-model, "miserable
+# comforters"), Job 42:11, 1 Chr 7:21-22, 19:2-3.
+#
+# TOKENIZER NOTES (G-4):
+# - "comforting others" REJECTED as an entry: it collapses to the bare
+#   token {comfort}, which is god-of-all-comfort's deliberate bare word
+#   — the collapse would fire this pack on every comfort query
+#   (accident class). Recorded as an inventory skip.
+# - "weep with those who weep" REJECTED as an entry: it collapses to
+#   bare {weep} (grief territory). STRUCTURAL LIMIT recorded: that
+#   exact query is served by exact-phrase retrieval of Rom 12:15 (rank
+#   1 measured) and by this pack's dual anchor when other entries fire.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: comforting-others
+label: Comforting others
+lexicon:
+  - comfort one another
+  - how to comfort someone who is grieving
+  - what to say to a suffering friend
+  - comfort those who mourn
+  - encourage the fainthearted
+anchors:
+  # "Therefore comfort one another with these words" (WEB, in corpus)
+  # — the practice commanded, with the words to use (4:13-17 stays
+  # grief-and-loss's / caught-up-together's / resurrection-of-the-dead's
+  # territory; this verse is the charge itself).
+  - ref: 1 Thessalonians 4:18
+    sources: [editorial]
+    weight: 1.0
+  # "Admonish the disorderly; encourage the faint-hearted; support the
+  # weak; be patient toward all" (WEB, in corpus) — the pastoral
+  # instruction differentiated by the sufferer's state.
+  - ref: 1 Thessalonians 5:14
+    sources: [editorial]
+    weight: 0.95
+  # "Rejoice with those who rejoice. Weep with those who weep" (WEB, in
+  # corpus). DUAL anchor with grief-and-loss — recorded in both files.
+  - ref: Romans 12:15
+    sources: [editorial]
+    weight: 0.9
+  # "...that we may be able to comfort those who are in any affliction,
+  # through the comfort with which we ourselves are comforted by God"
+  # (WEB, in corpus). Verse-scoped sibling inside god-of-all-comfort's
+  # 2 Cor 1:3-4 keystone — recorded in both files.
+  - ref: 2 Corinthians 1:4
+    sources: [editorial]
+    weight: 0.85
+  # Job's friends at their best: "they sat with him on the ground seven
+  # days and seven nights, and no one spoke a word to him, for they saw
+  # that his grief was very great." (Job 2 NOT in web-subset; re-check
+  # at re-pin — the model of presence before words.)
+  - ref: Job 2:11-13
+    sources: [editorial]
+    weight: 0.8
+  # "Miserable comforters are you all!" — the anti-model: comfort that
+  # wounds. (Job 16 NOT in web-subset; re-check at re-pin.)
+  - ref: Job 16:2-5
+    sources: [editorial]
+    weight: 0.6
+related:
+  - god-of-all-comfort
+  - grief-and-loss
+  - friendship
