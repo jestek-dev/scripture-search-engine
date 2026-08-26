@@ -817,6 +817,10 @@ describe('isolated candidate builder', () => {
     expect(sha256(readFileSync(baseDatabasePath))).toBe(baseSha);
   }, 120_000);
 
+  // 120s, not 60s: two candidate builds over the full-Bible fixture corpus
+  // (2026-08-26 expansion, web-subset 1.37 MB -> 7.68 MB) no longer fit 60s
+  // on slow runners; the byte-for-byte mirror siblings above already run at
+  // the 120s precedent.
   it('returns a verified cache hit and rebuilds a cache whose database bytes were tampered', async () => {
     const proposal = lexiconProposal('cache verification phrase');
     const buildRequest = request(proposal, 'cache');
@@ -831,7 +835,7 @@ describe('isolated candidate builder', () => {
     expect(sha256(readFileSync(rebuilt.databasePath))).toBe(rebuilt.descriptor.databaseSha256);
     expect(readdirSync(buildRequest.outputDirectory).some((entry) => entry.startsWith('.invalid-'))).toBe(true);
     expect(sha256(readFileSync(baseDatabasePath))).toBe(baseSha);
-  }, 60_000);
+  }, 120_000);
 
   it('serializes identical cross-process builds and makes the publication loser a verified CACHE_HIT', async () => {
     const proposal = lexiconProposal('cross process lock phrase');
