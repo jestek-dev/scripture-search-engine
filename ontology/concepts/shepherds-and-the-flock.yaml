@@ -1,0 +1,111 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 4 requesting books: Zechariah, John, Ezekiel, Acts).
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission only by his merge of this PR.
+# "No shepherd concept exists anywhere in the 131" (the row) — still
+# true of the 223 at this batch's start.
+#
+# REGISTERS (the row's three, per the Ezekiel conversion note):
+# God-as-shepherd (Ps 23; Ps 100; Isa 40:11) and the elder-charge
+# (Acts 20:28-31; 1 Pet 5:2-3) are in corpus; the bad-shepherds/civic
+# register (Ezek 34; Zech 10:2-3; 11:4-17) and the good-shepherd
+# discourse (John 10; 21:15-17) are corpus-blocked and ride the
+# re-pin. "pastoral-* ids are the crisis register, not this
+# civic/leadership theme" — honored; leadership keeps Heb 13:7, 17.
+#
+# DUAL ANCHOR: Ps 23:1 with gods-provision ("I shall lack nothing" is
+# its provision anchor; the shepherd figure is this row's whole
+# subject) — recorded in both files. The pending shepherd-psalm-guard
+# fixture's contract (Ps 23:1 first for the quoted-psalm query, no
+# unrelated theme in the top 3) is served, not fought: this pack's
+# keystone IS Ps 23:1.
+#
+# BOUNDARIES: Acts 20:26-27 stays watchman-and-warning's (disjoint
+# span); 1 Pet 5:4 (chief Shepherd / crown) stays heavenly-reward's —
+# anchored 5:2-3 only; Zech 13:9 stays testing's; Matt 26:31 quotes
+# Zech 13:7 (anchored as the quotation's own scene); Ps 100:4 stays
+# thanksgiving's, 100:1-2 praise's.
+#
+# TOKENIZER NOTE (G-4): bare "shepherd" is a deliberate single-word
+# admission (the subject noun IS the concept); bare "flock" skipped
+# (inventory row with reason).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: shepherds-and-the-flock
+label: The Shepherd and his flock
+lexicon:
+  - shepherd
+  - the lord is my shepherd
+  - god as shepherd
+  - shepherd the flock
+  - good shepherd
+anchors:
+  # "The LORD is my shepherd; I shall lack nothing." (WEB, in corpus).
+  # DUAL ANCHOR with gods-provision (recorded both files): provision
+  # reads the clause, this row reads the figure. Keystone so the psalm
+  # stays the top answer to every shepherd query. (23:3 stays
+  # restoration's, 23:4 the comfort packs'.)
+  - ref: Psalms 23:1
+    sources: [editorial]
+    weight: 1.0
+  # "He will feed his flock like a shepherd. He will gather the lambs
+  # in his arm, and carry them in his bosom." (WEB, in corpus). The
+  # gentlest OT statement of the figure. (40:8 stays
+  # power-of-gods-word's; 40:11 was previously unclaimed.)
+  - ref: Isaiah 40:11
+    sources: [editorial]
+    weight: 0.95
+  # "We are his people, and the sheep of his pasture." (WEB, in
+  # corpus). (100:1-2 stays praise's, 100:4 thanksgiving's.)
+  - ref: Psalms 100:3
+    sources: [editorial]
+    weight: 0.9
+  # "Take heed... to all the flock, in which the Holy Spirit has made
+  # you overseers, to shepherd the assembly of the Lord... vicious
+  # wolves will enter in among you, not sparing the flock." (WEB, in
+  # corpus). The one direct NT elder charge in narrative (the row);
+  # carries the corrupt-shepherds warning in corpus. (20:26-27 stays
+  # watchman-and-warning's.)
+  - ref: Acts 20:28-31
+    sources: [editorial]
+    weight: 0.9
+  # "shepherd the flock of God which is among you... not for dishonest
+  # gain... not as lording it over those entrusted to you, but making
+  # yourselves examples to the flock." (WEB, in corpus). (5:4 stays
+  # heavenly-reward's.)
+  - ref: 1 Peter 5:2-3
+    sources: [editorial]
+    weight: 0.85
+  # "Strike the shepherd, and the sheep will be scattered" (WEB, in
+  # corpus) — the row's darkest OT form, in its one in-corpus verse.
+  # (13:9 stays testing's.)
+  - ref: Zechariah 13:7
+    sources: [editorial]
+    weight: 0.7
+  # Jesus quotes Zech 13:7 of himself on the night of the arrest —
+  # "I will strike the shepherd, and the sheep of the flock will be
+  # scattered." (WEB, in corpus.)
+  - ref: Matthew 26:31
+    sources: [editorial]
+    weight: 0.65
+  # "I myself will be the shepherd of my sheep" — the bad-shepherds
+  # indictment and God's answer. (Ezekiel 34 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Ezekiel 34:11-16
+    sources: [editorial]
+    weight: 0.7
+  # "I am the good shepherd. The good shepherd lays down his life for
+  # the sheep." (John 10 NOT in web-subset; re-check at re-pin.)
+  - ref: John 10:11-16
+    sources: [editorial]
+    weight: 0.7
+  # "Feed my sheep" — the charge handed on. (John 21 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: John 21:15-17
+    sources: [editorial]
+    weight: 0.6
+related:
+  - gods-provision
+  - leadership
+  - gods-protection

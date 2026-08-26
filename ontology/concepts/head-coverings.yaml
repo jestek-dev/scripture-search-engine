@@ -1,0 +1,47 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 1 requesting book: 1 Corinthians). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR.
+#
+# ONE-DESIGN CROSS-NOTE DECIDED (the review: "decide one design before
+# minting either"): TWO rows, kept separate — this row is the narrow
+# one-passage lookup ("a perennial lay question with exactly one
+# passage to land on"), fully in corpus; men-and-women-in-the-church
+# (1 Tim 2:8-15) is entirely corpus-blocked and rides the re-pin,
+# where its curator may still fold this row in (reversible; recorded
+# here and in the batch ledger).
+#
+# NARROW ONE-PASSAGE DESIGN (remembered-* / head-coverings-shaped
+# precedent): the whole pericope is one anchor; there is nothing else
+# for the query to land on, by the row's own description.
+#
+# BOUNDARIES inside 1 Cor 11: lords-supper keeps 11:23-26 and 11:28.
+#
+# Attribution: anchor [editorial].
+# DOCTRINAL SCAN: no watchlist anchor. GIST CARE (the row's flag,
+# twice): describe and route, never adjudicate — gender roles are a
+# named non-criterion in docs/DOCTRINAL-BASIS.md §4. The gist states
+# what the passage discusses (custom, honor, prayer, the closing
+# no-such-custom note) and takes no position on modern practice.
+id: head-coverings
+label: Head coverings
+lexicon:
+  - head coverings
+  - head coverings in the bible
+  - should women cover their heads
+  - praying with head covered
+anchors:
+  # "Every man praying or prophesying, having his head covered,
+  # dishonors his head. But every woman praying or prophesying with
+  # her head uncovered dishonors her head... Judge for yourselves. Is
+  # it appropriate that a woman pray to God unveiled?... But if any
+  # man seems to be contentious, we have no such custom, neither do
+  # God's assemblies." (WEB, in corpus). The one passage the question
+  # has; the pack routes to all of it and rules on none of it.
+  # (11:23-26, 28 stay lords-supper's.)
+  - ref: 1 Corinthians 11:2-16
+    sources: [editorial]
+    weight: 1.0
+related:
+  - worship
+  - disputable-matters

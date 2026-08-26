@@ -70,6 +70,11 @@ anchors:
   # "They were all filled with the Holy Spirit and began to speak with
   # other languages" (WEB, in corpus). Pentecost — the promise kept
   # and the outpouring scene in corpus (the folded row's register).
+  # BATCH-6 SPAN SIBLING (2026-08-26): spiritual-gifts anchors this
+  # same span for the tongues register (Theme J extension); this pack
+  # keeps the Spirit's-coming register. Also: 4:29 is boldness-in-
+  # witness's and 4:30 signs-and-wonders' — 4:31 (filled and spoke)
+  # stays this pack's. Recorded in all files.
   - ref: Acts 2:1-4
     sources: [editorial]
     weight: 0.95

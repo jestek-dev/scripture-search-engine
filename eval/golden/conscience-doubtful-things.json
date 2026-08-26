@@ -1,0 +1,36 @@
+{
+  "id": "conscience-doubtful-things",
+  "query": "is it a sin if i am not sure",
+  "status": "active",
+  "additionalQueries": [
+    "acting against your conscience"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6: the Theme J conscience row (Romans +",
+    "Acts), resolved as a LEXICON+ANCHOR EXTENSION of the existing",
+    "conscience pack. That pack's anchors are the moral-knowledge",
+    "register (Rom 2:14-15 law-written-on-hearts); the row's register",
+    "— acting against conscience, doubtful things — had no anchor:",
+    "Rom 14:22-23 was free (disputable-matters keeps 14:5 and 14:19,",
+    "judging-others 14:4 and 14:13). Rom 13:5 stays inside",
+    "governing-authorities' 13:1-7 span (cross-noted, not claimed);",
+    "Acts 23:1 and 24:16 are corpus-blocked riders.",
+    "Measured gap before the extension (2026-08-26, pending-fixture",
+    "run): 'is it a sin if i am not sure' was answered wholesale by",
+    "Sin-and-its-wages anchors (Rom 6:23 rank 1 — 'the wages of sin",
+    "is death' to an anxious gray-area question, the wrong pastoral",
+    "register); 'acting against your conscience' surfaced only the",
+    "moral-law anchors, with Rom 14:22-23 nowhere."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 14:22-23",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Conscience — the law written on hearts"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "conscience"
+  ]
+}

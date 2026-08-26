@@ -1,0 +1,42 @@
+{
+  "id": "shepherds-and-the-flock",
+  "query": "god as shepherd",
+  "status": "active",
+  "additionalQueries": [
+    "shepherd the flock of god"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id shepherds-and-the-flock (Theme J row, 4 requesting",
+    "books). The row's three registers: God-as-shepherd and the",
+    "elder-charge registers are in corpus (Ps 23:1, Ps 100:3, Isa",
+    "40:11, Acts 20:28-31, 1 Pet 5:2-3); the bad-shepherds register",
+    "(Ezek 34; Zech 10-11; John 10) is corpus-blocked and rides the",
+    "re-pin. Ps 23:1 is DUAL with gods-provision (recorded both",
+    "files); the pending shepherd-psalm-guard fixture's Ps 23:1-first",
+    "contract respected (keystone weight keeps the psalm the top",
+    "answer).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'god as shepherd' returned 1 Pet 5:2/Acts 20:28 by proximity",
+    "CHIPLESS with Ps 23:1 rank 4 CHIPLESS; 'bad shepherds in the",
+    "bible' pure shepherd-token scatter; no curated shepherd concept",
+    "existed anywhere in the vocabulary."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 23:1",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Shepherd and his flock"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 40:11",
+    "Psalms 100:3",
+    "Acts 20:28-31",
+    "1 Peter 5:2-3"
+  ],
+  "coversConcepts": [
+    "shepherds-and-the-flock"
+  ]
+}

@@ -109,6 +109,9 @@ anchors:
   # (also EXAMPLE OF CHRIST, "Saints predestinated to follow"). "predestined
   # to be conformed to the image of his Son" (WEB, in corpus). The image's
   # destination.
+  # BATCH-6 SPAN SIBLING (2026-08-26): election-and-predestination
+  # anchors 8:29-30 for the foreknew-predestined chain; this pack
+  # keeps the conformed-to-the-image clause. Recorded both files.
   - ref: Romans 8:29
     sources: [torrey]
     weight: 0.7

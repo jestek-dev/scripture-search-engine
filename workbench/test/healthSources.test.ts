@@ -161,9 +161,20 @@ describe('health source semantics', () => {
     // the same change; the batch's three extensions ride
     // rest-for-the-weary, glory-of-god, and freedom-from-bondage, so they
     // add no ids here).
+    // + the 16 tag-gap rollout batch-6 packs (2026-08-26, Themes J-M of
+    // the adopted tag-gap review: church-discipline,
+    // revival-and-reformation, shepherds-and-the-flock,
+    // unity-of-the-church, supporting-gospel-workers, head-coverings,
+    // singleness, signs-and-wonders, boldness-in-witness,
+    // kingdom-of-heaven, election-and-predestination,
+    // adoption-as-gods-children, ascension, witness-testimony,
+    // light-and-darkness, zion-city-of-god — each with an active
+    // demonstrating fixture in the same change; the batch's four
+    // extensions ride spiritual-gifts, walking-in-the-light, conscience,
+    // and salvation, so they add no ids here).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(223);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(223);
+    expect(coverage).toHaveLength(239);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(239);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

@@ -1,0 +1,68 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 3 requesting books: 3 John, 1 Corinthians, 1 Timothy).
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission only by his merge of this PR.
+#
+# ROUTE CHECK (the row's own flag: hospitality / generosity / tithing
+# extensions) run and DECLINED: hospitality anchors the row's home
+# text (3 John 1:5-8) but its register is welcoming strangers — an
+# extension would answer "supporting missionaries" with Gen 18 /
+# Heb 13:2 stranger anchors; generosity's register is open-handed
+# giving broadly; tithing's is the tithe. The send-and-sustain
+# register is its own. Cross-related to hospitality and generosity.
+#
+# CORPUS: the home text 3 John 1:5-8 is corpus-blocked (3 John's
+# corpus presence is 1:4 only) and STAYS hospitality's anchor either
+# way (recorded there; not double-claimed here — it rides the re-pin
+# for this pack's own claim decision). The in-corpus witness is Phil
+# 4:15-18, Paul's fullest thanks for missionary support (free until
+# now: contentment keeps 4:11-13, gods-provision 4:19). 1 Cor 9:4-14
+# and 1 Tim 5:17-18 are corpus-blocked riders.
+#
+# NARROW ONE-ANCHOR DESIGN (complacency / putting-god-first
+# precedent): one in-corpus anchor carries the fixture; riders wait.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor. Phil 4:17 ("Not that I seek
+# for the gift") is quoted in the gist frame — support described as
+# partnership and fruit, never as a giving-to-get formula (the
+# never-give-to-get guardrail, putting-god-first's file).
+id: supporting-gospel-workers
+label: Supporting gospel workers
+lexicon:
+  # Bare "missionaries" is a deliberate single-word admission —
+  # distinctive modern word absent from the WEB text (§1.6d option-3
+  # register), no competing concept speaks the stem; inventory row.
+  - missionaries
+  - supporting missionaries
+  - supporting gospel workers
+  - sending out missionaries
+  - partnership in the gospel
+anchors:
+  # "no assembly shared with me in the matter of giving and receiving
+  # but you only. For even in Thessalonica you sent once and again to
+  # my need... Not that I seek for the gift, but I seek for the fruit
+  # that increases to your account... a sweet-smelling fragrance, an
+  # acceptable and well-pleasing sacrifice to God." (WEB, in corpus).
+  # The one church that sent, and what Paul calls their sending.
+  # (4:11-13 stays contentment's, 4:19 gods-provision's.)
+  - ref: Philippians 4:15-18
+    sources: [editorial]
+    weight: 1.0
+  # "the theme's fullest argument" (the row): those who proclaim the
+  # Good News should live from the Good News — with Paul's own
+  # surrendered-rights counterpoint. (1 Corinthians 9 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: 1 Corinthians 9:11-14
+    sources: [editorial]
+    weight: 0.8
+  # "the congregational-duty companion" (the row): double honor for
+  # elders who labor in word and teaching; the laborer worthy of his
+  # wages. (1 Timothy 5 NOT in web-subset; re-check at re-pin.)
+  - ref: 1 Timothy 5:17-18
+    sources: [editorial]
+    weight: 0.75
+related:
+  - hospitality
+  - generosity
+  - sharing-your-faith
