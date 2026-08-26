@@ -1,0 +1,53 @@
+{
+  "id": "remembered-cast-your-care",
+  "query": "casting all your care upon him",
+  "status": "pending",
+  "note": [
+    "ALIAS/LEXICON MINING BATCH 1 (2026-08-26, whole-Bible coverage plan §2.3",
+    "item 2 / §4.3, seeded by the battery re-grade's ph4 row). The 'care'",
+    "register of 1 Peter 5:7 — the wording of the Darby translation ('having",
+    "cast all your care upon him') and Young's Literal ('all your care having",
+    "cast upon Him'); the WEB reads 'casting all your worries on him'. All",
+    "wording public-domain (decision #4/#5 defaults: ASV/YLT/Darby/BSB/WEB",
+    "only; no ESV/NIV/NLT wording anywhere in this batch).",
+    "",
+    "Measured miss, fixture written FIRST, before any data: on main @ e762d1c",
+    "(0.14.0, corpus 644b241c…, layer b24ea16d…, fixture bed) this query",
+    "returns Matthew 6:30 at #1 (16.09, translation_variant/passage_terms",
+    "junk) with 1 Peter 5:7 — the verse being quoted — at #2 (11.90,",
+    "token_overlap only, chipless). The fix is the remembered-cast-your-care",
+    "pack (single anchor, 1 Peter 5:7 at 1.0), per the remembered-* narrow",
+    "one-anchor design.",
+    "",
+    "DELIBERATELY NOT the anxiety register: 'cast all your anxiety on him'",
+    "(battery ph4 verbatim; ASV wording) fires peace-of-god's own lexicon",
+    "entry, and the ACTIVE peace-of-god.json guards Philippians 4:6-7 above",
+    "1 Peter 5:7 for that query (2026-08-18 dedup guard); the batch-000",
+    "triage routed that flip needs-jesse (J4/J8, docs/reviews/sweep/",
+    "approvals/2026-08-23-batch-000-audit-seed.md §4). This pack's phrases",
+    "share no token set with that entry ({cast, care} vs {cast, anxiety}),",
+    "so the guarded query is untouched.",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose: the assertion is that",
+    "a curated anchor put the quoted verse first and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Peter 5:7",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Casting your care on him"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "additionalQueries": [
+    "having cast all your care upon him"
+  ],
+  "alsoAcceptable": [
+    "Psalms 55:22",
+    "Matthew 6:30"
+  ],
+  "coversConcepts": [
+    "remembered-cast-your-care"
+  ]
+}

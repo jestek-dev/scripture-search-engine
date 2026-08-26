@@ -1,0 +1,52 @@
+{
+  "id": "remembered-no-weapon-shall-prosper",
+  "query": "no weapon formed against me shall prosper",
+  "status": "pending",
+  "note": [
+    "ALIAS/LEXICON MINING BATCH 1 (2026-08-26, whole-Bible coverage plan §2.3",
+    "item 2 / §4.3, seeded by the battery re-grade's ph12 row). The remembered",
+    "phrasing carries 'prosper' — the ASV register ('no weapon that is formed",
+    "against thee shall prosper'); the WEB reads 'will prevail'. All wording",
+    "public-domain (decision #4/#5 defaults: ASV/YLT/Darby/BSB/WEB only).",
+    "",
+    "Measured miss, fixture written FIRST, before any data: on main @ e762d1c",
+    "(0.14.0, corpus 644b241c…, layer b24ea16d…, fixture bed) this query",
+    "returns Psalms 91:9-12 at #1 (31.28) with Isaiah 54:17 — the verse being",
+    "quoted — at #2 (30.56). Same J4-default shape as hope-plans.json (quoted",
+    "verse leads, provisional pending J4): the gap is that gods-protection",
+    "anchors Isaiah 54:17 at 0.85 under its Psalm 91 range at 1.0. The fix is",
+    "the remembered-no-weapon-shall-prosper pack (single anchor, Isaiah 54:17",
+    "at 1.0), additive — no reviewed gods-protection row is edited.",
+    "",
+    "SCOPE HONESTY: the SHORT query 'no weapon formed against me' (no",
+    "'prosper') is asserted by the ACTIVE gods-protection.json with today's",
+    "admitted Psalms 91:9-12 expectation, and the PENDING no-weapon.json",
+    "holds the J4 target state for it; both are deliberately untouched — this",
+    "pack's phrases all carry a token the short query lacks, so its admitted",
+    "ordering cannot move.",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose: the assertion is that",
+    "a curated anchor put the quoted verse first and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 54:17",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: No weapon formed against you"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "additionalQueries": [
+    "no weapon that is formed against thee shall prosper",
+    "every tongue that rises against me in judgment"
+  ],
+  "alsoAcceptable": [
+    "Psalms 91:9-12",
+    "Psalms 91:5-7",
+    "Psalms 91:14-16"
+  ],
+  "coversConcepts": [
+    "remembered-no-weapon-shall-prosper"
+  ]
+}

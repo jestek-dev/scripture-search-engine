@@ -1,0 +1,49 @@
+{
+  "id": "remembered-wait-for-the-lord",
+  "query": "they that wait upon the lord shall renew their strength",
+  "status": "pending",
+  "note": [
+    "ALIAS/LEXICON MINING BATCH 1 (2026-08-26, whole-Bible coverage plan §2.3",
+    "item 2 / §4.3, mined from the popular-verses Tier 1 seed — Isaiah 40:31",
+    "is rank 11 of the verified top-200). The remembered register is the",
+    "'wait upon the LORD' wording (Darby: 'they that wait upon Jehovah shall",
+    "renew their strength'; the WEB reads 'those who wait for the LORD will",
+    "renew their strength'). All wording public-domain (decision #4/#5",
+    "defaults: ASV/YLT/Darby/BSB/WEB only).",
+    "",
+    "Measured miss, fixture written FIRST, before any data: on main @ e762d1c",
+    "(0.14.0, corpus 644b241c…, layer b24ea16d…, fixture bed) this query",
+    "returns Psalms 23:3 at #1 (18.90 — Restoration-and-renewal anchor plus",
+    "translation_variant stems) with Isaiah 40:31 — the verse being quoted —",
+    "at #2 (17.23, no curated chip of its own: rest-for-the-weary reaches it",
+    "only as a one-hop Related theme). The WEB-verbatim register 'those who",
+    "wait for the lord will renew their strength' already leads by exact",
+    "phrase (68.14) and is asserted below as a guard. The fix is the",
+    "remembered-wait-for-the-lord pack (single anchor, Isaiah 40:31 at 1.0),",
+    "additive — rest-for-the-weary (0.85) and trust-in-god (0.75) keep their",
+    "reviewed anchors and weights.",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose: the assertion is that",
+    "a curated anchor put the quoted verse first and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 40:31",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Strength for those who wait on the Lord"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "additionalQueries": [
+    "those who wait for the lord will renew their strength"
+  ],
+  "alsoAcceptable": [
+    "Psalms 23:3",
+    "Psalms 103:4-5",
+    "Psalms 51:10"
+  ],
+  "coversConcepts": [
+    "remembered-wait-for-the-lord"
+  ]
+}

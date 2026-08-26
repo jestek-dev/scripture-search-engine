@@ -1,0 +1,47 @@
+{
+  "id": "stripes-healed",
+  "query": "with his stripes we are healed",
+  "status": "pending",
+  "note": [
+    "ALIAS/LEXICON MINING BATCH 1 (2026-08-26, whole-Bible coverage plan §2.3",
+    "item 2 / §4.3, mined from the popular-verses Tier 1 seed — Isaiah 53:5",
+    "is rank 20 of the verified top-200; the sibling promotion fixture",
+    "popular-isaiah-53-5 asserts the WEB register 'by his wounds we are",
+    "healed'). 'With his stripes we are healed' is the ASV's own wording",
+    "(1901, public domain) — the register memorization programs and Handel's",
+    "Messiah carry. Decision #4/#5 defaults: ASV/YLT/Darby/BSB/WEB wording",
+    "only.",
+    "",
+    "Measured miss, fixture written FIRST, before any data: on main @ e762d1c",
+    "(0.14.0, corpus 644b241c…, layer b24ea16d…, fixture bed) this query",
+    "does not return Isaiah 53:5 ANYWHERE in the top 10 — 'stripes' stems to",
+    "a token the WEB text of the verse never carries, so the query dead-ends",
+    "in prayer-for-healing's bare 'healing' cue (#1 James 5:13-16, 18.04).",
+    "The fix is a LEXICON EXTENSION on the-cross — the concept that already",
+    "anchors Isaiah 53:5 at 1.0 and already carries the WEB register 'by his",
+    "wounds we are healed' — never a new concept over the same verse (the",
+    "dilution G4 exists to prevent; the batch-5 gentle-and-humble-in-heart",
+    "extension is the precedent).",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose: the assertion is that",
+    "a curated anchor put the quoted verse first and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 53:5",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The cross and atonement"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 2:24",
+    "James 5:13-16",
+    "Jeremiah 17:14",
+    "Psalms 103:2-3"
+  ],
+  "coversConcepts": [
+    "the-cross"
+  ]
+}
