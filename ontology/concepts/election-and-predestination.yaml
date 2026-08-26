@@ -1,0 +1,80 @@
+# TAG-GAP ROLLOUT batch 6 (Theme K, 2026-08-26) — ADOPTED-TAG id
+# (Theme K row, 4 requesting books: Romans, Ephesians, 2 Thess,
+# 1 Thess). Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission only by his merge of this PR.
+#
+# DOCTRINALLY SENSITIVE — HANDLED PER THE ROW'S OWN FLAG: the gist is
+# §4-NEUTRAL (docs/DOCTRINAL-BASIS.md rules election disputes out as
+# admission criteria). This pack ROUTES to what the texts say —
+# foreknew, predestined, called, justified, glorified; chosen before
+# the foundation of the world; election as ground for thanks — and
+# adjudicates NOTHING between the historic readings of those words.
+# Recorded for Jesse's review in the batch ledger and the PR.
+#
+# BOUNDARIES: Rom 8:29-30 claimed as a SPAN SIBLING of image-of-god's
+# 8:29 ("conformed to the image of his Son" is its anchor; the chain
+# of 8:29-30 is this row's — recorded both files); Eph 1:5 is a
+# same-batch DUAL with adoption-as-gods-children (the verse's own two
+# clauses: "predestined us" here, "for adoption as children" there —
+# recorded both files); remnant keeps Rom 11:4-5, grace-not-earned
+# 11:6, gods-plan-for-israel 11:25-29.
+#
+# Rom 9:6-24 — the row's largest requested text — is corpus-blocked
+# (Romans 9 absent) and DELIBERATELY NOT ridden as an anchor in this
+# batch: the potter texts should enter with their whole argument
+# assertable, not as a detached proof-text (recorded for the re-pin
+# curator). The pastoral-register riders (2 Thess 2:13-14; 1 Th 1:4)
+# ride instead.
+#
+# TOKENIZER NOTE (G-4): "predestination" and "election" are
+# deliberate single-word admissions — the doctrine's own nouns, both
+# distinctive stems no other pack speaks; inventory rows recorded.
+#
+# Attribution: ALL anchors [editorial].
+id: election-and-predestination
+label: Election and predestination
+lexicon:
+  - predestination
+  - election
+  - does god choose who is saved
+  - chosen before the foundation of the world
+anchors:
+  # "he chose us in him before the foundation of the world... having
+  # predestined us for adoption as children through Jesus Christ to
+  # himself, according to the good pleasure of his desire" (WEB, in
+  # corpus). The vocabulary's home verses. DUAL on 1:5 with
+  # adoption-as-gods-children (recorded both files).
+  - ref: Ephesians 1:4-5
+    sources: [editorial]
+    weight: 1.0
+  # "For whom he foreknew, he also predestined... Whom he predestined,
+  # those he also called. Whom he called, those he also justified.
+  # Whom he justified, those he also glorified." (WEB, in corpus).
+  # The golden chain, stated whole. SPAN SIBLING with image-of-god's
+  # 8:29 (recorded both files).
+  - ref: Romans 8:29-30
+    sources: [editorial]
+    weight: 0.95
+  # "We were also assigned an inheritance in him, having been
+  # foreordained according to the purpose of him who does all things
+  # after the counsel of his will" (WEB, in corpus).
+  - ref: Ephesians 1:11
+    sources: [editorial]
+    weight: 0.9
+  # "election stated pastorally, as ground for thanks rather than
+  # speculation" (the row) — "God chose you from the beginning for
+  # salvation". (2 Thessalonians NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: 2 Thessalonians 2:13-14
+    sources: [editorial]
+    weight: 0.7
+  # "knowing, brothers loved by God, that you are chosen"
+  # (1 Thessalonians 1 NOT in web-subset; re-check at re-pin.)
+  - ref: 1 Thessalonians 1:4
+    sources: [editorial]
+    weight: 0.65
+related:
+  - providence
+  - grace-not-earned
+  - assurance-of-salvation
+  - gods-plan-for-israel

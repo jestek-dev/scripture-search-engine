@@ -10,6 +10,12 @@ id: resisting-the-devil
 label: Resisting the devil
 lexicon:
   - resist the devil
+  # TAG-GAP batch 2 (2026-08-26): bare "satan" was provisionally moved to
+  # the new who-is `satan` pack and MOVED BACK in the same session — this
+  # pack's own active fixture (resisting-the-devil.json) pins "satan" ->
+  # James 4:7 as reviewed routing, and an existing fixture assertion
+  # outranks a new pack's convenience. The satan pack carries the
+  # who-is-X-in-the-bible phrasings instead; both packs cross-relate.
   - satan
   - the devil
   - spiritual warfare

@@ -1,0 +1,125 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme D row in tag-gaps-review.md, 4 requesting books; Acts is "the
+# strongest single anchor set for this proposed concept"). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The Holy Spirit — the general who-is / filled-with / how-does-he-work
+# query family. The vocabulary carried only facets, and
+# holy-spirit-the-comforter's OWN in-file design note prescribes this
+# exact move: "If Jesse later wants a broader Holy Spirit pack, 'holy
+# spirit' moves there in the same PR." Executed here: the entries
+# "holy spirit", "filled with the spirit" and "be filled with the holy
+# spirit" MOVE from that pack to this one (their filled-scene anchors,
+# Acts 2:4 and 4:31, live here; Eph 5:18 stays the comforter pack's
+# anchor, reachable by its remaining lexicon).
+#
+# ROUTING WARNING HONORED (carried on the row twice): this lexicon
+# does NOT carry comforter / counselor / helper / advocate / spirit of
+# truth — those queries stay with holy-spirit-the-comforter, whose
+# John 14-16 anchors this pack also never claims.
+#
+# FOLD DECIDED: outpouring-of-the-spirit (Joel/Zechariah/Titus/Isaiah/
+# Ezekiel row) folds HERE — the fold the Luke row invited the curator
+# to weigh. The outpoured-Spirit promise is carried by the lexicon's
+# pour/outpouring entries; in corpus the scene is Acts 2:1-4. Joel
+# 2:28-29 and Acts 2:17 stay dreams-and-visions' anchors (sibling
+# note: that pack's subject is v17's dreams-and-visions clause; zero
+# shared lexicon phrases); Ezek 36:26-27; 37:14; 39:29, Isa 32:15;
+# 44:3, Zech 4:6; 12:10 (with the append's own caveat) and Tit 3:5-6
+# (span owned by grace-not-earned / justification-by-faith) ride the
+# re-pin as this row's noted refs. empowered-by-the-spirit (Judges)
+# stays a separate deferred row — the OT empowerment-for-a-task
+# register, corpus-blocked.
+#
+# SPAN DISCIPLINE: Acts 2:38 is baptism's and repentance's; Acts
+# 2:17 dreams-and-visions'; Acts 2:24, 31-33 resurrection's/trinity's;
+# Acts 1:8 sharing-your-faith's (this pack takes 1:4-5); Acts 13:2-3
+# fasting's; Luke 24:49's power-from-on-high flag is recorded, not
+# anchored (Luke 24:23 free but not ours).
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): "holy spirit" ({holi, spirit}) is the
+# moved 2-token entry — the subject phrase itself; "who is the holy
+# spirit" adds no tokens beyond it (who/is stopwords) and is not a
+# separate entry. All entries keep >= 2 significant tokens. Shared
+# tokens with holy-spirit-the-comforter after the move: {spirit, fill,
+# holi} via its retained "spirit of truth"/"filled..." — see the
+# comforter file's move note; zero shared phrases.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: holy-spirit
+label: The Holy Spirit
+lexicon:
+  - holy spirit
+  - filled with the spirit
+  - be filled with the holy spirit
+  - baptized in the holy spirit
+  - receive the holy spirit
+  - power of the holy spirit
+  - pour out my spirit
+  - outpouring of the holy spirit
+anchors:
+  # "wait for the promise of the Father... you will be baptized in the
+  # Holy Spirit not many days from now" (WEB, in corpus). The promise
+  # named; v8 (witnesses) stays sharing-your-faith's.
+  - ref: Acts 1:4-5
+    sources: [editorial]
+    weight: 1.0
+  # "They were all filled with the Holy Spirit and began to speak with
+  # other languages" (WEB, in corpus). Pentecost — the promise kept
+  # and the outpouring scene in corpus (the folded row's register).
+  # BATCH-6 SPAN SIBLING (2026-08-26): spiritual-gifts anchors this
+  # same span for the tongues register (Theme J extension); this pack
+  # keeps the Spirit's-coming register. Also: 4:29 is boldness-in-
+  # witness's and 4:30 signs-and-wonders' — 4:31 (filled and spoke)
+  # stays this pack's. Recorded in all files.
+  - ref: Acts 2:1-4
+    sources: [editorial]
+    weight: 0.95
+  # "They were all filled with the Holy Spirit, and they spoke the
+  # word of God with boldness" (WEB, in corpus). Filled again — the
+  # ongoing filling, not a one-time event.
+  - ref: Acts 4:31
+    sources: [editorial]
+    weight: 0.9
+  # "how much more will your heavenly Father give the Holy Spirit to
+  # those who ask him?" (WEB, in corpus). The Father's readiness to
+  # give the Spirit; Luke 11:14-22 is deliverance-from-demons' (same
+  # batch), 11:28 obedience-to-the-word's, 11:42-44 empty-worship's —
+  # no span overlap.
+  - ref: Luke 11:13
+    sources: [editorial]
+    weight: 0.9
+  # "unless one is born of water and Spirit... So is everyone who is
+  # born of the Spirit" (WEB, in corpus). The Spirit's work in the new
+  # birth.
+  - ref: John 3:5-8
+    sources: [editorial]
+    weight: 0.85
+  # "'I have seen the Spirit descending like a dove... he who baptizes
+  # in the Holy Spirit'" (WEB, in corpus).
+  - ref: John 1:32-33
+    sources: [editorial]
+    weight: 0.8
+  # "It will happen afterward, that I will pour out my Spirit on all
+  # flesh" — the outpoured-Spirit promise itself, among the
+  # most-preached texts in the Twelve via Acts 2. Anchored on
+  # dreams-and-visions for its v28 clause; carried here as the folded
+  # row's minting ref. (Joel NOT in web-subset; re-check at re-pin —
+  # the re-pin curator settles the sibling split.)
+  - ref: Joel 2:28-29
+    sources: [editorial]
+    weight: 0.9
+  # "I will put my Spirit within you, and cause you to walk in my
+  # statutes" — the new-heart promise the folded row carries. (Ezekiel
+  # 36 NOT in web-subset; re-check at re-pin.)
+  - ref: Ezekiel 36:26-27
+    sources: [editorial]
+    weight: 0.85
+related:
+  - holy-spirit-the-comforter
+  - walking-by-the-spirit
+  - trinity
+  - baptism

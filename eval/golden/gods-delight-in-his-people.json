@@ -1,0 +1,41 @@
+{
+  "id": "gods-delight-in-his-people",
+  "query": "god delights in his people",
+  "status": "active",
+  "additionalQueries": [
+    "god rejoices over you"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id gods-delight-in-his-people (Theme C row, minting",
+    "book Zephaniah), resolved by the row's OWN check-first alternative:",
+    "a LEXICON+ANCHOR EXTENSION of gods-love, decided extension-vs-mint",
+    "per the leadership-row precedent the row cites. The landing verse",
+    "(Zeph 3:17) is corpus-blocked (Zephaniah absent entirely) and",
+    "rides the re-pin as a noted anchor with the row's",
+    "remembered-phrasing note (NIV 'quiet you with his love' / WEB",
+    "'calm you in his love'); in corpus the register is carried by Ps",
+    "147:11 ('takes pleasure in those who fear him' — no lexical rung",
+    "from 'delight' vocabulary, which is exactly the measured gap) and",
+    "Isa 43:4 ('precious and honored in my sight').",
+    "Measured gap before the extension (2026-08-26, pending-fixture",
+    "run): both queries failed to surface Ps 147:11 in the top 10 at",
+    "all — no lexical rung runs from delight/rejoice vocabulary to the",
+    "WEB's 'takes pleasure', which is exactly the remembered-phrasing",
+    "gap the extension closes."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 147:11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The love of God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 43:4"
+  ],
+  "coversConcepts": [
+    "gods-love"
+  ]
+}

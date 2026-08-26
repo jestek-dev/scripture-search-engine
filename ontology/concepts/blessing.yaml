@@ -65,6 +65,10 @@ anchors:
   # Jesus's own answer to "what does it mean to be blessed", inverting
   # every material reading. Editorial for the range: Torrey BLESSED, THE
   # lists 5:3,4,5,6,7,8,9 as separate per-Beatitude rows.
+  # BATCH-6 VERSE-SCOPED SIBLING (2026-08-26): kingdom-of-heaven
+  # claims 5:3 for the Kingdom announcement register (ten-
+  # commandments/idolatry precedent); this span stays whole here.
+  # Recorded both files.
   - ref: Matthew 5:3-12
     sources: [editorial]
     weight: 0.9

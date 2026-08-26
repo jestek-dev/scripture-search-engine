@@ -1,0 +1,43 @@
+{
+  "id": "trusting-in-man",
+  "query": "trusting in man instead of god",
+  "status": "active",
+  "additionalQueries": [
+    "do not put your trust in princes"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id trusting-in-man (Theme E row, 1 requesting book,",
+    "logged by Ezekiel whose own refs are corpus-blocked; the Isaiah and",
+    "Jeremiah threads hit the theme and routed around it, so the gap is",
+    "recurring) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "The vocabulary can only answer from the positive side",
+    "(trust-in-god); the failure side \u2014 broken-reed alliances, false",
+    "confidence \u2014 has no concept. Boundary: trust-in-god keeps bare",
+    "'trust'/'confidence' and every positive anchor; this pack is the",
+    "misplaced-trust register only. Jer 17:7-8 (the contrast half) is",
+    "left unanchored as trust-in-god's natural territory, cross-noted.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'trusting in man instead of god' was answered by trust-in-god",
+    "anchors with the OPPOSITE intent (Prov 3:5-6, Ps 37:5, 'Theme:",
+    "Trusting God' chips) while Jer 17:5 sat mid-list CHIPLESS;",
+    "'cursed is the man who trusts in man' and 'do not put your trust",
+    "in princes' had Jer 17:5 / Ps 146:3 at rank 1 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 17:5-6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Trusting in man"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 146:3-4",
+    "Psalms 33:16-17"
+  ],
+  "coversConcepts": [
+    "trusting-in-man"
+  ]
+}

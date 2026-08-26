@@ -1,0 +1,81 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 1 requesting book: Acts). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR.
+#
+# ROUTE CHECK (the row's own flag: sharing-your-faith lexicon
+# extension) run and DECLINED, per the row's own lean ("Acts' repeated
+# boldness vocabulary argues it can stand alone"): the felt gap is
+# FEAR and the prayer for boldness — measured, "praying for boldness"
+# was answered by prayer's how-to anchors and "boldness to share my
+# faith" by faith-definition anchors, both wrong intent. Zero shared
+# phrases with sharing-your-faith; cross-related.
+#
+# BOUNDARIES: Acts 4:29 / 4:30 split by verse with signs-and-wonders
+# (same batch; the one prayer's two petitions — recorded both files);
+# 4:31 stays holy-spirit's (filled-and-spoke); Acts 13:47-48 not
+# claimed (named for the gentile-inclusion decision deferred to the
+# re-pin); Acts 1:8 stays sharing-your-faith's.
+#
+# CORPUS: in-corpus witnesses Acts 4:29, 4:13, 13:46, Eph 6:19-20.
+# Corpus-blocked riders: Acts 9:27-29, 14:3, 28:31.
+#
+# TOKENIZER NOTE (G-4): bare "boldness" is a deliberate single-word
+# admission — distinctive stem, the register's own word (WEB Acts
+# 4:13, 29); inventory row recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: boldness-in-witness
+label: Boldness in witness
+lexicon:
+  - boldness
+  - praying for boldness
+  - boldness to share my faith
+  - speak the word with boldness
+  - overcoming fear of evangelism
+anchors:
+  # "Now, Lord, look at their threats, and grant to your servants to
+  # speak your word with all boldness" (WEB, in corpus). The church's
+  # own prayer under threat — the text "praying for boldness" is
+  # looking for. (4:30 is signs-and-wonders'; 4:31 holy-spirit's.)
+  - ref: Acts 4:29
+    sources: [editorial]
+    weight: 1.0
+  # "when they saw the boldness of Peter and John, and had perceived
+  # that they were unlearned and ignorant men, they marveled. They
+  # recognized that they had been with Jesus." (WEB, in corpus).
+  # Where the boldness comes from, by the council's own observation.
+  - ref: Acts 4:13
+    sources: [editorial]
+    weight: 0.95
+  # "Paul and Barnabas spoke out boldly" — boldness under rejection,
+  # turning to a wider field. (WEB, in corpus; 13:47-48 not claimed,
+  # see header.)
+  - ref: Acts 13:46
+    sources: [editorial]
+    weight: 0.85
+  # "Pray for me, that utterance may be given to me... to make known
+  # with boldness the mystery of the Good News... that in it I may
+  # speak boldly, as I ought to speak." (WEB, in corpus). Paul asks
+  # for the same prayer — even an apostle requests boldness.
+  # (6:10-18 stays the armor packs'.)
+  - ref: Ephesians 6:19-20
+    sources: [editorial]
+    weight: 0.9
+  # Barnabas tells how Saul "preached boldly in the name of Jesus" —
+  # the pattern repeated. (Acts 9 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Acts 9:27-29
+    sources: [editorial]
+    weight: 0.65
+  # The book's last verse: "preaching God's Kingdom... with all
+  # boldness, without hindrance." (Acts 28 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Acts 28:31
+    sources: [editorial]
+    weight: 0.6
+related:
+  - sharing-your-faith
+  - fear-not
+  - holy-spirit

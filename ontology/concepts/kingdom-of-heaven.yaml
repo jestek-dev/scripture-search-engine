@@ -1,0 +1,108 @@
+# TAG-GAP ROLLOUT batch 6 (Theme K, 2026-08-26) — ADOPTED-TAG id
+# (Theme K row, 5 requesting books: Matthew, Mark, Luke, John, Acts,
+# plus 1 Chronicles' reference note). Adopted as display vocabulary by
+# Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission only
+# by his merge of this PR. The id follows the adopted display list
+# (kingdom-of-heaven); the LABEL uses the Kingdom-of-God phrasing the
+# WEB corpus itself speaks ("God's Kingdom" throughout Mark/Luke/
+# John/Acts) — the review's both-phrasings lexicon rule is honored.
+#
+# ADJACENCY (recorded at god-reigns' mint, binding): TWO rows —
+# god-reigns keeps the doxological-kingship register (the reigns
+# psalms, "the LORD reigns"); this pack is the NT ANNOUNCEMENT
+# register (at hand, receive it, enter it, parables of it). Zech 14:9
+# stays deferred with that decision. The 1 Chronicles scoping note
+# (Gospels'-announcement vs kingdom-broadly) is answered the same way:
+# announcement scope; 1 Chr 28-29 stays with god-reigns' territory at
+# the re-pin.
+#
+# BOUNDARIES: Matt 6:33 stays gods-provision's + putting-god-first's
+# ("seek first" queries are served there; cross-noted, not
+# re-anchored); Matt 5:3 claimed as a verse-scoped sibling inside
+# blessing's 5:3-12 span (idolatry/ten-commandments precedent;
+# recorded both files); John 3:3, 5 stay salvation's / holy-spirit's
+# (born-anew queries are theirs); Luke 9:57-62 stays discipleship's;
+# Luke 18:18-27 money-and-possessions'; Acts 1:3 resurrection's;
+# Mark 9:47 hell's territory adjacent — not claimed.
+#
+# CORPUS: in-corpus witnesses Mark 1:14-15, Luke 17:20-21, Luke
+# 18:16-17, Matt 5:3. The parable discourse (Matt 13; Mark 4) and
+# John 18:36 are corpus-blocked riders.
+#
+# TOKENIZER NOTE (G-4): bare "kingdom" is a deliberate single-word
+# admission — the announcement's own noun, no other pack speaks the
+# stem; inventory row recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor. The gist reports the
+# announcement as the texts make it (at hand; received like a child;
+# not coming with observation) and adjudicates no millennial or
+# already/not-yet scheme.
+id: kingdom-of-heaven
+label: The Kingdom of God
+lexicon:
+  # G4/G3 NOTE (measured at authoring): the full-strength 2-token
+  # entries "kingdom of god" / "kingdom of heaven" were TRIED AND
+  # REVERTED — they fired this pack's anchors at full authority on
+  # every QUOTE query containing the phrase, flooding the active
+  # flesh-and-blood-quote-guard ("flesh and blood cannot inherit the
+  # kingdom of god" must keep 1 Cor 15:50 first) with ranks 1-4.
+  # Bare "kingdom" (one-token specificity discount) carries the topic
+  # queries humbly instead; the phrase-bearing verses win their own
+  # quote queries by exact phrase. "what is the kingdom of god" was
+  # dropped for the same reason (it normalizes to the same {kingdom,
+  # god} set). Structural limit recorded.
+  - kingdom
+  - parables of the kingdom
+  - enter the kingdom
+  - kingdom of heaven meaning
+anchors:
+  # "The time is fulfilled, and God's Kingdom is at hand! Repent, and
+  # believe in the Good News." (WEB, in corpus). The announcement
+  # itself — Jesus' first recorded preaching in Mark.
+  - ref: Mark 1:14-15
+    sources: [editorial]
+    weight: 1.0
+  # "God's Kingdom doesn't come with observation... for behold, God's
+  # Kingdom is within you." (WEB, in corpus). The Pharisees' when
+  # question and Jesus' answer.
+  - ref: Luke 17:20-21
+    sources: [editorial]
+    weight: 0.95
+  # "Allow the little children to come to me... for God's Kingdom
+  # belongs to such as these... whoever doesn't receive God's Kingdom
+  # like a little child, he will in no way enter into it." (WEB, in
+  # corpus). How it is received. (18:18-27 stays
+  # money-and-possessions'.)
+  - ref: Luke 18:16-17
+    sources: [editorial]
+    weight: 0.9
+  # "Blessed are the poor in spirit, for theirs is the Kingdom of
+  # Heaven." (WEB, in corpus). Matthew's phrasing at the Sermon's
+  # front door. VERSE-SCOPED SIBLING inside blessing's 5:3-12 span
+  # (recorded both files).
+  - ref: Matthew 5:3
+    sources: [editorial]
+    weight: 0.85
+  # The parable discourse — mustard seed, leaven, treasure, pearl,
+  # net: "parables of the kingdom" is this chapter. (Matthew 13 NOT
+  # in web-subset; re-check at re-pin.)
+  - ref: Matthew 13:31-33
+    sources: [editorial]
+    weight: 0.8
+  # "The Kingdom of Heaven is like treasure hidden in the field...
+  # like a pearl of great price." (Matthew 13 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Matthew 13:44-46
+    sources: [editorial]
+    weight: 0.75
+  # "My Kingdom is not of this world." (John 18 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: John 18:36
+    sources: [editorial]
+    weight: 0.7
+related:
+  - god-reigns
+  - salvation
+  - second-coming
+  - putting-god-first

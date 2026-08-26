@@ -1,0 +1,115 @@
+# TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26) — ADOPTED-TAG id
+# (Theme I row in tag-gaps-review.md, 2 requesting books — the
+# Chronicles home-book pair, both corpus-blocked). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission happens only by his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "how to seek god" returned
+# pure seek/god proximity noise (Eccl 3:15 rank 1); "seek the lord
+# while he may be found" had Isa 55:6 rank 1 by exact phrase CHIPLESS.
+# The row's own register check verified: hunger-for-god owns
+# thirst/longing, presence-of-god nearness, prayer asking — none
+# carries seek/his-face vocabulary.
+#
+# THREE-ID DESIGN (recorded with loving-god, same batch): the
+# whole-heart vocabulary lands on loving-god (Deut 6:5) and THIS row
+# (Jer 29:13 "search for me with all your heart");
+# wholehearted-devotion resolves at the re-pin as a lexicon extension
+# of these two rather than a third id. Reversible; recorded in both
+# files and the rollout ledger.
+#
+# GUARDRAIL (the 2 Chronicles block's own note, honored in gist and
+# weights): Chronicles states seek-and-prosper connections in the
+# narrator's voice (26:5; 31:21); this concept reports seeking as
+# covenant devotion met by God's presence — never a technique for
+# outcomes. No prosperity framing anywhere in the lexicon.
+#
+# SIBLING ANCHOR (recorded in both files): 2 Chr 7:14 is claimed
+# verse-scoped inside the-house-of-god's 2 Chr 7:12-16 keystone — the
+# verse's own "seek my face" is this register's most-searched OT
+# sentence (Exod 20:17 / Luke 18:13 precedent).
+#
+# BOUNDARIES: Jer 29:11 stays hope-in-god's (this pack takes 29:12-13,
+# adjacent and disjoint); Ps 34:10 stays gods-provision's; Heb 11:6
+# faith's ("rewarder of those who diligently seek him" — cross-noted);
+# Matt 6:33 is putting-god-first's keystone (same batch — the
+# priorities register, cross-related); Ps 27:4 stays the-house-of-god's
+# (this pack takes 27:8).
+#
+# CORPUS: in-corpus witnesses Jer 29:12-13, Isa 55:6, Ps 27:8, 2 Chr
+# 7:14. Corpus-blocked riders: 1 Chr 16:10-11 ("Seek his face forever
+# more"), 1 Chr 28:9, 2 Chr 15:2; 7 more Chronicles seek-narratives,
+# Deut 4:29, Ps 63:1 (hunger-for-god's territory at the boundary —
+# named, not claimed).
+#
+# TOKENIZER NOTES (G-4): "seeking god" ({seek, god}) admitted as a
+# two-token pair — queries carrying both are seek-God intent (verified
+# against the probe set: no probe carries the pair). "seek me and find
+# me" REJECTED as an entry — {seek, find} would fire this pack on
+# every "seek and you will find" ask-seek-knock query (prayer's Matt
+# 7:7 territory; accident class). No bare "seek" — inventory skip.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword; see
+# GUARDRAIL above.
+id: seeking-god
+label: Seeking God
+lexicon:
+  - seeking god
+  - seek the lord
+  - how to seek god
+  - seek gods face
+  - seek him with all your heart
+anchors:
+  # "You shall seek me and find me, when you search for me with all
+  # your heart" — with the call-and-listen promise before it (WEB, in
+  # corpus). (Jer 29:11 stays hope-in-god's — adjacent, disjoint.)
+  - ref: Jeremiah 29:12-13
+    sources: [editorial]
+    weight: 1.0
+  # "Seek the LORD while he may be found. Call on him while he is
+  # near" (WEB, in corpus).
+  - ref: Isaiah 55:6
+    sources: [editorial]
+    weight: 0.95
+  # "When you said, 'Seek my face,' my heart said to you, 'I will seek
+  # your face, LORD'" (WEB, in corpus). (Ps 27:4 stays
+  # the-house-of-god's; 27:12 slander-and-false-accusation's, same
+  # batch.)
+  - ref: Psalms 27:8
+    sources: [editorial]
+    weight: 0.9
+  # "if my people... will humble themselves, pray, seek my face, and
+  # turn from their wicked ways..." (WEB, in corpus). Verse-scoped
+  # sibling inside the-house-of-god's 7:12-16 keystone — recorded in
+  # both files.
+  # BATCH-6 THIRD CLAIM (2026-08-26): revival-and-reformation also
+  # claims this verse (the turn-and-heal promise, its keystone) —
+  # three verse-scoped registers on one text, recorded in all three
+  # files.
+  - ref: 2 Chronicles 7:14
+    sources: [editorial]
+    weight: 0.85
+  # "Seek the LORD and his strength. Seek his face forever more." (1
+  # Chronicles NOT in web-subset; re-check at re-pin — the home-book
+  # pair's own keystone.)
+  - ref: 1 Chronicles 16:10-11
+    sources: [editorial]
+    weight: 0.9
+  # "If you seek him, he will be found by you; but if you forsake him,
+  # he will reject you forever." (1 Chronicles 28 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: 1 Chronicles 28:9
+    sources: [editorial]
+    weight: 0.8
+  # "you shall find him, when you search after him with all your heart
+  # and with all your soul." (Deuteronomy 4 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Deuteronomy 4:29
+    sources: [editorial]
+    weight: 0.75
+related:
+  - hunger-for-god
+  - knowing-god
+  - presence-of-god
+  - prayer

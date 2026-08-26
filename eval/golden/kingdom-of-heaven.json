@@ -1,0 +1,39 @@
+{
+  "id": "kingdom-of-heaven",
+  "query": "what is the kingdom of god",
+  "status": "active",
+  "additionalQueries": [
+    "kingdom of heaven meaning"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id kingdom-of-heaven (Theme K row, 5 requesting books",
+    "+ 1 Chr reference note; the id follows the adopted display list;",
+    "the review's both-phrasings rule is honored in the lexicon —",
+    "kingdom of God AND kingdom of heaven, since WEB reads God's",
+    "Kingdom in Mark/Luke/John). The god-reigns two-row adjacency call",
+    "(recorded at that pack's mint) binds: doxological kingship stays",
+    "there; this pack is the NT announcement register. Matt 13's",
+    "parable discourse is corpus-blocked and rides the re-pin.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'what is the kingdom of god' chipless proximity scatter (1 Cor",
+    "15:24 rank 1; Mark 1:14-15 and Luke 17:20-21 nowhere); 'kingdom",
+    "of heaven meaning' exact-phrase luck on Matt 18:1, all chipless."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Mark 1:14-15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Kingdom of God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 17:20-21",
+    "Luke 18:16-17",
+    "Matthew 5:3"
+  ],
+  "coversConcepts": [
+    "kingdom-of-heaven"
+  ]
+}

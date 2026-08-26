@@ -1,0 +1,36 @@
+{
+  "id": "walking-in-truth",
+  "query": "walking in truth",
+  "status": "active",
+  "additionalQueries": [
+    "my children walking in truth"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6: ADOPTED-TAG id walking-in-truth (Theme",
+    "J row, 1 requesting book: 3 John), resolved as a LEXICON+ANCHOR",
+    "EXTENSION of walking-in-the-light — the row's own check-first",
+    "route, taken: same walk-practice register, same Johannine",
+    "corpus family. 3 John's corpus presence is 1:4 alone (1:3, 1:5-8",
+    "corpus-blocked), and 1:4 is the letter's stated greatest joy.",
+    "The John-doc cross-note (truth row vs this row) is honored by",
+    "keeping the what-is-truth register OUT of this extension — that",
+    "row stays deferred (its texts owned or corpus-blocked).",
+    "Measured gap before the extension (2026-08-26, pending-fixture",
+    "run): 'walking in truth' had 3 John 1:4 rank 1 by exact phrase",
+    "CHIPLESS — right verse, no curated reason."
+  ],
+  "expectedTop": [
+    {
+      "reference": "3 John 1:4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Walking in the light"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 John 1:5-7"
+  ],
+  "coversConcepts": [
+    "walking-in-the-light"
+  ]
+}

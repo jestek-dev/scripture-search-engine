@@ -1,0 +1,90 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 4 requesting books: 2 Kings, Ezra, 2 Chronicles,
+# Nehemiah — every reform narrative corpus-blocked). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR.
+#
+# ROUTE CHECK (the row's own flag) run and DECLINED: a lexicon
+# extension on repentance would answer "revival in the bible" with the
+# personal-turning anchors (Acts 3:19; 1 John 1:9) — the corporate
+# returning-together register the row names is a different register,
+# and its in-corpus texts (2 Chr 7:14, Neh 8:1-8, Hab 3:2) are not
+# repentance's anchors. Cross-related instead.
+#
+# 2 Chr 7:14 is a THIRD verse-scoped claim on a shared text: the
+# whole-span owner is the-house-of-god (7:12-16) and seeking-god
+# claims the verse for the seek-my-face register (both recorded).
+# This pack claims the same verse for its turn-and-heal promise — the
+# revival text as users actually cite it. Recorded in all three files.
+#
+# CORPUS: in-corpus witnesses 2 Chr 7:14, Neh 8:1-8 (8:9-12 stays
+# joy-in-the-lord-adjacent — 8:10 is its anchor; 8:13-18 stays
+# appointed-feasts'), Hab 3:2 (WEB says "Renew your work", not the
+# remembered "revive" — noted). Corpus-blocked riders: Josiah's reform
+# (2 Kgs 22:11-20; 23:1-25), Hezekiah's (2 Chr 29-31), Ezra 9:8-9,
+# Ps 85:6 ("Will you not revive us again?").
+#
+# TOKENIZER NOTE (G-4): "revival" is a deliberate single-word
+# admission — the subject noun IS the concept and no other pack
+# speaks the stem; inventory row recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: 2 Chr 7:14 carries a conditional promise to Israel's
+# covenant assembly; the gist describes the pattern (humbling, prayer,
+# turning, God's hearing) without converting it into a national
+# formula for later readers — the Chronicles never-technique guardrail
+# (seeking-god's file) applies here too.
+id: revival-and-reformation
+label: Revival and reformation
+lexicon:
+  - revival
+  - revival in the bible
+  - spiritual awakening
+  - returning to god as a nation
+  - if my people humble themselves and pray
+anchors:
+  # "if my people who are called by my name will humble themselves,
+  # pray, seek my face, and turn from their wicked ways, then I will
+  # hear from heaven, will forgive their sin, and will heal their
+  # land." (WEB, in corpus). The verse revival prayer actually quotes.
+  # THIRD verse-scoped claim on a shared text (see header; recorded in
+  # the-house-of-god and seeking-god too).
+  - ref: 2 Chronicles 7:14
+    sources: [editorial]
+    weight: 1.0
+  # "All the people gathered themselves together as one man... to
+  # bring the book of the law... They read in the book... distinctly;
+  # and they gave the sense, so that they understood the reading."
+  # (WEB, in corpus). The word recovered and the people re-formed
+  # around it — the Nehemiah row's own register. (8:10 stays
+  # joy-in-the-lord's; 8:13-18 appointed-feasts'.)
+  - ref: Nehemiah 8:1-8
+    sources: [editorial]
+    weight: 0.9
+  # "LORD, I have heard of your fame... Renew your work in the middle
+  # of the years... In wrath, you remember mercy." (WEB, in corpus).
+  # The prophet's revival prayer; WEB's verb is "renew" where memory
+  # supplies "revive" (Hab 3:3-4 stays glory-of-god's).
+  - ref: Habakkuk 3:2
+    sources: [editorial]
+    weight: 0.85
+  # Josiah hears the rediscovered book and leads covenant renewal —
+  # "Scripture's fullest reform narrative" (the row). (2 Kings NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: 2 Kings 23:1-3
+    sources: [editorial]
+    weight: 0.7
+  # "Will you not revive us again, that your people may rejoice in
+  # you?" (Psalm 85 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 85:6
+    sources: [editorial]
+    weight: 0.65
+  # "reform requires re-reforming" (the row) — Nehemiah's second
+  # cleansing. (Nehemiah 13 NOT in web-subset; re-check at re-pin.)
+  - ref: Nehemiah 13:30-31
+    sources: [editorial]
+    weight: 0.55
+related:
+  - repentance
+  - seeking-god
+  - restoration

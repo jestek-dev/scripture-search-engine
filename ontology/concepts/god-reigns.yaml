@@ -1,0 +1,102 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme C row in tag-gaps-review.md, 4 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# God reigns — the kingship/enthronement register: "The LORD reigns" /
+# "God is king" had no kingship concept to land on. REGISTER BOUNDARY
+# per the recorded keep-as-two-rows call (review Contested calls
+# §1(e)): this is the doxological kingship register, deliberately NOT
+# an NT kingdom-announcement concept; tagging Isa 24:23 or 52:7 into
+# such a concept would be the read-back the conventions bar. Zech 14:9
+# stays deferred with that same decision.
+#
+# The verbatim enthronement psalms (93:1; 96:10; 97:1; 99:1; 47; 29:10;
+# 2:4-6) and Isa 24:23; 52:7 and Daniel's kingdom doxologies (Dan 2:44;
+# 4:3, 34-35; 6:26; 7:14, 27) are ALL corpus-blocked and ride the
+# re-pin. In corpus: Ps 10:16; 24:7-10; 95:3; 146:10; Jer 10:10;
+# 1 Tim 6:15.
+#
+# SPAN DISCIPLINE: Ps 103:19 ("his kingdom rules over all") is
+# providence's anchor — NOT re-anchored; Ps 9:7-8 (throne for
+# judgment) is divine-judgment's; Ps 24:3-4 is holiness's (this pack
+# takes the vv7-10 King-of-glory litany — no overlap); Ps 95:6 is
+# worship's (this pack takes v3).
+#
+# BOUNDARY vs the providence sovereignty extension (same batch):
+# kingship DECLARED there is governance EXERCISED here — no shared
+# phrases; shared tokens {god, lord} only.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({lord, reign}, {god, reign}, {god, king}, {king, glori},
+# {king, lord}). "king of kings" alone would collapse to bare `king`
+# and is NOT an entry; the full "king of kings and lord of lords"
+# keeps two tokens.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: god-reigns
+label: God reigns
+lexicon:
+  - the lord reigns
+  - god reigns
+  - god is king
+  - the king of glory
+  - king of kings and lord of lords
+anchors:
+  # "The LORD is King forever and ever! The nations will perish out of
+  # his land" (WEB, in corpus). The psalter's flat declaration.
+  - ref: Psalms 10:16
+    sources: [editorial]
+    weight: 1.0
+  # "Lift up your heads, you gates!... Who is the King of glory? The
+  # LORD of Armies is the King of glory!" (WEB, in corpus). The
+  # enthronement litany itself; vv3-4 stay with holiness.
+  - ref: Psalms 24:7-10
+    sources: [editorial]
+    weight: 0.95
+  # "The LORD will reign forever; your God, O Zion, to all
+  # generations" (WEB, in corpus).
+  - ref: Psalms 146:10
+    sources: [editorial]
+    weight: 0.9
+  # "For the LORD is a great God, a great King above all gods" (WEB,
+  # in corpus). Kept to v3; v6 is worship's.
+  - ref: Psalms 95:3
+    sources: [editorial]
+    weight: 0.85
+  # "But the LORD is the true God. He is the living God, and an
+  # everlasting King" (WEB, in corpus). Jeremiah's kingship confession
+  # inside the idol satire; idolatry (batch 1) anchors 10:3-5 — no
+  # span overlap.
+  - ref: Jeremiah 10:10
+    sources: [editorial]
+    weight: 0.85
+  # "who is the blessed and only Ruler, the King of kings and Lord of
+  # lords" (WEB, in corpus). The NT doxology of the same register.
+  - ref: 1 Timothy 6:15
+    sources: [editorial]
+    weight: 0.8
+  # "The LORD reigns. He is clothed with majesty... Your throne is
+  # established from long ago." — the enthronement psalm the row's
+  # rationale predicted. (Psalm 93 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Psalms 93:1-2
+    sources: [editorial]
+    weight: 0.9
+  # "Say among the nations, 'The LORD reigns.'" (Psalm 96 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Psalms 96:10
+    sources: [editorial]
+    weight: 0.85
+  # "How beautiful on the mountains are the feet of him who...says to
+  # Zion, 'Your God reigns!'" (Isaiah 52 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Isaiah 52:7
+    sources: [editorial]
+    weight: 0.85
+related:
+  - providence
+  - worship
+  - praise

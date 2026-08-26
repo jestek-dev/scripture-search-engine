@@ -1,0 +1,45 @@
+{
+  "id": "sovereignty-of-god",
+  "query": "god is in control of the nations",
+  "status": "active",
+  "additionalQueries": [
+    "the nations are like a drop in a bucket"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id sovereignty-of-god (Theme C row, 4 requesting",
+    "books), resolved as the row's OWN standing advice directs — 'check",
+    "whether a lexicon extension of providence serves these queries",
+    "before minting' — and the check ANSWERED it: providence already",
+    "owns the exact phrases 'gods sovereignty', 'god is in control' and",
+    "'sovereign over all', so a sibling pack would be a head-on G4",
+    "collision. LEXICON+ANCHOR EXTENSION of providence: the gap is the",
+    "nations/governments scale (Isa 40:15-17, 22-24 in corpus; Daniel's",
+    "'strongest anchor set in Scripture' for it — Dan 2:21; 4:34-35 —",
+    "corpus-blocked, riding the re-pin as noted anchors, with Jer",
+    "18:1-10; 27:5-7; 32:17 and Ezra 1:1). Register boundary vs the",
+    "god-reigns mint (same batch): kingship declarations there,",
+    "governance of events here; no shared phrases.",
+    "Measured gap before the extension (2026-08-26, pending-fixture",
+    "run): 'god is in control of the nations' did not surface Isa",
+    "40:15-17 in the top 10 (providence fired on 'god is in control'",
+    "but carried no nations-scale anchor); 'the nations are like a drop",
+    "in a bucket' reached it by exact phrase + passage terms, CHIPLESS",
+    "(wrong-reason class)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 40:15-17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's providence"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Isaiah 40:22-24",
+    "Psalms 33:10-11"
+  ],
+  "coversConcepts": [
+    "providence"
+  ]
+}

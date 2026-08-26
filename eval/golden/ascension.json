@@ -1,0 +1,37 @@
+{
+  "id": "ascension",
+  "query": "ascension of jesus",
+  "status": "active",
+  "additionalQueries": [
+    "jesus taken up to heaven"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id ascension (Theme K row, 2 requesting books).",
+    "Acts 1:9-11 claimed as a span sibling of second-coming's 1:11",
+    "(the verse carries both the departure and the promise; recorded",
+    "both files); Acts 2:33 verse-scoped sibling inside trinity's",
+    "2:32-33 (recorded both files); Acts 7:55-56 corpus-blocked rider.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'ascension of jesus' pure jesus-token noise (John 8:25 rank 1)",
+    "with Acts 1:4-5 surfacing only via passage terms CHIPLESS;",
+    "'where did jesus go after the resurrection' answered wholesale",
+    "by He-is-risen anchors — the event between resurrection and",
+    "return had no home, exactly as the row says."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 1:9-11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Ascension"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 24:50-53",
+    "Acts 2:33"
+  ],
+  "coversConcepts": [
+    "ascension"
+  ]
+}

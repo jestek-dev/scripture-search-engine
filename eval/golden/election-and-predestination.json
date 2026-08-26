@@ -1,0 +1,38 @@
+{
+  "id": "election-and-predestination",
+  "query": "predestination",
+  "status": "active",
+  "additionalQueries": [
+    "election in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id election-and-predestination (Theme K row, 4",
+    "requesting books). DOCTRINALLY SENSITIVE: the gist is §4-neutral",
+    "per the row's own flag (DOCTRINAL-BASIS rules election disputes",
+    "out as admission criteria) — it routes to what the texts say and",
+    "adjudicates nothing; recorded for Jesse's review. Rom 9:6-24 is",
+    "corpus-blocked and rides the re-pin. Rom 8:29-30 is claimed as a",
+    "span sibling of image-of-god's 8:29 (recorded both files);",
+    "remnant keeps Rom 11:4-5, gods-plan-for-israel keeps 11:25-29.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'predestination' returned exactly ONE result (Rom 8:30, chipless",
+    "passage-term); 'does god choose who is saved' was answered",
+    "entirely by salvation's how-to anchors — adjacent, not the texts."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 1:4-5",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Election and predestination"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Romans 8:29-30",
+    "Ephesians 1:11"
+  ],
+  "coversConcepts": [
+    "election-and-predestination"
+  ]
+}

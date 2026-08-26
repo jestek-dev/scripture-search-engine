@@ -1,0 +1,96 @@
+# TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26) — ADOPTED-TAG id
+# (Theme I row in tag-gaps-review.md, 5 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "servant of all" had Mark
+# 9:35 rank 1 by exact phrase CHIPLESS over servant-token noise;
+# "serving others" returned pure serv-token scatter. ("servant
+# leadership" is ALREADY leadership's — measured serving its anchors
+# with chips — and stays there.)
+#
+# EXTENSION ROUTE CHECKED AND DECLINED: the row's check-first is
+# humble-exaltation. Its vocabulary is humility/pride ("humble
+# yourselves", "god resists the proud") and its anchors are the
+# exaltation-reversal texts (1 Pet 5:6, Jas 4:10) — answering "washing
+# feet" or "serve one another" with those would be a register mismatch
+# (kindness/loving-others precedent). Cross-related instead; no shared
+# phrase.
+#
+# BOUNDARIES: Luke 22:24-27 stays leadership's keystone (the
+# servant-leadership register, decided at batch 3) — cross-noted, not
+# re-anchored. Acts 20:35 stays generosity's; Acts 20:19
+# humble-exaltation's. John 13:17 stays obedience-to-the-word's, 13:16
+# free but left with it (blessed-if-you-do-them span); 13:18-21
+# betrayal's; 13:34-35 loving-others'. This pack takes 13:12-15 — the
+# washed feet and the example.
+#
+# CORPUS: in-corpus witnesses Mark 9:35, John 13:12-15, Luke 9:46-48,
+# Luke 17:7-10. Corpus-blocked riders: Mark 10:42-45 ("the theme's
+# definitive verse" — Son of Man came to serve), Matt 20:25-28; 23:11,
+# John 12:26, Acts 6:1-6 (the deacons text).
+#
+# TOKENIZER NOTES (G-4): bare `servanthood` admitted (the subject noun
+# IS the concept). "serving others" REJECTED as an entry — it collapses
+# to bare {serv}, which would fire this pack on every serve-the-LORD
+# worship query (accident class); "servant of all" REJECTED — collapses
+# to bare {servant}, a head-on subset of servant-of-the-lord's lexicon.
+# STRUCTURAL LIMIT recorded: those two queries stay served by
+# exact-phrase/lexical retrieval plus this pack's other entries. "last
+# of all and servant of all" ({last, servant}) carries the Mark 9:35
+# phrasing safely.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: servanthood
+label: Servanthood
+lexicon:
+  - servanthood
+  - washing feet
+  # "serve" and "serving" stem apart under the one tokenizer — both
+  # forms kept so either phrasing fires.
+  - serve one another
+  - serving one another
+  - last of all and servant of all
+  - greatness through serving
+anchors:
+  # "If any man wants to be first, he shall be last of all, and servant
+  # of all" (WEB, in corpus) — the register's keystone.
+  - ref: Mark 9:35
+    sources: [editorial]
+    weight: 1.0
+  # The foot-washing made an example: "If I then, the Lord and the
+  # Teacher, have washed your feet, you also ought to wash one
+  # another's feet" (WEB, in corpus). (13:16-17 stays
+  # obedience-to-the-word's span; 13:18-21 betrayal's; 13:34-35
+  # loving-others'.)
+  - ref: John 13:12-15
+    sources: [editorial]
+    weight: 0.95
+  # The greatest-argument answered with a child: "whoever is least
+  # among you all, this one will be great" (WEB, in corpus).
+  - ref: Luke 9:46-48
+    sources: [editorial]
+    weight: 0.85
+  # "We are unworthy servants. We have done our duty" (WEB, in corpus)
+  # — service without entitlement.
+  - ref: Luke 17:7-10
+    sources: [editorial]
+    weight: 0.75
+  # "Whoever wants to become great among you shall be your servant...
+  # For the Son of Man also came not to be served, but to serve" — the
+  # theme's definitive verse. (Mark 10 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Mark 10:42-45
+    sources: [editorial]
+    weight: 0.95
+  # The deacons: "choose... seven men of good report... whom we may
+  # appoint over this business." (Acts 6 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Acts 6:1-6
+    sources: [editorial]
+    weight: 0.6
+related:
+  - humble-exaltation
+  - leadership
+  - loving-others

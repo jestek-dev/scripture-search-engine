@@ -1,0 +1,117 @@
+# TAG-GAP ROLLOUT batch 4 (Theme G, 2026-08-26) — ADOPTED-TAG id
+# (Theme G row in tag-gaps-review.md, 15 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Revenge in the Bible" is a common lay search with no home.
+#
+# GIST CARE (the row's own standing wording concern, honored): the
+# pack routes to what Scripture SAYS about vengeance — leave it to
+# God's wrath, overcome evil with good, the imprecatory psalms hand
+# vengeance to God rather than take it — never endorsement. The OT
+# refs where vengeance is commanded or regulated (Num 31:2-3;
+# 35:19-27) are described without adjudication and ride re-pin; the
+# Esther narration ("without moral comment") likewise.
+#
+# BOUNDARIES, all recorded: Nah 1:2-3 (the canonical vengeance-
+# belongs-to-God statement) sits inside divine-judgment's Nah 1:2-6
+# span and is NOT re-anchored (the slow-to-anger batch-2 precedent) —
+# Rom 12:19 and Heb 10:30 carry the same witness in corpus. Isa 61:2
+# ("the day of vengeance of our God") stays god-of-all-comfort's /
+# near-to-the-brokenhearted's. Matt 5:44-45 stays loving-others'
+# (the anchor below stops at 5:39). Luke 6:37 stays
+# forgiving-others'. Obad 1:15 rides with the day-of-the-lord pack's
+# territory.
+#
+# CORPUS: Rom 12:19-21, Lev 19:18, Heb 10:30, Matt 5:38-39, 1 Thess
+# 5:15, Lam 3:64-66 in corpus. Deut 32:35 (the verse Rom 12:19
+# quotes), Prov 20:22; 24:29; 25:21-22, Ps 94:1, the imprecatory
+# psalms (35; 58; 69; 109; 137) and Rev 6:9-11 are corpus-blocked
+# riders.
+#
+# TOKENIZER NOTE (G-4): bare "vengeance" and bare "revenge" are
+# deliberate single-word admissions — the subject nouns people type
+# (distinct stems under the shared stemmer); no other concept speaks
+# either. "vengeance is mine" also collapses to {vengeance} (is/mine
+# are stopwords) — same deliberate trigger, acknowledged in the
+# inventory.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: vengeance
+label: Vengeance
+lexicon:
+  - vengeance
+  - revenge
+  - vengeance is mine
+  - revenge in the bible
+  - getting back at someone
+  - repay evil for evil
+  # "an eye for an eye" was considered and DROPPED: it collapses to
+  # bare {eye} (an/for are stopwords) — the 2026-08-08 accident class
+  # ("apple of his eye", "eye of the needle" queries would fire this
+  # pack). The verbatim query already reaches Matt 5:38 by exact
+  # phrase; the anchor below gives it the honest neighborhood.
+anchors:
+  # "Don't seek revenge yourselves, beloved, but give place to God's
+  # wrath. For it is written, 'Vengeance belongs to me; I will repay,
+  # says the Lord'... Don't be overcome by evil, but overcome evil
+  # with good" (WEB, in corpus). The register's keystone; Rom 12:18
+  # stays harmony-with-others', 12:15 pastoral-grief-and-loss', 12:13
+  # hospitality's — verse-disjoint claims on the shared chapter.
+  - ref: Romans 12:19-21
+    sources: [editorial]
+    weight: 1.0
+  # "You shall not take vengeance, nor bear any grudge... but you
+  # shall love your neighbor as yourself" (WEB, in corpus). The law's
+  # own prohibition — where love-your-neighbor is first grounded
+  # against revenge. (Lev 19:15 stays favoritism's, 19:26/31
+  # occult-and-divination's, 19:33-34 hospitality's — verse-disjoint.)
+  - ref: Leviticus 19:18
+    sources: [editorial]
+    weight: 0.95
+  # "'Vengeance belongs to me. I will repay,' says the Lord. Again,
+  # 'The Lord will judge his people'" (WEB, in corpus). (Heb 10:19-22
+  # stays priesthood's territory — verse-disjoint.)
+  - ref: Hebrews 10:30
+    sources: [editorial]
+    weight: 0.9
+  # "'An eye for an eye, and a tooth for a tooth.' But I tell you,
+  # don't resist him who is evil; but whoever strikes you on your
+  # right cheek, turn to him the other also" (WEB, in corpus). The
+  # remembered eye-for-an-eye correction; Matt 5:44-45 stays
+  # loving-others' — verse-disjoint.
+  - ref: Matthew 5:38-39
+    sources: [editorial]
+    weight: 0.9
+  # "See that no one returns evil for evil to anyone, but always
+  # follow after that which is good" (WEB, in corpus). 1 Thess 5:1-3
+  # stays day-of-the-lord's, 5:6-8 drunkenness's, 5:12-13
+  # leadership's — verse-disjoint.
+  - ref: 1 Thessalonians 5:15
+    sources: [editorial]
+    weight: 0.85
+  # "You will pay them back, LORD, according to the work of their
+  # hands" (WEB, in corpus). The imprecatory register in corpus —
+  # vengeance handed to God from inside catastrophe, not taken.
+  # (Lam 3:21-26 stays hope-in-despair's / gods-faithfulness' /
+  # trust-in-god's, 3:37-38 providence's — verse-disjoint.)
+  - ref: Lamentations 3:64-66
+    sources: [editorial]
+    weight: 0.75
+  # "Vengeance is mine, and recompense" — the text Rom 12:19 and Heb
+  # 10:30 quote. (Deuteronomy 32 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Deuteronomy 32:35
+    sources: [editorial]
+    weight: 0.9
+  # "Don't say, 'I will pay back evil.' Wait for the LORD, and he will
+  # save you." (Proverbs 20 NOT in web-subset; re-check at re-pin.)
+  - ref: Proverbs 20:22
+    sources: [editorial]
+    weight: 0.85
+related:
+  - forgiving-others
+  - divine-judgment
+  - loving-others
+  - harmony-with-others

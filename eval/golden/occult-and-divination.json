@@ -1,0 +1,46 @@
+{
+  "id": "occult-and-divination",
+  "query": "what does the bible say about witchcraft",
+  "status": "active",
+  "additionalQueries": [
+    "mediums and psychics"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id occult-and-divination (Theme D row, 10 requesting",
+    "books) — engine admission only by Jesse's merge of this PR. A",
+    "common and pastorally live query family with no home;",
+    "resisting-the-devil is the believer's-resistance register, not the",
+    "practice prohibition (the row's own distinction). The Bible's",
+    "fullest ban list (Deut 18:9-14 — the very ref the row's rationale",
+    "says would complete a pack) and 1 Sam 28 (Endor), Isa 8:19-20 and",
+    "the Daniel failure-narratives are corpus-blocked and ride the",
+    "re-pin; in corpus the prohibition and the narrative are carried by",
+    "Lev 19:26, 31, Jer 10:2 (astrology register), Jer 29:8, Acts",
+    "16:16-18 and Acts 13:8-11. 1 Sam 15:23 is NOT an anchor (idolatry",
+    "owns it); Gal 5:19-21 is NOT an anchor (envy-and-jealousy owns the",
+    "works-of-the-flesh span); Ezek 13/21 material carries the",
+    "described-not-taught note and is deferred with its book.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'what does the bible say about witchcraft' did not surface Lev",
+    "19:31 in the top 10 at all; 'mediums and psychics' reached it by",
+    "shared word 'medium' only, CHIPLESS (wrong-reason class)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Leviticus 19:31",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The occult and divination"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Leviticus 19:26",
+    "Acts 16:16-18",
+    "Jeremiah 29:8-9",
+    "Jeremiah 10:2"
+  ],
+  "coversConcepts": [
+    "occult-and-divination"
+  ]
+}

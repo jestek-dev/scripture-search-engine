@@ -12,6 +12,22 @@
 # argument is one run and the trims were two windows onto it).
 # 1 Corinthians 12:4-6 (the classic varieties-of-gifts text) is
 # corpus-blocked — see the round-2 backlog; add it when 1 Cor 12 lands.
+#
+# TAG-GAP ROLLOUT batch 6 (2026-08-26): LEXICON+ANCHOR EXTENSION for
+# the Theme J speaking-in-tongues row — the row's own flagged route
+# ("likely a LEXICON EXTENSION of spiritual-gifts... rather than a new
+# id"). The defining chapters (1 Cor 12; 14) are corpus-blocked and
+# ride the re-pin; the in-corpus witnesses are Acts 2:1-4 (claimed as
+# a SPAN SIBLING of holy-spirit's keystone — the same scene is the
+# Spirit's coming there and the gift's first exercise here; recorded
+# both files) and 1 Cor 13:1 (free; loving-others keeps 13:4-8 and
+# 13:13). WEB says "other languages", which is why plain lexical
+# search missed the query family entirely (the row's diagnosis).
+# NEUTRALITY: continuation/cessation is a named non-criterion
+# (DOCTRINAL-BASIS); the entries route, the anchors describe, nothing
+# adjudicates. Bare "tongues" deliberately SKIPPED (inventory row):
+# the tongu stem is taming-the-tongue's subject territory (gossip /
+# speech register) — the two-token forms carry the gift register.
 id: spiritual-gifts
 label: Spiritual gifts
 lexicon:
@@ -22,6 +38,11 @@ lexicon:
   - each has received a gift
   - many members one body
   - what are my gifts
+  # Batch 6 tongues extension (see header). WEB wording is "other
+  # languages"; these are the forms searchers actually type.
+  - speaking in tongues
+  - gift of tongues
+  - praying in tongues
 anchors:
   # "We have many members in one body... having gifts differing according
   # to the grace that was given to us: prophecy... service... teaching...
@@ -46,6 +67,28 @@ anchors:
   - ref: Ephesians 4:11-12
     sources: [editorial]
     weight: 0.85
+  # Batch 6 tongues extension: "They were all filled with the Holy
+  # Spirit and began to speak with other languages, as the Spirit gave
+  # them the ability to speak." (WEB, in corpus). The gift's first
+  # exercise — SPAN SIBLING of holy-spirit's keystone 2:1-4 (recorded
+  # both files); the scene is the Spirit's coming there, the languages
+  # here.
+  - ref: Acts 2:1-4
+    sources: [editorial]
+    weight: 0.8
+  # "If I speak with the languages of men and of angels, but don't
+  # have love, I have become sounding brass" (WEB, in corpus). The
+  # gift ranked under love by the text itself. (13:4-8, 13 stay
+  # loving-others'.)
+  - ref: 1 Corinthians 13:1
+    sources: [editorial]
+    weight: 0.7
+  # The varieties-of-gifts chapter and the tongues-regulating chapter
+  # — the row's home texts. (1 Corinthians 12 and 14 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: 1 Corinthians 14:1-5
+    sources: [editorial]
+    weight: 0.65
 related:
   - gathering-together
   - loving-others

@@ -1,0 +1,39 @@
+{
+  "id": "zion-city-of-god",
+  "query": "city of god",
+  "status": "active",
+  "additionalQueries": [
+    "zion in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id zion-city-of-god (Theme L row, 1 requesting book:",
+    "Psalms, the whole Psalter's pooled refs). The great Zion psalms",
+    "(48; 84; 87; 122; 132; 137) are corpus-blocked and ride the",
+    "re-pin; minted on the in-corpus witnesses Ps 46:4-5, 9:11, 65:1,",
+    "147:12-14. Boundaries honored: refuge-in-trouble keeps Ps 46:1-3",
+    "and 46:10, god-reigns keeps 146:10, restoration-of-israel keeps",
+    "147:2, worship keeps 65:4; Heb 12:22 stays angels' (the row's",
+    "own re-verification note).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'city of god' chipless proximity scatter (Heb 11:10/12:22, Rev",
+    "21 tokens — no curated home; Ps 46:4-5 nowhere); 'zion in the",
+    "bible' bare zion-token scatter, same class."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 46:4-5",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Zion, the city of God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 9:11",
+    "Psalms 65:1",
+    "Psalms 147:12-14"
+  ],
+  "coversConcepts": [
+    "zion-city-of-god"
+  ]
+}

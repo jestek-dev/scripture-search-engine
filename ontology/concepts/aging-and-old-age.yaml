@@ -1,0 +1,84 @@
+# TAG-GAP ROLLOUT batch 5 (Theme H, 2026-08-26) — ADOPTED-TAG id
+# (Theme H row in tag-gaps-review.md, 3 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "bible verses about
+# growing old" returned pure grow/old token noise (Eph 4:22 "old man"
+# rank 1 — the put-off-the-old-self register, wrong sense entirely);
+# "strength in old age" had Ps 92:14 rank 1 by exact phrase CHIPLESS.
+#
+# REGISTER SPLIT honored (the row's own framing): the PR #43 id
+# caring-for-aging-parents covers the CAREGIVER's side — the children's
+# duty (its anchors untouched). THIS pack is the aging believer's own
+# side: "does God still use me when I'm old."
+#
+# NARROW ONE-ANCHOR DESIGN (seasons-of-life / remembered-* precedent):
+# the row's one in-corpus witness is Ps 92:12-14 and it is exactly the
+# register's promise text. Everything else rides the re-pin.
+#
+# CORPUS: in-corpus witness Ps 92:12-14 (thanksgiving owns 92:1 only —
+# disjoint). Corpus-blocked riders: Ps 71:9, 17-18 ("don't forsake me
+# when my strength fails"; "even when I am old and gray-haired... don't
+# forsake me"), Prov 16:31, 20:29, 17:6, 23:22 (the Proverbs block's
+# held contingency, resolved to this row), Eccl 12:1-7 (the canonical
+# allegory of old age) with 11:8, Isa 46:4 ("even to old age I am he,
+# and even to gray hairs I will carry you" — the register's strongest
+# first-person promise, named for the re-pin curator).
+#
+# TOKENIZER NOTES (G-4): entries keep >= 2 significant tokens. Bare
+# "old", "age"/"aging" deliberately NOT admitted: {age} would fire this
+# pack on every "caring for aging parents" query (that pack's lexicon
+# territory) and {old} is a generic contrast word ("old self", "old
+# covenant") — inventory skips with reasons.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: aging-and-old-age
+label: Aging and old age
+lexicon:
+  - growing old
+  - old age
+  - strength in old age
+  - aging with faith
+anchors:
+  # "The righteous shall flourish like the palm tree... They will still
+  # produce fruit in old age. They will be full of sap and green" (WEB,
+  # in corpus) — the aging believer's promise text and the register's
+  # keystone. (Ps 92:1 stays thanksgiving's — disjoint.)
+  - ref: Psalms 92:12-14
+    sources: [editorial]
+    weight: 1.0
+  # "Don't reject me in my old age. Don't forsake me when my strength
+  # fails... even when I am old and gray-haired, God, don't forsake
+  # me, until I have declared your strength to the next generation."
+  # (Psalm 71 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 71:9
+    sources: [editorial]
+    weight: 0.9
+  # The same psalm's charge: declaring God's works from youth to old
+  # age. (Psalm 71 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 71:17-18
+    sources: [editorial]
+    weight: 0.85
+  # "Gray hair is a crown of glory. It is attained by a life of
+  # righteousness." (Proverbs 16 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Proverbs 16:31
+    sources: [editorial]
+    weight: 0.8
+  # "Remember also your Creator in the days of your youth, before the
+  # evil days come" — the allegory of old age. (Ecclesiastes 12 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Ecclesiastes 12:1-7
+    sources: [editorial]
+    weight: 0.75
+  # "Even to old age I am he, and even to gray hairs I will carry you."
+  # (Isaiah 46 NOT in web-subset; re-check at re-pin.)
+  - ref: Isaiah 46:4
+    sources: [editorial]
+    weight: 0.9
+related:
+  - caring-for-aging-parents
+  - mortality
+  - seasons-of-life

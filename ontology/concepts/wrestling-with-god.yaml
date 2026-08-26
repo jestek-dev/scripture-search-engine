@@ -124,7 +124,15 @@ anchors:
   - ref: Psalms 88:13-14
     sources: [editorial]
     weight: 0.6
+# BOUNDARY (tag-gap batch 5, 2026-08-26): lament minted beside this
+# pack. This pack keeps the individual's protest-engagement register —
+# "how long o lord", "when god is silent", "arguing with god", and the
+# complaint verses Ps 13:1-2 / 88:13-14 — all untouched. lament carries
+# the practice/form register ("how to lament", "psalms of lament",
+# Lamentations, the composed and communal laments). Disjoint anchors,
+# disjoint phrases; recorded in both files.
 related:
   - prayer
   - hope-in-despair
   - surrender-to-god
+  - lament

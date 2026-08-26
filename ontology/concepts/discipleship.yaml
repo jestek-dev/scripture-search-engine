@@ -1,0 +1,123 @@
+# TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26) — ADOPTED-TAG id
+# (Theme I row in tag-gaps-review.md, 10 requesting books — the theme's
+# widest row). Adopted as display vocabulary by Jesse's 2026-08-25
+# ruling (CONVENTIONS §11); ENGINE admission happens only by his merge
+# of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "cost of discipleship"
+# returned FOUR results, all cost-token noise (Ezek 33:33 rank 1);
+# "what does it mean to follow jesus" returned pure follow/jesus
+# proximity scatter (John 1:37 narrative luck, chipless).
+#
+# TWO REGISTERS BY DESIGN (the row's own): the Gospels' call-and-cost
+# texts AND the epistles' imitation/mentoring chain (2 Tim 2:2 — "the
+# strongest anchor the row has"). One id, per the row's staging.
+#
+# BOUNDARY WITH surrender-to-god (decided, recorded): that pack owns
+# "take up your cross" and "deny yourself" with Luke 9:23 and Matt
+# 16:24 — all untouched. This pack anchors the ADJACENT verses (Luke
+# 9:57-62; Matt 16:25-26) and the call/mentoring texts; zero shared
+# phrases (governing-authorities precedent: design around the
+# collision, don't dual-claim it).
+#
+# OTHER BOUNDARIES: John 13:34-35 stays loving-others' ("by this
+# everyone will know that you are my disciples" — cross-noted); Matt
+# 28:19-20 already carries four packs' anchors (baptism, trinity,
+# nations-and-peoples, mormon-evangelism) and is NOT re-anchored — the
+# "make disciples" lexicon entry reaches it lexically and the great
+# commission stays where it lives; Luke 18:18-27 stays
+# money-and-possessions' span (this pack takes 18:28-30, disjoint);
+# John 8:36 stays freedom-from-bondage's (this pack takes 8:31-32).
+# Titus 2:3-5 stays godly-marriage's (the older-training-younger
+# register is carried by 2 Tim 2:2 instead).
+#
+# CORPUS: in-corpus witnesses Luke 9:57-62, Mark 1:16-18, Matt
+# 16:25-26, Luke 18:28-30, John 8:31-32, John 1:43, 2 Tim 2:2, Phil
+# 4:9. Corpus-blocked riders: Matt 4:18-22; 8:18-22; 10:37-39, Mark
+# 8:34-38, Luke 14:25-33 (counting the cost — the row's densest cost
+# text), John 21:19-22, 1 Thess 1:6, 2 Thess 3:7-9, 2 Tim 3:10, 14.
+#
+# TOKENIZER NOTES (G-4): bare `discipleship` admitted deliberately
+# (the subject noun IS the concept). "follow jesus" ({follow, jesu})
+# admitted as a two-token pair — queries carrying both are
+# discipleship-intent. No bare "follow" (generic), no bare "disciple"
+# ("the disciples" saturates Gospel narrative) — inventory skips.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: discipleship
+label: Following Jesus
+lexicon:
+  - discipleship
+  - follow jesus
+  - cost of discipleship
+  - make disciples
+  - fishers of men
+  - discipling someone
+  - spiritual mentor
+anchors:
+  # The three would-be followers: "No one, having put his hand to the
+  # plow and looking back, is fit for God's Kingdom" (WEB, in corpus)
+  # — the cost register's in-corpus keystone. (Luke 9:23 stays
+  # surrender-to-god's — disjoint, by design.)
+  - ref: Luke 9:57-62
+    sources: [editorial]
+    weight: 1.0
+  # "Come after me, and I will make you into fishers for men.
+  # Immediately they left their nets, and followed him" (WEB, in
+  # corpus) — the call register's keystone.
+  - ref: Mark 1:16-18
+    sources: [editorial]
+    weight: 0.95
+  # "Whoever will lose his life for my sake will find it. For what will
+  # it profit a man if he gains the whole world and forfeits his life?"
+  # (WEB, in corpus). Matt 16:24 stays surrender-to-god's — this range
+  # is deliberately adjacent and disjoint, recorded in both files.
+  - ref: Matthew 16:25-26
+    sources: [editorial]
+    weight: 0.9
+  # "If you remain in my word, then you are truly my disciples. You
+  # will know the truth, and the truth will make you free" (WEB, in
+  # corpus). (John 8:36 stays freedom-from-bondage's.)
+  - ref: John 8:31-32
+    sources: [editorial]
+    weight: 0.85
+  # Peter: "we have left everything and followed you" — and the
+  # answer's promise (WEB, in corpus). (Luke 18:18-27 stays
+  # money-and-possessions' span — disjoint.)
+  - ref: Luke 18:28-30
+    sources: [editorial]
+    weight: 0.8
+  # "The things which you have heard from me among many witnesses,
+  # commit the same things to faithful men who will be able to teach
+  # others also" (WEB, in corpus) — the mentoring chain in one verse,
+  # the row's own strongest-anchor call.
+  - ref: 2 Timothy 2:2
+    sources: [editorial]
+    weight: 0.95
+  # "Do the things which you learned, received, heard, and saw in me"
+  # (WEB, in corpus) — the imitation register.
+  - ref: Philippians 4:9
+    sources: [editorial]
+    weight: 0.75
+  # "Follow me." — the plain call (WEB, in corpus; John 1:35-51's call
+  # narrative, this verse the direct imperative).
+  - ref: John 1:43
+    sources: [editorial]
+    weight: 0.7
+  # "If anyone comes to me, and doesn't... he can't be my disciple" —
+  # counting the cost, the tower and the king. (Luke 14 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Luke 14:25-33
+    sources: [editorial]
+    weight: 0.9
+  # "Whoever doesn't take his cross and follow after me isn't worthy of
+  # me." (Matthew 10 NOT in web-subset; re-check at re-pin.)
+  - ref: Matthew 10:37-39
+    sources: [editorial]
+    weight: 0.7
+related:
+  - surrender-to-god
+  - obedience-to-the-word
+  - spiritual-growth
+  - sharing-your-faith

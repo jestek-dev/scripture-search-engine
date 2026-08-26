@@ -1,0 +1,73 @@
+# TAG-GAP ROLLOUT batch 6 (Theme J, 2026-08-26) — ADOPTED-TAG id
+# (Theme J row, 1 requesting book: 1 Corinthians). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR. "The vocabulary covers only
+# the married side" (the row) — measured true: "gift of singleness"
+# was hijacked by spiritual-gifts' bare gift token.
+#
+# BOUNDARIES inside 1 Cor 7 (three packs already own slices):
+# godly-marriage keeps 7:3, pastoral-marriage-divorce-teaching keeps
+# 7:10-16, pastoral-betrayal-and-marriage-crisis keeps 7:15. This
+# pack anchors the unmarried verses only — 7:7-9, 7:25-28, 7:32-35,
+# 7:39-40 — fully disjoint.
+#
+# Matt 19:12 anchored with care: Jesus' own word for those "who made
+# themselves eunuchs for the Kingdom of Heaven's sake" — voluntary
+# singleness for the Kingdom, stated by the text, described not
+# pressed ("He who is able to receive it, let him receive it").
+#
+# TOKENIZER NOTE (G-4): "singleness" is a deliberate single-word
+# admission — distinctive modern word, the subject noun IS the
+# concept; inventory row recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor. The gist keeps Paul's own
+# both-are-good frame (7:28 "if you marry, you have not sinned") —
+# neither singleness nor marriage ranked above the other beyond what
+# the text itself says.
+id: singleness
+label: Singleness
+lexicon:
+  - singleness
+  - gift of singleness
+  - stay single
+  - unmarried in the bible
+anchors:
+  # "each man has his own gift from God, one of this kind, and another
+  # of that kind. But I say to the unmarried and to widows, it is good
+  # for them if they remain even as I am. But if they don't have
+  # self-control, let them marry." (WEB, in corpus). Singleness named
+  # as gift — the query's own word. (7:3 stays godly-marriage's.)
+  - ref: 1 Corinthians 7:7-9
+    sources: [editorial]
+    weight: 1.0
+  # "He who is unmarried is concerned for the things of the Lord, how
+  # he may please the Lord... that you may attend to the Lord without
+  # distraction." (WEB, in corpus). The positive case — undivided
+  # attention, not second-class status.
+  - ref: 1 Corinthians 7:32-35
+    sources: [editorial]
+    weight: 0.95
+  # "Concerning virgins... it's good for a man to remain as he is...
+  # But if you marry, you have not sinned." (WEB, in corpus). Paul's
+  # measured judgment, with both paths honored.
+  - ref: 1 Corinthians 7:25-28
+    sources: [editorial]
+    weight: 0.9
+  # "she is free to be married to whomever she desires, only in the
+  # Lord. But she is happier if she stays as she is, in my judgment"
+  # (WEB, in corpus). The widow's freedom, both directions.
+  - ref: 1 Corinthians 7:39-40
+    sources: [editorial]
+    weight: 0.8
+  # "there are eunuchs who made themselves eunuchs for the Kingdom of
+  # Heaven's sake. He who is able to receive it, let him receive it."
+  # (WEB, in corpus). Jesus' own word for Kingdom-chosen singleness —
+  # described, not pressed (see header).
+  - ref: Matthew 19:12
+    sources: [editorial]
+    weight: 0.7
+related:
+  - godly-marriage
+  - contentment
+  - spiritual-gifts

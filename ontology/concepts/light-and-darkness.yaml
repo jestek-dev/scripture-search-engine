@@ -1,0 +1,74 @@
+# TAG-GAP ROLLOUT batch 6 (Theme K, 2026-08-26) — ADOPTED-TAG id
+# (Theme K row, 1 requesting book: John). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR.
+#
+# ROUTE CHECK (the row's own flag: walking-in-the-light lexicon
+# extension) run and DECLINED: that pack is the believer's-walk
+# register (1 John 1:5-7 fellowship test, "walk as Jesus walked") —
+# this row asks for John's CHRISTOLOGICAL light-claims ("Jesus light
+# of the world"); the extension would put the walk chip on identity
+# queries. Cross-related instead; walking-in-the-light keeps every
+# anchor it has (and gains 3 John 1:4 in this same batch — separate
+# extension, walk register).
+#
+# i-am-sayings CHECKED (the sayings-locator pack): it does not carry
+# John 8:12 or any light entry — 8:12 was unclaimed and lands here,
+# with the sayings-locator register noted (cross-related).
+#
+# BOUNDARIES: John 1:1-3 stays deity-of-christ's / creation's /
+# trinity's, 1:14 incarnation's — this pack anchors 1:4-5 only;
+# 3:16-21: gods-love keeps 3:16, salvation 3:16 and 3:3 — this pack
+# anchors 3:19-21 (the verdict passage), disjoint. John 9:5,
+# 12:35-36, 46 corpus-blocked riders.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor. John 3:19-21 is a judgment
+# text; the gist keeps its own accent — the light has come, and
+# coming to the light is the door it leaves open.
+id: light-and-darkness
+label: Light and darkness
+lexicon:
+  - light and darkness
+  - jesus light of the world
+  - light of the world
+  - the light shines in the darkness
+anchors:
+  # "This is the judgment, that the light has come into the world,
+  # and men loved the darkness rather than the light... But he who
+  # does the truth comes to the light" (WEB, in corpus). John's own
+  # summary of the theme — the light, the flight from it, and the
+  # way toward it. (3:16 stays gods-love's / salvation's.)
+  - ref: John 3:19-21
+    sources: [editorial]
+    weight: 1.0
+  # "I am the light of the world. He who follows me will not walk in
+  # the darkness, but will have the light of life." (WEB, in corpus).
+  # The claim itself. (Unclaimed until now; the i-am-sayings locator
+  # register is cross-noted, not duplicated.)
+  - ref: John 8:12
+    sources: [editorial]
+    weight: 0.95
+  # "In him was life, and the life was the light of men. The light
+  # shines in the darkness, and the darkness hasn't overcome it."
+  # (WEB, in corpus). The prologue's statement of the whole book.
+  # (1:1-3 stays deity-of-christ's / creation's / trinity's.)
+  - ref: John 1:4-5
+    sources: [editorial]
+    weight: 0.9
+  # "If a man walks in the day, he doesn't stumble, because he sees
+  # the light of this world. But if a man walks in the night, he
+  # stumbles, because the light isn't in him." (WEB, in corpus).
+  - ref: John 11:9-10
+    sources: [editorial]
+    weight: 0.75
+  # "While you have the light, believe in the light, that you may
+  # become children of light." (John 12 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: John 12:35-36
+    sources: [editorial]
+    weight: 0.7
+related:
+  - walking-in-the-light
+  - i-am-sayings
+  - salvation

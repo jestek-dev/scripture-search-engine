@@ -1,0 +1,35 @@
+{
+  "id": "supporting-gospel-workers",
+  "query": "supporting missionaries",
+  "status": "active",
+  "additionalQueries": [
+    "supporting gospel workers"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id supporting-gospel-workers (Theme J row, 3",
+    "requesting books). The row's check-first routes (hospitality /",
+    "generosity / tithing lexicon extensions) were run and DECLINED:",
+    "hospitality owns the home text 3 John 1:5-8 but that text is",
+    "corpus-blocked (3 John corpus = 1:4 only) and its register is",
+    "welcoming strangers — extension would answer 'supporting",
+    "missionaries' with Gen 18 / Heb 13:2 stranger anchors. Minted on",
+    "the in-corpus Phil 4:15-18 (Paul's own partnership text, free);",
+    "3 John 1:5-8, 1 Cor 9:4-14, 1 Tim 5:17-18 ride the re-pin.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'supporting missionaries' pure support-token noise (Rom 11:18",
+    "rank 1); 'sending out workers' send-token noise; Phil 4:15-18",
+    "nowhere."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 4:15-18",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Supporting gospel workers"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "supporting-gospel-workers"
+  ]
+}

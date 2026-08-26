@@ -1,0 +1,41 @@
+{
+  "id": "slow-to-anger",
+  "query": "god is slow to anger",
+  "status": "active",
+  "additionalQueries": [
+    "gods patience"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id slow-to-anger (Theme C row, 6 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The formula is",
+    "one of Scripture's most repeated self-descriptions (Exod 34:6 its",
+    "source text, corpus-blocked; Ps 86:15 and Ps 103:8 carry it",
+    "verbatim in corpus). divine-judgment carries the wrath side;",
+    "nothing carries God's patience. Boundary honored from the row's own",
+    "flag: the HUMAN virtue (Prov 14:29; Jas 1:19) routes to",
+    "self-control territory and is not asserted here — Jas 1:19 ranking",
+    "lexically on the primary query is honest retrieval, not a failure.",
+    "Nah 1:3 (also verbatim) is NOT an anchor: divine-judgment owns the",
+    "Nah 1:2-6 span; the pack cross-relates instead.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'god is slow to anger' returned Ps 86:15 by proximity + shared",
+    "words only, CHIPLESS (wrong-reason class); 'gods patience' did not",
+    "surface it in the top 10 at all."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 86:15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Slow to anger"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 103:8",
+    "Romans 2:4"
+  ],
+  "coversConcepts": [
+    "slow-to-anger"
+  ]
+}

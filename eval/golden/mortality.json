@@ -1,0 +1,49 @@
+{
+  "id": "mortality",
+  "query": "why do people die",
+  "status": "active",
+  "additionalQueries": [
+    "life is short"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id mortality (Theme F row, 11 requesting books \u2014 the",
+    "theme's widest row) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "Mortality itself is distinct from mourning a loss",
+    "(pastoral-grief-and-loss serves the griever) and from the dying",
+    "believer's hope (serious-illness-and-dying absorbed the",
+    "death-of-a-believer register and keeps bare 'death'; this pack",
+    "claims NO bare death/die token). One-or-two vs death-and-burial",
+    "DECIDED: two registers \u2014 that row (the burial-practice register) is",
+    "corpus-blocked and stays deferred. Isa 40:8 stays",
+    "power-of-gods-word's (anchor stops at 40:7); Eccl 12:7 stays",
+    "the-breath-of-life's; 1 Cor 15:54-57 stays pastoral-grief-and-loss'.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'why do people die' returned bare die-token scatter (Phil 1:21, Gen",
+    "3:4, Ps 82:7), no concept; 'death in the bible' was answered entirely by",
+    "serious-illness-and-dying's pastoral anchors (right pack for the",
+    "dying, wrong register for the doctrine question); 'life is short'",
+    "was unserved.",
+    "STRUCTURAL LIMIT recorded: 'why do we die' normalizes to bare {die} under the one tokenizer (why/we stopwords, 'do' under the 2-char floor) \u2014 indistinguishable from the bare query 'die', whose token this pack deliberately does not claim (serious-illness-and-dying territory); the oaths-and-vows 'let your yes be yes' precedent."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 3:19",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Mortality"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 39:4-5",
+    "Psalms 103:14-16",
+    "1 Corinthians 15:21-22",
+    "Ecclesiastes 3:19-21",
+    "Isaiah 40:6-7",
+    "James 4:13-14"
+  ],
+  "coversConcepts": [
+    "mortality"
+  ]
+}

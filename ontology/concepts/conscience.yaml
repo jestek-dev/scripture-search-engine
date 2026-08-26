@@ -28,6 +28,17 @@
 # {moral, law}, {people, know, right, wrong}.
 #
 # DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+#
+# TAG-GAP ROLLOUT batch 6 (2026-08-26): LEXICON+ANCHOR EXTENSION for
+# the Theme J conscience row (Romans + Acts) — the acting-against-
+# conscience register the row names ("acting against your conscience",
+# "is it a sin if I'm not sure"), which this pack's moral-knowledge
+# anchors did not serve (measured: those queries were answered by
+# Sin-and-its-wages anchors — the wrong pastoral register). Rom
+# 14:22-23 was free (disputable-matters keeps 14:5 and 14:19,
+# judging-others 14:4 and 14:13 — recorded); Rom 13:5 stays inside
+# governing-authorities' 13:1-7 span (cross-noted, NOT claimed);
+# Acts 23:1 and 24:16 are corpus-blocked riders for the re-pin.
 id: conscience
 label: Conscience — the law written on hearts
 lexicon:
@@ -40,6 +51,10 @@ lexicon:
   - moral law
   # The question form.
   - how do people know right from wrong
+  # Batch 6 acting-against-conscience extension (see header).
+  - acting against your conscience
+  - violating your conscience
+  - is it a sin if i am not sure
 anchors:
   # "(for when Gentiles who don't have the law do by nature the things of
   # the law... they show the work of the law written in their hearts,
@@ -94,5 +109,22 @@ anchors:
   - ref: Proverbs 20:27
     sources: [editorial]
     weight: 0.7
+  # Batch 6 acting-against-conscience extension: "Happy is he who
+  # doesn't judge himself in that which he approves. But he who doubts
+  # is condemned if he eats, because it isn't of faith; and whatever
+  # is not of faith is sin." (WEB, in corpus). Paul's own answer to
+  # "is it a sin if I'm not sure" — acting against an unpersuaded
+  # conscience. (14:5 and 14:19 stay disputable-matters', 14:4 and
+  # 14:13 judging-others'.)
+  - ref: Romans 14:22-23
+    sources: [editorial]
+    weight: 0.9
+  # "I have lived before God in all good conscience until today" —
+  # Paul's defense framed by conscience, twice. (Acts 23 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Acts 23:1
+    sources: [editorial]
+    weight: 0.55
 related:
   - those-who-never-heard
+  - disputable-matters

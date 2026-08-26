@@ -1,0 +1,98 @@
+# TAG-GAP ROLLOUT batch 4 (Theme G, 2026-08-26) — ADOPTED-TAG id
+# (Theme G row in tag-gaps-review.md, 7 requesting books; four Gospel
+# threads staged it as god-and-government and folded there). Adopted
+# as display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS
+# §11); ENGINE admission happens only by his merge of this PR.
+#
+# "Should Christians pay taxes" / "render to Caesar" / "obey God
+# rather than men" — the believer-and-state query family.
+#
+# DESIGN DECIDED AGAINST A HEAD-ON COLLISION (sovereignty-of-god ->
+# providence precedent, adapted): praying-for-leaders has grown to own
+# the phrases "government" and "governing authorities" and the anchors
+# Rom 13:1-7 / 1 Pet 2:13-17 / Jer 29:7 / Ps 33:12 — measured before
+# this pack, "what does the bible say about government" is already
+# answered there with honest chips. Those phrases and anchors STAY
+# there; this pack's lexicon shares no phrase with it and serves the
+# poles that pack does not: the tax question, and the
+# obey-God-rather-than-men limit. One DUAL anchor, recorded in both
+# files: Rom 13:1-7, the register's central text.
+#
+# BOUNDARIES: 1 Pet 2:13-17 stays praying-for-leaders' alone. Acts
+# 5:29 (the naming "We must obey God rather than men") is
+# corpus-blocked — Acts 4:19-20 is its in-corpus twin and carries the
+# query family until the re-pin. Mark 12:13-17 and Luke 20:20-26
+# (parallels) and Acts 22:25-29; 25:10-12 and Ezra 6:10; 7:26 ride
+# re-pin.
+#
+# GIST CARE: both poles stated as the texts state them — subjection
+# and taxes owed (Rom 13, Titus 3), and the apostles' refusal when
+# commanded to silence (Acts 4) — the pack adjudicates no modern
+# application.
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens;
+# bare "government" stays praying-for-leaders' (inventory skip row);
+# bare "caesar"/"taxes" skipped (narrative nouns, phrase forms carry
+# them).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: governing-authorities
+label: Governing authorities
+lexicon:
+  - render to caesar
+  - give to caesar what is caesars
+  - should christians pay taxes
+  - paying taxes in the bible
+  - obey god rather than men
+  - civil disobedience in the bible
+  - christians and the law
+anchors:
+  # "Is it lawful to pay taxes to Caesar, or not?... 'Give therefore
+  # to Caesar the things that are Caesar's, and to God the things that
+  # are God's'" (WEB, in corpus). The register's keystone — the
+  # question asked and answered in Jesus' own words. (Matt 22:37-39
+  # stays loving-others' territory — verse-disjoint.)
+  - ref: Matthew 22:15-22
+    sources: [editorial]
+    weight: 1.0
+  # "Whether it is right in the sight of God to listen to you rather
+  # than to God, judge for yourselves, for we can't help telling the
+  # things which we saw and heard" (WEB, in corpus). The other pole —
+  # in-corpus twin of Acts 5:29 (corpus-blocked, rides re-pin).
+  - ref: Acts 4:19-20
+    sources: [editorial]
+    weight: 0.95
+  # "Let every soul be in subjection to the higher authorities... if
+  # you owe taxes, pay taxes" (WEB, in corpus). DUAL with
+  # praying-for-leaders (recorded there): the passage is both
+  # registers' central text — prayer-and-submission there, the
+  # believer-and-state question here.
+  # BATCH-6 NOTE (2026-08-26): conscience's Theme J extension
+  # cross-notes 13:5 (be in subjection 'for conscience' sake') but
+  # does NOT claim it — the verse stays inside this span.
+  - ref: Romans 13:1-7
+    sources: [editorial]
+    weight: 0.95
+  # "Remind them to be in subjection to rulers and to authorities, to
+  # be obedient... to speak evil of no one" (WEB, in corpus).
+  - ref: Titus 3:1-2
+    sources: [editorial]
+    weight: 0.85
+  # "They have beaten us publicly without a trial, men who are
+  # Romans..." (WEB, in corpus). Paul asserting the law's own
+  # protections — the believer USING citizenship, the third pole of
+  # the query family. (Acts 16:30-31 stays salvation's —
+  # verse-disjoint.)
+  - ref: Acts 16:35-39
+    sources: [editorial]
+    weight: 0.75
+  # "We must obey God rather than men" — the family's naming text.
+  # (Acts 5 NOT in web-subset; re-check at re-pin.)
+  - ref: Acts 5:29
+    sources: [editorial]
+    weight: 0.95
+related:
+  - praying-for-leaders
+  - leadership
+  - suffering-for-christ

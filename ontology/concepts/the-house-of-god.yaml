@@ -38,6 +38,14 @@ anchors:
   # that my name may be there forever" (WEB, in corpus). God's own
   # answer at the temple dedication — the house chosen, his name and
   # eyes and heart there.
+  # SIBLING (tag-gap batch 5, 2026-08-26): seeking-god claims 2 Chr
+  # 7:14 verse-scoped inside this span — the verse's own "seek my
+  # face" is that register's most-searched OT sentence. Recorded in
+  # both files.
+  # BATCH-6 NOTE (2026-08-26): revival-and-reformation now also claims
+  # 7:14 verse-scoped (the turn-and-heal promise), alongside
+  # seeking-god's existing verse claim — three registers on one text,
+  # recorded in all three files; this whole-span anchor stays.
   - ref: 2 Chronicles 7:12-16
     sources: [editorial]
     weight: 1.0

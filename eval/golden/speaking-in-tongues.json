@@ -1,0 +1,40 @@
+{
+  "id": "speaking-in-tongues",
+  "query": "speaking in tongues",
+  "status": "active",
+  "additionalQueries": [
+    "gift of tongues"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6: ADOPTED-TAG id speaking-in-tongues",
+    "(Theme J row, 1 requesting book: 1 Corinthians), resolved as a",
+    "LEXICON+ANCHOR EXTENSION of spiritual-gifts — the row's own",
+    "flagged route. The defining chapters (1 Cor 12; 14) are",
+    "corpus-blocked and ride the re-pin; the in-corpus witnesses are",
+    "Acts 2:1-4 (claimed as a span sibling of holy-spirit's keystone,",
+    "recorded both files) and 1 Cor 13:1 (free; loving-others keeps",
+    "13:4-8, 13:13). WEB wording is 'other languages', which is why",
+    "plain lexical search missed entirely (the row's own diagnosis).",
+    "Gist untouched; continuation/cessation is a named non-criterion",
+    "and nothing here adjudicates it.",
+    "Measured gap before the extension (2026-08-26, pending-fixture",
+    "run): 'speaking in tongues' noise with 1 Cor 13:8 rank 1 via",
+    "translation variant CHIPLESS; 'gift of tongues' hijacked by",
+    "spiritual-gifts' generic anchors via the bare gift token with",
+    "the tongues texts absent."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 2:1-4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Spiritual gifts"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 13:1"
+  ],
+  "coversConcepts": [
+    "spiritual-gifts"
+  ]
+}

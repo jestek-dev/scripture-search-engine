@@ -29,6 +29,9 @@ anchors:
     sources: [editorial]
     weight: 1.0
   # "Blessed are those who have been persecuted for righteousness' sake"
+  # BOUNDARY (tag-gap batch 5, 2026-08-26): slander-and-false-accusation
+  # anchors Matt 5:11 (the say-evil-falsely verse) — adjacent, disjoint,
+  # cross-related; recorded in both files.
   - ref: Matthew 5:10
     sources: [torrey]
     weight: 0.95

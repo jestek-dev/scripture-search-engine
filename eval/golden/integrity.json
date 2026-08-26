@@ -1,0 +1,44 @@
+{
+  "id": "integrity",
+  "query": "integrity in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "man of integrity"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id integrity (Theme E row, 2 requesting books) — engine",
+    "admission only by Jesse's merge of this PR. The row's check-first",
+    "route (lexicon extension of honesty) was checked and DECLINED,",
+    "recorded: honesty is the truth-telling register (Eph 4:25, Col",
+    "3:9); these queries mean whole-life uprightness — the row's own",
+    "distinction. Keystone Prov 28:6 (walking in integrity over crooked",
+    "riches, in corpus) with Job 31:5-6 (Job's own oath — 'that God may",
+    "know my integrity') and Ps 101:2 (the blameless-heart resolve;",
+    "101:3 stays pastoral-sexual-purity's, cross-noted). Job 2:3, 27:5-6",
+    "and the other integrity proverbs (10:9; 11:3; 19:1; 20:7) are",
+    "corpus-blocked riders. Job 1:1/1:8 stay with",
+    "suffering-of-the-righteous and testing (cross-related, not",
+    "re-anchored).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'integrity in the bible' surfaced Job 31:6 at rank 1 by bare token",
+    "luck, CHIPLESS, then bible-token noise; Prov 28:6 at rank 7",
+    "CHIPLESS (wrong-reason class)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Proverbs 28:6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Integrity"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Job 31:5-6",
+    "Psalms 101:2",
+    "Proverbs 28:18"
+  ],
+  "coversConcepts": [
+    "integrity"
+  ]
+}

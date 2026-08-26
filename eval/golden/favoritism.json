@@ -1,0 +1,40 @@
+{
+  "id": "favoritism",
+  "query": "favoritism in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "showing partiality"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id favoritism (Theme E row, 2 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. A plain lay",
+    "query with no vocabulary home; James 2:1-9 is Scripture's direct",
+    "treatment and every anchor is in corpus except the riders. Rom",
+    "2:11 sits inside divine-judgment's Rom 2:5-11 span and is NOT",
+    "re-anchored (cross-noted); Eph 6:9 and Col 3:25 carry the",
+    "no-partiality-with-God witness instead. Acts 10:34-35, Deut",
+    "10:17, Prov 18:5, 24:23 and Jas 3:17 are corpus-blocked riders.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'favoritism in the bible' returned pure bible-token noise with",
+    "Lev 19:15 at rank 10 by bare token luck, CHIPLESS; 'showing",
+    "partiality' unserved."
+  ],
+  "expectedTop": [
+    {
+      "reference": "James 2:1-9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Favoritism"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Leviticus 19:15",
+    "Proverbs 28:21",
+    "Ephesians 6:9",
+    "Colossians 3:25"
+  ],
+  "coversConcepts": [
+    "favoritism"
+  ]
+}

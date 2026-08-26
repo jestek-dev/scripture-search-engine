@@ -27,6 +27,10 @@ lexicon:
   # remembered-anxious-for-nothing. Added 2026-08-18.
   - temptation
   - tempted
+  # (TAG-GAP batch 3, 2026-08-26: the new `temptation` teaching pack
+  # deliberately keeps every entry >= 2 significant tokens so these two
+  # bare words stay this pack's own; 1 Cor 10:13 stays this pack's only
+  # anchor. Cross-related, recorded both files.)
 anchors:
   - ref: 1 Corinthians 10:13
     sources: [editorial]

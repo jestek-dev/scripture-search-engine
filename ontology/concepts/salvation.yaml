@@ -20,6 +20,21 @@ lexicon:
   # Round-2 book admission 2026-08-18.
   - call on the name of the lord
   - i am the way the truth and the life
+  # TAG-GAP ROLLOUT batch 6 (2026-08-26): LEXICON EXTENSION for the
+  # Theme K eternal-life row (John) — John's own name for the gift,
+  # which no pack owned. This pack already anchors the in-corpus
+  # eternal-life texts (John 3:16 "...should not perish, but have
+  # eternal life"; 3:3; 1:12; Acts 16:30-31); John's definition text
+  # (17:2-3) and the phrase's spine (5:24; 6:27-68; 10:28; 20:31) are
+  # corpus-blocked — re-check at re-pin whether a standalone pack then
+  # earns its keep (recorded in the batch ledger). A sibling pack now
+  # would re-anchor this pack's own verses. Boundaries: John 3:36
+  # stays jesus-the-only-way's, 11:25-26 resurrection-of-the-dead's,
+  # 4:14 living-water's — all cross-noted, none re-anchored.
+  # Measured before: "what is eternal life" returned the right
+  # verse-family entirely CHIPLESS.
+  - eternal life
+  - everlasting life
 anchors:
   - ref: Acts 16:30-31
     sources: [editorial]

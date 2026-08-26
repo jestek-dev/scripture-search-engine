@@ -1,0 +1,89 @@
+# TAG-GAP ROLLOUT batch 4 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 1 requesting book: Ezekiel, whose
+# own refs are corpus-blocked; the Isaiah and Jeremiah threads hit the
+# theme and routed around it without logging, so the gap is recurring).
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission happens only by his merge of
+# this PR.
+#
+# "Trusting in man instead of God" — the vocabulary can only answer
+# from the positive side (trust-in-god); the failure side — broken-reed
+# alliances, false confidence — has no concept.
+#
+# MEASURED BEFORE-STATE (the reason this is a mint, not an extension):
+# "trusting in man instead of god" was answered by trust-in-god's
+# anchors with the OPPOSITE intent (Prov 3:5-6, Ps 37:5, "Theme:
+# Trusting God" chips) — the fear-of-the-lord/fear-not inversion class
+# from batch 3. Extending trust-in-god would deepen the inversion, not
+# fix it.
+#
+# BOUNDARY (recorded here; trust-in-god untouched): trust-in-god keeps
+# bare "trust"/"confidence" and every positive anchor. This pack is the
+# misplaced-trust register only, and its lexicon shares no phrase with
+# trust-in-god's. Jer 17:7-8 (the blessed-is-the-man contrast half) is
+# deliberately NOT anchored here — it is trust-in-god's natural
+# territory, cross-noted for the re-pin curator.
+#
+# CORPUS: Jer 17:5-6, Ps 146:3-4, Ps 33:16-17 in corpus. The minting
+# Ezekiel refs (29:6-7, 16 — Egypt the staff of reed) plus Isa 31:1,
+# Isa 2:22, Ps 118:8-9 and Ps 20:7 are corpus-blocked riders.
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens;
+# bare "trust" stays trust-in-god's (inventory skip row).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: trusting-in-man
+label: Trusting in man
+lexicon:
+  - trusting in man
+  - trust in man instead of god
+  - trusting in people not god
+  - do not put your trust in princes
+  - cursed is the man who trusts in man
+  - misplaced trust
+  - trusting in horses and chariots
+anchors:
+  # "Cursed is the man who trusts in man, relies on strength of flesh,
+  # and whose heart departs from the LORD. For he will be like a bush
+  # in the desert..." (WEB, in corpus). The register's keystone;
+  # vv. 7-8 (the blessed contrast) left to trust-in-god's territory.
+  - ref: Jeremiah 17:5-6
+    sources: [editorial]
+    weight: 1.0
+  # "Don't put your trust in princes, in a son of man in whom there is
+  # no help. His spirit departs... in that very day, his thoughts
+  # perish" (WEB, in corpus). Ps 146:9 is care-for-widows' (same
+  # batch), 146:10 god-reigns' — verse-disjoint claims on a shared
+  # psalm.
+  - ref: Psalms 146:3-4
+    sources: [editorial]
+    weight: 0.95
+  # "There is no king saved by the multitude of an army... A horse is a
+  # vain thing for safety" (WEB, in corpus). False confidence in
+  # military strength; Ps 33:10-11 stays providence's — verse-disjoint.
+  - ref: Psalms 33:16-17
+    sources: [editorial]
+    weight: 0.9
+  # "Woe to those who go down to Egypt for help, and rely on horses...
+  # but they don't look to the Holy One of Israel!" (Isaiah 31 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Isaiah 31:1
+    sources: [editorial]
+    weight: 0.85
+  # "It is better to take refuge in the LORD than to put confidence in
+  # man... than to put confidence in princes." (Psalm 118 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Psalms 118:8-9
+    sources: [editorial]
+    weight: 0.85
+  # The minting refs: Egypt "a staff of reed to the house of Israel" —
+  # the broken-reed alliance register the Ezekiel thread logged.
+  # (Ezekiel 29 NOT in web-subset; re-check at re-pin.)
+  - ref: Ezekiel 29:6-7
+    sources: [editorial]
+    weight: 0.8
+related:
+  - trust-in-god
+  - idolatry
+  - providence

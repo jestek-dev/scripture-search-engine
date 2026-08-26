@@ -1,0 +1,118 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme D row in tag-gaps-review.md, 10 requesting books; Isaiah's
+# independently-staged `divination-and-the-occult` folded in by the
+# review itself). Adopted as display vocabulary by Jesse's 2026-08-25
+# ruling (CONVENTIONS §11); ENGINE admission happens only by his merge
+# of this PR.
+#
+# The occult and divination — "what does the Bible say about mediums /
+# psychics / seances / witchcraft" is a common and pastorally live
+# query family with no home; resisting-the-devil is the
+# believer's-resistance register, not the practice prohibition (the
+# row's own distinction). The engine locates the prohibitions and the
+# narratives; it renders no verdict on any practice or person
+# (CLAUDE.md #6) — Ezekiel's flagged "described, not taught" care
+# applies to the whole pack's gist.
+#
+# Corpus-blocked, riding the re-pin: Deut 18:9-14 (the Bible's fullest
+# ban list — the very ref the row's rationale says would complete the
+# pack), 1 Sam 28 (Endor), Isa 8:19-20; 47:9-13, the Balaam cycle, the
+# Daniel court-magician failure narratives, 2 Kgs 17:17; 21:6; 23:24,
+# and 2 Chr 33:6 (with its own repentance note, 33:12-13).
+#
+# SPAN DISCIPLINE: 1 Sam 15:23 ("rebellion is as the sin of
+# witchcraft") is idolatry's anchor — NOT re-anchored; Gal 5:19-21
+# (sorcery in the works of the flesh) is envy-and-jealousy's; Jer
+# 10:3-5 is idolatry's (this pack takes 10:2); Acts 13:2-3 is
+# fasting's (this pack takes 13:8-11); Lev 19:33-34 is hospitality's,
+# 19:3 sabbath-rest's, 19:4 idolatry's, 19:12 the-name-of-god's (same
+# batch) — vv26 and 31 are free and taken here.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): bare "witchcraft", "divination" and
+# "occult" are deliberate single-word entries (inventory rows) — the
+# subject nouns people type, distinctive tokens with no competing
+# concept. Other entries keep >= 2 significant tokens ({medium,
+# psychic}, {fortun, tell}, {astrolog, horoscop}, {bibl, witchcraft}).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: occult-and-divination
+label: The occult and divination
+lexicon:
+  - witchcraft
+  - divination
+  - the occult
+  - mediums and psychics
+  - fortune telling
+  - astrology and horoscopes
+  - what does the bible say about witchcraft
+anchors:
+  # "Don't turn to those who are mediums, nor to the wizards. Don't
+  # seek them out, to be defiled by them" (WEB, in corpus). The
+  # prohibition stated to Israel directly.
+  - ref: Leviticus 19:31
+    sources: [editorial]
+    weight: 1.0
+  # "You shall not use enchantments, nor practice sorcery" (WEB, in
+  # corpus).
+  - ref: Leviticus 19:26
+    sources: [editorial]
+    weight: 0.9
+  # "a certain girl having a spirit of divination... brought her
+  # masters much gain by fortune telling... 'I command you in the name
+  # of Jesus Christ to come out of her!'" (WEB, in corpus). The NT
+  # narrative — divination met and ended.
+  - ref: Acts 16:16-18
+    sources: [editorial]
+    weight: 0.9
+  # "Elymas the sorcerer... 'you son of the devil... you will be
+  # blind'" (WEB, in corpus). Acts 13:2-3 is fasting's — no span
+  # overlap.
+  - ref: Acts 13:8-11
+    sources: [editorial]
+    weight: 0.8
+  # "Don't learn the way of the nations, and don't be dismayed at the
+  # signs of the sky" (WEB, in corpus). The astrology register; Jer
+  # 10:3-5 is idolatry's and 10:10 god-reigns' (same batch) — no span
+  # overlap.
+  - ref: Jeremiah 10:2
+    sources: [editorial]
+    weight: 0.8
+  # "Don't let your prophets who are among you and your diviners
+  # deceive you... they prophesy falsely to you in my name" (WEB, in
+  # corpus).
+  - ref: Jeremiah 29:8-9
+    sources: [editorial]
+    weight: 0.75
+  # "sorcerers... their part is in the lake that burns" (WEB, in
+  # corpus). Where Scripture's last book files the practice; Rev
+  # 21:2-4 is new-heaven-and-earth's and 21:23 glory-of-god's (same
+  # batch) — no span overlap.
+  - ref: Revelation 21:8
+    sources: [editorial]
+    weight: 0.7
+  # "There shall not be found with you anyone who... uses divination,
+  # one who tells fortunes, or an enchanter, or a sorcerer, or a
+  # charmer, or someone who consults with a familiar spirit, or a
+  # wizard, or a necromancer" — the fullest ban list. (Deuteronomy 18
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Deuteronomy 18:9-14
+    sources: [editorial]
+    weight: 1.0
+  # Saul and the medium of Endor — the canon's own seance narrative,
+  # told against the ban Saul himself had enforced. (1 Samuel 28 NOT
+  # in web-subset; re-check at re-pin.)
+  - ref: 1 Samuel 28:3-20
+    sources: [editorial]
+    weight: 0.9
+  # "consult with the spirits of the dead... Should not a people
+  # consult with their God?" — the prophetic alternative. (Isaiah 8
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Isaiah 8:19-20
+    sources: [editorial]
+    weight: 0.85
+related:
+  - resisting-the-devil
+  - idolatry
+  - false-prophets

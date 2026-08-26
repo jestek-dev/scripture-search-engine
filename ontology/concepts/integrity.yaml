@@ -1,0 +1,76 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 2 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Integrity in the Bible" / "man of integrity" — the book of Job's own
+# repeated word for its protagonist. The row's check-first route
+# (lexicon extension of honesty) was checked and DECLINED, recorded:
+# honesty is the truth-telling register (Eph 4:25; Col 3:9); these
+# queries mean whole-life uprightness — the row's own distinction. The
+# packs cross-relate.
+#
+# BOUNDARIES: Job 1:1, 8 ("blameless and upright") stay with
+# suffering-of-the-righteous and testing — this pack claims Job's OWN
+# oath instead (31:5-6, free span; 31:1 stays pastoral-sexual-purity's,
+# 31:32 hospitality's). Ps 101:2 is the blameless-heart resolve (101:3
+# stays pastoral-sexual-purity's — disjoint verses). Job 2:3, 9; 27:5-6
+# and the other integrity proverbs (10:9; 11:3; 19:1; 20:7) are
+# corpus-blocked riders.
+#
+# TOKENIZER NOTE (G-4): bare "integrity" is a deliberate one-word entry
+# (inventory row) — the subject noun IS the concept, distinctive stem no
+# other pack speaks. Bare "blameless" is skipped (inventory row):
+# holiness vocabulary as often as uprightness.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: integrity
+label: Integrity
+lexicon:
+  - integrity
+  - man of integrity
+  - walk in integrity
+  - integrity in the bible
+anchors:
+  # "Better is the poor who walks in his integrity than he who is
+  # perverse in his ways, and he is rich" (WEB, in corpus). Integrity
+  # priced above wealth — the register's keystone in corpus.
+  - ref: Proverbs 28:6
+    sources: [editorial]
+    weight: 1.0
+  # "If I have walked with falsehood... let me be weighed in an even
+  # balance, that God may know my integrity" (WEB, in corpus). Job's
+  # own oath of clearance — the book's word claimed in the book's own
+  # voice.
+  - ref: Job 31:5-6
+    sources: [editorial]
+    weight: 0.9
+  # "I will be careful to live a blameless life... I will walk within
+  # my house with a blameless heart" (WEB, in corpus). Integrity where
+  # no one watches — kept to v2 (101:3 stays
+  # pastoral-sexual-purity's).
+  - ref: Psalms 101:2
+    sources: [editorial]
+    weight: 0.85
+  # "Whoever walks blamelessly is kept safe; but one with perverse ways
+  # will fall suddenly" (WEB, in corpus).
+  - ref: Proverbs 28:18
+    sources: [editorial]
+    weight: 0.75
+  # "He who walks blamelessly walks surely, but he who perverts his
+  # ways will be found out." (Proverbs 10 NOT in web-subset; re-check
+  # at re-pin, with 11:3; 19:1; 20:7.)
+  - ref: Proverbs 10:9
+    sources: [editorial]
+    weight: 0.8
+  # "He still maintains his integrity, although you incited me against
+  # him" — God's own testimony to Job under trial. (Job 2 NOT in
+  # web-subset; re-check at re-pin, with 27:5-6.)
+  - ref: Job 2:3
+    sources: [editorial]
+    weight: 0.8
+related:
+  - honesty
+  - holiness
+  - suffering-of-the-righteous

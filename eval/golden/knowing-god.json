@@ -1,0 +1,43 @@
+{
+  "id": "knowing-god",
+  "query": "what does it mean to know god",
+  "status": "active",
+  "additionalQueries": [
+    "knowing god"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id knowing-god (Theme C row, 5 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The row's",
+    "check-first route (lexicon extension of hunger-for-god) was checked",
+    "and declined with reasons: that pack is the DESIRE register",
+    "(thirst, longing, dryness — its own in-file scope note) and its",
+    "anchors (Ps 42:1-2, Matt 5:6) would answer knowledge-relationship",
+    "queries with appetite texts. Jer 31:34 — 'they will all know me,",
+    "from their least to their greatest' — is the covenant promise of",
+    "this exact register and is in corpus (covenant owns the Jer",
+    "31:31-34 span; the overlapping narrower 31:34 anchor is recorded as",
+    "a sibling claim with disjoint lexicons, the Acts 17:26 precedent).",
+    "Hos 4:6/6:3, Jer 9:23-24 and the Exodus/Ezekiel recognition formula",
+    "ride the re-pin as noted anchors — the recognition refrain carries",
+    "the row's own staged-register caveat and is never asserted here.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "both queries failed to surface Jer 31:34 in the top 10 at all —",
+    "the covenant promise of this register was unreachable."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 31:34",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Knowing God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 John 2:3-4",
+    "John 14:7"
+  ],
+  "coversConcepts": [
+    "knowing-god"
+  ]
+}

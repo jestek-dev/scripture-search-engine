@@ -35,6 +35,11 @@ lexicon:
   - my spouse left me
   - marriage falling apart
 anchors:
+  # DUAL ANCHOR (TAG-GAP batch 3, 2026-08-26): the general `betrayal`
+  # pack also anchors Ps 55:12-14 — the psalm names betrayal by an
+  # intimate more precisely than anything else in Scripture, and the
+  # marriage-crisis and friend/kin registers are both honest claims on
+  # it (recorded in both files). This pack's other anchors stay its own.
   - ref: Psalms 55:12-14
     sources: [editorial]
     weight: 1

@@ -1,0 +1,38 @@
+{
+  "id": "boldness-in-witness",
+  "query": "praying for boldness",
+  "status": "active",
+  "additionalQueries": [
+    "boldness to share my faith"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id boldness-in-witness (Theme J row, 1 requesting",
+    "book: Acts). The row's check-first route (sharing-your-faith",
+    "lexicon extension) was run and DECLINED per the row's own lean:",
+    "the parrhesia register stands alone — the felt gap is fear and",
+    "the prayer for boldness, not evangelism how-to; zero shared",
+    "phrases with sharing-your-faith (cross-related). Acts 4:29 split",
+    "from 4:30 by design: 4:30 is signs-and-wonders' (same batch,",
+    "recorded both files); 4:31 stays holy-spirit's.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'praying for boldness' was flooded by prayer's how-to anchors",
+    "(1 Thess 5:16-18 rank 1 — wrong intent); 'boldness to share my",
+    "faith' flooded by faith/faith-and-works anchors (Heb 11:6 rank 1)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 4:29",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Boldness in witness"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 4:13",
+    "Acts 13:46"
+  ],
+  "coversConcepts": [
+    "boldness-in-witness"
+  ]
+}

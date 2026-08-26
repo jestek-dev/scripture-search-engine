@@ -1,0 +1,101 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 10 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The vocabulary carried only the RESPONSE side of temptation:
+# remembered-a-way-of-escape (1 Cor 10:13, deliberately one-anchor) and
+# resisting-the-devil (Jas 4:7). This pack carries the teaching itself —
+# where temptation comes from (Jas 1:13-15), the first temptation
+# (Gen 3), the Lord's own (Mark 1:12-13; the Matt 4 / Luke 4 accounts
+# are corpus-blocked riders), and the sympathetic high priest (Heb 4:15).
+#
+# BOUNDARY DESIGN — four neighbors, none of whose vocabulary this
+# lexicon speaks bare:
+#   - remembered-a-way-of-escape owns bare `temptation`/`tempted` (its
+#     2026-08-18 inventory rows) and 1 Cor 10:13, which is NOT
+#     re-anchored here. Every entry below keeps >= 2 significant tokens
+#     so the bare words stay that pack's own; on multi-word temptation
+#     queries both packs fire honestly.
+#   - testing owns God-tests-his-people (Scripture itself splits the
+#     senses, Jas 1:13: God tests, never tempts) — no test/refine token.
+#   - pastoral-freedom-from-bondage owns the crisis register
+#     ("overcoming temptation" is ITS lexicon entry) and Matt 26:41 —
+#     not re-anchored; Luke 22:40 (the same command, Luke's scene)
+#     carries watch-and-pray here.
+#   - satan anchors Mark 1:13 for the who-is register; this pack's
+#     Mark 1:12-13 span overlaps it deliberately — the temptation
+#     narrative IS both packs' claim (dual noted in both files).
+#
+# Jas 1:12 stays heavenly-reward's (crown of life) — this claim starts
+# at v13. 1 Tim 6:9 sits inside contentment's 1 Tim 6:6-10 span — not
+# re-anchored, cross-noted.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: temptation
+label: Temptation
+lexicon:
+  - where does temptation come from
+  - jesus tempted in the wilderness
+  - tempted by the devil
+  - god cannot be tempted
+  - how to resist temptation
+anchors:
+  # "Let no man say when he is tempted, 'I am tempted by God,' for God
+  # can't be tempted by evil, and he himself tempts no one. But each
+  # one is tempted when he is drawn away by his own lust and enticed.
+  # Then the lust... bears sin" (WEB, in corpus). Scripture's own
+  # answer to where temptation comes from — the diagnosis keystone.
+  - ref: James 1:13-15
+    sources: [editorial]
+    weight: 1.0
+  # "The Spirit drove him out into the wilderness. He was there in the
+  # wilderness forty days, tempted by Satan" (WEB, in corpus). The
+  # Lord's temptation in the only account in corpus; dual-claimed with
+  # satan (v13) — recorded both files.
+  - ref: Mark 1:12-13
+    sources: [editorial]
+    weight: 0.9
+  # "one who has been in all points tempted like we are, yet without
+  # sin" (WEB, in corpus). The sympathetic high priest; dual-claimed
+  # with priesthood (4:14-16) and pastoral-freedom-from-bondage
+  # (4:15-16) — the verse is all three, one span claim here.
+  - ref: Hebrews 4:15
+    sources: [editorial]
+    weight: 0.85
+  # "Pray that you don't enter into temptation" (WEB, in corpus).
+  # Watch-and-pray in Luke's Gethsemane scene (Matt 26:41 stays
+  # pastoral-freedom-from-bondage's).
+  - ref: Luke 22:40
+    sources: [editorial]
+    weight: 0.8
+  # "Now the serpent was more subtle... 'Has God really said...?'"
+  # (WEB, in corpus). The first temptation, anatomy included: doubt of
+  # the word, desire of the eyes, the taking.
+  - ref: Genesis 3:1-6
+    sources: [editorial]
+    weight: 0.75
+  # "Jesus was led up by the Spirit into the wilderness to be tempted
+  # by the devil" — the full three-temptation account, answered from
+  # the written word. (Matthew 4 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Matthew 4:1-11
+    sources: [editorial]
+    weight: 1.0
+  # Luke's account of the same. (Luke 4 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Luke 4:1-13
+    sources: [editorial]
+    weight: 0.9
+  # "Watch and pray, that you may not enter into temptation. The spirit
+  # indeed is willing, but the flesh is weak." (Mark 14 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Mark 14:38
+    sources: [editorial]
+    weight: 0.8
+related:
+  - remembered-a-way-of-escape
+  - resisting-the-devil
+  - testing
+  - satan

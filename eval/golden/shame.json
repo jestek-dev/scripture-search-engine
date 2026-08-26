@@ -1,0 +1,39 @@
+{
+  "id": "shame",
+  "query": "overcoming shame",
+  "status": "active",
+  "additionalQueries": [
+    "shame in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id shame (Theme H row, 1 requesting book: Ezekiel,",
+    "whose refs are ALL corpus-blocked and ride the re-pin as the",
+    "godly-shame-toward-repentance register). In-corpus anchors carry",
+    "the shame-LIFTED register (Isa 54:4, Ps 34:5, Isa 61:7) — both",
+    "registers described in the pack, neither adjudicated. Rom 10:11",
+    "checked and NOT anchored: WEB renders it 'disappointed' — no",
+    "shame word in the corpus bytes (anchor-accuracy covenant; named",
+    "for the re-pin curator).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'overcoming shame' was HIJACKED wholesale by victory-in-christ",
+    "(the overcom token — 1 John 5:4, Rom 8:37, warfare register, not",
+    "one shame text in the top 10); 'shame in the bible' chipless",
+    "shame-token scatter with Isa 54:4 buried rank 4 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 54:4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Shame"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 34:5",
+    "Isaiah 61:7"
+  ],
+  "coversConcepts": [
+    "shame"
+  ]
+}
