@@ -1,0 +1,85 @@
+# TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26) — ADOPTED-TAG id
+# (Theme I row in tag-gaps-review.md, 1 requesting book: Titus).
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission happens only by his merge of
+# this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "good works in the bible"
+# was flooded by work-and-diligence's labor-register anchors (Gen 2:15,
+# Eph 4:28 — the work-ethic register, not good deeds) around Titus 2:7
+# rank 1 by exact phrase CHIPLESS; Eph 2:10 and Titus 2:14 also
+# surfaced CHIPLESS.
+#
+# EXTENSION ROUTE CHECKED AND DECLINED (the row's own flag): the
+# check-first is faith-and-works. Its register is the James
+# faith-without-works DEBATE ("dead faith", "justified by works") —
+# extending it would fire the whole debate apparatus on plain
+# "good deeds" queries (kindness/loving-others precedent: register
+# mismatch). Cross-related instead; the shared token is only {work}.
+#
+# GRACE-FIRST GIST (the row's own note, honored): Titus makes good
+# works its refrain always downstream of grace (2:11 -> 2:14; 3:5 ->
+# 3:8) — the gist is worded grace-first and carries no works-salvation
+# framing; grace-not-earned and justification-by-faith are the
+# doctrine's own packs, cross-related.
+#
+# BOUNDARIES: Titus 3:8 stays faith-and-works' anchor; Matt 5:16
+# faith-and-works'; Eph 2:10 identity-in-christ's; Gal 6:9-10
+# do-not-lose-heart's; 1 Pet 2:12 honesty's; Heb 10:24
+# gathering-together's; Titus 2:9-10 bondservants-and-masters'; Titus
+# 3:1-2 governing-authorities'. All cross-noted, none re-anchored —
+# this pack takes the free Titus refrain verses.
+#
+# CORPUS: in-corpus witnesses Titus 2:14, Titus 2:7, Titus 3:14.
+# Corpus-blocked riders: Titus 1:16 (the denial register — "they
+# profess that they know God, but by their deeds they deny him").
+#
+# TOKENIZER NOTES (G-4): "good works" REJECTED as an entry — {good,
+# work} would fire this pack on every "all things work together for
+# good" query (Rom 8:28's family; accident class, verified against the
+# tokenizer). STRUCTURAL LIMIT recorded: the bare "good works" query
+# reaches Titus 2:7 by exact phrase (measured rank 1) and this pack
+# fires on the bible/deeds/zealous phrasings. No bare "works"
+# (faith-and-works territory) — inventory skips with reasons.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword; see
+# GRACE-FIRST GIST above.
+id: good-works
+label: Good works
+lexicon:
+  - good works in the bible
+  - good deeds
+  - zealous for good works
+  - doing good works
+anchors:
+  # "...redeem us from all iniquity and purify for himself a people for
+  # his own possession, zealous for good works" (WEB, in corpus) —
+  # grace first, works downstream: the refrain's keystone. (Titus
+  # 2:11-12 stays freedom-from-bondage's; 2:13 deity-of-christ's /
+  # second-coming's.)
+  - ref: Titus 2:14
+    sources: [editorial]
+    weight: 1.0
+  # "In all things show yourself an example of good works" (WEB, in
+  # corpus). (Titus 2:3-5 stays godly-marriage's; 2:9-10
+  # bondservants-and-masters'.)
+  - ref: Titus 2:7
+    sources: [editorial]
+    weight: 0.9
+  # "Let our people also learn to maintain good works to meet necessary
+  # needs, that they may not be unfruitful" (WEB, in corpus). (Titus
+  # 3:8 stays faith-and-works' anchor — cross-noted.)
+  - ref: Titus 3:14
+    sources: [editorial]
+    weight: 0.85
+  # "They profess that they know God, but by their deeds they deny
+  # him" — the refrain's negative. (Titus 1 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Titus 1:16
+    sources: [editorial]
+    weight: 0.6
+related:
+  - faith-and-works
+  - grace-not-earned
+  - kindness

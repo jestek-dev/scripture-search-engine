@@ -1,0 +1,37 @@
+{
+  "id": "putting-god-first",
+  "query": "putting god first",
+  "status": "active",
+  "additionalQueries": [
+    "seek first the kingdom of god"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id putting-god-first (Theme I row, 1 requesting book:",
+    "Haggai, entirely corpus-blocked) — engine admission only by",
+    "Jesse's merge of this PR. Minted on the row's own named answer",
+    "text: 'the first-place/priorities question Haggai 1 poses (and",
+    "Matt 6:33 answers)' — Matt 6:33 claimed verse-scoped inside",
+    "gods-provision's 6:31-33 keystone (recorded both files);",
+    "narrow one-anchor design, Haggai spine rides re-pin with the",
+    "row's never-give-to-get guardrail. Matt 6:24 and 6:19-21 stay",
+    "contentment's; Exod 20:3 idolatry's; Prov 3:9 tithing's. 'god",
+    "first' REJECTED as an entry ({god, first} accident class).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'putting god first' returned pure first/god proximity noise (Heb",
+    "4:6 translation-variant luck rank 1); 'seek first the kingdom of",
+    "god' was served only by gods-provision's chip — honest for the",
+    "provision half, nothing naming the priorities register."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 6:33",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Putting God first"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "putting-god-first"
+  ]
+}

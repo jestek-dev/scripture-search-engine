@@ -23,6 +23,10 @@ lexicon:
   # Round-2 book admission 2026-08-18.
   - as your days so your strength will be
 anchors:
+  # SIBLING (tag-gap batch 5, 2026-08-26): unanswered-prayer claims
+  # 2 Cor 12:8-9 — v8 the thrice-asked plea, v9-10 the sufficient-grace
+  # answer this pack anchors. Overlapping spans by design; recorded in
+  # all three files (this, serious-illness-and-dying, unanswered-prayer).
   - ref: 2 Corinthians 12:9-10
     sources: [editorial]
     weight: 1

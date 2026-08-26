@@ -1,0 +1,44 @@
+{
+  "id": "lament",
+  "query": "how to lament",
+  "status": "active",
+  "additionalQueries": [
+    "psalms of lament"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id lament (Theme H row, 17 requesting books) — engine",
+    "admission only by Jesse's merge of this PR. The concept-curation",
+    "skill's own sample request. Two binding boundaries honored:",
+    "grumbling-and-complaining keeps complaint AGAINST God/leaders",
+    "(batch 3 two-register decision); wrestling-with-god keeps the",
+    "protest-engagement register — 'how long o lord', 'when god is",
+    "silent', Ps 13:1-2, Ps 88:13-14 all stay its anchors. The",
+    "grief-decline pattern (review 1(c)) honored: no personal-grief",
+    "anchor claimed; grief-and-loss serves the bereaved.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'how to lament' returned Matt 11:17 rank 1 ('we mourned... you",
+    "didn't lament' — token luck, the children's-game verse) over",
+    "lament-token scatter, nothing curated; 'psalms of lament' the",
+    "same with Ps 82:1 psalm-token noise; 'lament in the bible'",
+    "identical class."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Lamentations 3:19-20",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Lament"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 55:1-2",
+    "Psalms 42:9-10",
+    "Psalms 10:1",
+    "Psalms 62:8",
+    "Jeremiah 10:19-20"
+  ],
+  "coversConcepts": [
+    "lament"
+  ]
+}

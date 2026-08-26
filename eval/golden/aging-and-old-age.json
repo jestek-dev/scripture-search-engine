@@ -1,0 +1,35 @@
+{
+  "id": "aging-and-old-age",
+  "query": "bible verses about growing old",
+  "status": "active",
+  "additionalQueries": [
+    "strength in old age"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id aging-and-old-age (Theme H row, 3 requesting",
+    "books) — engine admission only by Jesse's merge of this PR. The",
+    "aging believer's own register; caring-for-aging-parents keeps the",
+    "caregiver's side (register split per the row). Narrow one-anchor",
+    "design (seasons-of-life precedent): Ps 92:12-14 is the row's one",
+    "in-corpus witness; Ps 71, Prov 16:31, Eccl 12:1-7, Isa 46:4 ride",
+    "the re-pin. Bare 'age'/'aging'/'old' skipped ({age} would fire on",
+    "caring-for-aging-parents queries; inventory rows).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'bible verses about growing old' returned pure grow/old token",
+    "noise with Eph 4:22 rank 1 (the put-off-the-old-self register —",
+    "wrong sense entirely); 'strength in old age' had Ps 92:14 rank 1",
+    "by exact phrase CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 92:12-14",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Aging and old age"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "aging-and-old-age"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "comforting-others",
+  "query": "what to say to a suffering friend",
+  "status": "active",
+  "additionalQueries": [
+    "comfort one another"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id comforting-others (Theme H row, 3 requesting books)",
+    "— engine admission only by Jesse's merge of this PR. The HUMAN",
+    "practice register beside god-of-all-comfort (God comforting us).",
+    "The 1 Thessalonians one-or-two flag decided: scope is",
+    "comfort-in-suffering; the build-one-another-up register stays",
+    "gathering-together's (1 Thess 5:11, Heb 10:24-25 untouched).",
+    "Rom 12:15 DUAL with grief-and-loss; 2 Cor 1:4 verse-scoped sibling",
+    "inside god-of-all-comfort's 1:3-4 — both recorded in both files.",
+    "Tokenizer: 'comforting others' collapses to bare {comfort}",
+    "(god-of-all-comfort's word) and 'weep with those who weep' to bare",
+    "{weep} — both REJECTED as entries; structural limits recorded.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'what to say to a suffering friend' was hijacked wholesale by",
+    "suffering-for-christ's persecution anchors (Matt 5:10 rank 1, 1",
+    "Pet 4:12-16 — wrong register); 'comfort one another' returned 1",
+    "Thess 4:18 rank 1 by exact phrase CHIPLESS; 'weep with those who",
+    "weep' returned Rom 12:15 rank 1 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Thessalonians 5:14",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Comforting others"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Thessalonians 4:18",
+    "Romans 12:15",
+    "2 Corinthians 1:4"
+  ],
+  "coversConcepts": [
+    "comforting-others"
+  ]
+}

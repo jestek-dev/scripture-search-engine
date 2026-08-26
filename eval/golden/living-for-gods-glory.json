@@ -1,0 +1,36 @@
+{
+  "id": "living-for-gods-glory",
+  "query": "do everything for the glory of god",
+  "status": "active",
+  "additionalQueries": [
+    "glorify god in everything"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 5 (Themes H-I, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id living-for-gods-glory (Theme I row, 1 requesting",
+    "book: 1 Corinthians), resolved as a LEXICON + ANCHOR EXTENSION of",
+    "glory-of-god — the living-for queries normalize onto that pack's",
+    "own {glori, god} vocabulary, so a sibling pack would be a head-on",
+    "G4 shared-token collision (sovereignty-of-god -> providence",
+    "precedent). 1 Cor 10:31 joins glory-of-god's anchors; 1 Cor 6:20",
+    "stays surrender-to-god's (cross-noted). The row's own boundary",
+    "with putting-god-first ('a different question') recorded in both",
+    "batch-5 files.",
+    "Measured gap before the extension (2026-08-26, pending-fixture",
+    "run): 'do everything for the glory of god' was answered by",
+    "glory-of-god's theophany anchors (Rev 21:23, 2 Cor 4:6, Hab",
+    "3:3-4) with John 11:4 rank 1 by phrase luck and 1 Cor 10:31 —",
+    "the verse the asker wants — buried at rank 8 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Corinthians 10:31",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The glory of God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "glory-of-god"
+  ]
+}

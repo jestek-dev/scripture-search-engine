@@ -77,7 +77,11 @@ anchors:
   - ref: Numbers 14:2-4
     sources: [editorial]
     weight: 0.9
+# TWO-REGISTER NOTE (batch 3 decision, executed batch 5, 2026-08-26):
+# lament is now minted — complaint TO God lives there; complaint
+# AGAINST God/leaders stays here. Zero shared phrases; cross-related.
 related:
   - thanksgiving
   - contentment
   - wrestling-with-god
+  - lament

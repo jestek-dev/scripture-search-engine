@@ -583,6 +583,18 @@ collapses:
       the same deliberate trigger the single-word "vengeance" entry admits
       (inventory row); fixture-backed (vengeance.json).
 
+  - conceptId: lament
+    phrase: "how to lament"
+    token: lament
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-26"
+    note: >-
+      TAG-GAP batch 5 (2026-08-26), authored with the pack: the how-to
+      phrasing collapses to bare "lament" (how/to are stopwords) — the
+      same deliberate trigger the single-word "lament" entry admits
+      (inventory row); fixture-backed (lament.json).
+
 # Bare-word inventory — reviewed data, one row per compiled concept id.
 #
 # Every concept carries an explicit single-word decision: `admitted` bare
@@ -628,6 +640,21 @@ concepts:
     # 2026-08-08 correction table: collapses of "abide in me" / "remain in
     # me" — exactly the bare words someone would type; kept deliberately.
     admitted: [abide, remain]
+
+  - id: aging-and-old-age
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # aging-and-old-age.json). Phrase-forms pack.
+    skipped:
+      - token: age
+        reason: >-
+          Bare `age` would fire this pack on every "caring for aging
+          parents" query (that pack's lexicon territory) and on
+          age-of-accountability-class queries; "old age" (2 tokens)
+          carries the query family.
+      - token: old
+        reason: >-
+          Generic contrast word ("old self", "old covenant", "old
+          testament"); the paired forms carry the concept.
 
   - id: angels
     # 2026-08-26 tag-gap batch 2: row authored with the pack
@@ -716,6 +743,21 @@ concepts:
           admission is deferred until the double-chip question is
           re-adjudicated. The 2026-08-20 gap measurement stands recorded
           in this row's comment.
+
+  - id: backsliding
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # backsliding.json). Both subject nouns admitted; `backslid` appears
+    # in the WEB corpus bytes (Jer 31:22).
+    admitted: [backslid, apostasy]
+    skipped:
+      - token: faith
+        reason: >-
+          faith's own bare word; "falling away from the faith" / "left
+          the faith" (multi-token) carry this concept.
+      - token: fall
+        reason: >-
+          Generic; fall-of-man and stumbling territory. The phrase forms
+          carry the drift register.
 
   - id: baptism
     # 2026-08-23 stack merge (P4.11 completion): row authored for a
@@ -851,6 +893,30 @@ concepts:
           Gospels (the measured noise: Mark 5:8, Luke 6:18) — a sense this
           pack must never claim; the pairings keep the ritual register.
 
+  - id: comforting-others
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # comforting-others.json). Phrase-forms pack.
+    skipped:
+      - token: comfort
+        reason: >-
+          god-of-all-comfort's deliberate bare word — "comforting
+          others" was REJECTED as an entry precisely because it
+          collapses to bare `comfort`; the one-another phrase forms
+          carry the human-practice register.
+      - token: weep
+        reason: >-
+          "weep with those who weep" collapses to bare `weep` (grief
+          territory, Jesus-wept narrative) — entry rejected, structural
+          limit recorded in the pack; exact-phrase retrieval serves the
+          verbatim query (measured rank 1).
+
+  - id: complacency
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # complacency.json). Both subject nouns admitted; `lukewarm` appears
+    # in the WEB corpus bytes (Rev 3:16); no competing concept speaks
+    # either stem.
+    admitted: [complacency, lukewarm]
+
   - id: conscience
     # 2026-08-25 apologetics wave batch 3: row authored with the pack
     # (fixture-first, conscience.json). Bare `conscience` is a deliberate
@@ -971,6 +1037,21 @@ concepts:
         reason: >-
           Generic verb/noun ("designed", schemes, patterns); the
           universe/intelligent/order pairings carry the concept.
+
+  - id: discipleship
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # discipleship.json). The subject noun IS the concept.
+    admitted: [discipleship]
+    skipped:
+      - token: follow
+        reason: >-
+          Generic verb; "follow jesus" (2 tokens) carries the intent
+          without handing the pack every follow query.
+      - token: discipl
+        reason: >-
+          Bare "disciple(s)" saturates Gospel narrative as the actors'
+          name; "make disciples" / "discipling someone" (2 tokens)
+          carry the discipling register.
 
   - id: disputable-matters
     skipped:
@@ -1306,6 +1387,20 @@ concepts:
           Generic verb across the canon (changed garments, changed wages,
           times and seasons); the question forms ("does god change",
           "i the lord do not change") carry the concept.
+
+  - id: good-works
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # good-works.json). Phrase-forms pack.
+    skipped:
+      - token: work
+        reason: >-
+          work-and-diligence's own admitted bare word; and the pair
+          {good, work} was itself REJECTED as an entry (it would fire on
+          every "all things work together for good" query) — structural
+          limit recorded in the pack.
+      - token: good
+        reason: >-
+          Among the commonest words in the corpus; never a bare trigger.
 
   - id: governing-authorities
     # 2026-08-26 tag-gap batch 4: row authored with the pack
@@ -1676,6 +1771,24 @@ concepts:
           token (pack comment). The paired forms (knowing god, know the
           lord) carry the register.
 
+  - id: lament
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # lament.json). The genre noun IS the concept; the word appears in
+    # the WEB corpus bytes (Matt 11:17). Collapse row for "how to
+    # lament" recorded above.
+    admitted: [lament]
+    skipped:
+      - token: mourn
+        reason: >-
+          Grief territory (grief-and-loss, Matt 5:4's comfort packs);
+          lament is the practice register, not bereavement — the
+          grief-decline pattern (review 1(c)) says exactly this.
+      - token: complaint
+        reason: >-
+          grumbling-and-complaining's register risk in reverse: bare
+          "complaint"/"complaining" stays that pack's (its own admitted
+          words); this pack's phrase forms carry complaint-TO-God.
+
   - id: leadership
     # 2026-08-26 tag-gap batch 3: row authored with the pack
     # (fixture-first, leadership.json). Bare "leadership" is a
@@ -1715,6 +1828,22 @@ concepts:
     # 2026-08-18 harvest: deliberate bare entry — the doctrine's own name
     # for the disposition.
     admitted: [worldliness]
+
+  - id: loving-god
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # loving-god.json). Phrase-forms pack.
+    skipped:
+      - token: love
+        reason: >-
+          gods-love's bare word by Jesse's 2026-08-08 call; and the pair
+          {love, god} was itself REJECTED as an entry (it would fire this
+          pack on every "does god love me" query — the reverse of the
+          inversion the pack fixes); structural limit recorded.
+      - token: loving
+        reason: >-
+          `loving` stems apart from `love` under the one tokenizer, but
+          bare `loving` alone spans loving-kindness and neighbor-love;
+          "loving god" (2 tokens) carries the intent.
 
   - id: loving-others
     skipped:
@@ -2054,6 +2183,18 @@ concepts:
     # it fires today. Deny-list review candidate if it proves broad.
     admitted: [providence, sovereign]
 
+  - id: putting-god-first
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # putting-god-first.json). Bare `priority` (priorities) admitted —
+    # the query family's subject noun, no competing concept.
+    admitted: [priority]
+    skipped:
+      - token: first
+        reason: >-
+          Among the commonest ordinal words; "putting god first" / "seek
+          first the kingdom" carry the concept. The pair {god, first}
+          was also REJECTED as an entry (accident class).
+
   - id: receiving-correction
     # 2026-08-26 tag-gap batch 4: row authored with the pack
     # (fixture-first, receiving-correction.json). No single-token
@@ -2302,6 +2443,16 @@ concepts:
           Generic motion word; "the second coming" and the remembered
           phrasings carry the concept.
 
+  - id: seeking-god
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # seeking-god.json). Phrase-forms pack.
+    skipped:
+      - token: seek
+        reason: >-
+          Bare `seek` spans ask-seek-knock (prayer's Matt 7:7), seek-
+          first (putting-god-first, same batch), and plain search
+          narrative; the paired forms carry the devotion register.
+
   - id: self-control
     skipped:
       - token: discipline
@@ -2341,6 +2492,23 @@ concepts:
           'servant songs'); the suffering/songs/lord/sorrows pairings
           carry the Isaian figure.
 
+  - id: servanthood
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # servanthood.json). The subject noun IS the concept.
+    admitted: [servanthood]
+    skipped:
+      - token: servant
+        reason: >-
+          "servant of all" collapses to bare `servant` — a head-on
+          subset of servant-of-the-lord's lexicon; entry rejected,
+          structural limit recorded in the pack ("last of all and
+          servant of all" carries the phrasing safely).
+      - token: serv
+        reason: >-
+          "serving others" collapses to bare `serv` — it would fire the
+          pack on every serve-the-LORD worship query; entry rejected
+          with the same structural-limit record.
+
   - id: sexual-purity
     # NEEDS-JESSE §1.6d option 3 single words. (Bare "purity" routes to
     # holiness — 2026-08-18 round-2 ruling recorded there.)
@@ -2350,6 +2518,14 @@ concepts:
         reason: >-
           Plausible future admission, deferred pending a measured gap;
           "struggling with lust" carries it today.
+
+  - id: shame
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # shame.json). Both stems admitted deliberately — `shame` and
+    # `asham` (ashamed) stem apart under the one tokenizer, both
+    # saturate the register's WEB texts (Isa 54:4; Ps 34:5; Isa 61:7),
+    # and the measured gap was that neither reached anything curated.
+    admitted: [shame, asham]
 
   - id: sharing-your-faith
     # 2026-08-18 harvest: deliberate bare entries — "witnessing" and
@@ -2361,6 +2537,21 @@ concepts:
     # reviewed and admitted with the pack (broad by nature, kept humble by
     # the one-token discount).
     admitted: [sin]
+
+  - id: slander-and-false-accusation
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # slander-and-false-accusation.json). The subject noun IS the
+    # concept and appears in the WEB corpus bytes (Ps 101:5).
+    admitted: [slander]
+    skipped:
+      - token: gossip
+        reason: >-
+          taming-the-tongue's own bare entry — untouched; the two packs
+          are related, not merged.
+      - token: lie
+        reason: >-
+          honesty's territory (the be-truthful register); "when people
+          lie about you" (2 tokens) carries the target-of-lies intent.
 
   - id: slow-to-anger
     # 2026-08-26 tag-gap batch 2: row authored with the pack
@@ -2671,6 +2862,17 @@ concepts:
     # this pack speaks of "the bible"/"scripture" and leaves the
     # "gods word" phrasings to studying-the-word / power-of-gods-word.
 
+  - id: unanswered-prayer
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # unanswered-prayer.json). Phrase-forms pack.
+    skipped:
+      - token: prayer
+        reason: >-
+          prayer's own bare word; "unanswered prayer" (2 tokens) carries
+          this register. The pair {god, say} ("when god says no") was
+          also REJECTED as an entry (accident class — every "what does
+          god say about X" query).
+
   - id: vengeance
     # 2026-08-26 tag-gap batch 4: row authored with the pack
     # (fixture-first, vengeance.json). Bare "vengeance" and bare
@@ -2718,6 +2920,18 @@ concepts:
           Jesse's 2026-07-29 ruling scoped this concept to the ethical sense
           precisely because "light" spans both senses; admitting the bare
           token would undo that decision (2026-08-08 decision table).
+
+  - id: watchman-and-warning
+    # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
+    # watchman-and-warning.json). The subject noun IS the concept and
+    # saturates the keystone's WEB bytes (Ezek 33:1-9).
+    admitted: [watchman]
+    skipped:
+      - token: warn
+        reason: >-
+          Generic verb (Jesus warning disciples, storm warnings); "warn
+          the wicked" / "responsibility to warn others" (2 tokens) carry
+          the charge.
 
   - id: why-god-allows-suffering
     # 2026-08-25 apologetics wave batch 4: row authored with the pack

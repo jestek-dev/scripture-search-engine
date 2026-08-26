@@ -1,0 +1,125 @@
+# TAG-GAP ROLLOUT batch 5 (Theme H, 2026-08-26) — ADOPTED-TAG id
+# (Theme H row in tag-gaps-review.md, 17 requesting books — the theme's
+# widest row). Adopted as display vocabulary by Jesse's 2026-08-25
+# ruling (CONVENTIONS §11); ENGINE admission happens only by his merge
+# of this PR. The repo's concept-curation skill itself names "add
+# concepts about lament" as a sample request.
+#
+# REGISTER (two binding decisions honored):
+# 1. The batch-3 two-register ruling (grumbling-and-complaining's file):
+#    lament is complaint brought TO God; grumbling-and-complaining is
+#    complaint AGAINST God/leaders. Zero shared phrases; cross-related.
+# 2. Boundary with wrestling-with-god (which pre-dates this row): that
+#    pack owns the individual's protest-engagement — "how long o lord",
+#    "arguing with god", "angry at god", "when god is silent", and the
+#    complaint verses Ps 13:1-2 / Ps 88:13-14. THIS pack is the biblical
+#    practice and form — "how to lament", "psalms of lament", the
+#    composed/communal register (Lamentations, the lament psalms as a
+#    genre, the taught dirges). Disjoint anchors, disjoint phrases,
+#    cross-related. Wrestling keeps every anchor it has.
+#
+# GRIEF-DECLINE PATTERN (review §1(c)) honored: personal-grief scenes
+# (1 Sam 15:35; 30:4; 2 Sam 18:33; 19:4; 1 Chr 7:22) are NOT this row
+# and are served by grief-and-loss — no grief anchor claimed here.
+# The Jeremiah-confessions edge (Jer 15; 20) is settled the way
+# wrestling-with-god already settled it: Jer 20:7-9 is wrestling's
+# anchor and stays there.
+#
+# BOUNDARIES inside Lamentations 3 (four packs already own slices):
+# gods-faithfulness 3:22-23, hope-in-despair 3:21-23, trust-in-god
+# 3:25-26, providence 3:37-38, vengeance 3:64-66. This pack anchors the
+# COMPLAINT movement only (3:19-20), deliberately disjoint — the turn
+# to hope belongs to the packs that own it. Lam 3:8 and 3:44 are
+# unanswered-prayer's anchors (same batch, sibling register, recorded
+# both files). Ruth 1:20-21 (Naomi's Mara speech) stays care-for-widows'
+# anchor — cross-noted, not double-claimed.
+#
+# CORPUS: in-corpus witnesses are Lam 3:19-20, Ps 55:1-2, Ps 42:9-10,
+# Ps 10:1, Ps 62:8, Jer 10:19-20. Corpus-blocked riders: Lam 1-2; 5,
+# Ps 77:1-9, Ps 88 (whole-psalm register), 2 Sam 1:17-27 (composed,
+# taught lament), Ezek 19:1-14 (commanded dirge), Joel 1:8-14, Num
+# 11:11-15, Isa 63:15-64:12, 2 Chr 35:25 ("an ordinance in Israel").
+#
+# TOKENIZER NOTE (G-4): "how to lament" and "lament in the bible" both
+# collapse to the single token `lament` — bare `lament` is therefore a
+# deliberate single-word admission (the genre noun IS the concept);
+# collapse rows recorded in ontology/lexicon-inventory.yaml. No bare
+# "grief"/"mourn"/"weep" (grief-and-loss's territory; inventory skips).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist below describes the practice the texts model — sorrow carried TO
+# God — and adjudicates nothing.
+id: lament
+label: Lament
+lexicon:
+  - lament
+  - how to lament
+  - psalms of lament
+  - biblical lament
+  - pour out your heart to god
+anchors:
+  # "Remember my affliction and my misery... My soul still remembers
+  # them, and is bowed down within me" (WEB, in corpus) — the book of
+  # laments at its lowest, still speaking to God. The turn that follows
+  # (3:21-24) belongs to hope-in-despair / gods-faithfulness and is
+  # deliberately NOT claimed.
+  - ref: Lamentations 3:19-20
+    sources: [editorial]
+    weight: 1.0
+  # "Listen to my prayer, God... I am restless in my complaint, and
+  # moan" (WEB, in corpus) — the lament psalm's own name for itself:
+  # complaint carried to God. (Ps 55:12-14 stays betrayal's /
+  # betrayal-and-marriage-crisis's dual anchor; 55:22
+  # rest-for-the-weary's.)
+  - ref: Psalms 55:1-2
+    sources: [editorial]
+    weight: 0.95
+  # "I will ask God, my rock, 'Why have you forgotten me?'... my
+  # adversaries reproach me, while they continually ask me, 'Where is
+  # your God?'" (WEB, in corpus). The psalm's complaint verses; 42:1-2
+  # stays hunger-for-god's, 42:5 hope-in-despair's /
+  # do-not-lose-heart's.
+  - ref: Psalms 42:9-10
+    sources: [editorial]
+    weight: 0.9
+  # "Why do you stand far off, LORD? Why do you hide yourself in times
+  # of trouble?" (WEB, in corpus). The canonical why-question opener.
+  # (Ps 10:14 stays refuge-and-justice-for-the-oppressed's; 10:16
+  # god-reigns'.)
+  - ref: Psalms 10:1
+    sources: [editorial]
+    weight: 0.85
+  # "Pour out your heart before him. God is a refuge for us" (WEB, in
+  # corpus) — the Psalter's own invitation to the practice. (Ps 62:1-2
+  # stays rest-for-the-weary's.)
+  - ref: Psalms 62:8
+    sources: [editorial]
+    weight: 0.85
+  # "Woe is me because of my injury!... Truly this is my grief, and I
+  # must bear it" (WEB, in corpus) — Jeremiah's lament over the ruin of
+  # his people, the prophet practicing the form.
+  - ref: Jeremiah 10:19-20
+    sources: [editorial]
+    weight: 0.7
+  # "The whole book is the canonical anchor for this row" (the log).
+  # Lamentations 1-2 and 5 are NOT in web-subset beyond ch. 3; re-check
+  # at re-pin.
+  - ref: Lamentations 1:12
+    sources: [editorial]
+    weight: 0.7
+  # "I cry aloud to God... In the day of my trouble I sought the Lord."
+  # (Psalm 77 NOT in web-subset; re-check at re-pin.)
+  - ref: Psalms 77:1-9
+    sources: [editorial]
+    weight: 0.65
+  # David's composed, taught lament over Saul and Jonathan — the bow
+  # song, ordered taught to Judah. (2 Samuel 1 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: 2 Samuel 1:17-27
+    sources: [editorial]
+    weight: 0.6
+related:
+  - wrestling-with-god
+  - grumbling-and-complaining
+  - grief-and-loss

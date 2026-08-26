@@ -41,6 +41,22 @@ lexicon:
   - gods glory
   - the glory of the lord
   - show me your glory
+  # TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26): the review's
+  # living-for-gods-glory row (1 Cor 10:31; 6:20) resolved as a
+  # LEXICON + ANCHOR EXTENSION here rather than a sibling pack — the
+  # living-for queries normalize onto this pack's own {glori, god}
+  # vocabulary, so a second id would be a head-on G4 shared-token
+  # collision (sovereignty-of-god -> providence precedent). This
+  # header's earlier "distinct from living-for-gods-glory" note
+  # described the ROW boundary; the extension keeps the register
+  # visible through the 1 Cor 10:31 anchor comment. Measured before:
+  # "do everything for the glory of god" was answered by this pack's
+  # theophany anchors with 1 Cor 10:31 buried rank 8 CHIPLESS.
+  # 1 Cor 6:20 ("glorify God in your body") stays surrender-to-god's
+  # anchor — cross-noted, not re-anchored.
+  - do everything for the glory of god
+  - glorify god in everything
+  - living for gods glory
 anchors:
   # "The LORD's glory shall be revealed, and all flesh shall see it
   # together" (WEB, in corpus). The promise that the glory will be
@@ -91,6 +107,14 @@ anchors:
   - ref: Ezekiel 43:1-5
     sources: [editorial]
     weight: 0.8
+  # TAG-GAP batch 5 extension (see lexicon note): "Whether therefore
+  # you eat or drink, or whatever you do, do all to the glory of God"
+  # (WEB, in corpus) — the living-for register the review's
+  # living-for-gods-glory row documents, carried by this pack. (1 Cor
+  # 6:20 stays surrender-to-god's.)
+  - ref: 1 Corinthians 10:31
+    sources: [editorial]
+    weight: 0.9
 related:
   - presence-of-god
   - the-house-of-god

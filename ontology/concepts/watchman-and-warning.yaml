@@ -1,0 +1,82 @@
+# TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26) — ADOPTED-TAG id
+# (Theme I row in tag-gaps-review.md, 1 requesting book: Ezekiel,
+# proposed independently by two Ezekiel ranges and merged). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# MEASURED GAP (2026-08-26, fixture corpus): "watchman in the bible"
+# returned Ezek 33:7 and 33:1-2 CHIPLESS over bible-token noise;
+# "responsibility to warn others" returned warn-token scatter (Luke
+# 9:21 — Jesus warning the disciples to tell no one — rank 1: the
+# wrong sense entirely).
+#
+# EXTENSION ROUTE CHECKED AND DECLINED (the row's own flag): the
+# check-first is sharing-your-faith. Its vocabulary is NT evangelism
+# ("witnessing", "how to share the gospel", Acts 1:8) — answering
+# "watchman in the bible" or the blood-accountability charge with
+# be-my-witnesses anchors would be a register mismatch. Cross-related
+# instead; no shared phrase.
+#
+# CORPUS: the charge is stated twice at length in Ezekiel; the second
+# statement (33:1-9) is IN corpus and is the keystone. Acts 20:26-27 —
+# the row's own named NT companion ("I am clean from the blood of all
+# men") — is in corpus and free. Corpus-blocked riders: Ezek 3:16-21
+# (the first statement of the charge), Isa 21:6-12; 62:6-7 (the
+# watchman motif the Isaiah notes held pending recurrence).
+#
+# BOUNDARIES: Ezek 33:20 stays individual-responsibility's; 33:30-32
+# empty-worship's / obedience-to-the-word's (this pack takes 33:1-9,
+# disjoint); Acts 20:28-31 (overseers/wolves) is leadership-adjacent
+# territory, not claimed; false-prophets keeps the failed-watchman
+# judgment register, cross-related.
+#
+# TOKENIZER NOTES (G-4): bare `watchman` admitted — the subject noun
+# IS the concept and it saturates the keystone's WEB bytes. "blood on
+# your hands" ({blood, hand}) admitted as the charge's remembered
+# idiom — verified no probe carries the pair; the-cross's blood
+# vocabulary shares no entry with it.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist describes the accountability the text states; it does not
+# instruct condemnation of others (judging-others carries that
+# guardrail's own register).
+id: watchman-and-warning
+label: The watchman's charge
+lexicon:
+  - watchman
+  - warn the wicked
+  - responsibility to warn others
+  - blood on your hands
+anchors:
+  # "So you, son of man, I have set you a watchman to the house of
+  # Israel... if you warn the wicked of his way to turn from it... you
+  # have delivered your soul" (WEB, in corpus) — the charge stated in
+  # full: the whole watchman parable and its application. (Ezek 33:20
+  # stays individual-responsibility's; 33:30-32 empty-worship's.)
+  - ref: Ezekiel 33:1-9
+    sources: [editorial]
+    weight: 1.0
+  # "I testify to you today that I am clean from the blood of all men,
+  # for I didn't shrink from declaring to you the whole counsel of God"
+  # (WEB, in corpus) — the row's own named NT echo of the charge.
+  - ref: Acts 20:26-27
+    sources: [editorial]
+    weight: 0.9
+  # The first statement of the charge: "I have made you a watchman to
+  # the house of Israel: therefore hear the word from my mouth, and
+  # give them warning from me." (Ezekiel 3 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Ezekiel 3:16-21
+    sources: [editorial]
+    weight: 0.9
+  # "I have set watchmen on your walls, Jerusalem. They will never be
+  # silent day nor night." (Isaiah 62 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Isaiah 62:6-7
+    sources: [editorial]
+    weight: 0.6
+related:
+  - sharing-your-faith
+  - individual-responsibility
+  - false-prophets

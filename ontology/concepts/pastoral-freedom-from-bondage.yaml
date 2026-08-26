@@ -38,6 +38,21 @@ lexicon:
   - struggling to stay sober
   # Round-2 book admission 2026-08-18.
   - freedom in christ
+  # TAG-GAP ROLLOUT batch 5 (Theme I, 2026-08-26): the review's
+  # freedom-in-christ row resolved as a LEXICON EXTENSION here. The
+  # row's diagnosis was written for the display-tag layer (the
+  # pastoral-register ruling removed this pack's TAG from Gal 5);
+  # ENGINE-side this pack already anchors the row's entire in-corpus
+  # case (Gal 5:1, 13; John 8:36; Rom 6:17-18) and already carries
+  # "freedom in christ" — measured: that query is served with honest
+  # chips. The residual measured gap was "christian liberty"
+  # (chipless scatter, Gal 5:1 rank 3 CHIPLESS); these entries close
+  # it. The row's addiction-vs-doctrine two-register question is
+  # resolved engine-side as ONE pack carrying both registers
+  # (reversible at the re-pin, when Gal 2:4 and 4:22-31 become
+  # assertable and a split could stand on its own texts).
+  - christian liberty
+  - christian freedom
   - called to freedom
   - watch and pray
 anchors:

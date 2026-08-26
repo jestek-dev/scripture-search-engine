@@ -45,6 +45,10 @@ anchors:
   - ref: 2 Corinthians 4:16-18
     sources: [editorial]
     weight: 0.9
+  # SIBLING (tag-gap batch 5, 2026-08-26): unanswered-prayer claims
+  # 2 Cor 12:8-9 — v8 the thrice-asked plea, v9-10 the sufficient-grace
+  # answer this pack anchors. Overlapping spans by design; recorded in
+  # all three files (this, strength-in-weakness, unanswered-prayer).
   - ref: 2 Corinthians 12:9-10
     sources: [editorial]
     weight: 0.85
