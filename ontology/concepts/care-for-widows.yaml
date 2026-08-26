@@ -1,0 +1,97 @@
+# TAG-GAP ROLLOUT batch 4 (Theme G, 2026-08-26) — ADOPTED-TAG id
+# (Theme G row in tag-gaps-review.md, 7 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Bible verses for widows" / "does God care for widows" — real
+# pastoral queries; pastoral-grief-and-loss serves the griever but not
+# the widow-specific care register.
+#
+# REGISTER SPLIT (the row's own substance, from the 1 Timothy fold):
+# caring-for-aging-parents covers the CHILDREN'S duty to parents (its
+# Ruth 1:16-17 anchor stays); this pack is the care OF widows
+# themselves — God's, and the assembly's. 1 Tim 5:3-16 (the
+# church-practice charter) is corpus-blocked and rides re-pin.
+#
+# LEXICON DESIGN NOTE (the row's, honored): the WEB's Ruth never says
+# "widow" — its phrase is "the wife of the dead" (4:5) — so the
+# word-anchors come from James and the Psalter; the Ruth anchors carry
+# the narrative. The Jeremiah fold's widening note is honored in the
+# lexicon ("widows and orphans", "the fatherless") without renaming
+# the row's id.
+#
+# BOUNDARIES: Ruth 1:8 stays kindness's, Ruth 1:16-17
+# caring-for-aging-parents' — verse-disjoint claims on the shared
+# chapter. Ps 146:9 also names the foreigner: cross-noted to
+# sojourners-and-strangers (same batch), which does not anchor it.
+#
+# TOKENIZER NOTE (G-4): bare "widow" (and "widows", same stem) is a
+# deliberate single-word admission — the concept's own subject noun;
+# no competing concept speaks the token. Every other entry keeps
+# >= 2 significant tokens.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: care-for-widows
+label: Care for widows
+lexicon:
+  - widow
+  - care for widows
+  - bible verses for widows
+  - does god care for widows
+  - widows and orphans
+  - god of the fatherless
+anchors:
+  # "The LORD preserves the foreigners. He upholds the fatherless and
+  # widow" (WEB, in corpus). God's own care stated plainly; Ps 146:3-4
+  # is trusting-in-man's, 146:7 justice-and-oppression's, 146:10
+  # god-reigns' — verse-disjoint claims on one psalm.
+  - ref: Psalms 146:9
+    sources: [editorial]
+    weight: 1.0
+  # "Pure religion and undefiled before our God and Father is this: to
+  # visit the fatherless and widows in their affliction" (WEB, in
+  # corpus). The assembly's charge in one sentence. (Jas 1:12 stays
+  # heavenly-reward's, 1:13-15 temptation's, 1:22-25
+  # obedience-to-the-word's — verse-disjoint.)
+  - ref: James 1:27
+    sources: [editorial]
+    weight: 0.95
+  # "Elimelech, Naomi's husband, died... and the woman was bereaved of
+  # her two children and of her husband" (WEB, in corpus). The
+  # narrative register — the book the widow queries reach for. (Ruth
+  # 1:8 stays kindness's, 1:16-17 caring-for-aging-parents'.)
+  - ref: Ruth 1:3-5
+    sources: [editorial]
+    weight: 0.8
+  # "Call me Mara, for the Almighty has dealt very bitterly with me. I
+  # went out full, and the LORD has brought me home again empty" (WEB,
+  # in corpus). The widow's own voice — honest grief the register must
+  # not smooth over.
+  - ref: Ruth 1:20-21
+    sources: [editorial]
+    weight: 0.75
+  # "You shall not take advantage of any widow or fatherless child. If
+  # you take advantage of them at all..." — the direct command anchor
+  # the row's lexicon note wants. (Exodus 22 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Exodus 22:22-24
+    sources: [editorial]
+    weight: 0.9
+  # "A father of the fatherless, and a defender of the widows, is God
+  # in his holy habitation." (Psalm 68 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Psalms 68:5
+    sources: [editorial]
+    weight: 0.9
+  # "Honor widows who are widows indeed" — the church-practice charter
+  # (the 1 Timothy fold's staging). (1 Timothy 5 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: 1 Timothy 5:3-8
+    sources: [editorial]
+    weight: 0.85
+related:
+  - caring-for-aging-parents
+  - grief-and-loss
+  - generosity
+  - kindness

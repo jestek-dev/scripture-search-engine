@@ -1,0 +1,135 @@
+# TAG-GAP ROLLOUT batch 4 (Theme G, 2026-08-26) — ADOPTED-TAG id
+# (Theme G row in tag-gaps-review.md, 26 requesting books — the single
+# highest-breadth concept in the review). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission happens only by his merge of this PR.
+#
+# "Justice in the Bible" / "oppression of the poor" / "corrupt
+# leaders" — common topical queries with no home. This row is the
+# designated landing place of the project-wide 2026-08-23
+# pastoral-register ruling: national-scale justice material never
+# takes pastoral-* ids.
+#
+# BOUNDARY WITH pastoral-refuge-and-justice (deliberate, recorded):
+# that pack is the personal abuse-crisis register — its lexicon
+# ("defend the oppressed", "justice for the oppressed", the abuse
+# vocabulary) and anchors (Ps 82:3-4, Isa 1:17) are untouched, and
+# this lexicon shares NO phrase with it. This pack is the
+# civic/economic register: corrupt courts, dishonest scales, withheld
+# wages, tyrant rulers.
+#
+# OTHER BOUNDARIES, all recorded: Isa 1:11-17 stays empty-worship's
+# (the anchor below starts at 1:21); Exod 3:7 stays
+# pastoral-god-sees-my-suffering's (the national-enslavement register
+# rides re-pin); Ezek 18 belongs to individual-responsibility (same
+# batch); Jas 2:1-9 stays favoritism's and Jas 5:1-3
+# money-and-possessions' (the anchor below starts at 5:4); Ps 9:7-8
+# stays divine-judgment's territory (the claim below is 9:18); Mic 6:8
+# stays conscience's/humble-exaltation's; Luke's good-news-for-the-
+# poor register is a separate deferred row, per the log's own
+# partition.
+#
+# AMOS NOTE (the row's own lexicon ruling, honored): KJV/ESV "let
+# justice roll down like waters" shares almost no tokens with the
+# WEB's "let justice roll on like rivers" — the lexicon carries BOTH
+# phrasings. Amos is not in the corpus; Amos 5:24 is anchored as a
+# corpus-blocked rider, a verse-scoped sibling inside empty-worship's
+# Amos 5:21-24 rider span (recorded in both files) so the phrase has
+# an honest justice-register home when Amos lands.
+#
+# TOKENIZER NOTE (G-4): bare "justice" is an inventory SKIP —
+# pastoral-refuge-and-justice and divine-judgment both live in the
+# word's blast radius; the paired forms carry this concept. Bare
+# "oppression" likewise skipped (the pastoral register's word too).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: justice-and-oppression
+label: Justice and oppression
+lexicon:
+  - justice in the bible
+  - oppression of the poor
+  - what does the bible say about justice
+  - corrupt leaders
+  - exploiting the poor
+  - let justice roll down like waters
+  - justice rolls on like rivers
+  - god hates injustice
+anchors:
+  # "The LORD executes righteous acts, and justice for all who are
+  # oppressed" (WEB, in corpus). The Psalter's one-line thesis;
+  # verse-disjoint from the shared psalm's many owners (103:8
+  # slow-to-anger, 103:10-11 mercy, 103:14-16 mortality, 103:19
+  # providence, 103:20-21 angels).
+  - ref: Psalms 103:6
+    sources: [editorial]
+    weight: 1.0
+  # "who executes justice for the oppressed; who gives food to the
+  # hungry. The LORD frees the prisoners" (WEB, in corpus). Ps 146:3-4
+  # is trusting-in-man's (same batch), 146:9 care-for-widows' (same
+  # batch), 146:10 god-reigns' — verse-disjoint claims on one psalm.
+  - ref: Psalms 146:7
+    sources: [editorial]
+    weight: 0.95
+  # "How the faithful city has become a prostitute! She was full of
+  # justice... Your princes are rebellious and companions of thieves.
+  # Everyone loves bribes" (WEB, in corpus). The corrupt-leaders
+  # register; Isa 1:11-17 stays empty-worship's, 1:18
+  # forgiveness-of-sins', 1:19-20 obedience-to-the-word's —
+  # verse-disjoint.
+  - ref: Isaiah 1:21-23
+    sources: [editorial]
+    weight: 0.9
+  # "Behold, the wages of the laborers who mowed your fields, which
+  # you have kept back by fraud, cry out... You have condemned and you
+  # have murdered the righteous one" (WEB, in corpus). Withheld wages
+  # heard in heaven; Jas 5:1-3 stays money-and-possessions' —
+  # verse-disjoint.
+  - ref: James 5:4-6
+    sources: [editorial]
+    weight: 0.9
+  # "Shall I tolerate dishonest scales, and a bag of deceitful
+  # weights? Her rich men are full of violence" (WEB, in corpus). The
+  # economic register in the prophets; Mic 6:8 stays conscience's /
+  # humble-exaltation's — verse-disjoint.
+  - ref: Micah 6:10-12
+    sources: [editorial]
+    weight: 0.85
+  # "As a roaring lion or a charging bear, so is a wicked ruler over
+  # helpless people. A tyrannical ruler lacks judgment" (WEB, in
+  # corpus).
+  - ref: Proverbs 28:15-16
+    sources: [editorial]
+    weight: 0.8
+  # "For the needy shall not always be forgotten, nor the hope of the
+  # poor perish forever" (WEB, in corpus). Ps 9:7-8 left to
+  # divine-judgment's territory — verse-disjoint.
+  - ref: Psalms 9:18
+    sources: [editorial]
+    weight: 0.75
+  # "But let justice roll on like rivers, and righteousness like a
+  # mighty stream" — the theme's most-quoted verse, in both remembered
+  # phrasings (see AMOS NOTE above). Verse-scoped sibling inside
+  # empty-worship's Amos 5:21-24 rider span, recorded in both files.
+  # (Amos NOT in web-subset; re-check at re-pin.)
+  - ref: Amos 5:24
+    sources: [editorial]
+    weight: 0.95
+  # "Learn to do well. Seek justice. Relieve the oppressed" territory
+  # rides with Isa 1:17's standing owner (pastoral-refuge-and-justice);
+  # the civic statute spine (Deut 16:18-20; 24:14-15; 27:19) and the
+  # remediation narrative (Neh 5:1-13) are corpus-blocked riders.
+  - ref: Deuteronomy 16:18-20
+    sources: [editorial]
+    weight: 0.8
+  # "Woe to those who decree unrighteous decrees... to deprive the
+  # needy of justice" — the legislated-injustice register. (Isaiah 10
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Isaiah 10:1-2
+    sources: [editorial]
+    weight: 0.8
+related:
+  - refuge-and-justice-for-the-oppressed
+  - divine-judgment
+  - favoritism
+  - generosity

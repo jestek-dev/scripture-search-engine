@@ -1,0 +1,40 @@
+{
+  "id": "receiving-correction",
+  "query": "how to take criticism",
+  "status": "active",
+  "additionalQueries": [
+    "accepting correction"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id receiving-correction (Theme E row, 1 requesting book) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "A live discipleship query with no home. The-lords-discipline",
+    "extension route (the row's own check-first) CHECKED and DECLINED:",
+    "that pack is divine chastening (Heb 12:7-11); the row's queries are",
+    "about receiving human rebuke and criticism teachably \u2014 a register",
+    "mismatch. In-corpus anchors Prov 27:5-6 and 28:23; the row's other",
+    "Proverbs witnesses (9:8-9; 12:1; 13:18; 15:31-32; 17:10; 25:12) are",
+    "corpus-blocked riders. Prov 29:1 stays hardness-of-heart's rider",
+    "(cross-noted, batch 3).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'how to take criticism' returned pure take-token noise (Ps 27:10,",
+    "Prov 27:13); 'accepting correction' surfaced Prov 3:11 / Heb 12:5-7",
+    "by token luck, CHIPLESS and in the divine-discipline register;",
+    "'wounds of a friend' had Prov 27:6 at rank 1 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Proverbs 27:5-6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Receiving correction"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Proverbs 28:23"
+  ],
+  "coversConcepts": [
+    "receiving-correction"
+  ]
+}

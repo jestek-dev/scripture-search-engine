@@ -1,0 +1,87 @@
+# TAG-GAP ROLLOUT batch 4 (Theme G, 2026-08-26) — ADOPTED-TAG id
+# (Theme G row in tag-gaps-review.md, 1 requesting book; Ezek 18 is
+# Scripture's charter text and is in corpus whole). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission happens only by his merge of this PR.
+#
+# "Am I punished for my parents' sins" / "generational curses" /
+# "generational sin" / "personal responsibility before God" — heavy
+# lay queries with no concept to land on.
+#
+# MEASURED BEFORE-STATE: "am i punished for my parents sins" was
+# HIJACKED by parenting's anchors ("Theme: Raising children" on Col
+# 3:20-21, Eph 6:4, Deut 6:6-7) — a wrong-register answer to a
+# tender question.
+#
+# GIST CARE (both-statements-described, the hardness-of-heart batch-3
+# precedent): Exod 20:5-6 ("visiting the iniquity of the fathers on
+# the children") sits inside idolatry's Exod 20:3-6 span and is NOT
+# re-anchored; the tension between the visiting-iniquity texts and
+# Ezek 18 is recorded here, described as the texts state it, and
+# harmonized by neither pack. The engine reports what each text says
+# and who names it — it never adjudicates the doctrine.
+#
+# BOUNDARIES: Ezek 18:30-32 stays repentance's; Ezek 33:30-32 stays
+# empty-worship's (the claim below is 33:20 alone); Jer 31:31-34 stays
+# covenant's (with knowing-god's sibling 31:34) — the claim below is
+# 31:29-30, verse-disjoint.
+#
+# CORPUS: Ezek 18:1-4, 18:19-20, 33:20 and Jer 31:29-30 in corpus.
+# Deut 24:16, 2 Kgs 14:6 and Ezek 14:12-20 are corpus-blocked riders.
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens
+# ("generational" survives spell-correction as its own token in
+# phrases; bare "generation" is nobody's trigger).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: individual-responsibility
+label: Individual responsibility
+lexicon:
+  - generational sin
+  - generational curses
+  - punished for my parents sins
+  - the soul who sins shall die
+  - fathers have eaten sour grapes
+  - responsible before god
+anchors:
+  # "'Why doesn't the son bear the iniquity of the father?'... The
+  # soul who sins, he shall die. The son shall not bear the iniquity
+  # of the father, neither shall the father bear the iniquity of the
+  # son" (WEB, in corpus). The charter answer, in the chapter's own
+  # question-and-answer form.
+  - ref: Ezekiel 18:19-20
+    sources: [editorial]
+    weight: 1.0
+  # "What do you mean, that you use this proverb... 'The fathers have
+  # eaten sour grapes, and the children's teeth are set on edge'? ...
+  # Behold, all souls are mine" (WEB, in corpus). The proverb God
+  # retires; Ezek 18:30-32 stays repentance's — verse-disjoint.
+  - ref: Ezekiel 18:1-4
+    sources: [editorial]
+    weight: 0.95
+  # "everyone will die for his own iniquity. Every man who eats the
+  # sour grapes, his teeth will be set on edge" (WEB, in corpus). The
+  # same retirement promised in Jeremiah's new-covenant oracle;
+  # 31:31-34 stays covenant's — verse-disjoint.
+  - ref: Jeremiah 31:29-30
+    sources: [editorial]
+    weight: 0.9
+  # "House of Israel, I will judge every one of you after his ways"
+  # (WEB, in corpus). The watchman chapter's restatement; Ezek
+  # 33:30-32 stays empty-worship's — verse-disjoint.
+  - ref: Ezekiel 33:20
+    sources: [editorial]
+    weight: 0.8
+  # "The fathers shall not be put to death for the children, neither
+  # shall the children be put to death for the fathers; every man
+  # shall be put to death for his own sin" — the statute layer.
+  # (Deuteronomy 24 NOT in web-subset; re-check at re-pin.)
+  - ref: Deuteronomy 24:16
+    sources: [editorial]
+    weight: 0.85
+related:
+  - repentance
+  - divine-judgment
+  - forgiveness-of-sins
+  - parenting

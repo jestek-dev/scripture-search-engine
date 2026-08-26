@@ -1,0 +1,48 @@
+{
+  "id": "governing-authorities",
+  "query": "render to caesar",
+  "status": "active",
+  "additionalQueries": [
+    "obey god rather than men",
+    "should christians pay taxes"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id governing-authorities (Theme G row, 7 requesting",
+    "books; four Gospel threads staged it as god-and-government and",
+    "folded there) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "DESIGN DECIDED against a head-on collision: praying-for-leaders has",
+    "grown to own the phrases 'government' and 'governing authorities'",
+    "and the anchors Rom 13:1-7 / 1 Pet 2:13-17 / Jer 29:7 / Ps 33:12 \u2014",
+    "those phrases and anchors STAY there. This pack takes the",
+    "believer-and-state poles the review names: taxes/Caesar and",
+    "obey-God-rather-than-men, with zero shared phrases. Rom 13:1-7 is",
+    "the one DUAL anchor (recorded both files \u2014 the register's central",
+    "text); 1 Pet 2:13-17 stays praying-for-leaders' alone. Acts 5:29",
+    "(the naming text) is corpus-blocked; Acts 4:19-20 is its in-corpus",
+    "twin. Mark 12:13-17 and Luke 20:20-26 parallels ride re-pin.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'render to caesar' returned caesar/render token noise with Matt",
+    "22:21 CHIPLESS at rank 8; 'obey god rather than men' never surfaced",
+    "Acts 4:19-20 at all; 'should christians pay taxes' had Rom 13:6-7",
+    "at rank 1 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 22:15-22",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Governing authorities"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 4:19-20",
+    "Romans 13:1-7",
+    "Titus 3:1-2",
+    "Acts 16:35-39"
+  ],
+  "coversConcepts": [
+    "governing-authorities"
+  ]
+}

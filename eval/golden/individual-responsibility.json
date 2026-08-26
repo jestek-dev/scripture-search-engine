@@ -1,0 +1,46 @@
+{
+  "id": "individual-responsibility",
+  "query": "am i punished for my parents sins",
+  "status": "active",
+  "additionalQueries": [
+    "generational curses"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id individual-responsibility (Theme G row, 1 requesting",
+    "book; Ezek 18 is Scripture's charter text and is in corpus whole) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "Heavy lay queries (generational sin/curses, personal responsibility",
+    "before God) with no concept to land on. Gist care: descriptive of",
+    "Ezek 18's own claims; Exod 20:5-6 (visiting iniquity to the third",
+    "generation) sits inside idolatry's Exod 20:3-6 span and is NOT",
+    "re-anchored \u2014 the tension between the two texts is recorded, not",
+    "harmonized (both-statements-described, hardness-of-heart precedent).",
+    "Ezek 18:30-32 stays repentance's; Ezek 33:30-32 stays",
+    "empty-worship's (anchor here is 33:20 alone). Deut 24:16 and",
+    "2 Kgs 14:6 ride re-pin.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'am i punished for my parents sins' was HIJACKED by parenting's",
+    "anchors ('Theme: Raising children' on Col 3:20-21, Eph 6:4, Deut",
+    "6:6-7, Prov 3:11-12) with Ezek 18:19-20 surfacing only by",
+    "translation-variant luck, CHIPLESS; 'generational curses' was",
+    "spell-corrected token scatter; 'the soul who sins shall die' had",
+    "Ezek 18:20/18:4 at ranks 1-2 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ezekiel 18:19-20",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Individual responsibility"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ezekiel 18:1-4",
+    "Jeremiah 31:29-30",
+    "Ezekiel 33:20"
+  ],
+  "coversConcepts": [
+    "individual-responsibility"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "sojourners-and-strangers",
+  "query": "strangers and pilgrims",
+  "status": "active",
+  "additionalQueries": [
+    "living as a foreigner"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id sojourners-and-strangers (Theme G row, 17 requesting",
+    "books) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "Living as a foreigner recurs across the patriarchal narratives and",
+    "matters to displaced readers. Per the Lamentations append the gist",
+    "covers exile as well as sojourning; the 2 Kings exile-and-captivity",
+    "routing call (review SS1(e)) stays Jesse's and is NOT pre-decided",
+    "here \u2014 this pack records the cross-note without minting an exile",
+    "id. Lev 19:33-34 stays hospitality's (the welcome side; this pack",
+    "is the being-the-stranger side); 1 Pet 2:11 stays honesty's span;",
+    "Jer 29:7 stays praying-for-leaders' (anchor here stops at 29:6);",
+    "Ps 146:9's foreigner clause is cross-noted to care-for-widows'",
+    "anchor (same batch).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'strangers and pilgrims' had Heb 11:13 at rank 1 by exact phrase,",
+    "CHIPLESS, over stranger-token scatter; 'living as a foreigner'",
+    "returned 1 Pet 1:1/1:17 and Deut 14:29 by token luck, no concept."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hebrews 11:13-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Sojourners and strangers"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 39:12",
+    "Hebrews 13:14",
+    "Jeremiah 29:4-6",
+    "1 Peter 1:17"
+  ],
+  "coversConcepts": [
+    "sojourners-and-strangers"
+  ]
+}

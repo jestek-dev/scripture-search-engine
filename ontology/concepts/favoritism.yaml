@@ -54,6 +54,10 @@ anchors:
   # "he who is both their Master and yours is in heaven, and there is
   # no partiality with him" (WEB, in corpus). God's own impartiality as
   # the ground of ours (Rom 2:11 stays divine-judgment's).
+  # DUAL NOTE (tag-gap batch 4, 2026-08-26): bondservants-and-masters
+  # anchors the containing Eph 6:5-9 passage for the servants-and-
+  # masters register; this pack keeps v9's no-partiality clause
+  # (recorded in both files).
   - ref: Ephesians 6:9
     sources: [editorial]
     weight: 0.75

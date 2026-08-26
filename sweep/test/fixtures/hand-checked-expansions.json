@@ -74,7 +74,7 @@
       "query": "work",
       "register": "church-member",
       "expectationKind": "concept-anchors",
-      "conceptId": "faith-and-works"
+      "conceptId": "bondservants-and-masters"
     },
     {
       "queryId": "bare-word:010c46db14982d6b",
@@ -163,6 +163,13 @@
       "conceptId": "praying-for-leaders"
     },
     {
+      "queryId": "concept-register:002753f51315c91f",
+      "query": "scripture reading on bondservants and masters",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "bondservants-and-masters"
+    },
+    {
       "queryId": "concept-register:00397aac5fec4c4c",
       "query": "sermon text on dreams and visions",
       "register": "pastor",
@@ -175,6 +182,13 @@
       "register": "pastor",
       "expectationKind": "concept-anchors",
       "conceptId": "the-cross"
+    },
+    {
+      "queryId": "concept-register:006095c9350330c1",
+      "query": "where in the bible does it talk about governing authorities",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "governing-authorities"
     },
     {
       "queryId": "concept-register:0062e2fdc6c6ed7e",
@@ -196,20 +210,6 @@
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "remembered-all-things-for-good"
-    },
-    {
-      "queryId": "concept-register:0072fffbe92e0dc0",
-      "query": "primary text for a lesson on remain in me",
-      "register": "pastor",
-      "expectationKind": "concept-anchors",
-      "conceptId": "abiding-in-christ"
-    },
-    {
-      "queryId": "concept-register:007cf7a51e95d90f",
-      "query": "help me understand scripture is trustworthy",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "trustworthiness-of-scripture"
     }
   ],
   "felt-need": [
@@ -328,6 +328,12 @@
       "conceptId": "parenting"
     },
     {
+      "queryId": "golden-verbatim:044a9043cbf7aef8",
+      "query": "render to caesar",
+      "expectationKind": "concept-anchors",
+      "conceptId": "governing-authorities"
+    },
+    {
       "queryId": "golden-verbatim:04f4966dc8ff537d",
       "query": "how do people know right from wrong",
       "expectationKind": "concept-anchors",
@@ -338,12 +344,6 @@
       "query": "wages of sin",
       "expectationKind": "concept-anchors",
       "conceptId": "sin"
-    },
-    {
-      "queryId": "golden-verbatim:055dc61ef01a4246",
-      "query": "image of god",
-      "expectationKind": "concept-anchors",
-      "conceptId": "image-of-god"
     }
   ],
   "multi-concept": [
@@ -370,7 +370,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity — father, son, and spirit",
+      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"
@@ -588,6 +588,13 @@
       "conceptId": "messianic-prophecy"
     },
     {
+      "queryId": "worship-planning:013f976606bf8d26",
+      "query": "responsive reading about vengeance",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "vengeance"
+    },
+    {
       "queryId": "worship-planning:01485d0fcad402ec",
       "query": "benediction on god's plan for israel",
       "register": "worship-leader",
@@ -621,13 +628,6 @@
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
       "conceptId": "walking-in-the-light"
-    },
-    {
-      "queryId": "worship-planning:02e843d2e77fabf6",
-      "query": "setlist theme god rejoices over you",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "gods-love"
     }
   ]
 }
