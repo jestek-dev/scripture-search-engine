@@ -13,6 +13,10 @@ anchors:
   - ref: Matthew 18:21-22
     sources: [editorial]
     weight: 1.0
+  # DUAL ANCHOR (TAG-GAP batch 3, 2026-08-26): `kindness` also anchors
+  # Eph 4:32 — "Be kind to one another" is the verse's own first clause
+  # and the forgiving clause is this pack's; both claims are the verse's
+  # own words (2 Tim 1:7 precedent, recorded both files).
   - ref: Ephesians 4:32
     sources: [editorial]
     weight: 0.95

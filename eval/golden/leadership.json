@@ -1,0 +1,41 @@
+{
+  "id": "leadership",
+  "query": "biblical leadership",
+  "status": "active",
+  "additionalQueries": [
+    "servant leadership"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id leadership (Theme E row, 20 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. The row's own",
+    "check-first route (lexicon extension of wisdom-from-god) was checked",
+    "and DECLINED: that pack's register is wisdom-as-God's-gift (Jas 1:5",
+    "keystone) and its lexicon speaks no leadership vocabulary; answering",
+    "'biblical leadership' with ask-for-wisdom texts would be the wrong",
+    "register. Keystone Luke 22:24-27 (servant leadership in Jesus' own",
+    "words, in corpus). The elder-qualification texts (1 Tim 3:1-13,",
+    "Titus 1:5-9) and the OT administration spine (Exod 18, Deut 17,",
+    "1 Kgs 12, Ps 78:70-72) are corpus-blocked riders.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'biblical leadership' returned ZERO results; 'what makes a good",
+    "leader' returned Gen 2:18 and translation-variant noise, CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 22:24-27",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Leadership"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hebrews 13:7",
+    "Hebrews 13:17",
+    "1 Thessalonians 5:12-13",
+    "Proverbs 28:2"
+  ],
+  "coversConcepts": [
+    "leadership"
+  ]
+}

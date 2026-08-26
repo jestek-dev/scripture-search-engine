@@ -1,0 +1,84 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 4 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Judge not" is one of the most-typed Bible queries; disputable-matters
+# covers gray-area liberty but not the judge-not command itself. The
+# review's only fully-in-corpus Theme E row — every anchor asserts.
+#
+# TOKENIZER FACTS, faced squarely: the two core phrasings collapse to
+# single significant tokens ("judge not" -> `judge`; "judging others" ->
+# `judg` — distinct stems under the shared stemmer, both acknowledged in
+# ontology/lexicon-inventory.yaml). divine-judgment's lexicon
+# (judgment/wrath/flood stems) shares NEITHER token, so the two packs
+# stay disjoint; a bare "judge" query reaching Matt 7:1 with this chip
+# is the intended fix for the measured chipless scatter. "judge not lest
+# you be judged" keeps both stems and needs no collapse row.
+#
+# BOUNDARIES: Luke 6:37 stays forgiving-others' (its forgive clause is
+# that pack's claim; the speck-and-beam verses 6:41-42 carry Luke's
+# judge-not teaching here). Rom 14:10-12 stays judgment-seat-of-christ's
+# — this pack takes 14:4 and 14:13, disjoint. Rom 2:5-11 stays
+# divine-judgment's — this pack takes 2:1-3. Jas 2:13 stays mercy's.
+# None re-anchored; all cross-noted.
+#
+# GIST CARE: the texts forbid hypocritical condemnation, not moral
+# discernment (Matt 7:5 ends "then you can see clearly"); the pack
+# reports the passages and adjudicates nothing.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: judging-others
+label: Judging others
+lexicon:
+  - judge not
+  - judging others
+  - judge not lest you be judged
+  - speck in your brothers eye
+  - the speck and the beam
+anchors:
+  # "Don't judge, so that you won't be judged... Why do you see the
+  # speck that is in your brother's eye, but don't consider the beam
+  # that is in your own eye?... First remove the beam out of your own
+  # eye" (WEB, in corpus). The command and its anatomy — the passage
+  # every judge-not query means.
+  - ref: Matthew 7:1-5
+    sources: [editorial]
+    weight: 1.0
+  # Luke's speck-and-beam: "First remove the beam from your own eye"
+  # (WEB, in corpus). Luke 6:37's judge-not-forgive verse stays
+  # forgiving-others' — this claim is vv41-42.
+  - ref: Luke 6:41-42
+    sources: [editorial]
+    weight: 0.9
+  # "He who speaks against a brother and judges his brother, speaks
+  # against the law... But who are you to judge another?" (WEB, in
+  # corpus). The who-are-you register in James' own words.
+  - ref: James 4:11-12
+    sources: [editorial]
+    weight: 0.85
+  # "Who are you who judge another's servant? To his own lord he stands
+  # or falls" (WEB, in corpus). Judging across disputable matters —
+  # kept to v4 (14:5 and 14:19 stay disputable-matters').
+  - ref: Romans 14:4
+    sources: [editorial]
+    weight: 0.8
+  # "Therefore let's not judge one another any more, but judge this
+  # rather, that no man put a stumbling block in his brother's way"
+  # (WEB, in corpus).
+  - ref: Romans 14:13
+    sources: [editorial]
+    weight: 0.75
+  # "you are without excuse... For in that which you judge another, you
+  # condemn yourself. For you who judge practice the same things" (WEB,
+  # in corpus). The hypocrisy diagnosis — kept to vv1-3 (2:5-11 stays
+  # divine-judgment's).
+  - ref: Romans 2:1-3
+    sources: [editorial]
+    weight: 0.7
+related:
+  - disputable-matters
+  - forgiving-others
+  - mercy
+  - self-deception

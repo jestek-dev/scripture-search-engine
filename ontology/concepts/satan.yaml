@@ -85,6 +85,9 @@ anchors:
   # (WEB, in corpus). Mark's temptation summary; the angels of v13b
   # are angels' (same batch) territory by subject, span shared under
   # the sibling precedent — zero shared lexicon phrases.
+  # DUAL SPAN (TAG-GAP batch 3, 2026-08-26): `temptation` anchors Mark
+  # 1:12-13 — the temptation narrative is both packs' claim (recorded
+  # both files).
   - ref: Mark 1:13
     sources: [editorial]
     weight: 0.75

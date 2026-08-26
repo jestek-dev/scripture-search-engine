@@ -1,0 +1,45 @@
+{
+  "id": "kindness",
+  "query": "kindness in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "be kind"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id kindness (Theme E row, 3 requesting books) — engine",
+    "admission only by Jesse's merge of this PR. The row's check-first",
+    "route (lexicon extension of loving-others) was checked and",
+    "DECLINED, recorded: extension would fire all fourteen",
+    "love-command anchors on every kindness query and blur the hesed",
+    "register the row names; a narrow pack keeps the claim narrow.",
+    "Keystone Col 3:12 (kindness as the put-on garment, in corpus);",
+    "Eph 4:32 is deliberately DUAL-ANCHORED with forgiving-others —",
+    "'be kind to one another' is the verse's own first clause (2 Tim",
+    "1:7 dual-homing precedent, recorded in both files). Ruth 2:20,",
+    "3:10, 2 Sam 9 (the hesed narratives) are corpus-blocked riders —",
+    "only Ruth 1:8 is in corpus. Gal 5:22 stays the fruit pack's;",
+    "'loving kindness' stays mercy's hesed formula (cross-related,",
+    "zero shared phrases).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'kindness in the bible' surfaced Col 3:12 at rank 3 CHIPLESS",
+    "(wrong-reason class) amid Ps 103:4/42:8 loving-kindness token",
+    "noise; no concept in the vocabulary carried the word."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Colossians 3:12",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Kindness"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ephesians 4:32",
+    "Luke 6:35",
+    "Ruth 1:8"
+  ],
+  "coversConcepts": [
+    "kindness"
+  ]
+}

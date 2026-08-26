@@ -1,0 +1,40 @@
+{
+  "id": "oaths-and-vows",
+  "query": "making a vow to god",
+  "status": "active",
+  "additionalQueries": [
+    "should christians swear oaths"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id oaths-and-vows (Theme E row, 22 requesting books) —",
+    "engine admission only by Jesse's merge of this PR. Binding the",
+    "future before God is a recurring biblical practice with no concept.",
+    "The teaching keystone in corpus is Matt 5:33-37 (Jesus' own word on",
+    "swearing, quoting the vow command); Jas 5:12 restates it. Eccl",
+    "5:4-6, Num 30, Deut 23:21-23, Judg 11 and the vow-psalms other than",
+    "56/65/116 are corpus-blocked and ride the re-pin.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'making a vow to god' returned Num 6 scatter by bare token luck,",
+    "CHIPLESS, with Rom 10:5/Col 1:20 translation-variant noise leading;",
+    "'should christians swear oaths' surfaced Matt 5:33 and Jas 5:12",
+    "lexically but CHIPLESS (wrong-reason class)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 5:33-37",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Oaths and vows"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "James 5:12",
+    "Psalms 56:12",
+    "Psalms 116:14",
+    "Hebrews 6:16-18"
+  ],
+  "coversConcepts": [
+    "oaths-and-vows"
+  ]
+}

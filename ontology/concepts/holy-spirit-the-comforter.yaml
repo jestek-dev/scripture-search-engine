@@ -72,6 +72,9 @@ anchors:
     weight: 0.85
   # "be filled with the Spirit"; Torrey files 5:18 under INDWELLING OF THE
   # HOLY SPIRIT, THE — editorial for this pack's Comforter sense.
+  # DUAL ANCHOR (TAG-GAP batch 3, 2026-08-26): `drunkenness` also anchors
+  # 5:18 — "Don't be drunken with wine" is the verse's own first clause;
+  # the contrast is the verse's own point (recorded both files).
   - ref: Ephesians 5:18
     sources: [editorial]
     weight: 0.75

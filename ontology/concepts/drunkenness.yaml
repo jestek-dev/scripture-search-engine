@@ -1,0 +1,93 @@
+# TAG-GAP ROLLOUT batch 3 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 2 requesting books; converted at
+# the review's write time from a staged alcohol-and-drunkenness row).
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission happens only by his merge of this
+# PR.
+#
+# "What does the Bible say about drunkenness / alcohol" is a common lay
+# query — measured before the pack: PURE token noise, not one drink text
+# in the top 10. The row's check-first route (lexicon extension of
+# self-control) was checked and DECLINED, recorded: extension would
+# answer drunkenness queries with 2 Tim 1:7 and the soldier/athlete
+# figures — that pack's anchors, the wrong texts.
+#
+# REGISTER BOUNDARY (the row's cross-note, honored):
+# pastoral-freedom-from-bondage serves the person in addiction CRISIS
+# ("alcoholism", "struggling to stay sober" are ITS lexicon); this pack
+# is the what-does-the-Bible-say TEACHING register. The two must not be
+# collapsed — cross-related instead, and no crisis vocabulary appears
+# below.
+#
+# DUAL ANCHOR, deliberate and recorded in both files: Eph 5:18 is
+# holy-spirit-the-comforter's anchor, and "Don't be drunken with wine"
+# is the verse's own first clause — both claims are the verse's own
+# words (2 Tim 1:7 precedent). Rom 13:14 stays self-control's — this
+# pack takes 13:13, disjoint. The teaching keystones Prov 20:1;
+# 23:29-35; 31:4-7 are corpus-blocked riders; Isa 28:1-8 and Jer 13:13
+# are judgment imagery and NOT anchored (the Jeremiah decline the row
+# records, applied to both).
+#
+# GIST CARE: the pack reports the texts' warnings against drunkenness;
+# it adjudicates no abstinence-vs-moderation position — that is a
+# conscience question the texts themselves leave (Rom 14, cross-noted
+# via disputable-matters).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: drunkenness
+label: Drunkenness
+lexicon:
+  - drunkenness
+  - getting drunk
+  - alcohol in the bible
+  - is it a sin to get drunk
+anchors:
+  # "Let's walk properly, as in the day; not in reveling and
+  # drunkenness..." (WEB, in corpus). The walk-properly register —
+  # kept to v13 (13:14 stays self-control's).
+  - ref: Romans 13:13
+    sources: [editorial]
+    weight: 1.0
+  # "Don't be drunken with wine, in which is dissipation, but be filled
+  # with the Spirit" (WEB, in corpus). DUAL with
+  # holy-spirit-the-comforter (recorded both files) — the contrast is
+  # the verse's own point.
+  - ref: Ephesians 5:18
+    sources: [editorial]
+    weight: 0.9
+  # "those who are drunk are drunk in the night. But since we belong to
+  # the day, let's be sober" (WEB, in corpus). Sobriety as daylight
+  # identity — kept to vv6-8 (5:9-10 stays pastoral-serious-illness's).
+  - ref: 1 Thessalonians 5:6-8
+    sources: [editorial]
+    weight: 0.85
+  # "we have spent enough of our past time... having walked in
+  # lewdness, lusts, drunken binges, orgies, carousings" (WEB, in
+  # corpus). The past-tense register: what the readers were.
+  - ref: 1 Peter 4:3
+    sources: [editorial]
+    weight: 0.75
+  # "nor thieves, nor covetous, nor drunkards... will inherit God's
+  # Kingdom" (WEB, in corpus). The warning list — reported as the text
+  # gives it, beside 6:11's "such WERE some of you" hope (that verse
+  # stays its neighbors').
+  - ref: 1 Corinthians 6:9-10
+    sources: [editorial]
+    weight: 0.7
+  # "Wine is a mocker, and beer is a brawler. Whoever is led astray by
+  # them is not wise" — the teaching keystone. (Proverbs 20 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Proverbs 20:1
+    sources: [editorial]
+    weight: 0.95
+  # "Who has woe?... Those who stay long at the wine" — the fullest
+  # portrait, wanting and warning. (Proverbs 23 NOT in web-subset;
+  # re-check at re-pin, with 31:4-7.)
+  - ref: Proverbs 23:29-35
+    sources: [editorial]
+    weight: 0.9
+related:
+  - self-control
+  - freedom-from-bondage
+  - disputable-matters
