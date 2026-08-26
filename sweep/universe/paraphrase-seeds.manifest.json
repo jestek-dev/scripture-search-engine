@@ -3,11 +3,11 @@
   "schema": "scripture-search-engine/sweep-paraphrase-seeds-manifest/v1",
   "universeVersion": "1.0.0",
   "seed": "scripture-sweep-universe-v1",
-  "fingerprint": "7e037cb12c558ba8374161bb164eefe681a7b6af850905cf915cd3b91f0ff155",
-  "seedCount": 2646,
+  "fingerprint": "7c758cfcf4817af69e09467d13613b6408770e769b9d3fc709b1f9865089fed6",
+  "seedCount": 2676,
   "countsByStratum": {
-    "cell": 2071,
-    "curated": 521,
+    "cell": 2097,
+    "curated": 525,
     "frame": 54
   },
   "crisisAdjacentCount": 31
