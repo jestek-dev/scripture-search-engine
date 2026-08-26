@@ -1,0 +1,56 @@
+{
+  "id": "envy-and-jealousy-phrases",
+  "query": "jealous of others",
+  "additionalQueries": [
+    "struggling with envy"
+  ],
+  "status": "active",
+  "note": [
+    "CORPUS-EXPANSION EXECUTION (ruling rows 24-25, approved 2026-08-26).",
+    "Split out of envy-and-jealousy.json in the full-Bible expansion PR:",
+    "the phrase queries now surface the narrative exemplars the pack's own",
+    "corpus-needs note requested (Gen 4:3-8, Gen 37:3-11, 1 Sam 18:6-9)",
+    "plus the teaching verses (1 Cor 13:4, Prov 14:30, James 3:14-16), and",
+    "Prov 27:4 sits #7 / #6 behind them. The ruling widens Prov 27:4's",
+    "window for these queries with the measured leaders alsoAcceptable;",
+    "the executable window is 10, not the ruling's sketched 5, because",
+    "'jealous of others' measures Prov 27:4 at #7 (1/3/5/10 are the only",
+    "windows) — presence with the pack's own reason chip, which is the",
+    "assertion's point. The bare-word queries keep their unchanged top-3",
+    "assertion in the parent fixture.",
+    "",
+    "The Exodus 20:5 sense-inversion preferredOrder pair (Jesse,",
+    "2026-08-15) is carried over unchanged so the demotion stays measured",
+    "on the phrase queries too; it is demoted, never forbidden."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Proverbs 27:4",
+      "withinTop": 10,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Envy and jealousy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 13:4",
+    "Proverbs 14:30",
+    "Genesis 4:3-8",
+    "Genesis 37:3-11",
+    "1 Samuel 18:6-9",
+    "James 3:14-16",
+    "Galatians 5:19-21",
+    "Psalms 37:1",
+    "Psalms 73:2-3",
+    "1 Peter 2:1-2"
+  ],
+  "preferredOrder": [
+    {
+      "above": "Proverbs 27:4",
+      "below": "Exodus 20:5"
+    }
+  ],
+  "coversConcepts": [
+    "envy-and-jealousy"
+  ]
+}

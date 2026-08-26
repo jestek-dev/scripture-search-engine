@@ -21,7 +21,16 @@
     "",
     "Acts 16:9 is asserted without a reason requirement at withinTop 5: it",
     "matches 'vision' lexically twice (16:9, 16:10) AND carries the Torrey",
-    "VISIONS anchor, and the fixture should not dictate which rung serves it."
+    "VISIONS anchor, and the fixture should not dictate which rung serves it.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling rows 22-23, approved 2026-08-26):",
+    "the full corpus lands the OT vision texts (Daniel, Numbers 12,",
+    "Genesis 46...) and Acts 16:9 falls to #6 for 'visions' and #11 for",
+    "'dreams and visions' — honest competition, so per the ruling it moves",
+    "to alsoAcceptable (a top-10 window would still fail the second",
+    "query). The Acts 2:17 top-3 assertion HELD under measurement (#1 on",
+    "both queries) and stays untouched, as does the Zech 13:4",
+    "sense-inversion preferredOrder demotion."
   ],
   "expectedTop": [
     {
@@ -29,13 +38,15 @@
       "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Dreams and visions"
-    },
-    {
-      "reference": "Acts 16:9",
-      "withinTop": 5
     }
   ],
   "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 16:9",
+    "Joel 2:28",
+    "Numbers 12:6",
+    "Daniel 2:28"
+  ],
   "preferredOrder": [
     {
       "above": "Acts 2:17",

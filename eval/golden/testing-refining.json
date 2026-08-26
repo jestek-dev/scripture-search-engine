@@ -24,12 +24,20 @@
     "Mal 3:2-3 - the refiner's fire itself, on its own vocabulary - takes",
     "#3, with Zech 13:9 at #4. That ordering among the pack's own anchors",
     "is exactly what the note above declines to over-constrain; the other",
-    "three queries hold Zech 13:9 in the top 3 regardless."
+    "three queries hold Zech 13:9 in the top 3 regardless.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling row 28, approved 2026-08-26): on",
+    "the full corpus 'the refiners fire' puts the pack's own anchors ahead",
+    "— 1 Pet 1:6-7, the activated Gen 22:1-14, and Mal 3:2-3 (the",
+    "refiner's fire itself, alsoAcceptable by design) — with Zech 13:9 at",
+    "#7. Per the ruling the window widens to 10 for the fixture (the other",
+    "three queries measure Zech 13:9 at #4); the note above already",
+    "declines to over-constrain ordering among the pack's own anchors."
   ],
   "expectedTop": [
     {
       "reference": "Zechariah 13:9",
-      "withinTop": 5,
+      "withinTop": 10,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: God tests his people"
     }

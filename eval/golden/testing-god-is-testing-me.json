@@ -1,0 +1,38 @@
+{
+  "id": "testing-god-is-testing-me",
+  "query": "god is testing me",
+  "status": "active",
+  "note": [
+    "CORPUS-EXPANSION EXECUTION (ruling row 13, approved 2026-08-26).",
+    "Split out of testing.json in the full-Bible expansion PR: the pack's",
+    "own corpus-needs note requested Genesis 22, Deuteronomy 8, and",
+    "Hebrews 11:17, and their activation displaced 1 Pet 1:6-7 from this",
+    "query's top 3 — the very texts the pack asked for, doing the job they",
+    "were asked for. Per the ruling, expectedTop is the concept's namesake",
+    "text Genesis 22:1-14 (measured #1, with the pack's Theme chip), and",
+    "1 Pet 1:6-7 (measured #4) is alsoAcceptable alongside Heb 11:17.",
+    "",
+    "Split rather than widened in place: the ruling's top-3 window holds",
+    "for this query but testing.json's other queries keep their original",
+    "1 Pet 1:6-7 top-3 assertion, and per-query windows are not in the",
+    "schema. Same coversConcepts; nothing is lost, one assertion moved."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 22:1-14",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God tests his people"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 1:6-7",
+    "Hebrews 11:17",
+    "Deuteronomy 8:2-3",
+    "Psalms 66:10"
+  ],
+  "coversConcepts": [
+    "testing"
+  ]
+}
