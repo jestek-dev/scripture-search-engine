@@ -84,6 +84,9 @@ anchors:
     weight: 0.9
   # "The LORD is my shepherd; I shall lack nothing." — the shepherd's
   # provision; the psalm the whole theme rests on.
+  # BATCH-6 DUAL (2026-08-26): shepherds-and-the-flock anchors this
+  # same verse for the shepherd figure (its keystone); this pack keeps
+  # the provision clause. Recorded both files.
   - ref: Psalms 23:1
     sources: [editorial]
     weight: 0.85

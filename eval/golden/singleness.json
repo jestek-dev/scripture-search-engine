@@ -1,0 +1,36 @@
+{
+  "id": "singleness",
+  "query": "gift of singleness",
+  "status": "active",
+  "additionalQueries": [
+    "is it good to stay single"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id singleness (Theme J row, 1 requesting book:",
+    "1 Corinthians). Boundaries inside 1 Cor 7 honored: godly-marriage",
+    "keeps 7:3, pastoral-marriage-divorce-teaching keeps 7:10-16,",
+    "betrayal-and-marriage-crisis keeps 7:15 — this pack anchors the",
+    "unmarried verses only (7:7-9, 7:25-28, 7:32-35), disjoint.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'gift of singleness' was hijacked wholesale by spiritual-gifts'",
+    "anchors via the bare gift token (Rom 12:4-8 rank 1, 'Theme:",
+    "Spiritual gifts' — wrong intent); 'is it ok to stay single'",
+    "reached 1 Cor 7:8 rank 1 by translation variant CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Corinthians 7:7-9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Singleness"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 7:32-35",
+    "1 Corinthians 7:25-28"
+  ],
+  "coversConcepts": [
+    "singleness"
+  ]
+}

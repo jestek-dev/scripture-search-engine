@@ -641,6 +641,17 @@ concepts:
     # me" — exactly the bare words someone would type; kept deliberately.
     admitted: [abide, remain]
 
+  - id: adoption-as-gods-children
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # adoption-as-gods-children.json). The metaphor's own noun (WEB Rom
+    # 8:15, 23; Eph 1:5); no competing concept speaks the stem.
+    admitted: [adoption]
+    skipped:
+      - token: children
+        reason: >-
+          Generic family word (parenting's territory, "children of
+          israel" narrative); the paired forms carry the metaphor.
+
   - id: aging-and-old-age
     # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
     # aging-and-old-age.json). Phrase-forms pack.
@@ -697,6 +708,12 @@ concepts:
           Bare `feast` spans wedding banquets, Herod's feast, and the
           love-feast — generic narrative vocabulary; the appointed/lord/
           tabernacles/booths pairings carry the calendar concept.
+
+  - id: ascension
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # ascension.json). The event's own noun; distinctive stem, no
+    # competing concept.
+    admitted: [ascension]
 
   - id: asking-in-gods-will
     # 2026-08-23 stack merge (P4.11 completion): row authored for a
@@ -814,6 +831,18 @@ concepts:
     # if it proves broad.
     admitted: [blessing]
 
+  - id: boldness-in-witness
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # boldness-in-witness.json). The register's own word (WEB Acts 4:13,
+    # 29); no competing concept speaks the stem.
+    admitted: [boldness]
+    skipped:
+      - token: witness
+        reason: >-
+          sharing-your-faith's evangelism register speaks the stem
+          ("witnessing"); this pack's phrase forms carry the boldness
+          register without contesting the bare word.
+
   - id: bondservants-and-masters
     # 2026-08-26 tag-gap batch 4: row authored with the pack
     # (fixture-first, bondservants-and-masters.json). Bare "slavery" is
@@ -877,6 +906,22 @@ concepts:
     # The remembered registers ("the stone the builders rejected",
     # "head of the corner") stay multi-token.
     admitted: [cornerstone]
+
+  - id: church-discipline
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # church-discipline.json). "excommunication" is a distinctive modern
+    # word absent from the WEB text (§1.6d option-3 register).
+    admitted: [excommunication]
+    skipped:
+      - token: discipline
+        reason: >-
+          the-lords-discipline's subject stem (God's chastening,
+          Heb 12) and the parenting register ("discipline your son");
+          the assembly register keeps two-token forms.
+      - token: church
+        reason: >-
+          Generic; would fire this pack on every church-* query
+          (gathering-together, unity territory).
 
   - id: clean-and-unclean
     # 2026-08-26 tag-gap batch 1: row authored with the pack
@@ -1115,6 +1160,14 @@ concepts:
           pastoral-freedom-from-bondage's reviewed territory
           ("alcoholism") — as the teaching one; "alcohol in the bible"
           carries the teaching register beside it.
+
+  - id: election-and-predestination
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # election-and-predestination.json). The doctrine's own nouns (WEB
+    # "predestined" Rom 8:29-30, Eph 1:5; "chosen" family); both stems
+    # distinctive, no competing concept. Measured before: bare
+    # "predestination" returned exactly ONE chipless result.
+    admitted: [predestination, election]
 
   - id: empty-worship
     # 2026-08-26 tag-gap batch 1: row authored with the pack
@@ -1476,6 +1529,18 @@ concepts:
     # concept's own subject noun; kept deliberately.
     admitted: [harmony]
 
+  - id: head-coverings
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # head-coverings.json). Phrase-forms pack.
+    skipped:
+      - token: covering
+        reason: >-
+          Generic (atonement covering, Ps 91 cover-with-feathers);
+          "head coverings" (2 tokens) carries the lookup.
+      - token: head
+        reason: >-
+          Generic body word; the paired forms carry the question.
+
   - id: heavenly-reward
     # 2026-08-18 harvest: "crowns" is a deliberate bare entry (the reward
     # vocabulary of the anchor passages).
@@ -1759,6 +1824,17 @@ concepts:
     # tokens and never collides with either.
     admitted: [kindness, kind]
 
+  - id: kingdom-of-heaven
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # kingdom-of-heaven.json). The announcement's own noun; no other
+    # pack speaks the stem (god-reigns' lexicon is king/reigns-shaped).
+    admitted: [kingdom]
+    skipped:
+      - token: heaven
+        reason: >-
+          Generic destination word (new-heaven-and-earth, heavenly-
+          reward territory); the paired forms carry the announcement.
+
   - id: knowing-god
     # 2026-08-26 tag-gap batch 2: row authored with the pack
     # (fixture-first, knowing-god.json). Every entry keeps >= 2
@@ -1802,6 +1878,20 @@ concepts:
           Generic narrative word across the histories; "godly leader"
           (2 tokens) carries the query without handing the pack every
           leader mention.
+
+  - id: light-and-darkness
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # light-and-darkness.json). Phrase-forms pack.
+    skipped:
+      - token: light
+        reason: >-
+          Jesse's 2026-07-29 walking-in-the-light ruling stands: bare
+          "light" spans the ethical and cosmological senses; neither
+          pack takes the bare token.
+      - token: darkness
+        reason: >-
+          Generic; fires on lament/affliction texts (Lam 3:2) as often
+          as the Johannine theme; the paired forms carry it.
 
   - id: living-water
     # 2026-08-26 tag-gap batch 2: row authored with the pack
@@ -2388,6 +2478,20 @@ concepts:
           Ubiquitous ("dead in trespasses", "mourn the dead"); only the
           resurrection-paired forms carry this concept.
 
+  - id: revival-and-reformation
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # revival-and-reformation.json). The subject noun IS the concept;
+    # distinctive stem, no competing concept (WEB Hab 3:2 says "renew",
+    # so the modern noun is the only door to the register).
+    admitted: [revival]
+    skipped:
+      - token: reformation
+        reason: >-
+          No entry admits it deliberately: the stem drags church-history
+          queries ("the reformation") toward reform narratives the
+          corpus cannot yet answer (Josiah corpus-blocked); revisit at
+          re-pin.
+
   - id: sabbath-rest
     # PR #41 (2026-08-22 Genesis pilot): deliberate bare entry per the
     # in-file comment (§1.6d option-3 register: the word IS the concept
@@ -2532,11 +2636,53 @@ concepts:
     # "evangelism" are the topic's own vocabulary.
     admitted: [witnessing, evangelism]
 
+  - id: shepherds-and-the-flock
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # shepherds-and-the-flock.json). The subject noun IS the concept;
+    # no other pack speaks the stem, and the measured before-state was
+    # chipless scatter on every shepherd query.
+    admitted: [shepherd]
+    skipped:
+      - token: flock
+        reason: >-
+          The paired form ("shepherd the flock") carries it; bare
+          "flock" adds only congregation-generic noise.
+
+  - id: signs-and-wonders
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # signs-and-wonders.json). The subject noun IS the concept
+    # (modern query word; WEB narrative says "signs"); no competing
+    # concept speaks the miracl stem.
+    admitted: [miracl]
+    skipped:
+      - token: sign
+        reason: >-
+          Generic (signs of the times, second-coming territory; Gideon's
+          sign); "signs and wonders" (2 tokens) carries the pair.
+      - token: wonder
+        reason: >-
+          Generic awe word; the paired form carries it.
+
   - id: sin
     # 2026-08-18 harvest: deliberate bare entry — the doctrine's own name;
     # reviewed and admitted with the pack (broad by nature, kept humble by
     # the one-token discount).
     admitted: [sin]
+
+  - id: singleness
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # singleness.json). Distinctive modern noun absent from the WEB text
+    # (§1.6d option-3 register); no competing concept.
+    admitted: [singleness]
+    skipped:
+      - token: single
+        reason: >-
+          Generic adjective ("a single one"); "stay single" (2 tokens)
+          carries the query family.
+      - token: unmarri
+        reason: >-
+          The two-token forms ("unmarried in the bible") carry it; the
+          bare stem stays unclaimed until a measured gap shows.
 
   - id: slander-and-false-accusation
     # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
@@ -2592,6 +2738,13 @@ concepts:
     # magi-style giving language; recorded rather than silent. Deny-list
     # review candidate.
     admitted: [gifts]
+    skipped:
+      # 2026-08-26 tag-gap batch 6 (tongues extension): recorded skip.
+      - token: tongu
+        reason: >-
+          taming-the-tongue's subject stem (speech/gossip register);
+          the two-token tongues forms carry the gift register without
+          contesting the bare word.
 
   - id: spiritual-growth
     skipped:
@@ -2620,6 +2773,18 @@ concepts:
           Generic verb; the "study the bible" / "study scripture" phrase
           forms carry the concept. Plausible future admission, deferred
           pending a measured gap.
+
+  - id: supporting-gospel-workers
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # supporting-gospel-workers.json). "missionaries" is a distinctive
+    # modern word absent from the WEB text (§1.6d option-3 register); no
+    # competing concept speaks the stem.
+    admitted: [missionary]
+    skipped:
+      - token: support
+        reason: >-
+          Generic verb (Ps 51:12 "uphold"; Rom 11:18 root metaphor);
+          the paired forms carry the register.
 
   - id: supremacy-of-christ
     # 2026-08-25 apologetics wave batch 2: row authored with the pack
@@ -2873,6 +3038,19 @@ concepts:
           also REJECTED as an entry (accident class — every "what does
           god say about X" query).
 
+  - id: unity-of-the-church
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # unity-of-the-church.json). Phrase-forms pack.
+    skipped:
+      - token: unity
+        reason: >-
+          harmony-with-others' "keep the unity of the spirit" register
+          shares the stem; bare "unity" stays uncontested and the
+          church-paired forms carry this pack.
+      - token: church
+        reason: >-
+          Generic; see church-discipline's identical skip.
+
   - id: vengeance
     # 2026-08-26 tag-gap batch 4: row authored with the pack
     # (fixture-first, vengeance.json). Bare "vengeance" and bare
@@ -2954,6 +3132,20 @@ concepts:
     # ("discernment" is the prayer books' own topic word).
     admitted: [wisdom, discernment]
 
+  - id: witness-testimony
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # witness-testimony.json). Phrase-forms pack.
+    skipped:
+      - token: witness
+        reason: >-
+          sharing-your-faith's evangelism register speaks the stem; the
+          testimony-to-Jesus register keeps two-token forms (measured
+          hijack ran the other way — recorded in the fixture).
+      - token: testimony
+        reason: >-
+          Generic legal/scripture word (Ex 20:16 false testimony;
+          "testimonies" as statutes); the paired forms carry it.
+
   - id: work-and-diligence
     # 2026-08-18 harvest: deliberate bare entries. NOTE: bare "work" was
     # the accidental trigger the 2026-08-08 audit removed from
@@ -2978,3 +3170,16 @@ concepts:
           lexically) and non-devotional senses; the "wrestling with god"
           / "struggling with god" phrase forms carry the concept.
           Pending curation review before any bare admission.
+
+  - id: zion-city-of-god
+    # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
+    # zion-city-of-god.json). The proper noun IS the concept; in the WEB
+    # corpus bytes (Ps 9:11; 46; 65:1; 147:12); no competing concept.
+    admitted: [zion]
+    skipped:
+      - token: jerusalem
+        reason: >-
+          restoration-of-israel's Ps 147:2 register and plain place-name
+          queries; the Zion register keeps the distinctive noun and the
+          paired forms.
+

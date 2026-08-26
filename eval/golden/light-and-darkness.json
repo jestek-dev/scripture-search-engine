@@ -1,0 +1,41 @@
+{
+  "id": "light-and-darkness",
+  "query": "light and darkness in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "jesus light of the world"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id light-and-darkness (Theme K row, 1 requesting",
+    "book: John). The row's check-first route (walking-in-the-light",
+    "lexicon extension) was run and DECLINED: that pack is the",
+    "believer's-walk register (1 John 1:5-7 fellowship test) — the",
+    "row asks for John's christological light-claims, a different",
+    "register; extension would put the Walking-in-the-light chip on",
+    "'jesus light of the world' queries. Cross-related instead;",
+    "i-am-sayings checked: it does not carry John 8:12 or a light",
+    "entry. John 9:5, 12:35-36, 46 corpus-blocked riders.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'light and darkness in the bible' chipless proximity scatter",
+    "(Lam 3:2 rank 1); 'jesus light of the world' exact-phrase luck",
+    "(Matt 5:14 — the DISCIPLES-as-light verse — rank 1, wrong",
+    "referent) with John 8:12 rank 2 CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 3:19-21",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Light and darkness"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 8:12",
+    "John 1:4-5",
+    "John 11:9-10"
+  ],
+  "coversConcepts": [
+    "light-and-darkness"
+  ]
+}

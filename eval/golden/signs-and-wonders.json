@@ -1,0 +1,38 @@
+{
+  "id": "signs-and-wonders",
+  "query": "miracles in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "signs and wonders"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id signs-and-wonders (Theme J row, 1 requesting book:",
+    "Acts). Register per the row: miracles as attestation —",
+    "pastoral-prayer-for-healing keeps the personal-crisis register",
+    "untouched. In-corpus anchors Acts 2:22 (keystone: Jesus attested",
+    "by God through miracles), 2:43, 3:6-8, 4:30, John 3:2; the wider",
+    "Acts miracle catalog (5:12-16; 8-9; 14) rides the re-pin.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'miracles in the bible' pure miracle-token noise (Mark 6:54 rank",
+    "1, all chipless); 'signs and wonders' exact-phrase luck (2 Cor",
+    "12:12 rank 1) with no curated home."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 2:22",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Signs and wonders"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 2:43",
+    "Acts 3:6-8",
+    "Acts 4:30",
+    "John 3:2"
+  ],
+  "coversConcepts": [
+    "signs-and-wonders"
+  ]
+}

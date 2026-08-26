@@ -26,6 +26,9 @@ anchors:
   - ref: Luke 15:7
     sources: [torrey]
     weight: 0.75
+  # BATCH-6 OVERLAP NOTE (2026-08-26): church-discipline anchors the
+  # 7:8-12 letter-grief arc; this verse (godly sorrow) stays this
+  # pack's. Recorded both files.
   - ref: 2 Corinthians 7:10
     sources: [torrey]
     weight: 0.75

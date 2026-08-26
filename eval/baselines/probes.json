@@ -1,6 +1,6 @@
 {
   "corpusFingerprint": "d2846ff36ccd7ffb7a12d525cf3f26aeaf5a81427b014a96da9ff2a903a5d1fe",
-  "layerFingerprint": "f38da39007c39d987c48b9a466329242ebaee670e06b0e77636be3492688c2c5",
+  "layerFingerprint": "c2dd8663be3822b508b0c69d54a3d491f52a09d562592ec1cae4227e092943af",
   "engineVersion": "0.14.0",
   "observations": [
     {
@@ -117,17 +117,17 @@
         "WEB:62001007",
         "WEB:62002006",
         "WEB:49005008",
+        "WEB:64001004",
         "WEB:50001027",
         "WEB:51001010",
         "WEB:25003002",
         "WEB:66021024",
         "WEB:43011010",
-        "WEB:19056013",
-        "WEB:43011009"
+        "WEB:19056013"
       ],
       "resultCount": 25,
-      "weakReasonShare": 0.335018,
-      "meanTopScore": 23.722405
+      "weakReasonShare": 0.278046,
+      "meanTopScore": 26.533117
     },
     {
       "id": "narrow-hearing-doing",

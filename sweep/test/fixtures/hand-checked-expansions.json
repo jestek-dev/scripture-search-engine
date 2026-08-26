@@ -177,6 +177,13 @@
       "conceptId": "dreams-and-visions"
     },
     {
+      "queryId": "concept-register:0042e7a59245d8a6",
+      "query": "i want to learn about light and darkness",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "light-and-darkness"
+    },
+    {
       "queryId": "concept-register:0044ffdab2ec7c66",
       "query": "primary text for a lesson on propitiation",
       "register": "pastor",
@@ -203,13 +210,6 @@
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
       "conceptId": "discipleship"
-    },
-    {
-      "queryId": "concept-register:006a980da9784d82",
-      "query": "verses on the priesthood",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "priesthood"
     }
   ],
   "felt-need": [
@@ -574,6 +574,20 @@
       "conceptId": "obedience-to-the-word"
     },
     {
+      "queryId": "worship-planning:00637eaa7c95d689",
+      "query": "songs about adopted as god's children",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "adoption-as-gods-children"
+    },
+    {
+      "queryId": "worship-planning:0074c66dd6757085",
+      "query": "responsive reading about witness and testimony to jesus",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "witness-testimony"
+    },
+    {
       "queryId": "worship-planning:00931a318fc9254a",
       "query": "benediction on honor the son",
       "register": "worship-leader",
@@ -609,25 +623,11 @@
       "conceptId": "gods-plan-for-israel"
     },
     {
-      "queryId": "worship-planning:01c22d7c54a69fe9",
-      "query": "benediction on design in creation",
+      "queryId": "worship-planning:018214474797a4e2",
+      "query": "songs about singleness",
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
-      "conceptId": "design-in-creation"
-    },
-    {
-      "queryId": "worship-planning:023c488cadd320ae",
-      "query": "setlist theme the greatest commandment",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "loving-god"
-    },
-    {
-      "queryId": "worship-planning:0250d083ba1179f1",
-      "query": "opening scripture for a service on fell back into sin",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "relapse-and-restoration"
+      "conceptId": "singleness"
     }
   ]
 }

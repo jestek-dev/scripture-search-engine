@@ -1,0 +1,37 @@
+{
+  "id": "unity-of-the-church",
+  "query": "church unity",
+  "status": "active",
+  "additionalQueries": [
+    "one body in christ"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id unity-of-the-church (Theme J row, 3 requesting",
+    "books). Collision designed around: harmony-with-others keeps its",
+    "interpersonal-peace register, its 'keep the unity of the spirit'",
+    "entry and its Eph 4:2-3 anchor untouched — this pack takes the",
+    "church-body register with the ADJACENT Eph 4:4-6, plus Eph",
+    "2:14-16 and 1 Cor 1:10; zero shared phrases (recorded both",
+    "files). John 17:21-23 and Acts 15 are corpus-blocked riders.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'church unity' was chipless scatter (Rom 12:5 rank 1 by passage",
+    "terms, Eph 4:3 rank 2 by bare token); 'one body in christ'",
+    "exact-phrase luck on Rom 12:5, no curated home."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ephesians 4:4-6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Unity of the church"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 1:10",
+    "Ephesians 2:14-16"
+  ],
+  "coversConcepts": [
+    "unity-of-the-church"
+  ]
+}

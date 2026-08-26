@@ -1,0 +1,34 @@
+{
+  "id": "head-coverings",
+  "query": "head coverings in church",
+  "status": "active",
+  "additionalQueries": [
+    "should women cover their heads"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id head-coverings (Theme J row, 1 requesting book:",
+    "1 Corinthians). The one-design-before-minting-either cross-note",
+    "with men-and-women-in-the-church is DECIDED as two rows (recorded",
+    "in the pack): that broader row's text (1 Tim 2:8-15) is entirely",
+    "corpus-blocked and rides the re-pin; this row is the narrow",
+    "one-passage lookup the review describes, and its passage is fully",
+    "in corpus. Gist describes and routes; it adjudicates nothing",
+    "(gender roles are a named non-criterion in DOCTRINAL-BASIS §4).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'head coverings in church' pure head-token noise (Eph 5:23 rank",
+    "1); 'should women cover their heads' reached 1 Cor 11:7/11:4 by",
+    "proximity CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Corinthians 11:2-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Head coverings"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "head-coverings"
+  ]
+}

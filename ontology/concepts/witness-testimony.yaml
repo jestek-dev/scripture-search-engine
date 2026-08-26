@@ -1,0 +1,71 @@
+# TAG-GAP ROLLOUT batch 6 (Theme K, 2026-08-26) — ADOPTED-TAG id
+# (Theme K row, 1 requesting book: John). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR.
+#
+# REGISTER (the row's own): witness is John's apologetic framework —
+# testimony TO Jesus' identity. sharing-your-faith keeps the
+# believer's-evangelism register untouched (measured: "witnesses to
+# jesus" was hijacked by its Great-Commission anchors — the row's own
+# diagnosis; cross-related, zero shared anchor claims).
+#
+# BOUNDARIES inside the John chapters: 1:29 stays the-cross's ("Lamb
+# of God"), 1:32-33 holy-spirit's (Spirit descending), 3:30
+# surrender-to-god's ("He must increase") — this pack anchors 1:6-8,
+# 1:19-23, 3:26-29, 8:14-18, all previously unclaimed. "why believe
+# jesus" was checked as an entry and DROPPED ({believ, jesu} would
+# hijack "believe in jesus" salvation queries — accident class;
+# recorded here, structural limit).
+#
+# CORPUS: John 5:31-47 (the five stacked witnesses — the row's
+# centerpiece chapter) and 10:25, 41-42 are corpus-blocked riders.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: witness-testimony
+label: Witness and testimony to Jesus
+lexicon:
+  - testimony of john the baptist
+  - witnesses to jesus
+  - testify about jesus
+  - voice of one crying in the wilderness
+anchors:
+  # "This is John's testimony... He declared, 'I am not the Christ'...
+  # 'I am the voice of one crying in the wilderness, "Make straight
+  # the way of the Lord"'" (WEB, in corpus). The Baptist's testimony
+  # in his own words. (1:29 stays the-cross's.)
+  - ref: John 1:19-23
+    sources: [editorial]
+    weight: 1.0
+  # "There came a man sent from God, whose name was John. The same
+  # came as a witness, that he might testify about the light, that
+  # all might believe through him." (WEB, in corpus). The Gospel's
+  # own job description for a witness.
+  - ref: John 1:6-8
+    sources: [editorial]
+    weight: 0.95
+  # "You yourselves testify that I said, 'I am not the Christ,' but,
+  # 'I have been sent before him.'... the friend of the bridegroom...
+  # rejoices greatly because of the bridegroom's voice." (WEB, in
+  # corpus). The witness's joy in pointing away from himself. (3:30
+  # stays surrender-to-god's.)
+  - ref: John 3:26-29
+    sources: [editorial]
+    weight: 0.9
+  # "Even if I testify about myself, my testimony is true... I am one
+  # who testifies about myself, and the Father who sent me testifies
+  # about me." (WEB, in corpus). The two-witness argument Jesus
+  # himself makes.
+  - ref: John 8:14-18
+    sources: [editorial]
+    weight: 0.85
+  # The stacked witnesses — the Baptist, the works, the Father, the
+  # Scriptures, Moses. (John 5 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: John 5:31-39
+    sources: [editorial]
+    weight: 0.8
+related:
+  - sharing-your-faith
+  - deity-of-christ
+  - trustworthiness-of-scripture

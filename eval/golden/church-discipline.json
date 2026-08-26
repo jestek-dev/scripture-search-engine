@@ -1,0 +1,37 @@
+{
+  "id": "church-discipline",
+  "query": "church discipline",
+  "status": "active",
+  "additionalQueries": [
+    "how should the church handle sin"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 6 (Themes J-M, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id church-discipline (Theme J row, 5 requesting books)",
+    "— engine admission only by Jesse's merge of this PR. Register",
+    "boundary honored both ways: the-lords-discipline keeps God's",
+    "chastening (Heb 12), receiving-correction keeps personal",
+    "teachability, forgiving-others keeps Matt 18:21-22. Matt 18:15-17",
+    "(the row's own anticipated text) is in corpus and unclaimed.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'church discipline' returned Heb 12:7-8 rank 1 (the-Lord's-",
+    "discipline register, wrong intent) with Matt 18:18 rank 3",
+    "CHIPLESS; 'how should a church handle sin' was flooded wholesale",
+    "by Sin-and-its-wages anchors (Rom 6:23 etc.)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Matthew 18:15-17",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Church discipline"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Titus 3:10-11",
+    "2 Corinthians 7:8-12"
+  ],
+  "coversConcepts": [
+    "church-discipline"
+  ]
+}

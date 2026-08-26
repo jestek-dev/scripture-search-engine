@@ -68,6 +68,9 @@ anchors:
   # praying-for-leaders (recorded there): the passage is both
   # registers' central text — prayer-and-submission there, the
   # believer-and-state question here.
+  # BATCH-6 NOTE (2026-08-26): conscience's Theme J extension
+  # cross-notes 13:5 (be in subjection 'for conscience' sake') but
+  # does NOT claim it — the verse stays inside this span.
   - ref: Romans 13:1-7
     sources: [editorial]
     weight: 0.95

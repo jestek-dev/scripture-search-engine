@@ -32,6 +32,10 @@ anchors:
   # another in love, being eager to keep the unity of the Spirit in the
   # bond of peace" (WEB). Unity kept, not manufactured. Torrey lists 4:2
   # under MEEKNESS / LOVE TO MAN ("forbearing"); editorial for the range.
+  # BATCH-6 BOUNDARY (2026-08-26): unity-of-the-church takes the
+  # ADJACENT 4:4-6 (church-body register) with zero shared phrases;
+  # this anchor and the 'keep the unity of the spirit' entry stay
+  # this pack's. Recorded both files.
   - ref: Ephesians 4:2-3
     sources: [editorial]
     weight: 0.9

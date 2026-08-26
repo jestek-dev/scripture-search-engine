@@ -8,12 +8,25 @@ label: Walking in the light
 #
 # "light" on its own stays broad, because it legitimately spans both senses.
 # It is the WALKING phrases that pin this concept to conduct.
+#
+# TAG-GAP ROLLOUT batch 6 (2026-08-26): LEXICON+ANCHOR EXTENSION for
+# the Theme J walking-in-truth row (3 John) — the row's own check-first
+# route, taken: same walk-practice register, same Johannine family.
+# 3 John's corpus presence is 1:4 alone (1:3 and 1:5-8 are
+# corpus-blocked; 1:5-8 stays hospitality's anchor). The John-doc
+# cross-note is honored by keeping the what-is-truth register OUT:
+# that Theme K row stays deferred (its texts owned or corpus-blocked).
+# NOTE (same batch): the cosmological John light-claims this header
+# already declined now live in the new light-and-darkness pack —
+# cross-related below; this pack keeps conduct.
 lexicon:
   - walking in the light
   - walk as Jesus walked
   - walk in darkness
   - fellowship with one another
   - live according to the word
+  # Batch 6 walking-in-truth extension (see header).
+  - walking in truth
 anchors:
   - ref: 1 John 1:5-7
     sources: [editorial]
@@ -39,5 +52,19 @@ anchors:
   - ref: Philippians 1:27
     sources: [editorial]
     weight: 0.7
+  # Batch 6 walking-in-truth extension: "I have no greater joy than
+  # this: to hear about my children walking in truth." (WEB, in
+  # corpus). The letter's stated greatest joy — the phrase occurs
+  # three times in four verses (1:3-4); only 1:4 is in corpus, 1:3
+  # rides the re-pin.
+  - ref: 3 John 1:4
+    sources: [editorial]
+    weight: 0.85
 related:
   - obedience-to-the-word
+  # BATCH-6 EDGE TRIED AND REVERTED (2026-08-26): a related edge to the
+  # new light-and-darkness pack surfaced John 1:4-5 on "walking in the
+  # light" — exactly what this pack's own mustNotRank guard (Jesse's
+  # 2026-07-29 removal of John 1:4-9) forbids. The edge is ONE-
+  # DIRECTIONAL: light-and-darkness -> walking-in-the-light stands
+  # (trusting-in-man/trust-in-god precedent).

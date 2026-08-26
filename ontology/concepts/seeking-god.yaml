@@ -83,6 +83,10 @@ anchors:
   # turn from their wicked ways..." (WEB, in corpus). Verse-scoped
   # sibling inside the-house-of-god's 7:12-16 keystone — recorded in
   # both files.
+  # BATCH-6 THIRD CLAIM (2026-08-26): revival-and-reformation also
+  # claims this verse (the turn-and-heal promise, its keystone) —
+  # three verse-scoped registers on one text, recorded in all three
+  # files.
   - ref: 2 Chronicles 7:14
     sources: [editorial]
     weight: 0.85
