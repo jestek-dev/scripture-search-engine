@@ -499,6 +499,29 @@ collapses:
       gods-faithfulness register, plausibly right, but the pack file does
       not mark the collapse deliberate; recorded because it fires today.
       Deny-list review candidate if it proves broad.
+  - conceptId: mercy
+    phrase: be merciful
+    token: merciful
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-26"
+    note: >-
+      TAG-GAP batch 2 (2026-08-26), authored with the pack: "be merciful"
+      (Luke 6:36's own imperative) collapses to bare "merciful" ("be" is a
+      stopword). Deliberate — the bare adjective is a natural query for
+      this exact register and the token is distinctive; fixture-backed
+      (mercy.json).
+  - conceptId: occult-and-divination
+    phrase: the occult
+    token: occult
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-26"
+    note: >-
+      TAG-GAP batch 2 (2026-08-26), authored with the pack: "the occult"
+      collapses to bare "occult" — the subject noun people type,
+      distinctive token with no competing concept; deliberate per the
+      pack's in-file comment, fixture-backed (occult-and-divination.json).
 
 # Bare-word inventory — reviewed data, one row per compiled concept id.
 #
@@ -545,6 +568,21 @@ concepts:
     # 2026-08-08 correction table: collapses of "abide in me" / "remain in
     # me" — exactly the bare words someone would type; kept deliberately.
     admitted: [abide, remain]
+
+  - id: angels
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, angels.json). Bare `angels` is a deliberate
+    # single-word entry — the subject noun IS the concept, the word
+    # saturates the WEB text, and the measured gap was the query family
+    # reaching nothing curated. Every other entry keeps >= 2 significant
+    # tokens.
+    admitted: [angel]
+    skipped:
+      - token: guardian
+        reason: >-
+          Bare `guardian` is the human-ward sense as often as the angelic
+          one; "guardian angel" (2 tokens) carries the query without
+          handing the pack a generic word.
 
   - id: antichrist
     # 2026-08-26 tag-gap batch 1: row authored with the pack
@@ -796,6 +834,26 @@ concepts:
           a contemporary-practice sense the pack does not answer. The
           "meditate on ..." phrase forms carry it today.
 
+  - id: deliverance-from-demons
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, deliverance-from-demons.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires.
+    skipped:
+      - token: demon
+        reason: >-
+          Bare `demons` adds only narrative-scatter hijack surface; the
+          paired forms (casting out demons, demon possession, demons in
+          the bible) carry every natural query in the family.
+      - token: exorcism
+        reason: >-
+          The word never occurs in the WEB text and "casting out demons"
+          is what people type; admit later only against a measured gap.
+      - token: deliverance
+        reason: >-
+          Owned territory of the pastoral register and the Theme H
+          `deliverance` review row (rescue-from-enemies) still to be
+          curated — a bare grab here would preempt that row's design.
+
   - id: design-in-creation
     # 2026-08-25 apologetics wave batch 3: row authored with the pack
     # (fixture-first, design-in-creation.json). Every entry keeps >= 2
@@ -1002,11 +1060,39 @@ concepts:
     # significant tokens.
     admitted: [apologetics]
 
+  - id: glory-of-god
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, glory-of-god.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: glory
+        reason: >-
+          Doxology language spanning praise, worship and heavenly-reward
+          territory; the paired forms (the glory of god, glory of the
+          lord) carry the query family without handing this pack a
+          common doxological token.
+
   - id: god-of-all-comfort
     # 2026-08-18 harvest: deliberate bare entry — closes the 2026-08-13
     # audit's "comforter"/"comfort" reachability gap on the comfort side
     # (holy-spirit-the-comforter owns "comforter").
     admitted: [comfort]
+
+  - id: god-reigns
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, god-reigns.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: reign
+        reason: >-
+          Human kings reign across the narrative books; "the lord
+          reigns" / "god reigns" (2 tokens each) carry the doxological
+          register precisely.
+      - token: king
+        reason: >-
+          Among the commonest narrative nouns in the corpus; "king of
+          kings" alone would also collapse to it, so only the full
+          "king of kings and lord of lords" is an entry.
 
   - id: god-sees-my-suffering
     skipped:
@@ -1127,6 +1213,18 @@ concepts:
     # in-file comment; extending the stemmer was explicitly rejected
     # there in favor of the deterministic lexicon fix).
     admitted: [holy, sanctified, purity, holiness, sanctification, sanctify]
+
+  - id: holy-spirit
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, holy-spirit.json). Every entry keeps >= 2
+    # significant tokens ("holy spirit" itself is {holy, spirit}); no
+    # bare word fires this pack.
+    skipped:
+      - token: spirit
+        reason: >-
+          Spans the human spirit, unclean spirits and the breath-of-life
+          register; every Spirit pack (this one, the comforter,
+          walking-by-the-spirit, the fruit) keeps it paired.
 
   - id: holy-spirit-the-comforter
     # 2026-08-18 harvest: deliberate bare entries — the Paraclete titles
@@ -1319,6 +1417,29 @@ concepts:
     # plain-language registers.
     admitted: [justification]
 
+  - id: knowing-god
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, knowing-god.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: know
+        reason: >-
+          Among the commonest verbs in the corpus; "they will all know
+          me" was rejected as an entry for collapsing to exactly this
+          token (pack comment). The paired forms (knowing god, know the
+          lord) carry the register.
+
+  - id: living-water
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, living-water.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: water
+        reason: >-
+          Plain narrative noun across the whole corpus (wells, seas,
+          washing); the paired forms (living water, water of life)
+          carry the family.
+
   - id: loneliness
     # 2026-08-18 harvest: deliberate bare entries — the felt-need words.
     admitted: [loneliness, lonely]
@@ -1351,6 +1472,21 @@ concepts:
           (fixture first — never add data because it exists); the pack is
           reachable today by its question phrasings. Bare "marriage" belongs
           to godly-marriage (2026-08-18).
+
+  - id: mercy
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, mercy.json). Bare `mercy` is a deliberate
+    # single-word entry — the subject noun IS the concept and the hesed
+    # register had no home; `merciful` fires via the "be merciful"
+    # collapse (collapse row, same date). Every other entry keeps >= 2
+    # significant tokens.
+    admitted: [mercy, merciful]
+    skipped:
+      - token: kindness
+        reason: >-
+          Owned territory of the Theme E `kindness` review row still to
+          be curated; "loving kindness" (2 tokens, the WEB's own hesed
+          rendering) carries the corpus wording without preempting it.
 
   - id: messianic-prophecy
     # 2026-08-26 tag-gap batch 1: row authored with the pack
@@ -1451,6 +1587,22 @@ concepts:
   - id: obedience-to-the-word
     # 2026-08-08 decision table: the concept's own subject.
     admitted: [obedience]
+
+  - id: occult-and-divination
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, occult-and-divination.json). Bare `witchcraft`,
+    # `divination` and `occult` (the last via "the occult", collapse
+    # row) are deliberate single-word entries — the subject nouns people
+    # type, distinctive tokens with no competing concept. Every other
+    # entry keeps >= 2 significant tokens.
+    admitted: [witchcraft, divination, occult]
+    skipped:
+      - token: sorcery
+        reason: >-
+          Plausible future admission; deferred pending a measured gap —
+          today the family's queries reach the pack through its admitted
+          nouns and paired forms, and the corpus word appears inside
+          spans other packs own (Gal 5:20).
 
   - id: parenting
     # 2026-08-18 harvest: deliberate bare entry — the concept's own subject
@@ -1779,6 +1931,24 @@ concepts:
     # with a measured fixture.
     admitted: [salvation, saved, born]
 
+  - id: satan
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, satan.json). Every entry keeps >= 2 significant
+    # tokens; no bare word fires THIS pack.
+    skipped:
+      - token: satan
+        reason: >-
+          Owned by resisting-the-devil, whose active fixture pins the
+          query "satan" -> James 4:7 (a provisional move here regressed
+          it and was reverted in-session — see both pack comments).
+          Re-routing the bare word is a fixture change first, in its
+          own PR.
+      - token: devil
+        reason: >-
+          Owned by resisting-the-devil ("the devil" collapse row,
+          2026-08-21); "the devil in the bible" (2 tokens) carries the
+          who-is phrasing here.
+
   - id: second-coming
     # "maranatha" is a literal one-word entry (pre-2026-08-08).
     admitted: [maranatha]
@@ -1847,6 +2017,22 @@ concepts:
     # reviewed and admitted with the pack (broad by nature, kept humble by
     # the one-token discount).
     admitted: [sin]
+
+  - id: slow-to-anger
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, slow-to-anger.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: anger
+        reason: >-
+          Spans human anger (the self-control register the row's own
+          flag routes away) and God's wrath (divine-judgment); "slow to
+          anger" (2 tokens) is the formula itself.
+      - token: patience
+        reason: >-
+          The human virtue lives in the fruit-of-the-Spirit and
+          perseverance registers; "gods patience" (2 tokens) keeps the
+          divine-attribute claim precise.
 
   - id: spiritual-gifts
     # KEPT-WITH-RESERVATION: "what are my gifts" (2026-08-18 harvest)
@@ -2015,6 +2201,25 @@ concepts:
     # row for the two-concept ambiguity).
     admitted: [chastening]
 
+  - id: the-name-of-god
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, the-name-of-god.json). Every entry keeps >= 2
+    # significant tokens ("i am who i am" was REJECTED as an entry —
+    # all stopwords, zero-width phrase; pack comment). No bare word
+    # fires.
+    skipped:
+      - token: name
+        reason: >-
+          Among the commonest nouns in the corpus (naming children,
+          lists, reputations); the paired forms (the name of god, gods
+          name, name of the lord) carry the register.
+      - token: yahweh
+        reason: >-
+          Plausible future admission (people do type it bare); deferred
+          pending a measured gap — "meaning of yahweh" carries the live
+          query today, and the WEB renders the name as LORD, so the bare
+          token has no verse-text rung to stand on.
+
   - id: the-ten-commandments
     # 2026-08-18 harvest: deliberate bare entry — the technical name, fully
     # unambiguous.
@@ -2082,6 +2287,17 @@ concepts:
     # barren/childless are fixture-backed (waiting-for-a-child-barren
     # .json).
     admitted: [infertility, barren, childless]
+
+  - id: walking-by-the-spirit
+    # 2026-08-26 tag-gap batch 2: row authored with the pack
+    # (fixture-first, walking-by-the-spirit.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires.
+    skipped:
+      - token: walk
+        reason: >-
+          Plain narrative verb spanning literal walking and every
+          walk-with-God metaphor; the paired spirit forms carry this
+          register.
 
   - id: walking-in-the-light
     skipped:

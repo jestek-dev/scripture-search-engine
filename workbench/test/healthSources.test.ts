@@ -131,9 +131,16 @@ describe('health source semantics', () => {
     // remnant, day-of-the-lord, restoration-of-israel, messianic-prophecy,
     // antichrist, servant-of-the-lord, gods-plan-for-israel — each with an
     // active demonstrating fixture in the same change).
+    // + the 13 tag-gap rollout batch-2 packs (2026-08-26, Themes C-D of the
+    // adopted tag-gap review: slow-to-anger, mercy, knowing-god, god-reigns,
+    // the-name-of-god, living-water, glory-of-god, angels,
+    // occult-and-divination, holy-spirit, deliverance-from-demons, satan,
+    // walking-by-the-spirit — each with an active demonstrating fixture in
+    // the same change; the batch's two extensions ride providence and
+    // gods-love, so they add no ids here).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(168);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(168);
+    expect(coverage).toHaveLength(181);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(181);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

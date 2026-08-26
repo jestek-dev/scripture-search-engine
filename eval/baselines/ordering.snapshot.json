@@ -1,7 +1,7 @@
 {
   "engineVersion": "0.14.0",
   "corpusFingerprint": "d2846ff36ccd7ffb7a12d525cf3f26aeaf5a81427b014a96da9ff2a903a5d1fe",
-  "layerFingerprint": "78adcc89ae7e68c75c102f3798994607681cb63be76a05c627a2de85635cf20d",
+  "layerFingerprint": "5f7df1ed34096f07dba4388371f68ac5cfb362109cea85078c6e41851160e56d",
   "probes": [
     {
       "id": "broad-love",
@@ -59,6 +59,14 @@
           "score": 17.3
         },
         {
+          "targetId": "WEB:19147011",
+          "score": 16.5
+        },
+        {
+          "targetId": "WEB:23043004",
+          "score": 15.4
+        },
+        {
           "targetId": "WEB:43013035",
           "score": 10.285714
         },
@@ -97,14 +105,6 @@
         {
           "targetId": "WEB:40005044",
           "score": 7.9
-        },
-        {
-          "targetId": "WEB:46013013",
-          "score": 7.533333
-        },
-        {
-          "targetId": "WEB:60004008",
-          "score": 7.533333
         }
       ]
     },
@@ -2100,8 +2100,16 @@
           "score": 8.083102
         },
         {
+          "targetId": "WEB:19103011",
+          "score": 6.991355
+        },
+        {
           "targetId": "WEB:19101001",
           "score": 6.503522
+        },
+        {
+          "targetId": "WEB:19147011",
+          "score": 6.253453
         },
         {
           "targetId": "WEB:51003012",
@@ -2114,6 +2122,10 @@
         {
           "targetId": "WEB:19116001",
           "score": 5.666202
+        },
+        {
+          "targetId": "WEB:59002013",
+          "score": 4.065493
         },
         {
           "targetId": "WEB:05007012",
@@ -2165,18 +2177,6 @@
         },
         {
           "targetId": "WEB:19100005",
-          "score": 4.039746
-        },
-        {
-          "targetId": "WEB:19103008",
-          "score": 4.039746
-        },
-        {
-          "targetId": "WEB:19103011",
-          "score": 4.039746
-        },
-        {
-          "targetId": "WEB:19103017",
           "score": 4.039746
         }
       ]

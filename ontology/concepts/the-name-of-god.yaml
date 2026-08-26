@@ -1,0 +1,105 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme C row in tag-gaps-review.md, 4 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The name of God — the revelation and honor of the name itself: "I AM
+# WHO I AM", "what is God's name", "meaning of Jehovah/Yahweh".
+# ONE-CONCEPT-OR-TWO DECIDED (the row's flag): TWO registers. This
+# pack is the name revealed and honored; Ezekiel's gods-holy-name row
+# (God acting FOR HIS NAME'S SAKE) is a distinct register and stays
+# deferred — its minting refs (Ezek 36:20-23; 39:7, 25; 20:9-44) are
+# all corpus-blocked; the decision is recorded on both rows' ledger
+# lines and the re-pin curator inherits it.
+#
+# ROUTING HONORED: Prov 18:10 ("the name of the LORD is a strong
+# tower") stays routed to refuge-in-trouble per the Proverbs doc's own
+# routing; Matt 6:9 ("hallowed be your name") stays inside prayer's
+# Lord's-Prayer span (Matt 6:9-13) — the honoring petition is carried
+# here by lexicon only, landing on this pack's own anchors.
+#
+# SPAN NOTE: Exod 20:7 is claimed inside the-ten-commandments' Exod
+# 20:1-17 span — the idolatry (Exod 20:3-6, batch 1) precedent:
+# disjoint lexicons, the passage honestly carries both themes.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({name, god}, {name, lord}, {mean, yahweh}, {mean, jehovah},
+# {hallow, name}). "i am who i am" was tried as an entry and the
+# tokenizer REJECTED it — it normalizes to nothing (all stopwords), so
+# no query could ever match it. MEASURED and recorded: the query
+# "i am who i am" reaches Exod 3:13-15 by EXACT PHRASE retrieval of
+# the verse's own words (top result, chipless) — an honest lexical
+# rung the lexicon cannot and need not duplicate; the fixture asserts
+# the chip on "what is gods name" / "meaning of yahweh" instead.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: the-name-of-god
+label: The name of God
+lexicon:
+  - the name of god
+  - gods name
+  - the name of the lord
+  - meaning of yahweh
+  - meaning of jehovah
+  - hallowed be your name
+anchors:
+  # "'What is his name?'... God said to Moses, 'I AM WHO I AM'...
+  # 'This is my name forever, and this is my memorial to all
+  # generations'" (WEB, in corpus). The keystone — the name asked for
+  # and given. Exod 3:2 is angels' (same batch), 3:7 is
+  # pastoral-god-sees-my-suffering's — no span overlap.
+  - ref: Exodus 3:13-15
+    sources: [editorial]
+    weight: 1.0
+  # "You shall not misuse the name of the LORD your God" (WEB, in
+  # corpus). The commandment guarding the name; claimed inside
+  # the-ten-commandments' 20:1-17 span (header note).
+  - ref: Exodus 20:7
+    sources: [editorial]
+    weight: 0.9
+  # "Those who know your name will put their trust in you" (WEB, in
+  # corpus). The trusting-the-name register the Proverbs doc flagged
+  # as adjacent to the row's core.
+  - ref: Psalms 9:10
+    sources: [editorial]
+    weight: 0.85
+  # "You shall not swear by my name falsely, and profane the name of
+  # your God" (WEB, in corpus). The name profaned — Leviticus'
+  # register; Lev 19:3 is sabbath-rest's, 19:4 idolatry's, 19:33-34
+  # hospitality's — no span overlap.
+  - ref: Leviticus 19:12
+    sources: [editorial]
+    weight: 0.8
+  # "You shall fear the LORD your God; and you shall serve him, and
+  # shall swear by his name" (WEB, in corpus). Deut 6:4 is
+  # no-other-god's, 6:6-7 parenting's — no span overlap.
+  - ref: Deuteronomy 6:13
+    sources: [editorial]
+    weight: 0.75
+  # "The LORD descended... and proclaimed the LORD's name... 'The
+  # LORD! The LORD, a merciful and gracious God'" — the name
+  # proclaimed in full. (Exodus 34 NOT in web-subset; re-check at
+  # re-pin. Exod 34:6-7 itself is slow-to-anger's rider — this 34:5
+  # claim is the proclamation event, kept to the verse the formula
+  # rider does not carry.)
+  - ref: Exodus 34:5
+    sources: [editorial]
+    weight: 0.85
+  # "God said moreover... 'The LORD... I appeared to Abraham... as God
+  # Almighty; but by my name Yahweh I was not known to them.'" (Exodus
+  # 6 NOT in web-subset; re-check at re-pin.)
+  - ref: Exodus 6:2-3
+    sources: [editorial]
+    weight: 0.85
+  # "whoever blasphemes the name of the LORD, he shall surely be put
+  # to death" — the name's honor in Israel's law. (Leviticus 24 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Leviticus 24:15-16
+    sources: [editorial]
+    weight: 0.7
+related:
+  - knowing-god
+  - holiness
+  - the-ten-commandments

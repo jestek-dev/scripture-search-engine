@@ -1,0 +1,89 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme C row in tag-gaps-review.md, 6 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "Slow to anger" — one of Scripture's most repeated self-descriptions
+# (the Exod 34:6 formula, prayed back at Num 14:18 and Neh 9:17, sung
+# in Pss 86/103/145, and holding even in Nahum). divine-judgment
+# carries the wrath side; nothing carried God's patience. The formula's
+# source text (Exod 34:6-7) is corpus-blocked and rides the re-pin; in
+# corpus the formula is verbatim in Ps 86:15 and Ps 103:8, and Rom 2:4
+# preaches the patience's purpose.
+#
+# BOUNDARY (the row's own flag, honored): the HUMAN virtue — Prov
+# 14:29; Jas 1:19 ("slow to speak, slow to anger") — is self-control's
+# territory, not this pack's; neither is anchored, and Jas 1:19
+# ranking lexically on the formula's words is honest retrieval.
+# Nah 1:3 (verbatim in corpus) is NOT an anchor: divine-judgment owns
+# the Nah 1:2-6 span, and the verse's own point is patience WITHOUT
+# acquittal — the two packs cross-relate instead.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({slow, anger}, {god, patienc/patient}, {compassion, graciou}).
+# No bare word fires. Shared with mercy (same batch): zero shared
+# phrases; token sets disjoint apart from `god`.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: slow-to-anger
+label: Slow to anger
+lexicon:
+  - slow to anger
+  - gods patience
+  - god is patient
+  - the lords patience
+  - compassionate and gracious god
+anchors:
+  # "But you, Lord, are a merciful and gracious God, slow to anger, and
+  # abundant in loving kindness and truth" (WEB, in corpus). The Exod
+  # 34:6 formula prayed back to God — the psalter's own creed.
+  - ref: Psalms 86:15
+    sources: [editorial]
+    weight: 1.0
+  # "The LORD is merciful and gracious, slow to anger, and abundant in
+  # loving kindness" (WEB, in corpus). The formula sung as praise; kept
+  # to v8 — mercy (same batch) takes vv10-11, forgiveness-of-sins owns
+  # v12, prayer-for-healing vv2-3, providence v19. No span overlap.
+  - ref: Psalms 103:8
+    sources: [editorial]
+    weight: 0.95
+  # "Or do you despise the riches of his goodness, forbearance, and
+  # patience, not knowing that the goodness of God leads you to
+  # repentance?" (WEB, in corpus). The patience's purpose stated —
+  # never permission, always invitation.
+  - ref: Romans 2:4
+    sources: [editorial]
+    weight: 0.85
+  # "The LORD, the LORD, a merciful and gracious God, slow to anger,
+  # and abundant in loving kindness and truth" — the formula's source
+  # text, God proclaiming his own name. (Exodus 34 NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Exodus 34:6-7
+    sources: [editorial]
+    weight: 1.0
+  # "The LORD is slow to anger, and abundant in loving kindness,
+  # forgiving iniquity and disobedience" — Moses praying the formula
+  # back as intercession, its locus classicus in prayer. (Numbers 14
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Numbers 14:18
+    sources: [editorial]
+    weight: 0.9
+  # "But you are a God ready to pardon, gracious and merciful, slow to
+  # anger, and abundant in loving kindness, and didn't forsake them" —
+  # the formula holding across the whole rebellion history. (Nehemiah 9
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Nehemiah 9:17
+    sources: [editorial]
+    weight: 0.8
+  # "The LORD is gracious and merciful, slow to anger, and of great
+  # loving kindness." (Psalm 145 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Psalms 145:8
+    sources: [editorial]
+    weight: 0.85
+related:
+  - mercy
+  - divine-judgment
+  - forgiveness-of-sins

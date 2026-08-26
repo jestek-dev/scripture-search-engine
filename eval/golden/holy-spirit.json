@@ -1,48 +1,59 @@
 {
   "id": "holy-spirit",
-  "query": "holy spirit",
+  "query": "baptized with the holy spirit",
   "status": "active",
-  "note": [
-    "Bare-phrase coverage for the audit gap 'holy spirit', which currently",
-    "reaches no concept. Per §7.7 the phrase 'holy spirit' belongs to the",
-    "holy-spirit-the-comforter lexicon — there is deliberately NO separate",
-    "general holy-spirit concept in this cluster: a sibling pack would",
-    "collide with the comforter lexicon in G4, and the John 14-16 promise",
-    "passages are a sound landing for the bare query. If Jesse later wants",
-    "a broader Holy Spirit pack (Phillips's topic verses: Ephesians 5:18;",
-    "1 Corinthians 3:16, 6:19, 12:4-6; 2 Corinthians 13:14), 'holy spirit'",
-    "moves to it in the same PR and this fixture's coversConcepts moves",
-    "with it.",
-    "",
-    "John 14:26 is the expectedTop because it is the anchor that names 'the",
-    "Holy Spirit' in so many words in the WEB text. Galatians 5:22 and",
-    "Romans 5:5 may honestly rank via other concepts' anchors and lexical",
-    "match; alsoAcceptable admits them.",
-    "",
-    "Pending per fixtures-first; flip active with the concept PR.",
-    "Round-2 book admission 2026-08-18: holy-spirit-the-comforter gained John 16:13 (guide into all truth — the paraclete promise, deliberately NOT wired to decision-guidance queries) and Eph 5:18 (be filled with the Spirit)."
-  ],
   "additionalQueries": [
-    "the holy spirit"
+    "filled with the holy spirit",
+    "who is the holy spirit"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id holy-spirit (Theme D row, 4 requesting books; Acts",
+    "is 'the strongest single anchor set for this proposed concept') —",
+    "engine admission only by Jesse's merge of this PR. The vocabulary",
+    "carried only facets; holy-spirit-the-comforter's OWN in-file design",
+    "note says that if a broader Holy Spirit pack is minted, the 'holy",
+    "spirit' lexicon entry moves there in the same PR — executed here,",
+    "with the filled-with entries moving too (their anchors, Acts 2:4",
+    "and 4:31, live in this pack). Routing warning honored: this",
+    "lexicon does NOT carry counselor/comforter/helper/advocate/spirit",
+    "of truth — those queries stay with holy-spirit-the-comforter.",
+    "The fold question against outpouring-of-the-spirit is DECIDED as",
+    "the fold the Luke row invited: the outpouring register lives here",
+    "(Acts 2:1-4 in corpus; Joel 2:28-29 rides the re-pin — Acts 2:17",
+    "and Joel 2:28 stay dreams-and-visions anchors, sibling noted).",
+    "empowered-by-the-spirit (Judges) stays a separate deferred row.",
+    "FIXTURE MIGRATION, recorded: this file REPLACES the books-harvest",
+    "fixture of the same id (PR #31), which asserted 'holy spirit' ->",
+    "John 14:26 with the Comforter chip and whose own note prescribed",
+    "exactly this change — 'If Jesse later wants a broader Holy Spirit",
+    "pack... \"holy spirit\" moves to it in the same PR and this",
+    "fixture's coversConcepts moves with it.' Executed: coversConcepts",
+    "moves to the new id (holy-spirit-the-comforter stays demonstrated",
+    "by its own holy-spirit-the-comforter.json), and the bare 'holy",
+    "spirit' token set is asserted here via 'who is the holy spirit'.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "all three queries — 'baptized with the holy spirit', 'filled with",
+    "the holy spirit', 'who is the holy spirit' — failed to surface",
+    "Acts 1:4-5 in the top 10 at all; the comforter pack's facet",
+    "anchors were the only curated route for Spirit queries."
   ],
   "expectedTop": [
     {
-      "reference": "John 14:26",
+      "reference": "Acts 1:4-5",
       "requiredReasonFamily": "concept_anchor",
-      "requiredReasonLabel": "Theme: The Holy Spirit, the Comforter"
+      "requiredReasonLabel": "Theme: The Holy Spirit"
     }
   ],
   "expectedWithinTop": 10,
   "alsoAcceptable": [
-    "John 14:16-17",
-    "John 15:26",
-    "John 16:7",
-    "Galatians 5:22",
-    "Romans 8:26",
-    "John 16:13",
-    "Ephesians 5:18"
+    "Acts 2:1-4",
+    "Acts 4:31",
+    "Luke 11:13",
+    "John 1:32-33",
+    "John 3:5-8"
   ],
   "coversConcepts": [
-    "holy-spirit-the-comforter"
+    "holy-spirit"
   ]
 }

@@ -1,0 +1,43 @@
+{
+  "id": "mercy",
+  "query": "gods mercy",
+  "status": "active",
+  "additionalQueries": [
+    "god be merciful to me a sinner"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id mercy (Theme C row, 6 requesting books) — engine",
+    "admission only by Jesse's merge of this PR. The row's check-first",
+    "route (lexicon extension of gods-love or forgiveness-of-sins) was",
+    "checked and declined with reasons: gods-love owns bare 'love' and",
+    "would answer 'mercy' with John 3:16/Rom 8 anchors; forgiveness owns",
+    "the guilt/pardon register. The hesed mercy/compassion register",
+    "falls between them, exactly as the row says. The minting quotation",
+    "'I desire mercy, not sacrifice' (Hos 6:6; Matt 9:13; 12:7) is",
+    "corpus-blocked in all three passages and rides the re-pin as noted",
+    "anchors. Span discipline within this batch: slow-to-anger takes Ps",
+    "103:8; this pack takes Ps 103:10-11 — no overlap.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "both queries — 'gods mercy' and 'god be merciful to me a sinner' —",
+    "failed to surface Ps 103:10-11 in the top 10 at all; the hesed",
+    "register had no curated route."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 103:10-11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Mercy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 18:13",
+    "Luke 6:36",
+    "Hebrews 4:16",
+    "James 2:13"
+  ],
+  "coversConcepts": [
+    "mercy"
+  ]
+}

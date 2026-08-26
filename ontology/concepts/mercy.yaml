@@ -1,0 +1,102 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme C row in tag-gaps-review.md, 6 requesting books). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# Mercy — the hesed compassion register the row says "falls between"
+# gods-love (owns bare 'love') and forgiveness-of-sins (owns the
+# guilt/pardon register). The row's check-first route (extension of
+# either neighbour) was checked and DECLINED: routing "mercy" to John
+# 3:16 or to pardon anchors would answer the query with the wrong
+# register in the chip. The minting quotation "I desire mercy, not
+# sacrifice" (Hos 6:6, quoted twice by Jesus) is corpus-blocked in all
+# three passages (Hosea; Matt 9; Matt 12 absent) and rides the re-pin.
+#
+# SPAN DISCIPLINE: Ps 103:8 is slow-to-anger's (same batch); this pack
+# takes vv10-11. Micah 7:18 stays with forgiveness-of-sins (its own
+# comment bars adjacent-verse re-anchoring). Lam 3:22-23 stays with
+# gods-faithfulness. Eph 2:4-5 stays with gods-love; Titus 3:5 with
+# grace-not-earned/justification-by-faith; 1 Pet 1:3 with hope-in-god.
+# Luke 18:13 is claimed inside empty-worship's Luke 18:9-14 parable
+# span — the Acts 17:26 sibling precedent: zero shared lexicon
+# phrases, and the tax collector's plea is the mercy query's own
+# landing verse.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): "mercy" is the concept's own subject
+# noun, a deliberate bare entry (inventory row admitted: [merci-stem])
+# — the word occurs throughout the WEB text and the measured gap was
+# both queries returning nothing curated. "be merciful" collapses to
+# the same stem family (collapse row). Other entries keep >= 2
+# significant tokens. "loving kindness" is the WEB's own hesed
+# rendering — shared token `love` with gods-love acknowledged (zero
+# shared phrases).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: mercy
+label: Mercy
+lexicon:
+  - mercy
+  - gods mercy
+  - mercy and compassion
+  - loving kindness
+  - be merciful
+  - i desire mercy not sacrifice
+anchors:
+  # "He has not dealt with us according to our sins... For as the
+  # heavens are high above the earth, so great is his loving kindness
+  # toward those who fear him" (WEB, in corpus). Hesed at full height —
+  # the psalter's own measurement of mercy.
+  - ref: Psalms 103:10-11
+    sources: [editorial]
+    weight: 1.0
+  # "But the tax collector... beat his chest, saying, 'God, be merciful
+  # to me, a sinner!'" (WEB, in corpus). The mercy plea itself — the
+  # prayer the register's searcher is reaching for. Claimed inside
+  # empty-worship's Luke 18:9-14 parable span (sibling note in header).
+  - ref: Luke 18:13
+    sources: [editorial]
+    weight: 0.95
+  # "Therefore be merciful, even as your Father is also merciful"
+  # (WEB, in corpus). The Father's mercy as the measure of ours — the
+  # bridge between the divine and human registers the row spans.
+  - ref: Luke 6:36
+    sources: [editorial]
+    weight: 0.9
+  # "Blessed are the merciful, for they shall obtain mercy" (WEB, in
+  # corpus). The beatitude — mercy shown and received in one sentence.
+  - ref: Matthew 5:7
+    sources: [editorial]
+    weight: 0.9
+  # "For judgment is without mercy to him who has shown no mercy.
+  # Mercy triumphs over judgment" (WEB, in corpus).
+  - ref: James 2:13
+    sources: [editorial]
+    weight: 0.85
+  # "Let's therefore draw near with boldness to the throne of grace,
+  # that we may receive mercy" (WEB, in corpus). Where mercy is
+  # actually obtained.
+  - ref: Hebrews 4:16
+    sources: [editorial]
+    weight: 0.8
+  # "For I desire mercy, and not sacrifice" — the minting quotation,
+  # Hosea's word that Jesus quotes twice (Matt 9:13; 12:7, both also
+  # corpus-blocked). (Hosea NOT in web-subset; re-check at re-pin.)
+  - ref: Hosea 6:6
+    sources: [editorial]
+    weight: 0.95
+  # "Who is a God like you, who pardons iniquity... because he delights
+  # in loving kindness?" — anchored on forgiveness-of-sins for the
+  # pardon register; recorded here as the rider the mercy row also
+  # names. (Duplicate-anchor note: NOT re-anchored — see header.)
+  # - ref: Micah 7:18 (stays with forgiveness-of-sins)
+  # "I will have mercy on her who had not obtained mercy" — Hosea's
+  # covenant reversal. (Hosea NOT in web-subset; re-check at re-pin.)
+  - ref: Hosea 2:23
+    sources: [editorial]
+    weight: 0.7
+related:
+  - gods-love
+  - forgiveness-of-sins
+  - slow-to-anger

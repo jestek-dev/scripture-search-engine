@@ -1,0 +1,97 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme C row in tag-gaps-review.md, minting book Ezekiel). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# The glory of God — the glory itself: a heavy lay and devotional
+# query with no concept home. The row's check-first route (lexicon
+# extension of presence-of-god) was checked and DECLINED: that pack is
+# the NEARNESS register (draw near, never leave you) and its anchors
+# would answer glory queries with proximity texts. The row's flagged
+# overlap with the-house-of-god is a real adjacency but a different
+# subject — the glory vs the dwelling — kept as two, cross-related.
+# Distinct also from 1 Corinthians' living-for-gods-glory
+# (discipleship register), per the row.
+#
+# Ezekiel's glory cycle — the throne vision (1:28), the departure
+# (9:3; 10:4, 18-19; 11:22-23), the return (43:1-5; 44:4) — and Exod
+# 33:18-23; 40:34; Isa 6:3 are ALL corpus-blocked and ride the re-pin.
+# In corpus: Isa 40:5, 2 Cor 4:6, Hab 3:3-4, Rev 21:23.
+#
+# SPAN DISCIPLINE: John 1:14 ("we saw his glory") is incarnation's
+# anchor — NOT re-anchored; Ps 19:1 stays with creation /
+# creation-testifies; Ps 24:7-10 (King of glory) is god-reigns' (same
+# batch); Isa 40:1 is god-of-all-comfort's and 40:18-20 idolatry's —
+# this pack takes v5 only.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({glori, god}, {glori, lord}, {show, glori}). Bare "glory"
+# was considered and SKIPPED (inventory row): doxology language spans
+# praise, worship, and heavenly-reward territory; the paired forms
+# carry the query family without handing them a common doxological
+# token.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: glory-of-god
+label: The glory of God
+lexicon:
+  - the glory of god
+  - gods glory
+  - the glory of the lord
+  - show me your glory
+anchors:
+  # "The LORD's glory shall be revealed, and all flesh shall see it
+  # together" (WEB, in corpus). The promise that the glory will be
+  # seen — the pack's in-corpus keystone.
+  - ref: Isaiah 40:5
+    sources: [editorial]
+    weight: 1.0
+  # "God... who has shone in our hearts to give the light of the
+  # knowledge of the glory of God in the face of Jesus Christ" (WEB,
+  # in corpus). Where the glory is now beheld.
+  - ref: 2 Corinthians 4:6
+    sources: [editorial]
+    weight: 0.95
+  # "His glory covered the heavens, and his praise filled the earth.
+  # His splendor is like the sunrise" (WEB, in corpus). The theophany
+  # register; Hab 3:17-18 is joy-in-the-lord's — no span overlap.
+  - ref: Habakkuk 3:3-4
+    sources: [editorial]
+    weight: 0.85
+  # "The city has no need for the sun... for the very glory of God
+  # illuminated it" (WEB, in corpus). The glory as the new creation's
+  # own light; Rev 21:2-4 is new-heaven-and-earth's — no span overlap.
+  - ref: Revelation 21:23
+    sources: [editorial]
+    weight: 0.8
+  # "the appearance of the likeness of the LORD's glory" — the throne
+  # vision that opens the minting book's cycle. (Ezekiel 1 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Ezekiel 1:28
+    sources: [editorial]
+    weight: 0.9
+  # "He said, 'Please show me your glory.'... 'you shall see my back;
+  # but my face shall not be seen'" — the request the lexicon's
+  # remembered phrasing quotes. (Exodus 33 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Exodus 33:18-23
+    sources: [editorial]
+    weight: 0.95
+  # "the whole earth is full of his glory" — the seraphim's cry.
+  # (Isaiah 6 NOT in web-subset; re-check at re-pin.)
+  - ref: Isaiah 6:3
+    sources: [editorial]
+    weight: 0.9
+  # "the LORD's glory returned into the house by the way of the gate
+  # which faces toward the east" — the glory's return completing
+  # Ezekiel's cycle. (Ezekiel 43 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Ezekiel 43:1-5
+    sources: [editorial]
+    weight: 0.8
+related:
+  - presence-of-god
+  - the-house-of-god
+  - worship

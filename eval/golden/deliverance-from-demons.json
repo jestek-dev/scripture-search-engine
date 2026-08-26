@@ -1,0 +1,47 @@
+{
+  "id": "deliverance-from-demons",
+  "query": "casting out demons",
+  "status": "active",
+  "additionalQueries": [
+    "demon possession in the bible"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id deliverance-from-demons (Theme D row, 3 requesting",
+    "books; Mark 'Scripture's densest deliverance narrative') — engine",
+    "admission only by Jesse's merge of this PR. resisting-the-devil",
+    "covers the believer's resistance posture, not deliverance (the",
+    "row's own distinction); pastoral-freedom-from-bondage was checked",
+    "per the row's flag and is the habitual-sin/addiction register",
+    "(Rom 6-7, Gal 5:1), no narrative overlap. One-concept-or-two vs",
+    "Daniel's spiritual-warfare row DECIDED as two registers: this pack",
+    "is the deliverance narrative (in corpus via Mark and Luke); the",
+    "conflict-itself row stays deferred, corpus-blocked (Dan 10; Rev",
+    "12 both absent). Matthew's whole request list (Matt 8; 9; 12) is",
+    "corpus-blocked and rides the re-pin. John's checked-none result",
+    "(no exorcism anywhere in John) is recorded in the pack comment.",
+    "Span discipline: Mark 5 anchor stops at v15 — sharing-your-faith",
+    "owns Mark 5:19 (the go-and-tell sending).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'casting out demons' did not surface Mark 5:1-15 in the top 10 at",
+    "all; 'demon possession in the bible' reached it by preached",
+    "vocabulary only, CHIPLESS (wrong-reason class)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Mark 5:1-15",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Deliverance from demons"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Mark 1:23-27",
+    "Luke 11:14-22",
+    "Mark 9:25-29",
+    "Luke 9:37-43"
+  ],
+  "coversConcepts": [
+    "deliverance-from-demons"
+  ]
+}

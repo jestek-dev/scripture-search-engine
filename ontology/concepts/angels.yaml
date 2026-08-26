@@ -1,0 +1,109 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme D row in tag-gaps-review.md, 22 requesting books — the widest
+# row in the review). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission happens only
+# by his merge of this PR.
+#
+# Angels — heavily searched, and no angel concept existed anywhere in
+# the vocabulary. GIST RULE carried from the Revelation append:
+# 19:10 and 22:8-9 are Scripture's explicit correction against
+# worshiping angels ("Worship God") — this pack locates angelic
+# scenes; it never presents angels as objects of devotion.
+# RECORD-WITHOUT-SETTLING honored: Josh 5:13-15 and Exod 23:20-23
+# (identification questions) are not anchored — both corpus-blocked
+# anyway; the appends' honest non-claims (Mark 16:5's "young man",
+# Luke 24:4's "two men", Acts 1:10, John 12:29) stay unclaimed.
+#
+# SPAN DISCIPLINE: the guardian texts stay where they honestly live —
+# Ps 91:9-12 with gods-protection (whose lexicon already carries
+# "angels charge over you"), Ps 34:7 with refuge-in-trouble, Heb 13:2
+# with hospitality, Matt 28:5-6 with resurrection. This pack anchors
+# the free spans; a "guardian angel" query reaching Ps 91 through
+# gods-protection is correct routing, not a miss.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): "angels" is the concept's own subject
+# noun, a deliberate bare entry (inventory row admitted: [angel]) —
+# the word saturates the WEB text and the measured gap was the query
+# family reaching nothing curated. Other entries keep >= 2 significant
+# tokens ({angel, bibl}, {guardian, angel}, {angel, lord}). Shared
+# token with gods-protection's "angels charge over you": {angel} — one
+# token, zero shared phrases, and the dual reach on guardian queries
+# is the design (see above).
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: angels
+label: Angels
+lexicon:
+  - angels
+  - angels in the bible
+  - guardian angel
+  - the angel of the lord
+  - what does the bible say about angels
+anchors:
+  # "Praise the LORD, you angels of his, who are mighty in strength,
+  # who fulfill his word... all you armies of his" (WEB, in corpus).
+  # What angels are and do, in Scripture's own summary. vv8/10-12/19
+  # belong to slow-to-anger, mercy, forgiveness-of-sins and providence
+  # — no span overlap.
+  - ref: Psalms 103:20-21
+    sources: [editorial]
+    weight: 1.0
+  # "there is joy in the presence of the angels of God over one sinner
+  # repenting" (WEB, in corpus).
+  - ref: Luke 15:10
+    sources: [editorial]
+    weight: 0.9
+  # "in heaven their angels always see the face of my Father" (WEB, in
+  # corpus). The verse behind the guardian-angel question.
+  - ref: Matthew 18:10
+    sources: [editorial]
+    weight: 0.9
+  # "The LORD's angel appeared to him in a flame of fire out of the
+  # middle of a bush" (WEB, in corpus). The angel of the LORD at the
+  # burning bush; 3:7 is pastoral-god-sees-my-suffering's and 3:13-15
+  # the-name-of-god's (same batch) — no span overlap.
+  - ref: Exodus 3:2
+    sources: [editorial]
+    weight: 0.85
+  # "The LORD's angel found her by a fountain of water in the
+  # wilderness" (WEB, in corpus) — Hagar met and named for. Gen
+  # 16:1-2 is waiting-for-a-child's and 16:13 is
+  # pastoral-god-sees-my-suffering's — this span stops at v12.
+  - ref: Genesis 16:7-12
+    sources: [editorial]
+    weight: 0.8
+  # "he would even now send me more than twelve legions of angels"
+  # (WEB, in corpus).
+  - ref: Matthew 26:53
+    sources: [editorial]
+    weight: 0.75
+  # "you will see heaven opened, and the angels of God ascending and
+  # descending on the Son of Man" (WEB, in corpus).
+  - ref: John 1:51
+    sources: [editorial]
+    weight: 0.75
+  # "innumerable multitudes of angels" in festal assembly (WEB, in
+  # corpus). Heb 12:22 within the Zion passage; 12:1-2 is
+  # remembered-looking-to-jesus's — no span overlap.
+  - ref: Hebrews 12:22
+    sources: [editorial]
+    weight: 0.7
+  # "Aren't they all serving spirits, sent out to do service for the
+  # sake of those who will inherit salvation?" — Scripture's own
+  # definition. (Hebrews 1 NOT in web-subset; re-check at re-pin.)
+  - ref: Hebrews 1:14
+    sources: [editorial]
+    weight: 0.9
+  # Gabriel — "Scripture's first named angel" — sent to explain the
+  # vision. (Daniel NOT in web-subset; re-check at re-pin.)
+  - ref: Daniel 9:21
+    sources: [editorial]
+    weight: 0.75
+  # (Isa 6:2-7's seraphim were considered as a rider and left to the
+  # re-pin curator: glory-of-god (same batch) rides Isa 6:3 and the
+  # split belongs to whoever can measure it.)
+related:
+  - gods-protection
+  - dreams-and-visions

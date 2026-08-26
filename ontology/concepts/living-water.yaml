@@ -1,0 +1,94 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme C row in tag-gaps-review.md, minting book Ezekiel). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# Living water / the river of life — a heavy, Bible-wide lay query
+# family with no concept home. The row's own audit found the family's
+# refs riding OTHER rows as supporting material (Jer 2:13 on the Micah
+# idolatry row's broken-cisterns refs; John 7:37-39 on the Luke
+# holy-spirit row) with no row owning the query family itself —
+# `restoration` is the nearest but names renewal generally.
+#
+# The minting passage (Ezek 47:1-12, the temple river) and John
+# 7:37-39; Rev 22:1-2, 17; Zech 14:8; Jer 2:13 are corpus-blocked and
+# ride the re-pin. In corpus: John 4:10-14 (the woman at the well),
+# Jer 17:13 ("the spring of living waters", verbatim), Isa 55:1,
+# Isa 41:17-18.
+#
+# SPAN DISCIPLINE: Rev 21:6 ("the spring of the water of life") is
+# hunger-for-god's anchor for the desire register — NOT re-anchored;
+# the packs cross-relate. John 4:23-24 is worship's (this pack stops
+# at v14). Isa 55:10-11 is power-of-gods-word's (this pack takes
+# v1). Jer 17:9-10 is unclaimed but not ours — v13 only.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({live/living, water}, {river, life}, {water, life},
+# {stream, living, water}). No bare word fires. hunger-for-god shares
+# zero phrases and zero significant tokens with this lexicon.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: living-water
+label: Living water
+lexicon:
+  - living water
+  - river of life
+  - water of life
+  - streams of living water
+anchors:
+  # "he would have given you living water... the water that I will
+  # give him will become in him a well of water springing up to
+  # eternal life" (WEB, in corpus). The family's defining scene —
+  # Jesus at the well.
+  - ref: John 4:10-14
+    sources: [editorial]
+    weight: 1.0
+  # "they have forsaken the LORD, the spring of living waters" (WEB,
+  # in corpus). The phrase's own OT witness — Jeremiah restating his
+  # 2:13 image inside a corpus chapter.
+  - ref: Jeremiah 17:13
+    sources: [editorial]
+    weight: 0.9
+  # "Hey! Come, everyone who thirsts, to the waters!... without money
+  # and without price" (WEB, in corpus). The free invitation; kept to
+  # v1 — vv10-11 are power-of-gods-word's.
+  - ref: Isaiah 55:1
+    sources: [editorial]
+    weight: 0.85
+  # "I will open rivers on the bare heights... I will make the
+  # wilderness a pool of water" (WEB, in corpus). Water promised where
+  # there is none.
+  - ref: Isaiah 41:17-18
+    sources: [editorial]
+    weight: 0.8
+  # The temple river — ankle-deep to uncrossable, and "everything will
+  # live wherever the river comes." The minting passage. (Ezekiel 47
+  # NOT in web-subset; re-check at re-pin.)
+  - ref: Ezekiel 47:1-12
+    sources: [editorial]
+    weight: 0.95
+  # "If anyone is thirsty, let him come to me and drink!... But he
+  # said this about the Spirit" — the living-water invitation itself.
+  # (John 7 NOT in web-subset; re-check at re-pin.)
+  - ref: John 7:37-39
+    sources: [editorial]
+    weight: 0.95
+  # "a river of water of life, clear as crystal, proceeding out of the
+  # throne" — the family's consummation. (Revelation 22 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Revelation 22:1-2
+    sources: [editorial]
+    weight: 0.9
+  # "they have forsaken me, the spring of living waters, and cut them
+  # out cisterns, broken cisterns" — the source text of Jer 17:13's
+  # image; the Micah idolatry row carries it for the broken-cisterns
+  # register. (Jeremiah 2 NOT in web-subset; re-check at re-pin.)
+  - ref: Jeremiah 2:13
+    sources: [editorial]
+    weight: 0.8
+related:
+  - hunger-for-god
+  - restoration
+  - holy-spirit

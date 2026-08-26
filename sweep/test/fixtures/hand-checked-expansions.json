@@ -98,6 +98,13 @@
       "conceptId": "gods-protection"
     },
     {
+      "queryId": "bare-word:021f8ffac9f9a70f",
+      "query": "led",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "walking-by-the-spirit"
+    },
+    {
       "queryId": "bare-word:0282d9b79f42c74c",
       "query": "face",
       "register": "church-member",
@@ -112,6 +119,13 @@
       "conceptId": "pregnancy-and-child-loss"
     },
     {
+      "queryId": "bare-word:02f5f0a9b7e47af7",
+      "query": "astrology",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "occult-and-divination"
+    },
+    {
       "queryId": "bare-word:039b1751609c7754",
       "query": "testament",
       "register": "church-member",
@@ -124,20 +138,6 @@
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "design-in-creation"
-    },
-    {
-      "queryId": "bare-word:046b34e558dbffcc",
-      "query": "booth",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "appointed-feasts"
-    },
-    {
-      "queryId": "bare-word:04b447783afe5bfd",
-      "query": "opportunity",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "stewardship-of-days"
     }
   ],
   "concept-register": [
@@ -370,7 +370,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity — father, son, and spirit",
+      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"
@@ -616,18 +616,18 @@
       "conceptId": "walking-in-the-light"
     },
     {
-      "queryId": "worship-planning:031c44e09c30c9a8",
-      "query": "benediction on the prosperity of the wicked",
+      "queryId": "worship-planning:02e843d2e77fabf6",
+      "query": "setlist theme god rejoices over you",
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
-      "conceptId": "prosperity-of-the-wicked"
+      "conceptId": "gods-love"
     },
     {
-      "queryId": "worship-planning:03444d8711201a70",
-      "query": "setlist theme nations in the bible",
+      "queryId": "worship-planning:031116800d46a03f",
+      "query": "responsive reading about angels",
       "register": "worship-leader",
       "expectationKind": "concept-anchors",
-      "conceptId": "nations-and-peoples"
+      "conceptId": "angels"
     }
   ]
 }

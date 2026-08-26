@@ -1,0 +1,41 @@
+{
+  "id": "living-water",
+  "query": "living water",
+  "status": "active",
+  "additionalQueries": [
+    "river of life"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id living-water (Theme C row, minting book Ezekiel) —",
+    "engine admission only by Jesse's merge of this PR. A heavy,",
+    "Bible-wide lay query family with no concept home (the row's own",
+    "check: Jer 2:13 and John 7:37-39 ride OTHER rows as supporting",
+    "refs; no row owns the living-water family itself). The minting",
+    "passage (Ezek 47:1-12) and John 7:37-39, Rev 22:1-2, Zech 14:8 are",
+    "corpus-blocked and ride the re-pin; in corpus the family is",
+    "carried by John 4:10-14 (the woman at the well), Jer 17:13 ('the",
+    "spring of living waters', verbatim), Isa 55:1 and Isa 41:17-18.",
+    "Rev 21:6 is NOT an anchor (hunger-for-god owns it for the desire",
+    "register); the two packs cross-relate.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'living water' returned John 4:10-14 by exact phrase, CHIPLESS",
+    "(wrong-reason class); 'river of life' did not surface it at all."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 4:10-14",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Living water"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jeremiah 17:13",
+    "Isaiah 55:1",
+    "Isaiah 41:17-18"
+  ],
+  "coversConcepts": [
+    "living-water"
+  ]
+}

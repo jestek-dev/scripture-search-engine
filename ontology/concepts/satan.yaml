@@ -1,0 +1,113 @@
+# TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26) — ADOPTED-TAG id
+# (Theme D row in tag-gaps-review.md, Job + 1 Chronicles). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# Satan — the who-is register: "who is Satan", "Satan in the Bible".
+# The vocabulary carried only the response side (resisting-the-devil).
+# GIST RULE per the row: the engine stays descriptive of what
+# Scripture shows — never speculative demonology, never a biography
+# assembled from contested identifications. Ezek 28:12-19 is
+# deliberately NOT appended, honoring the review's Contested calls
+# §1(e) withholding; Isa 14 likewise stays out (the same
+# resisting-the-devil backlog note). 1 Chr 21:1 is carried as the WEB
+# gives it, with no harmonization against 2 Sam 24:1 — the row's own
+# care. Zech 3:1-2 stays routed to resisting-the-devil per the
+# Zechariah block.
+#
+# BARE-WORD DECISION (measured, reversed in-session): bare "satan"
+# was provisionally moved here from resisting-the-devil and the
+# gauntlet showed the move REGRESSING that pack's active fixture
+# (resisting-the-devil.json pins the query "satan" -> James 4:7 within
+# top 10 — a reviewed routing decision). The move was reverted: bare
+# "satan" and "the devil" STAY with resisting-the-devil,
+# fixture-pinned; this pack carries the who-is question family in its
+# ...in-the-bible phrasings, and both packs cross-relate. If Jesse
+# wants the bare word re-routed to the who-is register, that is a
+# fixture change first (CLAUDE.md "Adding data"), in its own PR.
+#
+# SPAN DISCIPLINE: Job 1:8-12 is testing's and Job 1:8 also
+# suffering-of-the-righteous's — this pack anchors Job 1:6-7 only
+# (the figure's own introduction: presence and roaming). Job 1:21 is
+# surrender-to-god's / why-god-allows-suffering's. Luke 22:42 is
+# surrender-to-god's (this pack takes 22:31-32); Matt 16:24 is
+# surrender-to-god's (this pack takes 16:23). 1 Pet 5:8-9 stays
+# resisting-the-devil's.
+#
+# Attribution: ALL anchors [editorial].
+#
+# TOKENIZER DISCIPLINE (G-4): every entry keeps >= 2 significant
+# tokens ({satan, bibl}, {devil, bibl}, {father, lie}). No bare word
+# fires this pack (inventory row: satan and devil SKIPPED with the
+# fixture-pinned reason above). "the accuser" and "the adversary"
+# were considered and SKIPPED as bare entries — both tokens carry
+# ordinary human senses in the corpus (courtroom adversaries, human
+# accusers) and the who-is queries reach the pack through its other
+# entries.
+#
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: satan
+label: Satan
+lexicon:
+  - satan in the bible
+  - who is satan in the bible
+  - the devil in the bible
+  - the father of lies
+anchors:
+  # "Satan also came among them. The LORD said to Satan, 'Where have
+  # you come from?'... 'From going back and forth on the earth'"
+  # (WEB, in corpus). The figure's introduction in Scripture's oldest
+  # scene of him — present, roaming, and answerable to God. vv8-12
+  # stay testing's / suffering-of-the-righteous's (header note).
+  - ref: Job 1:6-7
+    sources: [editorial]
+    weight: 1.0
+  # "You are of your father the devil... He was a murderer from the
+  # beginning... he is a liar, and the father of lies" (WEB, in
+  # corpus). Jesus' own description — the pack's sharpest descriptive
+  # text.
+  - ref: John 8:44
+    sources: [editorial]
+    weight: 0.95
+  # "Simon, Simon, behold, Satan asked to have all of you, that he
+  # might sift you as wheat, but I prayed for you" (WEB, in corpus).
+  # Satan's reach and its limit in one sentence.
+  - ref: Luke 22:31-32
+    sources: [editorial]
+    weight: 0.9
+  # "Get behind me, Satan! You are a stumbling block to me" (WEB, in
+  # corpus). The name applied to the tempter's voice wherever it
+  # speaks.
+  - ref: Matthew 16:23
+    sources: [editorial]
+    weight: 0.8
+  # "He was there in the wilderness forty days, tempted by Satan"
+  # (WEB, in corpus). Mark's temptation summary; the angels of v13b
+  # are angels' (same batch) territory by subject, span shared under
+  # the sibling precedent — zero shared lexicon phrases.
+  - ref: Mark 1:13
+    sources: [editorial]
+    weight: 0.75
+  # "Satan stood up against Israel, and moved David to number Israel"
+  # — reported as the WEB gives it; no harmonization against 2 Sam
+  # 24:1 (header note). (1 Chronicles NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: 1 Chronicles 21:1
+    sources: [editorial]
+    weight: 0.8
+  # The second heavenly scene — "skin for skin"; Satan permitted
+  # further, still bounded. (Job 2 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Job 2:1-7
+    sources: [editorial]
+    weight: 0.85
+  # "the great dragon... who is called the devil and Satan, the
+  # deceiver of the whole world... thrown down." (Revelation 12 NOT in
+  # web-subset; re-check at re-pin.)
+  - ref: Revelation 12:9-10
+    sources: [editorial]
+    weight: 0.85
+related:
+  - resisting-the-devil
+  - deliverance-from-demons
+  - testing

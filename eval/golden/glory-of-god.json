@@ -1,0 +1,44 @@
+{
+  "id": "glory-of-god",
+  "query": "the glory of god",
+  "status": "active",
+  "additionalQueries": [
+    "gods glory"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 2 (Themes C-D, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id glory-of-god (Theme C row, minting book Ezekiel) —",
+    "engine admission only by Jesse's merge of this PR. The row's",
+    "check-first route (lexicon extension of presence-of-god) was",
+    "checked and declined with reasons: that pack is the NEARNESS",
+    "register (draw near, never leave you) and its anchors would answer",
+    "'the glory of God' with proximity texts, not the glory itself. The",
+    "the-house-of-god overlap the row flags is a dwelling-vs-glory",
+    "register split — kept as two, cross-related. Ezekiel's own",
+    "glory-departing-and-returning cycle (Ezek 1:28 - 44:4), Exod 33-34",
+    "and Isa 6:3 are corpus-blocked and ride the re-pin; in corpus the",
+    "glory is carried by Isa 40:5, 2 Cor 4:6, Hab 3:3-4 and Rev 21:23.",
+    "John 1:14 is NOT an anchor (incarnation owns it); Ps 19:1 stays",
+    "with creation/creation-testifies. Distinct from 1 Corinthians'",
+    "living-for-gods-glory discipleship register, per the row.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'the glory of god' and 'gods glory' both failed to surface Isa",
+    "40:5 in the top 10 at all."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 40:5",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The glory of God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "2 Corinthians 4:6",
+    "Revelation 21:23",
+    "Habakkuk 3:3-4"
+  ],
+  "coversConcepts": [
+    "glory-of-god"
+  ]
+}
