@@ -1,7 +1,7 @@
 {
   "id": "shepherd-psalm-guard",
   "query": "the Lord is my shepherd",
-  "status": "pending",
+  "status": "active",
   "note": [
     "GAP FIXTURE (audit ph6-B; re-verified 2026-08-21 sweep). The quoted",
     "psalm leads (Ps 23:1 #1, exact_phrase) but ranks #2-#4 are 'Theme:",
