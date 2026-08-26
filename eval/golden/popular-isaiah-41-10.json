@@ -1,0 +1,17 @@
+{
+  "id": "popular-isaiah-41-10",
+  "query": "fear not for i am with you",
+  "status": "active",
+  "note": [
+    "POPULAR-VERSES PROMOTION (2026-08-26, whole-Bible coverage plan §4.2): rank 6 (Tier 1) of the verified top-200 popular-verses ranking (/mnt/project-files/research/popular-verses/top-200-verses.md; per-entry source traceability in top-200-verses.json — 60 source lists: platform usage data, memorization curricula, editorial listicles).",
+    "Guard fixture: regression armor over the verses users search most. The query is the famous phrasing in public-domain wording (WEB text or KJV-derived); no modern-translation wording is used. No reason-family requirement on purpose — this fixture guards lexical reachability and position, not concept attribution; concept fixtures own attribution.",
+    "Observed 2026-08-26 on main @ e762d1c, engine 0.14.0, corpusFingerprint 644b241c…, layerFingerprint b24ea16d…: this query ranks Isaiah 41:10 at #10 (reason families: concept_anchor). withinTop pinned at 10 per the observed-pin convention (assert the observed, admitted ordering with headroom; a tighter or different desired ordering is a ranking/data change, not a fixture edit).",
+    "Tight pin, recorded honestly: observed rank is #10 — the query's famous KJV-derived wording ('fear not...') shares no distinctive stems with the WEB text ('Don't you be afraid...'), so the hit rides concept_anchor evidence alone. The window has no headroom; if this fixture starts failing, that is the measured NIV/KJV-wording reachability gap the plan's §2.3 alias-mining program exists to close — extend data, never delete the fixture."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Isaiah 41:10",
+      "withinTop": 10
+    }
+  ]
+}
