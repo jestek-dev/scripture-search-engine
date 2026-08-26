@@ -177,7 +177,7 @@ Section-placement counts by OpenBible.info, used under CC BY 4.0. Counts ONLY: e
 
 - **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/topic-scores.zip>
-- **Checksum:** `2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60`
+- **Checksum:** `fee5234ebbc4db49cda493e55222d2e95665d17216c2f47fb38f8c0bbcd316d5`
 
 Creative Commons Attribution 4.0. The data file's own header states: 'CC-BY License: www.openbible.info/topics'. Attribution required in shipped output.
 
@@ -187,9 +187,9 @@ Topical data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info
 
 - **Rights:** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — **attribution required**
 - **Source:** <https://a.openbible.info/data/cross-references.zip>
-- **Checksum:** `36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829`
+- **Checksum:** `2006d1af4af558dc39b4dca77023bc1dc77dabf67d8ad9c98e0af1f86fe05644`
 
-Creative Commons Attribution 4.0. The data file's own header states: 'www.openbible.info CC-BY 2026-07-27'. Attribution required in shipped output.
+Creative Commons Attribution 4.0. The data file's own header states: 'www.openbible.info CC-BY 2026-08-24'. Attribution required in shipped output.
 
 Cross-reference data by OpenBible.info, used under CC BY 4.0 (https://www.openbible.info/labs/cross-references/). OpenBible states this data 'draws primarily from public-domain sources, especially the Treasury of Scripture Knowledge' - hence the declared derivedFrom, which places it in one correlation budget with TSK and with any homiletical co-citation source that also derives from TSK. Counting them as independent evidence would inflate confidence for what is substantially one body of scholarship. Rolling URL with no archival versioning; this checksum is our snapshot.
 
@@ -229,8 +229,8 @@ NEW ADMISSION, distinct from the lineage-only `tsk` manifest: that stub pins no 
 
 - **Rights:** Public domain
 - **Source:** <https://ebible.org/Scriptures/engwebp_vpl.zip>
-- **Retrieved:** 2026-07-29
-- **Checksum:** `3458ca34420c0547ec01b3dbda58a10a2d8fc511bdcd2e047ddd17fbe860b7b6`
+- **Retrieved:** 2026-08-25
+- **Checksum:** `b6f55cc787b1201b68dcfde8a1216e1a61ae6b3cc38748456cf58bdb5e95fc1c`
 
 Public domain. The WEB text may be freely copied, modified, and distributed. See https://ebible.org/engwebp/copyright.htm
 

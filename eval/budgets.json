@@ -35,12 +35,17 @@
       "remain acknowledged and no manifest sets archiveUrl). No archive exists",
       "to point at, and inventing a URL would be worse than acknowledging.",
       "When Jesse uploads the snapshots, all three flip to archiveUrl together",
-      "and this list finally empties."
+      "and this list finally empties.",
+      "",
+      "2026-08-25 (J52 re-pin PR): openbible-topics and openbible-xrefs leave",
+      "the list - their re-pinned snapshots now carry archiveUrl entries on the",
+      "source-snapshots-2026-08 Release (docs/source-repins.md step 6).",
+      "openbible-sections remains: it did not drift, its pinned bytes have no",
+      "archive asset yet, and archiving it is a separate errand - the list's",
+      "goal of emptying still stands."
     ],
     "acknowledgedUnarchivedRollingSources": [
-      "openbible-sections",
-      "openbible-topics",
-      "openbible-xrefs"
+      "openbible-sections"
     ]
   },
   "size": {

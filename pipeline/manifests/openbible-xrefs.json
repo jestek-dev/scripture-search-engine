@@ -2,11 +2,13 @@
   "id": "openbible-xrefs",
   "label": "OpenBible.info Cross References",
   "rightsClass": "cc_by",
-  "licenseRecord": "Creative Commons Attribution 4.0. The data file's own header states: 'www.openbible.info CC-BY 2026-07-27'. Attribution required in shipped output.",
+  "licenseRecord": "Creative Commons Attribution 4.0. The data file's own header states: 'www.openbible.info CC-BY 2026-08-24'. Attribution required in shipped output.",
   "sourceUrl": "https://a.openbible.info/data/cross-references.zip",
   "rollingSourceUrl": true,
-  "sha256": "36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829",
-  "bytes": 1981973,
+  "archiveUrl": "https://github.com/jestek-dev/scripture-search-engine/releases/download/source-snapshots-2026-08/cross-references-2026-08.zip",
+  "sha256": "2006d1af4af558dc39b4dca77023bc1dc77dabf67d8ad9c98e0af1f86fe05644",
+  "bytes": 1981803,
+  "provenanceNote": "RE-ADMITTED 2026-08-25 (re-pin PR C, plan P2.2/RH-4; process docs/source-repins.md). The 2026-08-08 pin (36d1b198..., 1,981,973 B) stopped being served: the upstream URL rolls weekly (observed 22c26dd6... on 2026-08-21; this 2026-08-25 capture observed 2006d1af..., 1,981,803 B - upstream rolled again mid-review, as expected). Vote-movement delta measured with pipeline/scripts/openbibleDelta.ts before this edit: class (b) consumed-scope movement - 173 of 1,835 committed edges shifted votes (all small community-vote movements; 0 adds, 0 removes); itemized report attached to the PR for Jesse's review (J52/A5a). License header re-confirmed: CC-BY marker intact, header date 2026-08-24 (the licenseRecord quote is updated to match - the grant wording itself is unchanged). archiveUrl pins the errand's verified release asset; the acknowledgedUnarchivedRollingSources entry is deleted in this same commit.",
   "maxTier": "public_distribution",
   "derivedFrom": [
     "tsk"
