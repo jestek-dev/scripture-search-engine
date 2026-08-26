@@ -145,9 +145,16 @@ describe('health source semantics', () => {
     // grumbling-and-complaining, kindness, integrity, drunkenness,
     // favoritism — each with an active demonstrating fixture in the same
     // change).
+    // + the 14 tag-gap rollout batch-4 packs (2026-08-26, Themes E/F/G of
+    // the adopted tag-gap review: seasons-of-life, enjoying-gods-gifts,
+    // receiving-correction, thought-life, trusting-in-man, covetousness,
+    // mortality, justice-and-oppression, sojourners-and-strangers,
+    // vengeance, governing-authorities, care-for-widows,
+    // bondservants-and-masters, individual-responsibility — each with an
+    // active demonstrating fixture in the same change).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(194);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(194);
+    expect(coverage).toHaveLength(208);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(208);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

@@ -1,6 +1,6 @@
 {
   "corpusFingerprint": "d2846ff36ccd7ffb7a12d525cf3f26aeaf5a81427b014a96da9ff2a903a5d1fe",
-  "layerFingerprint": "432bd03913d543ff887078152a364117a9e38c9b19067ab1b6b37395e44bb724",
+  "layerFingerprint": "126107585f82d26c89e9e466422e71e7350dd529ba9f5260ae86ecda5fca4367",
   "engineVersion": "0.14.0",
   "observations": [
     {
@@ -219,19 +219,19 @@
       "id": "ot-law-decalogue",
       "top": [
         "WEB:02020017",
-        "WEB:45013009",
         "WEB:45007007",
-        "WEB:05007025",
-        "WEB:44020033",
-        "WEB:45007008",
         "WEB:59004002",
-        "WEB:18031007",
-        "WEB:45007012",
-        "WEB:40006019"
+        "WEB:51003005",
+        "WEB:05007025",
+        "WEB:02020003",
+        "WEB:45013009",
+        "WEB:40006019",
+        "WEB:54006006",
+        "WEB:50004011"
       ],
-      "resultCount": 14,
-      "weakReasonShare": 1,
-      "meanTopScore": 6.067331
+      "resultCount": 25,
+      "weakReasonShare": 0.53642,
+      "meanTopScore": 16.597132
     },
     {
       "id": "ot-law-neighbour",

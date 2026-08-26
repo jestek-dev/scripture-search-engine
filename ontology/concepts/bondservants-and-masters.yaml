@@ -1,0 +1,98 @@
+# TAG-GAP ROLLOUT batch 4 (Theme G, 2026-08-26) — ADOPTED-TAG id
+# (Theme G row in tag-gaps-review.md, 6 requesting books; Ephesians'
+# staged slavery-in-the-bible row folded there). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission happens only by his merge of this PR.
+#
+# "What does the Bible say about slavery" is a common, weighty query
+# with no concept anywhere in the vocabulary.
+#
+# GIST CARE (the row's wording caveat, honored DOUBLY per the Jeremiah
+# fold): the pack routes to what the text actually says — reciprocal
+# duties, work as for the Lord, an impartial "Master in heaven" — and
+# never reads as endorsement. The OT release-law-and-judgment register
+# (Jer 34:8-22; Exod 21; Deut 15; Lev 25) is corpus-blocked and rides
+# re-pin with the one-concept-or-two question the fold flags recorded,
+# not pre-decided: today's pack is the NT household register; the
+# release-law texts join either this id or a sibling at the re-pin.
+#
+# PHILEMON (the text this query most needs to reach) is entirely
+# corpus-blocked — anchored as a rider so the brother-not-bondservant
+# turn is in the pack's own record.
+#
+# DUAL ANCHOR, recorded in both files: Eph 6:5-9 — favoritism holds
+# 6:9's no-partiality clause; this pack carries the full
+# servants-and-masters passage the register needs.
+#
+# OTHER BOUNDARIES: Col 3:23-24 stay remembered-work-as-for-the-lord's
+# / pleasing-god-not-people's and Col 3:25 favoritism's — the anchor
+# below is Col 3:22 alone. 1 Tim 6:6-10 and 6:17 stay contentment's —
+# verse-disjoint.
+#
+# TOKENIZER NOTE (G-4): bare "slavery" is a deliberate single-word
+# admission — the query's own noun; the WEB text of this corpus rarely
+# speaks it and no concept does (pastoral-freedom-from-bondage's
+# addiction register was checked: its lexicon speaks bondage/addiction
+# phrasings, not slavery). Bare "slave"/"servant" are inventory SKIPS
+# (they span servanthood queries and the whole narrative corpus).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: bondservants-and-masters
+label: Bondservants and masters
+lexicon:
+  - slavery
+  - what does the bible say about slavery
+  - bondservants and masters
+  - slaves and masters
+  - masters treat your servants
+  - work as unto your master
+anchors:
+  # "Servants, be obedient to those who according to the flesh are
+  # your masters... You masters, do the same things to them, and give
+  # up threatening, knowing that he who is both their Master and yours
+  # is in heaven" (WEB, in corpus). The register's fullest reciprocal
+  # passage — DUAL with favoritism's Eph 6:9 claim (recorded there).
+  - ref: Ephesians 6:5-9
+    sources: [editorial]
+    weight: 1.0
+  # "Exhort servants to be in subjection to their own masters... not
+  # stealing, but showing all good fidelity, that they may adorn the
+  # doctrine of God" (WEB, in corpus).
+  - ref: Titus 2:9-10
+    sources: [editorial]
+    weight: 0.85
+  # "Let as many as are bondservants under the yoke count their own
+  # masters worthy of all honor... Those who have believing masters,
+  # let them not despise them because they are brothers" (WEB, in
+  # corpus). The WEB's own "bondservants" word — and the
+  # brothers-not-despised turn inside it.
+  - ref: 1 Timothy 6:1-2
+    sources: [editorial]
+    weight: 0.9
+  # "Servants, obey in all things those who are your masters according
+  # to the flesh, not just when they are looking, as men pleasers"
+  # (WEB, in corpus). Anchor is v22 alone — 3:23-24 stay
+  # remembered-work-as-for-the-lord's / pleasing-god-not-people's,
+  # 3:25 favoritism's (recorded above).
+  - ref: Colossians 3:22
+    sources: [editorial]
+    weight: 0.8
+  # "no longer as a bondservant, but more than a bondservant, a
+  # beloved brother" — the passage "what does the Bible say about
+  # slavery" most needs to reach. (Philemon NOT in web-subset;
+  # re-check at re-pin.)
+  - ref: Philemon 1:8-21
+    sources: [editorial]
+    weight: 0.95
+  # The proclaimed-then-revoked release and its judgment — the OT
+  # release-law register (see header; one-or-two flagged, not
+  # pre-decided). (Jeremiah 34 NOT in web-subset; re-check at re-pin.)
+  - ref: Jeremiah 34:8-17
+    sources: [editorial]
+    weight: 0.75
+related:
+  - remembered-work-as-for-the-lord
+  - pleasing-god-not-people
+  - favoritism
+  - leadership

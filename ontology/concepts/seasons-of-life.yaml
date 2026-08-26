@@ -1,0 +1,59 @@
+# TAG-GAP ROLLOUT batch 4 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 1 requesting book). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "A time for everything" (Eccl 3:1-8) is one of the most-searched
+# passages in the Bible (funerals, graduations, grief) and no concept
+# carries any time/season phrasing.
+#
+# EXTENSION ROUTE CHECKED AND DECLINED: the row's own alternative is a
+# lexicon extension of providence. Providence is the governance-of-events
+# register ("god is in control", Gen 50:20, Ps 33:10-11) — answering
+# "seasons of life" with Joseph texts would be a register mismatch, and
+# none of this lexicon's phrases overlaps providence's. Cross-related
+# instead.
+#
+# NARROW ONE-ANCHOR DESIGN (remembered-* precedent): the row's entire
+# textual case is Eccl 3:1-8, in corpus whole. Eccl 3:11 ("he has made
+# everything beautiful in its time") stays conscience's anchor —
+# adjacent, cross-noted, not re-anchored. Ps 31:15 ("my times are in
+# your hand") is a corpus-blocked rider in the adjacent providence
+# register; re-check ownership at the re-pin.
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens
+# ("for/a/to/there/is" are stopwords; "time"/"season" never stand alone).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: seasons-of-life
+label: Seasons of life
+lexicon:
+  - a time for everything
+  - to everything there is a season
+  - seasons of life
+  - a season for every activity
+  - a time to be born and a time to die
+  - a time to mourn and a time to dance
+anchors:
+  # "For everything there is a season, and a time for every purpose
+  # under heaven: a time to be born, and a time to die..." (WEB, in
+  # corpus whole). The passage the queries name; the whole poem is the
+  # answer, so the anchor spans it. 3:11 stays conscience's; 3:12-13
+  # and 3:22 are enjoying-gods-gifts' (same batch); 3:14 stays
+  # fear-of-the-lord's; 3:19-21 are mortality's (same batch) —
+  # verse-disjoint claims on a shared chapter, idolatry precedent.
+  - ref: Ecclesiastes 3:1-8
+    sources: [editorial]
+    weight: 1.0
+  # "My times are in your hand" — the trusting-the-timekeeper register
+  # the funeral/graduation searcher often wants next. (Psalm 31 NOT in
+  # web-subset; re-check at re-pin, alongside providence's claim to the
+  # timing register.)
+  - ref: Psalms 31:15
+    sources: [editorial]
+    weight: 0.7
+related:
+  - providence
+  - mortality
+  - enjoying-gods-gifts

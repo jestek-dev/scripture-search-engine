@@ -1,0 +1,51 @@
+{
+  "id": "justice-and-oppression",
+  "query": "justice in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "oppression of the poor"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id justice-and-oppression (Theme G row, 26 requesting",
+    "books \u2014 the single highest-breadth concept in the review) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "The designated landing place of the 2026-08-23 pastoral-register",
+    "ruling: pastoral-refuge-and-justice is deliberately the personal",
+    "abuse-crisis register and keeps its lexicon ('defend the oppressed',",
+    "'justice for the oppressed') and anchors (Ps 82:3-4, Isa 1:17)",
+    "untouched; this pack is the civic/economic register with zero",
+    "shared phrases. Isa 1:11-17 stays empty-worship's; Exod 3:7 stays",
+    "pastoral-god-sees-my-suffering's; Ezek 18 is left to",
+    "individual-responsibility (same batch); Jas 5:1-3 stays",
+    "money-and-possessions' (anchor here starts at 5:4). Amos 5:24 rides",
+    "re-pin as a verse-scoped sibling inside empty-worship's Amos",
+    "5:21-24 rider span (recorded both files) so both KJV/ESV 'let",
+    "justice roll down like waters' and WEB 'roll on like rivers'",
+    "phrasings have an honest home when Amos lands.",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'justice in the bible' returned justice-token scatter with Isa 1:17",
+    "surfacing only lexically and Jas 2:6/2:3 as passage-term noise;",
+    "'oppression of the poor' returned oppression/poor token scatter",
+    "(Ps 73:8, Isa 54:14, Matt 5:3), no concept."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Psalms 103:6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Justice and oppression"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 146:7",
+    "Isaiah 1:21-23",
+    "James 5:4-6",
+    "Micah 6:10-12",
+    "Proverbs 28:15-16",
+    "Psalms 9:18"
+  ],
+  "coversConcepts": [
+    "justice-and-oppression"
+  ]
+}

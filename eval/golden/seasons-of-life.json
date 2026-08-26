@@ -1,0 +1,34 @@
+{
+  "id": "seasons-of-life",
+  "query": "a time for everything",
+  "status": "active",
+  "additionalQueries": [
+    "seasons of life"
+  ],
+  "note": [
+    "TAG-GAP ROLLOUT batch 4 (Themes E/F/G, 2026-08-26), fixtures-first:",
+    "ADOPTED-TAG id seasons-of-life (Theme E row, 1 requesting book) \u2014",
+    "engine admission only by Jesse's merge of this PR.",
+    "One of the most-searched passages in the Bible (funerals,",
+    "graduations, grief); no concept carries any time/season phrasing.",
+    "Providence extension route (the row's own alternative) CHECKED and",
+    "DECLINED: providence is the governance-of-events register; answering",
+    "'seasons of life' with Gen 50:20 / Ps 33:10-11 would be a register",
+    "mismatch. Eccl 3:11 stays conscience's (eternity in their hearts).",
+    "Measured gap before the pack (2026-08-26, pending-fixture run):",
+    "'a time for everything' returned Eccl 3:1 at rank 1 by bare token",
+    "luck (everyth/time), CHIPLESS; 'seasons of life' returned season-",
+    "token scatter (Mark 9:49, Gal 6:9) with Eccl 3:1 chipless at rank 1."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ecclesiastes 3:1-8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Seasons of life"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "coversConcepts": [
+    "seasons-of-life"
+  ]
+}

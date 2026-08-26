@@ -100,6 +100,10 @@ anchors:
   # "I hate, I despise your feasts... But let justice roll on like
   # rivers" register — the prophets' densest rejection oracle. (Amos
   # NOT in web-subset; re-check at re-pin.)
+  # SIBLING NOTE (tag-gap batch 4, 2026-08-26): justice-and-oppression
+  # anchors v24 alone as its own rider — the justice-roll phrase's
+  # justice-register home — inside this span (recorded in both files);
+  # this pack keeps the rejection-oracle register.
   - ref: Amos 5:21-24
     sources: [editorial]
     weight: 0.85

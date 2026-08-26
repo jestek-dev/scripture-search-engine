@@ -1,0 +1,88 @@
+# TAG-GAP ROLLOUT batch 4 (Theme E, 2026-08-26) — ADOPTED-TAG id
+# (Theme E row in tag-gaps-review.md, 1 requesting book). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission happens only by his merge of this PR.
+#
+# "How to take criticism" / "accepting correction" / "teachable spirit"
+# — a live discipleship query with no home.
+#
+# EXTENSION ROUTE CHECKED AND DECLINED: the row's own check-first is
+# the-lords-discipline. That pack is divine chastening (Heb 12:7-11,
+# Rev 3:19, "why is god disciplining me"); the row's queries are about
+# receiving HUMAN rebuke and criticism teachably — Proverbs' open-
+# rebuke register. Answering "how to take criticism" with Heb 12:7-11
+# would be a register mismatch. Cross-related instead; the two lexicons
+# share no phrase.
+#
+# BOUNDARIES: Prov 29:1 (often reproved, stiffens his neck) stays
+# hardness-of-heart's corpus-blocked rider (batch 3) — the refusal side
+# of this same coin, cross-noted, never double-claimed. 2 Corinthians'
+# church-discipline register (a future Theme J row) is a different
+# register from personal teachability, per the row's adjacency note.
+# Prov 3:11-12 stays parenting's anchor (and the-lords-discipline's
+# territory at the re-pin).
+#
+# CORPUS: in-corpus witnesses are Prov 27:5-6 and 28:23; the row's
+# other Proverbs witnesses (9:8-9; 12:1; 13:18; 15:31-32; 17:10; 25:12)
+# and Ps 141:5 are corpus-blocked riders.
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens.
+# Bare "correction"/"rebuke" deliberately NOT admitted — "correction"
+# spans the-lords-discipline's divine register and "rebuke" the
+# prophetic/Jesus-rebukes narratives; the paired forms carry this
+# concept (inventory skip rows).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: receiving-correction
+label: Receiving correction
+lexicon:
+  - receiving correction
+  - accepting correction
+  - how to take criticism
+  - teachable spirit
+  - open rebuke
+  - wounds of a friend
+  - listen to correction
+anchors:
+  # "Better is open rebuke than hidden love. The wounds of a friend are
+  # faithful, although the kisses of an enemy are profuse" (WEB, in
+  # corpus). The register's keystone — correction received as
+  # friendship's faithfulness. (Prov 27:17 stays friendship's
+  # territory.)
+  - ref: Proverbs 27:5-6
+    sources: [editorial]
+    weight: 1.0
+  # "One who rebukes a man will afterward find more favor than one who
+  # flatters with the tongue" (WEB, in corpus).
+  - ref: Proverbs 28:23
+    sources: [editorial]
+    weight: 0.9
+  # "Reprove a wise man, and he will love you. Instruct a wise man, and
+  # he will be still wiser." (Proverbs 9 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Proverbs 9:8-9
+    sources: [editorial]
+    weight: 0.85
+  # "Whoever loves correction loves knowledge, but he who hates reproof
+  # is stupid." (Proverbs 12 NOT in web-subset; re-check at re-pin.)
+  - ref: Proverbs 12:1
+    sources: [editorial]
+    weight: 0.8
+  # "The ear that listens to reproof lives... he who listens to reproof
+  # gets understanding." (Proverbs 15 NOT in web-subset; re-check at
+  # re-pin.)
+  - ref: Proverbs 15:31-32
+    sources: [editorial]
+    weight: 0.8
+  # "Let the righteous strike me, it is kindness; let him reprove me,
+  # it is like oil on the head." (Psalm 141 NOT in web-subset; re-check
+  # at re-pin.)
+  - ref: Psalms 141:5
+    sources: [editorial]
+    weight: 0.7
+related:
+  - the-lords-discipline
+  - hardness-of-heart
+  - friendship
+  - wisdom-from-god

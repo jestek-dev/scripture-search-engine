@@ -50,6 +50,11 @@ anchors:
   # "Let every soul be in subjection to the higher authorities, for there
   # is no authority except from God" — through taxes, respect, and honor
   # (13:6-7). Torrey-verified: KINGS (13:1 "God ordains"; 13:2, 13:5-7).
+  # DUAL NOTE (tag-gap batch 4, 2026-08-26): governing-authorities also
+  # anchors this passage — the believer-and-state register (taxes /
+  # Caesar / obey-God-rather-than-men); this pack keeps the phrases
+  # "government" and "governing authorities" and every other anchor
+  # (recorded in both files).
   - ref: Romans 13:1-7
     sources: [torrey]
     weight: 0.9
