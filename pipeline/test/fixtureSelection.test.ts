@@ -106,20 +106,21 @@ describe('committed WEB fixture selection', () => {
     expect(fixture.selection).toEqual(SELECTION);
   });
 
-  it('commits exactly 5,726 unique verses in canonical order for the selected chapter universe', () => {
-    // 5,669 through P5.2; +58 at P5.6 PR 2 (Psalm 136's 26 + Genesis 11's 32,
-    // the pericope-grouping fixture targets); -1 at the 2026-08-25 re-pin:
-    // the fixture is now generated straight from the pinned VPL zip, whose
-    // importer omits textless references, so the empty Luke 17:36 entry the
-    // earlier USFM-extension path had carried is no longer emitted (the
-    // WEB delta report proved every other verse byte-identical).
+  it('commits exactly 31,098 unique verses in canonical order for the selected chapter universe', () => {
+    // 5,726 through the 2026-08-25 re-pin (5,669 at P5.2; +58 at P5.6 PR 2;
+    // -1 when the VPL route dropped the textless Luke 17:36 entry). 31,098 as
+    // of 2026-08-26: Jesse ruled the corpus carries the whole Bible — the
+    // selection is every chapter of all 66 books, and the count is the full
+    // WEB VPL export's verse total (the importer omits textless references,
+    // e.g. Luke 17:36, so this is 31,098, not the 31,103 of the older JSON
+    // export lineage).
     const fixture = readFixture();
     const expectedSelection = normalizeSelection(SELECTION);
     const committedSelection = normalizeSelection(fixture.selection);
     const actualSelection = actualFixtureChapters(fixture.verses);
 
-    expect(fixture.verses).toHaveLength(5726);
-    expect(new Set(fixture.verses.map((verse) => `${verse.book}:${verse.chapter}:${verse.verse}`)).size).toBe(5726);
+    expect(fixture.verses).toHaveLength(31098);
+    expect(new Set(fixture.verses.map((verse) => `${verse.book}:${verse.chapter}:${verse.verse}`)).size).toBe(31098);
     expect(committedSelection).toEqual(expectedSelection);
     expect(actualSelection).toEqual(expectedSelection);
 
