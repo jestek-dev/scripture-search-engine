@@ -146,7 +146,8 @@ Jesse, strictly last.
 Jesse commissioned and pre-approved the dashboard plan (2,176 lines, 42
 D-items, 5 phases; every section through harsh-critic loops —
 `docs/plans/2026-08-22-dashboard-implementation-plan.md`). Delivery, each
-phase its own reviewed PR, all merged by Jesse within ~36 hours:
+phase its own reviewed PR, all merged by Jesse within ~33 hours of the
+2026-08-22 13:06Z commissioning:
 **#38** (P1 shell + themes + real read-only search, merged 2026-08-23
 ~03:43Z), **#45** (P2 voting end-to-end, ~15:24Z), **#48** (P3 suggestions,
 ~17:13Z), **#49** (P4 queue/Compare/History/Finish-up signing, ~20:35Z),
@@ -223,12 +224,12 @@ copy. (Memory: `dashboard-plan-2026-08-22.md`.)
 - **PR #52 merged 01:22Z** (`031ed69`). Jesse asked to un-defer the
   161-concept engine work; it ran overnight as six stacked draft PRs
   **#54 → #59** (census 153 → 239, zero NO-MEASURABLE-EFFECT packs).
-- Afternoon: Jesse published the `source-snapshots-2026-08` release (14:47Z,
-  digests verified), merged #54 (`8c8b78d`) — but #55–#59 merged
-  **un-retargeted** onto each other's branches; recovery **PR #60**
-  (14:53Z, `6367855`) carried batches 2–6 to main. Then **PR #53 — the J52
-  re-pin of all three drifted sources — merged 15:22Z as `e762d1c`. J52
-  done.** (Memory: `concept-packs-161-2026-08-26.md`.)
+- Afternoon: Jesse merged #54 (`8c8b78d`, 14:19Z) — but #55–#59 merged
+  **un-retargeted** onto each other's branches; he published the
+  `source-snapshots-2026-08` release (14:47Z, digests verified), and
+  recovery **PR #60** (14:53Z, `6367855`) carried batches 2–6 to main.
+  Then **PR #53 — the J52 re-pin of all three drifted sources — merged
+  15:22Z as `e762d1c`. J52 done.** (Memory: `concept-packs-161-2026-08-26.md`.)
 - Jesse's 16:03Z ask (whole Bible, verse-by-verse tags, fuzzy wording,
   every verse searchable) produced the **whole-Bible coverage plan**
   (`project-files/plans/2026-08-26-whole-bible-coverage-plan.md`): the

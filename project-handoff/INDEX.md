@@ -34,7 +34,9 @@ Verified: no secrets or credentials.
 ## 2. `project-files/` — verbatim copies from `/mnt/project-files`
 
 Everything below is copied **verbatim** (no rewriting), preserving its
-subpath under `/mnt/project-files/`. 186 files. The one exception to
+subpath under `/mnt/project-files/`. 247 files (186 text/data files, plus
+the 61 screenshot PNGs added at verification — see the screenshots table
+below). The one exception to
 verbatim handling is `HANDOFF.md`, which was **refreshed** into
 [HANDOFF.md](HANDOFF.md) (its 2026-08-25/26 body kept intact; only dated
 2026-08-27 additions) rather than duplicated.
@@ -90,6 +92,25 @@ verbatim handling is `HANDOFF.md`, which was **refreshed** into
 | [battery-regrade-2026-08-26.md](project-files/research/battery-regrade-2026-08-26.md) / [.json](project-files/research/battery-regrade-2026-08-26.json) | The post-re-pin battery re-grade (A-, 0 harmful) that surfaced the G10 size flag; 16-row alias-mining seed table. Copied from /mnt/project-files/research/. |
 | [apologetics-tags/apologetics-concept-map.md](project-files/research/apologetics-tags/apologetics-concept-map.md) / [.json](project-files/research/apologetics-tags/apologetics-concept-map.json) | The Mormon/JW apologetics concept map (29 concepts / 216 WEB-verified anchors) behind PR #51. Copied from /mnt/project-files/research/apologetics-tags/. |
 | [popular-verses/](project-files/research/popular-verses/) (21 files) | The top-200 popular-verses dataset with full provenance: `top-200-verses.{json,md}`, `dedupe-log.md`, deterministic `build_ranking.py`, 5 source JSONs, and `held-fixture-drafts/` (11 files — drafts promoted via PR #63). Copied from /mnt/project-files/research/popular-verses/. |
+
+### Screenshot evidence (`project-files/research/`, 61 PNGs, ~5.6 MB total)
+
+Copied verbatim at the 2026-08-27 verification pass (originally excluded as
+binaries; added because they are the only project-file content that would
+otherwise die with the project — the reviewer may drop them from the PR if
+unwanted). The findings they evidence are preserved in text in
+`reconstructed/2026-08-21-22-prototype-audit-verdicts.md`, the dashboard
+plan, and the memory export.
+
+| Directory | Contents |
+|---|---|
+| [research/2026-08-21-prototype-audit/](project-files/research/2026-08-21-prototype-audit/) (16 PNGs) | Jesse's workbench prototype v1 screens + the old workbench against the real server. |
+| [research/2026-08-22-prototype-v2/](project-files/research/2026-08-22-prototype-v2/) (7 PNGs) | Prototype v2 — the search-driven flow that became The Study's spec. |
+| [research/2026-08-22-study-p1/](project-files/research/2026-08-22-study-p1/) (5 PNGs) | The Study Phase 1: shell, themes, read-only search. |
+| [research/2026-08-23-study-p2/](project-files/research/2026-08-23-study-p2/) (8 PNGs) | Phase 2: voting, interview, tail rescue, undo. |
+| [research/2026-08-23-study-p3/](project-files/research/2026-08-23-study-p3/) (8 PNGs) | Phase 3: suggestion flow and receipts. |
+| [research/2026-08-23-study-p4/](project-files/research/2026-08-23-study-p4/) (8 PNGs) | Phase 4: queue, blind Compare, History, Finish-up signing. |
+| [research/2026-08-23-study-p5/](project-files/research/2026-08-23-study-p5/) (9 PNGs) | Phase 5: onboarding, shortcut sheet, polish — the flip. |
 
 ### Reference data and uploads
 
@@ -181,8 +202,10 @@ Links are relative to this folder.
 
 | What | Where it stays | Reason |
 |---|---|---|
-| 61 PNG screenshots (7 directories): `research/2026-08-21-prototype-audit/` (16), `research/2026-08-22-prototype-v2/` (7), `research/2026-08-22-study-p1/` (5), `research/2026-08-23-study-p2/` (8), `research/2026-08-23-study-p3/` (8), `research/2026-08-23-study-p4/` (8), `research/2026-08-23-study-p5/` (9) | `/mnt/project-files/research/…` (until deletion) | Binary artifacts (~5.7 MB) whose evidentiary content — the prototype/Study audit findings — is preserved in text form in the reconstructed audit doc, the dashboard plan, and the memory export. This is a docs-only PR; the shipped UI itself lives on main. |
 | `/mnt/project-files/HANDOFF.md` (as a verbatim duplicate) | Refreshed into [HANDOFF.md](HANDOFF.md) | Handled specially per the handoff brief: the repo copy is the canonical refresh (original body preserved intact inside it); the share copy now carries a superseded banner. |
 
-Nothing else under `/mnt/project-files` was excluded: 248 files total =
-186 copied + 1 refreshed (HANDOFF.md) + 61 PNGs excluded.
+(The 61 screenshot PNGs, originally excluded here as binaries, were copied
+in at the 2026-08-27 verification pass — see the screenshots table in §2.)
+
+Nothing under `/mnt/project-files` is excluded: 248 files total =
+247 copied (186 text/data + 61 PNGs) + 1 refreshed (HANDOFF.md).
