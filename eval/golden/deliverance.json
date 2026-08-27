@@ -1,0 +1,47 @@
+{
+  "id": "deliverance",
+  "query": "god will deliver you",
+  "status": "active",
+  "additionalQueries": [
+    "deliverance in the bible"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 32 (Theme H, 6 requesting books). Deferred",
+    "because EVERY requested ref was absent (1 Sam 7-26, 2 Sam 22, Judg",
+    "2-15, 1 Kgs 20, Ezra 8, Esth 4:14).",
+    "Register per the row: the plain rescue register — salvation is",
+    "gospel-keyed, gods-protection the shielding register,",
+    "pastoral-freedom-from-bondage the crisis pack; none touched.",
+    "BOUNDARIES: Judg 2:16, 18 stay inside backsliding's 2:11-19 anchor",
+    "(this pack takes Judg 3:9, the cycle's first instance); Ezra 8:22",
+    "stays inside fasting's 8:21-23 (this pack takes 8:31, the deliverance",
+    "reported); Esth 4:16 stays courage's (this pack takes 4:14 — the",
+    "row's own phrase witness, adjacent and disjoint); 1 Sam 7:12",
+    "(Ebenezer) goes to remembrance-and-memorials (same PR) — this pack",
+    "takes the 7:10-11 rescue verses, disjoint.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'god will deliver you' Deut 7:23 rank 1 (destroy-the-nations",
+    "register, wrong intent — the recorded misroute) then chipless",
+    "god+deliver scatter; 'god delivered me' chipless scatter (Rom 7:6,",
+    "Deut 2:33); 'deliverance in the bible' unserved."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Samuel 17:37",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Deliverance"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "2 Samuel 22:17-20",
+    "Judges 3:9",
+    "1 Samuel 7:10-11",
+    "Ezra 8:31",
+    "Esther 4:14"
+  ],
+  "coversConcepts": [
+    "deliverance"
+  ]
+}

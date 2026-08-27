@@ -1,0 +1,43 @@
+{
+  "id": "zeal-for-god",
+  "query": "zeal for god",
+  "status": "active",
+  "additionalQueries": [
+    "zealous for the lord"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 36 (Theme I, requesting book: Numbers).",
+    "Deferred because Num 25:7-13 (Phinehas \u2014 the row's whole case) was",
+    "absent.",
+    "The VIGILANTE-VIOLENCE gist CAUTION honored: the pack anchors the",
+    "LORD's own commendation (Num 25:10-13), describes what the text",
+    "commends (a unique, priestly act), and pairs it with Rom 10:2's",
+    "zeal-without-knowledge caution and the Ps 69:9 / John 2:17",
+    "zeal-for-your-house register \u2014 described, adjudicated by neither.",
+    "WEB WORDING NOTE: Num 25:11-13 says 'jealous... for his God' (WEB's",
+    "rendering of the zeal word); the lexicon carries the zeal forms",
+    "people type.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'zeal for god' Rom 10:2 rank 1 exact phrase CHIPLESS then zeal-token",
+    "noise (Prov 27:14); 'zealous for the lord' hijacked by guidance",
+    "theme-cues (Ps 32:8!) \u2014 Phinehas and Ps 69:9 nowhere.",
+    "STRUCTURAL LIMIT added at authoring: 'zeal for your house' / 'zeal in the bible' rejected as entries (G4: 67% shared vocabulary with the-house-of-god); the verbatim house query rides exact-phrase retrieval (John 2:17, Ps 69:9) with this pack's chip present when the zeal forms fire."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Numbers 25:10-13",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Zeal for God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 69:9",
+    "John 2:17",
+    "Romans 10:2"
+  ],
+  "coversConcepts": [
+    "zeal-for-god"
+  ]
+}

@@ -315,6 +315,18 @@ collapses:
     note: >-
       J12 flag: bare 'job' also names the book of Job in queries ('job
       suffering'); confirm the collapse or rephrase toward 'my work'.
+  - conceptId: remembrance-and-memorials
+    phrase: "my ebenezer"
+    token: ebenezer
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-27"
+    note: >-
+      CORPUS-BLOCKED ROSTER build (2026-08-27), authored with the pack:
+      "my" is a stopword, so the hymn phrase collapses to bare
+      "ebenezer" — deliberate: "raise my Ebenezer" (the row's own hymn
+      query) and the bare name both reach 1 Sam 7:12; no other concept
+      speaks it. Fixture-backed (remembrance-and-memorials.json).
   - conceptId: resisting-the-devil
     phrase: "the devil"
     token: devil
@@ -996,6 +1008,19 @@ concepts:
           Generic; would fire this pack on every church-* query
           (gathering-together, unity territory).
 
+  - id: circumcision-of-the-heart
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, circumcision-of-the-heart.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires. No
+    # uncircumcised-heart entry (the Jeremiah routing to
+    # hardness-of-heart stands).
+    skipped:
+      - token: circumcision
+        reason: >-
+          Spans the physical-institution texts (1 Cor 7:19, Galatians)
+          the pack does not claim; the heart-qualified forms carry
+          this register.
+
   - id: cities-of-refuge
     # 2026-08-27 corpus-blocked roster build: row authored with the pack
     # (fixture-first, cities-of-refuge.json). Every entry keeps >= 2
@@ -1197,6 +1222,22 @@ concepts:
           language), deferred pending a measured gap — the word also carries
           a contemporary-practice sense the pack does not answer. The
           "meditate on ..." phrase forms carry it today.
+
+  - id: deliverance
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, deliverance.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: deliver
+        reason: >-
+          Generic verb across hundreds of verses and every register
+          (rescue, hand-over, childbirth); the god/lord-paired forms
+          carry the rescue register.
+      - token: deliverance
+        reason: >-
+          The bare noun is ambiguous with the deliverance-from-demons
+          register (deliverance ministry vocabulary); the phrase forms
+          keep the two registers fenced.
 
   - id: deliverance-from-demons
     # 2026-08-26 tag-gap batch 2: row authored with the pack
@@ -2719,6 +2760,23 @@ concepts:
           (2026-08-18, deliberate, with the in-file comment here explicitly
           declining it for this one-anchor pack).
 
+  - id: remembrance-and-memorials
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, remembrance-and-memorials.json). One deliberate
+    # collapse (row above): "my ebenezer" -> ebenezer.
+    admitted: [ebenezer]
+    skipped:
+      - token: memorial
+        reason: >-
+          Spans the ephod-stones and offering-portion uses (Exod 39:7
+          was the measured rank-1 noise); the stones/practice phrase
+          forms carry this register.
+      - token: remember
+        reason: >-
+          Generic verb; and "remembering gods faithfulness" measured
+          already served by gods-faithfulness — no entry competes for
+          that family.
+
   - id: remnant
     # 2026-08-26 tag-gap batch 1: row authored with the pack
     # (fixture-first, remnant.json). Bare `remnant` is a deliberate
@@ -2821,6 +2879,16 @@ concepts:
     # 2026-08-27 corpus-blocked roster build: row authored with the pack
     # (fixture-first, right-in-their-own-eyes.json). A phrase-forms
     # pack — no entry collapses to a single significant token.
+
+  - id: running-from-god
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, running-from-god.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: run
+        reason: >-
+          Plain narrative verb (and its runn/running stem sibling);
+          the from-god forms carry the flight register.
 
   - id: sabbath-rest
     # PR #41 (2026-08-22 Genesis pilot): deliberate bare entry per the
@@ -3587,6 +3655,17 @@ concepts:
           lexically) and non-devotional senses; the "wrestling with god"
           / "struggling with god" phrase forms carry the concept.
           Pending curation review before any bare admission.
+
+  - id: zeal-for-god
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, zeal-for-god.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: zeal
+        reason: >-
+          The bare noun spans the divine-jealousy texts and Gal 6:12's
+          negative use; the paired forms (god/lord/house) carry the
+          searched register.
 
   - id: zion-city-of-god
     # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,

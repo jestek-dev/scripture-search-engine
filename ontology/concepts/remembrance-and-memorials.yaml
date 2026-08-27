@@ -1,0 +1,85 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme I row 33 (5 requesting books: Joshua, 1 Samuel, Deuteronomy,
+# Esther, Psalms). Deferred because the memorial-practice spine was
+# absent.
+#
+# ONE-CONCEPT-OR-TWO DECIDED at curation (the Deuteronomy register
+# note; reversible): ONE id — the memorial practice (Joshua's stones)
+# and the remember-and-do-not-forget discipline (Deuteronomy's spine)
+# are one practice, monument and command: the stones exist so the
+# children ask (Josh 4:6). The BORDERLINE forgetting-in-prosperity
+# flag honored narrowly: only the free Deut 8:11-14 is anchored, at
+# modest weight, and no forget-vocabulary entry is admitted that
+# could hijack prosperity queries.
+#
+# BOUNDARIES: Deut 8:2-3 stays testing's anchor; Deut 5:15 stays
+# inside sabbath-rest's 5:12-15; Esth 9:26-28 stays inside
+# appointed-feasts' 9:20-28 (the feast-as-memorial register is that
+# pack's) — all cross-noted, not claimed. "remembering gods
+# faithfulness" measured ALREADY SERVED by gods-faithfulness — that
+# query family is deliberately NOT in this lexicon.
+#
+# TOKENIZER NOTE (G-4): "my ebenezer" collapses to the single token
+# `ebenezer` ("my" is a stopword) — deliberate: the hymn query
+# ("raise my Ebenezer", the row's own example) and the bare name both
+# reach 1 Sam 7:12; no other concept speaks it. Collapse row +
+# inventory admission recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: remembrance-and-memorials
+label: Remembrance and memorials
+lexicon:
+  - memorial stones
+  - what do these stones mean
+  - my ebenezer
+  - remember what god has done
+  - memorials in the bible
+anchors:
+  # "that when your children ask in the future, saying, 'What do you
+  # mean by these stones?' then you shall tell them... These stones
+  # shall be for a memorial to the children of Israel forever." (WEB,
+  # in corpus). The practice's charter — a monument built to provoke
+  # the question.
+  - ref: Joshua 4:6-7
+    sources: [editorial]
+    weight: 1.0
+  # "Then Samuel took a stone... and called its name Ebenezer, saying,
+  # 'The LORD helped us until now.'" (WEB, in corpus). The Ebenezer —
+  # the source of the hymn query (the rescue itself, 7:10-11, is
+  # deliverance's anchor, same PR).
+  - ref: 1 Samuel 7:12
+    sources: [editorial]
+    weight: 0.9
+  # "'When your children ask their fathers in time to come, saying,
+  # 'What do these stones mean?'... that all the peoples of the earth
+  # may know that the LORD's hand is mighty" (WEB, in corpus). The
+  # charge repeated at Gilgal, with its purpose widened.
+  - ref: Joshua 4:21-24
+    sources: [editorial]
+    weight: 0.85
+  # "he took a great stone... 'Behold, this stone shall be a witness
+  # against us, for it has heard all the LORD's words'" (WEB, in
+  # corpus). The covenant witness stone.
+  - ref: Joshua 24:26-27
+    sources: [editorial]
+    weight: 0.75
+  # "Beware lest you forget the LORD your God... lest, when you have
+  # eaten and are full... then your heart might be lifted up, and you
+  # forget the LORD" (WEB, in corpus). The discipline's negative
+  # command — the reason the practice exists (see BORDERLINE note).
+  - ref: Deuteronomy 8:11-14
+    sources: [editorial]
+    weight: 0.7
+  # "Remember his marvelous works that he has done: his wonders, and
+  # the judgments of his mouth," (WEB, in corpus). The psalmist's same
+  # charge.
+  - ref: Psalms 105:5
+    sources: [editorial]
+    weight: 0.7
+related:
+  - gods-faithfulness
+  - testing
+  - appointed-feasts
+  - parenting
+sources: [editorial]

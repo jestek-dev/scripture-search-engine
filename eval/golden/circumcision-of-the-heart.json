@@ -1,0 +1,46 @@
+{
+  "id": "circumcision-of-the-heart",
+  "query": "circumcise your heart",
+  "status": "active",
+  "additionalQueries": [
+    "circumcision of the heart meaning"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 37 (Theme I, requesting book:",
+    "Deuteronomy). Deferred because Deut 30:6; 10:16 were absent.",
+    "The READ-TOGETHER heart-design DECIDED at curation (both rows' own",
+    "cross-flags, reversible): TWO resolutions, ONE new id — this narrow",
+    "mint for the circumcision vocabulary (repentance names the human",
+    "turning, not God's inward surgery; new-creation is the NT",
+    "fresh-start register), while the new-heart row lands as a",
+    "new-creation LEXICON EXTENSION (see new-heart.json, same PR) since",
+    "new-creation already anchors Ezek 36:26 and Ps 51:10. No broader",
+    "heart-transformation umbrella minted.",
+    "BOUNDARIES: Rom 2:28-29 claimed (verified free — the roster's own",
+    "note: the natural NT keystone); Jer 4:4 / 9:26 NOT claimed — the",
+    "Jeremiah thread's recorded routing to hardness-of-heart stands",
+    "(adjacent imagery, different theme), so no uncircumcised-heart",
+    "lexicon entry either; Deut 30:1-5 stays restoration-of-israel's",
+    "(this pack takes the adjacent, disjoint 30:6).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'circumcise your heart' Deut 30:6 rank 1 exact phrase CHIPLESS;",
+    "'circumcision of the heart meaning' Rom 2:29 rank 1 CHIPLESS then",
+    "token noise (Isa 10:7!)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Deuteronomy 30:6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Circumcision of the heart"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Deuteronomy 10:16",
+    "Romans 2:28-29"
+  ],
+  "coversConcepts": [
+    "circumcision-of-the-heart"
+  ]
+}
