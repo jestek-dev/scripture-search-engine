@@ -1,0 +1,36 @@
+# REMEMBERED-PHRASING PACK — alias-mining batch 1 (2026-08-26, whole-Bible
+# coverage plan §2.3 item 2 / §4.3; mined from the popular-verses Tier 2
+# seed — Isaiah 26:3 is rank 62 of the verified top-200).
+#
+# PD-ONLY WORDING (decision #4/#5 defaults): every phrase below is the
+# verbatim wording of the American Standard Version (1901, public domain) —
+# no ESV/NIV/NLT-derived wording anywhere in this pack.
+#   - "whose mind is stayed on thee" — ASV, Isaiah 26:3. The WEB reads
+#     "whoever's mind is steadfast"; 'stayed' stems to a token the WEB
+#     verse never carries, so the register measured ABSENT from the top 10
+#     (translation-variant scatter at #1 — see
+#     eval/golden/remembered-mind-stayed-on-thee.json).
+#   - "thou wilt keep him in perfect peace" — ASV, Isaiah 26:3. Its query
+#     already led lexically (exact phrase on 'in perfect peace'); the
+#     entry's value is the honest curated chip and the first clause of the
+#     same remembered promise — recorded so the admission evidence is read
+#     correctly.
+#
+# ONE anchor per pack, deliberately (the remembered-* design). ADDITIVE on
+# purpose: peace-of-god keeps its reviewed Isaiah 26:3 anchor at 0.9 —
+# coexistence over one verse per the remembered-anxious-for-nothing /
+# peace-of-god precedent. Token overlap with peace-of-god is {perfect,
+# peace} only (2 of this pack's 5), under the G4 ratios.
+id: remembered-mind-stayed-on-thee
+label: A mind stayed on God
+lexicon:
+  - whose mind is stayed on thee
+  - thou wilt keep him in perfect peace
+anchors:
+  # "You will keep whoever's mind is steadfast in perfect peace, because he
+  # trusts in you." (WEB)
+  - ref: Isaiah 26:3
+    sources: [editorial]
+    weight: 1.0
+related:
+  - peace-of-god

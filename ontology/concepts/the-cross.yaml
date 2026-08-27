@@ -20,6 +20,18 @@ lexicon:
   # is the WEB's own wording at 1 John 2:2 / 4:10.
   - propitiation
   - atoning sacrifice
+  # Alias-mining batch 1 extension (2026-08-26, coverage plan §2.3 item 2;
+  # popular-verses Tier 1 seed, Isaiah 53:5 rank 20). ASV wording (1901,
+  # public domain): "with his stripes we are healed" — the register
+  # memorization programs and Handel's Messiah carry. 'stripes' stems to a
+  # token the WEB text never contains ('by his wounds we are healed', the
+  # entry above), so the query measured Isaiah 53:5 ABSENT from the top 10
+  # (dead-ended in the bare 'healing' cue — see eval/golden/
+  # stripes-healed.json for the fixture-first evidence). Extension here,
+  # never a new concept: this pack already anchors Isaiah 53:5 at 1.0 and
+  # already owns the WEB register of the same clause (the batch-5
+  # gentle-and-humble-in-heart extension is the precedent).
+  - with his stripes we are healed
 anchors:
   - ref: Isaiah 53:5
     sources: [editorial]

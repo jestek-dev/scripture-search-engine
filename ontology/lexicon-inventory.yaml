@@ -2751,6 +2751,38 @@ concepts:
     # phrasings pass); peace-of-god owns the adjective "anxious".
     admitted: [anxiety]
 
+  - id: remembered-calls-things-that-are-not
+    # 2026-08-27 alias-mining batch 1 held row, admitted post corpus
+    # expansion (fixture-first, remembered-calls-things-that-are-not.json).
+    # Phrasing-only by design; the single entry keeps 2 significant tokens
+    # ({call, thing} — the draft's recorded caution, measured before
+    # admission).
+    skipped:
+      - token: call
+        reason: >-
+          Generic verb across the canon (call on the name, call me Lord,
+          called to be saints); the full remembered phrase carries the
+          register.
+      - token: thing
+        reason: >-
+          Near-stopword breadth (all things work together, the things that
+          are seen); the full remembered phrase carries the register.
+
+  - id: remembered-cast-your-care
+    # 2026-08-26 alias-mining batch 1: authored with the pack
+    # (fixture-first, remembered-cast-your-care.json). Phrasing-only by
+    # design; every entry keeps 2 significant tokens.
+    skipped:
+      - token: cast
+        reason: >-
+          Generic verb across the canon (cast out, cast lots, cast down);
+          the paired {cast, care} forms carry the register.
+      - token: care
+        reason: >-
+          Spans caregiving and worldly-cares senses (caring for aging
+          parents is another pack's territory); the paired forms carry
+          the register.
+
   - id: remembered-faith-as-assurance
     skipped:
       - token: assurance
@@ -2805,12 +2837,59 @@ concepts:
           The most common name in the product cannot route to one narrow
           anchor; phrasing-only by design.
 
+  - id: remembered-mind-stayed-on-thee
+    # 2026-08-26 alias-mining batch 1: authored with the pack
+    # (fixture-first, remembered-mind-stayed-on-thee.json). Phrasing-only
+    # by design; every entry keeps >= 2 significant tokens.
+    skipped:
+      - token: peace
+        reason: >-
+          peace-of-god owns the bare word (2026-08-08 deliberate entry);
+          double-firing it here would dilute the anchor the two concepts
+          deliberately share.
+      - token: mind
+        reason: >-
+          Generic faculty word (renewing of your mind, mind of Christ);
+          the paired {mind, stay} form carries the register.
+
+  - id: remembered-no-weapon-shall-prosper
+    # 2026-08-26 alias-mining batch 1: authored with the pack
+    # (fixture-first, remembered-no-weapon-shall-prosper.json).
+    # Phrasing-only by design; every entry keeps >= 2 significant tokens.
+    skipped:
+      - token: weapon
+        reason: >-
+          gods-protection's "no weapon formed against me" entry already
+          speaks the token in its own register; the bare word would also
+          claim battle narratives.
+      - token: prosper
+        reason: >-
+          Prosperity-slogan territory (battery ad2/ad4; editorial stance
+          J9 undecided) — a bare trigger here would quietly take a side;
+          the full remembered clause carries the register.
+
   - id: remembered-transformed-not-conformed
     skipped:
       - token: transformed
         reason: >-
           Plausible future admission, deferred pending a measured gap; the
           remembered Romans 12:2 phrasings carry it today.
+
+  - id: remembered-wait-for-the-lord
+    # 2026-08-26 alias-mining batch 1: authored with the pack
+    # (fixture-first, remembered-wait-for-the-lord.json). Phrasing-only by
+    # design; every entry keeps >= 2 significant tokens.
+    skipped:
+      - token: wait
+        reason: >-
+          "Waiting on God" is trust-in-god's anchor territory (Ps 27:14,
+          Lam 3:25-26); a bare trigger would route every waiting query to
+          one verse.
+      - token: strength
+        reason: >-
+          The battery's ms5 names the missing God's-strength concept as
+          CONCEPT work (plan §5-list rows 12); a bare trigger here would
+          pre-empt that pack with one narrow anchor.
 
   - id: remembered-work-as-for-the-lord
     # job: KEPT-WITH-RESERVATION — the 2026-08-18 life-situation aliases

@@ -1,0 +1,35 @@
+{
+  "id": "famous-i-can-do-all-things",
+  "query": "i can do all things",
+  "status": "active",
+  "note": [
+    "ALIAS/LEXICON MINING BATCH 1 (2026-08-26, whole-Bible coverage plan §2.3",
+    "item 2 / §4.3, seeded by the battery re-grade's ph3 row). GUARD ONLY —",
+    "no data row accompanies this fixture, per the mining loop's own rule:",
+    "never add a row for a query that already lands.",
+    "",
+    "Measured 2026-08-26 on main @ e762d1c (0.14.0, corpus 644b241c…, layer",
+    "b24ea16d…, fixture bed): Philippians 4:13 ranks #1 (11.14) for this",
+    "truncated register, but on the exact-phrase/token rung alone with a junk",
+    "tail — the regrade calls it fragile because the phrase normalizes to the",
+    "single significant token 'thing', so no lexicon entry may ever carry it",
+    "(the F5 bare-word class) and no curated chip backs it. This fixture is",
+    "the regression armor: if a future weight or data change demotes the",
+    "verse for its own most-quoted truncation, the gauntlet says so. The",
+    "fuller registers are guarded by the sibling promotion fixture",
+    "popular-philippians-4-13 ('i can do all things through christ').",
+    "",
+    "withinTop 3 per the observed-pin convention (assert the observed",
+    "ordering with headroom; a tighter or different desired ordering is a",
+    "ranking/data change, not a fixture edit). No reason-family requirement",
+    "on purpose — this fixture guards lexical reachability and position, not",
+    "concept attribution."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Philippians 4:13",
+      "withinTop": 3
+    }
+  ],
+  "expectedWithinTop": 10
+}
