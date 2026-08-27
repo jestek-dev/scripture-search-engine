@@ -69,6 +69,11 @@ quotes stay repository-relative and reproducible.
 
 ## Procedure
 
+Steps 1, 3 and 4 can also be driven from The Study's guided signing page at
+`/sign` ([docs/workbench-baseline-signing.md](../workbench-baseline-signing.md));
+the page quotes this policy and changes none of it — the reviewer still
+authors every word, and step 6 stays Jesse's alone.
+
 1. The change author regenerates the baseline (`npm run gauntlet -- --update-baseline`)
    and generates the packet against the prior committed baseline.
 2. Jesse designates the independent reviewer for this move.

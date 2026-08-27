@@ -83,6 +83,11 @@ import {
   AdmissionPublishOperations,
   AdmissionPublishOperationsError,
 } from './admissionPublishOperations.js';
+import {
+  SigningOperations,
+  SigningOperationsError,
+  parseSigningForm,
+} from './signingOperations.js';
 import { REVIEW_PRIORITY_FORMULA, type ReviewSessionCase } from './reviewSessions.js';
 import type { QualityDashboardReport } from './qualityDashboard.js';
 import type { SensitiveCategories, TelemetryBudgets } from '../../pipeline/src/telemetry/index.js';
@@ -221,7 +226,10 @@ function requiresTrustedJson(pathname: string): boolean {
     pathname === '/api/v2/sessions' ||
     /^\/api\/v2\/sessions\/[^/]+\/(?:complete-item|skip-item|complete-session)$/.test(pathname) ||
     /^\/api\/v2\/admissions\/[^/]+\/admit$/.test(pathname) ||
-    /^\/api\/v2\/publish\/[^/]+\/prepare$/.test(pathname)
+    /^\/api\/v2\/publish\/[^/]+\/prepare$/.test(pathname) ||
+    pathname === '/api/v2/signing/review-packet' ||
+    pathname === '/api/v2/signing/preview' ||
+    pathname === '/api/v2/signing/write'
   );
 }
 
@@ -232,6 +240,15 @@ function sendStudioError(response: http.ServerResponse, error: unknown): void {
     return;
   }
   sendV2Error(response, 500, 'studio_operation_failed', 'Studio operation failed. Reload and retry.');
+}
+
+function sendSigningError(response: http.ServerResponse, error: unknown): void {
+  response.setHeader('cache-control', 'no-store');
+  if (error instanceof SigningOperationsError) {
+    sendV2Error(response, error.status, error.code, error.message);
+    return;
+  }
+  sendV2Error(response, 500, 'signing_failed', error instanceof Error ? error.message : 'Signing operation failed.');
 }
 
 function sendAdmissionPublishError(response: http.ServerResponse, error: unknown): void {
@@ -492,6 +509,10 @@ async function main(): Promise<void> {
     },
   });
   let studioOperations: StudioOperations | null = null;
+  // Sign the baselines (J39): repository reads and the three guarded writes
+  // only — it never touches the release artifact, so it stays available even
+  // while the engine is down (though writes still honor degraded-read-only).
+  const signingOperations = new SigningOperations({ repoRoot: MUTATION_REPO_ROOT });
   const admissionPublishOperations = new AdmissionPublishOperations({
     repoRoot: MUTATION_REPO_ROOT,
     evidencePath: ADMISSION_EVIDENCE_PATH,
@@ -959,6 +980,75 @@ async function main(): Promise<void> {
           response.setHeader('cache-control', 'no-store');
           sendV2Success(response, 200, { audit: studioOperations.getAudit(studioAuditMatch[1]!), readOnly: degradedReadOnly });
         } catch (error) { sendStudioError(response, error); }
+        return;
+      }
+
+      if (url.pathname === '/api/v2/signing/status') {
+        if (request.method !== 'GET') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only GET is allowed for signing status.');
+          return;
+        }
+        if ([...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Signing status does not accept query parameters.');
+          return;
+        }
+        try {
+          response.setHeader('cache-control', 'no-store');
+          sendV2Success(response, 200, { status: await signingOperations.status(), readOnly: degradedReadOnly });
+        } catch (error) { sendSigningError(response, error); }
+        return;
+      }
+
+      if (url.pathname === '/api/v2/signing/review-packet' || url.pathname === '/api/v2/signing/preview') {
+        if (request.method !== 'POST') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only POST is allowed for signing operations.');
+          return;
+        }
+        if ([...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Signing routes do not accept query parameters.');
+          return;
+        }
+        try {
+          response.setHeader('cache-control', 'no-store');
+          if (url.pathname.endsWith('/review-packet')) {
+            // The packet lands in the gitignored eval/.runs/, so this POST
+            // mutates no reviewed file; the write route below is the only
+            // signing route that does.
+            await readJsonBody(request); // drain; the packet takes no input
+            sendV2Success(response, 200, { packet: await signingOperations.reviewPacket() });
+          } else {
+            const form = parseSigningForm(await readJsonBody(request));
+            sendV2Success(response, 200, { preview: await signingOperations.preview(form) });
+          }
+        } catch (error) { sendSigningError(response, error); }
+        return;
+      }
+
+      if (url.pathname === '/api/v2/signing/write') {
+        if (request.method !== 'POST') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only POST is allowed to write the signed approvals.');
+          return;
+        }
+        if (activeRepositoryMutation !== null || jobRunner.getActive() !== null) {
+          sendV2Error(response, 409, 'mutation_running', 'Another repository operation is already running.');
+          return;
+        }
+        if ([...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Signing write does not accept query parameters.');
+          return;
+        }
+        const signingMutationId = randomUUID();
+        activeRepositoryMutation = { kind: 'baseline-signing', id: signingMutationId };
+        try {
+          response.setHeader('cache-control', 'no-store');
+          const body = await readJsonBody(request);
+          const form = parseSigningForm(body);
+          const confirmDigest = isPlainObject(body) && typeof body['confirmDigest'] === 'string' ? body['confirmDigest'] : '';
+          sendV2Success(response, 201, { result: await signingOperations.write(form, confirmDigest) });
+        } catch (error) { sendSigningError(response, error); }
+        finally {
+          if (activeRepositoryMutation?.id === signingMutationId) activeRepositoryMutation = null;
+        }
         return;
       }
 
