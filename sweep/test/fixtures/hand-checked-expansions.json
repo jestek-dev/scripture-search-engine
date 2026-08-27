@@ -70,6 +70,20 @@
   ],
   "bare-word": [
     {
+      "queryId": "bare-word:00117a38cf2b687c",
+      "query": "yoked",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "unequally-yoked"
+    },
+    {
+      "queryId": "bare-word:0066355f93f3101f",
+      "query": "craftsmanship",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "craftsmanship-and-creativity"
+    },
+    {
       "queryId": "bare-word:00e13ed7af55b276",
       "query": "work",
       "register": "church-member",
@@ -124,20 +138,6 @@
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "remembered-joy-in-trials"
-    },
-    {
-      "queryId": "bare-word:02d036ed6295e00d",
-      "query": "miscarriage",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "pregnancy-and-child-loss"
-    },
-    {
-      "queryId": "bare-word:02f5f0a9b7e47af7",
-      "query": "astrology",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "occult-and-divination"
     }
   ],
   "concept-register": [
@@ -147,6 +147,20 @@
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "building-on-the-rock"
+    },
+    {
+      "queryId": "concept-register:0010f35b2555c784",
+      "query": "scripture reading on can women teach in church",
+      "register": "worship-leader",
+      "expectationKind": "concept-anchors",
+      "conceptId": "men-and-women-in-the-church"
+    },
+    {
+      "queryId": "concept-register:001565771fa768e2",
+      "query": "help me understand kinsman redeemer",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "kinsman-redeemer"
     },
     {
       "queryId": "concept-register:001c8355d9cb195c",
@@ -191,25 +205,11 @@
       "conceptId": "the-cross"
     },
     {
-      "queryId": "concept-register:006095c9350330c1",
-      "query": "where in the bible does it talk about governing authorities",
+      "queryId": "concept-register:005000f9eb86bd7a",
+      "query": "bible verses about zeal for god",
       "register": "church-member",
       "expectationKind": "concept-anchors",
-      "conceptId": "governing-authorities"
-    },
-    {
-      "queryId": "concept-register:0062e2fdc6c6ed7e",
-      "query": "key passages on abused",
-      "register": "pastor",
-      "expectationKind": "concept-anchors",
-      "conceptId": "refuge-and-justice-for-the-oppressed"
-    },
-    {
-      "queryId": "concept-register:006a2fe81bc685b2",
-      "query": "scripture reading on cost of discipleship",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "discipleship"
+      "conceptId": "zeal-for-god"
     }
   ],
   "felt-need": [
@@ -286,6 +286,18 @@
   ],
   "golden-verbatim": [
     {
+      "queryId": "golden-verbatim:004777fa4717a544",
+      "query": "persecution in the old testament",
+      "expectationKind": "concept-anchors",
+      "conceptId": "persecuted-for-gods-word"
+    },
+    {
+      "queryId": "golden-verbatim:004804219c63edfe",
+      "query": "raise my ebenezer",
+      "expectationKind": "concept-anchors",
+      "conceptId": "remembrance-and-memorials"
+    },
+    {
       "queryId": "golden-verbatim:01230e3d9f4b9b60",
       "query": "you are gods",
       "expectationKind": "concept-anchors",
@@ -332,21 +344,16 @@
       "query": "parenting",
       "expectationKind": "concept-anchors",
       "conceptId": "parenting"
-    },
-    {
-      "queryId": "golden-verbatim:044a9043cbf7aef8",
-      "query": "render to caesar",
-      "expectationKind": "concept-anchors",
-      "conceptId": "governing-authorities"
-    },
-    {
-      "queryId": "golden-verbatim:0466c456615d4fad",
-      "query": "love the lord your god with all your heart",
-      "expectationKind": "concept-anchors",
-      "conceptId": "loving-god"
     }
   ],
   "multi-concept": [
+    {
+      "queryId": "multi-concept:003f2f082dbdbc99",
+      "query": "famine of hearing god's word and unanswered prayer",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "famine-of-hearing-gods-word"
+    },
     {
       "queryId": "multi-concept:0055c27c520da1d1",
       "query": "sermon connecting refuge in trouble and victory in christ",
@@ -370,7 +377,7 @@
     },
     {
       "queryId": "multi-concept:0076292a1bd24ac6",
-      "query": "how does the incarnation relate to trinity — father, son, and spirit",
+      "query": "how does the incarnation relate to trinity \u2014 father, son, and spirit",
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "incarnation"
@@ -381,6 +388,13 @@
       "register": "pastor",
       "expectationKind": "concept-anchors",
       "conceptId": "hell"
+    },
+    {
+      "queryId": "multi-concept:008158a0937c7815",
+      "query": "how does scripture is trustworthy relate to truth",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "trustworthiness-of-scripture"
     },
     {
       "queryId": "multi-concept:009e376cb0e9e185",
@@ -402,20 +416,6 @@
       "register": "church-member",
       "expectationKind": "concept-anchors",
       "conceptId": "deity-of-christ"
-    },
-    {
-      "queryId": "multi-concept:011515cea0bf13e6",
-      "query": "how does the house of god relate to worship",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "the-house-of-god"
-    },
-    {
-      "queryId": "multi-concept:0115e44a2981d50d",
-      "query": "verses about following jesus and growing in christ",
-      "register": "church-member",
-      "expectationKind": "concept-anchors",
-      "conceptId": "discipleship"
     }
   ],
   "remembered-phrase": [

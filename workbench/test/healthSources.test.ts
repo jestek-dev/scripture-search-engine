@@ -173,8 +173,12 @@ describe('health source semantics', () => {
     // extensions ride spiritual-gifts, walking-in-the-light, conscience,
     // and salvation, so they add no ids here).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(239);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(239);
+    // 2026-08-27 corpus-blocked roster build (post-#64 full corpus):
+    // 239 -> 283 — 44 new ids across five waves (Themes A-M); the
+    // roster's three extensions ride loving-god, giving-an-answer, and
+    // new-creation, so they add no ids here.
+    expect(coverage).toHaveLength(283);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(283);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

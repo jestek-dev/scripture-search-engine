@@ -3,17 +3,17 @@
   "schema": "scripture-search-engine/sweep-universe-manifest/v1",
   "universeVersion": "1.0.0",
   "seed": "scripture-sweep-universe-v1",
-  "fingerprint": "d4a3abe349d3aec4c6942b577d83bb115d707d3eb12baddaa06bff7c7ce5adec",
-  "lineCount": 12521,
+  "fingerprint": "98b328cfc8ba442057a7bfddac37ed78413bd8660e2271be6a50214160b8e658",
+  "lineCount": 14638,
   "countsByGenerator": {
     "adversarial": 40,
-    "bare-word": 1115,
-    "concept-register": 5322,
+    "bare-word": 1249,
+    "concept-register": 6299,
     "felt-need": 780,
-    "multi-concept": 2228,
+    "multi-concept": 2860,
     "remembered-phrase": 156,
     "theological-term": 504,
-    "worship-planning": 1592,
-    "golden-verbatim": 784
+    "worship-planning": 1872,
+    "golden-verbatim": 878
   }
 }
