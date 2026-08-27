@@ -84,10 +84,14 @@ anchors:
     sources: [editorial]
     weight: 0.85
   # "Your house and your kingdom will be made sure forever" — the Davidic
-  # covenant oracle (WEB wording from knowledge — 2 Sam 7 NOT in
-  # web-subset). Torrey COVENANT lists 2 Sam 23:5 for "Made with David";
+  # covenant oracle (WEB, in corpus since #64). Torrey COVENANT lists
+  # 2 Sam 23:5 for "Made with David";
   # 7:12-16 is the oracle itself, filed by Torrey under PROMISES OF GOD /
   # HUMAN NATURE OF CHRIST — editorial for this range.
+  # DUAL ANCHOR (2026-08-27 roster build): also davidic-covenant's
+  # charter text (that pack carries the Davidic-register queries the
+  # measured check showed this pack's ordering cannot serve; recorded
+  # both files). This pack's weight unchanged.
   - ref: 2 Samuel 7:12-16
     sources: [editorial]
     weight: 0.8

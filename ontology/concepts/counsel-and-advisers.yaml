@@ -1,0 +1,79 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme E row, 3 requesting books: 2 Samuel, 1 Kings,
+# 1 Chronicles). Adopted as display vocabulary by Jesse's 2026-08-25
+# ruling (CONVENTIONS §11); ENGINE admission only by his merge of this
+# PR. Deferred through batches 1-6: signature texts absent AND the
+# BORDERLINE check-first unresolvable without them.
+#
+# CHECK-FIRST (the row's own flag) RUN AND DECLINED 2026-08-27:
+# wisdom-from-god = ask GOD for wisdom (Jas 1:5 register); guidance =
+# God's own leading (Ps 32:8 register). The human-advisers register —
+# take counsel, weigh advisers, beware the flatterer's counsel — fits
+# neither; an extension would answer "seeking advice" with the wrong
+# texts. Minted, cross-related to both.
+#
+# MEASURED HIJACK FIXED (recorded at the batch-3 deferral for this
+# exact moment): "multitude of counselors" ranked Prov 11:14/15:22
+# chipless and then routed to holy-spirit-the-comforter's Counselor
+# anchors (John 14-16). The Counselor routing is UNTOUCHED: this pack
+# admits no bare counselor/counsel token (inventory skips) — the
+# multi-word phrases carry the human register.
+#
+# BOUNDARIES: Ps 1:1 ("walks not in the counsel of the wicked") stays
+# where it lives (delight-in-the-word's span territory) — not claimed.
+# 1 Chr 12:32 (men of Issachar, understanding of the times) anchored
+# as the discerning-advisers narrative verse.
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses
+# ("seeking advice" -> {seek, advic}).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: counsel-and-advisers
+label: Counsel and advisers
+lexicon:
+  - multitude of counselors
+  - godly counsel
+  - seeking advice
+  - wise counsel
+  - listen to advice
+anchors:
+  # "Where there is no wise guidance, the nation falls, but in the
+  # multitude of counselors there is victory." (WEB, in corpus). The
+  # keystone proverb.
+  - ref: Proverbs 11:14
+    sources: [editorial]
+    weight: 1.0
+  # "Where there is no counsel, plans fail; but in a multitude of
+  # counselors they are established." (WEB, in corpus).
+  - ref: Proverbs 15:22
+    sources: [editorial]
+    weight: 0.95
+  # "Perfume and incense bring joy to the heart; so does earnest
+  # counsel from a man's friend." (WEB, in corpus).
+  - ref: Proverbs 27:9
+    sources: [editorial]
+    weight: 0.85
+  # "But he abandoned the counsel of the old men... and took counsel
+  # with the young men who had grown up with him" (WEB, in corpus).
+  # Rehoboam — counsel rejected, kingdom torn.
+  - ref: 1 Kings 12:8
+    sources: [editorial]
+    weight: 0.85
+  # "For the LORD had ordained to defeat the good counsel of
+  # Ahithophel, to the intent that the LORD might bring evil on
+  # Absalom." (WEB, in corpus). Counsel under providence.
+  - ref: 2 Samuel 17:14
+    sources: [editorial]
+    weight: 0.8
+  # "Of the children of Issachar, men who had understanding of the
+  # times, to know what Israel ought to do" (WEB, in corpus).
+  - ref: 1 Chronicles 12:32
+    sources: [editorial]
+    weight: 0.7
+related:
+  - wisdom-from-god
+  - guidance
+  - leadership
+  - receiving-correction
+sources: [editorial]

@@ -1,0 +1,47 @@
+{
+  "id": "men-and-women-in-the-church",
+  "query": "what does the bible say about women teaching",
+  "status": "active",
+  "additionalQueries": [
+    "women in ministry",
+    "women pastors"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 41 (Theme J, requesting book: 1 Timothy).",
+    "Deferred because 1 Tim 2:8-15 was absent (1 Tim corpus was ch. 6).",
+    "The TWO-ROW design vs head-coverings was DECIDED pre-roster",
+    "(recorded in the head-coverings pack): head-coverings stays the",
+    "narrower one-passage lookup; this row is the broader",
+    "church-practice question. The fold option stays open to Jesse — the",
+    "packs are cross-related and either can absorb the other later.",
+    "SECTION-4 NEUTRALITY (the row's own flag, gender roles a named",
+    "NON-criterion in docs/DOCTRINAL-BASIS.md): the pack is descriptive",
+    "and routing-only — it reports what the passage says and which",
+    "verses people are asking about; it adjudicates no church-practice",
+    "position. Modesty in dress (2:9-10) rides this row per the review.",
+    "BOUNDARY: 1 Tim 2:5-6 stays jesus-the-only-way's (with mediator's",
+    "verse-scoped sibling, same PR); this pack's spans (2:8-10, 2:11-12,",
+    "2:13-15) are disjoint from it.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'what does the bible say about women teaching' pure say+women token",
+    "noise (Ruth 4:14!); 'women in ministry' generic ministry scatter",
+    "(Acts 1:17); 'women pastors' unserved — the most-searched",
+    "church-practice passage unreachable."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Timothy 2:11-12",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Men and women in the church"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Timothy 2:8-10",
+    "1 Timothy 2:13-15"
+  ],
+  "coversConcepts": [
+    "men-and-women-in-the-church"
+  ]
+}

@@ -1,0 +1,65 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme K row 42 (requesting book: John). Deferred because John
+# 18:37-38 (Pilate) and 17:17-19 were absent; the Counselor routing
+# and 14:6's owners bound then and still bind.
+#
+# EXTENSION ROUTES CHECKED before minting (the row's own rule): the
+# walking-in-truth register landed pre-roster as a walking-in-the-light
+# extension (the one-treatment cross-note, resolved there) — that is
+# the walk-PRACTICE register; no incumbent carries the what-is-truth
+# register. MINTED narrow.
+#
+# BOUNDARIES: John 14:6 stays jesus-the-only-way's; 14:17 and 16:13
+# stay holy-spirit-the-comforter's — deliberately NO spirit-of-truth
+# entry here (that vocabulary is the Counselor routing); John 8:31-32
+# stays discipleship's anchor (cross-noted — reachable by exact
+# phrase, and the related edge carries it); John 18:36 stays
+# kingdom-of-heaven's (this pack takes the adjacent, disjoint
+# 18:37-38). John 17:17 is DUAL-anchored with
+# trustworthiness-of-scripture — the verse honestly serves both
+# registers ("your word is truth" is that pack's claim; "sanctify them
+# in your truth" this one's; recorded both files).
+#
+# TOKENIZER NOTE (G-4): "what is truth" collapses to the single token
+# `truth` (what/is are stopwords) — deliberate: Pilate's question IS
+# the query, and bare "truth" reaching this concept is the designed
+# default (the concept is truth itself; the walk-practice and
+# Counselor registers keep their multi-token phrases). Collapse row +
+# inventory admission recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports what John says truth is; it debates no epistemology.
+id: truth
+label: Truth
+lexicon:
+  - what is truth
+  - you will know the truth
+  - the truth will set you free
+  - jesus is the truth
+anchors:
+  # "'For this reason I have been born... that I should testify to the
+  # truth. Everyone who is of the truth listens to my voice.' Pilate
+  # said to him, 'What is truth?'" (WEB, in corpus). The question and
+  # its answer, standing face to face.
+  - ref: John 18:37-38
+    sources: [editorial]
+    weight: 1.0
+  # "Sanctify them in your truth. Your word is truth." (WEB, in
+  # corpus). DUAL with trustworthiness-of-scripture (recorded both
+  # files) — this pack's claim is the sanctify-them-in-truth register.
+  - ref: John 17:17
+    sources: [editorial]
+    weight: 0.85
+  # "For the law was given through Moses. Grace and truth were
+  # realized through Jesus Christ." (WEB, in corpus). Truth as person,
+  # the prologue's word.
+  - ref: John 1:17
+    sources: [editorial]
+    weight: 0.8
+related:
+  - jesus-the-only-way
+  - discipleship
+  - trustworthiness-of-scripture
+  - walking-in-the-light
+sources: [editorial]

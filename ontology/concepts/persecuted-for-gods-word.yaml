@@ -1,0 +1,85 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme B row, 3 requesting books: Jeremiah, Daniel,
+# Esther). Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission only by his merge of this PR.
+# Deferred through batches 1-6: the OT spine (Jer 20/26/37-38, Dan 3/6,
+# Esther) absent AND the suffering-for-christ boundary needed it
+# present to design.
+#
+# G4 BOUNDARY DESIGNED (the deferral's named risk): suffering-for-christ
+# OWNS bare "persecution"/"persecuted" and every NT
+# suffering-with-Christ phrasing — untouched. This pack takes the OT
+# persecuted-prophet / state-power register on multi-word phrases only:
+# "persecuted prophets", "persecution in the old testament", and the
+# narrative-locate queries (fiery furnace, lions' den). The two entries
+# sharing the persecut stem are three-token forms that cannot fire on
+# bare-persecution queries. Cross-related both directions.
+#
+# BOUNDARIES: the Acts persecution-of-the-church material stays a
+# suffering-for-christ concern (the review's own routing — a lexicon
+# extension check on THAT pack, not this row). Esther's doctrinal
+# register (providence, "for such a time as this") stays
+# gods-plan-for-israel's territory — this pack anchors only Esth 3:6,
+# the persecution decree itself. Matt 5:12 ("so they persecuted the
+# prophets who were before you") stays with its owners
+# (suffering-for-christ's 5:10 / slander's 5:11 spans) — not claimed.
+# Dan 3:17-18 (the confession) is fear-not/faith territory if anywhere;
+# this pack anchors 3:19-20, the persecution act.
+#
+# TOKENIZER NOTE (G-4): no single-token entries and no stopword
+# collapses; every entry keeps >= 2 significant tokens.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist describes the narratives; it promises no outcome and adjudicates
+# no modern political question.
+id: persecuted-for-gods-word
+label: Persecuted for God's word
+lexicon:
+  - persecuted prophets
+  - persecution in the old testament
+  - persecuted for speaking gods word
+  - the fiery furnace
+  - daniel in the lions den
+  - shadrach meshach and abednego
+anchors:
+  # "the priests and the prophets and all the people seized him,
+  # saying, 'You shall surely die!... Why have you prophesied in the
+  # LORD's name...?'" (WEB, in corpus). Jeremiah seized for the temple
+  # sermon — the keystone.
+  - ref: Jeremiah 26:8-9
+    sources: [editorial]
+    weight: 1.0
+  # "Then Pashhur struck Jeremiah the prophet and put him in the
+  # stocks" (WEB, in corpus). The prophet beaten for the word.
+  - ref: Jeremiah 20:1-2
+    sources: [editorial]
+    weight: 0.9
+  # "Then they took Jeremiah and threw him into the dungeon... and
+  # Jeremiah sank in the mire." (WEB, in corpus).
+  - ref: Jeremiah 38:6
+    sources: [editorial]
+    weight: 0.85
+  # "He commanded certain mighty men... to bind Shadrach, Meshach, and
+  # Abednego, and to cast them into the burning fiery furnace." (WEB,
+  # in corpus). The state-power register — worship itself outlawed.
+  - ref: Daniel 3:19-20
+    sources: [editorial]
+    weight: 0.9
+  # "Then the king commanded, and they brought Daniel and cast him
+  # into the den of lions." (WEB, in corpus).
+  - ref: Daniel 6:16
+    sources: [editorial]
+    weight: 0.85
+  # "Haman sought to destroy all the Jews who were throughout the
+  # whole kingdom of Ahasuerus" (WEB, in corpus). The national-scale
+  # case — the attempted annihilation decree.
+  - ref: Esther 3:6
+    sources: [editorial]
+    weight: 0.75
+related:
+  - suffering-for-christ
+  - gods-plan-for-israel
+  - boldness-in-witness
+  - watchman-and-warning
+sources: [editorial]

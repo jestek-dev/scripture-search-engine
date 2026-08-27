@@ -1,0 +1,82 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme C row, 4 requesting books: 1 Samuel, Proverbs,
+# 1 Kings, 1 Chronicles). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission only by his
+# merge of this PR. Deferred through batches 1-6: keystone 1 Sam 16:7
+# and ALL Proverbs witnesses corpus-blocked, one-design flag open.
+#
+# ONE-DESIGN DECIDED at curation (the review flags these calls to the
+# curator; CONVENTIONS §11.7 defers them to concept-pack curation;
+# reversible, recorded in all three files): THREE registers, three ids,
+# zero shared phrases —
+#   god-looks-at-the-heart  = divine scrutiny (this pack): God weighs
+#                             the heart, not the appearance;
+#   gods-surprising-choice  = God's use of weak/unlikely instruments
+#                             (minted this same PR, 1 Cor 1:26-29);
+#   humble-exaltation       = the pride/humility reversal (live pack,
+#                             untouched).
+# 1 Sam 16:11-12 (David the youngest fetched) belongs to
+# gods-surprising-choice's narrative; 16:7 to this pack.
+#
+# LEXICON MOVE (holy-spirit-the-comforter precedent, same PR): the
+# entry "god looks at the heart" MOVES here FROM identity-in-christ,
+# whose self-worth register kept answering the divine-scrutiny query
+# with Ps 139/Eph 2:10 anchors (measured 2026-08-27). identity-in-christ
+# KEEPS its 1 Sam 16:7 anchor — the verse honestly serves both
+# registers; DUAL-anchored, recorded in both files. Its active fixture
+# does not pin the moved query (verified).
+#
+# BOUNDARIES: Prov 17:3 ("the LORD tests the hearts") stays testing's
+# anchor; 1 Chr 28:9 ("the LORD searches all hearts") stays
+# seeking-god's; Ps 139:23-24 stays thought-life's — all cross-noted,
+# none claimed. god-sees-my-suffering keeps the seen-in-affliction
+# register ("god sees" queries) — different question, cross-related.
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses
+# (every entry keeps >= 2 significant tokens).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: god-looks-at-the-heart
+label: God looks at the heart
+lexicon:
+  - god looks at the heart
+  - the lord looks at the heart
+  - man looks at the outward appearance
+  - the lord weighs the heart
+  - god searches the heart
+anchors:
+  # "For man looks at the outward appearance, but the LORD looks at
+  # the heart." (WEB, in corpus). The keystone, spoken at David's
+  # anointing. DUAL with identity-in-christ (self-worth register) —
+  # recorded in both files.
+  - ref: 1 Samuel 16:7
+    sources: [editorial]
+    weight: 1.0
+  # "Every way of a man is right in his own eyes, but the LORD weighs
+  # the hearts." (WEB, in corpus). The row's densest witness book.
+  - ref: Proverbs 21:2
+    sources: [editorial]
+    weight: 0.9
+  # "All the ways of a man are clean in his own eyes, but the LORD
+  # weighs the motives." (WEB, in corpus).
+  - ref: Proverbs 16:2
+    sources: [editorial]
+    weight: 0.85
+  # "I, the LORD, search the mind. I try the heart, even to give every
+  # man according to his ways" (WEB, in corpus).
+  - ref: Jeremiah 17:10
+    sources: [editorial]
+    weight: 0.85
+  # "for you, even you only, know the hearts of all the children of
+  # men" (WEB, in corpus). Solomon's temple prayer.
+  - ref: 1 Kings 8:39
+    sources: [editorial]
+    weight: 0.75
+related:
+  - identity-in-christ
+  - gods-surprising-choice
+  - testing
+  - seeking-god
+  - god-sees-my-suffering
+sources: [editorial]

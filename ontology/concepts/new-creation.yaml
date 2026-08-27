@@ -17,6 +17,27 @@ lexicon:
   - fresh start
   - new beginnings
   - starting over
+  # CORPUS-BLOCKED ROSTER build (2026-08-27): the new-heart roster row
+  # (Theme I, Ezekiel) lands as this EXTENSION, not a mint — the row's
+  # own listed alternative, taken because this pack ALREADY anchors
+  # Ezek 36:26 ("the promise behind Psalm 51's prayer") and Ps 51:10;
+  # only the heart vocabulary was missing, so "new heart" / "heart of
+  # stone to heart of flesh" / "god change my heart" could not reach
+  # them. Decided together with circumcision-of-the-heart's narrow mint
+  # (same PR — the read-together design both rows flag). BOUNDARIES
+  # honored: Ezek 11:19 stays hardness-of-heart's anchor, Ezek 18:31
+  # inside repentance's 18:30-32, Jer 31:33 covenant's — no anchor
+  # added here. Fixture-backed (new-heart.json).
+  # STRUCTURAL LIMIT (G-3 guard, recorded at authoring): "heart of
+  # flesh" was REJECTED as an entry — {heart, flesh} is a subset of the
+  # psalm-73-strength-guard query ("my flesh and my heart may fail...")
+  # and firing there displaced Ps 73:26. "heart of stone" carries the
+  # full stone-to-flesh query; the bare "heart of flesh" fragment
+  # reaches Ezek 36:26 / 11:19 by exact-phrase retrieval.
+  - a new heart
+  - heart of stone
+  - god change my heart
+  - a clean heart
 anchors:
   # "if anyone is in Christ, he is a new creation. The old things have
   # passed away. Behold, all things have become new." The defining text.

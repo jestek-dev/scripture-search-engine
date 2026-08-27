@@ -1,0 +1,78 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme F row, 7 requesting books). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR. Deferred through batches 1-6:
+# only 1 Sam 31:11-13 of the whole row was in corpus.
+#
+# REGISTER (the batch-4 two-registers decision executed): mortality
+# keeps the you-are-dust TEACHING register; this pack is the PRACTICE
+# register — burial charges, the family grave, dying well ("funerals
+# in the Bible" is a real pastoral-practice query, the row's why).
+# Ecclesiastes' recorded decline honored (its material is mortality's).
+#
+# BOUNDARIES: serious-illness-and-dying keeps bare death and the
+# death-of-a-believer register; resurrection keeps the empty-tomb
+# texts — this pack anchors the BURIAL scenes (John 19:38-42, Luke
+# 23:50-53), which no resurrection pack claims (verified), and the
+# burial-practice comment in each anchor keeps the register honest.
+# Gen 50:20 stays providence's (this pack claims 50:24-26, disjoint).
+# Gen 23:4 stays sojourners-and-strangers' (the pack skips Gen 23).
+#
+# TOKENIZER NOTE (G-4): no single-token entries; bare death / die /
+# funeral / burial all skipped with reasons (inventory).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack describes the practices the texts narrate; it prescribes no
+# funeral rite and adjudicates no cremation/burial question.
+id: death-and-burial
+label: Death and burial
+lexicon:
+  - funerals in the bible
+  - burial in the bible
+  - bury me with my fathers
+  - burial customs in the bible
+  - what does the bible say about funerals
+anchors:
+  # "I am to be gathered to my people. Bury me with my fathers in the
+  # cave that is in the field of Ephron the Hittite" (WEB, in corpus).
+  # Jacob's burial charge — the keystone.
+  - ref: Genesis 49:29-31
+    sources: [editorial]
+    weight: 1.0
+  # "So they took Jesus' body, and bound it in linen cloths with the
+  # spices, as the custom of the Jews is to bury." (WEB, in corpus).
+  # The Gospel's own burial-custom note.
+  - ref: John 19:38-42
+    sources: [editorial]
+    weight: 0.9
+  # "He took it down and wrapped it in a linen cloth, and laid him in
+  # a tomb that was cut in stone" (WEB, in corpus). Joseph of
+  # Arimathaea's care.
+  - ref: Luke 23:50-53
+    sources: [editorial]
+    weight: 0.85
+  # "all the valiant men arose, went all night, and took the body of
+  # Saul... and buried their bones under the tamarisk tree in Jabesh"
+  # (WEB, in corpus). Burial as valor and honor.
+  - ref: 1 Samuel 31:11-13
+    sources: [editorial]
+    weight: 0.8
+  # "So Moses the servant of the LORD died there... He buried him in
+  # the valley... but no man knows where his tomb is to this day."
+  # (WEB, in corpus). God himself buries Moses.
+  - ref: Deuteronomy 34:5-6
+    sources: [editorial]
+    weight: 0.8
+  # "God will surely visit you, and you shall carry up my bones from
+  # here." (WEB, in corpus). Joseph's charge — burial hope pointed at
+  # the promise. (Gen 50:20 stays providence's.)
+  - ref: Genesis 50:24-26
+    sources: [editorial]
+    weight: 0.75
+related:
+  - mortality
+  - serious-illness-and-dying
+  - grief-and-loss
+  - resurrection
+sources: [editorial]

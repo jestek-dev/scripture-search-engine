@@ -1,0 +1,43 @@
+{
+  "id": "kinsman-redeemer",
+  "query": "kinsman redeemer",
+  "status": "active",
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 27 (Theme G, 3 requesting books: Ruth,",
+    "Leviticus, Deuteronomy). Deferred because Ruth 2-4 were absent (the",
+    "corpus had Ruth 1 only), with Lev 25 and Deut 25:5-10 also blocked.",
+    "The levirate either/or DECIDED at curation (reversible, recorded in",
+    "the pack): ONE pack for the whole goel institution INCLUDING the",
+    "levirate duty — Ruth 4 itself joins redemption and levirate in one",
+    "act, so scoping them apart would split the canonical text's own",
+    "story; no separate levirate-marriage id minted (the either/or, NOT",
+    "a double-mint, exactly as the Deuteronomy append instructs).",
+    "The design note honored: the pack keeps to what the text says about",
+    "the INSTITUTION; the redemption-in-Christ register stays with the",
+    "existing NT concepts (no read-back — no NT anchor here).",
+    "Job's redeemer row decided alongside as TWO registers (see",
+    "redeemer.yaml, same PR).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'kinsman redeemer' pure redeemer-token scatter (Isa 54:5, Ps 78:35",
+    "chipless) — Ruth nowhere in the top 10."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ruth 3:9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Kinsman redeemer"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ruth 2:20",
+    "Ruth 4:9-10",
+    "Ruth 4:14",
+    "Leviticus 25:25",
+    "Deuteronomy 25:5-6"
+  ],
+  "coversConcepts": [
+    "kinsman-redeemer"
+  ]
+}

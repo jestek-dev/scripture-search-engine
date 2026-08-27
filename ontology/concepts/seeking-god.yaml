@@ -17,6 +17,12 @@
 # wholehearted-devotion resolves at the re-pin as a lexicon extension
 # of these two rather than a third id. Reversible; recorded in both
 # files and the rollout ledger.
+# EXECUTED 2026-08-27 (corpus-blocked roster build): the extension
+# landed on loving-god (entries wholehearted devotion / divided heart /
+# undivided heart; anchors 1 Kgs 8:61; 11:4; Ps 86:11-12), fixture
+# wholehearted-devotion.json. THIS row's existing "seek him with all
+# your heart" entry and 1 Chr 28:9 anchor already carried its half —
+# no change here.
 #
 # GUARDRAIL (the 2 Chronicles block's own note, honored in gist and
 # weights): Chronicles states seek-and-prosper connections in the

@@ -1,0 +1,50 @@
+{
+  "id": "god-looks-at-the-heart",
+  "query": "god looks at the heart",
+  "status": "active",
+  "additionalQueries": [
+    "the lord weighs the heart"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 6 (Theme C, 4 requesting books). Deferred",
+    "because keystone 1 Sam 16:7 and ALL Proverbs witnesses were absent,",
+    "and the review's one-design flag (decide with gods-surprising-choice",
+    "and humble-exaltation together) was unresolved.",
+    "ONE-DESIGN DECIDED at curation (CONVENTIONS §11.7 defers these calls",
+    "to concept-pack curation; reversible, recorded in all three files):",
+    "THREE distinct registers, zero shared phrases — god-looks-at-the-heart",
+    "= divine scrutiny of the heart vs appearance (this pack);",
+    "gods-surprising-choice = God's use of weak and unlikely instruments",
+    "(minted this same PR, 1 Cor 1:26-29 keystone); humble-exaltation",
+    "keeps the pride/humility reversal it already owns.",
+    "1 Sam 16:7 is DUAL-anchored with identity-in-christ (recorded both",
+    "files); the lexicon entry 'god looks at the heart' MOVES from",
+    "identity-in-christ to this pack in the same PR (the",
+    "holy-spirit-the-comforter precedent; identity-in-christ's active",
+    "fixture does not pin that query — verified).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'god looks at the heart' returned 1 Sam 16:7 rank 1 but with the",
+    "WRONG chip (Theme: Identity in Christ) followed by identity anchors",
+    "(Ps 139:13-14, Eph 2:10, 1 Pet 2:9 — self-worth register, not the",
+    "divine-scrutiny teaching); 'the lord weighs the heart' returned",
+    "Prov 21:2/16:2 by exact phrase CHIPLESS."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Samuel 16:7",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God looks at the heart"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Proverbs 21:2",
+    "Proverbs 16:2",
+    "Jeremiah 17:10",
+    "1 Kings 8:39"
+  ],
+  "coversConcepts": [
+    "god-looks-at-the-heart"
+  ]
+}

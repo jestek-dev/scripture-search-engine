@@ -1,0 +1,79 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme H row 32 (6 requesting books: 1-2 Samuel, Judges, 1 Kings,
+# Ezra, Esther). Deferred because EVERY requested ref was absent.
+#
+# REGISTER (the row's own case): the plain rescue register — "God
+# delivered me / will deliver you" — which had no home: salvation is
+# gospel-keyed, gods-protection the shielding register,
+# pastoral-freedom-from-bondage the crisis pack. None touched.
+#
+# BOUNDARIES: Judg 2:16, 18 stay inside backsliding's 2:11-19 anchor
+# (this pack takes Judg 3:9 — the cycle's first named instance);
+# Ezra 8:22 stays inside fasting's 8:21-23 (this pack takes 8:31, the
+# deliverance reported); Esth 4:16 stays courage's (this pack takes
+# 4:14 — the row's own phrase witness, adjacent and disjoint; the
+# row's register caveat kept: Esther's deliverance arrives with no
+# named deliverer, which is why the phrase is searched); 1 Sam 7:12
+# (Ebenezer) goes to remembrance-and-memorials (same PR) — this pack
+# takes the disjoint 7:10-11 rescue verses. Proverbs' recorded decline
+# (11:8; 12:13 act-consequence generalizations) honored: not anchored.
+# MEASURED MISROUTE FIXED: "god will deliver you" returned Deut 7:23
+# rank 1 (destroy-the-nations register, wrong intent).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the texts' own testimony of rescue; it promises no
+# outcome.
+id: deliverance
+label: Deliverance
+lexicon:
+  - god will deliver you
+  - the lord delivered me
+  - deliverance in the bible
+  - god will rescue you
+anchors:
+  # "The LORD, who delivered me out of the paw of the lion and out of
+  # the paw of the bear, will deliver me out of the hand of this
+  # Philistine." (WEB, in corpus). Past deliverance grounding present
+  # confidence — the register's defining sentence.
+  - ref: 1 Samuel 17:37
+    sources: [editorial]
+    weight: 1.0
+  # "He sent from on high and he took me... He delivered me from my
+  # strong enemy... He delivered me, because he delighted in me."
+  # (WEB, in corpus). The row's register set to music — David's song.
+  - ref: 2 Samuel 22:17-20
+    sources: [editorial]
+    weight: 0.9
+  # "When the children of Israel cried to the LORD, the LORD raised up
+  # a savior... who saved them" (WEB, in corpus). The Judges cycle's
+  # first named deliverer (2:16, 18 stay backsliding's).
+  - ref: Judges 3:9
+    sources: [editorial]
+    weight: 0.8
+  # "the LORD thundered with a great thunder on that day on the
+  # Philistines and confused them; and they were struck down before
+  # Israel." (WEB, in corpus). The rescue the Ebenezer stone remembers
+  # (7:12 is remembrance-and-memorials', same PR).
+  - ref: 1 Samuel 7:10-11
+    sources: [editorial]
+    weight: 0.75
+  # "For if you remain silent now, then relief and deliverance will
+  # come to the Jews from another place... for such a time as this?"
+  # (WEB, in corpus). The phrase witness — deliverance certain, the
+  # deliverer unnamed (the row's register caveat, kept).
+  - ref: Esther 4:14
+    sources: [editorial]
+    weight: 0.75
+  # "The hand of our God was on us, and he delivered us from the hand
+  # of the enemy and the bandits by the way." (WEB, in corpus). The
+  # deliverance 8:22 trusted for, reported (8:22 stays fasting's).
+  - ref: Ezra 8:31
+    sources: [editorial]
+    weight: 0.7
+related:
+  - gods-protection
+  - salvation
+  - courage
+  - gods-faithfulness
+sources: [editorial]

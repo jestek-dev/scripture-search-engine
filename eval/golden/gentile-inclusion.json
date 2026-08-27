@@ -1,0 +1,46 @@
+{
+  "id": "gentile-inclusion",
+  "query": "do christians have to keep the law of moses",
+  "status": "active",
+  "additionalQueries": [
+    "jerusalem council",
+    "gentiles in the bible"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 40 (Theme J, requesting book: Acts; the",
+    "review's one CONTESTED row). ADOPTED BY JESSE (2026-08-25 reply b:",
+    "'I'm okay with adding gentile-inclusion if it applies'); the",
+    "REQUIRED extension check on nations-and-peoples was RUN and recorded",
+    "at the 2026-08-26 sweep (register mismatch, measured:",
+    "origin-of-nations vs church-inclusion) — the reversible delegated",
+    "default's condition is satisfied, so the id is minted.",
+    "BOUNDARY: Acts 10:34-35 stays favoritism's anchor (cross-noted, not",
+    "claimed — this pack takes the free 10:44-45 outpouring verses);",
+    "Acts 13:46 stays boldness-in-witness' (this pack takes the adjacent",
+    "13:47-48, noted FREE by the roster); Gal 3:28 noted FREE and",
+    "claimed.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'do christians have to keep the law of moses' Acts 15:5 rank 1",
+    "CHIPLESS with the recorded governing-authorities MISROUTE at rank 2",
+    "(Rom 13:1-7!); 'jerusalem council' pure token noise (Ezra 7:28);",
+    "'gentiles in the bible' unserved."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Acts 15:8-11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Gentile inclusion"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 11:17-18",
+    "Acts 10:44-45",
+    "Acts 13:47-48",
+    "Galatians 3:28"
+  ],
+  "coversConcepts": [
+    "gentile-inclusion"
+  ]
+}

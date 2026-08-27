@@ -1,0 +1,82 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme D row, 2 requesting books: Daniel, Revelation).
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission only by his merge of this PR.
+# Deferred through batches 1-6: Dan 10:13, 20-21; 12:1 and Rev 12:7-12
+# all corpus-blocked, with the recorded lexicon fact weighing against a
+# third pack until the conflict texts were assertable.
+#
+# THREE-REGISTER MAP (the recorded two-register decision extended, all
+# recorded): resisting-the-devil = the believer's RESPONSE (it KEEPS
+# the bare phrase "spiritual warfare" — its ACTIVE fixture pins that
+# query; verified undisturbed, this pack has no entry firing on it);
+# deliverance-from-demons = the Gospels' deliverance narrative; THIS
+# pack = the CONFLICT ITSELF that the texts describe (Michael and the
+# dragon, the prince of Persia, the accuser thrown down). REVERSIBLE
+# CURATION DEFAULT recorded: whether the bare phrase should one day
+# move here (the conflict is arguably what "spiritual warfare" names)
+# is left for Jesse — moving it would re-point an active fixture, so
+# nothing moves in this PR.
+#
+# GIST CARE (the row's own wording rule): descriptive of what
+# Scripture SHOWS, never speculative demonology — the pack reports the
+# scenes and says nothing about mechanics, territories, or techniques.
+#
+# BOUNDARIES: Rev 12:9-10 stays satan's anchor (the accuser named —
+# recorded there; this pack takes the disjoint 12:7-8 war and 12:11
+# overcoming). remembered-full-armor-of-god keeps Eph 6 (verse-memory
+# id). Deuteronomy's warfare row (human war laws, built this PR) is
+# lexically fenced: zero shared phrases, recorded both files (the
+# review's three-way bare-"warfare" collision warning — NEITHER pack
+# admits the bare token).
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses.
+# The one-directional related edge (this pack -> resisting-the-devil)
+# never fires on resisting-the-devil's own queries.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: spiritual-warfare
+label: Spiritual warfare
+lexicon:
+  - war in heaven
+  - michael and the dragon
+  - the prince of persia
+  - battle in the heavenly realms
+  - angels fighting demons
+anchors:
+  # "There was war in the sky. Michael and his angels made war on the
+  # dragon. The dragon and his angels made war. They didn't prevail."
+  # (WEB, in corpus). The keystone scene. (12:9-10 stays satan's.)
+  - ref: Revelation 12:7-8
+    sources: [editorial]
+    weight: 1.0
+  # "But the prince of the kingdom of Persia withstood me twenty-one
+  # days; but, behold, Michael, one of the chief princes, came to help
+  # me" (WEB, in corpus). Daniel's glimpse of the unseen conflict.
+  - ref: Daniel 10:13
+    sources: [editorial]
+    weight: 0.95
+  # "Now I will return to fight with the prince of Persia. When I go
+  # out, behold, the prince of Greece will come." (WEB, in corpus).
+  - ref: Daniel 10:20-21
+    sources: [editorial]
+    weight: 0.85
+  # "They overcame him because of the Lamb's blood, and because of the
+  # word of their testimony." (WEB, in corpus). How the war is won —
+  # the texts' own answer.
+  - ref: Revelation 12:11
+    sources: [editorial]
+    weight: 0.9
+  # "Michael shall stand up, the great prince who stands for the
+  # children of your people" (WEB, in corpus).
+  - ref: Daniel 12:1
+    sources: [editorial]
+    weight: 0.75
+related:
+  - resisting-the-devil
+  - deliverance-from-demons
+  - satan
+  - angels
+  - victory-in-christ
+sources: [editorial]

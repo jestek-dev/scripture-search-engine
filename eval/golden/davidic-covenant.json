@@ -1,0 +1,53 @@
+{
+  "id": "davidic-covenant",
+  "query": "davidic covenant",
+  "status": "active",
+  "additionalQueries": [
+    "gods promise to david",
+    "throne established forever"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 44 (Theme L, 5 requesting books).",
+    "Deferred because 2 Sam 7 and all Kings/Chronicles stress-texts were",
+    "absent.",
+    "EXTENSION ROUTE CHECKED before minting (the row's own alternative:",
+    "'check whether covenant's lexicon can carry Davidic phrasings'):",
+    "covenant already fires on 'davidic covenant' (bare covenant token,",
+    "measured) and already anchors 2 Sam 7:12-16 — but the oracle ranks",
+    "BELOW seven general-covenant anchors (Luke 22:20, Jer 31, the",
+    "Genesis covenants...) and 'gods promise to david' / 'throne",
+    "established forever' fire nothing at all. A lexicon extension",
+    "cannot fix the ordering without reweighting covenant's anchors and",
+    "disturbing its active fixture — so MINTED as the narrow Davidic",
+    "register, cross-related.",
+    "2 Sam 7:12-16 is DUAL-anchored with covenant (recorded both files).",
+    "The NO-MESSIANIC-READ-BACK design note (stated at mint, re-carried",
+    "by both Kings and Chronicles appends) honored: anchors keep to what",
+    "the text says (offspring, house, throne, father-son, chastening",
+    "without abandonment); NO NT anchor — the fulfillment register stays",
+    "with the existing NT concepts (messianic-prophecy cross-related).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'davidic covenant' covenant chips rank 1-7 but ALL general-register",
+    "(2 Sam 7 not in the top 7); 'gods promise to david' 2 Chr 1:9",
+    "phrase-fragment CHIPLESS then david-token noise; 'throne",
+    "established forever' unserved."
+  ],
+  "expectedTop": [
+    {
+      "reference": "2 Samuel 7:12-16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Davidic covenant"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Chronicles 17:11-14",
+    "2 Samuel 23:5",
+    "2 Kings 8:19",
+    "2 Chronicles 7:17-18"
+  ],
+  "coversConcepts": [
+    "davidic-covenant"
+  ]
+}

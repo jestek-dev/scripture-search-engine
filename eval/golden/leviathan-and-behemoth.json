@@ -1,7 +1,7 @@
 {
   "id": "leviathan-and-behemoth",
   "query": "leviathan",
-  "status": "pending",
+  "status": "active",
   "additionalQueries": [
     "behemoth",
     "dinosaurs in the bible"
@@ -24,7 +24,14 @@
     "antichrist/Ezekiel-28 identification-free precedents); the",
     "dinosaurs-in-the-bible query is answered by locating what the text",
     "says, never by ruling on what the creatures were (CLAUDE.md #6).",
-    "PR decision-table row carries the deferral for Jesse."
+    "PR decision-table row carries the deferral for Jesse.",
+    "",
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27):",
+    "Job 40-41 + Psalms 74/104 now in corpus; pack lands in this PR per the",
+    "activation note (concept + chapters + coversConcepts together). Gist",
+    "discipline honored: identification-FREE (no dinosaur/crocodile/hippo/",
+    "mythology adjudication anywhere in gist or label). Flipped active in",
+    "this PR after measurement."
   ],
   "expectedTop": [
     {
@@ -41,5 +48,8 @@
   "alsoAcceptable": [
     "Job 41:33-34",
     "Psalms 104:26"
+  ],
+  "coversConcepts": [
+    "leviathan-and-behemoth"
   ]
 }

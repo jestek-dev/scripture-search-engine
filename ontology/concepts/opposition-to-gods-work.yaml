@@ -1,0 +1,57 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme J row 39 (2 requesting books: Ezra, Nehemiah). Deferred because
+# Ezra was absent entirely and Nehemiah's corpus was ch. 8 only.
+#
+# ROUTING honored: Nehemiah's persecuted-for-gods-word check was
+# declined by the review and routed HERE (that pack keeps the
+# prophet-persecution register; this one the opposition-to-the-WORK
+# playbook: ridicule, conspiracy, rumor, hired prophecy, intimidation).
+# do-not-lose-heart deliberately NOT edged in for Ezra 4 — the review's
+# own warning: that would tag the failure mode (the hands ARE
+# weakened).
+#
+# BOUNDARY: Neh 6:11 stays courage's anchor ("should such a man as I
+# flee?"); this pack takes the adjacent, disjoint 6:9.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the narratives' own playbook; it names no modern enemy.
+id: opposition-to-gods-work
+label: Opposition to God's work
+lexicon:
+  - opposition to gods work
+  - opposition in ministry
+  - facing opposition when serving god
+  - enemies of gods work
+anchors:
+  # "For they all would have made us afraid, saying, 'Their hands will
+  # be weakened from the work, that it not be done.' But now,
+  # strengthen my hands." (WEB, in corpus). The intimidation named —
+  # and answered in one breath.
+  - ref: Nehemiah 6:9
+    sources: [editorial]
+    weight: 1.0
+  # "Then the people of the land weakened the hands of the people of
+  # Judah, and troubled them in building. They hired counselors
+  # against them to frustrate their purpose" (WEB, in corpus). The
+  # OT's paradigm opposition-to-the-work narrative.
+  - ref: Ezra 4:4-5
+    sources: [editorial]
+    weight: 0.9
+  # "'What are these feeble Jews doing?... if a fox climbed up it, he
+  # would break down their stone wall.'" (WEB, in corpus). The
+  # ridicule chapter.
+  - ref: Nehemiah 4:1-3
+    sources: [editorial]
+    weight: 0.85
+  # "they ridiculed us and despised us... Then I answered them...
+  # 'The God of heaven will prosper us. Therefore we, his servants,
+  # will arise and build'" (WEB, in corpus). Mockery met with resolve.
+  - ref: Nehemiah 2:19-20
+    sources: [editorial]
+    weight: 0.75
+related:
+  - persecuted-for-gods-word
+  - courage
+  - do-not-lose-heart
+sources: [editorial]

@@ -24,7 +24,11 @@ lexicon:
   - identity
   - self worth
   - gods workmanship
-  - god looks at the heart
+  # "god looks at the heart" MOVED to the god-looks-at-the-heart pack
+  # (corpus-blocked roster build, 2026-08-27; holy-spirit-the-comforter
+  # precedent): the divine-scrutiny query was answering with this
+  # pack's self-worth anchors (measured). The 1 Sam 16:7 anchor below
+  # stays — DUAL with god-looks-at-the-heart, recorded in both files.
   # Round-2 book admission 2026-08-18.
   - every spiritual blessing
 anchors:
@@ -39,9 +43,10 @@ anchors:
     sources: [editorial]
     weight: 0.95
   # "Man looks at the outward appearance, but the LORD looks at the heart"
-  # (WEB wording from knowledge — NOT in web-subset; corpus-needs.md).
-  # Spoken at David's anointing — worth is not appearance; Phillips' lead
-  # Self-Image verse.
+  # (WEB, in corpus since #64). Spoken at David's anointing — worth is not
+  # appearance; Phillips' lead Self-Image verse. DUAL with
+  # god-looks-at-the-heart (divine-scrutiny register, 2026-08-27 roster
+  # build) — the verse honestly serves both registers; recorded both files.
   - ref: 1 Samuel 16:7
     sources: [editorial]
     weight: 0.85

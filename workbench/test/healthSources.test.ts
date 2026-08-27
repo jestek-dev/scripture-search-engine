@@ -181,8 +181,12 @@ describe('health source semantics', () => {
     // 2026-08-27 batch-1 held row admitted post corpus expansion (#64):
     // 243 -> 244 (remembered-calls-things-that-are-not, with its active
     // demonstrating fixture in the same change).
-    expect(coverage).toHaveLength(244);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(244);
+    // 2026-08-27 corpus-blocked roster build (post-#64 full corpus):
+    // 244 -> 288 — 44 new ids across five waves (Themes A-M); the
+    // roster's three extensions ride loving-god, giving-an-answer, and
+    // new-creation, so they add no ids here.
+    expect(coverage).toHaveLength(288);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(288);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

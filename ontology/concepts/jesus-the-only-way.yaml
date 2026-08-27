@@ -91,12 +91,14 @@ anchors:
     sources: [editorial]
     weight: 0.7
   # "For there is one God and one mediator between God and men, the man
-  # Christ Jesus, who gave himself as a ransom for all" (WEB wording,
-  # current edition — 1 Timothy 2 NOT in web-subset; re-check at re-pin).
+  # Christ Jesus, who gave himself as a ransom for all" (WEB, in corpus
+  # since #64).
   # UNIVERSAL-OFFER-KEPT comment (map): the context (2:1-4, God "desires
   # all people to be saved") holds exclusivity and the universal offer in
-  # the same breath — the concept keeps both. Cross-ref the pending
-  # mediator tag-gap row (Job 9:33 register; not built in this wave).
+  # the same breath — the concept keeps both. The mediator tag-gap row
+  # is now BUILT (2026-08-27 roster build): mediator claims 1 Tim 2:5 as
+  # a verse-scoped SIBLING inside this 2:5-6 span (recorded both files);
+  # this pack keeps the full span and the exclusivity register.
   - ref: 1 Timothy 2:5-6
     sources: [editorial]
     weight: 0.9

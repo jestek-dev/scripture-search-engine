@@ -1,0 +1,48 @@
+{
+  "id": "craftsmanship-and-creativity",
+  "query": "god and creativity",
+  "status": "active",
+  "additionalQueries": [
+    "artists in the bible"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 3 (Theme A, 1 requesting book: Exodus).",
+    "Deferred because Exod 31; 35-36 were absent AND the row's own flag",
+    "(check a wisdom-from-god lexicon extension first) was unresolved.",
+    "Extension check RUN (2026-08-27): wisdom-from-god's lexicon is the",
+    "ask-for-wisdom register (wisdom / discernment / ask god for wisdom);",
+    "an extension would answer creativity and craft queries with Jas 1:5",
+    "and Proverbs wisdom anchors — the wrong register. DECLINED; minted",
+    "as its own narrow pack with a related edge instead (the Exodus texts",
+    "themselves call the craft-filling 'wisdom', honored in the gist).",
+    "STRUCTURAL LIMIT (measured at authoring, G4): the review's 'art as",
+    "worship' query cannot be a lexicon entry — 'art' is a STOPWORD",
+    "(archaic second-person), so the phrase collapses to bare `worship`",
+    "and would fire Bezalel anchors on every worship query. 'artists in",
+    "the bible' carries the intent; the verbatim query now reaches the",
+    "worship list only (the collapse-free design's accepted cost).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'god and creativity' pure god-token noise (John 8:42, Ps 55:16,",
+    "Phil 4:20); 'art as worship' hijacked wholesale by worship's",
+    "sanctuary anchors (John 4:23-24, Ps 95:6 — wrong intent; the asker",
+    "wants craft-as-offering, not the worship command)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Exodus 31:3-5",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Craftsmanship and creativity"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Exodus 35:30-35",
+    "Exodus 36:1-2",
+    "1 Kings 7:13-14",
+    "Proverbs 22:29"
+  ],
+  "coversConcepts": [
+    "craftsmanship-and-creativity"
+  ]
+}

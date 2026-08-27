@@ -1,0 +1,74 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme G row 27 (3 requesting books: Ruth, Leviticus, Deuteronomy).
+# Deferred because Ruth 2-4 were absent (the corpus had Ruth 1 only),
+# with Lev 25 and Deut 25:5-10 also blocked.
+#
+# The LEVIRATE EITHER/OR decided at curation (reversible): ONE pack
+# for the whole goel institution INCLUDING the levirate duty — Ruth 4
+# itself joins land-redemption and levirate in one act, so scoping
+# them apart would split the canonical text's own story. No separate
+# levirate-marriage id minted (the either/or, NOT a double-mint,
+# exactly as the Deuteronomy append instructs); "levirate marriage"
+# rides this lexicon.
+#
+# The design note honored: the pack keeps to what the text says about
+# the INSTITUTION; the redemption-in-Christ register stays with the
+# existing NT concepts — NO NT anchor here, no read-back. Job's
+# redeemer row decided alongside as TWO registers (see redeemer.yaml,
+# same PR): that pack is the personal confession; this one the
+# institution. Cross-related both ways; every phrase here is
+# kinsman/levirate/Boaz-qualified.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the institution; it does not preach Boaz as a type.
+id: kinsman-redeemer
+label: Kinsman redeemer
+lexicon:
+  - kinsman redeemer
+  - near kinsman
+  - levirate marriage
+  - boaz redeems ruth
+anchors:
+  # "I am Ruth your servant. Therefore spread the corner of your
+  # garment over your servant; for you are a near kinsman." (WEB, in
+  # corpus). The request that names the institution.
+  - ref: Ruth 3:9
+    sources: [editorial]
+    weight: 1.0
+  # "The man is a close relative to us, one of our near kinsmen."
+  # (WEB, in corpus). Naomi names Boaz's standing.
+  - ref: Ruth 2:20
+    sources: [editorial]
+    weight: 0.85
+  # "I have bought all that was Elimelech's... Moreover, Ruth the
+  # Moabitess... I have purchased to be my wife, to raise up the name
+  # of the dead on his inheritance" (WEB, in corpus). The act itself —
+  # redemption and levirate joined in one sentence.
+  - ref: Ruth 4:9-10
+    sources: [editorial]
+    weight: 0.9
+  # "Blessed be the LORD, who has not left you today without a near
+  # kinsman." (WEB, in corpus). The women's verdict.
+  - ref: Ruth 4:14
+    sources: [editorial]
+    weight: 0.75
+  # "If your brother becomes poor, and sells some of his possessions,
+  # then his kinsman who is next to him shall come, and redeem that
+  # which his brother has sold." (WEB, in corpus). The Levitical law
+  # behind Boaz's act.
+  - ref: Leviticus 25:25
+    sources: [editorial]
+    weight: 0.8
+  # "Her husband's brother shall go in to her, and take her as his
+  # wife, and perform the duty of a husband's brother... that his name
+  # not be blotted out of Israel." (WEB, in corpus). The levirate duty
+  # — folded here per the either/or above.
+  - ref: Deuteronomy 25:5-6
+    sources: [editorial]
+    weight: 0.75
+related:
+  - redeemer
+  - care-for-widows
+  - gods-provision
+sources: [editorial]

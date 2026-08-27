@@ -1,0 +1,43 @@
+{
+  "id": "spiritual-adultery",
+  "query": "spiritual adultery",
+  "status": "active",
+  "additionalQueries": [
+    "unfaithful to god"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 2 (Theme A, 2 requesting books: Hosea,",
+    "Ezekiel). Deferred because the minting books (Hos 1-3; Ezek 16/23)",
+    "were entirely absent from the fixture corpus; now present.",
+    "One-concept-or-two vs idolatry DECIDED at curation as TWO registers",
+    "(object register vs relationship register — the review's own framing;",
+    "idolatry.yaml's header already anticipated this row as the",
+    "relationship register). Reversible; recorded in both packs.",
+    "pastoral-betrayal-and-marriage-crisis untouched: its YAML deliberately",
+    "excludes Hosea (human-marriage pastoral care).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'spiritual adultery' pure token scatter (Exod 20:14, 1 Cor 10:3,",
+    "Matt 5:27 — commandment and NT-spiritual token luck, no curated",
+    "home); 'unfaithful to god' reached Hos 11:12/4:12/9:1 CHIPLESS by",
+    "token luck — the right book with no curated reason."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Hosea 1:2",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Spiritual adultery"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Hosea 3:1",
+    "Hosea 2:2",
+    "Ezekiel 16:32",
+    "Ezekiel 6:9",
+    "Hosea 4:12"
+  ],
+  "coversConcepts": [
+    "spiritual-adultery"
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "new-heart",
+  "query": "heart of stone to heart of flesh",
+  "status": "active",
+  "additionalQueries": [
+    "new heart",
+    "god change my heart"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 38 (Theme I, requesting book: Ezekiel).",
+    "Deferred because Ezek 11:19-20; 36:25-27 were absent.",
+    "EXTENSION, NOT A MINT (the row's own listed alternative + the",
+    "check-first rule): new-creation ALREADY anchors Ezek 36:26 ('the",
+    "promise behind Psalm 51's prayer') and Ps 51:10 \u2014 the row's texts \u2014",
+    "but its lexicon carried no heart vocabulary, so the query family",
+    "could not reach them. This fixture covers a LEXICON EXTENSION of",
+    "new-creation (new heart / heart of stone / heart of flesh / god",
+    "change my heart / a clean heart), not a new id. Decided together",
+    "with circumcision-of-the-heart (that row's narrow mint, same PR) \u2014",
+    "the read-together design both rows flag.",
+    "BOUNDARIES: Ezek 11:19 stays hardness-of-heart's anchor (the",
+    "stony-heart-removed promise is that row's own answer text \u2014 surfaces",
+    "here by exact-phrase retrieval, not claim); Ezek 18:31 stays inside",
+    "repentance's 18:30-32; Jer 31:33 stays covenant's. No new anchor",
+    "added \u2014 the extension routes queries to the anchors new-creation",
+    "already holds.",
+    "Measured gap before the extension (2026-08-27, pre-extension run):",
+    "'heart of stone to heart of flesh' Ezek 11:19 / 36:26 ranks 1-2",
+    "CHIPLESS phrase-fragment luck; 'new heart' new+heart token noise",
+    "(Ps 4:7 new WINE!); 'god change my heart' repentance chips only \u2014",
+    "the promise texts unreachable as a concept.",
+    "STRUCTURAL LIMIT added at authoring: 'heart of flesh' rejected as an entry (subset of the psalm-73-strength-guard query, displaced Ps 73:26); 'heart of stone' carries the stone-to-flesh query and the bare fragment rides exact-phrase retrieval."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ezekiel 36:26",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: A new creation"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ezekiel 11:19",
+    "Psalms 51:10"
+  ],
+  "coversConcepts": [
+    "new-creation"
+  ]
+}

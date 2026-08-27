@@ -1,0 +1,82 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme A row, 1 requesting book: Exodus). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission only by his merge of this PR. Deferred through
+# batches 1-6: Exod 31; 35-36 absent AND the row's own check-first flag
+# unresolved.
+#
+# EXTENSION CHECK (the row's own flag) RUN AND DECLINED 2026-08-27:
+# wisdom-from-god's lexicon is the ask-for-wisdom register (wisdom /
+# discernment / ask god for wisdom / lacking wisdom); extending it
+# would answer "god and creativity" with Jas 1:5 and Proverbs anchors —
+# the wrong register. The Exodus texts DO call the craft-filling
+# "wisdom" (honored: related edge + gist), but the query family is
+# craft-as-calling, not wisdom-seeking. Reversible.
+#
+# BOUNDARIES: sabbath-rest keeps Exod 31:13-17 (covenant-sign register,
+# same chapter — disjoint verses). worship keeps the worship command
+# texts; "art as worship" reaches THIS pack's Bezalel texts, which is
+# the asker's intent (craft offered to God), recorded in the fixture.
+#
+# TOKENIZER NOTE (G-4): "craftsmanship" and "bezalel" are deliberate
+# one-word entries (distinctive tokens; bezalel is the narrative's own
+# proper noun, craftsmanship the subject noun people type — no
+# competing concept speaks either stem). Inventory rows recorded.
+# "art as worship" DROPPED AT AUTHORING (measured, G4): "art" is a
+# STOPWORD (archaic second-person "art"), so the phrase collapses to
+# bare `worship` — it would fire this pack's Bezalel anchors on every
+# bare worship query (the thought-life what-should-i-think-about
+# accident class). "artists in the bible" carries that intent instead;
+# structural limit recorded here and in the fixture.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist describes Spirit-given skill as the text presents it; it does
+# not adjudicate anything about art forms or worship style.
+id: craftsmanship-and-creativity
+label: Craftsmanship and creativity
+lexicon:
+  - craftsmanship
+  - god and creativity
+  - creativity in the bible
+  - artists in the bible
+  - skillful work
+  - bezalel
+anchors:
+  # "I have filled him with the Spirit of God, in wisdom, and in
+  # understanding, and in knowledge, and in all kinds of workmanship,
+  # to devise skillful works, to work in gold, and in silver, and in
+  # bronze, and in cutting of stones... and in carving of wood" (WEB,
+  # in corpus). Bezalel's call — the keystone.
+  - ref: Exodus 31:3-5
+    sources: [editorial]
+    weight: 1.0
+  # "He has filled him with the Spirit of God, in wisdom, in
+  # understanding, in knowledge, and in all kinds of workmanship...
+  # He has put in his heart that he may teach" (WEB, in corpus). The
+  # commissioning retold, with the teaching gift added.
+  - ref: Exodus 35:30-35
+    sources: [editorial]
+    weight: 0.9
+  # "Bezalel and Oholiab shall work with every wise-hearted man, in
+  # whom the LORD has put wisdom and understanding to know how to do
+  # all the work for the service of the sanctuary" (WEB, in corpus).
+  - ref: Exodus 36:1-2
+    sources: [editorial]
+    weight: 0.8
+  # "he was filled with wisdom and understanding and skill to work all
+  # works in bronze" (WEB, in corpus). Hiram — the temple's craftsman
+  # described in the same filled-with-wisdom idiom.
+  - ref: 1 Kings 7:13-14
+    sources: [editorial]
+    weight: 0.7
+  # "Do you see a man skilled in his work? He will serve kings." (WEB,
+  # in corpus).
+  - ref: Proverbs 22:29
+    sources: [editorial]
+    weight: 0.65
+related:
+  - wisdom-from-god
+  - worship
+  - work-and-diligence
+sources: [editorial]

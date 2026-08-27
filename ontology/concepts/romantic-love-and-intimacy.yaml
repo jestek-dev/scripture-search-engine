@@ -1,0 +1,62 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme M row 48 (requesting book: Song of Solomon). Deferred because
+# the Song's corpus presence was 2:1 ALONE.
+#
+# RIDER FOLDED: waiting-and-timing-in-love rides here as ONE pack per
+# Jesse's adopted §11.1 fold — Song 2:7's thrice-repeated charge
+# ("that you not stir up, nor awaken love, until it so desires") is
+# anchored and its query family carried in this lexicon. No second id.
+#
+# NON-GRAPHIC CELEBRATION REGISTER (the row's own design note): the
+# anchors are the Song's celebration texts and its charge — the pack
+# routes to the text's own celebration of love and desire, never to
+# advice-literature framing. It quotes; it does not counsel.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the Song's own voice; allegory vs plain-sense is not
+# adjudicated (the anchors read either way).
+id: romantic-love-and-intimacy
+label: Romantic love and intimacy
+lexicon:
+  - romantic love
+  - intimacy in marriage
+  - do not awaken love
+  - waiting for the right person
+  - song of solomon
+anchors:
+  # "Set me as a seal on your heart... for love is strong as death...
+  # Many waters can't quench love, neither can floods drown it." (WEB,
+  # in corpus). The book's keystone — love's strength said plainly.
+  - ref: Song of Solomon 8:6-7
+    sources: [editorial]
+    weight: 1.0
+  # "I adjure you, daughters of Jerusalem... that you not stir up, nor
+  # awaken love, until it so desires." (WEB, in corpus). The
+  # thrice-repeated charge (2:7; 3:5; 8:4) — the folded
+  # waiting-and-timing register's own text.
+  - ref: Song of Solomon 2:7
+    sources: [editorial]
+    weight: 0.9
+  # "My beloved is mine, and I am his." (WEB, in corpus). Mutual
+  # belonging in one line.
+  - ref: Song of Solomon 2:16
+    sources: [editorial]
+    weight: 0.85
+  # "I sat down under his shadow with great delight... He brought me
+  # to the banquet hall. His banner over me is love." (WEB, in
+  # corpus). Delight celebrated without apology.
+  - ref: Song of Solomon 2:3-4
+    sources: [editorial]
+    weight: 0.75
+  # "You are all beautiful, my love. There is no spot in you." (WEB,
+  # in corpus). The lover's blessing — the celebration register's
+  # gentlest line.
+  - ref: Song of Solomon 4:7
+    sources: [editorial]
+    weight: 0.7
+related:
+  - godly-marriage
+  - unequally-yoked
+  - singleness
+sources: [editorial]

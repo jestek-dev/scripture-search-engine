@@ -1,0 +1,76 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme F row 24 (requesting book: Job). Deferred because Job 9:32-35
+# (the umpire-longing — the minting register), 16:19-21, 33:23-24 and
+# 1 Tim 2:5 were all absent.
+#
+# ONE-OR-TWO vs redeemer DECIDED at curation (both built this PR,
+# reversible): two registers — this pack is the GO-BETWEEN longing
+# ("no umpire between us") and its NT answer; redeemer is the ransom
+# confession. Cross-related, zero shared phrases.
+#
+# The Hebrews decide-alongside-priesthood merge note HONORED: Heb 8:6 /
+# 9:15 / 12:24 stay with their owners (priesthood's office register;
+# covenant's 12:24) — cross-related, not claimed; exactly as the
+# batch-1 priesthood pack cross-noted without building this row.
+#
+# SIBLING CLAIM (verse-scoped): 1 Tim 2:5 is claimed INSIDE
+# jesus-the-only-way's 2:5-6 anchor span (recorded both files) — the
+# verse IS the query's answer ("one mediator between God and men");
+# the exclusivity register of the full 2:5-6 span stays that pack's.
+#
+# BOUNDARY: 1 John 2:1 (advocate) stays assurance-of-salvation's
+# anchor — cross-noted, not claimed.
+#
+# TOKENIZER NOTE (G-4): two deliberate single-token collapses —
+# "one mediator" -> `mediator` ("one" is a stopword) and "umpire
+# between us" -> `umpire` ("between"/"us" are stopwords). Both stems
+# are distinctive (no other concept speaks either); bare `mediator` is
+# the subject noun people type, and bare `umpire` is the WEB's own
+# word for Job 9:33 (KJV "daysman"). Collapse rows + inventory
+# admissions recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports Job's longing and Paul's sentence side by side; it
+# does not adjudicate the typology between them.
+id: mediator
+label: Mediator
+lexicon:
+  - mediator between god and man
+  - mediator between god and men
+  - one mediator
+  - umpire between us
+  - mediator in the bible
+anchors:
+  # "For he is not a man, as I am, that I should answer him... There
+  # is no umpire between us, that might lay his hand on us both."
+  # (WEB, in corpus). The umpire-longing — this pack's own register,
+  # the reason the row was minted.
+  - ref: Job 9:32-35
+    sources: [editorial]
+    weight: 1.0
+  # "For there is one God and one mediator between God and men, the
+  # man Christ Jesus," (WEB, in corpus). Verse-scoped SIBLING inside
+  # jesus-the-only-way's 2:5-6 anchor (recorded both files) — the
+  # query's own sentence.
+  - ref: 1 Timothy 2:5
+    sources: [editorial]
+    weight: 0.95
+  # "Even now, behold, my witness is in heaven. He who vouches for me
+  # is on high... that he would maintain the right of a man with God"
+  # (WEB, in corpus). The longing renewed — a heavenly advocate.
+  - ref: Job 16:19-21
+    sources: [editorial]
+    weight: 0.85
+  # "If there is beside him an angel, an interpreter, one among a
+  # thousand... then God is gracious to him" (WEB, in corpus). Elihu's
+  # go-between figure.
+  - ref: Job 33:23-24
+    sources: [editorial]
+    weight: 0.8
+related:
+  - jesus-the-only-way
+  - priesthood
+  - redeemer
+  - covenant
+sources: [editorial]

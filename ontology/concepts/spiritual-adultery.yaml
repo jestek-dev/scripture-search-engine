@@ -1,0 +1,81 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme A row, 2 requesting books: Hosea, Ezekiel).
+# Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission only by his merge of this PR.
+# Deferred through batches 1-6: the minting books (Hos 1-3; Ezek 16/23)
+# were entirely absent from the fixture corpus.
+#
+# ONE-OR-TWO vs idolatry DECIDED at curation as TWO registers
+# (reversible, recorded both files): idolatry = the OBJECT register
+# (idols, images, false gods — what is worshiped); this pack = the
+# RELATIONSHIP register (covenant unfaithfulness as marriage betrayal —
+# Hosea's controlling metaphor). idolatry.yaml's own header already
+# anticipated exactly this split. Zero shared lexicon phrases.
+#
+# BOUNDARIES: pastoral-betrayal-and-marriage-crisis untouched — its
+# YAML deliberately excludes Hosea (human-marriage pastoral care, the
+# review's own note). Jas 4:4 ("adulterers... friendship with the
+# world") stays love-not-the-world's anchor — cross-related, not
+# claimed. Exod 20:14 / Matt 5:27 (literal adultery command) belong to
+# no register here and are not touched.
+#
+# TOKENIZER NOTE (G-4): no bare "adultery"/"unfaithful" (inventory
+# skips with reasons — the literal-commandment sense must keep winning
+# the bare word). All entries are multi-word.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist describes the prophets' own marriage metaphor; it adjudicates
+# nothing about divorce, remarriage, or any human marriage.
+id: spiritual-adultery
+label: Spiritual adultery
+lexicon:
+  - spiritual adultery
+  - unfaithful to god
+  - adultery against god
+  - cheating on god
+  - hosea and gomer
+anchors:
+  # "Go, take for yourself a wife of prostitution and children of
+  # unfaithfulness; for the land commits great adultery, forsaking the
+  # LORD." (WEB, in corpus). The keystone — Hosea's commission, the
+  # metaphor stated in one verse.
+  - ref: Hosea 1:2
+    sources: [editorial]
+    weight: 1.0
+  # "Go again, love a woman loved by another, and an adulteress, even
+  # as the LORD loves the children of Israel, though they turn to
+  # other gods" (WEB, in corpus). The metaphor's grace half.
+  - ref: Hosea 3:1
+    sources: [editorial]
+    weight: 0.95
+  # "Contend with your mother!... let her put away her prostitution
+  # from her face, and her adulteries from between her breasts" (WEB,
+  # in corpus).
+  - ref: Hosea 2:2
+    sources: [editorial]
+    weight: 0.85
+  # "Adulterous wife, who takes strangers instead of her husband!"
+  # (WEB, in corpus). Ezekiel's version of the same charge.
+  - ref: Ezekiel 16:32
+    sources: [editorial]
+    weight: 0.85
+  # "I have been broken with their lewd heart, which has departed from
+  # me, and with their eyes, which play the prostitute after their
+  # idols" (WEB, in corpus). God wounded by the unfaithfulness — the
+  # relationship register in one verse.
+  - ref: Ezekiel 6:9
+    sources: [editorial]
+    weight: 0.75
+  # "Indeed the spirit of prostitution has led them astray, and they
+  # have been unfaithful to their God." (WEB, in corpus). The verse
+  # that says "unfaithful to their God" in the corpus's own bytes.
+  - ref: Hosea 4:12
+    sources: [editorial]
+    weight: 0.7
+related:
+  - idolatry
+  - love-not-the-world
+  - gods-love
+  - backsliding
+sources: [editorial]

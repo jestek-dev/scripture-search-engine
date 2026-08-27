@@ -1,0 +1,80 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme E row, 2 requesting books: Esther, Nehemiah;
+# roadmap appends Dan 3; 6). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission only by his
+# merge of this PR. Deferred through batches 1-6: the row's entire case
+# was corpus-blocked, and the in-corpus courage texts were fear-not's
+# divine-comfort register — which the row itself says is precisely NOT
+# this gap.
+#
+# REGISTER: human courage to act rightly at personal risk where no
+# divine word is recorded — Esther before the king, Nehemiah refusing
+# the temple, the three refusing the image. fear-not keeps the
+# comfort-COMMAND register ("do not be afraid", "take courage", Josh
+# 1:9); Ps 27:14 stays trust-in-god's anchor. Zero shared phrases.
+# Nehemiah's register caveat carried verbatim: this courage is
+# prayer-entwined (Neh 6:9) — described, not disqualified.
+#
+# BOUNDARIES: Esth 4:14 ("for such a time as this") stays providence's
+# anchor — this pack takes 4:16, the resolve itself. Dan 3:17-18
+# anchored for the but-if-not confession (3:19-20, the furnace act,
+# is persecuted-for-gods-word's — same PR, disjoint verses, recorded
+# both files).
+#
+# TOKENIZER NOTE (G-4): no single-token entries; bare "courage"
+# skipped with reason (fear-not's take-courage adjacency — inventory).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: courage
+label: Courage
+lexicon:
+  - courage to do the right thing
+  # "if i perish i perish" REJECTED as an entry: "if"/"i" are stopwords,
+  # so it collapses to bare `perish` — a token whose natural queries
+  # (John 3:16's "not perish") this pack must never answer. Exact-phrase
+  # retrieval already serves the verbatim query (measured: Esth 4:16
+  # rank 1). Structural limit recorded here and in the fixture.
+  - courage in the bible
+  - standing up for what is right
+  # "but if not" (Dan 3:18's remembered phrase) REJECTED as an entry:
+  # all three words are stopwords — it normalizes to NOTHING (the
+  # oaths-and-vows "let your yes be yes" structural-limit precedent);
+  # exact-phrase retrieval serves the verbatim query.
+anchors:
+  # "I will go in to the king, which is against the law; and if I
+  # perish, I perish." (WEB, in corpus). The keystone — courage with
+  # no recorded divine word.
+  - ref: Esther 4:16
+    sources: [editorial]
+    weight: 1.0
+  # "Should a man like me flee? Who is there that, being such as I,
+  # would go into the temple to save his life? I will not go in."
+  # (WEB, in corpus). Nehemiah refusing the safe sin.
+  - ref: Nehemiah 6:11
+    sources: [editorial]
+    weight: 0.9
+  # "Esther put on her royal clothing and stood in the inner court of
+  # the king's house... she obtained favor in his sight" (WEB, in
+  # corpus). The resolve carried out.
+  - ref: Esther 5:1-2
+    sources: [editorial]
+    weight: 0.8
+  # "Esther said, 'An adversary and an enemy, even this wicked
+  # Haman!'" (WEB, in corpus). Naming the powerful to his face.
+  - ref: Esther 7:6
+    sources: [editorial]
+    weight: 0.7
+  # "our God whom we serve is able to deliver us... But if not, let it
+  # be known to you, O king, that we will not serve your gods" (WEB,
+  # in corpus). The roadmap's Daniel append — courage without a
+  # guaranteed outcome. (3:19-20 stays persecuted-for-gods-word's.)
+  - ref: Daniel 3:16-18
+    sources: [editorial]
+    weight: 0.9
+related:
+  - fear-not
+  - persecuted-for-gods-word
+  - trust-in-god
+  - boldness-in-witness
+sources: [editorial]

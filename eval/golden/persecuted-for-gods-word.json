@@ -1,0 +1,46 @@
+{
+  "id": "persecuted-for-gods-word",
+  "query": "persecuted prophets",
+  "status": "active",
+  "additionalQueries": [
+    "persecution in the old testament"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 4 (Theme B, 3 requesting books: Jeremiah,",
+    "Daniel, Esther). Deferred because the OT spine (Jer 20/26/37-38,",
+    "Dan 3/6, Esther) was absent AND the G4 boundary with",
+    "suffering-for-christ needed that spine present to design.",
+    "Boundary DESIGNED: suffering-for-christ keeps bare 'persecution' /",
+    "'persecuted' and every NT suffering-with-Christ phrasing; this pack",
+    "takes the OT persecuted-prophet / state-power register on multi-word",
+    "phrases only (persecuted prophets, the fiery furnace, the lions den",
+    "narrative queries). The Acts-block extension check stays with",
+    "suffering-for-christ (the review's own routing). Esther's doctrinal",
+    "register stays with gods-plan-for-israel (cross-noted, not claimed).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'persecuted prophets' and 'persecution in the old testament' both",
+    "answered ENTIRELY by suffering-for-christ NT anchors (Matt 5:10,",
+    "1 Pet 4:12-16, Rom 8:17 ranks 1-5) — the NT-framed read-back the",
+    "review names; no OT persecution narrative anywhere in the top 10.",
+    "'daniel in the lions den' / 'the fiery furnace' chipless token luck."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 26:8-9",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Persecuted for God's word"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jeremiah 20:1-2",
+    "Jeremiah 38:6",
+    "Daniel 3:19-20",
+    "Daniel 6:16",
+    "Esther 3:6"
+  ],
+  "coversConcepts": [
+    "persecuted-for-gods-word"
+  ]
+}
