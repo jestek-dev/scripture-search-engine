@@ -178,8 +178,11 @@ describe('health source semantics', () => {
     // remembered-mind-stayed-on-thee — each with an active demonstrating
     // fixture in the same change; the batch's the-cross lexicon extension
     // rides an existing id).
-    expect(coverage).toHaveLength(243);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(243);
+    // 2026-08-27 batch-1 held row admitted post corpus expansion (#64):
+    // 243 -> 244 (remembered-calls-things-that-are-not, with its active
+    // demonstrating fixture in the same change).
+    expect(coverage).toHaveLength(244);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(244);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

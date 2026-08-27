@@ -1,0 +1,30 @@
+{
+  "id": "remembered-calls-things-slogan-guard",
+  "query": "speak things into existence",
+  "status": "active",
+  "note": [
+    "J9 BOUNDARY GUARD for the remembered-calls-things-that-are-not pack",
+    "(2026-08-27, admitted with the pack; the guard the held draft asked for).",
+    "The slogan 'speak things into existence' is prosperity-teaching",
+    "vocabulary, not translation wording, and the battery re-grade marks ad11's",
+    "corrective framing J9-gated: whether the engine should answer the slogan",
+    "with Romans 4:17 (the verse people mean), a corrective, or both is",
+    "Jesse's editorial call, not a data row's.",
+    "",
+    "Measured 2026-08-27 on the admission identity (0.14.0, corpus 6450b7d7…):",
+    "the slogan carries no 'call' stem ({speak, thing, existence}), does not",
+    "fire the pack's anchor, and Romans 4:17 is absent from its top 10",
+    "(token scatter leads: Ephesians 5:12 at 9.26). This guard pins that",
+    "boundary: if Romans 4:17 starts LEADING the slogan, data has answered",
+    "the J9 question without the ruling — surface it, don't ship it. Romans",
+    "4:17 MAY rank (it is scripture; suppressing it is forbidden); it must",
+    "not lead by data."
+  ],
+  "mustNotLead": [
+    {
+      "reference": "Romans 4:17",
+      "withinTop": 1,
+      "why": "Routing the prosperity slogan to the verse people mean is J9-gated editorial territory (battery ad11); until Jesse rules, no data row may put Romans 4:17 first for this phrasing. It may rank as an honest hit; it must not lead."
+    }
+  ]
+}
