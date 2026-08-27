@@ -286,6 +286,11 @@
   ],
   "golden-verbatim": [
     {
+      "queryId": "golden-verbatim:004304ac3e557630",
+      "query": "while we were yet sinners christ died for us",
+      "expectationKind": "none"
+    },
+    {
       "queryId": "golden-verbatim:004777fa4717a544",
       "query": "persecution in the old testament",
       "expectationKind": "concept-anchors",
@@ -338,12 +343,6 @@
       "query": "pray for our leaders",
       "expectationKind": "concept-anchors",
       "conceptId": "praying-for-leaders"
-    },
-    {
-      "queryId": "golden-verbatim:0417928ae0601fd7",
-      "query": "parenting",
-      "expectationKind": "concept-anchors",
-      "conceptId": "parenting"
     }
   ],
   "multi-concept": [
