@@ -2,7 +2,6 @@
   "id": "testing",
   "query": "testing of your faith",
   "additionalQueries": [
-    "god is testing me",
     "why does god test us"
   ],
   "status": "active",
@@ -23,7 +22,15 @@
     "",
     "suffering-for-christ also anchors 1 Pet 1:6-7 (fiery-trial register),",
     "but none of these queries fires that concept's lexicon, so the",
-    "concept_anchor reason for 'Theme: God tests his people' must be present."
+    "concept_anchor reason for 'Theme: God tests his people' must be present.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling row 13, approved 2026-08-26): the",
+    "ruling re-points 'god is testing me' at the concept's namesake text",
+    "Genesis 22:1-14, now in corpus. That query moves to its own fixture",
+    "(testing-god-is-testing-me.json) because the ruling's window (top 3)",
+    "holds for it but not for this fixture's other queries, and per-query",
+    "windows are not in the schema. The two queries kept here still hold",
+    "1 Pet 1:6-7 in the top 3 unchanged (measured #1 and #2)."
   ],
   "expectedTop": [
     {

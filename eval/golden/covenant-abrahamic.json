@@ -21,18 +21,32 @@
     "",
     "If the corpus-extension request in the pack notes (Genesis 15 + 17)",
     "is approved, re-point expectedTop at Genesis 15:7-18 and demote this",
-    "assertion to alsoAcceptable."
+    "assertion to alsoAcceptable.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling rows 4-5, approved 2026-08-26):",
+    "the full-Bible corpus landed Genesis 15 and 17, so the note above is",
+    "executed — expectedTop is Genesis 15:7-18 and Gal 3:15-18 is",
+    "alsoAcceptable. withinTop 10, not the old 5: measured on the expanded",
+    "bed Gen 15:7-18 sits #3 for 'abrahamic covenant' but #7 for 'covenant",
+    "with abraham', where Gen 17:2-14 leads on its own abraham+covenant",
+    "tokens and the verbatim 'covenant with abraham' exact-phrase verses",
+    "(Ex 2:24, Lev 26:42, 2 Ki 13:23) honestly precede it. One window",
+    "serves both queries (per-query windows are not in the schema), and",
+    "the fixture must not distort weights to force a rank contest the",
+    "pack's own ordering declines."
   ],
   "expectedTop": [
     {
-      "reference": "Galatians 3:15-18",
-      "withinTop": 5,
+      "reference": "Genesis 15:7-18",
+      "withinTop": 10,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Covenant"
     }
   ],
   "expectedWithinTop": 10,
   "alsoAcceptable": [
+    "Galatians 3:15-18",
+    "Genesis 17:2-14",
     "Jeremiah 31:31-34",
     "Deuteronomy 7:9",
     "Hebrews 12:24"

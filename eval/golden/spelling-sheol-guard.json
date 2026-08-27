@@ -4,12 +4,13 @@
   "status": "active",
   "note": [
     "QR-5 (P5.4) harm-class guard: a distinctive transliterated scripture word the WEB text actually uses. 'Sheol' is exactly the kind of word a careless corrector would 'fix' toward common English — and rewriting it would swap a precise theological term for noise. It is a corpus token (in-vocabulary), so the OOV gate forbids correction; the exact undecorated 'Shared word: sheol' chip is the tripwire.",
-    "ACTIVE from birth — pins already-true behavior."
+    "ACTIVE from birth — pins already-true behavior.",
+    "CORPUS-EXPANSION EXECUTION (ruling row 18, approved 2026-08-26): the OT's ~60 real sheol verses are now in corpus and Ps 139:8 sits #7 among them — honest competition, and the guard's point is untouched: the OOV gate never 'fixes' a real scripture word, and the exact-match requiredReasonLabel still trips on any decoration of the chip. Window widened to 10 (the measured position sits within it) per the ruling's minimal fix."
   ],
   "expectedTop": [
     {
       "ref": "Psalms 139:8",
-      "withinTop": 3,
+      "withinTop": 10,
       "requiredReasonLabel": "Shared word: sheol"
     }
   ]

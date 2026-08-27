@@ -358,13 +358,18 @@ describe('gauntlet machine report', () => {
 });
 
 describe.sequential('gauntlet CLI process', () => {
+  // 600s test / 180s per spawn, not the 60s defaults: this test runs the FULL
+  // gauntlet CLI three times, and each run rebuilds the fixture database over
+  // the full-Bible corpus (web-subset 1.37 MB -> 7.68 MB, 2026-08-26
+  // expansion). A Windows runner exceeded 60s while Linux passed — the exact
+  // cross-platform timing class the config comment above warns about.
   it('keeps Markdown on stdout and writes complete reports for an in-repo rerun', () => {
     const jsonPath = join(REPO_ROOT, 'eval', '.runs', `gauntlet-report-test-${process.pid}.json`);
     const run = (args: string[]) =>
       spawnSync(process.execPath, [TSX_CLI, 'eval/src/gauntlet.ts', ...args], {
         cwd: REPO_ROOT,
         encoding: 'utf8',
-        timeout: 60_000,
+        timeout: 180_000,
       });
 
     try {
@@ -407,7 +412,7 @@ describe.sequential('gauntlet CLI process', () => {
     } finally {
       rmSync(jsonPath, { force: true });
     }
-  });
+  }, 600_000);
 
   it('names the doctrinal-guardrail data files in fixtureInputSha256 (edit moves the hash, revert restores it)', () => {
     const scratch = mkdtempSync(join(tmpdir(), 'fixture-input-sha-'));

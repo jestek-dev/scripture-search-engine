@@ -2,9 +2,7 @@
   "id": "envy-and-jealousy",
   "query": "jealousy",
   "additionalQueries": [
-    "envy",
-    "jealous of others",
-    "struggling with envy"
+    "envy"
   ],
   "status": "active",
   "note": [
@@ -23,7 +21,17 @@
     "God' — is an honest lexical match for the query word in its OPPOSITE",
     "register: a searcher struggling with envy served divine covenant",
     "jealousy. It is demoted, never forbidden; both references are in the",
-    "fixture corpus, so the pair cannot pass vacuously."
+    "fixture corpus, so the pair cannot pass vacuously.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling rows 24-25, approved 2026-08-26):",
+    "the narrative exemplars this pack's corpus-needs note named (Gen 4,",
+    "Gen 37, 1 Sam 18) and Prov 14:30 are now in corpus. The bare-word",
+    "queries kept here still hold Prov 27:4 in the top 3 unchanged",
+    "(measured #1 for 'jealousy', #3 for 'envy'); the two phrase queries,",
+    "where the exemplars lead, move to their own fixture",
+    "(envy-and-jealousy-phrases.json) with the ruling's widened window,",
+    "because per-query windows are not in the schema and the bare-word",
+    "top-3 assertion must not be weakened by the split."
   ],
   "expectedTop": [
     {

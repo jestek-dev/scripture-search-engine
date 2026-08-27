@@ -21,12 +21,21 @@
     "",
     "Isa 54's deserted-wife verses (54:5-6, 54:10) belong to",
     "betrayal-and-marriage-crisis; the chapter is shared honestly and this",
-    "fixture asserts nothing against those rows."
+    "fixture asserts nothing against those rows.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling rows 10-11, approved 2026-08-26):",
+    "the narrative anchors now lead, exactly the moment Isa 54:1's",
+    "deliberately-low 0.65 weight was set for; per this fixture's own note",
+    "the assertion is presence in the top, not the pack's #1. The window",
+    "widens to 10 rather than the ruling's sketched 5 because 'childless'",
+    "measures Isa 54:1 at #9 (behind the whole narrative-anchor set, with",
+    "Gen 15:2-5 carrying the query's own token) while 'barren' measures",
+    "#5; one window serves both queries and 10 is the smallest that does."
   ],
   "expectedTop": [
     {
       "reference": "Isaiah 54:1",
-      "withinTop": 3,
+      "withinTop": 10,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Waiting for a child"
     }

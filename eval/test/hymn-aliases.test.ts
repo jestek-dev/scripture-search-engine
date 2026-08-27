@@ -234,14 +234,17 @@ describe('verse-range alias arm — integration (P5.5 round-1 fix, critique defe
     copyFileSync(fixturePath, doctoredPath);
     const doctored = new DatabaseSync(doctoredPath);
     try {
-      // Obadiah 1:1-4 — the whole book is absent from the fixture corpus.
+      // Obadiah 1:25-28 — verse ids past the book's real 21 verses, so the
+      // range stays absent even on the full-Bible fixture corpus (the
+      // 2026-08-26 corpus expansion made every whole book present, which is
+      // why this row no longer uses Obadiah 1:1-4).
       doctored
         .prepare(
           `INSERT INTO curated_aliases(title, normalized_raw, concept_id, start_verse_id,
                                        end_verse_id, source_id, weight, locator)
            VALUES (?, ?, NULL, ?, ?, 'hymn-aliases', ?, ?)`,
         )
-        .run('Absent Range Hymn', 'a phrase for an absent range', 31001001, 31001004, 1, 'X, "Y" (1900)');
+        .run('Absent Range Hymn', 'a phrase for an absent range', 31001025, 31001028, 1, 'X, "Y" (1900)');
     } finally {
       doctored.close();
     }
