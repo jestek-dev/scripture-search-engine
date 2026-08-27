@@ -26,11 +26,21 @@
     "technique) — and 'praying for a baby' shares the pray token, so the",
     "pairing is a live lexical risk, not a decoration. The verse is IN the",
     "fixture corpus, so the guard cannot pass vacuously; it ranks honestly",
-    "for prayer queries, where the `prayer` concept anchors it."
+    "for prayer queries, where the `prayer` concept anchors it.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling rows 6-9, approved 2026-08-26):",
+    "the narrative anchors this pack was designed around are now in corpus",
+    "and lead, exactly as intended ('narrative anchors lead once the",
+    "corpus extension lands'). expectedTop moves to 1 Samuel 1:9-20 —",
+    "Hannah, the concept's fullest narrative and the measured #1 on all",
+    "four queries — with Gen 16:1-2 (measured #6) and Isa 54:1 dropping",
+    "to alsoAcceptable. The Mark 11:24 pastoral mustNotRank is untouched",
+    "and held under measurement on every query, including the pray-token",
+    "'praying for a baby'."
   ],
   "expectedTop": [
     {
-      "reference": "Genesis 16:1-2",
+      "reference": "1 Samuel 1:9-20",
       "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Waiting for a child"
@@ -38,7 +48,12 @@
   ],
   "expectedWithinTop": 10,
   "alsoAcceptable": [
-    "Isaiah 54:1"
+    "Genesis 16:1-2",
+    "Isaiah 54:1",
+    "Psalms 113:9",
+    "Genesis 25:21",
+    "Genesis 21:1-7",
+    "Luke 1:13"
   ],
   "mustNotRank": [
     {

@@ -5,14 +5,17 @@
   "note": [
     "QR-5 (P5.4) guard: archaic forms route through the tokenizer's reviewed ARCHAIC_FORMS fold, never through spelling correction. 'loveth' folds to the in-vocabulary token 'love' at tokenize time — the correction layer must never see it, and no chip may claim a correction happened. The undecorated 'Shared word: love' chip on a Love-of-God anchor pins that.",
     "This is covenant 4 territory: correction lives in the intent layer, NOT the tokenizer, and the tokenizer's own folding is the first and preferred path for archaic language (TOKENIZER_VERSION stays 1.0.0).",
-    "ACTIVE from birth — pins already-true behavior."
+    "ACTIVE from birth — pins already-true behavior.",
+    "CORPUS-EXPANSION EXECUTION (ruling row 19, approved 2026-08-26): explanation-contract re-target, the ruling's recommended first option. On the full corpus Rom 5:8 still ranks #1 for 'loveth' but its displayed reasons are now concept chips (Theme: The love of God) — the shared-word chip no longer surfaces, so pinning that particular chip pinned an accident of anchor coverage, not the invariant. The tripwire now asserts what it actually guards: Rom 5:8 ranks in the top 3 for 'loveth' (concept_anchor evidence), AND no chip anywhere in the results claims a spelling correction happened — archaic forms fold in the tokenizer, never the corrector. The forbiddenReasonLabelSubstrings assertion is the minimal G3 capability added for this row; it survives future anchor changes."
   ],
   "expectedTop": [
     {
       "ref": "Romans 5:8",
       "withinTop": 3,
-      "requiredReasonFamily": "concept_anchor",
-      "requiredReasonLabel": "Shared word: love"
+      "requiredReasonFamily": "concept_anchor"
     }
+  ],
+  "forbiddenReasonLabelSubstrings": [
+    "(corrected from"
   ]
 }

@@ -1,0 +1,58 @@
+{
+  "id": "nations-and-peoples-tribe-and-tongue",
+  "query": "every tribe and tongue",
+  "additionalQueries": [
+    "nations in the bible"
+  ],
+  "status": "active",
+  "note": [
+    "CORPUS-EXPANSION EXECUTION (ruling rows 26-27, approved 2026-08-26).",
+    "Split out of nations-and-peoples-all-nations.json in the full-Bible",
+    "expansion PR: on the full corpus these queries face honest",
+    "competition from the pack's newly-activated nations anchors",
+    "(Acts 17:26-27, Genesis 10:32/11:8-9/12:3, Psalms 67:2-5,",
+    "Isaiah 2:2-4, Isaiah 49:6) and Matt 28:19 falls to #10 on both. Per",
+    "the ruling: the lexically-direct every-tribe-and-tongue register is",
+    "asserted — Revelation 7:9-10 ('out of every nation and of all",
+    "tribes, peoples, and languages', measured #5 on both queries) —",
+    "and Matt 28:19 widens to top 10 with the measured leaders",
+    "alsoAcceptable. The 'all nations' top-5 assertion stays tight in",
+    "the parent fixture.",
+    "",
+    "The Psalms 9:17 sense-inversion preferredOrder pair (Jesse,",
+    "2026-08-15) is carried over unchanged so the demotion stays measured",
+    "on these queries too; it is demoted, never forbidden."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Revelation 7:9-10",
+      "withinTop": 5,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Nations and peoples"
+    },
+    {
+      "reference": "Matthew 28:19",
+      "withinTop": 10,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Nations and peoples"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Acts 17:26-27",
+    "Genesis 10:32",
+    "Genesis 11:8-9",
+    "Genesis 12:3",
+    "Psalms 67:2-5",
+    "Isaiah 2:2-4",
+    "Isaiah 49:6",
+    "Psalms 86:9",
+    "Revelation 21:24-26"
+  ],
+  "preferredOrder": [
+    {
+      "above": "Matthew 28:19",
+      "below": "Psalms 9:17"
+    }
+  ]
+}

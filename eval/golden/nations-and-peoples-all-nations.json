@@ -1,10 +1,7 @@
 {
   "id": "nations-and-peoples-all-nations",
   "query": "all nations",
-  "additionalQueries": [
-    "every tribe and tongue",
-    "nations in the bible"
-  ],
+  "additionalQueries": [],
   "status": "active",
   "note": [
     "GENESIS-PILOT FIXTURE (14-concept round, drafted 2026-08-22). Second",
@@ -24,7 +21,16 @@
     "the strongest in-corpus pairing of lexical match and curated anchor for",
     "this query. withinTop 5, not 3 — 'all nations' appears in many honest",
     "verses (Ps 86:9 among them) and this fixture must not force a brittle",
-    "ordering between them."
+    "ordering between them.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling rows 26-27, approved 2026-08-26):",
+    "'all nations' itself HELD (Matt 28:19 measured #4, within 5,",
+    "unchanged here). The two full-corpus-competition queries ('every",
+    "tribe and tongue', 'nations in the bible') move to their own fixture",
+    "(nations-and-peoples-tribe-and-tongue.json) with the ruling's",
+    "widened window and the lexically-direct register asserted, because",
+    "per-query windows are not in the schema and this query's top-5",
+    "assertion must not be weakened by the move."
   ],
   "expectedTop": [
     {
