@@ -1,0 +1,17 @@
+{
+  "id": "popular-2-corinthians-9-7",
+  "query": "god loves a cheerful giver",
+  "status": "pending",
+  "note": [
+    "POPULAR-VERSES PROMOTION (2026-08-26, whole-Bible coverage plan §4.2): rank 55 (Tier 3) of the verified top-200 popular-verses ranking (/mnt/project-files/research/popular-verses/top-200-verses.md; per-entry source traceability in top-200-verses.json — 60 source lists: platform usage data, memorization curricula, editorial listicles).",
+    "Guard fixture: regression armor over the verses users search most. The query is the famous phrasing in public-domain wording (WEB text or KJV-derived); no modern-translation wording is used. No reason-family requirement on purpose — this fixture guards lexical reachability and position, not concept attribution; concept fixtures own attribution.",
+    "PENDING — HELD OUT OF THE PROMOTION PR: the target verse is not in the current 5,727-verse fixture corpus (pipeline/fixtures/web-subset.json @ main e762d1c), so the gauntlet cannot measure it yet. This draft awaits the corpus-expansion merge; admit it from post-expansion main in a follow-up PR: run the gauntlet, read the observed rank, pin withinTop to the observation, and flip status to active in that same PR.",
+    "The withinTop 3 below is the expected post-expansion pin for a famous exact-phrase query, not a measurement; re-pin to what the post-expansion gauntlet actually observes."
+  ],
+  "expectedTop": [
+    {
+      "ref": "2 Corinthians 9:7",
+      "withinTop": 3
+    }
+  ]
+}

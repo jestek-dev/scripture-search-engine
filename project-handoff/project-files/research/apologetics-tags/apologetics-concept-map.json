@@ -1,0 +1,3112 @@
+{
+ "generated": "2026-08-25",
+ "note": "Integrated apologetics concept-to-scripture map, merged from four domain drafts (A: creation & the knowable God; B: suffering & resurrection; C: Scripture & the only way; D: the Jesus of the Bible). Cases: EXISTING-extension = one of the 131 merged ontology ids, extended; PENDING-TAG-GAP = a tag-gaps-review proposal reused (not merged yet — no display use until it merges); NEW-MINT = genuinely new id proposed; NEW-MINT-conditional = new id behind a mint-vs-extend call surfaced to Jesse. verification: 'pinned' = word-for-word match against pipeline/fixtures/web-subset.json (pinned engwebp source sha256 3458ca34...); 'current-edition' = match against the live ebible.org engwebp_vpl.txt (sha256 71ea1ce6..., extracted from the downloaded archive engwebp_vpl.zip, sha256 b6f55cc7...; drifted from the pin) — re-check those quotes if/when the re-pin PR lands. Display tags are gated on engine merge: no new id can land on a book doc until its pack merges to main.",
+ "counts": {
+  "concepts": 29,
+  "anchors": 216,
+  "by_case": {
+   "EXISTING-extension": {
+    "concepts": 7,
+    "anchors": 48
+   },
+   "PENDING-TAG-GAP": {
+    "concepts": 12,
+    "anchors": 90
+   },
+   "NEW-MINT": {
+    "concepts": 5,
+    "anchors": 40
+   },
+   "NEW-MINT-conditional": {
+    "concepts": 5,
+    "anchors": 38
+   }
+  },
+  "anchors_by_provenance": {
+   "pinned": 100,
+   "current-edition": 116
+  }
+ },
+ "concepts": [
+  {
+   "id": "creation-testifies",
+   "case": "NEW-MINT",
+   "definition": "Creation itself is God's ongoing witness to every person — the heavens, the seasons, and providence declare the Creator, leaving all without excuse (general revelation).",
+   "notes": "Reuse check done: `creation` teaches the act of making; `those-who-never-heard` owns the fate-of-the-unevangelized question and already carries Rom 1:19–20 on the display side. The witness register is distinct. Boundary decision for Jesse: Rom 1:19–20 dual-anchors this id and those-who-never-heard deliberately.",
+   "anchors": [
+    {
+     "ref": "Psalm 19:1-2",
+     "quote": "The heavens declare the glory of God. The expanse shows his handiwork. Day after day they pour out speech, and night after night they display knowledge.",
+     "verification": "pinned",
+     "note": "WEB v1 begins with the merged superscription 'For the Chief Musician. A Psalm by David.' before this body text.",
+     "justification": "The psalm's first half is explicitly about wordless, continuous cosmic testimony — the concept's namesake text, teaching it directly, not merely used for it.",
+     "sources": [
+      "routledge",
+      "manning-20",
+      "ap-teleo"
+     ]
+    },
+    {
+     "ref": "Psalm 19:3",
+     "quote": "There is no speech nor language where their voice is not heard.",
+     "verification": "pinned",
+     "justification": "Universality of the witness — the same every-person scope the concept claims.",
+     "sources": [
+      "manning-20",
+      "ap-teleo"
+     ]
+    },
+    {
+     "ref": "Romans 1:19-20",
+     "quote": "because that which is known of God is revealed in them, for God revealed it to them. For the invisible things of him since the creation of the world are clearly seen, being perceived through the things that are made, even his everlasting power and divinity, that they may be without excuse.",
+     "verification": "pinned",
+     "justification": "Paul's own doctrine of general revelation: what can be known of God is revealed by God through what is made, with the without-excuse verdict. In context (1:18–32) the witness is suppressed, not persuasive unto faith — justification wording keeps that edge. Dual-anchored with those-who-never-heard.",
+     "sources": [
+      "routledge",
+      "crossexamined",
+      "manning-20"
+     ]
+    },
+    {
+     "ref": "Acts 14:16-17",
+     "quote": "who in the generations gone by allowed all the nations to walk in their own ways. Yet he didn’t leave himself without witness, in that he did good and gave you rains from the sky and fruitful seasons, filling our hearts with food and gladness.",
+     "verification": "current-edition",
+     "justification": "Paul at Lystra, to pagans with no Scripture: God 'didn't leave himself without witness' — the concept's exact claim, in the Bible's own missionary practice.",
+     "sources": [
+      "manning-20",
+      "crossexamined"
+     ]
+    },
+    {
+     "ref": "Acts 17:26-27",
+     "quote": "He made from one blood every nation of men to dwell on all the surface of the earth, having determined appointed seasons and the boundaries of their dwellings, that they should seek the Lord, if perhaps they might reach out for him and find him, though he is not far from each one of us.",
+     "verification": "pinned",
+     "justification": "The Areopagus address states the purpose of the created order: that people should seek and find the God who is near. Natural theology's warrant text, taught in context.",
+     "sources": [
+      "routledge",
+      "crossexamined"
+     ]
+    },
+    {
+     "ref": "Job 12:7-9",
+     "quote": "“But ask the animals now, and they will teach you; the birds of the sky, and they will tell you. Or speak to the earth, and it will teach you. The fish of the sea will declare to you. Who doesn’t know that in all these, the LORD’s hand has done this,",
+     "verification": "current-edition",
+     "note": "v9 runs on into v10.",
+     "justification": "Caveat noted: this is Job's retort to Zophar — even the animals know the LORD's hand does everything, including the calamity under dispute. The premise it teaches (creatures visibly display the LORD's doing) is affirmed, but the justification must not flatten the speech into a serene nature-hymn.",
+     "sources": [
+      "manning-20"
+     ]
+    },
+    {
+     "ref": "Psalm 8:3-4",
+     "quote": "When I consider your heavens, the work of your fingers, the moon and the stars, which you have ordained, what is man, that you think of him? What is the son of man, that you care for him?",
+     "verification": "current-edition",
+     "justification": "The sky-witness producing right creaturely response — wonder before the Ordainer. Vv. 5–6 (human dignity) belong to image-of-god; the split is deliberate.",
+     "sources": [
+      "manning-20"
+     ]
+    }
+   ],
+   "declined": [
+    "Psalm 14:1 — ubiquitous in apologetics usage against atheism, but the psalm teaches universal corruption (vv1b–3), not an argument for God's existence; tagging it would be 'used-about', not 'teaches'.",
+    "Psalm 19:7-11 — the psalm's second half turns to the law (special revelation); belongs to trustworthiness-of-scripture / delight-in-the-word territory (Worker C). Anchor split at v6/v7 is deliberate.",
+    "Romans 1:21-23 — suppression/idolatry exchange carried inside the Rom 1:19–20 justification; the idolatry substance belongs to the pending idolatry row (Theme A, not Worker A)."
+   ],
+   "domain": "Creation & the knowable God (domains 1+5)"
+  },
+  {
+   "id": "creation",
+   "case": "EXISTING-extension",
+   "definition": "Extension register: God alone made all things and is himself unmade — everything that exists comes from him, so he owns and sustains it (first-cause / who-made-God query family). Extend lexicon and anchors of the merged `creation` id; do NOT mint maker-of-all-things.",
+   "notes": "Brief-mandated reuse check resolved as extend-not-mint: the teaching substance is exactly what `creation` says; the gap is lay/apologetics query phrasings ('who made God', 'did the universe have a beginning', 'everything has a cause') and whole-canon anchors beyond Gen 1. Argument names (cosmological/kalam) stay in lexicon, never in the id.",
+   "anchors": [
+    {
+     "ref": "Genesis 1:1",
+     "quote": "In the beginning, God created the heavens and the earth.",
+     "verification": "pinned",
+     "justification": "The canon's opening assertion of an absolute beginning with God prior to it — the premise every first-cause discussion borrows.",
+     "sources": [
+      "gq-kalam",
+      "routledge"
+     ]
+    },
+    {
+     "ref": "Psalm 90:2",
+     "quote": "Before the mountains were born, before you had formed the earth and the world, even from everlasting to everlasting, you are God.",
+     "verification": "current-edition",
+     "justification": "The Maker himself is unmade, from everlasting to everlasting — the honest scriptural answer to 'who made God'.",
+     "sources": [
+      "gq-kalam",
+      "crossexamined"
+     ]
+    },
+    {
+     "ref": "Isaiah 44:24",
+     "quote": "The LORD, your Redeemer, and he who formed you from the womb says: “I am the LORD, who makes all things; who alone stretches out the heavens; who spreads out the earth by myself;",
+     "verification": "current-edition",
+     "note": "Sentence continues in v25.",
+     "justification": "Sole, unassisted creatorship ('makes all things… alone… by myself') in the anti-idol polemic of Isa 44, where creating is what distinguishes God from every rival. Part of the Isaiah 40–46 block from the Mormonism conversation.",
+     "sources": [
+      "brief-6.1",
+      "manning-20"
+     ]
+    },
+    {
+     "ref": "Jeremiah 10:12",
+     "quote": "God has made the earth by his power. He has established the world by his wisdom, and by his understanding has he stretched out the heavens.",
+     "verification": "pinned",
+     "justification": "In-context contrast with idols: creating by power and wisdom is the LORD's distinguishing act.",
+     "sources": [
+      "manning-20"
+     ]
+    },
+    {
+     "ref": "John 1:3",
+     "quote": "All things were made through him. Without him, nothing was made that has been made.",
+     "verification": "pinned",
+     "justification": "The made/unmade line drawn absolutely. The deity-of-Christ freight is Worker D's ground; anchored here only for the all-things-made claim it states.",
+     "sources": [
+      "crossexamined"
+     ]
+    },
+    {
+     "ref": "Acts 17:24-25",
+     "quote": "The God who made the world and all things in it, he, being Lord of heaven and earth, doesn’t dwell in temples made with hands. He isn’t served by men’s hands, as though he needed anything, seeing he himself gives to all life and breath and all things.",
+     "verification": "pinned",
+     "justification": "Creator aseity preached to philosophers: God needs nothing and gives everything — the owns-and-sustains clause, taught in the Bible's own engagement with Greek thought.",
+     "sources": [
+      "routledge",
+      "crossexamined"
+     ]
+    },
+    {
+     "ref": "Hebrews 3:4",
+     "quote": "For every house is built by someone; but he who built all things is God.",
+     "verification": "current-edition",
+     "justification": "The one place Scripture states the builder inference in argument form. Context caveat: in Heb 3 it serves the Moses/Christ comparison, not a standalone proof — yet it asserts, as a general truth, that all things have God as builder.",
+     "sources": [
+      "gq-kalam",
+      "namb-moral"
+     ]
+    },
+    {
+     "ref": "Revelation 4:11",
+     "quote": "“Worthy are you, our Lord and God, the Holy One, to receive the glory, the honor, and the power, for you created all things, and because of your desire they existed and were created!”",
+     "verification": "current-edition",
+     "justification": "Creation grounded in God's will ('because of your desire they existed') — contingency of everything on the Creator, taught doxologically.",
+     "sources": [
+      "gq-kalam"
+     ]
+    }
+   ],
+   "declined": [
+    "maker-of-all-things — not minted; folded into this extension after the brief-mandated reuse check (would fail G4 and split one concept across two chips).",
+    "origin-of-life id — not minted (per brief Domain 5): Scripture teaches God forming life, not abiogenesis; an id named for the debate would put the engine on ground the texts don't occupy. Served by creation + design-in-creation + the-breath-of-life lexicons.",
+    "Ontological-argument id — not minted (per brief Domain 1): Scripture asserts God's necessary reality but nowhere teaches Anselm's inference; no honest anchors exist. That register is served by Ps 90:2 here via lexicon.",
+    "Hebrews 11:3 — rejected as a first-cause anchor: 'by faith we understand' is the verse's own register (faith-received creation ex nihilo); conscripting it as a rational proof-text inverts its point.",
+    "Colossians 1:16-17 — not anchored here despite teaching all-things-made through Christ: the brief's disputed-text table routes Col 1:15–17 through deity-of-christ/supremacy-of-christ with editorial provenance (Worker D)."
+   ],
+   "domain": "Creation & the knowable God (domains 1+5)"
+  },
+  {
+   "id": "design-in-creation",
+   "case": "NEW-MINT",
+   "definition": "The world is made with wisdom, order, and purpose — fixed ordinances govern the heavens, the earth is formed to be inhabited, and human beings are deliberately woven together.",
+   "notes": "Reuse check done: not covered by creation (act, not orderedness), wisdom-from-god (wisdom for living), or any tag-gap row. Fine-tuning/intelligent-design queries land here via lexicon; the id names what the texts teach, not the modern argument, and no anchor is claimed to teach fine-tuning physics.",
+   "anchors": [
+    {
+     "ref": "Proverbs 3:19-20",
+     "quote": "By wisdom the LORD founded the earth. By understanding, he established the heavens. By his knowledge, the depths were broken up, and the skies drop down the dew.",
+     "verification": "pinned",
+     "justification": "Creation executed by wisdom, understanding, knowledge — orderedness located in the Maker's mind, the concept's core claim.",
+     "sources": [
+      "ap-teleo"
+     ]
+    },
+    {
+     "ref": "Job 38:4",
+     "quote": "“Where were you when I laid the foundations of the earth? Declare, if you have understanding.",
+     "verification": "current-edition",
+     "justification": "The whirlwind speech's architectural imagery (foundations, measurements in v5) presents the earth as deliberately laid and man as unqualified to audit it. Theodicy function of the speeches is Worker B's ground; anchored here only for the making. Possible dual-anchor with why-god-allows-suffering — flagged for integration.",
+     "sources": [
+      "ap-teleo",
+      "thirdmill-job"
+     ]
+    },
+    {
+     "ref": "Job 38:33",
+     "quote": "Do you know the laws of the heavens? Can you establish its dominion over the earth?",
+     "verification": "current-edition",
+     "justification": "Scripture's own phrase 'laws of the heavens' — a lawlike created order that man neither wrote nor administers; the honest biblical hook for law-of-nature queries.",
+     "sources": [
+      "ap-teleo"
+     ]
+    },
+    {
+     "ref": "Jeremiah 33:25",
+     "quote": "The LORD says: “If my covenant of day and night fails, if I have not appointed the ordinances of heaven and earth,",
+     "verification": "pinned",
+     "note": "Protasis; the sentence completes in v26.",
+     "justification": "The fixed ordinances of heaven and earth are so reliable God stakes covenant promises on them. Caveat: the passage's point is covenant certainty to Israel — the appointed natural order is the premise, not the topic.",
+     "sources": [
+      "ap-teleo"
+     ]
+    },
+    {
+     "ref": "Isaiah 45:18",
+     "quote": "For the LORD who created the heavens, the God who formed the earth and made it, who established it and didn’t create it a waste, who formed it to be inhabited says: “I am the LORD. There is no other.",
+     "verification": "current-edition",
+     "justification": "The earth 'formed to be inhabited' — explicit purpose-of-the-world statement. The no-other-God clause is Worker D's no-other-god ground; shared text, two honest registers.",
+     "sources": [
+      "manning-20",
+      "brief-6.1"
+     ]
+    },
+    {
+     "ref": "Psalm 104:24",
+     "quote": "LORD, how many are your works! In wisdom, you have made them all. The earth is full of your riches.",
+     "verification": "current-edition",
+     "justification": "The creation-psalm's summary verse after 23 verses of ecosystem detail: all of it made in wisdom.",
+     "sources": [
+      "ap-teleo"
+     ]
+    },
+    {
+     "ref": "Psalm 139:13-14",
+     "quote": "For you formed my inmost being. You knit me together in my mother’s womb. I will give thanks to you, for I am fearfully and wonderfully made. Your works are wonderful. My soul knows that very well.",
+     "verification": "pinned",
+     "justification": "Design brought down to the individual person — 'knit together', 'fearfully and wonderfully made'. Anchored for deliberate personal formation, not for any embryology claim.",
+     "sources": [
+      "manning-20"
+     ]
+    }
+   ],
+   "declined": [
+    "Proverbs 8:22-31 — rejected despite being the canon's richest wisdom-in-creation poem: the brief's disputed-text table places Prov 8 under a recorded no-Christ-identification rule (classic Arian proof-text), and anchoring it into the apologetics family invites exactly the contested-identification traffic the rule quarantines. Prov 3:19–20 teaches the same substance without the dispute. Deliberate omission, not oversight."
+   ],
+   "domain": "Creation & the knowable God (domains 1+5)"
+  },
+  {
+   "id": "conscience",
+   "case": "PENDING-TAG-GAP",
+   "definition": "Extension register on the pending tag-gap `conscience` row (Theme J): God's law written on every human heart — the inner witness that accuses and excuses, making right and wrong knowable to those who never received Scripture (moral-argument query family).",
+   "notes": "PENDING — proposed in tag-gaps-review, not merged; no display use until it merges. Per the brief's own instruction, extend this row rather than minting conscience-and-moral-law. Coordination flag: Rom 2:14–16 dual-anchors this row and those-who-never-heard.",
+   "anchors": [
+    {
+     "ref": "Romans 2:14-15",
+     "quote": "(for when Gentiles who don’t have the law do by nature the things of the law, these, not having the law, are a law to themselves, in that they show the work of the law written in their hearts, their conscience testifying with them, and their thoughts among themselves accusing or else excusing them)",
+     "verification": "pinned",
+     "justification": "The moral-argument tradition's central text actually teaches its premise: the law's work written on hearts, conscience as internal witness, in people with no revealed law. In context it serves Paul's indictment (all are accountable) — exactly the register the concept claims.",
+     "sources": [
+      "namb-moral",
+      "gq-moral",
+      "routledge"
+     ]
+    },
+    {
+     "ref": "Romans 2:16",
+     "quote": "in the day when God will judge the secrets of men, according to my Good News, by Jesus Christ.",
+     "verification": "pinned",
+     "justification": "Completes the sentence: the inner witness has a Judge — moral accountability, not mere moral feeling.",
+     "sources": [
+      "namb-moral"
+     ]
+    },
+    {
+     "ref": "Romans 1:32",
+     "quote": "who, knowing the ordinance of God, that those who practice such things are worthy of death, not only do the same, but also approve of those who practice them.",
+     "verification": "pinned",
+     "justification": "Moral knowledge possessed and suppressed — 'knowing the ordinance of God' while approving its breach; the knowledge is real even where it does not govern.",
+     "sources": [
+      "gq-moral"
+     ]
+    },
+    {
+     "ref": "Proverbs 20:27",
+     "quote": "The spirit of man is the LORD’s lamp, searching all his innermost parts.",
+     "verification": "current-edition",
+     "justification": "The inner faculty as the LORD's own lamp searching the person — Proverbs' one-verse anthropology of the examining inner witness.",
+     "sources": [
+      "gq-moral"
+     ]
+    },
+    {
+     "ref": "Micah 6:8",
+     "quote": "He has shown you, O man, what is good. What does the LORD require of you, but to act justly, to love mercy, and to walk humbly with your God?",
+     "verification": "pinned",
+     "justification": "'He has shown you, O man' — the good as shown, addressed generically. Caveat: the courtroom scene addresses covenant Israel, who had special revelation; do not overclaim it as a pure natural-law text.",
+     "sources": [
+      "gq-moral"
+     ]
+    },
+    {
+     "ref": "Ecclesiastes 3:11",
+     "quote": "He has made everything beautiful in its time. He has also set eternity in their hearts, yet so that man can’t find out the work that God has done from the beginning even to the end.",
+     "verification": "pinned",
+     "justification": "'Eternity in their hearts' — the implanted inner reach toward what outlasts us, paired honestly with the verse's own limit clause. Anchored for the inner-witness register, not as a moral-law text; if the row's final gist is strictly moral-conscience this anchor should move or drop — flagged for integration.",
+     "sources": [
+      "crossexamined"
+     ]
+    }
+   ],
+   "declined": [
+    "conscience-and-moral-law — not minted; folded into this pending row per the brief's instruction ('extend it rather than double-minting')."
+   ],
+   "domain": "Creation & the knowable God (domains 1+5)"
+  },
+  {
+   "id": "image-of-god",
+   "case": "EXISTING-extension",
+   "definition": "Extension register on the merged `image-of-god` id: every human being is made in God's image — the ground of human uniqueness, dignity, dominion, and personhood (imago-Dei / human-mind query family, e.g. 'what makes humans different from animals', 'why is human life sacred').",
+   "anchors": [
+    {
+     "ref": "Genesis 1:26-27",
+     "quote": "God said, “Let’s make man in our image, after our likeness. Let them have dominion over the fish of the sea, and over the birds of the sky, and over the livestock, and over all the earth, and over every creeping thing that creeps on the earth.” God created man in his own image. In God’s image he created him; male and female he created them.",
+     "verification": "pinned",
+     "justification": "The charter text: image, likeness, dominion, male and female — presumably already the pack's core anchor; listed for map completeness.",
+     "sources": [
+      "namb-moral",
+      "routledge"
+     ]
+    },
+    {
+     "ref": "Genesis 9:6",
+     "quote": "Whoever sheds man’s blood, his blood will be shed by man, for God made man in his own image.",
+     "verification": "current-edition",
+     "justification": "The image doctrine grounding the sanctity of human life after the fall — human worth is derivative of the image and survives Gen 3.",
+     "sources": [
+      "namb-moral"
+     ]
+    },
+    {
+     "ref": "Psalm 8:5-6",
+     "quote": "For you have made him a little lower than the angels, and crowned him with glory and honor. You make him ruler over the works of your hands. You have put all things under his feet:",
+     "verification": "current-edition",
+     "note": "v6 runs on into v7.",
+     "justification": "Crowned status and delegated rule — the psalmist's commentary on Gen 1:26–28, teaching human exceptionality within creation.",
+     "sources": [
+      "manning-20"
+     ]
+    },
+    {
+     "ref": "James 3:9",
+     "quote": "With it we bless our God and Father, and with it we curse men who are made in the image of God.",
+     "verification": "current-edition",
+     "justification": "NT confirmation that people are presently 'made in the image of God' — the image as a standing fact with ethical force, not an Eden-only status.",
+     "sources": [
+      "gq-soul"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "Creation & the knowable God (domains 1+5)"
+  },
+  {
+   "id": "the-breath-of-life",
+   "case": "NEW-MINT-conditional",
+   "definition": "Human beings live by God-breathed spirit — more than dust, a soul/spirit given by God, distinct from the body and returning to him.",
+   "notes": "Conditional mint — the brief-required extend-image-of-god check is surfaced to Jesse, not made silently. Recommendation: mint (distinct teaching substance and query family: 'do humans have souls', 'is the mind just the brain', 'what happens to the spirit at death'). If Jesse rules extend-instead, all anchors move onto image-of-god unchanged. Doctrinal note: takes no position on dichotomy vs trichotomy or philosophical dualism debates — gist stays at the texts' level.",
+   "anchors": [
+    {
+     "ref": "Genesis 2:7",
+     "quote": "The LORD God formed man from the dust of the ground, and breathed into his nostrils the breath of life; and man became a living soul.",
+     "verification": "pinned",
+     "justification": "The concept's namesake: dust plus divine breath makes 'a living soul'. Honest note: nephesh here means the whole living person (animals are also 'living souls' in Gen 1), so this anchor teaches God-breathed life; the distinct-spirit claim rests on the later anchors.",
+     "sources": [
+      "gq-soul",
+      "equip-soul"
+     ]
+    },
+    {
+     "ref": "Ecclesiastes 12:7",
+     "quote": "and the dust returns to the earth as it was, and the spirit returns to God who gave it.",
+     "verification": "current-edition",
+     "justification": "Gen 2:7 run in reverse at death: dust and spirit part ways, and the spirit 'returns to God who gave it' — the body/spirit distinction stated by the text itself.",
+     "sources": [
+      "gq-soul",
+      "equip-soul"
+     ]
+    },
+    {
+     "ref": "Zechariah 12:1",
+     "quote": "A revelation of the LORD’s word concerning Israel: The LORD, who stretches out the heavens and lays the foundation of the earth, and forms the spirit of man within him says:",
+     "verification": "current-edition",
+     "justification": "Forming 'the spirit of man within him' listed alongside stretching the heavens — the human spirit as a distinct divine workmanship, in a formal creation-credential formula.",
+     "sources": [
+      "equip-soul"
+     ]
+    },
+    {
+     "ref": "Job 32:8",
+     "quote": "But there is a spirit in man, and the Spirit of the Almighty gives them understanding.",
+     "verification": "current-edition",
+     "justification": "Understanding sourced in the God-given spirit, not age or flesh (Elihu against 'days should speak', v7). Caveat: Elihu is an uncorrected but human speaker; the claim is consonant with and carried by Gen 2:7 / Prov 20:27.",
+     "sources": [
+      "equip-soul"
+     ]
+    },
+    {
+     "ref": "Matthew 10:28",
+     "quote": "Don’t be afraid of those who kill the body, but are not able to kill the soul. Rather, fear him who is able to destroy both soul and body in Gehenna.",
+     "verification": "current-edition",
+     "justification": "Jesus distinguishes what men can kill (body) from what they cannot (soul) — the strongest dominical statement that the person is not exhausted by the body. In context it grounds fearless confession; the justification retains that rather than reducing the verse to an anthropology datum.",
+     "sources": [
+      "gq-soul",
+      "equip-soul"
+     ]
+    },
+    {
+     "ref": "2 Corinthians 4:16, 18",
+     "quote": "Therefore we don’t faint, but though our outward person is decaying, yet our inward person is renewed day by day. […] while we don’t look at the things which are seen, but at the things which are not seen. For the things which are seen are temporal, but the things which are not seen are eternal.",
+     "verification": "pinned",
+     "note": "Two verses; v17 elided, marked with bracketed ellipsis — each verse quoted word-for-word.",
+     "justification": "Outward person decaying while the inward person renews — Paul's lived body/inner-person distinction, aimed at endurance in suffering (context kept in the gist).",
+     "sources": [
+      "equip-soul"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "Creation & the knowable God (domains 1+5)"
+  },
+  {
+   "id": "those-who-never-heard",
+   "case": "EXISTING-extension",
+   "definition": "Merged A+C extension of the existing pack ('God's witness to all': which passages curated sources name for 'what about people who never heard' — creation's witness, conscience, the Spirit's conviction — adjudicating nothing about anyone's destiny). Anchors-only extension, no scope change. Existing pack anchors verified by Worker C: Rom 1:18-20 (torrey), Rom 2:14-15 (editorial), John 16:8 (editorial). Lexicon additions (register A): 'what about people who never heard the gospel', 'is God fair to those who never heard'. Related-edge addition (register C): jesus-the-only-way, both directions (Acts 17:30-31 follows directly on 17:26-27).",
+   "notes": "MERGED ENTRY: Workers A and C each proposed an extension of this id; integrated into one entry. C's two proposed anchors (Acts 17:26-27; Acts 14:16-17) were the same texts A proposed — justifications and sources merged, true duplicates dropped. Binding coordination flag (A): Rom 1:19-20, Rom 2:14-16, and Acts 14/17 each anchor two concepts in this map — general revelation stated once, consumed by two question families. Recorded as one deliberate design decision (Decision 3), not drift.",
+   "anchors": [
+    {
+     "ref": "Romans 1:19-20",
+     "quote": "because that which is known of God is revealed in them, for God revealed it to them. For the invisible things of him since the creation of the world are clearly seen, being perceived through the things that are made, even his everlasting power and divinity, that they may be without excuse.",
+     "verification": "pinned",
+     "justification": "Already this id's ground: the witness reaches everyone, so no one is excuse-holding for lack of revelation. Dual-anchored with creation-testifies.",
+     "sources": [
+      "routledge",
+      "crossexamined",
+      "manning-20"
+     ]
+    },
+    {
+     "ref": "Acts 17:26-27",
+     "quote": "He made from one blood every nation of men to dwell on all the surface of the earth, having determined appointed seasons and the boundaries of their dwellings, that they should seek the Lord, if perhaps they might reach out for him and find him, though he is not far from each one of us.",
+     "verification": "pinned",
+     "justification": "God's placement of every nation is aimed at seeking and finding him — directly answers the is-God-reachable half of the never-heard question. [C, merged:] Athens — God's providential arrangement of every nation is purposed toward seeking and finding him, the pack's exact register, from the one NT speech addressed wholly to pagans.",
+     "sources": [
+      "crossexamined",
+      "editorial",
+      "routledge"
+     ]
+    },
+    {
+     "ref": "Acts 14:16-17",
+     "quote": "who in the generations gone by allowed all the nations to walk in their own ways. Yet he didn’t leave himself without witness, in that he did good and gave you rains from the sky and fruitful seasons, filling our hearts with food and gladness.",
+     "verification": "current-edition",
+     "justification": "The nations walked their own ways, yet were never without witness — the two clauses of the never-heard question in one sentence. [C, merged:] Lystra — 'he didn't leave himself without witness': providence itself as testimony to nations outside the covenant.",
+     "sources": [
+      "crossexamined",
+      "editorial",
+      "manning-20"
+     ]
+    },
+    {
+     "ref": "Romans 2:14-16",
+     "quote": "(for when Gentiles who don’t have the law do by nature the things of the law, these, not having the law, are a law to themselves, in that they show the work of the law written in their hearts, their conscience testifying with them, and their thoughts among themselves accusing or else excusing them) in the day when God will judge the secrets of men, according to my Good News, by Jesus Christ.",
+     "verification": "pinned",
+     "justification": "The inner witness is the never-heard question's second leg: those without the law are judged by the law written on their hearts. Dual-anchored with the pending conscience row.",
+     "sources": [
+      "namb-moral",
+      "gq-moral"
+     ]
+    }
+   ],
+   "declined": [
+    "1 Corinthians 14:33 as a scripture-sufficiency / no-competing-revelation anchor anywhere in this domain: in context the sentence regulates orderly congregational prophecy and tongues (14:40 'decently and in order'); that God's character excludes competing revelations is an inference the verse does not teach. Stays in the dialogue map as the conversation's own citation, attributed; no concept anchor. WEB (current-edition, verified): 'for God is not a God of confusion but of peace, as in all the assemblies of the saints.' Consulted: https://www.gotquestions.org/God-is-not-the-author-of-confusion.html"
+   ],
+   "domain": "A + C (merged; listed under Domain A)"
+  },
+  {
+   "id": "leviathan-and-behemoth",
+   "case": "PENDING-TAG-GAP",
+   "definition": "The untamable creatures of Job 40–41 — God's own exhibits of creative power that humble human pretension. Reuses the pending Theme E row (flagged in the review itself as creation/origins query traffic).",
+   "notes": "PENDING — not merged; no display use until it is. Handling rule per the antichrist/Ezek-28 precedents: the concept never adjudicates any identification (dinosaur, hippopotamus, crocodile, symbolic) — consulted references themselves split. Origins queries ('dinosaurs in the bible') reach these passages via lexicon; the gist stays identification-free. Job 40–41 is outside web-subset.json, so golden-fixture assertions ride the corpus-expansion PR.",
+   "anchors": [
+    {
+     "ref": "Job 40:15",
+     "quote": "“See now behemoth, which I made as well as you. He eats grass as an ox.",
+     "verification": "current-edition",
+     "justification": "'Which I made as well as you' — creature and man are exhibits of the same Maker; that co-creature clause is the verse's own point.",
+     "sources": [
+      "knowableword-job",
+      "thirdmill-job"
+     ]
+    },
+    {
+     "ref": "Job 40:19",
+     "quote": "He is the chief of the ways of God. He who made him gives him his sword.",
+     "verification": "current-edition",
+     "justification": "Behemoth as 'chief of the ways of God' — supreme workmanship, subduable only by his Maker.",
+     "sources": [
+      "knowableword-job"
+     ]
+    },
+    {
+     "ref": "Job 41:1",
+     "quote": "“Can you draw out Leviathan with a fish hook, or press down his tongue with a cord?",
+     "verification": "current-edition",
+     "justification": "The rhetorical challenge that structures the whole Leviathan speech: human incapacity before one creature.",
+     "sources": [
+      "thirdmill-job"
+     ]
+    },
+    {
+     "ref": "Job 41:11",
+     "quote": "Who has first given to me, that I should repay him? Everything under the heavens is mine.",
+     "verification": "current-edition",
+     "justification": "The speech's theological center: from creature-power to Creator-ownership. (Later taken up by Paul, Rom 11:35 — attributed fact, never read back onto Job.)",
+     "sources": [
+      "thirdmill-job"
+     ]
+    },
+    {
+     "ref": "Job 41:33-34",
+     "quote": "On earth there is not his equal, that is made without fear. He sees everything that is high. He is king over all the sons of pride.”",
+     "verification": "current-edition",
+     "justification": "The closing superlative — the creature as living rebuke to human pride, which is the speech's function in Job's story.",
+     "sources": [
+      "knowableword-job",
+      "thirdmill-job"
+     ]
+    },
+    {
+     "ref": "Psalm 104:26",
+     "quote": "There the ships go, and leviathan, whom you formed to play there.",
+     "verification": "current-edition",
+     "justification": "Leviathan outside Job: formed by God 'to play' in the sea — guards the concept against pure-monster readings.",
+     "sources": [
+      "knowableword-job"
+     ]
+    }
+   ],
+   "declined": [
+    "knowing-god register (Jer 9:23–24, Acts 17:27 as knowability) — deferred, not drafted: the tag-gap row is Theme C and the §8 split does not assign it to Worker A; its natural-theology edge is covered under creation-testifies. Left to integration to avoid a cross-worker double-mint.",
+    "Job 38–42 as theodicy — not claimed by Worker A; whirlwind-speech anchors here cover only the making and the creatures. Worker B owns why-god-allows-suffering; Job 38:4 possible dual-anchor flagged.",
+    "Psalm 82:6 — out-of-scope confirmation: appears in deification/origins query traffic but has no creation-domain teaching substance; the brief's disputed-text table already assigns its handling (justice-register concepts; deification guard fixtures)."
+   ],
+   "domain": "Creation & the knowable God (domains 1+5)"
+  },
+  {
+   "id": "why-god-allows-suffering",
+   "case": "NEW-MINT",
+   "definition": "Scripture's own answers - and its refusals to answer - to why a good, sovereign God permits evil and suffering.",
+   "anchors": [
+    {
+     "ref": "Job 1:21",
+     "quote": "He said, “Naked I came out of my mother’s womb, and naked will I return there. The LORD gave, and the LORD has taken away. Blessed be the LORD’s name.”",
+     "verification": "pinned",
+     "justification": "In context Job has just lost children and property to Satan's assault, permitted but bounded by God (1:12); the book poses innocent suffering as sharply as any philosopher and answers first with worship, not explanation.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/",
+      "https://knowingscripture.com/articles/job-and-the-problem-of-evil"
+     ]
+    },
+    {
+     "ref": "Job 42:2, 5",
+     "quote": "“I know that you can do all things, and that no purpose of yours can be restrained. … I had heard of you by the hearing of the ear, but now my eye sees you.",
+     "verification": "current-edition",
+     "justification": "God's answer to Job is his own presence and unsearchable governance (chs. 38-41), not a disclosed reason; Job's resolution is encounter, and the book never tells Job about chapter 1. Anchors Scripture's mystery-shaped answer.",
+     "sources": [
+      "https://knowingscripture.com/articles/job-and-the-problem-of-evil",
+      "https://frame-poythress.org/the-bible-on-the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "Genesis 50:20",
+     "quote": "As for you, you meant evil against me, but God meant it for good, to save many people alive, as is happening today.",
+     "verification": "current-edition",
+     "justification": "Joseph names the brothers' act genuinely evil and God's purpose in the same event genuinely good - the clearest canonical statement that God sovereignly works through evil he does not excuse; spoken after Jacob's death, closing the whole Joseph narrative.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "John 9:2-3",
+     "quote": "His disciples asked him, “Rabbi, who sinned, this man or his parents, that he was born blind?” Jesus answered, “This man didn’t sin, nor did his parents, but that the works of God might be revealed in him.",
+     "verification": "current-edition",
+     "justification": "Jesus explicitly rejects the suffering-equals-punishment calculus for this man and reframes the affliction toward God's purpose. Caveat: he answers this case, not every case - do not generalize into 'all suffering exists to display miracles.'",
+     "sources": [
+      "https://frame-poythress.org/the-bible-on-the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "Luke 13:2-5",
+     "quote": "Jesus answered them, “Do you think that these Galileans were worse sinners than all the other Galileans, because they suffered such things? I tell you, no, but unless you repent, you will all perish in the same way. Or those eighteen on whom the tower in Siloam fell and killed them—do you think that they were worse offenders than all the men who dwell in Jerusalem? I tell you, no, but, unless you repent, you will all perish in the same way.”",
+     "verification": "current-edition",
+     "justification": "On two current calamities Jesus denies that the victims were worse sinners and turns the question into a summons to repentance - Scripture's own handling of 'why did this disaster happen.'",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "Romans 8:18",
+     "quote": "For I consider that the sufferings of this present time are not worthy to be compared with the glory which will be revealed toward us.",
+     "verification": "pinned",
+     "justification": "In the chapter's argument (creation groaning, vv. 19-23) present suffering is real but outweighed and temporary within God's redemptive arc - an eschatological, not explanatory, answer.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "Romans 8:28",
+     "quote": "We know that all things work together for good for those who love God, for those who are called according to his purpose.",
+     "verification": "pinned",
+     "justification": "The 'good' is defined by v. 29 (conformity to Christ's image), not circumstantial ease - the justification must carry that scope to avoid prosperity-adjacent misuse. Coordination: this text is owned by existing remembered-all-things-for-good; cross-listed deliberately, integration pass decides anchor vs lexicon pointer.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "2 Corinthians 4:17-18",
+     "quote": "For our light affliction, which is for the moment, works for us more and more exceedingly an eternal weight of glory, while we don’t look at the things which are seen, but at the things which are not seen. For the things which are seen are temporal, but the things which are not seen are eternal.",
+     "verification": "pinned",
+     "justification": "Paul, cataloguing real afflictions (vv. 8-12), teaches that suffering is productive within God's economy - the soul-building register of theodicy.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "1 Peter 4:19",
+     "quote": "Therefore let them also who suffer according to the will of God in doing good entrust their souls to him, as to a faithful Creator.",
+     "verification": "pinned",
+     "justification": "States plainly that some suffering is 'according to the will of God' and that the response is entrusting oneself to a faithful Creator. Context caveat: the chapter's suffering is primarily persecution (vv. 12-16), so this borders suffering-for-christ; kept because v. 19 states the principle at the level of suffering in doing good generally.",
+     "sources": [
+      "https://frame-poythress.org/the-bible-on-the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "Revelation 21:4",
+     "quote": "He will wipe away every tear from their eyes. Death will be no more; neither will there be mourning, nor crying, nor pain any more. The first things have passed away.”",
+     "verification": "pinned",
+     "justification": "Scripture's final answer to evil is its promised end - not explanation but abolition. Display ownership of this text stays with new-heaven-and-earth; anchored here so where-is-God queries surface it with this reason.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    }
+   ],
+   "declined": [
+    {
+     "item": "Isaiah 45:7",
+     "reason": "In context Yahweh's self-declaration against Babylonian dualism addressed to Cyrus, not a theodicy answer; unglossed it invites 'God creates moral evil' misreadings display copy must not adjudicate. Belongs, if anywhere, with the PENDING sovereignty-of-god row with editorial handling."
+    },
+    {
+     "item": "Romans 5:3-4 / James 1:2-4",
+     "reason": "Verified (Rom 5:3-4 pinned) but owned by existing remembered-joy-in-trials and testing; reached by related edge, not duplicate anchors."
+    },
+    {
+     "item": "evil-will-not-win (concept mint)",
+     "reason": "Declined per the brief's own fold flag: final-reckoning register belongs to existing divine-judgment / new-heaven-and-earth lexicons; Rev 21:4 anchored under this umbrella with overlap noted."
+    }
+   ],
+   "domain": "Suffering & resurrection (domains 2+3)"
+  },
+  {
+   "id": "suffering-of-the-righteous",
+   "case": "PENDING-TAG-GAP",
+   "definition": "The righteous do suffer - Scripture's candid witness that affliction is not proportional to godliness.",
+   "anchors": [
+    {
+     "ref": "Job 1:8",
+     "quote": "The LORD said to Satan, “Have you considered my servant, Job? For there is no one like him on the earth, a blameless and an upright man, one who fears God, and turns away from evil.”",
+     "verification": "pinned",
+     "justification": "The narrator and God himself certify Job's integrity before the suffering - the book's argument depends on the sufferer being righteous, dismantling the friends' retribution theology.",
+     "sources": [
+      "https://knowingscripture.com/articles/job-and-the-problem-of-evil"
+     ]
+    },
+    {
+     "ref": "Job 2:3",
+     "quote": "The LORD said to Satan, “Have you considered my servant Job? For there is no one like him on the earth, a blameless and an upright man, one who fears God, and turns away from evil. He still maintains his integrity, although you incited me against him, to ruin him without cause.”",
+     "verification": "current-edition",
+     "justification": "God's own words: the ruin was 'without cause' - the text itself denies that Job's suffering was deserved.",
+     "sources": [
+      "https://knowingscripture.com/articles/job-and-the-problem-of-evil"
+     ]
+    },
+    {
+     "ref": "Job 2:10",
+     "quote": "But he said to her, “You speak as one of the foolish women would speak. What? Shall we receive good at the hand of God, and shall we not receive evil?” In all this Job didn’t sin with his lips.",
+     "verification": "current-edition",
+     "justification": "Job's stated posture: receiving adversity from God's hand without charging God with wrong - righteousness within suffering, not just before it.",
+     "sources": [
+      "https://knowingscripture.com/articles/job-and-the-problem-of-evil"
+     ]
+    },
+    {
+     "ref": "Psalm 34:19",
+     "quote": "Many are the afflictions of the righteous, but the LORD delivers him out of them all.",
+     "verification": "pinned",
+     "justification": "Both halves in one verse: the righteous have many afflictions, and the LORD's deliverance is the psalm's confidence. Guard: 'delivers him out of them all' is testimony of God's faithfulness, not a formula of exemption (named prosperity-framing exclusion).",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "Psalm 44:17, 22",
+     "quote": "All this has come on us, yet we haven’t forgotten you. We haven’t been false to your covenant. … Yes, for your sake we are killed all day long. We are regarded as sheep for the slaughter.",
+     "verification": "current-edition",
+     "justification": "A whole-psalm protest that covenant faithfulness did not prevent national catastrophe; v. 22 is the verse Paul cites in Rom 8:36 (stated as attributed NT use, not read back onto the psalm).",
+     "sources": [
+      "https://www.blueletterbible.org/Comm/mhc/Psa/Psa_073.cfm"
+     ]
+    },
+    {
+     "ref": "Ecclesiastes 7:15",
+     "quote": "All this I have seen in my days of vanity: there is a righteous man who perishes in his righteousness, and there is a wicked man who lives long in his evildoing.",
+     "verification": "current-edition",
+     "justification": "The Preacher's observed data point against any tidy righteousness-equals-outcomes scheme, from inside the canon's wisdom literature.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "Habakkuk 1:13",
+     "quote": "You who have purer eyes than to see evil, and who cannot look on perversity, why do you tolerate those who deal treacherously and keep silent when the wicked swallows up the man who is more righteous than he,",
+     "verification": "current-edition",
+     "justification": "The prophet puts the theodicy question to God from God's own holiness - canonical warrant that the question itself is faithful speech. Also serves prosperity-of-the-wicked; anchored once, here, with a cross edge.",
+     "sources": [
+      "https://www.blueletterbible.org/Comm/mhc/Psa/Psa_073.cfm"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "Suffering & resurrection (domains 2+3)"
+  },
+  {
+   "id": "prosperity-of-the-wicked",
+   "case": "PENDING-TAG-GAP",
+   "definition": "Scripture's open grievance that the wicked flourish - and where the psalmists take that grievance.",
+   "anchors": [
+    {
+     "ref": "Psalm 73:3",
+     "quote": "For I was envious of the arrogant, when I saw the prosperity of the wicked.",
+     "verification": "pinned",
+     "justification": "Asaph's thesis statement; the whole psalm is the canon's fullest treatment of this stumbling block, voiced by a worship leader.",
+     "sources": [
+      "https://www.blueletterbible.org/Comm/mhc/Psa/Psa_073.cfm"
+     ]
+    },
+    {
+     "ref": "Psalm 73:12",
+     "quote": "Behold, these are the wicked. Being always at ease, they increase in riches.",
+     "verification": "pinned",
+     "justification": "The observation at its sharpest, immediately before the psalmist admits he almost lost his footing (vv. 2, 13-14).",
+     "sources": [
+      "https://www.blueletterbible.org/Comm/mhc/Psa/Psa_073.cfm"
+     ]
+    },
+    {
+     "ref": "Psalm 73:16-17",
+     "quote": "When I tried to understand this, it was too painful for me— until I entered God’s sanctuary, and considered their latter end.",
+     "verification": "pinned",
+     "justification": "The psalm's hinge: the answer arrives not as an argument but in worship and an eschatological horizon - the model resolution this concept should surface first.",
+     "sources": [
+      "https://www.blueletterbible.org/Comm/mhc/Psa/Psa_073.cfm"
+     ]
+    },
+    {
+     "ref": "Psalm 73:26",
+     "quote": "My flesh and my heart fails, but God is the strength of my heart and my portion forever.",
+     "verification": "pinned",
+     "justification": "Where the psalm lands: God himself, not adjusted circumstances, is the portion - guards the concept against a prosperity-shaped resolution.",
+     "sources": [
+      "https://www.blueletterbible.org/Comm/mhc/Psa/Psa_073.cfm"
+     ]
+    },
+    {
+     "ref": "Job 21:7",
+     "quote": "“Why do the wicked live, become old, yes, and grow mighty in power?",
+     "verification": "current-edition",
+     "justification": "Job's rebuttal of Zophar: observed reality contradicts the friends' claim that the wicked visibly perish; the canon lets this stand as data.",
+     "sources": [
+      "https://knowingscripture.com/articles/job-and-the-problem-of-evil"
+     ]
+    },
+    {
+     "ref": "Jeremiah 12:1",
+     "quote": "You are righteous, LORD, when I contend with you; yet I would like to plead a case with you. Why does the way of the wicked prosper? Why are they all at ease who deal very treacherously?",
+     "verification": "current-edition",
+     "justification": "The prophet files the complaint as a legal case while confessing God righteous - grievance and faith held together in one verse.",
+     "sources": [
+      "https://www.blueletterbible.org/Comm/mhc/Psa/Psa_073.cfm"
+     ]
+    },
+    {
+     "ref": "Psalm 37:1, 35-36",
+     "quote": "By David. Don’t fret because of evildoers, neither be envious against those who work unrighteousness. … I have seen the wicked in great power, spreading himself like a green tree in its native soil. But he passed away, and behold, he was not. Yes, I sought him, but he could not be found.",
+     "verification": "pinned",
+     "justification": "The wisdom-psalm counterpart: the prosperity is real but transient; counsel ('don't fret') plus eyewitness observation of the wicked's passing.",
+     "sources": [
+      "https://www.blueletterbible.org/Comm/mhc/Psa/Psa_073.cfm"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "Suffering & resurrection (domains 2+3)"
+  },
+  {
+   "id": "resurrection",
+   "case": "EXISTING-extension",
+   "definition": "EXTENSION register for the existing Easter-scoped concept: Christ's resurrection as a bodily, witnessed event - the appearances, the named eyewitnesses, and the apostolic insistence that everything hangs on it. Resolves tag-gaps-review 1(a): do NOT mint witnesses-of-the-resurrection. MERGED ENTRY: Worker D's coordination-only bodily-resurrection set (Luke 24:39; Luke 24:42-43; John 20:27; John 2:19-21; 1 John 1:1; Acts 2:31-32) merged in per the brief — D minted nothing. Five of D's six anchors were already carried by B's set (same, wider, or — in the John 2 case — deliberately narrowed spans: B's \"John 2:19, 21\" drops v20, where D had 2:19-21); the sixth widened B's Acts 2:32 to Acts 2:31-32. The JW-dialogue bodily-resurrection topic (brief §6.2 row 3) is served by this one entry.",
+   "anchors": [
+    {
+     "ref": "1 Corinthians 15:3-6",
+     "quote": "For I delivered to you first of all that which I also received: that Christ died for our sins according to the Scriptures, that he was buried, that he was raised on the third day according to the Scriptures, and that he appeared to Cephas, then to the twelve. Then he appeared to over five hundred brothers at once, most of whom remain until now, but some have also fallen asleep.",
+     "verification": "pinned",
+     "justification": "Paul marks this as tradition he 'received' - the early creed at the center of the minimal-facts literature, with a named and living eyewitness list. The passage teaches the witnessed resurrection; its evidential use in apologetics is downstream of what it says.",
+     "sources": [
+      "https://rabbitroomapologetics.substack.com/p/the-minimal-facts-method-for-the",
+      "https://crossexamined.org/the-evidential-value-of-1-corinthians-153-8-to-the-case-for-the-resurrection/"
+     ]
+    },
+    {
+     "ref": "1 Corinthians 15:14, 17",
+     "quote": "If Christ has not been raised, then our preaching is in vain and your faith also is in vain. … If Christ has not been raised, your faith is vain; you are still in your sins.",
+     "verification": "pinned",
+     "justification": "Paul stakes the faith's truth on a falsifiable historical claim - the canon's own warrant for treating the resurrection as evidence-apt rather than merely symbolic.",
+     "sources": [
+      "https://crossexamined.org/the-minimal-facts-of-the-resurrection/"
+     ]
+    },
+    {
+     "ref": "Luke 24:39",
+     "quote": "See my hands and my feet, that it is truly me. Touch me and see, for a spirit doesn’t have flesh and bones, as you see that I have.”",
+     "verification": "pinned",
+     "justification": "The risen Jesus's own contrast: not 'a spirit,' but flesh and bones, offered for touch - the plain-sense bodily claim, in context answering the disciples' fear that they saw a spirit (v. 37). Directly answers the spiritual-resurrection-only reading.",
+     "sources": [
+      "https://www.catholic.com/qa/was-jesus-resurrection-of-a-physical-or-purely-spiritual-nature",
+      "https://apologeticspress.org/did-jesus-have-the-same-physical-body-after-his-resurrection-673/"
+     ]
+    },
+    {
+     "ref": "Luke 24:42-43",
+     "quote": "They gave him a piece of a broiled fish and some honeycomb. He took them, and ate in front of them.",
+     "verification": "pinned",
+     "justification": "Eating 'in front of them' is Luke's deliberate physical demonstration - narrated as evidence within the text itself (v. 41).",
+     "sources": [
+      "https://www.catholic.com/qa/was-jesus-resurrection-of-a-physical-or-purely-spiritual-nature"
+     ]
+    },
+    {
+     "ref": "John 20:27-28",
+     "quote": "Then he said to Thomas, “Reach here your finger, and see my hands. Reach here your hand, and put it into my side. Don’t be unbelieving, but believing.” Thomas answered him, “My Lord and my God!”",
+     "verification": "current-edition",
+     "justification": "The wounds of the crucified body on the risen one - continuity of the same body - and Thomas's unrebuked confession. The confession itself is deity-of-christ ground (Worker D's lane); anchored here for the touch-the-wounds evidence, with a cross edge.",
+     "sources": [
+      "https://apologeticspress.org/did-jesus-have-the-same-physical-body-after-his-resurrection-673/"
+     ]
+    },
+    {
+     "ref": "John 2:19, 21",
+     "quote": "Jesus answered them, “Destroy this temple, and in three days I will raise it up.” … But he spoke of the temple of his body.",
+     "verification": "current-edition",
+     "justification": "The evangelist's own gloss fixes the referent: the raised 'temple' is his body - Jesus predicted a bodily resurrection per the text's explicit interpretation, not an inference.",
+     "sources": [
+      "https://www.catholic.com/qa/was-jesus-resurrection-of-a-physical-or-purely-spiritual-nature"
+     ]
+    },
+    {
+     "ref": "Acts 1:3",
+     "quote": "To these he also showed himself alive after he suffered, by many proofs, appearing to them over a period of forty days and speaking about God’s Kingdom.",
+     "verification": "pinned",
+     "justification": "Luke's summary uses the language of demonstration - 'many proofs' over forty days - the canon itself framing the appearances evidentially.",
+     "sources": [
+      "https://crossexamined.org/the-minimal-facts-of-the-resurrection/"
+     ]
+    },
+    {
+     "ref": "Acts 2:31-32",
+     "quote": "he foreseeing this, spoke about the resurrection of the Christ, that his soul wasn’t left in Hades, and his flesh didn’t see decay. This Jesus God raised up, to which we all are witnesses.",
+     "verification": "pinned",
+     "justification": "The first public apostolic sermon, in Jerusalem weeks after the events, rests its claim on collective eyewitness — 'we all are witnesses' — and defines the resurrection in terms of flesh: 'his flesh didn't see decay'. [Widened from B's Acts 2:32 by merging D's Acts 2:31-32 bodily-register anchor.]",
+     "sources": [
+      "https://crossexamined.org/the-minimal-facts-of-the-resurrection/",
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Acts 17:31",
+     "quote": "because he has appointed a day in which he will judge the world in righteousness by the man whom he has ordained; of which he has given assurance to all men, in that he has raised him from the dead.”",
+     "verification": "pinned",
+     "justification": "To a pagan philosophical audience Paul offers the resurrection as God's public 'assurance' - Scripture's own model of resurrection-as-apologetic.",
+     "sources": [
+      "https://rabbitroomapologetics.substack.com/p/the-minimal-facts-method-for-the"
+     ]
+    },
+    {
+     "ref": "1 John 1:1-2",
+     "quote": "That which was from the beginning, that which we have heard, that which we have seen with our eyes, that which we saw, and our hands touched, concerning the Word of life (and the life was revealed, and we have seen, and testify, and declare to you the life, the eternal life, which was with the Father, and was revealed to us);",
+     "verification": "pinned",
+     "justification": "First-person sensory testimony - heard, seen, touched - opening a letter whose stated purpose is testimony. Scope caveat carried honestly: the referent is the whole incarnate life of the Word, not the resurrection appearances alone.",
+     "sources": [
+      "https://crossexamined.org/the-minimal-facts-of-the-resurrection/"
+     ]
+    }
+   ],
+   "declined": [
+    {
+     "item": "witnesses-of-the-resurrection (concept mint)",
+     "reason": "Declined as a mint: the evidence register sits honestly within existing resurrection's Easter scope; minting beside it is the near-duplicate G4 rejects, and review 1(a) demanded one decision for the family. Resolved as extend resurrection + reuse resurrection-of-the-dead."
+    },
+    {
+     "item": "2 Peter 1:16",
+     "reason": "Context check fails for resurrection: 'eyewitnesses of his majesty' is, per vv. 17-18, the Transfiguration ('with him on the holy mountain'). Classic apologetics use fails the teaches-X vs used-in-arguments-about-X test; belongs, if anywhere, with the PENDING witness-testimony row."
+    },
+    {
+     "item": "Mark 16:9-14",
+     "reason": "Longer ending is the best-known disputed Gospel text; every appearance it reports is carried by undisputed text in Luke 24 / John 20 / 1 Cor 15."
+    },
+    {
+     "item": "Matthew 12:40",
+     "reason": "Genuinely records Jesus foretelling three days 'in the heart of the earth,' but the pericope's plain point is the refusal of a sign to an evil generation; the prediction register is already carried by John 2:19-21 where the evangelist's own gloss does the interpretive work."
+    },
+    {
+     "item": "Isaiah 53:10-11; Hosea 6:2",
+     "reason": "No-read-back rule: their resurrection significance is NT-attributed ('according to the Scriptures') - the PENDING messianic-prophecy row's attributed-fact territory (Workers C/D), not a bare fact about the OT chapters."
+    }
+   ],
+   "domain": "B + D (merged; listed under Domain B)"
+  },
+  {
+   "id": "resurrection-of-the-dead",
+   "case": "PENDING-TAG-GAP",
+   "definition": "The promised resurrection of the dead - Christ as first fruits, the raising of all people to life or judgment, and the believer's embodied hope. Takes the general-resurrection half of the one resurrection-scoping decision.",
+   "anchors": [
+    {
+     "ref": "1 Corinthians 15:20",
+     "quote": "But now Christ has been raised from the dead. He became the first fruit of those who are asleep.",
+     "verification": "pinned",
+     "justification": "The load-bearing link between the two resurrection concepts: Christ's resurrection is 'first fruit' - the same harvest the dead in Christ will join. This verse is why the two-id split has a principled boundary.",
+     "sources": [
+      "https://rabbitroomapologetics.substack.com/p/the-minimal-facts-method-for-the"
+     ]
+    },
+    {
+     "ref": "1 Corinthians 15:42-44",
+     "quote": "So also is the resurrection of the dead. The body is sown perishable; it is raised imperishable. It is sown in dishonor; it is raised in glory. It is sown in weakness; it is raised in power. It is sown a natural body; it is raised a spiritual body. There is a natural body and there is also a spiritual body.",
+     "verification": "pinned",
+     "justification": "The fullest canonical description of the resurrection body: fourfold 'sown ... raised' continuity-with-transformation, and the subject of every clause is the body. Handling note: 'spiritual body' is sometimes read as immaterial; the passage's own contrast is perishable/imperishable - state the sown/raised structure and let the text carry it; any fuller anti-immaterial gloss is sources:[editorial].",
+     "sources": [
+      "https://www.catholic.com/qa/was-jesus-resurrection-of-a-physical-or-purely-spiritual-nature"
+     ]
+    },
+    {
+     "ref": "Daniel 12:2",
+     "quote": "Many of those who sleep in the dust of the earth will awake, some to everlasting life, and some to shame and everlasting contempt.",
+     "verification": "current-edition",
+     "justification": "The OT's clearest resurrection text: sleepers in the dust awaking to two destinies - in its own context, without NT read-back.",
+     "sources": [
+      "https://evidenceunseen.com/old-testament/job/difficulties/does-this-passage-refer-to-the-concept-of-resurrection"
+     ]
+    },
+    {
+     "ref": "John 5:28-29",
+     "quote": "Don’t marvel at this, for the hour comes in which all who are in the tombs will hear his voice and will come out; those who have done good, to the resurrection of life; and those who have done evil, to the resurrection of judgment.",
+     "verification": "current-edition",
+     "justification": "Jesus teaches a universal, tomb-emptying resurrection to two outcomes, at his own voice. Two-outcomes wording borders divine-judgment / hell - cross edges; justification stays descriptive per the no-adjudication rule.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "John 11:25-26",
+     "quote": "Jesus said to her, “I am the resurrection and the life. He who believes in me will still live, even if he dies. Whoever lives and believes in me will never die. Do you believe this?”",
+     "verification": "pinned",
+     "justification": "Spoken to a grieving Martha at a real grave: resurrection hope located in Jesus's person, immediately enacted in sign at Lazarus's tomb. Overlaps the PENDING i-am-sayings row - coordinate, don't duplicate.",
+     "sources": [
+      "https://www.catholic.com/qa/was-jesus-resurrection-of-a-physical-or-purely-spiritual-nature"
+     ]
+    },
+    {
+     "ref": "Acts 24:15",
+     "quote": "having hope toward God, which these also themselves look for, that there will be a resurrection of the dead, both of the just and unjust.",
+     "verification": "current-edition",
+     "justification": "Paul before Felix states the general resurrection - 'both of the just and unjust' - as shared Jewish hope and his own; the phrase is the concept's name in the text.",
+     "sources": [
+      "https://crossexamined.org/the-minimal-facts-of-the-resurrection/"
+     ]
+    },
+    {
+     "ref": "1 Thessalonians 4:13-14",
+     "quote": "But we don’t want you to be ignorant, brothers, concerning those who have fallen asleep, so that you don’t grieve like the rest, who have no hope. For if we believe that Jesus died and rose again, even so God will bring with him those who have fallen asleep in Jesus.",
+     "verification": "pinned",
+     "justification": "The pastoral payload of the doctrine: grief with hope, grounded explicitly in Christ's resurrection. Cross edge to caught-up-together, which owns vv. 16-17.",
+     "sources": [
+      "https://www.thegospelcoalition.org/essay/the-problem-of-evil/"
+     ]
+    },
+    {
+     "ref": "Philippians 3:20-21",
+     "quote": "For our citizenship is in heaven, from where we also wait for a Savior, the Lord Jesus Christ, who will change the body of our humiliation to be conformed to the body of his glory, according to the working by which he is able even to subject all things to himself.",
+     "verification": "current-edition",
+     "justification": "The believer's hope is a changed body conformed to Christ's glorified body - embodiment, not escape from it.",
+     "sources": [
+      "https://www.catholic.com/qa/was-jesus-resurrection-of-a-physical-or-purely-spiritual-nature"
+     ]
+    },
+    {
+     "ref": "Job 19:25-27",
+     "quote": "But as for me, I know that my Redeemer lives. In the end, he will stand upon the earth. After my skin is destroyed, then I will see God in my flesh, whom I, even I, will see on my side. My eyes will see, and not as a stranger. “My heart is consumed within me.",
+     "verification": "current-edition",
+     "justification": "CAVEAT ANCHOR (low weight, sources:[editorial] for the resurrection reading): WEB renders 'in my flesh,' and on that rendering Job confesses hope of seeing God beyond death with a living Redeemer as guarantor. The Hebrew of v. 26 is famously difficult and 'from my flesh' (apart from it) is a live scholarly reading - never present as a load-bearing bodily-resurrection proof; it anchors the hope-beyond-death register as the WEB text reads, dispute noted.",
+     "sources": [
+      "https://evidenceunseen.com/old-testament/job/difficulties/does-this-passage-refer-to-the-concept-of-resurrection",
+      "https://bhebrew.biblicalhumanities.org/viewtopic.php?t=22699",
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    }
+   ],
+   "declined": [
+    {
+     "item": "lament; unanswered-prayer (PENDING rows)",
+     "reason": "Adjacent to the theodicy family but not scoped to Worker B by the brief's split (section 8). Noted as neighbours for related edges; not drafted here."
+    },
+    {
+     "item": "Psalm 82:6 family",
+     "reason": "Out of this domain (deification dispute, Worker D / disputed-texts table); noted because resurrection-hope queries occasionally pull it in - the brief's mustNotRank guard fixture recommendation stands."
+    },
+    {
+     "item": "Revelation 20:12-13",
+     "reason": "Teaches the dead raised for judgment but sits inside the millennial-sequence passage; anchoring it would drag the concept into end-times sequencing the DOCTRINAL-BASIS section-4 non-criteria fence off. John 5:28-29 and Acts 24:15 carry the both-destinies register on unfenced ground."
+    }
+   ],
+   "domain": "Suffering & resurrection (domains 2+3)"
+  },
+  {
+   "id": "trustworthiness-of-scripture",
+   "case": "PENDING-TAG-GAP",
+   "definition": "Scripture is God-breathed, flawless, and true — trustworthy in what it affirms and sufficient to equip God's people for every good work.",
+   "anchors": [
+    {
+     "ref": "2 Timothy 3:16-17",
+     "quote": "Every Scripture is God-breathed and profitable for teaching, for reproof, for correction, and for instruction in righteousness, that each person who belongs to God may be complete, thoroughly equipped for every good work.",
+     "verification": "current-edition",
+     "justification": "In context Paul sets the sacred writings Timothy has known from infancy (3:14-15) against deceivers who grow worse (3:13); inspiration ('God-breathed') and the equipping purpose are the sentence's own claims. Caveat: the verse claims sufficiency-to-equip, not canon closure; wider sola-scriptura freight is a contested inference and stays out of the gist.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://puritanboard.com/threads/2-timothy-3-16-and-sola-scriptura.102808/",
+      "https://jimmyakin.com/library/2-timothy-316-17-and-sola-scriptura"
+     ]
+    },
+    {
+     "ref": "2 Peter 1:20-21",
+     "quote": "knowing this first, that no prophecy of Scripture is of private interpretation. For no prophecy ever came by the will of man, but holy men of God spoke, being moved by the Holy Spirit.",
+     "verification": "current-edition",
+     "justification": "Peter's own account of Scripture's origin — carried by the Holy Spirit, not human initiative — given to ground the prophetic word's reliability (1:19).",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "2 Peter 1:16",
+     "quote": "For we didn’t follow cunningly devised fables when we made known to you the power and coming of our Lord Jesus Christ, but we were eyewitnesses of his majesty.",
+     "verification": "current-edition",
+     "justification": "The apostolic message's explicit not-myth, eyewitness claim — the historical-reliability register stated inside Scripture itself.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Luke 1:3-4",
+     "quote": "it seemed good to me also, having traced the course of all things accurately from the first, to write to you in order, most excellent Theophilus; that you might know the certainty concerning the things in which you were instructed.",
+     "verification": "current-edition",
+     "justification": "Luke's preface (1:1-4) claims eyewitness sources (v2), careful investigation, and certainty as its goal — Scripture's own description of its historical method.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Psalm 19:7-9",
+     "quote": "The LORD’s law is perfect, restoring the soul. The LORD’s covenant is sure, making wise the simple. The LORD’s precepts are right, rejoicing the heart. The LORD’s commandment is pure, enlightening the eyes. The fear of the LORD is clean, enduring forever. The LORD’s ordinances are true, and righteous altogether.",
+     "verification": "pinned",
+     "justification": "The psalm's second panel: after creation's wordless speech (19:1-6), the written word is perfect, sure, right, pure, true. Dual claim noted: studying-the-word anchors Ps 19:7-11 (torrey) in the engagement register.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Psalm 12:6",
+     "quote": "The LORD’s words are flawless words, as silver refined in a clay furnace, purified seven times.",
+     "verification": "current-edition",
+     "justification": "Set against the flattering, double-hearted speech of men (12:2-4) — the contrast is the psalm's point.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Psalm 119:160",
+     "quote": "All of your words are truth. Every one of your righteous ordinances endures forever.",
+     "verification": "current-edition",
+     "justification": "The psalm's summary predication of truth over the whole of God's words. (VPL line's trailing acrostic header 'SIN AND SHIN' stripped.)",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Proverbs 30:5",
+     "quote": "“Every word of God is flawless. He is a shield to those who take refuge in him.",
+     "verification": "current-edition",
+     "justification": "Agur's confession of the word's purity; v6 (the add-nothing clause) is anchored under no-other-gospel.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "John 17:17",
+     "quote": "Sanctify them in your truth. Your word is truth.",
+     "verification": "current-edition",
+     "justification": "Jesus' own predication, in prayer rather than polemic — the word's truth as the medium of the disciples' sanctification.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    }
+   ],
+   "declined": [
+    "Canon-closure reading of 2 Tim 3:16-17 — the verse claims inspiration and sufficiency-to-equip; caveat recorded on the anchor."
+   ],
+   "domain": "Scripture & the only way (domains 4+6)"
+  },
+  {
+   "id": "power-of-gods-word",
+   "case": "PENDING-TAG-GAP",
+   "definition": "God's word endures forever, cannot be broken, and accomplishes what he sends it to do.",
+   "anchors": [
+    {
+     "ref": "Isaiah 40:8",
+     "quote": "The grass withers, the flower fades; but the word of our God stands forever.”",
+     "verification": "pinned",
+     "justification": "The comfort chapter's ground: everything human withers; the word of our God stands forever.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Isaiah 55:10-11",
+     "quote": "For as the rain comes down and the snow from the sky, and doesn’t return there, but waters the earth, and makes it grow and bud, and gives seed to the sower and bread to the eater; so is my word that goes out of my mouth: it will not return to me void, but it will accomplish that which I please, and it will prosper in the thing I sent it to do.",
+     "verification": "pinned",
+     "justification": "Efficacy as God's own simile — like rain and snow, the word accomplishes what it is sent to do.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Matthew 24:35",
+     "quote": "Heaven and earth will pass away, but my words will not pass away.",
+     "verification": "pinned",
+     "justification": "Olivet discourse: Jesus stakes the certainty of his words above the permanence of creation. Caveat: teaches the indestructible certainty of Jesus' words, not a claim about manuscript transmission — the transmission application belongs to the map document, attributed, never the gist. Dual claim: studying-the-word already anchors 24:35.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Matthew 5:18",
+     "quote": "For most certainly, I tell you, until heaven and earth pass away, not even one smallest letter or one tiny pen stroke shall in any way pass away from the law, until all things are accomplished.",
+     "verification": "pinned",
+     "justification": "Jesus' estimate of the law's permanence down to the smallest letter, inside his claim to fulfill rather than destroy (5:17).",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "John 10:35",
+     "quote": "If he called them gods, to whom the word of God came (and the Scripture can’t be broken),",
+     "verification": "current-edition",
+     "justification": "The parenthesis is load-bearing: Jesus' argument leans on a single word of Ps 82 being indissoluble. Handling per the disputed-texts table: only the unbreakability clause is anchored; the 'you are gods' deification misuse is never anchored (a-fortiori argument handled inside deity-of-christ explanations, Worker D).",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "1 Peter 1:24-25",
+     "quote": "For, “All flesh is like grass, and all of man’s glory like the flower in the grass. The grass withers, and its flower falls; but the Lord’s word endures forever.” This is the word of Good News which was preached to you.",
+     "verification": "pinned",
+     "justification": "Isa 40 quoted and applied by an apostle to the preached gospel — the enduring word identified with the message the readers received.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Hebrews 4:12",
+     "quote": "For the word of God is living and active, and sharper than any two-edged sword, piercing even to the dividing of soul and spirit, of both joints and marrow, and is able to discern the thoughts and intentions of the heart.",
+     "verification": "pinned",
+     "justification": "The efficacy register: the word as living agent, not inert text. Dual claim noted: studying-the-word anchors it (torrey) in the engagement register.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Psalm 119:89",
+     "quote": "LORD, your word is settled in heaven forever.",
+     "verification": "current-edition",
+     "justification": "Permanence located in God's own settled decree.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    }
+   ],
+   "declined": [
+    "scripture-cannot-be-broken as a separate id — folded here (endurance/unbreakability) and into trustworthiness-of-scripture (truth/flawlessness), per the brief's recommendation.",
+    "Matt 24:35 as manuscript-transmission proof — admitted only as permanence-of-Jesus'-words; caveat recorded.",
+    "Ps 82:6 / John 10:34 beyond the unbreakability clause — per the disputed-texts table."
+   ],
+   "domain": "Scripture & the only way (domains 4+6)"
+  },
+  {
+   "id": "no-other-gospel",
+   "case": "NEW-MINT",
+   "definition": "The gospel received from the apostles is final and complete; any different 'good news' — whoever brings it, even an angel from heaven — is rejected.",
+   "anchors": [
+    {
+     "ref": "Galatians 1:8",
+     "quote": "But even though we, or an angel from heaven, should preach to you any “good news” other than that which we preached to you, let him be cursed.",
+     "verification": "pinned",
+     "justification": "Written against rival teachers in Galatia (1:6-7): the test is content-identity with the received gospel, and the messenger's rank — apostle or angel — cannot legitimize a different message. The passage's own argument, not an application; directly serves the angelic-revelation claim (map §6.1 claim 5c).",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "2 Corinthians 11:4",
+     "quote": "For if he who comes preaches another Jesus whom we didn’t preach, or if you receive a different spirit which you didn’t receive, or a different “good news” which you didn’t accept, you put up with that well enough.",
+     "verification": "current-edition",
+     "justification": "Paul fears the church being led from 'the simplicity that is in Christ' (v3) toward another Jesus, a different spirit, a different 'good news' — the text's own three-part category, and the pastoral close of the map's first conversation.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "2 Corinthians 11:13-14",
+     "quote": "For such men are false apostles, deceitful workers, masquerading as Christ’s apostles. And no wonder, for even Satan masquerades as an angel of light.",
+     "verification": "current-edition",
+     "justification": "Same argument, continued: angelic appearance does not authenticate a message. Stated as what the text says of Paul's rivals; the gist names no modern group.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Jude 1:3",
+     "quote": "Beloved, while I was very eager to write to you about our common salvation, I was constrained to write to you exhorting you to contend earnestly for the faith which was once for all delivered to the saints.",
+     "verification": "current-edition",
+     "justification": "'Once for all delivered' is the finality claim; v4 supplies the occasion. Coordination: Jude 3 is the seat of pending contending-for-the-faith — proposal: that row keeps the contend/guard register, this concept the once-for-all finality register; if Jesse prefers one concept, no-other-gospel can absorb it. One decision, not two mints.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Deuteronomy 4:2",
+     "quote": "You shall not add to the word which I command you, neither shall you take away from it, that you may keep the commandments of the LORD your God which I command you.",
+     "verification": "current-edition",
+     "justification": "Caveat: in context the command concerns the statutes Israel received; the honest claim is the principle that God's word is not to be supplemented or diminished by human addition. Whole-canon application is application, not the verse's own claim.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Proverbs 30:6",
+     "quote": "Don’t you add to his words, lest he reprove you, and you be found a liar.",
+     "verification": "current-edition",
+     "justification": "The add-nothing principle in wisdom register, following directly on 'Every word of God is flawless' (30:5, anchored under trustworthiness-of-scripture).",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Revelation 22:18-19",
+     "quote": "I testify to everyone who hears the words of the prophecy of this book: if anyone adds to them, God will add to him the plagues which are written in this book. If anyone takes away from the words of the book of this prophecy, God will take away his part from the tree of life, and out of the holy city, which are written in this book.",
+     "verification": "current-edition",
+     "justification": "Caveat is the anchor's honest shape: 'the words of the book of this prophecy' is Revelation itself (broad consensus, incl. conservative treatments). Anchored as the canon's closing instance of the add-nothing principle (echoing Deut 4:2; Prov 30:6), never as a whole-Bible proof-text; weight below the Galatians/2 Corinthians anchors.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://bib.irr.org/revelation-2218-19-and-canon-of-scripture",
+      "https://www.gotquestions.org/Revelation-22-18-19.html"
+     ]
+    }
+   ],
+   "declined": [
+    "Rev 22:18-19 as a whole-canon proof-text — admitted only with the Revelation-scope caveat.",
+    "Movement-naming lexicon entries — surfaced to Jesse per brief §1.3, not drafted."
+   ],
+   "domain": "Scripture & the only way (domains 4+6)"
+  },
+  {
+   "id": "false-prophets",
+   "case": "PENDING-TAG-GAP",
+   "definition": "Scripture's own tests for anyone who claims to speak for God — fulfillment, fidelity to the true God, confession of Christ, and fruits — and its warnings against false prophets and teachers.",
+   "anchors": [
+    {
+     "ref": "Deuteronomy 18:21-22",
+     "quote": "You may say in your heart, “How shall we know the word which the LORD has not spoken?” When a prophet speaks in the LORD’s name, if the thing doesn’t follow, nor happen, that is the thing which the LORD has not spoken. The prophet has spoken it presumptuously. You shall not be afraid of him.",
+     "verification": "current-edition",
+     "justification": "The statute's own criterion, framed as an answer to the audience's own question (v21): the unfulfilled word exposes presumption. Application to any modern movement lives in fixtures and the map document, never in gist wording (brief disputed-texts row). Closes map §6.2.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://www.gotquestions.org/false-prophets.html",
+      "http://www.crivoice.org/prophetdeut18.html",
+      "https://gobible.org/bible_study/tpg/tpg-l6-tp/"
+     ]
+    },
+    {
+     "ref": "Deuteronomy 13:1-3",
+     "quote": "If a prophet or a dreamer of dreams arises among you, and he gives you a sign or a wonder, and the sign or the wonder comes to pass, of which he spoke to you, saying, “Let’s go after other gods” (which you have not known) “and let’s serve them,” you shall not listen to the words of that prophet, or to that dreamer of dreams; for the LORD your God is testing you, to know whether you love the LORD your God with all your heart and with all your soul.",
+     "verification": "current-edition",
+     "justification": "The companion statute: a sign that comes true does not validate a prophet who calls to other gods — the doctrinal test outranks the sign test.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://www.gotquestions.org/false-prophets.html",
+      "http://www.crivoice.org/prophetdeut18.html",
+      "https://gobible.org/bible_study/tpg/tpg-l6-tp/"
+     ]
+    },
+    {
+     "ref": "1 John 4:1",
+     "quote": "Beloved, don’t believe every spirit, but test the spirits, whether they are of God, because many false prophets have gone out into the world.",
+     "verification": "pinned",
+     "justification": "The command to test the spirits, with vv2-3 supplying the confessional criterion (Jesus Christ come in the flesh). Serves map §6.1 claim 5c.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Matthew 7:15-16",
+     "quote": "“Beware of false prophets, who come to you in sheep’s clothing, but inwardly are ravening wolves. By their fruits you will know them. Do you gather grapes from thorns or figs from thistles?",
+     "verification": "pinned",
+     "justification": "Jesus' fruits test, in the Sermon's closing warnings — appearance deceives; outcomes testify.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Matthew 24:24",
+     "quote": "For false christs and false prophets will arise, and they will show great signs and wonders, so as to lead astray, if possible, even the chosen ones.",
+     "verification": "pinned",
+     "justification": "Great signs cannot authenticate a messenger — Jesus' own warning inside the Olivet discourse.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "2 Peter 2:1",
+     "quote": "But false prophets also arose among the people, as false teachers will also be among you, who will secretly bring in destructive heresies, denying even the Master who bought them, bringing on themselves swift destruction.",
+     "verification": "current-edition",
+     "justification": "The bridge verse: the OT phenomenon (false prophets) and the church-age phenomenon (false teachers) named as one continuum in a single sentence — the textual ground for merging false-teachers into this concept (decision D1).",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "1 Thessalonians 5:20-21",
+     "quote": "Don’t despise prophecies. Test all things, and hold firmly that which is good.",
+     "verification": "pinned",
+     "justification": "The balanced apostolic register: testing commanded without contempt for prophecy — why the concept adjudicates no continuationist question (DOCTRINAL-BASIS §4 non-criterion).",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Acts 17:11",
+     "quote": "Now these were more noble than those in Thessalonica, in that they received the word with all readiness of mind, examining the Scriptures daily to see whether these things were so.",
+     "verification": "pinned",
+     "justification": "Anti-tagging check passed: the narrator commends the practice ('more noble') — the passage depicts testing claims against Scripture, it is not merely used for it. Cross-ref studying-the-word.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Isaiah 8:20",
+     "quote": "Turn to the law and to the covenant! If they don’t speak according to this word, surely there is no morning for them.",
+     "verification": "current-edition",
+     "justification": "In context (8:19) the alternative on offer is consulting mediums and wizards; the measure of any voice is whether it speaks according to this word. Cross-ref pending occult-and-divination.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://www.gotquestions.org/false-prophets.html",
+      "http://www.crivoice.org/prophetdeut18.html",
+      "https://gobible.org/bible_study/tpg/tpg-l6-tp/"
+     ]
+    }
+   ],
+   "declined": [
+    "testing-prophets / test-the-spirits as new ids — the test register is this concept's lexicon; a second pack would be a G4 near-duplicate beside two pending rows (decision D1).",
+    "false-teachers as a separate id — merged here on the strength of 2 Pet 2:1 (decision D1, reversible).",
+    "Bare 'test'/'testing' lexicon tokens — excluded, matching the existing testing pack's deliberate exclusion; only multi-word phrases admitted."
+   ],
+   "domain": "Scripture & the only way (domains 4+6)"
+  },
+  {
+   "id": "jesus-the-only-way",
+   "case": "NEW-MINT",
+   "definition": "Salvation is found in Christ alone — the one way to the Father, the one saving name, the one mediator between God and men.",
+   "anchors": [
+    {
+     "ref": "John 14:6",
+     "quote": "Jesus said to him, “I am the way, the truth, and the life. No one comes to the Father, except through me.",
+     "verification": "pinned",
+     "justification": "The Farewell-discourse answer to Thomas's 'how can we know the way?' (14:5) — the exclusive clause is the verse's own second half, not an inference.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://blog.truthforlife.org/the-exclusivity-of-christ-in-a-pluralistic-culture",
+      "https://www.gotquestions.org/religious-pluralism.html"
+     ]
+    },
+    {
+     "ref": "Acts 4:12",
+     "quote": "There is salvation in no one else, for there is no other name under heaven that is given among men, by which we must be saved!”",
+     "verification": "pinned",
+     "justification": "Peter before the council, about the crucified and risen Jesus (4:10-11) — the no-other-name claim in the church's first public defense.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://blog.truthforlife.org/the-exclusivity-of-christ-in-a-pluralistic-culture",
+      "https://www.gotquestions.org/religious-pluralism.html"
+     ]
+    },
+    {
+     "ref": "1 Timothy 2:5-6",
+     "quote": "For there is one God and one mediator between God and men, the man Christ Jesus, who gave himself as a ransom for all, the testimony at the proper time,",
+     "verification": "current-edition",
+     "justification": "One God, one mediator — and the context (2:1-4, God 'desires all people to be saved') holds exclusivity and the universal offer in the same breath; the concept must keep both. Cross-ref pending mediator (Job 9:33 register) — coordinate, don't duplicate.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://blog.truthforlife.org/the-exclusivity-of-christ-in-a-pluralistic-culture",
+      "https://www.gotquestions.org/religious-pluralism.html"
+     ]
+    },
+    {
+     "ref": "John 3:36",
+     "quote": "One who believes in the Son has eternal life, but one who disobeys the Son won’t see life, but the wrath of God remains on him.”",
+     "verification": "pinned",
+     "justification": "The two-outcome structure — life or remaining wrath — turns entirely on the Son.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "1 John 5:11-12",
+     "quote": "The testimony is this: that God gave to us eternal life, and this life is in his Son. He who has the Son has the life. He who doesn’t have God’s Son doesn’t have the life.",
+     "verification": "pinned",
+     "justification": "Life located in the Son, so that having him and having life are one — John's summary testimony. Cross-ref pending eternal-life, witness-testimony.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "John 10:9",
+     "quote": "I am the door. If anyone enters in by me, he will be saved, and will go in and go out and will find pasture.",
+     "verification": "current-edition",
+     "justification": "The shepherd discourse's door image: entry to salvation and pasture is through him. Cross-ref pending i-am-sayings (Worker D).",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Matthew 7:13-14",
+     "quote": "“Enter in by the narrow gate; for the gate is wide and the way is broad that leads to destruction, and there are many who enter in by it. How narrow is the gate and the way is restricted that leads to life! There are few who find it.",
+     "verification": "pinned",
+     "justification": "Caveat: in the Sermon the narrow gate is entering life on Jesus' terms; the anchor claims the two-ways structure and 'few find it', not a bare exclusivism slogan.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Isaiah 45:21-22",
+     "quote": "Declare and present it. Yes, let them take counsel together. Who has shown this from ancient time? Who has declared it of old? Haven’t I, the LORD? There is no other God besides me, a just God and a Savior. There is no one besides me. “Look to me, and be saved, all the ends of the earth; for I am God, and there is no other.",
+     "verification": "current-edition",
+     "justification": "The exclusive-Savior claim joined to a universal call ('Look to me, and be saved, all the ends of the earth'). Boundary: shared ground with pending no-other-god (Worker D) — this pack claims the Savior register, that one the monotheism register; cross-link, don't duplicate.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Acts 17:30-31",
+     "quote": "The times of ignorance therefore God overlooked. But now he commands that all people everywhere should repent, because he has appointed a day in which he will judge the world in righteousness by the man whom he has ordained; of which he has given assurance to all men, in that he has raised him from the dead.”",
+     "verification": "pinned",
+     "justification": "Athens: universal repentance commanded, one appointed man, assurance by resurrection — where the pluralism question meets its apostolic answer. Cross-ref those-who-never-heard and Worker B's resurrection family.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "Scripture & the only way (domains 4+6)"
+  },
+  {
+   "id": "giving-an-answer",
+   "case": "NEW-MINT-conditional",
+   "definition": "The believer's readiness to give a gentle, reasoned answer for the hope of the gospel to anyone who asks.",
+   "anchors": [
+    {
+     "ref": "1 Peter 3:15",
+     "quote": "But sanctify the Lord God in your hearts. Always be ready to give an answer to everyone who asks you a reason concerning the hope that is in you, with humility and fear,",
+     "verification": "pinned",
+     "justification": "The apologia charge itself: readiness, a reason, and the governing manner — 'with humility and fear', with a good conscience (v16). The manner is part of the claim, not a garnish.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://www.crossway.org/articles/what-does-1-peter-315-mean/",
+      "https://apologeticsforthechurch.org/the-importance-of-1-peter-315-16-for-apologetics/"
+     ]
+    },
+    {
+     "ref": "Colossians 4:6",
+     "quote": "Let your speech always be with grace, seasoned with salt, that you may know how you ought to answer each one.",
+     "verification": "current-edition",
+     "justification": "Addressed to conduct 'toward those who are outside' (4:5) — answering outsiders, each one particularly, with grace.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Acts 17:2-3",
+     "quote": "Paul, as was his custom, went in to them; and for three Sabbath days reasoned with them from the Scriptures, explaining and demonstrating that the Christ had to suffer and rise again from the dead, and saying, “This Jesus, whom I proclaim to you, is the Christ.”",
+     "verification": "pinned",
+     "justification": "Anti-tagging check passed: the narrative depicts reasoned persuasion as Paul's custom — explaining and demonstrating from the Scriptures — not merely a passage recruited by apologists.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)",
+      "https://www.crossway.org/articles/what-does-1-peter-315-mean/",
+      "https://apologeticsforthechurch.org/the-importance-of-1-peter-315-16-for-apologetics/"
+     ]
+    },
+    {
+     "ref": "Acts 26:25",
+     "quote": "But he said, “I am not crazy, most excellent Festus, but boldly declare words of truth and reasonableness.",
+     "verification": "current-edition",
+     "justification": "Inside a formal defense before Agrippa (26:1-2): truth and reasonableness as the apostle's own description of his speech.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Philippians 1:7",
+     "quote": "It is even right for me to think this way on behalf of all of you, because I have you in my heart, because both in my bonds and in the defense and confirmation of the Good News, you all are partakers with me of grace.",
+     "verification": "pinned",
+     "justification": "'The defense and confirmation of the Good News' — Paul's own category for the work, shared with the whole church ('you all are partakers').",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Philippians 1:17",
+     "quote": "but the latter out of love, knowing that I am appointed for the defense of the Good News.",
+     "verification": "pinned",
+     "justification": "Paul 'appointed for the defense of the Good News'. Versification note: WEB follows the majority-text order of vv16-17; this clause appears at v16 in critical-text versions.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "2 Corinthians 10:5",
+     "quote": "throwing down imaginations and every high thing that is exalted against the knowledge of God and bringing every thought into captivity to the obedience of Christ,",
+     "verification": "pinned",
+     "justification": "Caveat: the context (10:3-4) is Paul's conflict with opponents of his ministry, a warfare metaphor; the honest claim is that arguments raised against the knowledge of God are to be demolished. Never licenses combativeness — 1 Pet 3:15's humility clause governs the register.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    },
+    {
+     "ref": "Titus 1:9",
+     "quote": "holding to the faithful word which is according to the teaching, that he may be able to exhort in the sound doctrine, and to convict those who contradict him.",
+     "verification": "current-edition",
+     "justification": "Boundary note: elder-qualification context; ability to answer contradiction is required of overseers specifically. Borders pending contending-for-the-faith; keep at low weight or rehome there at integration.",
+     "sources": [
+      "editorial (LH theological judgment; provenance-visible per ontology/README.md)"
+     ]
+    }
+   ],
+   "declined": [
+    "Extension-instead-of-mint alternative recorded: fold into sharing-your-faith (whose anchors — Acts 1:8; 2 Cor 5:18-20; Luke 24:46-48; Mark 5:19 — are fully disjoint from this set). Recommendation is mint; the call is surfaced to Jesse."
+   ],
+   "domain": "Scripture & the only way (domains 4+6)"
+  },
+  {
+   "id": "deity-of-christ",
+   "case": "EXISTING-extension",
+   "definition": "Jesus is fully God — the eternal Word and Creator, bearing divine titles and prerogatives.",
+   "anchors": [
+    {
+     "ref": "John 1:1",
+     "quote": "In the beginning was the Word, and the Word was with God, and the Word was God.",
+     "verification": "pinned",
+     "justification": "The Word is both distinct from God ('with God') and fully God ('was God'). The 'a god' rendering is a known contested reading; the WEB text is quoted exactly and the anarthrous-theos grammar debate stays out of display justifications; engine-side this is an editorial-attributed anchor. Verse 3 closes the door on a created Word.",
+     "sources": [
+      "gotquestions-word-was-a-god",
+      "equip-john11-nwt",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "John 1:3",
+     "quote": "All things were made through him. Without him, nothing was made that has been made.",
+     "verification": "pinned",
+     "justification": "Exhaustive clause: everything in the category 'made things' was made through the Word, so the Word cannot belong to that category — the standard consensus reading of the verse's own logic.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "John 8:58",
+     "quote": "Jesus said to them, “Most certainly, I tell you, before Abraham came into existence, I AM.”",
+     "verification": "pinned",
+     "justification": "Present-tense existence before Abraham — 'I AM', capitalized by the WEB itself, marking the Exodus 3:14 allusion (standard consensus reading, signposted). The hearers' move to stone him (8:59) shows they heard a divine claim.",
+     "sources": [
+      "gotquestions-word-was-a-god",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "John 10:30-33",
+     "quote": "I and the Father are one.” Therefore the Jews took up stones again to stone him. Jesus answered them, “I have shown you many good works from my Father. For which of those works do you stone me?” The Jews answered him, “We don’t stone you for a good work, but for blasphemy, because you, being a man, make yourself God.”",
+     "verification": "current-edition",
+     "justification": "His audience understood a claim to deity and answered with the blasphemy charge. Jesus' Psalm 82 reply (10:34) is an a-fortiori argument, not a retraction — he restates the claim at 10:38. Psalm 82 itself is never anchored to this or any deification concept (see declined).",
+     "sources": [
+      "gotquestions-you-are-gods",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "John 17:5",
+     "quote": "Now, Father, glorify me with your own self with the glory which I had with you before the world existed.",
+     "verification": "current-edition",
+     "justification": "Jesus asks for the return of glory he personally possessed with the Father before creation — pre-existence and shared divine glory in his own prayer.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "John 20:28-29",
+     "quote": "Thomas answered him, “My Lord and my God!” Jesus said to him, “Because you have seen me, you have believed. Blessed are those who have not seen and have believed.”",
+     "verification": "current-edition",
+     "justification": "Thomas addresses the risen Jesus as 'my God' ('answered him' — addressed to Jesus, not past him), and Jesus blesses the belief rather than correcting it, holding it up as the model confession.",
+     "sources": [
+      "bibleref-john523",
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Colossians 2:9",
+     "quote": "For in him all the fullness of the Deity dwells bodily,",
+     "verification": "current-edition",
+     "justification": "Not a portion but 'all the fullness of the Deity', dwelling 'bodily' — full deity in the incarnate Christ, grounding the letter's warning against other teaching (2:8).",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Titus 2:13",
+     "quote": "looking for the blessed hope and appearing of the glory of our great God and Savior, Jesus Christ,",
+     "verification": "pinned",
+     "justification": "The WEB text itself joins 'our great God and Savior' as one pair of titles borne by 'Jesus Christ'. The one-article Greek construction stays out of display wording; the plain English carries the point.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Isaiah 9:6 with Isaiah 10:21",
+     "quote": "For a child is born to us. A son is given to us; and the government will be on his shoulders. His name will be called Wonderful Counselor, Mighty God, Everlasting Father, Prince of Peace. … A remnant will return, even the remnant of Jacob, to the mighty God.",
+     "verification": "current-edition",
+     "justification": "The royal child bears the name 'Mighty God', and one chapter later Isaiah uses the identical title for the God of Jacob (10:21) — within Isaiah's usage it is not a lesser-divinity category. Honest scope: the identification of the child with Jesus is NT-attributed fact (Matt 4:15-16 cites Isa 9:1-2), never adjudicated fulfillment; no Christ-fulfillment display tag lands on Isaiah 9 itself.",
+     "sources": [
+      "carm-isa96",
+      "creation-isa96",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Micah 5:2",
+     "quote": "But you, Bethlehem Ephrathah, being small among the clans of Judah, out of you one will come out to me who is to be ruler in Israel; whose goings out are from of old, from ancient times.",
+     "verification": "current-edition",
+     "justification": "The Bethlehem ruler's 'goings out are from of old, from ancient times' — origins before his birth. Flagged honestly: WEB reads weaker than KJV's 'from everlasting'; an eternality argument rests on the Hebrew, so the justification claims ancient pre-existence language only. The Bethlehem citation (Matt 2:5-6) is attributed fact; no fulfillment tag on Micah 5 itself.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Philippians 2:6-7",
+     "quote": "who, existing in the form of God, didn’t consider equality with God a thing to be grasped, but emptied himself, taking the form of a servant, being made in the likeness of men.",
+     "verification": "current-edition",
+     "justification": "Christ's starting point is 'existing in the form of God' with 'equality with God' his to hold — the humbling presupposes the height. The consensus reading of 'emptied himself' is renunciation of privilege by taking servanthood (the verse's own definition), not subtraction of deity; signposted as the standard reading. Exaltation half (2:9-11) anchored under honor-the-son.",
+     "sources": [
+      "crossway-deity-list",
+      "scoping-brief",
+      "editorial"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "no-other-god",
+   "case": "PENDING-TAG-GAP",
+   "definition": "There is one God only — none formed before him, none after, none besides. (Isaiah-minted tag-gap row; extend it, do not mint beside it; its overlap question with idolatry remains one pending call. Also the honest answer-ground for exaltation / humans-becoming-gods queries — the engine reports what the texts say, never argues.)",
+   "anchors": [
+    {
+     "ref": "Deuteronomy 6:4",
+     "quote": "Hear, Israel: The LORD is our God. The LORD is one.",
+     "verification": "pinned",
+     "justification": "The Shema — Israel's foundational confession that the LORD is one; the verse both source conversations turn on.",
+     "sources": [
+      "str-mormon-verses",
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Deuteronomy 4:35",
+     "quote": "It was shown to you so that you might know that the LORD is God. There is no one else besides him.",
+     "verification": "current-edition",
+     "justification": "Moses states the purpose of the exodus signs: to teach that the LORD alone is God — 'no one else besides him', reinforced at 4:39 ('God in heaven above and on the earth beneath. There is no one else.').",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Isaiah 43:10",
+     "quote": "“You are my witnesses,” says the LORD, “With my servant whom I have chosen; that you may know and believe me, and understand that I am he. Before me there was no God formed, neither will there be after me.",
+     "verification": "pinned",
+     "justification": "God's own testimony excludes gods in both directions of time — none formed before, none after. In context the ground of Israel's witness against the idols (43:9-12). Keystone text for become-gods queries, stated purely as what the verse says.",
+     "sources": [
+      "aomin-mormon-verses",
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Isaiah 43:11",
+     "quote": "I myself am the LORD. Besides me, there is no savior.",
+     "verification": "pinned",
+     "justification": "Exclusive saviorhood belongs to the LORD — no rival savior beside him. The NT confession of Jesus as Savior is handled under deity-of-christ, not read back into Isaiah 43's display tags.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Isaiah 44:6",
+     "quote": "This is what the LORD, the King of Israel, and his Redeemer, the LORD of Armies, says: “I am the first, and I am the last; and besides me there is no God.",
+     "verification": "current-edition",
+     "justification": "The first-and-last title is paired in the same breath with 'besides me there is no God' — the title is exclusive by Isaiah's own logic. Shared anchor with the-first-and-the-last.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Isaiah 44:8",
+     "quote": "Don’t fear, neither be afraid. Haven’t I declared it to you long ago, and shown it? You are my witnesses. Is there a God besides me? Indeed, there is not. I don’t know any other Rock.”",
+     "verification": "current-edition",
+     "justification": "God poses and answers the question directly — 'Is there a God besides me? Indeed, there is not' — adding that even he knows no other Rock; the strongest closure against undiscovered gods.",
+     "sources": [
+      "aomin-mormon-verses"
+     ]
+    },
+    {
+     "ref": "Isaiah 44:24",
+     "quote": "The LORD, your Redeemer, and he who formed you from the womb says: “I am the LORD, who makes all things; who alone stretches out the heavens; who spreads out the earth by myself;",
+     "verification": "current-edition",
+     "justification": "Creation was solo work — 'alone... by myself' — no council of creator-gods. The NT places the Word/Son inside that solo act (John 1:3; Col 1:16); that synthesis is stated in the NT anchors, not read back onto Isaiah 44's tags.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Isaiah 45:21-22",
+     "quote": "Declare and present it. Yes, let them take counsel together. Who has shown this from ancient time? Who has declared it of old? Haven’t I, the LORD? There is no other God besides me, a just God and a Savior. There is no one besides me. “Look to me, and be saved, all the ends of the earth; for I am God, and there is no other.",
+     "verification": "current-edition",
+     "justification": "Monotheism stated as invitation — because there is no other God, all the ends of the earth are told to look to him alone for salvation.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Isaiah 46:9",
+     "quote": "Remember the former things of old; for I am God, and there is no other. I am God, and there is none like me.",
+     "verification": "current-edition",
+     "justification": "Both uniqueness claims in one verse: no other God exists, and none is even like him — against plural gods and against godhood as an attainable class.",
+     "sources": [
+      "aomin-mormon-verses"
+     ]
+    },
+    {
+     "ref": "1 Kings 8:60",
+     "quote": "that all the peoples of the earth may know that the LORD himself is God. There is no one else.",
+     "verification": "current-edition",
+     "justification": "Solomon's temple-dedication prayer aims at a missionary truth: all peoples are to know the LORD alone is God.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Psalm 96:5",
+     "quote": "For all the gods of the peoples are idols, but the LORD made the heavens.",
+     "verification": "current-edition",
+     "justification": "The psalm's own contrast: the nations' gods are idols; the LORD is distinguished from every so-called god by being the Maker.",
+     "sources": [
+      "scoping-brief"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "trinity",
+   "case": "EXISTING-extension",
+   "definition": "One God in three persons — Father, Son, and Holy Spirit. (Reuse; light lexicon extension for query families like 'godhead', 'three persons one God', 'is the Holy Spirit a person'. Anchors below only if the existing pack lacks them.)",
+   "anchors": [
+    {
+     "ref": "Matthew 28:19",
+     "quote": "Go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit,",
+     "verification": "pinned",
+     "justification": "One 'name', three named — Father, Son, and Holy Spirit in the single baptismal formula. The singular-name observation is the standard consensus reading, signposted.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "2 Corinthians 13:14",
+     "quote": "The grace of the Lord Jesus Christ, God’s love, and the fellowship of the Holy Spirit be with you all. Amen.",
+     "verification": "current-edition",
+     "justification": "The apostolic benediction blesses the church from all three persons in parallel — grace from the Lord Jesus, love from God, fellowship from the Spirit.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Matthew 3:16-17",
+     "quote": "Jesus, when he was baptized, went up directly from the water: and behold, the heavens were opened to him. He saw the Spirit of God descending as a dove, and coming on him. Behold, a voice out of the heavens said, “This is my beloved Son, with whom I am well pleased.”",
+     "verification": "current-edition",
+     "justification": "At the baptism all three are present and distinct in one scene — Son in the water, Spirit descending, Father speaking. Teaches the distinction of persons; the unity side is carried by Deut 6:4 and the no-other-god texts.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "John 14:16-17",
+     "quote": "I will pray to the Father, and he will give you another Counselor, that he may be with you forever: the Spirit of truth, whom the world can’t receive, for it doesn’t see him and doesn’t know him. You know him, for he lives with you and will be in you.",
+     "verification": "pinned",
+     "justification": "The Spirit is 'another Counselor' — personal like the Son ('him', 'he lives with you'), given by the Father at the Son's asking; the three persons act in one sentence.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Deuteronomy 6:4",
+     "quote": "Hear, Israel: The LORD is our God. The LORD is one.",
+     "verification": "pinned",
+     "justification": "The oneness pole of the doctrine — shared anchor with no-other-god. Trinitarian teaching stands on this verse, not against it; anchoring it here guards the concept from tritheistic drift.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "supremacy-of-christ",
+   "case": "PENDING-TAG-GAP",
+   "definition": "Christ preeminent over all — image of the invisible God, agent and goal of creation, head of the church, superior to every angel. (Colossians-minted tag-gap row that already owns Col 1:15-20; check its row before adding anchors; extend with Hebrews 1, do not mint beside it.)",
+   "anchors": [
+    {
+     "ref": "Colossians 1:15",
+     "quote": "He is the image of the invisible God, the firstborn of all creation.",
+     "verification": "pinned",
+     "justification": "DISPUTED TEXT. 'Firstborn' (prototokos) is a title of rank — preeminent heir over all creation — not first-created: grounded in v.16 (all things without remainder created 'through him and for him', placing him outside the created category), v.18's own gloss ('that in all things he might have the preeminence'), and the OT rank-usage of Ps 89:27 (David appointed 'firstborn', a future appointment to rank). The WEB, matching the Greek, reads 'all things', not 'all other things'. Contested; editorial-attributed so the framing is visibly LH's judgment, stated as the standard conservative-evangelical consensus it is.",
+     "sources": [
+      "equip-col115",
+      "carm-col115",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Colossians 1:16",
+     "quote": "For by him all things were created in the heavens and on the earth, visible things and invisible things, whether thrones or dominions or principalities or powers. All things have been created through him and for him.",
+     "verification": "pinned",
+     "justification": "The 'For' grounds v.15: he is firstborn because all things — enumerated to exclude exceptions, visible and invisible — were created by, through, and for him. Creator of all cannot be a member of 'all'.",
+     "sources": [
+      "equip-col115",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Colossians 1:17",
+     "quote": "He is before all things, and in him all things are held together.",
+     "verification": "pinned",
+     "justification": "Priority ('before all things') and present sustaining ('held together') — his stated relation to creation is sustainer, not first member.",
+     "sources": [
+      "equip-col115",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Colossians 1:18",
+     "quote": "He is the head of the body, the assembly, who is the beginning, the firstborn from the dead, that in all things he might have the preeminence.",
+     "verification": "pinned",
+     "justification": "The hymn's purpose clause defines the register of 'firstborn': 'that in all things he might have the preeminence'. 'Firstborn from the dead' is manifestly rank language (he is not the first person ever to be dead), confirming the same sense in v.15.",
+     "sources": [
+      "equip-col115",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Hebrews 1:3",
+     "quote": "His Son is the radiance of his glory, the very image of his substance, and upholding all things by the word of his power, who, when he had by himself purified us of our sins, sat down on the right hand of the Majesty on high,",
+     "verification": "current-edition",
+     "justification": "The Son is the exact image of God's substance and upholds all things by his own word — the frame for the chapter's argument of his superiority to angels.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Hebrews 1:8",
+     "quote": "But of the Son he says, “Your throne, O God, is forever and ever. The scepter of uprightness is the scepter of your Kingdom.",
+     "verification": "current-edition",
+     "justification": "The Father addresses the Son as 'O God' with an everlasting throne (quoting Ps 45:6-7), in a chapter whose explicit argument is the Son's categorical superiority to angels (1:4-5).",
+     "sources": [
+      "crossway-deity-list",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Hebrews 1:10-12",
+     "quote": "And, “You, Lord, in the beginning, laid the foundation of the earth. The heavens are the works of your hands. They will perish, but you continue. They all will grow old like a garment does. You will roll them up like a mantle, and they will be changed; but you are the same. Your years won’t fail.”",
+     "verification": "current-edition",
+     "justification": "Hebrews applies Psalm 102's address to Yahweh — Creator, unchanging while creation wears out — to the Son ('of the Son he says', 1:8 governing the catena). A created being cannot be the one who laid creation's foundation. The Ps 102 application is the author of Hebrews' own attributed citation, stated as such.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "honor-the-son",
+   "case": "NEW-MINT-conditional",
+   "definition": "The Father wills that all honor the Son just as they honor the Father; the risen Jesus rightly receives worship. (Conditional mint: may instead be a lexicon/anchor extension of deity-of-christ — run the extension check and surface the mint-vs-extend call to Jesse. Minting case: the query family is devotional-practice-shaped, distinct from identity-shaped deity queries.)",
+   "anchors": [
+    {
+     "ref": "John 5:22-23",
+     "quote": "For the Father judges no one, but he has given all judgment to the Son, that all may honor the Son, even as they honor the Father. He who doesn’t honor the Son doesn’t honor the Father who sent him.",
+     "verification": "current-edition",
+     "justification": "The Father's stated purpose in committing all judgment to the Son is that all honor the Son 'even as' they honor the Father; withholding that honor from the Son forfeits it toward the Father. The equivalence is the verse's own wording, not an inference.",
+     "sources": [
+      "bibleref-john523",
+      "biblehub-john523"
+     ]
+    },
+    {
+     "ref": "John 20:28-29",
+     "quote": "Thomas answered him, “My Lord and my God!” Jesus said to him, “Because you have seen me, you have believed. Blessed are those who have not seen and have believed.”",
+     "verification": "current-edition",
+     "justification": "The model confession Jesus blesses is worship-language addressed to himself. Shared anchor with deity-of-christ; here it carries the devotional-practice register.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Hebrews 1:6",
+     "quote": "When he again brings in the firstborn into the world he says, “Let all the angels of God worship him.”",
+     "verification": "current-edition",
+     "justification": "God himself commands the angels to worship the Son — worship ordered by the Father, in the chapter that ranks the Son above every angel. 'Firstborn' carries the rank sense established at Col 1:15/18.",
+     "sources": [
+      "bibleref-john523",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Philippians 2:9-11",
+     "quote": "Therefore God also highly exalted him, and gave to him the name which is above every name, that at the name of Jesus every knee should bow, of those in heaven, those on earth, and those under the earth, and that every tongue should confess that Jesus Christ is Lord, to the glory of God the Father.",
+     "verification": "current-edition",
+     "justification": "DISPUTED TEXT. Universal homage — every knee, every tongue — is directed at Jesus, echoing Isaiah 45:23 ('to me every knee shall bow, every tongue shall take an oath'), Yahweh's oath about himself amid Isaiah's no-other-god chapter; and this glorifies rather than rivals the Father. Honest scope: the exaltation is of the humbled incarnate Christ of vv.6-8, so it presupposes rather than confers divine status — standard consensus reading, signposted; the Isa 45:23 echo is stated as an echo, not read back onto Isaiah 45's tags.",
+     "sources": [
+      "crossway-deity-list",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Matthew 14:33",
+     "quote": "Those who were in the boat came and worshiped him, saying, “You are truly the Son of God!”",
+     "verification": "current-edition",
+     "justification": "After the walking on water, the disciples' response is worship joined to confession, and Jesus receives it — the narrative records no correction.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Matthew 28:9",
+     "quote": "As they went to tell his disciples, behold, Jesus met them, saying, “Rejoice!” They came and took hold of his feet, and worshiped him.",
+     "verification": "pinned",
+     "justification": "The risen Jesus accepts worship from the women — a deliberate narrative contrast with angels and apostles, who refuse it (Rev 19:10; 22:8-9 'Worship God'; Acts 10:25-26, all current-edition-verified). Every faithful creature deflects worship; Jesus receives it — descriptive of the texts, stated as the consensus observation it is.",
+     "sources": [
+      "gotquestions-you-are-gods",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Matthew 28:17",
+     "quote": "When they saw him, they bowed down to him; but some doubted.",
+     "verification": "pinned",
+     "justification": "The Eleven's response to the risen Christ is prostration — and the narrator's candor about doubt strengthens the report's honesty.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Revelation 5:13",
+     "quote": "I heard every created thing which is in heaven, on the earth, under the earth, on the sea, and everything in them, saying, “To him who sits on the throne and to the Lamb be the blessing, the honor, the glory, and the dominion, forever and ever! Amen!”",
+     "verification": "current-edition",
+     "justification": "Heaven's liturgy directs identical praise 'to him who sits on the throne and to the Lamb' in a single doxology — and the choir is 'every created thing', placing the Lamb on the receiving side of creation's worship, not among the worshipers.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "the-first-and-the-last",
+   "case": "NEW-MINT-conditional",
+   "definition": "'The first and the last' / 'the Alpha and Omega' — the divine self-title of Yahweh in Isaiah, borne by the risen Jesus in Revelation. (Conditional mint: possibly folds into deity-of-christ — one design call, surfaced to Jesse. Title-locator pattern precedent: christ-the-cornerstone, tag-gap the-branch.)",
+   "anchors": [
+    {
+     "ref": "Isaiah 41:4",
+     "quote": "Who has worked and done it, calling the generations from the beginning? I, the LORD, the first, and with the last, I am he.”",
+     "verification": "pinned",
+     "justification": "The title's first sounding: the LORD identifies himself as 'the first, and with the last' — before history and outlasting it.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Isaiah 44:6",
+     "quote": "This is what the LORD, the King of Israel, and his Redeemer, the LORD of Armies, says: “I am the first, and I am the last; and besides me there is no God.",
+     "verification": "current-edition",
+     "justification": "Isaiah's own logic makes the title exclusive — 'I am the first, and I am the last' in the same breath as 'besides me there is no God'. Whoever truly bears the title cannot be a second, lesser divine being; the text forecloses that category itself.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Isaiah 48:12",
+     "quote": "“Listen to me, O Jacob, and Israel my called: I am he. I am the first. I am also the last.",
+     "verification": "current-edition",
+     "justification": "The third Isaian sounding, joined to the 'I am he' formula — a fixed self-designation of Yahweh, not a one-off metaphor.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Revelation 1:8",
+     "quote": "“I am the Alpha and the Omega,” says the Lord God, “who is and who was and who is to come, the Almighty.”",
+     "verification": "pinned",
+     "justification": "'Alpha and Omega' introduced as the Lord God's own title, joined to 'the Almighty'. Honest scope: many readers take 1:8's speaker as the Father — the concept's argument rests on the chain that follows (1:17-18; 2:8; 22:12-13, 20), which fixes the same title on the risen Jesus.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Revelation 1:17-18",
+     "quote": "When I saw him, I fell at his feet like a dead man. He laid his right hand on me, saying, “Don’t be afraid. I am the first and the last, and the Living one. I was dead, and behold, I am alive forever and ever. Amen. I have the keys of Death and of Hades.",
+     "verification": "pinned",
+     "justification": "The speaker claiming Isaiah's title 'the first and the last' self-identifies as the one who 'was dead, and behold, I am alive forever' — unambiguously the risen Jesus. The concept's hinge verse.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Revelation 2:8",
+     "quote": "“To the angel of the assembly in Smyrna write: “The first and the last, who was dead, and has come to life says these things:",
+     "verification": "current-edition",
+     "justification": "The letter-opening formula repeats the identification — 'the first and the last' is expressly the one 'who was dead, and has come to life'. A second independent witness inside Revelation.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Revelation 21:6",
+     "quote": "He said to me, “I am the Alpha and the Omega, the Beginning and the End. I will give freely to him who is thirsty from the spring of the water of life.",
+     "verification": "pinned",
+     "justification": "The enthroned speaker stacks the title's forms — Alpha and Omega, Beginning and End — and attaches the living-water promise, tying the title to the gift of salvation.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Revelation 22:12-13",
+     "quote": "“Behold, I am coming soon! My reward is with me, to repay to each man according to his work. I am the Alpha and the Omega, the First and the Last, the Beginning and the End.",
+     "verification": "current-edition",
+     "justification": "The coming Judge who repays each person claims all three forms of the title at once. Read with 22:20, the 'I am coming' speaker is named.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Revelation 22:20",
+     "quote": "He who testifies these things says, “Yes, I am coming soon.” Amen! Yes, come, Lord Jesus!",
+     "verification": "current-edition",
+     "justification": "The book's closing identifies the 'I am coming soon' speaker of 22:12-13: the church's answering prayer is 'come, Lord Jesus'. The identification is Revelation's own, three verses later — attributed to the text, not imposed on it.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "virgin-birth",
+   "case": "NEW-MINT-conditional",
+   "definition": "Jesus was conceived by the Holy Spirit and born of the virgin Mary. (Conditional mint: existing incarnation may cover by lexicon extension; the mint-vs-extend call is surfaced to Jesse per the brief. Minting case: doctrinal core point 3 names the virgin birth separately and the query family is distinct.)",
+   "anchors": [
+    {
+     "ref": "Matthew 1:18",
+     "quote": "Now the birth of Jesus Christ was like this: After his mother, Mary, was engaged to Joseph, before they came together, she was found pregnant by the Holy Spirit.",
+     "verification": "current-edition",
+     "justification": "Both halves of the doctrine in one verse: conception 'before they came together', and its cause — 'by the Holy Spirit'.",
+     "sources": [
+      "gotquestions-virgin-birth"
+     ]
+    },
+    {
+     "ref": "Matthew 1:20",
+     "quote": "But when he thought about these things, behold, an angel of the Lord appeared to him in a dream, saying, “Joseph, son of David, don’t be afraid to take to yourself Mary as your wife, for that which is conceived in her is of the Holy Spirit.",
+     "verification": "current-edition",
+     "justification": "The angel's word to Joseph independently attributes the conception to the Holy Spirit — doubly attested within the chapter.",
+     "sources": [
+      "gotquestions-virgin-birth"
+     ]
+    },
+    {
+     "ref": "Matthew 1:22-23",
+     "quote": "Now all this has happened that it might be fulfilled which was spoken by the Lord through the prophet, saying, “Behold, the virgin shall be with child, and shall give birth to a son. They shall call his name Immanuel,” which is, being interpreted, “God with us.”",
+     "verification": "current-edition",
+     "justification": "Matthew himself cites Isaiah 7:14 of this birth and supplies the translation 'God with us'. The fulfillment claim is Matthew's own attributed citation — quoted as such, with no adjudication added.",
+     "sources": [
+      "gotquestions-virgin-birth"
+     ]
+    },
+    {
+     "ref": "Matthew 1:25",
+     "quote": "and didn’t know her sexually until she had given birth to her firstborn son. He named him Jesus.",
+     "verification": "current-edition",
+     "justification": "The narrator states plainly that Mary's virginity continued until after the birth — closing the natural-conception alternative on the narrative's own terms.",
+     "sources": [
+      "gotquestions-virgin-birth"
+     ]
+    },
+    {
+     "ref": "Luke 1:34-35",
+     "quote": "Mary said to the angel, “How can this be, seeing I am a virgin?” The angel answered her, “The Holy Spirit will come on you, and the power of the Most High will overshadow you. Therefore also the holy one who is born from you will be called the Son of God.",
+     "verification": "current-edition",
+     "justification": "Luke's independent account: Mary's own objection establishes her virginity, and the angel grounds the title 'Son of God' in the Spirit's overshadowing — divine, not human, paternity, with no physical begetting in the text: the stated means is the Spirit's power.",
+     "sources": [
+      "gotquestions-virgin-birth"
+     ]
+    },
+    {
+     "ref": "Isaiah 7:14",
+     "quote": "Therefore the Lord himself will give you a sign. Behold, the virgin will conceive, and bear a son, and shall call his name Immanuel.",
+     "verification": "current-edition",
+     "justification": "DISPUTED TEXT. In its own chapter, a sign to Ahaz with a near horizon (7:15-16); the identification with Jesus' birth is Matthew's attributed citation (Matt 1:22-23), never adjudicated fulfillment — per the messianic-prophecy locator rule NO display tag for this concept ever lands on Isaiah 7 itself; any engine anchor on it is editorial-attributed. Honest scope: the almah/parthenos question is real scholarly territory; the WEB reads 'the virgin', and the concept's claim rests on Matthew and Luke's explicit narratives, not on Isaiah 7:14 standing alone.",
+     "sources": [
+      "gotquestions-virgin-birth",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Galatians 4:4",
+     "quote": "But when the fullness of the time came, God sent out his Son, born to a woman, born under the law,",
+     "verification": "current-edition",
+     "justification": "Paul's earliest-strand formula names only a mother — 'born to a woman' — for the Son whom God 'sent out'. Honest scope: corroborating, not independently demonstrative.",
+     "sources": [
+      "gotquestions-virgin-birth"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "grace-not-earned",
+   "case": "EXISTING-extension",
+   "definition": "Salvation is God's gift received by faith — not earned, completed, or topped up by works. (Reuse; NO new id — lexicon/fixture work only, e.g. the 'saved by grace after all we can do' query family. Coordinate with justification-by-faith and faith-and-works; the works-as-fruit relation of James 2 belongs to faith-and-works and is not adjudicated here.)",
+   "anchors": [
+    {
+     "ref": "Ephesians 2:8-9",
+     "quote": "for by grace you have been saved through faith, and that not of yourselves; it is the gift of God, not of works, that no one would boast.",
+     "verification": "pinned",
+     "justification": "The definitional text: by grace, through faith, 'not of yourselves... not of works', with the stated purpose that boasting is excluded. Doctrinal core point 5 ('a gift, not a technique') is this verse's own logic.",
+     "sources": [
+      "str-mormon-verses",
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Isaiah 64:6",
+     "quote": "For we have all become like one who is unclean, and all our righteousness is like a polluted garment. We all fade like a leaf; and our iniquities, like the wind, take us away.",
+     "verification": "current-edition",
+     "justification": "Even 'all our righteousness' — our best works, not our worst — is a polluted garment before God; the reason works cannot be salvation's currency. Context caveat: in 64:5-7 this is Israel's corporate penitential confession under judgment ('you have hidden your face from us'); the verse asserts that even best works are polluted, and the soteriological application is drawn as application — Eph 2:8-9 and Titus 3:5 carry the direct not-by-works teaching.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Titus 3:5",
+     "quote": "not by works of righteousness which we did ourselves, but according to his mercy, he saved us through the washing of regeneration and renewing by the Holy Spirit,",
+     "verification": "pinned",
+     "justification": "Salvation's ground stated negatively and positively in one clause — 'not by works of righteousness which we did ourselves, but according to his mercy'.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Romans 4:4-5",
+     "quote": "Now to him who works, the reward is not counted as grace, but as something owed. But to him who doesn’t work, but believes in him who justifies the ungodly, his faith is accounted for righteousness.",
+     "verification": "current-edition",
+     "justification": "Paul's wage/gift logic addresses every grace-plus-works synthesis: whatever is worked for is owed, not grace — the categories cannot be blended without destroying the first.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Galatians 2:16",
+     "quote": "yet knowing that a man is not justified by the works of the law but through faith in Jesus Christ, even we believed in Christ Jesus, that we might be justified by faith in Christ and not by the works of the law, because no flesh will be justified by the works of the law.",
+     "verification": "current-edition",
+     "justification": "Three times in one verse: justification is through faith in Christ, not by works of the law — emphatic closure against works-completed righteousness.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "2 Timothy 1:9",
+     "quote": "who saved us and called us with a holy calling, not according to our works, but according to his own purpose and grace, which was given to us in Christ Jesus before times eternal,",
+     "verification": "pinned",
+     "justification": "Salvation runs on God's 'own purpose and grace... before times eternal' — settled before any human work existed to contribute.",
+     "sources": [
+      "scoping-brief"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "gods-unchanging-nature",
+   "case": "PENDING-TAG-GAP",
+   "definition": "God is eternally and unchangeably God — from everlasting, not a man, without variation. (Tag-gap row; extend, do not mint beside it. Honest answer-ground for eternal-progression queries; the engine reports what the texts teach, never argues.)",
+   "anchors": [
+    {
+     "ref": "Malachi 3:6",
+     "quote": "“For I, the LORD, don’t change; therefore you, sons of Jacob, are not consumed.",
+     "verification": "pinned",
+     "justification": "Unchangeableness in first person — and in context the ground of covenant mercy: Israel survives because the LORD does not change.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Numbers 23:19",
+     "quote": "God is not a man, that he should lie, nor a son of man, that he should repent. Has he said, and he won’t do it? Or has he spoken, and he won’t make it good?",
+     "verification": "current-edition",
+     "justification": "'God is not a man' — a contrast of nature grounding a contrast of behavior. Honest scope: the verse's contextual point is God's reliability of word, not a treatise on divine embodiment; anchored for the contrast-of-nature ground the text actually asserts.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "Psalm 90:2",
+     "quote": "Before the mountains were born, before you had formed the earth and the world, even from everlasting to everlasting, you are God.",
+     "verification": "current-edition",
+     "justification": "'From everlasting to everlasting, you are God' — deity is not attained; there is no direction of time in which he is other than God. The most direct single text for the concept.",
+     "sources": [
+      "aomin-mormon-verses"
+     ]
+    },
+    {
+     "ref": "Psalm 102:25-27",
+     "quote": "Of old, you laid the foundation of the earth. The heavens are the work of your hands. They will perish, but you will endure. Yes, all of them will wear out like a garment. You will change them like a cloak, and they will be changed. But you are the same. Your years will have no end.",
+     "verification": "current-edition",
+     "justification": "Creation wears out and is changed; its Maker 'is the same' with unending years — mutability belongs to the made, immutability to the Maker. Hebrews 1:10-12 applies these words to the Son (anchored under supremacy-of-christ as the author's attributed citation).",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "James 1:17",
+     "quote": "Every good gift and every perfect gift is from above, coming down from the Father of lights, with whom can be no variation nor turning shadow.",
+     "verification": "pinned",
+     "justification": "With the Father of lights there 'can be no variation nor turning shadow' — change is not merely absent but impossible ('can be no').",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "Isaiah 43:10",
+     "quote": "“You are my witnesses,” says the LORD, “With my servant whom I have chosen; that you may know and believe me, and understand that I am he. Before me there was no God formed, neither will there be after me.",
+     "verification": "pinned",
+     "justification": "Shared anchor with no-other-god: no god formed before him and none after — godhood is not a class beings enter, in either direction of time.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  },
+  {
+   "id": "i-am-sayings",
+   "case": "PENDING-TAG-GAP",
+   "definition": "Jesus' 'I am' declarations in John — the predicated sayings and the absolute uses. (John-minted tag-gap row; extend it; this contributes the absolute uses that carry the apologetic weight.)",
+   "anchors": [
+    {
+     "ref": "John 8:58",
+     "quote": "Jesus said to them, “Most certainly, I tell you, before Abraham came into existence, I AM.”",
+     "verification": "pinned",
+     "justification": "The absolute use at full strength — the WEB's capitalized 'I AM' marks the Exodus 3:14 allusion (pinned: 'I AM WHO I AM'), stated as the standard consensus reading. Shared anchor with deity-of-christ.",
+     "sources": [
+      "gotquestions-word-was-a-god",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "John 8:24",
+     "quote": "I said therefore to you that you will die in your sins; for unless you believe that I am he, you will die in your sins.”",
+     "verification": "pinned",
+     "justification": "Believing 'that I am he' is made the hinge of salvation itself. Honest scope: the WEB supplies 'he' (the Greek is the bare 'I am'); the justification claims only what the English shows, with the fuller ego-eimi observation signposted as a reading.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    },
+    {
+     "ref": "John 6:35",
+     "quote": "Jesus said to them, “I am the bread of life. Whoever comes to me will not be hungry, and whoever believes in me will never be thirsty.",
+     "verification": "current-edition",
+     "justification": "The first predicated saying: Jesus locates the satisfaction of ultimate hunger and thirst in himself — a self-claim no prophet makes about himself.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "John 11:25",
+     "quote": "Jesus said to her, “I am the resurrection and the life. He who believes in me will still live, even if he dies.",
+     "verification": "pinned",
+     "justification": "Jesus does not say he will perform the resurrection but that he IS it — resurrection and life located in his person.",
+     "sources": [
+      "scoping-brief"
+     ]
+    },
+    {
+     "ref": "John 18:5-6",
+     "quote": "They answered him, “Jesus of Nazareth.” Jesus said to them, “I am he.” Judas also, who betrayed him, was standing with them. When therefore he said to them, “I am he,” they went backward and fell to the ground.",
+     "verification": "current-edition",
+     "justification": "At the arrest, the words 'I am he' fell the arresting party to the ground — an effect no ordinary self-identification produces. The divine-name connection is the standard consensus reading of John's narration, signposted; the falling is simply what the text says.",
+     "sources": [
+      "scoping-brief",
+      "editorial"
+     ]
+    }
+   ],
+   "declined": [],
+   "domain": "The Jesus of the Bible (domains 7+8)"
+  }
+ ],
+ "dual_anchors": [
+  {
+   "ref": "Romans 1:19-20",
+   "concepts": [
+    "creation-testifies",
+    "those-who-never-heard"
+   ],
+   "rationale": "One text, two honest registers: creation as God's continuous witness vs the fate-of-the-unevangelized question; the display side keeps only the existing id until creation-testifies merges."
+  },
+  {
+   "ref": "Romans 2:14-16",
+   "concepts": [
+    "conscience",
+    "those-who-never-heard"
+   ],
+   "rationale": "The law written on hearts is both the moral-argument's central text and the never-heard question's second leg (judged by the inner witness)."
+  },
+  {
+   "ref": "Acts 14:16-17",
+   "concepts": [
+    "creation-testifies",
+    "those-who-never-heard"
+   ],
+   "rationale": "'He didn't leave himself without witness' teaches providence-as-witness once; both question families honestly consume it."
+  },
+  {
+   "ref": "Acts 17:26-27",
+   "concepts": [
+    "creation-testifies",
+    "those-who-never-heard"
+   ],
+   "rationale": "The seek-and-find purpose of the created order serves both the natural-theology register and the never-heard register."
+  },
+  {
+   "ref": "Isaiah 44:24",
+   "concepts": [
+    "creation",
+    "no-other-god"
+   ],
+   "rationale": "Sole unassisted creatorship ('alone... by myself') is both a creation claim and Isaiah's monotheism polemic — two registers of one verse."
+  },
+  {
+   "ref": "Psalm 90:2",
+   "concepts": [
+    "creation",
+    "gods-unchanging-nature"
+   ],
+   "rationale": "The unmade Maker answers 'who made God' (creation register) and 'was God once a man' (everlasting-deity register)."
+  },
+  {
+   "ref": "John 1:3",
+   "concepts": [
+    "creation",
+    "deity-of-christ"
+   ],
+   "rationale": "Anchored on creation only for the all-things-made claim; on deity-of-christ for the made/unmade line that places the Word outside creation."
+  },
+  {
+   "ref": "2 Corinthians 4:16-18",
+   "concepts": [
+    "the-breath-of-life",
+    "why-god-allows-suffering"
+   ],
+   "rationale": "Different verse spans of one passage: vv16+18 carry the inner/outer-person anthropology; vv17-18 the affliction-works-glory theodicy register."
+  },
+  {
+   "ref": "Deuteronomy 6:4",
+   "concepts": [
+    "no-other-god",
+    "trinity"
+   ],
+   "rationale": "The Shema is the oneness pole of both concepts; keeping it anchored on trinity guards that concept against tritheistic drift."
+  },
+  {
+   "ref": "Isaiah 43:10",
+   "concepts": [
+    "no-other-god",
+    "gods-unchanging-nature"
+   ],
+   "rationale": "'No God formed before me, neither after' serves both monotheism and the no-attained-godhood register — godhood is not a class beings enter."
+  },
+  {
+   "ref": "Isaiah 44:6",
+   "concepts": [
+    "no-other-god",
+    "the-first-and-the-last"
+   ],
+   "rationale": "The exclusivity clause and the first-and-last title stand in the same breath; each concept claims its own half of the verse's logic."
+  },
+  {
+   "ref": "Isaiah 45:21-22",
+   "concepts": [
+    "no-other-god",
+    "jesus-the-only-way"
+   ],
+   "rationale": "Cross-linked, not duplicated in substance: no-other-god claims the monotheism register, jesus-the-only-way the exclusive-Savior register (Worker C's recorded boundary)."
+  },
+  {
+   "ref": "John 8:58",
+   "concepts": [
+    "deity-of-christ",
+    "i-am-sayings"
+   ],
+   "rationale": "The identity claim itself (deity register) and the strongest absolute use in the I-am corpus (saying-locator register)."
+  },
+  {
+   "ref": "John 20:28-29",
+   "concepts": [
+    "deity-of-christ",
+    "honor-the-son"
+   ],
+   "rationale": "The confession's content ('my God') vs the devotional practice Jesus blesses — identity register and worship register."
+  },
+  {
+   "ref": "John 20:27-28",
+   "concepts": [
+    "resurrection",
+    "deity-of-christ"
+   ],
+   "rationale": "Anchored under resurrection for the touch-the-wounds evidence with a cross edge to deity-of-christ for the confession (Worker B's recorded split)."
+  },
+  {
+   "ref": "Acts 17:30-31",
+   "concepts": [
+    "jesus-the-only-way",
+    "resurrection"
+   ],
+   "rationale": "One Areopagus close, two registers: the one-appointed-man exclusivity claim and the resurrection offered as God's public assurance (v31 alone on resurrection)."
+  },
+  {
+   "ref": "Romans 8:28",
+   "concepts": [
+    "why-god-allows-suffering",
+    "remembered-all-things-for-good (existing owner)"
+   ],
+   "rationale": "Cross-list, decision pending (Decision 15): the existing remembered- concept owns the text; the umbrella needs it to surface for why-is-this-happening queries — pack anchor vs lexicon pointer is Jesse's call."
+  },
+  {
+   "ref": "Revelation 21:4",
+   "concepts": [
+    "why-god-allows-suffering",
+    "new-heaven-and-earth (existing owner)"
+   ],
+   "rationale": "Cross-list, decision pending (Decision 15): display ownership stays with new-heaven-and-earth; the theodicy umbrella anchors it because Scripture's final answer to evil is its promised end."
+  },
+  {
+   "ref": "John 11:25(-26)",
+   "concepts": [
+    "resurrection-of-the-dead",
+    "i-am-sayings"
+   ],
+   "rationale": "Resurrection-hope-in-Jesus's-person register vs the predicated I-am saying itself; Worker B flagged coordinate-don't-duplicate — confirm dual or single+cross-ref (Decision 17)."
+  },
+  {
+   "ref": "Psalm 19:7-9 / Matthew 24:35 / Hebrews 4:12",
+   "concepts": [
+    "trustworthiness-of-scripture / power-of-gods-word",
+    "studying-the-word (existing owner)"
+   ],
+   "rationale": "Dual claims with the existing studying-the-word pack (engagement register vs trustworthiness/permanence registers); precedent: the testing pack's dual claim on 1 Pet 1:6-7."
+  },
+  {
+   "ref": "Habakkuk 1:13",
+   "concepts": [
+    "suffering-of-the-righteous"
+   ],
+   "rationale": "Deliberately anchored ONCE with a cross edge to prosperity-of-the-wicked — never-mint-twice discipline applied to anchors; not a dual anchor."
+  },
+  {
+   "ref": "Philippians 2:6-7 / 2:9-11",
+   "concepts": [
+    "deity-of-christ",
+    "honor-the-son"
+   ],
+   "rationale": "A split, not a dual: the humbling half (vv6-7) anchors deity; the exaltation half (vv9-11) anchors the worship register."
+  },
+  {
+   "ref": "Hebrews 1 (1:3, 8, 10-12 vs 1:6)",
+   "concepts": [
+    "supremacy-of-christ",
+    "honor-the-son"
+   ],
+   "rationale": "A split within one chapter: the superiority-to-angels catena anchors supremacy; the command that angels worship the Son (1:6) anchors the worship register."
+  },
+  {
+   "ref": "Job 38:4",
+   "concepts": [
+    "design-in-creation"
+   ],
+   "rationale": "Worker A flagged a potential dual with the theodicy family; dissolved at integration — Worker B anchored Job 1/42, not Job 38, so no dual exists."
+  },
+  {
+   "ref": "2 Peter 1:16",
+   "concepts": [
+    "trustworthiness-of-scripture"
+   ],
+   "rationale": "Not a dual: Worker B declined it as a resurrection-eyewitness anchor (context is the Transfiguration); Worker C anchors it only for the not-myth historical-reliability register — consistent, single anchor."
+  }
+ ],
+ "declined": [
+  {
+   "item": "Ontological-argument concept id",
+   "domains": [
+    "A"
+   ],
+   "reason": "Scripture asserts God's necessary reality; it nowhere teaches Anselm's inference from the concept of a maximal being. No honest anchors exist, so no id. Queries in that register are served by creation (Ps 90:2 — the eternal, unmade God) via lexicon."
+  },
+  {
+   "item": "origin-of-life / abiogenesis-shaped id",
+   "domains": [
+    "A"
+   ],
+   "reason": "Scripture teaches God forming life (Gen 1:11-27; 2:7; Ps 104:24-30), not abiogenesis; an id named for the debate would put the engine on ground the texts don't occupy. Served by creation + design-in-creation + the-breath-of-life lexicons."
+  },
+  {
+   "item": "maker-of-all-things id",
+   "domains": [
+    "A"
+   ],
+   "reason": "Not minted; folded into the creation extension after the brief-mandated reuse check — a neighbour mint would fail G4 and split one concept across two chips."
+  },
+  {
+   "item": "conscience-and-moral-law id",
+   "domains": [
+    "A"
+   ],
+   "reason": "Not minted; folded into the pending conscience tag-gap row per the brief's own instruction ('extend it rather than double-minting')."
+  },
+  {
+   "item": "knowing-god register (Jer 9:23-24 etc.)",
+   "domains": [
+    "A"
+   ],
+   "reason": "Deferred, not drafted: the tag-gap row is Theme C and the §8 split does not assign it to Worker A; its natural-theology edge (Acts 17:27) is covered under creation-testifies. Recorded so no cross-worker double-mint occurs (see Decision 19)."
+  },
+  {
+   "item": "Psalm 14:1 ('The fool has said in his heart...')",
+   "domains": [
+    "A"
+   ],
+   "reason": "Ubiquitous in apologetics usage against atheism, but the psalm teaches universal corruption ('There is no one who does good', v1b with vv2-3), not an argument for God's existence — the used-about vs teaches trap the rollout forbids."
+  },
+  {
+   "item": "Hebrews 11:3 as a first-cause anchor",
+   "domains": [
+    "A"
+   ],
+   "reason": "'By faith we understand' is the verse's own register (faith-received creation ex nihilo); conscripting it as a rational proof-text inverts its point."
+  },
+  {
+   "item": "Proverbs 8:22-31 for any Christ/deity or design concept",
+   "domains": [
+    "A",
+    "D"
+   ],
+   "reason": "The chapter's plain sense is personified Wisdom; the Christological identification is the contested-identification class the rollout declines (Ezek 28 precedent; brief disputed-texts table: 'Do NOT tag Prov 8 with any Christ concept'). Left unanchored on both sides: it neither supports a created Christ nor is conscripted as a deity anchor; Prov 3:19-20 teaches the design substance without the dispute."
+  },
+  {
+   "item": "Psalm 19:7-11 under creation-testifies",
+   "domains": [
+    "A"
+   ],
+   "reason": "The psalm's second half turns from the heavens to the law (special revelation) — trustworthiness-of-scripture / delight-in-the-word territory; splitting the anchor at v6/v7 keeps both concepts honest."
+  },
+  {
+   "item": "Colossians 1:16-17 under creation",
+   "domains": [
+    "A"
+   ],
+   "reason": "Teaches all-things-made through Christ, but the disputed-text table routes Col 1:15-17 through deity-of-christ/supremacy-of-christ with editorial provenance; double-anchoring onto creation would leak a contested-text handling decision across concepts."
+  },
+  {
+   "item": "Romans 1:21-23 as a separate anchor",
+   "domains": [
+    "A"
+   ],
+   "reason": "The suppression theme is carried inside the Rom 1:19-20 justification; the idolatry substance belongs to the pending idolatry row (Theme A)."
+  },
+  {
+   "item": "Psalm 82:6 / John 10:34 as any deification, deity, creation, or resurrection anchor",
+   "domains": [
+    "A",
+    "B",
+    "C",
+    "D"
+   ],
+   "reason": "All four drafts concurred. Ps 82's plain sense is unjust rulers/judges under God's judgment — v7 (pinned): 'Nevertheless you shall die like men, and fall like one of the rulers.' If tagged at all it belongs to justice-register concepts. John 10:34 is handled only inside deity-of-christ's John 10:30-33 justification as Jesus' a-fortiori argument; only the unbreakability clause of John 10:35 is anchored (power-of-gods-word). RECOMMENDED: Ps 82 is in the pinned fixture corpus, so a mustNotRank guard fixture against deification/become-gods queries is shippable now (Decision 12)."
+  },
+  {
+   "item": "witnesses-of-the-resurrection concept id",
+   "domains": [
+    "B"
+   ],
+   "reason": "Declined as a mint: the evidence register sits honestly within existing resurrection's Easter scope; minting beside it would be the near-duplicate G4 rejects, and the review's §1(a) flags demanded one decision for the whole family. Resolved: extend resurrection, reuse resurrection-of-the-dead."
+  },
+  {
+   "item": "evil-will-not-win concept id",
+   "domains": [
+    "B"
+   ],
+   "reason": "Declined per the brief's own fold flag: the final-reckoning register belongs to existing divine-judgment / new-heaven-and-earth lexicons ('will evil ever end', 'will God defeat evil'); Rev 21:4 is anchored under why-god-allows-suffering with the overlap recorded."
+  },
+  {
+   "item": "lament and unanswered-prayer rows (Theme H)",
+   "domains": [
+    "B"
+   ],
+   "reason": "Adjacent to the theodicy family but not scoped to Worker B by the brief's split; noted as neighbours for related edges, not drafted."
+  },
+  {
+   "item": "2 Peter 1:16 as a resurrection-eyewitness anchor",
+   "domains": [
+    "B"
+   ],
+   "reason": "Context check fails: 'eyewitnesses of his majesty' is, per vv17-18, the Transfiguration ('with him on the holy mountain'), not the resurrection appearances. Anchored instead only under trustworthiness-of-scripture for the not-myth historical-reliability register (Worker C)."
+  },
+  {
+   "item": "Mark 16:9-14 (longer-ending appearances)",
+   "domains": [
+    "B"
+   ],
+   "reason": "The longer ending is the best-known disputed Gospel text; every appearance it reports is carried by undisputed text in Luke 24 / John 20 / 1 Cor 15. No reason to build on contested ground."
+  },
+  {
+   "item": "Matthew 12:40 (sign of Jonah) under resurrection",
+   "domains": [
+    "B"
+   ],
+   "reason": "The pericope's plain point is the refusal of a sign to 'an evil and adulterous generation'; the prediction register is already carried by John 2:19-21, where the evangelist's own gloss does the interpretive work."
+  },
+  {
+   "item": "Isaiah 53:10-11 and Hosea 6:2 as resurrection anchors",
+   "domains": [
+    "B"
+   ],
+   "reason": "No-read-back rule: their resurrection significance is NT-attributed ('according to the Scriptures') — the pending messianic-prophecy row's recorded attributed-fact territory, not a bare fact about the OT chapters."
+  },
+  {
+   "item": "Isaiah 45:7 under why-god-allows-suffering",
+   "domains": [
+    "B"
+   ],
+   "reason": "In context Yahweh's self-declaration against Babylonian dualism addressed to Cyrus, not a theodicy answer; unglossed it invites 'God creates moral evil' misreadings display copy must not adjudicate. Belongs, if anywhere, with the pending sovereignty-of-god row, with editorial handling."
+  },
+  {
+   "item": "Romans 5:3-4 / James 1:2-4 (suffering produces character)",
+   "domains": [
+    "B"
+   ],
+   "reason": "Verified (Rom 5:3-4 pinned) but owned by existing remembered-joy-in-trials and testing; why-god-allows-suffering reaches this ground by related edge, not duplicate anchors."
+  },
+  {
+   "item": "Revelation 20:12-13 under resurrection-of-the-dead",
+   "domains": [
+    "B"
+   ],
+   "reason": "Teaches the dead raised for judgment but sits inside the millennial-sequence passage; anchoring it would drag the concept toward §4 non-criteria territory (millennial views)."
+  },
+  {
+   "item": "1 Corinthians 14:33 as a scripture-sufficiency / no-competing-revelation anchor",
+   "domains": [
+    "C"
+   ],
+   "reason": "In context the sentence regulates orderly congregational prophecy and tongues (14:40 'decently and in order'); that God's character excludes competing revelations is an inference the verse does not teach. Stays in the conversation coverage table as the dialogue's own citation, attributed; no concept anchor. WEB (current-edition, verified): 'for God is not a God of confusion but of peace, as in all the assemblies of the saints.'"
+  },
+  {
+   "item": "testing-prophets / test-the-spirits concept ids",
+   "domains": [
+    "C"
+   ],
+   "reason": "Folded into pending false-prophets (Decision 6): the how-do-I-test register is that concept's lexicon; a second pack would be a G4 near-duplicate beside two already-pending rows."
+  },
+  {
+   "item": "false-teachers as a separate concept id",
+   "domains": [
+    "C"
+   ],
+   "reason": "Merged into false-prophets on the strength of 2 Pet 2:1, which names the OT and church-age phenomena as one continuum in a single sentence (Decision 6, reversible)."
+  },
+  {
+   "item": "scripture-cannot-be-broken concept id",
+   "domains": [
+    "C"
+   ],
+   "reason": "Folded per the brief's own recommendation: endurance/unbreakability anchors to power-of-gods-word; truth/flawlessness/inspiration anchors to trustworthiness-of-scripture."
+  },
+  {
+   "item": "Revelation 22:18-19 as a whole-canon proof-text",
+   "domains": [
+    "C"
+   ],
+   "reason": "Admitted as an anchor only with the recorded Revelation-scope caveat ('the words of the book of this prophecy' is Revelation itself — broad scholarly consensus including conservative treatments); anchored as the canon's closing instance of the add-nothing principle, at lower weight. A stronger claim would be a G3-class wrong-reason failure."
+  },
+  {
+   "item": "Matthew 24:35 as a manuscript-transmission proof",
+   "domains": [
+    "C"
+   ],
+   "reason": "Admitted only as the indestructible certainty of Jesus' words; deploying it against text-corruption claims is an application about transmission the verse does not make — the map may use it so, attributed; the gist may not."
+  },
+  {
+   "item": "Canon-closure reading of 2 Timothy 3:16-17",
+   "domains": [
+    "C"
+   ],
+   "reason": "The verse claims inspiration and sufficiency-to-equip, not canon closure; the wider sola-scriptura freight is a contested inference and stays out of the gist (caveat recorded on the anchor)."
+  },
+  {
+   "item": "Bare 'test'/'testing' lexicon tokens on false-prophets",
+   "domains": [
+    "C"
+   ],
+   "reason": "Excluded, matching the existing testing pack's deliberate exclusion; only multi-word phrases admitted ('test the spirits', 'test all things')."
+  },
+  {
+   "item": "Movement-naming lexicon entries (e.g. queries naming a specific group)",
+   "domains": [
+    "C",
+    "D"
+   ],
+   "reason": "Not drafted; whether a lexicon entry may name a movement is surfaced to Jesse per brief §1.3 (Decision 13), not made silently."
+  },
+  {
+   "item": "Revelation 3:14 ('the beginning of God's creation')",
+   "domains": [
+    "D"
+   ],
+   "reason": "DEFERRED, not anchored: not in either source conversation's claim map; the arche-as-origin/ruler handling deserves its own careful treatment rather than a drive-by anchor. Follow-up flagged (Decision 18)."
+  },
+  {
+   "item": "LDS and Watchtower source material (2 Nephi 25:23; Moroni 10:32; 1 Nephi 13:28; 2 Nephi 29:6; Journal of Discourses 1:50-51; Watchtower prophecy records)",
+   "domains": [
+    "D"
+   ],
+   "reason": "Never anchors. Context for why topics matter; quoted in the map only as the claims under discussion; never as Scripture, never as authorities in justifications, never entering the engine as anchors or lexicon."
+  },
+  {
+   "item": "JW conversation 'Kingdom emphasis — who is the King?' row",
+   "domains": [
+    "D"
+   ],
+   "reason": "A synthesis of the preceding texts by the conversation's own label; covered jointly by deity-of-christ, the-first-and-the-last, and honor-the-son. No separate anchor."
+  },
+  {
+   "item": "Isaiah 40-46 reading assignment (Mormonism conversation close)",
+   "domains": [
+    "D"
+   ],
+   "reason": "A reading-plan suggestion, not a scripture claim; its content is fully covered by the no-other-god and gods-unchanging-nature anchor sets."
+  },
+  {
+   "item": "Job 38-42 claimed as theodicy by Domain A",
+   "domains": [
+    "A"
+   ],
+   "reason": "Worker A anchors the whirlwind speeches only for what they teach about the making and the creatures; the why-suffering function belongs to why-god-allows-suffering (Domain B). The flagged potential Job 38:4 dual dissolved at integration (B anchored Job 1/42, not Job 38)."
+  }
+ ],
+ "decisions_for_jesse": [
+  {
+   "n": 1,
+   "id": "resurrection-scoping",
+   "decision": "Confirm the one family decision (resolves tag-gaps-review §1(a)): extend existing resurrection with the bodily-evidence register (no witnesses-of-the-resurrection mint); reuse pending resurrection-of-the-dead for the general resurrection and believer's hope; related edge between them. Worker D contributed anchors into this same decision and minted nothing."
+  },
+  {
+   "n": 2,
+   "id": "why-god-allows-suffering",
+   "decision": "Approve the one new question-shaped theodicy umbrella (NEW-MINT). Recorded fallback if the gauntlet shows G8 churn (too broad): fold its lexicon into the two pending registers suffering-of-the-righteous / prosperity-of-the-wicked."
+  },
+  {
+   "n": 3,
+   "id": "general-revelation-dual-anchors",
+   "decision": "Confirm the deliberate dual-anchor design: Rom 1:19-20, Rom 2:14-16, Acts 14:16-17, Acts 17:26-27 each anchor two concepts (creation-testifies / those-who-never-heard / conscience) — general revelation stated once, consumed by two question families — or collapse the pair. This also approves/declines the creation-testifies mint itself."
+  },
+  {
+   "n": 4,
+   "id": "the-breath-of-life",
+   "decision": "Mint vs extend image-of-god. Worker A recommends mint (distinct teaching substance — the God-given spirit/soul, its origin, distinctness, return — and barely-overlapping query families). If extend, every anchor moves onto image-of-god unchanged."
+  },
+  {
+   "n": 5,
+   "id": "conscience-eccl-3-11",
+   "decision": "Eccl 3:11 is anchored on the pending conscience row for the inner-witness register; if the row's final gist is strictly moral-conscience, move or drop that anchor (Worker A's recorded flag)."
+  },
+  {
+   "n": 6,
+   "id": "false-prophets-three-way",
+   "decision": "Confirm decision D1 (reversible): one concept under pending false-prophets, absorbing false-teachers (2 Pet 2:1 joins them in one sentence; label suggestion 'False prophets and teachers'); no testing-prophets / test-the-spirits mint — the test register is lexicon."
+  },
+  {
+   "n": 7,
+   "id": "no-other-gospel-vs-contending",
+   "decision": "no-other-gospel (NEW-MINT) vs pending contending-for-the-faith: proposal is two cross-linked concepts (once-for-all finality register vs contend/guard register, Jude 1:3 anchored under no-other-gospel with the coordination recorded); if Jesse prefers one concept, no-other-gospel can absorb the row."
+  },
+  {
+   "n": 8,
+   "id": "giving-an-answer",
+   "decision": "Mint vs fold into existing sharing-your-faith. Worker C recommends mint: the 1 Pet 3:15 answer-those-who-ask register is anchor-disjoint from sharing-your-faith's go-and-tell set (zero overlap, verified against the pack). Sub-decision: Titus 1:9 (elder-qualification context) — keep at low weight or rehome to contending-for-the-faith."
+  },
+  {
+   "n": 9,
+   "id": "honor-the-son",
+   "decision": "Mint vs extend deity-of-christ. Worker D's minting case: the query family ('should we worship Jesus', 'praying to Jesus') is devotional-practice-shaped, distinct from identity-shaped deity queries, and the anchor sets barely overlap."
+  },
+  {
+   "n": 10,
+   "id": "the-first-and-the-last",
+   "decision": "Mint vs fold into deity-of-christ. Minting case: title-locator precedent (christ-the-cornerstone, pending the-branch); title-shaped query family ('alpha and omega'); anchor set spans Isaiah and Revelation in a way neither parent displays well."
+  },
+  {
+   "n": 11,
+   "id": "virgin-birth",
+   "decision": "Mint vs extend existing incarnation. Minting case: doctrinal core point 3 names the virgin birth separately, and the query family ('virgin birth', 'conceived by the Holy Spirit') is distinct from incarnation queries."
+  },
+  {
+   "n": 12,
+   "id": "ps82-guard-fixture",
+   "decision": "RECOMMENDED TO SHIP NOW: a mustNotRank guard fixture against deification / become-gods queries pinning Ps 82:6 out of rank. Ps 82 is in the pinned fixture corpus, so this is shippable immediately (all four drafts concurred; brief disputed-texts table)."
+  },
+  {
+   "n": 13,
+   "id": "movement-naming-lexicon",
+   "decision": "May lexicon entries name a movement (e.g. 'what do mormons believe')? Per brief §1.3 this is Jesse's call; drafts kept all gists and lexicon concept-shaped. Audience framing currently lives only in golden-fixture ids (evangelism-mormon-*) and would stay there if declined."
+  },
+  {
+   "n": 14,
+   "id": "no-other-god-vs-idolatry",
+   "decision": "The tag-gap log's recorded pending call: no-other-god vs idolatry — one concept or two. The apologetics extension drafted here touches only the monotheism register and leaves that call open."
+  },
+  {
+   "n": 15,
+   "id": "rom828-rev214-cross-lists",
+   "decision": "Rom 8:28 (owned by remembered-all-things-for-good) and Rev 21:4 (owned by new-heaven-and-earth) are cross-listed on why-god-allows-suffering: decide pack anchors vs lexicon pointers at the owning concepts (Worker B's recorded coordination)."
+  },
+  {
+   "n": 16,
+   "id": "job-19-25-27",
+   "decision": "Job 19:25-27 on resurrection-of-the-dead: admit as a low-weight sources:[editorial] anchor with the recorded caveat (Hebrew of v26 famously difficult; 'from my flesh' a live reading — anchors hope-beyond-death as the WEB reads, never a load-bearing bodily-resurrection proof) — or drop."
+  },
+  {
+   "n": 17,
+   "id": "john-11-25-dual",
+   "decision": "John 11:25(-26) is claimed by resurrection-of-the-dead (B) and i-am-sayings (D). Confirm dual anchor (two honest registers) or single anchor + cross-ref (Worker B's coordinate-don't-duplicate flag)."
+  },
+  {
+   "n": 18,
+   "id": "rev-3-14-followup",
+   "decision": "Rev 3:14 ('the beginning of God's creation') deferred by Worker D: schedule its arche-as-origin/ruler handling as its own careful treatment, or leave unanchored."
+  },
+  {
+   "n": 19,
+   "id": "knowing-god-deferral",
+   "decision": "Worker A deferred the knowing-god register (Theme C row) — confirm no apologetics-side extension is needed now, or assign it."
+  },
+  {
+   "n": 20,
+   "id": "corpus-blocked-fixtures",
+   "decision": "116 of 216 anchors are current-edition-verified and largely outside the pinned fixture corpus; golden-fixture assertions on those refs ship status:'pending' with activation notes while docs/corpus-payload-dependency.md reads BLOCKED (and all current-edition quotes re-check when the re-pin PR lands). Confirm this staging."
+  }
+ ],
+ "critic_rounds": [
+  {
+   "round": 1,
+   "date": "2026-08-25",
+   "verdict": "NOT APPROVED — 9 objections (0 BLOCKER, 1 MAJOR, 8 MINOR); all 9 fixed by the editor, re-review pending",
+   "objections": [
+    {
+     "n": 1,
+     "severity": "MAJOR",
+     "site": "deity-of-christ / John 10:30-33",
+     "defect": "unmarked splice: v30 joined directly to v33, vv31-32 silently omitted",
+     "disposition": "fixed",
+     "fix": "full vv30-33 quoted; re-verified word-for-word against engwebp_vpl.txt"
+    },
+    {
+     "n": 2,
+     "severity": "MINOR",
+     "site": "no-other-gospel / Galatians 1:6-9",
+     "defect": "ref span overstated the quote (v8 alone)",
+     "disposition": "fixed",
+     "fix": "ref narrowed to Galatians 1:8; 1:6-7 context stays in the justification; md coverage table updated"
+    },
+    {
+     "n": 3,
+     "severity": "MINOR",
+     "site": "no-other-gospel / 2 Corinthians 11:3-4",
+     "defect": "ref span overstated the quote (v4 alone)",
+     "disposition": "fixed",
+     "fix": "ref narrowed to 2 Corinthians 11:4; v3 context stays in the justification; md coverage table updated"
+    },
+    {
+     "n": 4,
+     "severity": "MINOR",
+     "site": "false-prophets / Deuteronomy 13:1-3",
+     "defect": "quote began at v2 with no elision marker while the ref claimed 13:1-3",
+     "disposition": "fixed",
+     "fix": "quote now runs from the start of v1; re-verified word-for-word against engwebp_vpl.txt"
+    },
+    {
+     "n": 5,
+     "severity": "MINOR",
+     "site": "provenance header (md intro + JSON note + sources appendix)",
+     "defect": "sha256 b6f55cc7... is the zip's hash, not engwebp_vpl.txt's",
+     "disposition": "fixed",
+     "fix": "txt attributed its own sha256 71ea1ce6...; zip hash attributed to engwebp_vpl.zip explicitly; both hashes recomputed by the editor"
+    },
+    {
+     "n": 6,
+     "severity": "MINOR",
+     "site": "supremacy-of-christ / Colossians 1:17",
+     "defect": "missing editorial attribution required by the disputed-text table for Col 1:15-17",
+     "disposition": "fixed",
+     "fix": "editorial added to the anchor's sources"
+    },
+    {
+     "n": 7,
+     "severity": "MINOR",
+     "site": "Psalms-vs-Psalm ref naming",
+     "defect": "two spellings of one book across the deliverable",
+     "disposition": "fixed",
+     "fix": "normalized to the majority form Psalm (19:7-9, 12:6, 119:160, 119:89) in md and JSON"
+    },
+    {
+     "n": 8,
+     "severity": "MINOR",
+     "site": "resurrection merge note",
+     "defect": "'same or wider spans' false for John 2 (B's John 2:19, 21 narrower than D's 2:19-21)",
+     "disposition": "fixed",
+     "fix": "reworded in entry definition and integration log to name the deliberately narrowed John 2 case"
+    },
+    {
+     "n": 9,
+     "severity": "MINOR",
+     "site": "grace-not-earned / Isaiah 64:6",
+     "defect": "missing context caveat (corporate penitential confession)",
+     "disposition": "fixed",
+     "fix": "caveat added; soteriological application signposted as application with Eph 2:8-9 / Titus 3:5 carrying the direct teaching"
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "date": "2026-08-25",
+   "verdict": "NOT APPROVED \u2014 1 objection (0 BLOCKER, 0 MAJOR, 1 MINOR); fixed by the editor, re-review pending",
+   "notes": "Round-2 critic verified all 9 round-1 fixes as genuinely and correctly applied, and re-verified all 216 anchor quotes against their witnesses (206 exact, 4 honest substrings, 6 marked-ellipsis quotes verified segment-by-segment; 0 mismatches). Counts, case labels, md/JSON agreement, coverage tables, and the round-1 log all verified clean.",
+   "objections": [
+    {
+     "n": 1,
+     "severity": "MINOR",
+     "site": "resurrection-of-the-dead / Job 19:25-27",
+     "defect": "justification and Decision 16 assert sources:[editorial] for the resurrection reading, but the anchor's sources array held only the two URLs",
+     "disposition": "fixed",
+     "fix": "editorial added to the anchor's sources in md and JSON (URLs kept)"
+    }
+   ]
+  },
+  {
+   "round": 3,
+   "date": "2026-08-25",
+   "verdict": "NOT APPROVED — 1 objection (0 BLOCKER, 0 MAJOR, 1 MINOR); fixed by the editor, re-review pending",
+   "notes": "Round-3 critic verified the round-2 fix as genuinely and correctly applied, re-verified all 216 anchor quotes against their witnesses (205 exact, 4 honest substrings, 6 marked-ellipsis quotes and the one two-passage composite verified segment-by-segment; 0 word-level mismatches), and found zero md/JSON mismatches across all 29 concepts and 216 anchors. Counts, case labels, coverage tables, round-1 fix invariants, and both round logs all verified clean.",
+   "objections": [
+    {
+     "n": 1,
+     "severity": "MINOR",
+     "site": "deity-of-christ / Isaiah 9:6 with Isaiah 10:21",
+     "defect": "two-passage quote joined Isa 9:6 to Isa 10:21 with no visible seam, against the map's convention of marking non-contiguous joins",
+     "disposition": "fixed",
+     "fix": "… seam marker inserted between 'Prince of Peace.' and 'A remnant will return' in md and JSON; both segments kept word-for-word and re-verified against engwebp_vpl.txt"
+    }
+   ]
+  },
+  {
+   "round": 4,
+   "date": "2026-08-25",
+   "verdict": "APPROVED — zero objections; the critic loop closed at round 4",
+   "notes": "Fresh round-4 critic (no part in prior rounds; independent tooling throughout) verified the round-3 seam fix as genuinely and correctly applied, confirmed all three prior round logs accurate against the round files, re-verified all 216 anchor quotes against their witnesses (205 exact, 4 honest substrings, 7 seam-marked quotes verified segment-by-segment; 0 mismatches), found zero md/JSON mismatches across all 29 concepts and 216 anchors, reverified counts, case labels, and coverage tables, and sanity-read the 4 least-examined entries clean. Convergence: 9 → 1 → 1 → 0.",
+   "objections": []
+  }
+ ]
+}

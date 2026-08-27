@@ -1,0 +1,19 @@
+---
+name: tag-application-2026-08-25
+description: 2026-08-25 Jesse ruled on the tag-gap review (all additions approved; contested calls a–d settled) and the display-tag application pass COMPLETED — 1,428 tags applied / 709 reasoned skips of 2,137 candidates across all 66 book summary docs, 8 editor batches each fresh-critic audited + consolidated fix-verification APPROVED zero objections; CONVENTIONS §11 records the binding rulings; engine-side concept packs NOT started (awaiting Jesse's go)
+metadata:
+  type: project
+  modified: 2026-08-25T04:20:02.813Z
+---
+
+# Display-tag application pass — COMPLETE 2026-08-25
+
+Thread cmsg_01P3QsU2j86UJUbajEtMTYp2P4yvFoDcbcYFeRB5gzQF9M (same thread as [[tag-gaps-consolidation-2026-08-23]]). Jesse's 2026-08-25 rulings on tag-gaps-review.md §1: (a) both-tags-where-applicable + Sadducee-parallel harmonization (Mark 12/Luke 20 now carry `resurrection` + `resurrection-of-the-dead`; Matt 22 gained the companion tag; divergence records annotated resolved); (b) `gentile-inclusion` adopted (applied Acts 10/11/13/15/26 beside `nations-and-peoples` on 10/11/13); (c) delegated → thread KEPT the grief tags on Judges 11 / 2 Sam 21 / 2 Kgs 4, annotated; (d) all 93 PR #43 id uses ratified (annotations in all 34 using docs); overall "I agree with all additions. I'm okay with having more tags as long as it's helpful." → 161 adopted concepts (162 minus the one recorded fold). Rulings recorded as binding CONVENTIONS.md §11 (incl. tag-density policy: presence bar first, soft cap 6 / hard ceiling 8, yield order) and a verbatim postscript on tag-gaps-review.md.
+
+**Execution:** planning worker built per-book worklists (2,134→2,137 candidates, log-line-cited); 8 editor batches (Epistles+Rev 148/48, Gospels+Acts 142/171, Pss/Job/Eccl 195/96, Torah+Genesis-pilot 232/67, Jer+Judges–Kings 196/94, Isa–Song 191/71, History 166/88, Twelve+Prov 158/74) = **1,428 applied / 709 skipped**, every skip reasoned in each doc's dated Decisions item. Anchor rule: quotes only from the doc's own verified WEB text, log-row fragments, or the pinned fixture pipeline/fixtures/web-subset.json, byte-verified (Daniel/2 Kings have zero fixture verses — doc/log only). Each batch fresh-critic audited; objections were almost all record-keeping (counts, citations, annotation wording — Luke's 17 log citations were scrambled; batch-7 reworded 7 preserved parentheticals) plus ONE real composed-quote catch (Ezek 34 "out of the peoples" — replaced with the doc-verified quote). All fixes verified by a consolidated fresh critic: APPROVED zero objections, zero collateral damage, tag-gaps.md untouched except the dated EOF Heb 1:14 erratum note ("ministering spirits" log quote is an erratum; WEB reads "serving spirits").
+
+**Flags left for Jesse (recorded in doc Decisions):** deity-of-christ half of the Mark 12/Luke 20 divergence not covered by any log row — standing, needs his word to harmonize; cities-of-refuge now adjacent to pastoral-refuge-and-justice on Exod 21/Num 35/Deut 19; Lam 3 unanswered-prayer ceiling yield; Joel day-of-the-lord vs fasting yield tension; Exod 20:7 vs Deut 5:11 name-of-god cross-book divergence (both documented).
+
+**NOT done:** engine-side ingestion. The 161 adopted ids are display tags + vocabulary-addition candidates only; concept packs (golden fixtures → gauntlet → measurable effect → human PR merge) await Jesse's go, per the covenant and CONVENTIONS §11(1).
+
+**Process lesson:** across 8 batches and ~1,400 additions, fresh critics found content clean but records fallible — count/citation errors cluster in Decisions summaries, not tag placements; and the one composed-quote attempt that survived editor self-checks was caught only by 100%-coverage anchor verification. Byte-verified anchors + mechanical recounts are non-negotiable for corpus docs.
