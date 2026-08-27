@@ -3,8 +3,8 @@
   "schema": "scripture-search-engine/sweep-universe-manifest/v1",
   "universeVersion": "1.0.0",
   "seed": "scripture-sweep-universe-v1",
-  "fingerprint": "712788243aa9ad8f7acad769e2f9511d62668bfa367dc5bdb3f21de4f995a24f",
-  "lineCount": 12686,
+  "fingerprint": "84b1f2daf874b4470f803d4ecf82e4b9777da0174f232383e17e3c8b301240bd",
+  "lineCount": 12785,
   "countsByGenerator": {
     "adversarial": 40,
     "bare-word": 1117,
@@ -14,6 +14,6 @@
     "remembered-phrase": 156,
     "theological-term": 504,
     "worship-planning": 1622,
-    "golden-verbatim": 797
+    "golden-verbatim": 896
   }
 }
