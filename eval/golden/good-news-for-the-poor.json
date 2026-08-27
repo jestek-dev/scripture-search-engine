@@ -1,0 +1,42 @@
+{
+  "id": "good-news-for-the-poor",
+  "query": "what does the bible say about the poor",
+  "status": "active",
+  "additionalQueries": [
+    "good news to the poor"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 31 (Theme G, requesting book: Luke).",
+    "Deferred because the signature texts (Luke 4:18; 1:52-53; 7:22;",
+    "12:33) were absent and the lone in-corpus Luke 6:20-25 was too thin",
+    "to measure.",
+    "The keep-distinct-from-justice reversible call EXECUTED as recorded",
+    "on both rows: justice-and-oppression keeps the oppression/justice",
+    "register (its lexicon and anchors untouched); this pack is the",
+    "GOOD-NEWS register — God's favor announced to the poor — on Luke's",
+    "own texts (the review partitioned Luke's justice-shaped refs to the",
+    "Micah row precisely so these two rows do not compete).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'what does the bible say about the poor' pure do+say token noise",
+    "(Ps 73:11, Job 1:9); 'good news to the poor' Luke 4:18 rank 1 exact",
+    "phrase CHIPLESS, then good+news scatter."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Luke 4:18",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Good news for the poor"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Luke 1:52-53",
+    "Luke 6:20-21",
+    "Luke 7:22",
+    "Luke 12:33"
+  ],
+  "coversConcepts": [
+    "good-news-for-the-poor"
+  ]
+}

@@ -117,12 +117,15 @@ anchors:
     sources: [editorial]
     weight: 0.8
   # "But as for me, I know that my Redeemer lives... After my skin is
-  # destroyed, then I will see God in my flesh" (WEB wording — Job 19
-  # NOT in web-subset). CAVEAT ANCHOR (map Decision 16, verbatim
+  # destroyed, then I will see God in my flesh" (WEB, in corpus since
+  # #64). CAVEAT ANCHOR (map Decision 16, verbatim
   # intent): the Hebrew of v26 is famously difficult and 'from my
   # flesh' (apart from it) is a live scholarly reading — this anchors
   # the hope-beyond-death register as the WEB text reads, dispute noted,
   # at low weight, NEVER a load-bearing bodily-resurrection proof.
+  # DUAL ANCHOR (2026-08-27 roster build): also redeemer's keystone —
+  # the verse honestly serves both registers (recorded both files);
+  # this pack's caveat and weight are unchanged.
   - ref: Job 19:25-27
     sources: [editorial]
     weight: 0.4

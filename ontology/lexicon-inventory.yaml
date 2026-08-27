@@ -214,6 +214,28 @@ collapses:
     reviewedBy: pending-J12
     date: "2026-08-21"
     note: "Bare 'remembrance' should reach the Lord's supper; distinctive."
+  - conceptId: mediator
+    phrase: "one mediator"
+    token: mediator
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-27"
+    note: >-
+      CORPUS-BLOCKED ROSTER build (2026-08-27), authored with the pack:
+      "one" is a stopword, so Paul's own phrase collapses to bare
+      "mediator" — deliberate: the subject noun people type, distinctive
+      stem, no competing concept; fixture-backed (mediator.json).
+  - conceptId: mediator
+    phrase: "umpire between us"
+    token: umpire
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-27"
+    note: >-
+      CORPUS-BLOCKED ROSTER build (2026-08-27), authored with the pack:
+      "between"/"us" are stopwords, so Job 9:33's own phrase collapses
+      to bare "umpire" — deliberate: the WEB's unique word for the verse
+      people search by it (KJV "daysman"); no other concept speaks it.
   - conceptId: new-creation
     phrase: "starting over"
     token: start
@@ -262,6 +284,19 @@ collapses:
       Bare 'presence' should reach this concept. (The cautionary 'god with
       us' -> god collapse from the gate's docstring is no longer in the
       lexicon; this one is the safe form.)
+  - conceptId: redeemer
+    phrase: "my redeemer"
+    token: redeemer
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-27"
+    note: >-
+      CORPUS-BLOCKED ROSTER build (2026-08-27), authored with the pack:
+      "my" is a stopword, so the confession's own phrase collapses to
+      bare "redeemer" — deliberate: "who is my redeemer" (the fixture's
+      additionalQuery) normalizes to exactly this token; distinctive
+      (kinsman-redeemer's phrases all carry "kinsman"); fixture-backed
+      (redeemer.json).
   - conceptId: relapse-and-restoration
     phrase: "failed again"
     token: fail
@@ -961,6 +996,19 @@ concepts:
           Generic; would fire this pack on every church-* query
           (gathering-together, unity territory).
 
+  - id: cities-of-refuge
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, cities-of-refuge.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: refuge
+        reason: >-
+          refuge-in-trouble (Psalm register) and
+          refuge-and-justice-for-the-oppressed (pastoral register) are
+          the bare word's incumbents; this civil-institution lookup
+          rides the qualified forms only — the misroute warning the
+          pack was minted around.
+
   - id: clean-and-unclean
     # 2026-08-26 tag-gap batch 1: row authored with the pack
     # (fixture-first, clean-and-unclean.json). Every entry keeps >= 2
@@ -1115,6 +1163,22 @@ concepts:
         reason: >-
           Generic time vocabulary across the whole canon; the multi-word
           phrase is the concept's name.
+
+  - id: death-and-burial
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, death-and-burial.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: burial
+        reason: >-
+          The phrase forms carry the lookup register; bare "burial" is
+          plausibly admissible later but ships conservative alongside
+          the mortality / grief-and-loss neighborhood.
+      - token: funeral
+        reason: >-
+          Same conservative call as burial: distinctive modern word, but
+          the what-does-the-bible-say phrase forms are the measured
+          queries; revisit if bare-word queries surface.
 
   - id: deity-of-christ
     skipped:
@@ -1595,6 +1659,17 @@ concepts:
           times and seasons); the question forms ("does god change",
           "i the lord do not change") carry the concept.
 
+  - id: good-news-for-the-poor
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, good-news-for-the-poor.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires.
+    skipped:
+      - token: poor
+        reason: >-
+          Spans justice-and-oppression's register and dozens of
+          proverbs; the good-news phrase forms carry this pack's
+          announcement register (the keep-distinct-from-justice call).
+
   - id: good-works
     # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
     # good-works.json). Phrase-forms pack.
@@ -1868,6 +1943,17 @@ concepts:
     # collapse in the lexicon ("generational" is its own token and
     # never stands alone).
     skipped: []
+  - id: inheritance
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, inheritance.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: inheritance
+        reason: >-
+          Common noun across both registers (OT allotment, NT in-Christ)
+          plus hundreds of allotment verses; the phrase forms carry the
+          lookup queries.
+
   - id: integrity
     # 2026-08-26 tag-gap batch 3: row authored with the pack
     # (fixture-first, integrity.json). Bare "integrity" is the subject
@@ -1988,6 +2074,23 @@ concepts:
         reason: >-
           Generic destination word (new-heaven-and-earth, heavenly-
           reward territory); the paired forms carry the announcement.
+
+  - id: kinsman-redeemer
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, kinsman-redeemer.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires. The levirate either/or
+    # folded levirate marriage into this lexicon (no separate id).
+    skipped:
+      - token: kinsman
+        reason: >-
+          Distinctive, but the institution's own queries are the
+          qualified two-token forms; bare "kinsman" ships conservative
+          (plausibly admissible later).
+      - token: redeemer
+        reason: >-
+          Belongs to the redeemer pack (same PR): the two-register
+          split gives the bare confession word to the personal
+          register; this pack's phrases all carry "kinsman".
 
   - id: knowing-god
     # 2026-08-26 tag-gap batch 2: row authored with the pack
@@ -2114,6 +2217,12 @@ concepts:
           (fixture first — never add data because it exists); the pack is
           reachable today by its question phrasings. Bare "marriage" belongs
           to godly-marriage (2026-08-18).
+
+  - id: mediator
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, mediator.json). Two deliberate collapses (rows
+    # above): "one mediator" -> mediator, "umpire between us" -> umpire.
+    admitted: [mediator, umpire]
 
   - id: mercy
     # 2026-08-26 tag-gap batch 2: row authored with the pack
@@ -2319,6 +2428,22 @@ concepts:
     # significant tokens.
     admitted: [passover]
 
+  - id: peace-among-nations
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, peace-among-nations.json). Every entry keeps >= 2
+    # significant tokens ("war no more" REJECTED at authoring —
+    # collapses to bare `war`; structural limit in the pack file).
+    skipped:
+      - token: peace
+        reason: >-
+          peace-of-god's inner-peace register is the bare word's
+          incumbent; this pack takes only the between-nations phrase
+          forms (the measured "world peace" hijack fix).
+      - token: war
+        reason: >-
+          The three-way bare-war boundary (recorded with the warfare
+          pack): neither war pack admits the bare word.
+
   - id: peace-of-god
     # peace: 2026-08-08 decision table. anxious: correction-table collapse
     # of "do not be anxious" — kept, exactly the bare word someone types
@@ -2476,6 +2601,14 @@ concepts:
         reason: >-
           Spans the prophetic and Jesus-rebukes narratives; "open
           rebuke" (2 tokens) carries this concept.
+  - id: redeemer
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, redeemer.json). One deliberate collapse (row
+    # above): "my redeemer" -> redeemer — the fixture's own
+    # additionalQuery ("who is my redeemer") normalizes to exactly this
+    # bare token; kinsman-redeemer's phrases all carry "kinsman".
+    admitted: [redeemer]
+
   - id: refuge-and-justice-for-the-oppressed
     # NEEDS-JESSE §1.6d option 3 single words ("abused" and "raped" stem
     # differently from their base forms, so both surface forms are listed).
@@ -2609,6 +2742,21 @@ concepts:
     # 2026-08-18 harvest: deliberate bare entries per the pack's header
     # comment — the exhaustion register people actually type.
     admitted: [rest, weary, tired, exhausted, burnout]
+
+  - id: restitution
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, restitution.json). Deliberate bare subject-noun
+    # entry: the fixture's primary query IS the bare word; distinctive
+    # stem, no competing concept. "eye for an eye" REJECTED at
+    # authoring — collapses to bare `eye` (structural limit in the
+    # pack file).
+    admitted: [restitution]
+    skipped:
+      - token: eye
+        reason: >-
+          The talion phrase collapses to a body-part noun that answers
+          every eye-verse query; exact-phrase retrieval serves the
+          verbatim query and Lev 24:18-21 is anchored to carry the chip.
 
   - id: restoration
     # 2026-08-18 harvest: "restoration" deliberate bare entry; restore/renew
@@ -3351,6 +3499,22 @@ concepts:
           Jesse's 2026-07-29 ruling scoped this concept to the ethical sense
           precisely because "light" spans both senses; admitting the bare
           token would undo that decision (2026-08-08 decision table).
+
+  - id: warfare
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, warfare.json). Every entry keeps >= 2 significant
+    # tokens; the three-way bare-war boundary recorded here and in both
+    # war packs.
+    skipped:
+      - token: war
+        reason: >-
+          Bare "war" spans this pack, spiritual-warfare and
+          peace-among-nations; the phrase forms partition the three
+          registers (the collision warning the rows shipped with).
+      - token: warfare
+        reason: >-
+          Same boundary: spiritual-warfare's register is the bare
+          word's likeliest modern sense; neither pack admits it.
 
   - id: watchman-and-warning
     # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,

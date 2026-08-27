@@ -1,0 +1,57 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme G row 29 (2 requesting books: Micah, Isaiah). Deferred because
+# BOTH twin texts (Mic 4:1-4; Isa 2:2-4) were absent — the row IS
+# those two texts.
+#
+# QUERY PARTITION with the warfare row (both built this PR, recorded
+# in both packs): "what does the bible say about war" belongs to
+# warfare (the war-law register); THIS pack takes the
+# peace-between-nations register (swords into plowshares, world
+# peace). peace-of-god keeps the inner-peace/anxiety register — the
+# measured hijack this pack fixes ("world peace" was answered
+# wholesale by John 14:27 / Phil 4:6-7 before this pack).
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens.
+# "war no more" was REJECTED at authoring — it collapses to bare `war`
+# ("no"/"more" are stopwords), violating the three-way bare-war
+# boundary recorded with the warfare pack; "learn war no more" (the
+# text's own clause, 2 tokens) carries that query family instead.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the prophets' vision; it does not date it or map it
+# onto any politics.
+id: peace-among-nations
+label: Peace among nations
+lexicon:
+  - swords into plowshares
+  - world peace
+  - peace among nations
+  - learn war no more
+anchors:
+  # "They shall beat their swords into plowshares, and their spears
+  # into pruning hooks. Nation shall not lift up sword against nation,
+  # neither shall they learn war any more." (WEB, in corpus). The
+  # vision's most-quoted sentence, with its mountain-of-the-LORD frame.
+  - ref: Isaiah 2:2-4
+    sources: [editorial]
+    weight: 1.0
+  # "They will beat their swords into plowshares... But every man will
+  # sit under his vine and under his fig tree. No one will make them
+  # afraid" (WEB, in corpus). The twin text, with Micah's own coda —
+  # the vine-and-fig-tree line Isaiah's version lacks.
+  - ref: Micah 4:1-4
+    sources: [editorial]
+    weight: 0.95
+  # "He makes wars cease to the end of the earth. He breaks the bow,
+  # and shatters the spear. He burns the chariots in the fire." (WEB,
+  # in corpus). The psalm's same register: God ending war itself.
+  - ref: Psalms 46:9
+    sources: [editorial]
+    weight: 0.8
+related:
+  - warfare
+  - kingdom-of-heaven
+  - zion-city-of-god
+  - peace-of-god
+sources: [editorial]

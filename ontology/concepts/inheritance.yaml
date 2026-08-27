@@ -1,0 +1,72 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme G row 26 (4 requesting books). Deferred because Joshua's dense
+# allotment text, Num 26-36, the Deut refs and the Psalms were absent —
+# and the NT in-Christ register was recorded as "a different design to
+# decide at re-pin".
+#
+# DESIGN DECIDED at curation (reversible, the deferred call): ONE id
+# spanning both registers — the OT land-allotment theme and the NT
+# in-Christ inheritance the OT theme becomes — described side by side.
+# The anchors are the texts' own words; the pack adjudicates no
+# typology (it does not say the land "really means" heaven, nor that
+# the NT hope is a metaphor — it reports both registers and lets the
+# related edges carry the neighborhood).
+#
+# BOUNDARY: Eph 1:11 ("assigned an inheritance in him") stays
+# election-and-predestination's anchor — this pack takes the ADJACENT,
+# disjoint Eph 1:13-14 pledge-of-our-inheritance verses (recorded in
+# both files).
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens;
+# bare `inheritance` deliberately SKIPPED (inventory row) — a common
+# noun across both registers plus hundreds of allotment verses; the
+# phrase forms carry the lookup queries.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: inheritance
+label: Inheritance
+lexicon:
+  - inheritance in the bible
+  - our inheritance in christ
+  - pledge of our inheritance
+  - the lord is my inheritance
+  - inheritance of the promised land
+anchors:
+  # "to an incorruptible and undefiled inheritance that doesn't fade
+  # away, reserved in Heaven for you," (WEB, in corpus). The NT
+  # register's keystone sentence.
+  - ref: 1 Peter 1:4
+    sources: [editorial]
+    weight: 1.0
+  # "So the LORD gave to Israel all the land which he swore to give to
+  # their fathers... Nothing failed of any good thing which the LORD
+  # had spoken" (WEB, in corpus). The OT register's summary verdict —
+  # the allotment chapters' own conclusion.
+  - ref: Joshua 21:43-45
+    sources: [editorial]
+    weight: 0.9
+  # "you were sealed with the promised Holy Spirit, who is a pledge of
+  # our inheritance" (WEB, in corpus). The pledge verses — ADJACENT to
+  # election-and-predestination's Eph 1:11, deliberately disjoint
+  # (recorded both files).
+  - ref: Ephesians 1:13-14
+    sources: [editorial]
+    weight: 0.85
+  # "The daughters of Zelophehad speak right. You shall surely give
+  # them a possession of an inheritance" (WEB, in corpus). The
+  # institution argued and amended — inheritance as covenant right.
+  - ref: Numbers 27:7-8
+    sources: [editorial]
+    weight: 0.75
+  # "Therefore Levi has no portion nor inheritance with his brothers;
+  # the LORD is his inheritance" (WEB, in corpus). The register-bridge
+  # verse: the LORD himself as the portion.
+  - ref: Deuteronomy 10:9
+    sources: [editorial]
+    weight: 0.75
+related:
+  - adoption-as-gods-children
+  - gods-faithfulness
+  - hope-in-god
+sources: [editorial]

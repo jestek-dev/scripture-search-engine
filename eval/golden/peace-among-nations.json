@@ -1,0 +1,41 @@
+{
+  "id": "peace-among-nations",
+  "query": "swords into plowshares",
+  "status": "active",
+  "additionalQueries": [
+    "world peace"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 29 (Theme G, 2 requesting books: Micah,",
+    "Isaiah). Deferred because BOTH twin texts (Mic 4:1-4; Isa 2:2-4)",
+    "were absent — the row IS those two texts.",
+    "QUERY PARTITION with the warfare row (both built this PR, recorded",
+    "in both packs): 'what does the bible say about war' belongs to",
+    "warfare (the war-law register); this pack takes the",
+    "peace-between-nations register (swords into plowshares, world",
+    "peace). peace-of-god keeps the inner-peace/anxiety register — the",
+    "measured hijack this pack fixes.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'swords into plowshares' Isa 2:4 / Mic 4:3 ranks 1-2 exact phrase",
+    "CHIPLESS; 'world peace' hijacked wholesale by peace-of-god's",
+    "inner-peace anchors (John 14:27, 16:33, Phil 4:6-7 — the review's",
+    "exact diagnosis: the Bible's best-known peace-between-nations text",
+    "was unreachable as a concept)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 2:2-4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Peace among nations"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Micah 4:1-4",
+    "Psalms 46:9"
+  ],
+  "coversConcepts": [
+    "peace-among-nations"
+  ]
+}

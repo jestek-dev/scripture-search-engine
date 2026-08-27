@@ -1,0 +1,69 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme G row 28 (2 requesting books: Exodus, Leviticus). Deferred
+# because Exod 21:18-22:15, Lev 5:16; 6:1-7; 24:17-21 were ALL absent.
+#
+# BOUNDARY: refuge-and-justice-for-the-oppressed untouched — it is
+# keyed to the oppressed person's RESCUE, not civil remedy (the row's
+# own distinction). Luke 19:8 (Zacchaeus's fourfold restoration) is
+# anchored as the NT narrative echo of Exod 22:1's own multiple — a
+# story the law's numbers walk into, described, not allegorized.
+#
+# STRUCTURAL LIMIT (vengeance precedent): "eye for an eye" is NOT a
+# lexicon entry — it collapses to bare `eye` ("for"/"an" are
+# stopwords), and bare eye-queries belong to exact-phrase retrieval.
+# Lev 24:18-21 is anchored so the talion text carries this chip when
+# the concept fires by its own phrases.
+#
+# TOKENIZER NOTE (G-4): bare `restitution` ADMITTED (inventory row) —
+# the subject noun people type, distinctive stem, no competing
+# concept; the fixture's primary query IS the bare word.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the civil-remedy law in the text's own terms.
+id: restitution
+label: Restitution
+lexicon:
+  - restitution
+  - make restitution
+  - restitution in the bible
+  - pay back what was stolen
+anchors:
+  # "he shall restore that which he took by robbery... or the lost
+  # thing which he found... he shall restore it in full, and shall add
+  # a fifth part more to it." (WEB, in corpus). The law's fullest
+  # statement: restoration plus a fifth.
+  - ref: Leviticus 6:4-5
+    sources: [editorial]
+    weight: 1.0
+  # "If a man steals an ox or a sheep, and kills it or sells it, he
+  # shall pay five oxen for an ox, and four sheep for a sheep." (WEB,
+  # in corpus). The multiple — the number Zacchaeus later names.
+  - ref: Exodus 22:1
+    sources: [editorial]
+    weight: 0.9
+  # "then he shall confess his sin which he has done; and he shall
+  # make restitution for his guilt in full, add to it the fifth part"
+  # (WEB, in corpus). Restitution joined to confession.
+  - ref: Numbers 5:6-7
+    sources: [editorial]
+    weight: 0.85
+  # "Behold, Lord, half of my goods I give to the poor. If I have
+  # wrongfully exacted anything of anyone, I restore four times as
+  # much." (WEB, in corpus). The NT narrative echo of Exod 22:1's
+  # multiple — described, not allegorized.
+  - ref: Luke 19:8
+    sources: [editorial]
+    weight: 0.8
+  # "He who strikes an animal mortally shall make it good, life for
+  # life... fracture for fracture, eye for eye, tooth for tooth."
+  # (WEB, in corpus). The talion frame around making-it-good — carries
+  # the chip for the exact-phrase query (see structural limit above).
+  - ref: Leviticus 24:18-21
+    sources: [editorial]
+    weight: 0.7
+related:
+  - repentance
+  - justice-and-oppression
+  - cities-of-refuge
+sources: [editorial]

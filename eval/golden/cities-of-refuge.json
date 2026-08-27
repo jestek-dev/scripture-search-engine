@@ -1,0 +1,38 @@
+{
+  "id": "cities-of-refuge",
+  "query": "cities of refuge",
+  "status": "active",
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 25 (Theme G, 4 requesting books: Joshua,",
+    "Exodus, Numbers, Deuteronomy). Deferred because Josh 20, Exod 21:13,",
+    "Num 35, Deut 4:41-43/19 were ALL absent.",
+    "The standing misroute WARNING honored: refuge-in-trouble (Psalm",
+    "register) and pastoral-refuge-and-justice (abuse-crisis register)",
+    "are adjacent but WRONG for this lookup query, and tagging Josh 20",
+    "with either would misroute their pastoral queries — so the",
+    "lexicon-extension either/or is DECIDED as a narrow MINT (neither",
+    "pastoral pack touched; zero shared phrases — 'cities of refuge' is",
+    "two-token and cannot fire on bare refuge queries).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'cities of refuge' exact-phrase rows only (Num 35:6, 35:11, Josh",
+    "20:2), ALL CHIPLESS — the lookup query had no curated home."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Joshua 20:2-3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Cities of refuge"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Numbers 35:11-12",
+    "Exodus 21:13",
+    "Deuteronomy 19:2-4",
+    "Deuteronomy 4:41-43"
+  ],
+  "coversConcepts": [
+    "cities-of-refuge"
+  ]
+}
