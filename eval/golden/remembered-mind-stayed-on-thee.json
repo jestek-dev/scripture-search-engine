@@ -1,0 +1,50 @@
+{
+  "id": "remembered-mind-stayed-on-thee",
+  "query": "whose mind is stayed on thee",
+  "status": "active",
+  "note": [
+    "ALIAS/LEXICON MINING BATCH 1 (2026-08-26, whole-Bible coverage plan §2.3",
+    "item 2 / §4.3, mined from the popular-verses Tier 2 seed — Isaiah 26:3",
+    "is rank 62 of the verified top-200; the sibling promotion fixture",
+    "popular-isaiah-26-3 asserts the WEB register 'steadfast in perfect",
+    "peace'). 'Whose mind is stayed on thee' is the ASV's own wording (1901,",
+    "public domain); the WEB reads 'whoever's mind is steadfast'. Decision",
+    "#4/#5 defaults: ASV/YLT/Darby/BSB/WEB wording only.",
+    "",
+    "Measured miss, fixture written FIRST, before any data: on main @ e762d1c",
+    "(0.14.0, corpus 644b241c…, layer b24ea16d…, fixture bed) this query",
+    "does not return Isaiah 26:3 ANYWHERE in the top 10 — 'stayed' stems to",
+    "a token the WEB verse never carries ('steadfast' stems differently), so",
+    "the query dead-ends in translation_variant scatter (#1 Ephesians 6:18,",
+    "6.00). The longer register 'perfect peace whose mind is stayed on thee'",
+    "already leads (27.02, peace-of-god anchor + token overlap) and is",
+    "asserted below as a guard. The fix is the remembered-mind-stayed-on-thee",
+    "pack (single anchor, Isaiah 26:3 at 1.0), additive — peace-of-god keeps",
+    "its reviewed Isaiah 26:3 anchor at 0.9; the two concepts coexist over",
+    "one verse exactly as remembered-anxious-for-nothing and peace-of-god",
+    "coexist over Philippians 4:6-7.",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose: the assertion is that",
+    "a curated anchor put the quoted verse first and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Isaiah 26:3",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: A mind stayed on God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "additionalQueries": [
+    "perfect peace whose mind is stayed on thee"
+  ],
+  "alsoAcceptable": [
+    "Philippians 4:6-7",
+    "John 14:27",
+    "Colossians 3:15"
+  ],
+  "coversConcepts": [
+    "remembered-mind-stayed-on-thee"
+  ]
+}

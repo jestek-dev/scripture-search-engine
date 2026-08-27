@@ -1,0 +1,60 @@
+# REMEMBERED-PHRASING PACK — alias-mining batch 1 HELD ROW, admitted post
+# corpus expansion (2026-08-27, whole-Bible coverage plan §2.3 item 2 /
+# §4.3; battery re-grade seed row ad11 'speak things into existence' — X:
+# Romans 4:17, the verse people mean, never surfaced on the 5,726-verse
+# corpus). Held out of the original batch-1 push because Romans 4 was
+# outside the fixture corpus; the full-Bible expansion (#64) made the row
+# measurable, and it was measured before admission (fixtures-first —
+# eval/golden/remembered-calls-things-that-are-not.json).
+#
+# PD-ONLY WORDING (decision #4/#5 defaults): the phrase below is the
+# verbatim wording of the American Standard Version (1901, public domain) —
+# no ESV/NIV/NLT-derived wording anywhere in this pack.
+#   - "calleth the things that are not as though they were" — ASV,
+#     Romans 4:17. The measured miss: this register returned Romans 4:17
+#     at #3 on chipless token_overlap/proximity only (8.37, behind bare
+#     {call, thing} scatter led by Luke 6:46).
+#   - "calls the things that are not as though they were" — WEB,
+#     Romans 4:17 (verbatim, comma dropped by tokenization). Its query
+#     already led lexically (measured #1, exact_phrase, 40.00); the
+#     entry's value is the honest curated chip and G4's two-surface-forms
+#     floor — recorded so the admission evidence is read correctly (the
+#     mind-stayed-on-thee second-entry precedent).
+#
+# CAUTION recorded at draft time, measured before admission: the phrase
+# tokenizes to the generic 2-token set {call, thing}, so any query
+# carrying both stems fires this anchor. Measured on the admission
+# identity: bare "call things" -> Romans 4:17 #1 with the chip (48.37);
+# "called to do great things" -> Romans 4:17 #2 with the chip, behind the
+# exact-phrase lexical leader. This is the same 2-token-pair collapse the
+# batch admitted for {cast, care} (remembered-cast-your-care): the paired
+# form IS the register carrier, the chip is honest, and both tokens are
+# skipped in the bare-word inventory with reasons (phrasing-only by
+# design). Deny-list review candidate if the pair proves broad in use.
+# The J9 boundary is guarded by the sibling fixture
+# remembered-calls-things-slogan-guard: "speak things into existence"
+# carries no 'call' stem, does not fire this anchor, and Romans 4:17 must
+# not lead it by data.
+#
+# DELIBERATELY NOT INCLUDED: routing the slogan query "speak things into
+# existence" itself ({speak, thing, existence}) to Romans 4:17. That
+# phrasing is prosperity-teaching vocabulary, not translation wording, and
+# the re-grade marks ad11's corrective framing J9-gated — whether the
+# engine should answer the slogan with the verse people mean, a
+# corrective, or both is Jesse's editorial call, not a data row's.
+#
+# ONE anchor per pack, deliberately (the remembered-* design): the phrase
+# names exactly one verse; narrow anchor, narrow claim.
+id: remembered-calls-things-that-are-not
+label: Calling things that are not
+lexicon:
+  - calleth the things that are not as though they were
+  - calls the things that are not as though they were
+anchors:
+  # "...God, who gives life to the dead, and calls the things that are
+  # not, as though they were." (WEB)
+  - ref: Romans 4:17
+    sources: [editorial]
+    weight: 1.0
+related:
+  - faith

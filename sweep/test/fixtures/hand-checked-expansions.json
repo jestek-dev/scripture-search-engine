@@ -177,6 +177,13 @@
       "conceptId": "dreams-and-visions"
     },
     {
+      "queryId": "concept-register:003bd079ae24c321",
+      "query": "what does the bible say about they that wait upon Jehovah shall renew their strength",
+      "register": "church-member",
+      "expectationKind": "concept-anchors",
+      "conceptId": "remembered-wait-for-the-lord"
+    },
+    {
       "queryId": "concept-register:0042e7a59245d8a6",
       "query": "i want to learn about light and darkness",
       "register": "church-member",
@@ -184,11 +191,11 @@
       "conceptId": "light-and-darkness"
     },
     {
-      "queryId": "concept-register:0044ffdab2ec7c66",
-      "query": "primary text for a lesson on propitiation",
+      "queryId": "concept-register:0053837ff7bdec1c",
+      "query": "what passage teaches strength for those who wait on the lord",
       "register": "pastor",
       "expectationKind": "concept-anchors",
-      "conceptId": "the-cross"
+      "conceptId": "remembered-wait-for-the-lord"
     },
     {
       "queryId": "concept-register:006095c9350330c1",
@@ -203,13 +210,6 @@
       "register": "pastor",
       "expectationKind": "concept-anchors",
       "conceptId": "refuge-and-justice-for-the-oppressed"
-    },
-    {
-      "queryId": "concept-register:006a2fe81bc685b2",
-      "query": "scripture reading on cost of discipleship",
-      "register": "worship-leader",
-      "expectationKind": "concept-anchors",
-      "conceptId": "discipleship"
     }
   ],
   "felt-need": [
@@ -303,6 +303,12 @@
       "conceptId": "covenant"
     },
     {
+      "queryId": "golden-verbatim:026962841999eb25",
+      "query": "i can do all things",
+      "expectationKind": "concept-anchors",
+      "conceptId": "famous-i-can-do-all-things"
+    },
+    {
       "queryId": "golden-verbatim:02d036ed6295e00d",
       "query": "miscarriage",
       "expectationKind": "concept-anchors",
@@ -337,12 +343,6 @@
       "query": "parenting",
       "expectationKind": "concept-anchors",
       "conceptId": "parenting"
-    },
-    {
-      "queryId": "golden-verbatim:044a9043cbf7aef8",
-      "query": "render to caesar",
-      "expectationKind": "concept-anchors",
-      "conceptId": "governing-authorities"
     }
   ],
   "multi-concept": [
