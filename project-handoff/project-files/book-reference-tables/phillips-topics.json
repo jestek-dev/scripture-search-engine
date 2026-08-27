@@ -1,0 +1,1212 @@
+{
+  "metadata": {
+    "bookTitle": "A Topical Bible Guide",
+    "author": "Bob Phillips",
+    "year": 2004,
+    "publisher": "Harvest House Publishers",
+    "isbn13": "9780736912747",
+    "extractionDate": "2026-08-18",
+    "note": "references only; selection/arrangement and text remain the publisher's — use as leads, verify each pairing against scripture before any admission",
+    "structureNote": "Topic headings with the scripture references listed under each. 'Signs of the Times' carries three subheadings, marked with subtopicOf. Book names normalized; OCR errata (e.g. 'Exopus'->Exodus, 'Timus'->Titus) corrected.",
+    "damaged": [
+      "Topic 'Social Signs': one OCR segment 'LUKE ...; 28:30' is not a valid Luke chapter and could not be recovered; that single reference was dropped."
+    ]
+  },
+  "topics": [
+    {
+      "topic": "Anxiety and Worry",
+      "references": [
+        "Matthew 6:30-34",
+        "Philippians 4:5-7",
+        "Psalm 16:11",
+        "Psalm 37:1,7",
+        "Psalm 43:5",
+        "Proverbs 16:7",
+        "Isaiah 41:10",
+        "Philippians 4:8-9,19",
+        "2 Thessalonians 3:3",
+        "1 Peter 5:7"
+      ]
+    },
+    {
+      "topic": "Assurance of Salvation",
+      "references": [
+        "John 10:27-30",
+        "Romans 8:37-39",
+        "Matthew 24:35",
+        "John 5:24",
+        "John 6:37",
+        "John 20:31",
+        "Romans 8:16,31,35",
+        "Hebrews 13:5",
+        "1 John 5:11-13"
+      ]
+    },
+    {
+      "topic": "Battle of Armageddon",
+      "references": [
+        "Revelation 16:16",
+        "Revelation 14:14-20"
+      ]
+    },
+    {
+      "topic": "Beatitudes",
+      "references": [
+        "Matthew 5:3-10"
+      ]
+    },
+    {
+      "topic": "Bereavement and Loss",
+      "references": [
+        "Psalm 23:4",
+        "Psalm 119:50",
+        "Deuteronomy 31:8",
+        "Psalm 23",
+        "Psalm 27:10"
+      ]
+    },
+    {
+      "topic": "Bowl Judgments",
+      "references": [
+        "Revelation 16:1",
+        "Revelation 16"
+      ]
+    },
+    {
+      "topic": "Christian Fellowship",
+      "references": [
+        "Matthew 18:20",
+        "Hebrews 10:24-25",
+        "Psalm 122:1,9",
+        "Psalm 133:1",
+        "John 13:34",
+        "Acts 2:42,46",
+        "1 Corinthians 1:9",
+        "1 John 1:3,7"
+      ]
+    },
+    {
+      "topic": "Christian’s Armor",
+      "references": [
+        "2 Corinthians 10:3-5",
+        "Ephesians 6:11",
+        "Ephesians 6:10-18"
+      ]
+    },
+    {
+      "topic": "Comfort",
+      "references": [
+        "Matthew 11:28-30",
+        "John 14:1",
+        "Psalm 23",
+        "Lamentations 3:21-26",
+        "Matthew 5:4",
+        "John 14:16-18",
+        "Romans 15:4",
+        "2 Corinthians 1:3-5",
+        "2 Thessalonians 2:16-17"
+      ]
+    },
+    {
+      "topic": "Confidence",
+      "references": [
+        "Philippians 1:6",
+        "Hebrews 10:35",
+        "Psalm 27:3",
+        "Proverbs 3:26",
+        "Proverbs 14:26",
+        "Isaiah 30:15",
+        "Galatians 6:9",
+        "Ephesians 3:11-12",
+        "1 Peter 2:9"
+      ]
+    },
+    {
+      "topic": "Crowns",
+      "references": [
+        "2 Timothy 4:7-8",
+        "James 1:12",
+        "1 Corinthians 9:25",
+        "1 Thessalonians 2:19-20",
+        "1 Peter 5:2-4",
+        "Revelation 2:10"
+      ]
+    },
+    {
+      "topic": "Danger",
+      "references": [
+        "Psalm 32:7",
+        "Isaiah 43:2",
+        "Psalm 23:4",
+        "Psalm 34:7,17,19",
+        "Psalm 91:1-2,11",
+        "Psalm 121:1-8",
+        "Romans 14:8"
+      ]
+    },
+    {
+      "topic": "Death",
+      "references": [
+        "2 Corinthians 5:6-9",
+        "Philippians 1:21-22",
+        "Psalm 23:4",
+        "Psalm 116:15",
+        "Romans 14:8",
+        "2 Corinthians 5:1",
+        "1 Thessalonians 5:9-10",
+        "2 Timothy 4:7-8",
+        "Hebrews 9:27",
+        "Revelation 21:4"
+      ]
+    },
+    {
+      "topic": "Deity of Christ",
+      "references": [
+        "John 1:1",
+        "John 20:28",
+        "Matthew 26:63-64",
+        "John 1:1-14,18",
+        "John 10:30",
+        "John 14:9",
+        "John 16:15",
+        "John 17:10",
+        "Romans 9:5",
+        "Colossians 1:15-19",
+        "Colossians 2:9",
+        "Hebrews 1:3,8",
+        "1 John 5:20"
+      ]
+    },
+    {
+      "topic": "Difficulties",
+      "references": [
+        "Romans 8:28",
+        "2 Corinthians 4:16-18",
+        "Hebrews 5:8",
+        "Hebrews 12:7,11",
+        "Revelation 3:19"
+      ]
+    },
+    {
+      "topic": "Disappointment",
+      "references": [
+        "Psalm 126:6",
+        "John 14:27",
+        "Psalm 43:5",
+        "Psalm 55:22",
+        "2 Corinthians 4:8-10"
+      ]
+    },
+    {
+      "topic": "Discouragement",
+      "references": [
+        "John 16:33",
+        "Hebrews 4:16",
+        "Joshua 1:9",
+        "Psalm 27:14",
+        "Psalm 43:5",
+        "John 14:1-3,27",
+        "John 19:25-27",
+        "Colossians 1:5",
+        "1 Peter 1:3-9",
+        "1 John 5:14",
+        "Revelation 22:1-4"
+      ]
+    },
+    {
+      "topic": "Divorce",
+      "references": [
+        "Malachi 2:16",
+        "Matthew 19:6",
+        "Deuteronomy 24:1-4",
+        "Matthew 5:31-32",
+        "Matthew 19:3-12",
+        "Mark 10:2-12",
+        "Luke 16:18",
+        "1 Corinthians 7:10-15"
+      ]
+    },
+    {
+      "topic": "Doubtful Things",
+      "references": [
+        "Romans 14:19",
+        "Romans 14:1-23",
+        "1 Corinthians 8:9,13",
+        "Philippians 2:15",
+        "Colossians 3:2,5-10,17",
+        "Titus 2:12-14",
+        "James 4:4",
+        "1 John 2:15-17"
+      ]
+    },
+    {
+      "topic": "External Pressures",
+      "references": [
+        "2 Corinthians 12:9-10",
+        "1 John 5:4-5",
+        "Joshua 1:9",
+        "Psalm 37:5",
+        "Romans 8:28",
+        "1 Peter 5:7"
+      ]
+    },
+    {
+      "topic": "Faith",
+      "references": [
+        "Hebrews 11:1",
+        "Hebrews 11:6",
+        "Romans 4:3",
+        "Romans 10:17",
+        "Ephesians 2:8-9",
+        "Hebrews 12:2",
+        "James 1:3-6",
+        "1 Peter 1:7"
+      ]
+    },
+    {
+      "topic": "Fear",
+      "references": [
+        "Psalm 27:1",
+        "Psalm 56:11",
+        "Psalm 91:1-2",
+        "Psalm 121:1-8",
+        "Proverbs 3:25",
+        "Proverbs 29:25",
+        "Isaiah 51:12",
+        "John 14:27",
+        "Romans 8:28-29,31,35-39",
+        "Philippians 4:19",
+        "2 Timothy 1:7",
+        "1 John 4:18",
+        "Jude 24-25"
+      ]
+    },
+    {
+      "topic": "Forgiveness of Sin",
+      "references": [
+        "Psalm 103:1-3",
+        "1 John 1:9",
+        "Psalm 32:5",
+        "Psalm 51",
+        "Psalm 103:12",
+        "Proverbs 28:13",
+        "Isaiah 1:18",
+        "Isaiah 55:7",
+        "James 5:15-16"
+      ]
+    },
+    {
+      "topic": "Forgiving Others",
+      "references": [
+        "Matthew 6:14-15",
+        "Ephesians 4:31-32",
+        "Proverbs 18:19",
+        "Matthew 5:44-47",
+        "Matthew 6:12",
+        "Matthew 18:15-25",
+        "Mark 11:25-26",
+        "Luke 17:3-4",
+        "Colossians 3:13"
+      ]
+    },
+    {
+      "topic": "Friends and Friendliness",
+      "references": [
+        "Proverbs 18:24",
+        "John 13:35",
+        "John 15:13-14",
+        "Galatians 6:1,10"
+      ]
+    },
+    {
+      "topic": "Fruit of the Spirit",
+      "references": [
+        "Galatians 5:22-23"
+      ]
+    },
+    {
+      "topic": "Generosity",
+      "references": [
+        "Luke 6:38",
+        "2 Corinthians 9:6-7",
+        "1 Chronicles 29:9",
+        "Psalm 37:21",
+        "Proverbs 3:9-10",
+        "Matthew 5:42"
+      ]
+    },
+    {
+      "topic": "God’s Care",
+      "references": [
+        "Psalm 91:1-2",
+        "1 Peter 5:7",
+        "Psalm 31:19-20",
+        "Psalm 34:17-19",
+        "Nahum 1:7",
+        "Ephesians 3:20",
+        "Philippians 4:19",
+        "1 John 4:16",
+        "Jude 24"
+      ]
+    },
+    {
+      "topic": "Golden Rule",
+      "references": [
+        "Luke 6:31",
+        "Matthew 7:12"
+      ]
+    },
+    {
+      "topic": "Great White Throne",
+      "references": [
+        "Revelation 20:11",
+        "Revelation 20:11-15"
+      ]
+    },
+    {
+      "topic": "Growing Spiritually",
+      "references": [
+        "Ephesians 4:15",
+        "2 Peter 3:18",
+        "Ephesians 3:17-19",
+        "Colossians 1:9-11",
+        "Colossians 3:16",
+        "1 Timothy 4:15",
+        "2 Timothy 2:15",
+        "2 Peter 1:5-8"
+      ]
+    },
+    {
+      "topic": "Guidance",
+      "references": [
+        "Psalm 32:8",
+        "Isaiah 30:21",
+        "Isaiah 58:11",
+        "Luke 1:79",
+        "John 16:13"
+      ]
+    },
+    {
+      "topic": "Guilt",
+      "references": [
+        "Romans 8:1-2",
+        "2 Corinthians 5:21",
+        "Psalm 32:1-2",
+        "Ephesians 1:7",
+        "Colossians 2:9-17",
+        "Titus 3:5"
+      ]
+    },
+    {
+      "topic": "Hell",
+      "references": [
+        "Matthew 18:8-9",
+        "Revelation 1:18",
+        "Matthew 5:22",
+        "Matthew 13:42,50",
+        "Matthew 22:13",
+        "Matthew 25:41,46",
+        "Mark 9:48",
+        "Jude 7"
+      ]
+    },
+    {
+      "topic": "Help and Care",
+      "references": [
+        "2 Chronicles 16:9",
+        "Psalm 55:22",
+        "Psalm 34:7",
+        "Psalm 37:5,24",
+        "Psalm 91:4",
+        "Isaiah 50:9",
+        "Isaiah 54:17",
+        "Hebrews 4:16",
+        "Hebrews 13:5-6"
+      ]
+    },
+    {
+      "topic": "Holy Spirit",
+      "references": [
+        "Acts 2:38",
+        "Ephesians 5:18",
+        "Acts 5:3-4",
+        "1 Corinthians 3:16",
+        "1 Corinthians 6:19",
+        "1 Corinthians 12:4-6",
+        "2 Corinthians 13:14",
+        "1 Peter 1:2"
+      ]
+    },
+    {
+      "topic": "Honesty",
+      "references": [
+        "Ephesians 4:25",
+        "Colossians 3:9-10",
+        "Romans 13:13",
+        "1 Thessalonians 4:11-12",
+        "Hebrews 13:18",
+        "1 Peter 2:11-12"
+      ]
+    },
+    {
+      "topic": "Humility",
+      "references": [
+        "Romans 12:3",
+        "Philippians 2:3-4",
+        "Proverbs 22:4",
+        "Micah 6:8",
+        "Acts 20:19",
+        "1 Peter 5:5-6"
+      ]
+    },
+    {
+      "topic": "Husbands",
+      "references": [
+        "Ephesians 5:25-28",
+        "1 Peter 3:7",
+        "Genesis 18:19",
+        "Proverbs 23:13-14",
+        "1 Corinthians 7:3",
+        "Ephesians 6:4"
+      ]
+    },
+    {
+      "topic": "Jesus—Savior of the World",
+      "references": [
+        "John 14:6",
+        "Acts 4:12",
+        "Matthew 1:21",
+        "Luke 19:10",
+        "John 3:16",
+        "Romans 5:8",
+        "Ephesians 1:7",
+        "1 John 5:12"
+      ]
+    },
+    {
+      "topic": "Judgment Seat of Christ",
+      "references": [
+        "Romans 14:10-12",
+        "2 Corinthians 5:10",
+        "Matthew 6:2-4",
+        "Matthew 25:14-30",
+        "Luke 19:11-27",
+        "1 Corinthians 3:9-15",
+        "2 Timothy 4:8"
+      ]
+    },
+    {
+      "topic": "Kingdom Age",
+      "references": [
+        "Isaiah 11:6",
+        "Isaiah 60:1-3",
+        "Isaiah 14:7-8",
+        "Isaiah 25:8-9",
+        "Revelation 20:1-6"
+      ]
+    },
+    {
+      "topic": "Lake of Fire",
+      "references": [
+        "Revelation 20:14-15"
+      ]
+    },
+    {
+      "topic": "Liberty",
+      "references": [
+        "John 8:32,36",
+        "Galatians 5:13",
+        "Romans 6:6-7,17-22",
+        "Romans 7:6",
+        "Romans 8:2",
+        "Romans 14:1-23",
+        "1 Corinthians 8:1-13",
+        "Galatians 2:21",
+        "Galatians 5:1",
+        "Colossians 3:17",
+        "1 Timothy 4:4"
+      ]
+    },
+    {
+      "topic": "Living the Christian Life",
+      "references": [
+        "Psalm 119:9-11",
+        "Ephesians 1:3",
+        "John 15:7",
+        "2 Corinthians 5:17",
+        "Colossians 2:6",
+        "1 Peter 2:2",
+        "1 John 1:7"
+      ]
+    },
+    {
+      "topic": "Loneliness",
+      "references": [
+        "Psalm 68:6",
+        "Hebrews 13:5",
+        "Psalm 23",
+        "Psalm 27:10",
+        "Psalm 91:11",
+        "Isaiah 41:10",
+        "Matthew 28:20"
+      ]
+    },
+    {
+      "topic": "Lord’s Prayer",
+      "references": [
+        "Matthew 6:9-13"
+      ]
+    },
+    {
+      "topic": "Lord’s Supper",
+      "references": [
+        "Matthew 26:26-28",
+        "Mark 14:22-24",
+        "Luke 22:19-20",
+        "1 Corinthians 11:17-34"
+      ]
+    },
+    {
+      "topic": "Lordship",
+      "references": [
+        "Matthew 7:21",
+        "Romans 10:9-10",
+        "Luke 6:46",
+        "Romans 6:13-16",
+        "Romans 12:1-2",
+        "1 Corinthians 6:19-20",
+        "Philippians 2:9-11"
+      ]
+    },
+    {
+      "topic": "Love",
+      "references": [
+        "Romans 5:8",
+        "1 John 4:10",
+        "John 6:16",
+        "John 15:9-14",
+        "Romans 8:35-39",
+        "1 Corinthians 13",
+        "1 John 3:1"
+      ]
+    },
+    {
+      "topic": "Man’s Need of Salvation",
+      "references": [
+        "Romans 3:23",
+        "Romans 6:23",
+        "Isaiah 64:6",
+        "Romans 3:10-18",
+        "Romans 5:12",
+        "Hebrews 9:27",
+        "1 John 2:13-17"
+      ]
+    },
+    {
+      "topic": "Mark of the Beast",
+      "references": [
+        "Revelation 13:16-18"
+      ]
+    },
+    {
+      "topic": "Marriage Supper of the Lamb",
+      "references": [
+        "Revelation 19:7-9"
+      ]
+    },
+    {
+      "topic": "National Responsibilities",
+      "references": [
+        "Romans 13:1",
+        "1 Timothy 2:1-4",
+        "Psalm 33:12",
+        "Proverbs 14:34",
+        "Proverbs 29:18",
+        "Romans 13:1-7",
+        "1 Peter 2:13-17"
+      ]
+    },
+    {
+      "topic": "New Heaven and Earth",
+      "references": [
+        "Isaiah 65:17",
+        "Revelation 21:1",
+        "Isaiah 65:17-25",
+        "Revelation 21-22"
+      ]
+    },
+    {
+      "topic": "Obedience",
+      "references": [
+        "1 Samuel 15:22",
+        "John 14:21",
+        "Psalm 111:10",
+        "Psalm 119:2",
+        "Ecclesiastes 12:13",
+        "Isaiah 1:19-20",
+        "Matthew 6:24",
+        "John 14:15",
+        "Romans 6:16",
+        "2 Corinthians 10:5",
+        "James 2:10",
+        "1 John 3:22"
+      ]
+    },
+    {
+      "topic": "Occult",
+      "references": [
+        "Isaiah 8:19",
+        "James 4:7",
+        "Leviticus 20:27",
+        "Deuteronomy 18:9-12",
+        "1 Samuel 28:7-12",
+        "2 Kings 21:6",
+        "Isaiah 19:3",
+        "Isaiah 47:13-14",
+        "Acts 19:18-20"
+      ]
+    },
+    {
+      "topic": "Occupation",
+      "references": [
+        "Genesis 2:15",
+        "2 Thessalonians 3:10",
+        "Proverbs 14:23",
+        "Ecclesiastes 9:10",
+        "Romans 12:11-13",
+        "Ephesians 4:28"
+      ]
+    },
+    {
+      "topic": "One Hundred Forty-Four Thousand",
+      "references": [
+        "Revelation 7:4",
+        "Revelation 14:1,3"
+      ]
+    },
+    {
+      "topic": "Overcoming Temptation",
+      "references": [
+        "Matthew 26:41",
+        "1 Corinthians 10:13",
+        "Isaiah 41:10",
+        "Philippians 1:6",
+        "2 Thessalonians 3:3",
+        "James 4:7",
+        "1 Peter 2:9"
+      ]
+    },
+    {
+      "topic": "Paradise and Hades",
+      "references": [
+        "Luke 23:43",
+        "Luke 16:22-26"
+      ]
+    },
+    {
+      "topic": "Parents and Children",
+      "references": [
+        "Ephesians 6:1-4",
+        "Psalm 148:12-13",
+        "Proverbs 1:8-9",
+        "Proverbs 6:20-23",
+        "Proverbs 23:22,26",
+        "Proverbs 28:7",
+        "Colossians 3:20-21",
+        "1 Timothy 4:12",
+        "1 Timothy 5:4"
+      ]
+    },
+    {
+      "topic": "Peace",
+      "references": [
+        "Isaiah 26:3",
+        "Philippians 4:6-7",
+        "John 14:27",
+        "John 16:33",
+        "Romans 5:1",
+        "Philippians 4:4-9",
+        "Colossians 3:15"
+      ]
+    },
+    {
+      "topic": "Persecution",
+      "references": [
+        "Matthew 5:10",
+        "1 Peter 2:20",
+        "Matthew 10:22",
+        "Acts 5:41",
+        "Acts 9:16",
+        "Romans 8:17",
+        "Hebrews 11:25",
+        "James 1:2-4"
+      ]
+    },
+    {
+      "topic": "Plan of Salvation",
+      "references": [
+        "John 1:12",
+        "Romans 10:9-10",
+        "Isaiah 55:7",
+        "John 3:3",
+        "John 5:24",
+        "Romans 10:13",
+        "Ephesians 2:8-9",
+        "Titus 3:5-7",
+        "1 John 5:11-13",
+        "Revelation 3:20"
+      ]
+    },
+    {
+      "topic": "Power over Satan",
+      "references": [
+        "James 4:7",
+        "1 John 4:4"
+      ]
+    },
+    {
+      "topic": "Praise and Gratitude",
+      "references": [
+        "Psalm 100:4",
+        "1 Thessalonians 5:18",
+        "Hebrews 13:15",
+        "Deuteronomy 8:10",
+        "1 Samuel 12:24",
+        "2 Chronicles 20",
+        "Psalm 34:1-4",
+        "Psalm 50:23",
+        "Psalm 51:15",
+        "Psalm 63:2-7",
+        "Psalm 107:8",
+        "Psalm 139:14",
+        "Psalm 147:1",
+        "Psalm 1:50",
+        "Ephesians 5:18-20",
+        "Philippians 4:4-6",
+        "Colossians 3:15-17",
+        "Hebrews 13:15",
+        "1 Peter 1:6-9"
+      ]
+    },
+    {
+      "topic": "Prayer",
+      "references": [
+        "Matthew 7:7",
+        "John 15:7",
+        "Psalm 10:17",
+        "Psalm 18:3",
+        "Psalm 86:5,7",
+        "Psalm 145:18",
+        "Jeremiah 33:3",
+        "Joel 2:32",
+        "Matthew 21:22",
+        "John 14:13-14",
+        "Romans 10:9-13",
+        "Ephesians 6:18",
+        "Hebrews 4:14-16",
+        "James 5:16",
+        "1 John 5:14-15"
+      ]
+    },
+    {
+      "topic": "Provision",
+      "references": [
+        "Psalm 34:10",
+        "Matthew 6:33",
+        "Psalm 23",
+        "Psalm 37:3-4",
+        "Psalm 84:11",
+        "Isaiah 58:11",
+        "2 Corinthians 9:8",
+        "Ephesians 3:20",
+        "1 Peter 1:3-5",
+        "2 Peter 1:3-4"
+      ]
+    },
+    {
+      "topic": "Purity",
+      "references": [
+        "Psalm 119:9",
+        "1 John 3:3",
+        "Philippians 2:14-15",
+        "James 3:17",
+        "James 4:8"
+      ]
+    },
+    {
+      "topic": "Rapture",
+      "references": [
+        "1 Corinthians 15:51-52",
+        "1 Thessalonians 4:16-17",
+        "Titus 2:13",
+        "Luke 21:34-36",
+        "1 Thessalonians 4:13-18",
+        "2 Peter 3:8-14",
+        "1 John 3:2-3"
+      ]
+    },
+    {
+      "topic": "Rewards",
+      "references": [
+        "Ephesians 6:8",
+        "Revelation 22:12",
+        "1 Corinthians 3:11-15",
+        "Ephesians 5:27",
+        "2 Thessalonians 2:14",
+        "2 Timothy 4:8",
+        "1 John 3:1-2",
+        "Jude 24"
+      ]
+    },
+    {
+      "topic": "Satan",
+      "references": [
+        "James 4:7",
+        "1 John 4:4",
+        "Isaiah 14:12-15",
+        "Ezekiel 28:12-19",
+        "1 Peter 5:8-9",
+        "2 Peter 2:9"
+      ]
+    },
+    {
+      "topic": "Seal Judgments",
+      "references": [
+        "Revelation 5:9",
+        "Revelation 6:1-8:2"
+      ]
+    },
+    {
+      "topic": "Self-Control",
+      "references": [
+        "1 Corinthians 9:24-25",
+        "2 Timothy 1:7",
+        "Proverbs 4:23-26",
+        "Romans 13:14",
+        "1 Corinthians 16:13",
+        "2 Timothy 2:3-5"
+      ]
+    },
+    {
+      "topic": "Self-Image",
+      "references": [
+        "1 Samuel 16:7",
+        "2 Corinthians 3:4-6",
+        "Psalm 138:8",
+        "Psalm 139:14-16",
+        "Philippians 1:6",
+        "Hebrews 12:2"
+      ]
+    },
+    {
+      "topic": "Sex and Marriage",
+      "references": [
+        "Proverbs 5:18-19",
+        "Hebrews 13:4",
+        "1 Corinthians 7",
+        "Ephesians 5:18-6:3",
+        "1 Thessalonians 4:1-7",
+        "1 Peter 3:1-9"
+      ]
+    },
+    {
+      "topic": "Sickness",
+      "references": [
+        "James 5:13-16",
+        "Psalm 41:3",
+        "Psalm 103:3",
+        "Matthew 4:23",
+        "John 11:4"
+      ]
+    },
+    {
+      "topic": "Signs of the Times",
+      "references": []
+    },
+    {
+      "topic": "Physical Signs",
+      "references": [
+        "Matthew 24:7-8",
+        "Luke 21:25",
+        "Isaiah 35:1-2",
+        "Ezekiel 36:30",
+        "Ezekiel 38:14-16",
+        "Ezekiel 44:1-2",
+        "Daniel 11:40",
+        "Daniel 12:4",
+        "Matthew 24:15",
+        "2 Thessalonians 2:4",
+        "James 5:1-3",
+        "Revelation 11:1-2"
+      ],
+      "subtopicOf": "Signs of the Times"
+    },
+    {
+      "topic": "Social Signs",
+      "references": [
+        "Ezekiel 36:24",
+        "Matthew 24:6-7",
+        "Genesis 6:5",
+        "Genesis 13:13",
+        "Genesis 19:4-5",
+        "Deuteronomy 28:63-67",
+        "Ezekiel 34:11-13",
+        "Ezekiel 38-39",
+        "Zechariah 12:2-3",
+        "Matthew 24:9-10,12,37-39",
+        "Mark 7:21,23",
+        "Luke 17:28-30",
+        "Luke 21:24,25,29-33",
+        "2 Timothy 3:1-5",
+        "Revelation 9:13-21",
+        "Revelation 21:8",
+        "Revelation 22:15"
+      ],
+      "subtopicOf": "Signs of the Times"
+    },
+    {
+      "topic": "Religious Signs",
+      "references": [
+        "Matthew 24:4-5",
+        "1 Timothy 4:1",
+        "Daniel 8:23-25",
+        "Daniel 11:36-45",
+        "Joel 2:28-29",
+        "Matthew 24:11,13-14,34",
+        "2 Thessalonians 2:4-8",
+        "2 Timothy 4:3-4",
+        "2 Peter 2:1-2",
+        "2 Peter 3:3-4",
+        "1 John 5:19",
+        "Revelation 12:12",
+        "Revelation 13:1-8"
+      ],
+      "subtopicOf": "Signs of the Times"
+    },
+    {
+      "topic": "Sin",
+      "references": [
+        "Romans 6:23",
+        "2 Corinthians 5:21",
+        "Isaiah 53:5-6",
+        "Isaiah 59:1-2",
+        "John 8:34",
+        "Romans 3:23",
+        "Galatians 6:7-8"
+      ]
+    },
+    {
+      "topic": "Social Responsibilities",
+      "references": [
+        "Matthew 5:13-16",
+        "1 John 3:17-18",
+        "Proverbs 19:17",
+        "Matthew 10:42",
+        "Luke 3:10-11",
+        "Galatians 6:1-5"
+      ]
+    },
+    {
+      "topic": "Sorrow",
+      "references": [
+        "Matthew 11:28-30",
+        "2 Corinthians 4:16-18",
+        "Job 5:17-18",
+        "Proverbs 10:22",
+        "Isaiah 53:4",
+        "John 16:22",
+        "2 Corinthians 1:3-5",
+        "2 Corinthians 6:10",
+        "1 Thessalonians 4:13",
+        "1 Peter 1:7",
+        "1 Peter 4:12-13",
+        "Revelation 21:4"
+      ]
+    },
+    {
+      "topic": "Spiritual Gifts",
+      "references": [
+        "Romans 12:6-8",
+        "1 Corinthians 12:4-6",
+        "1 Corinthians 12-14",
+        "Ephesians 4:11-12",
+        "1 Peter 4:10"
+      ]
+    },
+    {
+      "topic": "Strength",
+      "references": [
+        "Isaiah 40:29-31",
+        "2 Corinthians 12:8-10",
+        "Deuteronomy 33:25",
+        "Psalm 27:14",
+        "Psalm 28:7",
+        "Isaiah 41:10",
+        "Philippians 4:13"
+      ]
+    },
+    {
+      "topic": "Study",
+      "references": [
+        "Psalm 119:18",
+        "2 Timothy 2:15",
+        "Psalm 19:7-11",
+        "Psalm 119:9,11",
+        "2 Timothy 3:15-17",
+        "Hebrews 4:12",
+        "1 Peter 2:2"
+      ]
+    },
+    {
+      "topic": "Suffering",
+      "references": [
+        "Romans 8:18",
+        "1 Peter 5:10",
+        "2 Corinthians 1:5",
+        "Philippians 1:29",
+        "Philippians 3:10",
+        "2 Timothy 2:12",
+        "1 Peter 1:6-7",
+        "1 Peter 2:19",
+        "1 Peter 4:12-13,16"
+      ]
+    },
+    {
+      "topic": "Temptation",
+      "references": [
+        "1 Corinthians 10:12-13",
+        "Hebrews 2:18",
+        "Psalm 94:17-18",
+        "Proverbs 28:13",
+        "Matthew 26:41",
+        "Hebrews 4:14-16",
+        "James 1:2-3,12,14",
+        "James 4:7",
+        "1 Peter 1:6",
+        "2 Peter 2:9",
+        "1 John 4:4",
+        "Jude 24"
+      ]
+    },
+    {
+      "topic": "Ten Commandments",
+      "references": [
+        "Exodus 20:1-17"
+      ]
+    },
+    {
+      "topic": "Those Who Haven’t Heard",
+      "references": [
+        "Romans 1:18-20",
+        "John 6:45",
+        "John 12:32",
+        "John 16:8",
+        "Romans 2:15,18"
+      ]
+    },
+    {
+      "topic": "Tribulation Period",
+      "references": [
+        "Matthew 24:21",
+        "Revelation 7:14",
+        "Daniel 9:24-27",
+        "Revelation 11:2-3",
+        "Revelation 13:5"
+      ]
+    },
+    {
+      "topic": "Trumpet Judgments",
+      "references": [
+        "Revelation 8:2,6",
+        "Revelation 8-9"
+      ]
+    },
+    {
+      "topic": "Trust",
+      "references": [
+        "Proverbs 3:5-6",
+        "Isaiah 26:3-4",
+        "Psalm 5:11",
+        "Psalm 18:2",
+        "Psalm 37:5",
+        "Isaiah 12:2"
+      ]
+    },
+    {
+      "topic": "Two Witnesses",
+      "references": [
+        "Revelation 11:3",
+        "Revelation 11:3-12"
+      ]
+    },
+    {
+      "topic": "Unpardonable Sin",
+      "references": [
+        "Luke 12:10",
+        "Hebrews 10:26-27",
+        "Matthew 12:22-32",
+        "Mark 3:22-30",
+        "Luke 11:14-23",
+        "1 John 5:16-17"
+      ]
+    },
+    {
+      "topic": "Victory",
+      "references": [
+        "Romans 8:37",
+        "1 Corinthians 15:57",
+        "2 Chronicles 32:8",
+        "2 Corinthians 2:14",
+        "2 Timothy 2:19",
+        "1 John 5:4",
+        "Revelation 3:5",
+        "Revelation 21:7"
+      ]
+    },
+    {
+      "topic": "Will of God",
+      "references": [
+        "Romans 12:2",
+        "Ephesians 5:17",
+        "Psalm 37:4",
+        "Psalm 91:1-2",
+        "Proverbs 3:5-6",
+        "Proverbs 4:26",
+        "Romans 14:5",
+        "Galatians 6:4",
+        "Philippians 2:12-13",
+        "1 Thessalonians 4:3",
+        "1 Peter 3:17"
+      ]
+    },
+    {
+      "topic": "Witnessing",
+      "references": [
+        "Matthew 5:16",
+        "Acts 1:8",
+        "Psalm 66:16",
+        "Proverbs 11:30",
+        "Mark 5:19",
+        "Luke 24:48",
+        "Romans 1:16",
+        "2 Corinthians 5:18-20",
+        "1 Peter 4:11"
+      ]
+    },
+    {
+      "topic": "Wives",
+      "references": [
+        "Proverbs 12:4",
+        "Proverbs 31:10",
+        "Proverbs 11:6",
+        "Proverbs 14:1",
+        "Proverbs 22:6,15",
+        "Proverbs 29:15",
+        "Proverbs 31:10-31",
+        "1 Timothy 3:11",
+        "Titus 2:3-5",
+        "1 Peter 3:1-6"
+      ]
+    }
+  ]
+}

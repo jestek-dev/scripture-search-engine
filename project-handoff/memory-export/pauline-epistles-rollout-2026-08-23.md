@@ -1,0 +1,19 @@
+---
+name: pauline-epistles-rollout-2026-08-23
+description: 2026-08-23 Pauline epistles group (Romans–Philemon, 13 books) of the full-Bible rollout COMPLETE — all 13 published to /mnt/project-files/research/bible-rollout/<book>.md after fresh-critic loops to zero objections (Romans/Colossians/2 Thess r1, Ephesians/Titus/Philemon r2, Galatians/Philippians/1 Thess r3, 2 Cor r4, 1 Cor/1 Tim/2 Tim r5); 23 new tag-gap rows + ~40 ref-appends; survived a real tag-gaps.md clobber (2 Thess block re-applied); PR #43 id uses flagged per-doc for Jesse; thread cmsg_01P3QsU2j86UJUbajEtMTYp29Sypu8FCnH4SeSMvzE6mcX RESOLVED
+metadata:
+  type: project
+  modified: 2026-08-23T08:27:40.242Z
+---
+
+# Pauline epistles rollout group — COMPLETE 2026-08-23
+
+Thread cmsg_01P3QsU2j86UJUbajEtMTYp29Sypu8FCnH4SeSMvzE6mcX (session cse_01NAh7Pt1ayuB5VXDEtEf2NN). All 13 published to /mnt/project-files/research/bible-rollout/: romans, 1-corinthians, 2-corinthians, galatians, ephesians, philippians, colossians, 1-thessalonians, 2-thessalonians, 1-timothy, 2-timothy, titus, philemon (.md each). Every book closed at "APPROVED — zero objections" from a fresh harsh critic (rounds to zero: Romans 1, Colossians 1, 2 Thess 1, Ephesians 2, Titus 2, Philemon 2, Galatians 3, Philippians 3, 1 Thess 3, 2 Cor 4, 1 Cor 5, 1 Tim 5, 2 Tim 5), each doc carrying a delivery-confirmation blockquote, per-round critic records, Decisions records with reversible delegated calls, and honest per-chapter provenance (pinned-fixture-verified vs current-edition-only; **2 Thessalonians and Philemon have ZERO fixture witnesses** — stated at full strength in those docs).
+
+**PR #43 tag uses awaiting Jesse's ratification (each flagged in that book's Decisions record as a reversible default):** 1 Cor `christ-the-cornerstone`/`baptism`/`benediction`; 1 Thess `benediction`; Titus `justification-by-faith`; 1 Tim `incarnation`/`caring-for-aging-parents`; 2 Tim `benediction`; earlier books' uses likewise recorded in their own Decisions records; Philemon deliberately none.
+
+**Tag-gaps contributed (23 new rows):** Romans — governing-authorities, conscience, election-and-predestination, adoption-as-gods-children, gods-plan-for-israel, judging-others; Colossians — legalism, bondservants-and-masters, supremacy-of-christ; Ephesians — unity-of-the-church; Galatians — freedom-in-christ, walking-by-the-spirit; 2 Cor — unanswered-prayer, unequally-yoked, church-discipline; Philippians — death-of-a-believer, thought-life; 1 Cor — singleness, living-for-gods-glory, speaking-in-tongues, head-coverings; Titus — good-works; 1 Tim — men-and-women-in-the-church. Plus ~40 ref-appends with cross-thread routing (2 Thess man-of-lawlessness → 1 John antichrist row with both-word-families lexicon note; both Timothys' falling-away → Judges backsliding row per the Hebrews precedent; 2 Tim last-days → Daniel end-times row; slavery refs unified on bondservants-and-masters).
+
+**Process notes:** a concurrent thread's full-file save clobbered the verified 2 Thessalonians append block (only real loss in a group-wide audit; re-applied and re-verified; coordinator alerted; delivery-time survival audits per CONVENTIONS §9 passed 15/15 at final delivery). Recurring critic-catch classes worth pre-checking in future drafts: sub-5-gram distinctive-phrase echoes from in-copyright framing notes (run possessive-splitting AND apostrophe-deletion normalizations; check the appendix's own claims for staleness), person clashes between third-person prose and second-person quotes, purpose clauses over-asserted as accomplished fact (WEB 4:17 class), duplicate/misplaced glosses, and stale appendix span counts after revisions.
+
+Links: [[bible-rollout-2026-08-23]], [[bible-rollout-conventions-2026-08-23]], [[minor-prophets-rollout-2026-08-23]], [[isaiah-daniel-rollout-2026-08-23]], [[hebrews-revelation-rollout-2026-08-23]]

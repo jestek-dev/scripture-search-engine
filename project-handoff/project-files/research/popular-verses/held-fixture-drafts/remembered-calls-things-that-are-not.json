@@ -1,0 +1,17 @@
+{
+  "id": "remembered-calls-things-that-are-not",
+  "query": "calleth the things that are not as though they were",
+  "status": "pending",
+  "note": [
+    "ALIAS-MINING BATCH 1 HELD DRAFT (2026-08-26, whole-Bible coverage plan §2.3 item 2 / §4.3; battery re-grade seed row ad11 'speak things into existence' — X: Romans 4:17, the verse people mean, never surfaces).",
+    "HELD OUT OF THE BATCH-1 PR: Romans 4 is not in the current 5,726-verse fixture corpus (pipeline/fixtures/web-subset.json @ main e762d1c — Romans selections are chapters 1, 2, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15), so neither this fixture nor its data row can be measured or admitted yet. Awaits the corpus-expansion merge; admit from post-expansion main per this directory's README procedure.",
+    "The query is ASV wording (1901, public domain): 'calleth the things that are not, as though they were' — decision #4/#5 defaults, no ESV/NIV/NLT wording. Proposed row (measure first, fixtures-first): a remembered-* pack with the single anchor Romans 4:17 and this phrasing in its lexicon. CAUTION recorded for the eventual curator: the phrase tokenizes to just {call, thing}, a generic 2-token set — measure what else it fires on before admitting; a guard against collateral hits belongs in this fixture if it ships.",
+    "DELIBERATELY NOT INCLUDED: routing the slogan query 'speak things into existence' itself ({speak, thing, existence}) to Romans 4:17. That phrasing is prosperity-teaching vocabulary, not translation wording, and the regrade marks ad11's corrective framing J9-gated — whether the engine should answer the slogan with the verse people mean, a corrective, or both is Jesse's editorial call, not a data row's."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Romans 4:17",
+      "withinTop": 3
+    }
+  ]
+}
