@@ -40,6 +40,8 @@
 
 **Your genuinely open calls** (each has a safe default that stands indefinitely if you never rule — nothing merges, weakens, or retires on its own; the full wording is in section 09.9):
 
+> **Ruled 2026-08-27: Jesse accepted all defaults; call 4 — the post-wind-down signer — remains open.**
+
 1. **Answer-sheet-only updates skipping the "must move a result" rule.** These updates only write test lines — they can't move a result by design, so the rule would block them forever. *Default: yes* — the answer sheet is the measuring instrument, and the change lands as its own reviewed PR whose merge is the ratification.
 2. **The "sign after merge" amendment.** A data update refreshes the frozen expected-results files the checks compare against, and an independent person signs off on that refresh *after* the merge (the standing rule you already set). The checks as written still demand the signature *before* — this amendment records the deferral honestly instead of blocking forever. *Default: yes.*
 3. **The frozen queue after you step back.** Updates keep validating and wait as proposed changes; nothing merges until a successor plan names the merging human. *Default: yes* — same assumption the sweep plan already made.
