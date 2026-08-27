@@ -21,16 +21,34 @@
     "first, and with the last' — so it is deliberately NOT guarded),",
     "Rev 1:17 out of the top 3.",
     "The mustNotLead entry names the measured #1 hijacker; window 3 because",
-    "the pack's anchors occupied #1-#4."
+    "the pack's anchors occupied #1-#4.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling rows 14-15, approved 2026-08-26,",
+    "also a catch-up-ruling fixture): the full corpus lands the verbatim",
+    "synoptic parallels, and the ruling accepts them rather than distorting",
+    "weights. Measured: 'the last will be first' -> Matt 20:16 #1 (its own",
+    "exact phrase — WEB 'So the last will be first...'), Mark 10:31 #2,",
+    "Matt 19:30 #3; 'the first shall be last' -> Mark 10:31 #1, Matt 19:30",
+    "#2, Luke 13:30 #3. The assertion rides Mark 10:31 within the top 3 on",
+    "token evidence (no single verse is #1 on both queries — the teaching's",
+    "own parallels trade the lead), with Matt 19:30 / Matt 20:16 /",
+    "Luke 13:30 alsoAcceptable. The guarded harm class did NOT occur:",
+    "Rev 1:17-18 mustNotLead stays exactly as written and held under",
+    "measurement — every top-3 row on both queries is the teaching itself."
   ],
   "expectedTop": [
     {
-      "reference": "Matthew 19:30",
-      "withinTop": 1,
+      "reference": "Mark 10:31",
+      "withinTop": 3,
       "requiredReasonFamily": "token_overlap"
     }
   ],
-  "expectedWithinTop": 1,
+  "expectedWithinTop": 3,
+  "alsoAcceptable": [
+    "Matthew 19:30",
+    "Matthew 20:16",
+    "Luke 13:30"
+  ],
   "mustNotLead": [
     {
       "reference": "Revelation 1:17-18",

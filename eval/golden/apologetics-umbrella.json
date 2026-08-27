@@ -39,7 +39,17 @@
     "landed. With the in-corpus list members now direct anchors, the top",
     "10 fills with Theme rows and the related-edge tail sits below the",
     "largest assertable window (10); those rows move to alsoAcceptable.",
-    "The related edges themselves remain (tail enrichment)."
+    "The related edges themselves remain (tail enrichment).",
+    "CORPUS-EXPANSION EXECUTION (ruling row 21, approved 2026-08-26): the",
+    "full corpus activates the dormant giving-an-answer anchors from",
+    "Jesse's own 19-passage D13 list (2026-08-25), and the ruling accepts",
+    "the activation: the displacers ARE the supplied passages. Measured",
+    "top 10 is entirely Jesse's list; the newly-activated Luke 1:1-4 (#3)",
+    "and 2 Pet 1:16 (#4) join expectedTop, and 2 Tim 2:24-26 (measured",
+    "#11, displaced by its own list-mates) moves to alsoAcceptable. The",
+    "scoping guard was RE-VERIFIED under measurement on the expanded bed:",
+    "no movement-specific content anywhere in bare 'apologetics' top 15,",
+    "and every mustNotRank row stays exactly as written."
   ],
   "expectedTop": [
     {
@@ -49,7 +59,13 @@
       "withinTop": 1
     },
     {
-      "reference": "2 Timothy 2:24-26",
+      "reference": "Luke 1:1-4",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer",
+      "withinTop": 10
+    },
+    {
+      "reference": "2 Peter 1:16",
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Giving an answer",
       "withinTop": 10
@@ -99,6 +115,7 @@
     }
   ],
   "alsoAcceptable": [
+    "2 Timothy 2:24-26",
     "Acts 17:2-3",
     "Philippians 1:7",
     "Philippians 1:17",
