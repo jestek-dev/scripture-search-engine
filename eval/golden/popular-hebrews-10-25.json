@@ -1,0 +1,16 @@
+{
+  "id": "popular-hebrews-10-25",
+  "query": "not forsaking our own assembling together",
+  "status": "active",
+  "note": [
+    "POPULAR-VERSES PROMOTION (2026-08-26, whole-Bible coverage plan §4.2): rank 84 (Tier 3) of the verified top-200 popular-verses ranking (/mnt/project-files/research/popular-verses/top-200-verses.md; per-entry source traceability in top-200-verses.json — 60 source lists: platform usage data, memorization curricula, editorial listicles).",
+    "Guard fixture: regression armor over the verses users search most. The query is the famous phrasing in public-domain wording (WEB text or KJV-derived); no modern-translation wording is used. No reason-family requirement on purpose — this fixture guards lexical reachability and position, not concept attribution; concept fixtures own attribution.",
+    "Observed 2026-08-26 on main @ e762d1c, engine 0.14.0, corpusFingerprint 644b241c…, layerFingerprint b24ea16d…: this query ranks Hebrews 10:25 at #1 (reason families: exact_phrase, passage_terms). withinTop pinned at 3 per the observed-pin convention (assert the observed, admitted ordering with headroom; a tighter or different desired ordering is a ranking/data change, not a fixture edit)."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Hebrews 10:25",
+      "withinTop": 3
+    }
+  ]
+}

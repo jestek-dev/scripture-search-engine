@@ -1,0 +1,16 @@
+{
+  "id": "popular-1-john-1-9",
+  "query": "if we confess our sins he is faithful",
+  "status": "active",
+  "note": [
+    "POPULAR-VERSES PROMOTION (2026-08-26, whole-Bible coverage plan §4.2): rank 28 (Tier 2) of the verified top-200 popular-verses ranking (/mnt/project-files/research/popular-verses/top-200-verses.md; per-entry source traceability in top-200-verses.json — 60 source lists: platform usage data, memorization curricula, editorial listicles).",
+    "Guard fixture: regression armor over the verses users search most. The query is the famous phrasing in public-domain wording (WEB text or KJV-derived); no modern-translation wording is used. No reason-family requirement on purpose — this fixture guards lexical reachability and position, not concept attribution; concept fixtures own attribution.",
+    "Observed 2026-08-26 on main @ e762d1c, engine 0.14.0, corpusFingerprint 644b241c…, layerFingerprint b24ea16d…: this query ranks 1 John 1:9 at #1 (reason families: exact_phrase, concept_anchor, concept_lexicon, passage_terms). withinTop pinned at 3 per the observed-pin convention (assert the observed, admitted ordering with headroom; a tighter or different desired ordering is a ranking/data change, not a fixture edit)."
+  ],
+  "expectedTop": [
+    {
+      "ref": "1 John 1:9",
+      "withinTop": 3
+    }
+  ]
+}

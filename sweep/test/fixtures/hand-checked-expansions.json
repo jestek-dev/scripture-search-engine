@@ -286,6 +286,11 @@
   ],
   "golden-verbatim": [
     {
+      "queryId": "golden-verbatim:004304ac3e557630",
+      "query": "while we were yet sinners christ died for us",
+      "expectationKind": "none"
+    },
+    {
       "queryId": "golden-verbatim:01230e3d9f4b9b60",
       "query": "you are gods",
       "expectationKind": "concept-anchors",
@@ -338,12 +343,6 @@
       "query": "render to caesar",
       "expectationKind": "concept-anchors",
       "conceptId": "governing-authorities"
-    },
-    {
-      "queryId": "golden-verbatim:0466c456615d4fad",
-      "query": "love the lord your god with all your heart",
-      "expectationKind": "concept-anchors",
-      "conceptId": "loving-god"
     }
   ],
   "multi-concept": [
