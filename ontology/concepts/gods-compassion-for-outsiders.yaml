@@ -1,0 +1,68 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme C row, requesting book: Jonah — "the theme's
+# defining book", entirely absent until #64). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR.
+#
+# EXTENSION CHECK (the row's own flag: "could alternatively be a
+# lexicon extension of gods-love; check that route before minting")
+# RUN AND DECLINED 2026-08-27: the extension would answer the
+# outsiders/enemies/Nineveh register with the God-loves-YOU assurance
+# anchors (measured: John 3:16, Rom 5:8 flood) — honest on the love
+# question, silent on the asker's actual question (does God pity those
+# outside the covenant). Minted narrow on Jonah, the defining-book
+# design (gods-compassion precedent recorded at the deferral).
+#
+# BOUNDARIES: Jonah 3:10 stays god-relents' anchor (same PR) — the
+# disjoint Jonah split recorded in both files: that pack takes the
+# relenting verse, this pack God's own compassion argument (4:10-11),
+# his self-description quoted by Jonah (4:2), and the pagan sailors
+# spared and worshiping (1:14-16). nations-and-peoples keeps the
+# origin-of-nations register; mercy keeps the inward hesed register
+# (Ps 103). Cross-related to loving-your-enemies' NT command register
+# via gods-love edge — the pack itself stays OT-narrative.
+#
+# TOKENIZER NOTE (G-4): no single-token entries; entries share no
+# phrase with gods-love (verified — its love entries are
+# assurance-register).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports Jonah's own argument; it adjudicates nothing about the
+# scope of salvation.
+id: gods-compassion-for-outsiders
+label: God's compassion for outsiders
+lexicon:
+  - does god love people outside the church
+  - gods mercy on other nations
+  - does god care about my enemies
+  - does god love unbelievers
+  - why did god spare nineveh
+anchors:
+  # "Shouldn't I be concerned for Nineveh, that great city, in which
+  # are more than one hundred twenty thousand persons who can't
+  # discern between their right hand and their left hand...?" (WEB, in
+  # corpus). God's own closing argument — the keystone.
+  - ref: Jonah 4:10-11
+    sources: [editorial]
+    weight: 1.0
+  # "I knew that you are a gracious God and merciful, slow to anger,
+  # and abundant in loving kindness, and you relent of doing harm."
+  # (WEB, in corpus). Jonah quoting the formula AS his complaint —
+  # compassion extended to the enemy city.
+  - ref: Jonah 4:2
+    sources: [editorial]
+    weight: 0.9
+  # "Therefore they cried to the LORD... So they feared the LORD
+  # exceedingly; and they offered a sacrifice to the LORD" (WEB, in
+  # corpus). The pagan sailors spared and worshiping.
+  - ref: Jonah 1:14-16
+    sources: [editorial]
+    weight: 0.7
+related:
+  - gods-love
+  - mercy
+  - slow-to-anger
+  - god-relents
+  - nations-and-peoples
+sources: [editorial]

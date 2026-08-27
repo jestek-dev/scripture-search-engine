@@ -1,0 +1,45 @@
+{
+  "id": "gods-holy-name",
+  "query": "for his names sake",
+  "status": "active",
+  "additionalQueries": [
+    "gods holy name"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 8 (Theme C, requesting book: Ezekiel).",
+    "Deferred because Ezek 36:20-23; 39:7, 25; 20:9-44 were all absent",
+    "(only Ps 23:3 in corpus — a supporting phrase, not a measurable",
+    "pack). The one-or-two question vs the-name-of-god was ALREADY",
+    "DECIDED as two registers in batch 2 (recorded in both places):",
+    "the-name-of-god = revelation/honor of the name; this pack = God",
+    "acting for his name's sake / sanctifying his profaned name.",
+    "Ps 23:3 stays restoration's anchor (cross-noted, not claimed);",
+    "Matt 6:9 stays inside prayer's span (the-name-of-god's own recorded",
+    "routing) — 'hallowed be your name' here carries the Ezek 36:23",
+    "sanctify-my-great-name register, the verse's OT background.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'for his names sake' chipless proximity scatter (Luke 21:17 rank 1",
+    "wrong sense — persecution 'for my name's sake'; Ps 23:3/25:11",
+    "chipless); 'gods holy name' had no curated home (the-name-of-god's",
+    "revelation-register anchors answer 'hallowed be your name' instead)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ezekiel 36:22-23",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: For his name's sake"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ezekiel 39:7",
+    "Ezekiel 20:9",
+    "Ezekiel 20:44",
+    "Psalms 79:9",
+    "Psalms 25:11"
+  ],
+  "coversConcepts": [
+    "gods-holy-name"
+  ]
+}

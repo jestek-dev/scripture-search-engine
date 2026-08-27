@@ -308,6 +308,18 @@ collapses:
     reviewedBy: pending-J12
     date: "2026-08-21"
     note: "Actively useful collapse (the gate docstring's own example): bare 'risen'."
+  - conceptId: sacrifice-and-atonement
+    phrase: "the scapegoat"
+    token: scapegoat
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-27"
+    note: >-
+      CORPUS-BLOCKED ROSTER build (2026-08-27), authored with the pack:
+      "the scapegoat" collapses to the bare token ("the" is a stopword) —
+      deliberate: the word people type for Lev 16:22, absent from WEB
+      corpus bytes, colliding with no concept; fixture-backed
+      (sacrifice-and-atonement.json).
   - conceptId: salvation
     phrase: "how can i be saved"
     token: saved
@@ -997,6 +1009,21 @@ concepts:
     # subject noun people type; "you shall not covet" collapses to the
     # same covet trigger (collapse row above).
     admitted: [covetousness, covet]
+  - id: craftsmanship-and-creativity
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, craftsmanship-and-creativity.json). Two deliberate
+    # one-word entries: "craftsmanship" (the subject noun people type;
+    # distinctive stem, no competing concept) and "bezalel" (the
+    # narrative's own proper noun).
+    admitted: [craftsmanship, bezalel]
+    skipped:
+      - token: creativity
+        reason: >-
+          Adjacent to creation/creation-testifies vocabulary; the
+          "creativity in the bible" / "god and creativity" phrase forms
+          carry the register without risking bare-token traffic meant
+          for the creation doctrine.
+
   - id: creation
     # 2026-08-08 decision table: names the doctrine, not a general word.
     admitted: [creation]
@@ -1253,6 +1280,18 @@ concepts:
           forms carry it. Pending curation review before any bare
           admission.
 
+  - id: famine-of-hearing-gods-word
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, famine-of-hearing-gods-word.json). A phrase-forms
+    # pack — no entry collapses to a single significant token.
+    skipped:
+      - token: famine
+        reason: >-
+          Bare "famine" is provision/scarcity traffic (the measured
+          before-state showed gods-provision answering "famine of the
+          word"); the two-token phrase forms carry the word-withheld
+          register.
+
   - id: fasting
     # 2026-08-26 tag-gap batch 1: row authored with the pack
     # (fixture-first, fasting.json). Bare `fast` is a deliberate
@@ -1363,6 +1402,19 @@ concepts:
           lord) carry the query family without handing this pack a
           common doxological token.
 
+  - id: god-looks-at-the-heart
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, god-looks-at-the-heart.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires. (The entry "god looks
+    # at the heart" moved here FROM identity-in-christ in the same PR —
+    # its collapse status is unchanged: three significant tokens.)
+    skipped:
+      - token: heart
+        reason: >-
+          A corpus-wide common word spanning dozens of registers
+          (new-heart, hardness-of-heart, loving-god's whole-heart
+          family); the phrase forms carry this pack.
+
   - id: god-of-all-comfort
     # 2026-08-18 harvest: deliberate bare entry — closes the 2026-08-13
     # audit's "comforter"/"comfort" reachability gap on the comfort side
@@ -1385,6 +1437,18 @@ concepts:
           kings" alone would also collapse to it, so only the full
           "king of kings and lord of lords" is an entry.
 
+  - id: god-relents
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, god-relents.json). Every entry keeps >= 2
+    # significant tokens ("god" is a significant token under the shared
+    # tokenizer); no bare word fires.
+    skipped:
+      - token: relent
+        reason: >-
+          "god relents"/"god relented" already carry the register at
+          two-token width; a bare admission adds nothing and would fire
+          this pack on human-relenting narrative queries.
+
   - id: god-sees-my-suffering
     skipped:
       - token: suffering
@@ -1398,9 +1462,23 @@ concepts:
     # actually type for marriage teaching and spousal prayer.
     admitted: [marriage, husbands, wives]
 
+  - id: gods-compassion-for-outsiders
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, gods-compassion-for-outsiders.json). A phrase-forms
+    # pack — no entry collapses to a single significant token; bare
+    # compassion/mercy stay with their owners (mercy, god-of-all-comfort
+    # adjacency noted).
+
   - id: gods-faithfulness
     # 2026-08-08 decision table: attribute language, rarely generic.
     admitted: [faithfulness]
+
+  - id: gods-holy-name
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, gods-holy-name.json). A phrase-forms pack — no
+    # entry collapses to a single significant token; bare "name" and the
+    # revelation-register phrases stay the-name-of-god's (the batch-2
+    # two-register decision).
 
   - id: gods-love
     # Jesse's call 2026-08-08, recorded in gods-love.yaml: the bare word
@@ -1429,6 +1507,12 @@ concepts:
     # (rest-for-the-weary precedent: the word IS the situation),
     # fixture-backed (gods-provision-famine.json).
     admitted: [provision, famine]
+
+  - id: gods-surprising-choice
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, gods-surprising-choice.json). A phrase-forms pack —
+    # no entry collapses to a single significant token; bare weak/chose
+    # would be strength-in-weakness and election territory respectively.
 
   - id: gods-unchanging-nature
     # 2026-08-25 apologetics wave batch 2: row authored with the pack
@@ -2167,6 +2251,21 @@ concepts:
     # set).
     admitted: [peace, anxious, worry, worried, stress, fret]
 
+  - id: persecuted-for-gods-word
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, persecuted-for-gods-word.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires.
+    skipped:
+      - token: persecution
+        reason: >-
+          suffering-for-christ's live bare entry (its 2026-08-18
+          admission) — the NT teaching keeps the bare word; this pack's
+          OT register rides multi-word phrases only (the deferral's own
+          G4 boundary design).
+      - token: persecuted
+        reason: >-
+          Same owner and same design as "persecution".
+
   - id: pleasing-god-not-people
     # 2026-08-18 harvest: deliberate per the in-file comment — "approval"
     # is the modern vocabulary of this struggle, and "approval of others"
@@ -2502,6 +2601,30 @@ concepts:
     # "sabbath" itself.
     admitted: [sabbath]
 
+  - id: sacrifice-and-atonement
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, sacrifice-and-atonement.json). "the scapegoat"
+    # collapse acknowledged above — the word people type for Lev 16:22,
+    # colliding with no concept.
+    admitted: [scapegoat]
+    skipped:
+      - token: atonement
+        reason: >-
+          the-cross's live bare entry (since 2026-08-08) — the NT
+          teaching keeps the bare word; this pack's OT-ritual register
+          rides multi-word phrases (the deferral's own recorded
+          boundary).
+      - token: sacrifice
+        reason: >-
+          A corpus-wide common word spanning ritual, praise ("sacrifice
+          of praise"), and living-sacrifice registers; the phrase forms
+          carry this pack.
+      - token: offering
+        reason: >-
+          Same breadth problem as "sacrifice" (grain/burnt/free-will
+          offerings, tithing's offerings); "sin offering" and "guilt
+          offering" carry the ritual register at two-token width.
+
   - id: salvation
     # salvation/saved: 2026-08-08 decision table and correction table.
     # born: collapse of "you must be born again", recorded 2026-08-08 WITH
@@ -2731,6 +2854,22 @@ concepts:
         reason: >-
           The corpus's ordinary narrative word; "strangers and
           pilgrims" (2 tokens) carries the register.
+  - id: spiritual-adultery
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, spiritual-adultery.json). A phrase-forms pack — no
+    # entry collapses to a single significant token.
+    skipped:
+      - token: adultery
+        reason: >-
+          The literal-commandment sense (Exod 20:14, Matt 5:27) must
+          keep winning the bare word; the "spiritual adultery" /
+          "unfaithful to god" phrase forms carry the covenant metaphor.
+      - token: unfaithful
+        reason: >-
+          Spans marital and covenant senses; a bare admission would fire
+          Hosea anchors on human-marriage crisis queries
+          (pastoral-betrayal-and-marriage-crisis territory).
+
   - id: spiritual-gifts
     # KEPT-WITH-RESERVATION: "what are my gifts" (2026-08-18 harvest)
     # collapses to bare `gift` ("what are my" are stopwords). Plausibly the

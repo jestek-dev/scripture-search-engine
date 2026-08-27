@@ -1,0 +1,43 @@
+{
+  "id": "famine-of-hearing-gods-word",
+  "query": "famine of the word",
+  "status": "active",
+  "additionalQueries": [
+    "a famine of hearing the words of the lord"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 10 (Theme C, requesting book: Amos).",
+    "Deferred because Amos 8:11-12 was absent, together with the",
+    "word-withheld vs prayer-shut-out routing decision.",
+    "ROUTING SETTLED across both rows (the Lamentations cross-note's own",
+    "instruction, decided with unanswered-prayer's curator record):",
+    "unanswered-prayer keeps the prayer-shut-out register (Lam 3:8/3:44)",
+    "and 'when god is silent' STAYS wrestling-with-god's lexicon (batch-5",
+    "verified fact); this pack takes ONLY the word-withheld-as-judgment",
+    "register ('famine of the word' and kin). Extension-vs-mint call the",
+    "review asks for: no existing word concept carries the withdrawal",
+    "register (power-of-gods-word = the word's power, delight-in-the-word",
+    "= love of it), so a narrow mint (seasons-of-life one-passage",
+    "precedent) with 1 Sam 3:1 / Lam 2:9 as supporting witnesses.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'famine of the word' hijacked wholesale by gods-provision's",
+    "bread-and-needs anchors (Matt 6:31-33, Phil 4:19, Ps 23:1 — famine",
+    "token inversion, opposite intent); Amos 8:11-12 nowhere in top 10."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Amos 8:11-12",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Famine of hearing God's word"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Samuel 3:1",
+    "Lamentations 2:9"
+  ],
+  "coversConcepts": [
+    "famine-of-hearing-gods-word"
+  ]
+}

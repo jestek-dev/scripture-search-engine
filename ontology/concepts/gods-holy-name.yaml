@@ -1,0 +1,80 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme C row, requesting book: Ezekiel; the review's
+# flag adds Pss 23:3; 79:9 and the Lord's Prayer). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR. Deferred through batches 1-6:
+# Ezek 36:20-23; 39:7, 25; 20:9-44 all corpus-blocked.
+#
+# ONE-OR-TWO vs the-name-of-god: DECIDED in batch 2 as TWO registers
+# (recorded in both places then; executed now) — the-name-of-god =
+# revelation/honor of the name (I AM, the third commandment, the name
+# as refuge); this pack = God ACTING for his name's sake — the
+# honoring, profaning, and sanctifying of the name among the nations.
+# Zero shared lexicon phrases with the-name-of-god's entries.
+#
+# BOUNDARIES: Ps 23:3 stays restoration's anchor ("He restores my
+# soul" — that pack's active fixture pins it top-3); cross-noted, not
+# claimed — Ps 79:9 and Ps 25:11 carry the Psalter's for-your-name's-
+# sake prayer register instead. Matt 6:9 stays inside prayer's span
+# (the-name-of-god's own recorded routing); "hallowed be your name"
+# HERE carries the Ezek 36:23 sanctify-my-great-name register — the
+# petition's OT background — as an entry, not a Matthew claim.
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses
+# ("for his names sake" -> {sake, name}; "gods holy name" ->
+# {god, holi, name}).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports Ezekiel's own for-my-name's-sake logic; it adjudicates
+# nothing about Israel, the nations, or prayer formulas.
+id: gods-holy-name
+label: For his name's sake
+lexicon:
+  - for his names sake
+  - for your names sake
+  - gods holy name
+  - hallowed be your name
+  - god profaned among the nations
+  - god acts for his name
+anchors:
+  # "I don't do this for your sake, house of Israel, but for my holy
+  # name, which you have profaned among the nations... I will sanctify
+  # my great name... Then the nations will know that I am the LORD"
+  # (WEB, in corpus). The keystone — the register stated whole.
+  - ref: Ezekiel 36:22-23
+    sources: [editorial]
+    weight: 1.0
+  # "I will make my holy name known among my people Israel. I won't
+  # allow my holy name to be profaned any more." (WEB, in corpus).
+  - ref: Ezekiel 39:7
+    sources: [editorial]
+    weight: 0.9
+  # "But I worked for my name's sake, that it should not be profaned
+  # in the sight of the nations" (WEB, in corpus). The exodus retold
+  # through the name's honor.
+  - ref: Ezekiel 20:9
+    sources: [editorial]
+    weight: 0.85
+  # "You will know that I am the LORD, when I have dealt with you for
+  # my name's sake, not according to your evil ways" (WEB, in corpus).
+  - ref: Ezekiel 20:44
+    sources: [editorial]
+    weight: 0.8
+  # "Help us, God of our salvation, for the glory of your name.
+  # Deliver us, and forgive our sins, for your name's sake." (WEB, in
+  # corpus). The Psalter's prayer in this register.
+  - ref: Psalms 79:9
+    sources: [editorial]
+    weight: 0.85
+  # "For your name's sake, LORD, pardon my iniquity, for it is great."
+  # (WEB, in corpus). (Ps 23:3 stays restoration's — cross-noted.)
+  - ref: Psalms 25:11
+    sources: [editorial]
+    weight: 0.75
+related:
+  - the-name-of-god
+  - glory-of-god
+  - holiness
+  - restoration-of-israel
+sources: [editorial]

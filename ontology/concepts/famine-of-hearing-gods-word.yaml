@@ -1,0 +1,66 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme C row, requesting book: Amos). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission only by his merge of this PR. Deferred through
+# batches 1-6: Amos 8:11-12 corpus-blocked, and the word-withheld vs
+# prayer-shut-out routing decision deferred with it.
+#
+# ROUTING SETTLED across both rows (the Lamentations cross-note's own
+# instruction): unanswered-prayer keeps the prayer-shut-out register
+# (Lam 3:8; 3:44 — God not hearing PRAYER) and "when god is silent"
+# STAYS wrestling-with-god's lexicon entry (batch-5 verified fact,
+# re-verified); this pack takes ONLY the word-withheld-as-judgment
+# register. Zero shared phrases with either.
+#
+# EXTENSION-VS-MINT (the row asks for a deliberate call): no existing
+# word concept carries the withdrawal register — power-of-gods-word is
+# the word's power, delight-in-the-word the love of it,
+# obedience-to-the-word the doing of it. Minted NARROW on the one
+# primary passage (seasons-of-life one-anchor precedent) with two
+# supporting witnesses in the same register.
+#
+# TOKENIZER NOTE (G-4): "famine of the word" -> {famine, word} and
+# "a famine of hearing" -> {famine, hear} — two significant tokens
+# each, no collapses. No bare "famine" (gods-provision territory the
+# measured inversion demonstrates; inventory skip with reason).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist reports the judgment texts; it never teaches that God is
+# permanently silent toward a seeker (Amos's famine is the prophets'
+# own warning to a covenant people spurning the word they had).
+id: famine-of-hearing-gods-word
+label: Famine of hearing God's word
+lexicon:
+  - famine of the word
+  - a famine of hearing the words of the lord
+  - god withholding his word
+  - no vision from the lord
+anchors:
+  # "Behold, the days come," says the Lord GOD, "that I will send a
+  # famine in the land, not a famine of bread, nor a thirst for water,
+  # but of hearing the LORD's words. They will wander from sea to
+  # sea... to seek the LORD's word, and will not find it." (WEB, in
+  # corpus). The passage that IS the row.
+  - ref: Amos 8:11-12
+    sources: [editorial]
+    weight: 1.0
+  # "The LORD's word was rare in those days. There were not many
+  # visions, then." (WEB, in corpus). The register's narrative
+  # statement at Shiloh.
+  - ref: 1 Samuel 3:1
+    sources: [editorial]
+    weight: 0.8
+  # "Her king and her princes are among the nations where the law is
+  # not. Yes, her prophets find no vision from the LORD." (WEB, in
+  # corpus). The exile's word-withheld verse. (Lam 3:8/3:44 stay
+  # unanswered-prayer's — the settled routing.)
+  - ref: Lamentations 2:9
+    sources: [editorial]
+    weight: 0.75
+related:
+  - power-of-gods-word
+  - unanswered-prayer
+  - wrestling-with-god
+  - divine-judgment
+sources: [editorial]

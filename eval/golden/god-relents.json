@@ -1,0 +1,45 @@
+{
+  "id": "god-relents",
+  "query": "god relents",
+  "status": "active",
+  "additionalQueries": [
+    "does god change his mind"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 7 (Theme C, requesting book: Jeremiah;",
+    "the review's own flag: 'Jonah 3-4 and Joel 2:13-14 will join').",
+    "Deferred because Jer 18/26, Jonah 3-4, Joel 2 were all absent.",
+    "Carried gist care honored: the conditional-prophecy pattern, never",
+    "divine fickleness; kept SEPARATE from gods-unchanging-nature (the",
+    "recorded cross-note) — both witnesses stand, adjudicated by neither",
+    "pack (the hardness-of-heart both-statements precedent). On 'does god",
+    "change his mind' the unchanging-nature anchors legitimately compete;",
+    "gods-unchanging-nature's active fixture ('does god change', Mal 3:6",
+    "within 10) verified undisturbed by design (its entry tokens do not",
+    "fire on this pack's phrases).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'god relents' chipless token luck (Amos 7:6, Jonah 3:9-10, no",
+    "curated home); 'does god change his mind' answered ONLY from the",
+    "immutability side (gods-unchanging-nature anchors ranks 1-4) — the",
+    "conditional-prophecy texts the asker is asking about were absent."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jeremiah 18:7-10",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God relents"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jonah 3:10",
+    "Joel 2:13",
+    "Exodus 32:14",
+    "Jeremiah 26:3",
+    "Amos 7:3"
+  ],
+  "coversConcepts": [
+    "god-relents"
+  ]
+}
