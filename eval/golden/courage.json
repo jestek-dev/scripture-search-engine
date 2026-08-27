@@ -1,0 +1,47 @@
+{
+  "id": "courage",
+  "query": "courage to do the right thing",
+  "status": "active",
+  "additionalQueries": [
+    "courage in the bible"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 17 (Theme E, 2 requesting books: Esther,",
+    "Nehemiah; roadmap appends Dan 3; 6). Deferred because the row's",
+    "entire case (Esth 4:11-16; 5:1-2; 7:6; Neh 6:9-13; Dan 3; 6) was",
+    "absent — and the in-corpus courage texts were fear-not's",
+    "divine-comfort register, which the row itself says is precisely NOT",
+    "this gap (human courage where no divine word is recorded).",
+    "fear-not untouched: it keeps 'take courage' and the comfort-command",
+    "texts (Josh 1:9, Ps 27:14 stays trust-in-god's anchor); bare",
+    "'courage' skipped with reason. Nehemiah's register caveat carried:",
+    "this courage is prayer-entwined (6:9) — described, not disqualified.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'courage to do the right thing' pure right+thing token noise (2 Chr",
+    "30:4, 1 Chr 13:4 — the batch-3 deferral's 'unserved' measurement",
+    "reproduced); 'if i perish i perish' Esth 4:16 rank 1 exact phrase CHIPLESS.",
+    "STRUCTURAL LIMIT (recorded in the pack): 'if i perish i perish'",
+    "cannot be a lexicon entry — if/i are stopwords, so it collapses to",
+    "bare `perish`, whose natural queries (John 3:16) this pack must",
+    "never answer. Exact-phrase retrieval already serves the verbatim",
+    "query (measured: Esth 4:16 rank 1, before and after)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Esther 4:16",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Courage"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Nehemiah 6:11",
+    "Esther 5:1-2",
+    "Esther 7:6",
+    "Daniel 3:16-18"
+  ],
+  "coversConcepts": [
+    "courage"
+  ]
+}

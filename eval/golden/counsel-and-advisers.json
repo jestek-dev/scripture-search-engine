@@ -1,0 +1,48 @@
+{
+  "id": "counsel-and-advisers",
+  "query": "multitude of counselors",
+  "status": "active",
+  "additionalQueries": [
+    "godly counsel",
+    "seeking advice"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 15 (Theme E, 3 requesting books: 2 Samuel,",
+    "1 Kings, 1 Chronicles). Deferred because the signature texts (Prov",
+    "11:14; 15:22; 1 Kgs 12:6-15; 1 Chr 12/27) were absent and the",
+    "BORDERLINE check-first (wisdom-from-god / guidance lexicon question)",
+    "was unresolvable without them.",
+    "CHECK RUN AND DECLINED 2026-08-27: wisdom-from-god is the",
+    "ask-GOD-for-wisdom register and guidance is God's own leading — the",
+    "human-advisers register (Prov 11:14's multitude of counselors, the",
+    "Ahithophel/Rehoboam narratives) fits neither lexicon; an extension",
+    "would answer 'seeking advice' with Jas 1:5 or Ps 32:8. Minted.",
+    "MEASURED HIJACK (recorded at the batch-3 deferral for this exact",
+    "moment) CONFIRMED and FIXED: 'multitude of counselors' ranked Prov",
+    "11:14/15:22 chipless then routed to holy-spirit-the-comforter's",
+    "Counselor anchors (John 14:16-17, 14:26 ranks 3-4) — the human-",
+    "advisers register had no curated answer. The Counselor routing",
+    "itself is untouched (no comforter/counselor bare token here).",
+    "Measured gap before the pack (2026-08-27): as above; 'godly counsel'",
+    "translation-variant scatter with Ps 1:1 chipless."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Proverbs 11:14",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Counsel and advisers"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Proverbs 15:22",
+    "Proverbs 27:9",
+    "1 Kings 12:8",
+    "2 Samuel 17:14",
+    "1 Chronicles 12:32"
+  ],
+  "coversConcepts": [
+    "counsel-and-advisers"
+  ]
+}

@@ -381,6 +381,19 @@ collapses:
     note: >-
       Bare 'cross' must reach this concept — the concept exists for exactly
       that query. (Its exact-phrase scoring is P3.3's taper, not this table.)
+  - conceptId: vanity-of-life
+    phrase: "vanity of vanities"
+    token: vanity
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-27"
+    note: >-
+      CORPUS-BLOCKED ROSTER build (2026-08-27), authored with the pack:
+      both words share the stem `vanity` ("of" is a stopword), so the
+      book's own thesis phrase collapses to the bare token — deliberate:
+      the phrase IS the query people type, the stem reaches the thesis
+      texts, and no other concept speaks it; fixture-backed
+      (vanity-of-life.json).
   - conceptId: victory-in-christ
     phrase: "greater is he who is in you"
     token: greater
@@ -833,6 +846,19 @@ concepts:
           fire on Holy Week queries. The multi-word crisis phrasings carry
           it.
 
+  - id: blasphemy-against-the-spirit
+    # 2026-08-27 corpus-blocked roster build: pack authored under the
+    # pre-existing unpardonable-sin fixture's anxious-searcher design
+    # note (fixture flips active with the pack). A phrase-forms pack —
+    # no entry collapses to a single significant token.
+    skipped:
+      - token: blasphemy
+        reason: >-
+          Spans the general sin (Mark 3:28's "all sins... including
+          their blasphemies") and this specific saying; the bare word
+          must not fire the unpardonable-sin anchors on general
+          blasphemy queries. The multi-word forms carry it.
+
   - id: blessing
     # KEPT-WITH-RESERVATION 2026-08-22 (PR #41 merge): "blessed to be a
     # blessing" collapses to the bare stem `bless` ("to be a" are
@@ -992,6 +1018,34 @@ concepts:
     # 6:10 through curation); comparison/comparing are the
     # greener-grass register.
     admitted: [contentment, content, wealth, money, finances, debt, comparison, comparing]
+
+  - id: counsel-and-advisers
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, counsel-and-advisers.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: counsel
+        reason: >-
+          The Counselor routing (holy-spirit-the-comforter) and Ps 1:1's
+          counsel-of-the-wicked sense share the stem; the multi-word
+          phrases carry the human-advisers register (the batch-3
+          measured hijack this pack exists to fix, without touching the
+          Counselor's own queries).
+      - token: counselor
+        reason: >-
+          Same Counselor routing; never admitted here.
+
+  - id: courage
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, courage.json). Every entry keeps >= 2 significant
+    # tokens ("if i perish i perish" REJECTED at authoring — collapses
+    # to bare `perish`; structural limit in the pack file).
+    skipped:
+      - token: courage
+        reason: >-
+          fear-not's "take courage" comfort-command register is the
+          bare word's strongest incumbent sense; this pack's
+          human-courage register rides the phrase forms.
 
   - id: covenant
     # PR #41 (2026-08-22 Genesis pilot): deliberate bare subject-noun
@@ -1196,6 +1250,12 @@ concepts:
     # "predestination" returned exactly ONE chipless result.
     admitted: [predestination, election]
 
+  - id: empowered-by-the-spirit
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, empowered-by-the-spirit.json). A phrase-forms
+    # pack; bare "spirit" stays holy-spirit territory (never admitted
+    # anywhere as a bare trigger).
+
   - id: empty-worship
     # 2026-08-26 tag-gap batch 1: row authored with the pack
     # (fixture-first, empty-worship.json). Every entry keeps >= 2
@@ -1389,6 +1449,16 @@ concepts:
     # scatter with no curated chip. Every other entry keeps >= 2
     # significant tokens.
     admitted: [apologetics]
+
+  - id: gloating-over-downfall
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, gloating-over-downfall.json). Every entry keeps
+    # >= 2 significant tokens.
+    skipped:
+      - token: gloating
+        reason: >-
+          Rare but ambiguous alone (envy/taunt senses); the question
+          phrasings people actually type carry the register.
 
   - id: glory-of-god
     # 2026-08-26 tag-gap batch 2: row authored with the pack
@@ -1962,6 +2032,14 @@ concepts:
           Generic narrative word across the histories; "godly leader"
           (2 tokens) carries the query without handing the pack every
           leader mention.
+
+  - id: leviathan-and-behemoth
+    # 2026-08-27 corpus-blocked roster build: pack authored under the
+    # pre-existing leviathan-and-behemoth fixture (flips active with
+    # the pack). Two deliberate one-word entries — the creatures' own
+    # names, in WEB corpus bytes, colliding with no concept (creation's
+    # lexicon carries neither).
+    admitted: [leviathan, behemoth]
 
   - id: light-and-darkness
     # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,
@@ -2591,6 +2669,11 @@ concepts:
           corpus cannot yet answer (Josiah corpus-blocked); revisit at
           re-pin.
 
+  - id: right-in-their-own-eyes
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, right-in-their-own-eyes.json). A phrase-forms
+    # pack — no entry collapses to a single significant token.
+
   - id: sabbath-rest
     # PR #41 (2026-08-22 Genesis pilot): deliberate bare entry per the
     # in-file comment (§1.6d option-3 register: the word IS the concept
@@ -2885,12 +2968,35 @@ concepts:
           the two-token tongues forms carry the gift register without
           contesting the bare word.
 
+  - id: spiritual-warfare
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, spiritual-warfare.json). Every entry keeps >= 2
+    # significant tokens; the bare phrase "spiritual warfare" STAYS
+    # resisting-the-devil's lexicon entry (its active fixture pins the
+    # query — the recorded lexicon fact honored; ownership of the bare
+    # phrase is a reversible curation default flagged for Jesse in the
+    # pack file).
+    skipped:
+      - token: warfare
+        reason: >-
+          The review's three-way bare-"warfare" collision warning
+          (spiritual-warfare rows vs Deuteronomy's war-laws row):
+          NEITHER pack admits the bare token; multi-word phrases only.
+
   - id: spiritual-growth
     skipped:
       - token: growth
         reason: >-
           Generic (agricultural and numeric growth across the canon); the
           "spiritual growth" / "grow in christ" phrase forms carry it.
+
+  - id: stewardship
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, stewardship.json). Bare "stewardship" is a
+    # deliberate one-word entry — WEB's own word (1 Cor 9:17, Luke
+    # 16:2-4), the subject noun people type, no competing concept
+    # (stewardship-of-days is the time register and shares no phrase).
+    admitted: [stewardship]
 
   - id: stewardship-of-days
     # 2026-08-18 harvest, §1.6d pattern: a distinctive modern word absent
@@ -3199,6 +3305,14 @@ concepts:
     # considered and DROPPED at authoring (collapses to bare eye —
     # accident class; the pack file records it).
     admitted: [vengeance, revenge]
+  - id: vanity-of-life
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, vanity-of-life.json). "vanity of vanities"
+    # collapses to bare `vanity` (collapse row above) — deliberate: the
+    # phrase IS the query, the stem reaches the thesis texts, no other
+    # concept speaks it.
+    admitted: [vanity]
+
   - id: victory-in-christ
     # victory: 2026-08-08 decision table. conqueror: kept collapse of "more
     # than conquerors". overcomes: collapse of "he who overcomes"

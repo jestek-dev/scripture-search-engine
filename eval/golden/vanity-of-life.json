@@ -1,0 +1,45 @@
+{
+  "id": "vanity-of-life",
+  "query": "what is the point of life",
+  "status": "active",
+  "additionalQueries": [
+    "vanity of vanities meaning",
+    "life feels meaningless"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 19 (Theme E, requesting book:",
+    "Ecclesiastes). Deferred because the thesis texts (Eccl 1:2-11; 2:11,",
+    "17; 12:8 and the refrain outside ch. 3) were ALL absent —",
+    "Ecclesiastes' corpus was ch. 3 only.",
+    "The row's own gist flag honored: WEB 'vanity' (vapor/fleeting) and",
+    "the NIV-remembered 'meaningless' phrasing BOTH reachable (lexicon",
+    "carries both), routed to the book's own arc — related edge to",
+    "fear-of-the-lord carries Eccl 12:13-14's conclusion (that pack's",
+    "anchor, not claimed here) — without flattening the book's honesty.",
+    "Eccl 3:19's refrain instance stays mortality's anchor (the batch-4",
+    "cross-note, unchanged).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'what is the point of life' pure life-token noise (Ps 139:24, Prov",
+    "3:18); 'vanity of vanities meaning' scatter with Eccl 1:2 rank 4",
+    "CHIPLESS (bare token luck); 'life feels meaningless' no honest",
+    "answer at all."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Ecclesiastes 1:2-3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Vanity of life"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Ecclesiastes 2:11",
+    "Ecclesiastes 2:17",
+    "Ecclesiastes 12:8",
+    "Ecclesiastes 1:14"
+  ],
+  "coversConcepts": [
+    "vanity-of-life"
+  ]
+}

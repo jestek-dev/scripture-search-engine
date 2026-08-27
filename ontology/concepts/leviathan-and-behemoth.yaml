@@ -1,0 +1,70 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme E row, 2 requesting books: Job, Psalms; the
+# angels named-figure precedent). Adopted as display vocabulary by
+# Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission only
+# by his merge of this PR. The standing corpus-block (Job 40-41;
+# Ps 74:13-14 absent) lifted by #64; the pre-existing pending fixture
+# leviathan-and-behemoth (2026-08-25) is the measured-gap record and
+# flips active in this PR per its own activation note (concept +
+# chapters + coversConcepts together).
+#
+# GIST DISCIPLINE (the fixture's activation note, executed): the
+# creature descriptions are LOCATED, identification-FREE — no
+# dinosaur / crocodile / hippopotamus / mythology adjudication in
+# gist, label, or comments (the antichrist / Ezekiel-28
+# identification-free precedents). The dinosaurs-in-the-bible query is
+# answered by locating what the text says, never by ruling on what the
+# creatures were (CLAUDE.md #6).
+#
+# TOKENIZER NOTE (G-4): "leviathan" and "behemoth" are deliberate
+# one-word entries — the creatures' own names, in WEB corpus bytes,
+# colliding with no concept (creation's lexicon carries neither — the
+# row's own re-verification). Inventory rows recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: leviathan-and-behemoth
+label: Leviathan and behemoth
+lexicon:
+  - leviathan
+  - behemoth
+  - behemoth in the bible
+  - dinosaurs in the bible
+anchors:
+  # "Can you draw out Leviathan with a fish hook, or press down his
+  # tongue with a cord?" (WEB, in corpus). The LORD's own challenge —
+  # the keystone.
+  - ref: Job 41:1
+    sources: [editorial]
+    weight: 1.0
+  # "See now behemoth, which I made as well as you. He eats grass as
+  # an ox." (WEB, in corpus).
+  - ref: Job 40:15
+    sources: [editorial]
+    weight: 0.95
+  # "On earth there is not his equal, that is made without fear. He
+  # sees everything that is high. He is king over all the sons of
+  # pride." (WEB, in corpus). The description's summit.
+  - ref: Job 41:33-34
+    sources: [editorial]
+    weight: 0.85
+  # "You broke the heads of Leviathan in pieces. You gave him as food
+  # to people and desert creatures." (WEB, in corpus).
+  - ref: Psalms 74:13-14
+    sources: [editorial]
+    weight: 0.8
+  # "There the ships go, and leviathan, whom you formed to play
+  # there." (WEB, in corpus).
+  - ref: Psalms 104:26
+    sources: [editorial]
+    weight: 0.75
+  # "Let them curse it who curse the day, who are ready to rouse up
+  # leviathan." (WEB, in corpus).
+  - ref: Job 3:8
+    sources: [editorial]
+    weight: 0.6
+related:
+  - creation
+  - design-in-creation
+  - providence
+sources: [editorial]

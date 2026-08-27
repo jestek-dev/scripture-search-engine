@@ -1,0 +1,41 @@
+{
+  "id": "right-in-their-own-eyes",
+  "query": "everyone did what was right in their own eyes",
+  "status": "active",
+  "additionalQueries": [
+    "no king in israel"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 20 (Theme E, requesting book: Judges).",
+    "Deferred because Judg 17:6; 21:25 (and 18:1; 19:1) were absent —",
+    "Judges' corpus was ch. 16 only — with Prov 21:2; 12:15 also blocked.",
+    "FOLD ALTERNATIVE DECIDED at curation (the row flags it to curation",
+    "judgment): no discernment/authority concept exists in the vocabulary",
+    "to fold into, and the thesis-line query family deserves the book's",
+    "own texts — MINTED narrow (reversible). Prov 21:2 stays",
+    "god-looks-at-the-heart's anchor (same PR, cross-noted — its second",
+    "clause is that pack's register); this pack takes Prov 12:15, the",
+    "fool's-own-eyes verse.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'everyone did what was right in their own eyes' ranked Deut 12:8",
+    "rank 1 then Judg 17:6 / 21:25 ranks 2-3 — ALL CHIPLESS token luck;",
+    "'no king in israel' unserved by any curated home."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Judges 21:25",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Right in their own eyes"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Judges 17:6",
+    "Proverbs 12:15",
+    "Deuteronomy 12:8"
+  ],
+  "coversConcepts": [
+    "right-in-their-own-eyes"
+  ]
+}

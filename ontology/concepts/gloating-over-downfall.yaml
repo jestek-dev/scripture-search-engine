@@ -1,0 +1,69 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme E row, 3 requesting books: Obadiah, Proverbs,
+# Ezekiel — Ezekiel's staged gloating-over-anothers-fall row folded
+# here by the review itself). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission only by his
+# merge of this PR. Deferred through batches 1-6: every direct text
+# absent, lone in-corpus witness (Job 31:29) too thin to measure.
+#
+# BORDERLINE DECIDED at curation (the row's own self-mark: "reviewer
+# may fold this into a broader betrayal/vengeance treatment"; decided
+# alongside Theme G's vengeance row as the deferral instructed;
+# reversible, recorded here and in vengeance.yaml): MINT narrow, not
+# fold. The register is a CONSCIENCE question about one's own reaction
+# to an enemy's fall — vengeance's routes-to-leave-it-to-God design
+# answers people seeking or renouncing revenge; a fold would put a
+# "Theme: Vengeance" chip on a self-examination query. Cross-related
+# ONE-DIRECTIONALLY (this pack -> vengeance; a reverse edge would
+# surface these anchors on vengeance's own fixture queries — the
+# batch-4 reverted-edge precedent), zero shared phrases.
+#
+# BOUNDARIES: Job 31:29 (Job's oath: "If I have rejoiced at the
+# destruction of him who hated me") sits inside Job 31, whose verses
+# are claimed clause-by-clause by integrity/sexual-purity/hospitality
+# (batch 3) — NOT claimed here; Prov 24:17-18 is the teaching keystone.
+# Mic 7:8 ("Don't rejoice against me, my enemy") is the victim's-voice
+# inverse — left unclaimed, noted for any future taunt-register need.
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses
+# ("gloating" alone NOT admitted — see inventory skip).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: gloating-over-downfall
+label: Gloating over downfall
+lexicon:
+  - is it wrong to celebrate someones downfall
+  - rejoice when your enemy falls
+  - gloating over someone
+  - happy when bad things happen to bad people
+anchors:
+  # "Don't rejoice when your enemy falls. Don't let your heart be glad
+  # when he is overthrown, lest the LORD see it, and it displease him"
+  # (WEB, in corpus). The teaching keystone.
+  - ref: Proverbs 24:17-18
+    sources: [editorial]
+    weight: 1.0
+  # "Whoever mocks the poor reproaches his Maker. He who is glad at
+  # calamity shall not be unpunished." (WEB, in corpus).
+  - ref: Proverbs 17:5
+    sources: [editorial]
+    weight: 0.9
+  # "But don't look down on your brother in the day of his disaster,
+  # and don't rejoice over the children of Judah in the day of their
+  # destruction." (WEB, in corpus). Edom's indictment — the theme's
+  # own prophet.
+  - ref: Obadiah 1:12-13
+    sources: [editorial]
+    weight: 0.9
+  # "Because you have clapped your hands, stamped with the feet, and
+  # rejoiced with all the contempt of your soul against the land of
+  # Israel" (WEB, in corpus). Ammon's gloating judged.
+  - ref: Ezekiel 25:6
+    sources: [editorial]
+    weight: 0.75
+related:
+  - vengeance
+  - betrayal
+  - envy-and-jealousy
+sources: [editorial]

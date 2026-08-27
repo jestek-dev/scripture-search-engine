@@ -1,0 +1,46 @@
+{
+  "id": "spiritual-warfare",
+  "query": "war in heaven",
+  "status": "active",
+  "additionalQueries": [
+    "michael and the dragon"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 12 (Theme D, 2 requesting books: Daniel,",
+    "Revelation). Deferred because Dan 10:13, 20-21; 12:1 and Rev 12:7-12",
+    "were all absent, with the recorded lexicon fact weighing against a",
+    "third pack until the conflict texts were assertable. They now are.",
+    "LEXICON FACT HONORED: resisting-the-devil KEEPS the bare phrase",
+    "'spiritual warfare' (its ACTIVE fixture pins that query — verified",
+    "undisturbed: this pack carries no entry that fires on it, and the",
+    "related edge is one-directional from this pack only). This pack is",
+    "the CONFLICT-ITSELF register the row's gap names — the war the",
+    "texts describe, not the believer's response (resisting-the-devil)",
+    "and not the Gospels' deliverance narrative (deliverance-from-demons,",
+    "the recorded two-register decision). Which pack should own the bare",
+    "phrase long-term is recorded in the pack file as a reversible",
+    "curation default.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'war in heaven' pure translation-variant noise (Isa 13:4, Jer 16:4);",
+    "'michael and the dragon' Rev 12:7 rank 1 CHIPLESS by token luck,",
+    "then Michael-genealogy scatter (1 Chr 6:40, Num 13:13)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Revelation 12:7-8",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Spiritual warfare"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Daniel 10:13",
+    "Daniel 10:20-21",
+    "Revelation 12:11",
+    "Daniel 12:1"
+  ],
+  "coversConcepts": [
+    "spiritual-warfare"
+  ]
+}
