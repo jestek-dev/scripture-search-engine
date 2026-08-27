@@ -1,0 +1,48 @@
+{
+  "id": "the-lords-anointed",
+  "query": "touch not the lords anointed",
+  "status": "active",
+  "additionalQueries": [
+    "the lords anointed"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 46 (Theme L, 2 requesting books: 1-2",
+    "Samuel). Deferred because 1 Sam 24; 26 + 2 Sam 1; 19 were absent",
+    "(1 Sam corpus was chs 15, 31).",
+    "The MISAPPLICATION-GUARD design note honored: the pack carries the",
+    "phrase's actual narrative meaning as attributed fact — David's",
+    "refusal to harm king Saul, and the Psalm's protection of the",
+    "patriarch-prophets — and adjudicates nothing about the phrase's",
+    "modern use toward leaders (described, not applied).",
+    "The Psalms delivery's WITHDRAWN alternative id (its messiah",
+    "material) honored: no messianic anchor here — that register stays",
+    "messianic-prophecy's (cross-related).",
+    "BOUNDARIES: 1 Sam 16:7 stays god-looks-at-the-heart's /",
+    "identity-in-christ's; 16:11-12 gods-surprising-choice's; this pack",
+    "takes the free 16:13 (the anointing that grounds the restraint).",
+    "Ps 105:15 claimed with its own register named (patriarchs as",
+    "anointed ones); its parallel 1 Chr 16:22 surfaces by exact phrase.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'touch not the lords anointed' John 11:2 rank 1 (Mary anointing",
+    "Jesus — wrong register!), 1 Chr 16:22 / Ps 105:15 ranks 2-3",
+    "CHIPLESS; the David narratives nowhere."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Samuel 24:6",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: The Lord's anointed"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Samuel 26:9-11",
+    "2 Samuel 1:14-16",
+    "Psalms 105:15",
+    "1 Chronicles 16:22"
+  ],
+  "coversConcepts": [
+    "the-lords-anointed"
+  ]
+}

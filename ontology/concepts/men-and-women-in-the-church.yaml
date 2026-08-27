@@ -1,0 +1,58 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme J row 41 (requesting book: 1 Timothy). Deferred because
+# 1 Tim 2:8-15 was absent (1 Tim corpus was ch. 6).
+#
+# TWO-ROW DESIGN vs head-coverings DECIDED pre-roster (recorded in the
+# head-coverings pack): that pack stays the narrower one-passage
+# lookup; this row is the broader church-practice question. The fold
+# option stays open to Jesse — cross-related both ways would be a
+# one-commit change.
+#
+# SECTION-4 NEUTRALITY (the row's own flag; gender roles are a named
+# NON-criterion in docs/DOCTRINAL-BASIS.md §4): this pack is
+# descriptive and routing-only. It reports WHERE the passage is and
+# WHAT it says, verse by verse, because these are among the
+# most-searched church-practice questions — it adjudicates no
+# church-practice position, in either direction. Modesty in dress
+# (2:9-10) rides this row per the review.
+#
+# BOUNDARY: 1 Tim 2:5-6 stays jesus-the-only-way's anchor (with
+# mediator's verse-scoped sibling, same PR); this pack's spans
+# (2:8-10, 2:11-12, 2:13-15) are disjoint from it.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: men-and-women-in-the-church
+label: Men and women in the church
+lexicon:
+  - women in ministry
+  - women pastors
+  - can women teach in church
+  - women teaching in the bible
+  - men and women in the church
+anchors:
+  # "Let a woman learn in quietness with full submission. But I don't
+  # permit a woman to teach, nor to exercise authority over a man,
+  # but to be in quietness." (WEB, in corpus). The verses the queries
+  # ask about — reported as the passage reads.
+  - ref: 1 Timothy 2:11-12
+    sources: [editorial]
+    weight: 1.0
+  # "I desire therefore that the men in every place pray... that women
+  # also adorn themselves in decent clothing, with modesty and
+  # propriety... with good works" (WEB, in corpus). The passage's
+  # opening charge to both — the modesty register rides here.
+  - ref: 1 Timothy 2:8-10
+    sources: [editorial]
+    weight: 0.85
+  # "For Adam was formed first, then Eve..." (WEB, in corpus). The
+  # passage's own grounding and its difficult close — reported whole
+  # so the searcher reads the argument, not a fragment.
+  - ref: 1 Timothy 2:13-15
+    sources: [editorial]
+    weight: 0.75
+related:
+  - head-coverings
+  - spiritual-gifts
+  - the-house-of-god
+sources: [editorial]

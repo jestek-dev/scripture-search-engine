@@ -428,6 +428,18 @@ collapses:
     note: >-
       Bare 'cross' must reach this concept — the concept exists for exactly
       that query. (Its exact-phrase scoring is P3.3's taper, not this table.)
+  - conceptId: truth
+    phrase: "what is truth"
+    token: truth
+    intended: true
+    reviewedBy: pending-J12
+    date: "2026-08-27"
+    note: >-
+      CORPUS-BLOCKED ROSTER build (2026-08-27), authored with the pack:
+      what/is are stopwords, so Pilate's question collapses to bare
+      "truth" — deliberate: the question IS the query and the concept
+      is truth itself; the walk-practice and Counselor registers keep
+      their multi-token phrases. Fixture-backed (truth.json).
   - conceptId: vanity-of-life
     phrase: "vanity of vanities"
     token: vanity
@@ -1172,6 +1184,19 @@ concepts:
           generic witness query. "the witness of creation" keeps the
           distinctive pair.
 
+  - id: davidic-covenant
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, davidic-covenant.json). Every entry keeps >= 2
+    # significant tokens; bare "covenant" stays covenant's admitted
+    # trigger (that pack's row) — this register rides the
+    # david-qualified forms only.
+    skipped:
+      - token: covenant
+        reason: >-
+          The bare noun is covenant's admitted trigger (its own
+          inventory row); this pack's phrases are all david/throne
+          qualified so the general register keeps the bare word.
+
   - id: day-of-the-lord
     # 2026-08-26 tag-gap batch 1: row authored with the pack
     # (fixture-first, day-of-the-lord.json). Every entry keeps >= 2
@@ -1543,6 +1568,18 @@ concepts:
     # 2026-08-18 harvest: deliberate bare entry — the concept's own subject
     # noun.
     admitted: [generosity]
+
+  - id: gentile-inclusion
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, gentile-inclusion.json; the review's contested row
+    # adopted by Jesse 2026-08-25). Every entry keeps >= 2 significant
+    # tokens; no bare word fires.
+    skipped:
+      - token: gentiles
+        reason: >-
+          nations-and-peoples holds the origin-of-nations register
+          (the recorded extension-check mismatch); the qualified
+          church-inclusion forms carry this pack.
 
   - id: giving-an-answer
     # 2026-08-25 apologetics wave batch 5: row authored with the pack
@@ -2177,6 +2214,14 @@ concepts:
           (2 tokens) carries the query without handing the pack every
           leader mention.
 
+  - id: legalism
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, legalism.json). Deliberate bare entry: a
+    # distinctive modern word absent from the WEB text where the word
+    # IS the concept (infertility/burnout precedent); no competing
+    # concept.
+    admitted: [legalism]
+
   - id: leviathan-and-behemoth
     # 2026-08-27 corpus-blocked roster build: pack authored under the
     # pre-existing leviathan-and-behemoth fixture (flips active with
@@ -2264,6 +2309,17 @@ concepts:
     # (fixture-first, mediator.json). Two deliberate collapses (rows
     # above): "one mediator" -> mediator, "umpire between us" -> umpire.
     admitted: [mediator, umpire]
+
+  - id: men-and-women-in-the-church
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, men-and-women-in-the-church.json). Every entry
+    # keeps >= 2 significant tokens; no bare word fires.
+    skipped:
+      - token: women
+        reason: >-
+          Plain corpus noun across narrative and epistle alike; the
+          ministry/teaching/church-qualified forms carry the
+          church-practice question.
 
   - id: mercy
     # 2026-08-26 tag-gap batch 2: row authored with the pack
@@ -2454,6 +2510,17 @@ concepts:
           today the family's queries reach the pack through its admitted
           nouns and paired forms, and the corpus word appears inside
           spans other packs own (Gal 5:20).
+
+  - id: opposition-to-gods-work
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, opposition-to-gods-work.json). Every entry keeps
+    # >= 2 significant tokens; no bare word fires.
+    skipped:
+      - token: opposition
+        reason: >-
+          The bare noun ships conservative (plausibly admissible
+          later); the ministry/work-qualified forms are the measured
+          queries.
 
   - id: parenting
     # 2026-08-18 harvest: deliberate bare entry — the concept's own subject
@@ -2879,6 +2946,23 @@ concepts:
     # 2026-08-27 corpus-blocked roster build: row authored with the pack
     # (fixture-first, right-in-their-own-eyes.json). A phrase-forms
     # pack — no entry collapses to a single significant token.
+
+  - id: romantic-love-and-intimacy
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, romantic-love-and-intimacy.json; the
+    # waiting-and-timing-in-love rider folded per Jesse's adopted
+    # fold). Every entry keeps >= 2 significant tokens; no bare word
+    # fires.
+    skipped:
+      - token: love
+        reason: >-
+          The most contested token in the vocabulary (gods-love,
+          loving-others, loving-god all live there); every entry here
+          pairs it — the Song's register never takes the bare word.
+      - token: intimacy
+        reason: >-
+          Ships conservative: the bare word spans intimacy-with-God
+          devotional usage; the in-marriage form carries this register.
 
   - id: running-from-god
     # 2026-08-27 corpus-blocked roster build: row authored with the pack
@@ -3389,6 +3473,17 @@ concepts:
           dynasty, building); the {house, god} / {house, lord}
           pairings carry the dwelling theme.
 
+  - id: the-lords-anointed
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, the-lords-anointed.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: anointed
+        reason: >-
+          Bare anoint-forms span ceremony, healing (Jas 5:14 register)
+          and Mary's anointing (the measured John 11:2 noise); the
+          lords/gods-paired forms carry the narrative phrase.
+
   - id: the-lords-discipline
     # 2026-08-18 harvest: "chastening" deliberate bare entry (the KJV-family
     # register people quote; bare "discipline" is skipped on self-control's
@@ -3488,6 +3583,15 @@ concepts:
     # this pack speaks of "the bible"/"scripture" and leaves the
     # "gods word" phrasings to studying-the-word / power-of-gods-word.
 
+  - id: truth
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, truth.json). One deliberate collapse (row above):
+    # "what is truth" -> truth — Pilate's question IS the query and the
+    # concept is truth itself; the walk-practice
+    # (walking-in-the-light) and Counselor (comforter) registers keep
+    # their multi-token phrases.
+    admitted: [truth]
+
   - id: unanswered-prayer
     # 2026-08-26 tag-gap batch 5: authored with the pack (fixture-first,
     # unanswered-prayer.json). Phrase-forms pack.
@@ -3498,6 +3602,17 @@ concepts:
           this register. The pair {god, say} ("when god says no") was
           also REJECTED as an entry (accident class — every "what does
           god say about X" query).
+
+  - id: unequally-yoked
+    # 2026-08-27 corpus-blocked roster build: row authored with the pack
+    # (fixture-first, unequally-yoked.json). Every entry keeps >= 2
+    # significant tokens; no bare word fires.
+    skipped:
+      - token: yoked
+        reason: >-
+          Ships conservative alongside the literal yoke texts (Deut
+          22:10 was the measured rank-2 noise) and Matt 11:29-30's
+          my-yoke register; the paired forms carry the question.
 
   - id: unity-of-the-church
     # 2026-08-26 tag-gap batch 6: authored with the pack (fixture-first,

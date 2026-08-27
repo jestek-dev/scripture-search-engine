@@ -1,0 +1,63 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme J row 40 (requesting book: Acts) — the review's one CONTESTED
+# row, ADOPTED BY JESSE (2026-08-25 reply b: "I'm okay with adding
+# gentile-inclusion if it applies").
+#
+# The reversible delegated default's REQUIRED extension check was RUN
+# and recorded at the 2026-08-26 sweep: nations-and-peoples is the
+# origin-of-nations register (measured mismatch) and grace-not-earned
+# the soteriology — neither serves the Gentiles-welcomed-without-the-
+# law question itself. Condition satisfied; id minted.
+#
+# BOUNDARIES: Acts 10:34-35 stays favoritism's anchor (cross-noted —
+# this pack takes the free 10:44-45 outpouring verses); Acts 13:46
+# stays boldness-in-witness' (this pack takes the adjacent 13:47-48,
+# noted FREE by the roster); Gal 3:28 noted FREE and claimed.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the council's own resolution; it relitigates nothing.
+id: gentile-inclusion
+label: Gentile inclusion
+lexicon:
+  - gentile inclusion
+  - gentiles in the bible
+  - jerusalem council
+  - keep the law of moses
+  - do christians have to be circumcised
+anchors:
+  # "God, who knows the heart, testified about them, giving them the
+  # Holy Spirit... He made no distinction between us and them...
+  # we believe that we are saved through the grace of the Lord Jesus,
+  # just as they are." (WEB, in corpus). The council's resolution —
+  # the answer to the row's whole query family.
+  - ref: Acts 15:8-11
+    sources: [editorial]
+    weight: 1.0
+  # "'Then God has also granted to the Gentiles repentance to life!'"
+  # (WEB, in corpus). Jerusalem's verdict on Cornelius.
+  - ref: Acts 11:17-18
+    sources: [editorial]
+    weight: 0.9
+  # "the gift of the Holy Spirit was also poured out on the Gentiles."
+  # (WEB, in corpus). The event itself (10:34-35 stays favoritism's).
+  - ref: Acts 10:44-45
+    sources: [editorial]
+    weight: 0.85
+  # "'I have set you as a light for the Gentiles'... As many as were
+  # appointed to eternal life believed." (WEB, in corpus). The mission
+  # turned outward (13:46 stays boldness-in-witness').
+  - ref: Acts 13:47-48
+    sources: [editorial]
+    weight: 0.8
+  # "There is neither Jew nor Greek... for you are all one in Christ
+  # Jesus." (WEB, in corpus). The inclusion stated as identity.
+  - ref: Galatians 3:28
+    sources: [editorial]
+    weight: 0.8
+related:
+  - nations-and-peoples
+  - grace-not-earned
+  - favoritism
+  - salvation
+sources: [editorial]

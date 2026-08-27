@@ -67,9 +67,12 @@ anchors:
   - ref: 2 Peter 1:20-21
     sources: [editorial]
     weight: 0.85
-  # "Sanctify them in your truth. Your word is truth." (WEB wording,
-  # current edition — John 17 NOT in web-subset; re-check at re-pin).
+  # "Sanctify them in your truth. Your word is truth." (WEB, in corpus
+  # since #64).
   # Jesus' own predication, in prayer rather than polemic.
+  # DUAL ANCHOR (2026-08-27 roster build): also the truth pack's —
+  # "your word is truth" is this pack's claim, "sanctify them in your
+  # truth" that one's (recorded both files). Weight unchanged.
   - ref: John 17:17
     sources: [editorial]
     weight: 0.85

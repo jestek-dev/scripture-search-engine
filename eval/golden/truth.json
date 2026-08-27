@@ -1,0 +1,51 @@
+{
+  "id": "truth",
+  "query": "what is truth",
+  "status": "active",
+  "additionalQueries": [
+    "you will know the truth"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 42 (Theme K, requesting book: John).",
+    "Deferred because John 18:37-38 (Pilate) and 17:17-19 were absent;",
+    "the Counselor routing (14:17; 16:13 comforter's) and 14:6",
+    "(salvation's/only-way's) bound then and still bind.",
+    "EXTENSION ROUTES CHECKED before minting (the row's own rule):",
+    "walking-in-the-light's walking-in-truth extension is the",
+    "walk-PRACTICE register (the one-treatment cross-note resolved there",
+    "pre-roster); no incumbent carries the what-is-truth register — so",
+    "MINTED narrow.",
+    "BOUNDARIES: John 14:6 stays jesus-the-only-way's; 14:17 and 16:13",
+    "stay holy-spirit-the-comforter's (no spirit-of-truth entry here —",
+    "that vocabulary is the Counselor routing); John 8:31-32 stays",
+    "discipleship's anchor (cross-noted, reachable by exact phrase);",
+    "John 17:17 is DUAL-anchored with trustworthiness-of-scripture (the",
+    "verse honestly serves both registers: 'your word is truth' is that",
+    "pack's claim, 'sanctify them in your truth' this one's; recorded",
+    "both files); John 18:36 stays kingdom-of-heaven's (this pack takes",
+    "the adjacent, disjoint 18:37-38).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'what is truth' John 18:38 rank 1 exact phrase CHIPLESS; 'you will",
+    "know the truth' John 8:32 rank 1 exact phrase CHIPLESS (its",
+    "discipleship anchor does not fire on this query) — truth itself had",
+    "no curated home."
+  ],
+  "expectedTop": [
+    {
+      "reference": "John 18:37-38",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Truth"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 17:17",
+    "John 1:17",
+    "John 8:31-32",
+    "John 8:32"
+  ],
+  "coversConcepts": [
+    "truth"
+  ]
+}

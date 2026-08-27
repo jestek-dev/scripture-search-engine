@@ -1,0 +1,78 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme L row 44 (5 requesting books: 2 Samuel, 1-2 Kings, 1-2
+# Chronicles). Deferred because 2 Sam 7 (home text) and every
+# Kings/Chronicles stress-text were absent.
+#
+# EXTENSION ROUTE CHECKED before minting (the row's own alternative —
+# "check whether covenant's lexicon can carry 'Davidic covenant' /
+# 'throne established forever' phrasings"): covenant already FIRES on
+# "davidic covenant" (its bare covenant token) and already anchors
+# 2 Sam 7:12-16 — but the oracle ranks BELOW seven general-covenant
+# anchors on that query (measured: Luke 22:20, Jer 31, the Genesis
+# covenants all outrank it), and "gods promise to david" / "throne
+# established forever" fire nothing. The extension cannot fix the
+# ordering without reweighting covenant's anchors and disturbing its
+# active fixture — so the Davidic register is MINTED narrow,
+# cross-related to covenant.
+#
+# DUAL ANCHOR: 2 Sam 7:12-16 with covenant (recorded both files) —
+# the oracle is both the covenant register's Davidic instance and this
+# pack's charter text.
+#
+# NO-MESSIANIC-READ-BACK (the design note stated at mint and
+# re-carried by both the Kings and Chronicles appends): anchors keep
+# to what the text says — offspring, house, throne, father-son,
+# chastening without abandonment, the lamp not extinguished. NO NT
+# anchor; the fulfillment register stays with the existing NT concepts
+# (messianic-prophecy cross-related, not claimed here).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: davidic-covenant
+label: The Davidic covenant
+lexicon:
+  - davidic covenant
+  - gods promise to david
+  - covenant with david
+  - throne established forever
+anchors:
+  # "I will set up your offspring after you... he will build a house
+  # for my name, and I will establish the throne of his kingdom
+  # forever. I will be his father, and he will be my son. If he
+  # commits iniquity, I will chasten him... but my loving kindness
+  # will not depart from him" (WEB, in corpus). The charter text —
+  # DUAL with covenant (recorded both files).
+  - ref: 2 Samuel 7:12-16
+    sources: [editorial]
+    weight: 1.0
+  # "It will happen... that I will set up your offspring after you...
+  # I will establish his throne forever... His throne will be
+  # established forever." (WEB, in corpus). The Chronicler's telling
+  # of the charter.
+  - ref: 1 Chronicles 17:11-14
+    sources: [editorial]
+    weight: 0.9
+  # "Isn't my house so with God? Yet he has made with me an
+  # everlasting covenant, ordered in all things, and sure" (WEB, in
+  # corpus). David's own last-words summary.
+  - ref: 2 Samuel 23:5
+    sources: [editorial]
+    weight: 0.85
+  # "However, the LORD would not destroy Judah, for David his
+  # servant's sake, as he promised him to give to him a lamp for his
+  # children always." (WEB, in corpus). The promise under stress —
+  # the lamp kept burning.
+  - ref: 2 Kings 8:19
+    sources: [editorial]
+    weight: 0.75
+  # "then I will establish the throne of your kingdom, according as I
+  # covenanted with David your father" (WEB, in corpus). The promise
+  # restated to Solomon, condition and covenant together.
+  - ref: 2 Chronicles 7:17-18
+    sources: [editorial]
+    weight: 0.7
+related:
+  - covenant
+  - messianic-prophecy
+  - gods-faithfulness
+sources: [editorial]
