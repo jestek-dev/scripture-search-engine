@@ -325,6 +325,10 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
     sourceDecisionSubject,
     decisionSlots: [{ kind: 'source-proposal', slotId: 'source-proposal', subjectDigest: sourceDecisionSubject }],
     measurableEffect: true,
+    effectExemption: null,
+    fixtureLane: null,
+    baseIdentity: null,
+    deferredSigningMarker: null,
   };
   const preview: AdmissionPreview = { ...previewBody, digest: digest(previewBody) };
   const decision = signAdmissionDecision({
@@ -370,6 +374,10 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
       },
     },
     gauntlet,
+    effectExemption: null,
+    baseIdentity: null,
+    deferredSigning: null,
+    releaseGauntletClassification: null,
     sourceChanges: [sourceChange],
     probeMovements: [],
     commands: [outcome(process.execPath, [resolveNpmCliPath(), 'run', 'verify'])],
@@ -488,7 +496,7 @@ async function withFixtureAndProbe(repo: TestRepository, variant: ProbeApprovalV
   const fixtureSubject = 'f'.repeat(64);
   const probeSubject = includeBaseline ? digest({ movements: [movement], diff: baseline.digest }) : null;
   const sourceSubject = digest({ proposalDigest: repo.manifest.proposalDigest, diffs: [source.digest] });
-  const { digest: _gauntletDigest, ...oldGauntletBody } = repo.manifest.gauntlet;
+  const { digest: _gauntletDigest, ...oldGauntletBody } = repo.manifest.gauntlet!;
   const gauntletBody = { ...oldGauntletBody, baseCommit };
   const gauntlet = { ...gauntletBody, digest: digest(gauntletBody) };
   const previewBody: Omit<AdmissionPreview, 'digest'> = {
@@ -810,7 +818,7 @@ describe('M14 isolated draft publication preparation', () => {
     expect(result.prBody).toContain('eval/baselines/probes.json');
     expect(result.prBody).toContain('eval/baselines/probes.approval.json');
     expect(result.prBody).toContain(repo.comparison.referenceIdentity.layerFingerprint);
-    expect(result.prBody).toContain(repo.manifest.gauntlet.digest);
+    expect(result.prBody).toContain(repo.manifest.gauntlet!.digest);
 
     const missingFixture = await withoutDecision(repo, 'fixture-promotion');
     await expect(prepareDraftPublication(input(missingFixture))).rejects.toMatchObject({ code: 'decision_slot_invalid' });

@@ -63,7 +63,8 @@ export interface PublishPreparationDependencies {
 
 export interface TrustedPublishEvidence {
   readonly admissionPreview: AdmissionPreview;
-  readonly comparisonReport: ComparisonReport;
+  /** Null exactly for fixture-lane admissions, which admit no comparison. */
+  readonly comparisonReport: ComparisonReport | null;
 }
 
 export interface PreparePublishInput {
@@ -412,8 +413,23 @@ function validateManifest(value: unknown, expectedDigest: string, proposal: Prop
   requireCommit(manifest.expectedMainCommit, 'expectedMainCommit');
   requireCommit(manifest.worktreeTreeHash, 'worktreeTreeHash');
   if (manifest.baseCommit !== manifest.expectedMainCommit) fail('stale_main', 'Admission base and reviewed main are not identical.');
-  if (proposalManifestDigest(proposal) !== manifest.proposalDigest || manifest.candidate.proposalDigest !== manifest.proposalDigest
-      || manifest.comparison.binding.proposalDigest !== manifest.proposalDigest) fail('proposal_mismatch', 'Proposal is not the admitted proposal.');
+  // Fixture-lane admissions (all-golden-fixture-upsert manifests) carry no
+  // candidate artifact: the four candidate-evidence fields are null together,
+  // the recorded exemption names the fixture lane, and the base identity pins
+  // what the rebuild reproduced (identity neutrality). Anything else with a
+  // null candidate is a forged manifest.
+  const fixtureLaneManifest = manifest.candidate === null;
+  if (fixtureLaneManifest && (manifest.comparison !== null || manifest.gauntlet !== null
+      || manifest.effectExemption === null || manifest.effectExemption.lane !== 'fixture-lane'
+      || manifest.baseIdentity === null || !isRecord(manifest.baseIdentity))) {
+    fail('invalid_manifest', 'A fixture-lane admission must record its effect exemption and base identity and carry no candidate evidence.');
+  }
+  if (!fixtureLaneManifest && (manifest.comparison === null || manifest.gauntlet === null)) {
+    fail('invalid_manifest', 'A candidate-bearing admission must carry its comparison and gauntlet evidence.');
+  }
+  if (proposalManifestDigest(proposal) !== manifest.proposalDigest
+      || (manifest.candidate !== null && manifest.candidate.proposalDigest !== manifest.proposalDigest)
+      || (manifest.comparison !== null && manifest.comparison.binding.proposalDigest !== manifest.proposalDigest)) fail('proposal_mismatch', 'Proposal is not the admitted proposal.');
   const cases = [...proposal.caseIds].sort();
   if (canonical(cases) !== canonical([...manifest.linkedCaseIds].sort())) fail('proposal_mismatch', 'Linked cases do not match the admitted proposal.');
   if (!Array.isArray(manifest.decisions) || manifest.decisions.length === 0 || typeof signingKey !== 'string' || signingKey.length < 32) {
@@ -433,28 +449,51 @@ function validateManifest(value: unknown, expectedDigest: string, proposal: Prop
   }
   if (manifest.rebuiltCandidate.status !== 'REBUILT') fail('invalid_manifest', 'Admission did not use a fresh rebuild.');
   validateCommandOutcome(manifest.rebuiltCandidate.command, 'rebuiltCandidate.command');
-  const { digest: gauntletDigest, ...gauntletBody } = manifest.gauntlet;
-  if (gauntletDigest !== digest(gauntletBody) || manifest.gauntlet.gatesDigest !== digest(manifest.gauntlet.gates)
-      || manifest.gauntlet.blocking || !['ADMIT', 'ADMIT_WITH_WARNINGS'].includes(manifest.gauntlet.verdict)
-      || manifest.gauntlet.gates.some((entry) => entry.status === 'fail'
-        || (entry.applicability === 'required' && entry.status !== 'pass'))) {
-    fail('blocked_admission', 'Admission contains a blocking or non-passing gate.');
-  }
-  if (manifest.gauntlet.baseCommit !== manifest.baseCommit
-      || manifest.gauntlet.proposalDigest !== manifest.proposalDigest
-      || manifest.gauntlet.sourceSnapshotDigest !== manifest.candidate.sourceSnapshotDigest
-      || manifest.gauntlet.candidateDescriptorSha256 !== manifest.candidate.descriptorSha256
-      || manifest.gauntlet.candidateDatabaseSha256 !== manifest.candidate.databaseSha256
-      || manifest.gauntlet.comparisonDigest !== manifest.comparison.digest
-      || canonical(manifest.gauntlet.baseIdentity) !== canonical(manifest.comparison.binding.referenceIdentity)
-      || canonical(manifest.gauntlet.candidateIdentity) !== canonical(manifest.comparison.binding.candidateIdentity)) {
-    fail('invalid_manifest', 'Verified gauntlet is not bound to the admitted base, proposal, candidate, and comparison.');
-  }
-  if (manifest.comparison.digest !== manifest.comparison.binding.comparisonDigest
-      || manifest.comparison.binding.cacheKey !== manifest.candidate.cacheKey
-      || manifest.comparison.binding.databaseSha256 !== manifest.candidate.databaseSha256
-      || manifest.comparison.binding.descriptorSha256 !== manifest.candidate.descriptorSha256) {
-    fail('invalid_manifest', 'Comparison and candidate bindings disagree.');
+  if (manifest.candidate !== null && manifest.comparison !== null && manifest.gauntlet !== null) {
+    const { digest: gauntletDigest, ...gauntletBody } = manifest.gauntlet;
+    if (gauntletDigest !== digest(gauntletBody) || manifest.gauntlet.gatesDigest !== digest(manifest.gauntlet.gates)
+        || manifest.gauntlet.blocking || !['ADMIT', 'ADMIT_WITH_WARNINGS'].includes(manifest.gauntlet.verdict)
+        || manifest.gauntlet.gates.some((entry) => entry.status === 'fail'
+          || (entry.applicability === 'required' && entry.status !== 'pass'))) {
+      fail('blocked_admission', 'Admission contains a blocking or non-passing gate.');
+    }
+    if (manifest.gauntlet.baseCommit !== manifest.baseCommit
+        || manifest.gauntlet.proposalDigest !== manifest.proposalDigest
+        || manifest.gauntlet.sourceSnapshotDigest !== manifest.candidate.sourceSnapshotDigest
+        || manifest.gauntlet.candidateDescriptorSha256 !== manifest.candidate.descriptorSha256
+        || manifest.gauntlet.candidateDatabaseSha256 !== manifest.candidate.databaseSha256
+        || manifest.gauntlet.comparisonDigest !== manifest.comparison.digest
+        || canonical(manifest.gauntlet.baseIdentity) !== canonical(manifest.comparison.binding.referenceIdentity)
+        || canonical(manifest.gauntlet.candidateIdentity) !== canonical(manifest.comparison.binding.candidateIdentity)) {
+      fail('invalid_manifest', 'Verified gauntlet is not bound to the admitted base, proposal, candidate, and comparison.');
+    }
+    if (manifest.comparison.digest !== manifest.comparison.binding.comparisonDigest
+        || manifest.comparison.binding.cacheKey !== manifest.candidate.cacheKey
+        || manifest.comparison.binding.databaseSha256 !== manifest.candidate.databaseSha256
+        || manifest.comparison.binding.descriptorSha256 !== manifest.candidate.descriptorSha256) {
+      fail('invalid_manifest', 'Comparison and candidate bindings disagree.');
+    }
+  } else {
+    // Fixture lane: the release gauntlet run against the rebuilt (identical)
+    // release artifact is the only gauntlet evidence. It must be recorded,
+    // digest-bound, run at the admitted base, on the recorded base identity —
+    // and any red must be the classified inherited standing red (a verified
+    // control run at the base commit reproduced every finding).
+    const release = manifest.releaseGauntlet;
+    if (release === undefined) fail('invalid_manifest', 'A fixture-lane admission must record its verified release gauntlet.');
+    const { digest: releaseDigest, ...releaseBody } = release;
+    if (releaseDigest !== digest(releaseBody) || release.gatesDigest !== digest(release.gates)
+        || release.targetKind !== 'release'
+        || release.baseCommit !== manifest.baseCommit
+        || canonical(release.engineIdentity) !== canonical(manifest.baseIdentity)) {
+      fail('invalid_manifest', 'Verified release gauntlet is not bound to the admitted base and identity.');
+    }
+    const clean = !release.blocking && ['ADMIT', 'ADMIT_WITH_WARNINGS'].includes(release.verdict);
+    const inherited = manifest.releaseGauntletClassification !== null
+      && manifest.releaseGauntletClassification.kind === 'inherited-standing-red';
+    if (!clean && !inherited) {
+      fail('blocked_admission', 'Admission contains a blocking or non-passing gate.');
+    }
   }
   if (!manifest.commands.some((command) => {
     validateCommandOutcome(command, 'commands[]');
@@ -500,11 +539,18 @@ function validateTrustedEvidence(
   evidence: TrustedPublishEvidence,
   manifest: AdmissionManifest,
   proposal: ProposalManifest,
-): { readonly preview: AdmissionPreview; readonly comparison: ComparisonReport } {
+): { readonly preview: AdmissionPreview; readonly comparison: ComparisonReport | null } {
   const preview = evidence.admissionPreview;
   const comparison = evidence.comparisonReport;
-  try { assertComparisonReportIntegrity(comparison); }
-  catch { fail('comparison_evidence_invalid', 'Trusted comparison report failed deterministic integrity validation.'); }
+  // Fixture-lane admissions have no comparison: the trusted evidence must be
+  // null exactly when the immutable manifest recorded none, and vice versa.
+  if ((comparison === null) !== (manifest.comparison === null)) {
+    fail('comparison_evidence_invalid', 'Trusted comparison evidence disagrees with the immutable admission manifest.');
+  }
+  if (comparison !== null) {
+    try { assertComparisonReportIntegrity(comparison); }
+    catch { fail('comparison_evidence_invalid', 'Trusted comparison report failed deterministic integrity validation.'); }
+  }
   if (!isRecord(preview) || preview.schemaVersion !== 1 || typeof preview.digest !== 'string') {
     fail('preview_evidence_invalid', 'Trusted admission preview is malformed.');
   }
@@ -518,28 +564,33 @@ function validateTrustedEvidence(
       || preview.admittedBaseCommit !== manifest.baseCommit
       || preview.expectedMainCommit !== manifest.expectedMainCommit
       || canonical(preview.candidate) !== canonical(manifest.candidate)
-      || preview.comparisonDigest !== manifest.comparison.digest
-      || preview.gauntletDigest !== manifest.gauntlet.digest
+      || preview.comparisonDigest !== (manifest.comparison === null ? null : manifest.comparison.digest)
+      || preview.gauntletDigest !== (manifest.gauntlet === null ? null : manifest.gauntlet.digest)
       || canonical(preview.gauntlet) !== canonical(manifest.gauntlet)
       || canonical(preview.diffs) !== canonical(manifest.sourceChanges)
       || canonical(preview.probeMovements) !== canonical(manifest.probeMovements)) {
     fail('preview_evidence_invalid', 'Trusted admission preview disagrees with the immutable admission manifest.');
   }
-  if (comparison.digest !== manifest.comparison.digest
-      || canonical(comparison.referenceIdentity) !== canonical(manifest.comparison.binding.referenceIdentity)
-      || canonical(comparison.candidateIdentity) !== canonical(manifest.comparison.binding.candidateIdentity)
-      || preview.comparisonUniverseDigest !== digest(comparison.universe)) {
-    fail('comparison_evidence_invalid', 'Trusted comparison report is not bound to the admitted comparison and identities.');
-  }
-  const changedQueries = comparison.queries.filter((entry) => entry.top10Changed).map((entry) => entry.query).sort();
-  const reviewedQueries = [...preview.reviewedComparisonQueries].sort();
-  if (preview.comparisonReviewDigest !== digest({
-    reviewedQueries,
-    changedQueries,
-    regressionSessionQueryIds: comparison.regressionSessionQueryIds,
-  })) fail('comparison_evidence_invalid', 'Comparison review coverage is not digest-bound to the admitted preview.');
-  if (canonical(reviewedQueries) !== canonical(changedQueries)) {
-    fail('comparison_evidence_invalid', 'Every changed comparison query must have exact reviewed coverage.');
+  if (comparison !== null && manifest.comparison !== null) {
+    if (comparison.digest !== manifest.comparison.digest
+        || canonical(comparison.referenceIdentity) !== canonical(manifest.comparison.binding.referenceIdentity)
+        || canonical(comparison.candidateIdentity) !== canonical(manifest.comparison.binding.candidateIdentity)
+        || preview.comparisonUniverseDigest !== digest(comparison.universe)) {
+      fail('comparison_evidence_invalid', 'Trusted comparison report is not bound to the admitted comparison and identities.');
+    }
+    const changedQueries = comparison.queries.filter((entry) => entry.top10Changed).map((entry) => entry.query).sort();
+    const reviewedQueries = [...preview.reviewedComparisonQueries].sort();
+    if (preview.comparisonReviewDigest !== digest({
+      reviewedQueries,
+      changedQueries,
+      regressionSessionQueryIds: comparison.regressionSessionQueryIds,
+    })) fail('comparison_evidence_invalid', 'Comparison review coverage is not digest-bound to the admitted preview.');
+    if (canonical(reviewedQueries) !== canonical(changedQueries)) {
+      fail('comparison_evidence_invalid', 'Every changed comparison query must have exact reviewed coverage.');
+    }
+  } else if (preview.reviewedComparisonQueries.length > 0 || preview.comparisonUniverseDigest !== null
+      || preview.comparisonReviewDigest !== null) {
+    fail('comparison_evidence_invalid', 'A fixture-lane admission carries no comparison review to attest.');
   }
 
   const changedDiffs = preview.diffs.filter((entry) => entry.changed);
@@ -620,10 +671,12 @@ function validateTrustedEvidence(
       fail('decision_slot_invalid', 'Probe decision must rationalize every baseline movement exactly once.');
     }
   }
-  const linkedMembershipIds = new Set(comparison.queries.flatMap((entry) => entry.memberships
-    .filter((membership) => membership.kind === 'linked-case').map((membership) => membership.sourceId)));
-  if (manifest.linkedCaseIds.some((caseId) => !linkedMembershipIds.has(caseId))) {
-    fail('comparison_evidence_invalid', 'Trusted comparison omits an admitted linked case.');
+  if (comparison !== null) {
+    const linkedMembershipIds = new Set(comparison.queries.flatMap((entry) => entry.memberships
+      .filter((membership) => membership.kind === 'linked-case').map((membership) => membership.sourceId)));
+    if (manifest.linkedCaseIds.some((caseId) => !linkedMembershipIds.has(caseId))) {
+      fail('comparison_evidence_invalid', 'Trusted comparison omits an admitted linked case.');
+    }
   }
   return { preview, comparison };
 }
@@ -833,7 +886,7 @@ function commitMessage(proposal: ProposalManifest, manifest: AdmissionManifest, 
     '',
     `Admission-Digest: ${manifest.digest}`,
     `Admission-Preview-Digest: ${manifest.previewDigest}`,
-    `Comparison-Digest: ${manifest.comparison.digest}`,
+    ...(manifest.comparison === null ? [] : [`Comparison-Digest: ${manifest.comparison.digest}`]),
     `Verification-Digest: ${verification.digest}`,
   ].join('\n');
 }
@@ -1022,8 +1075,8 @@ function probeLines(manifest: AdmissionManifest): string[] {
   ];
 }
 
-function gateLines(manifest: AdmissionManifest): string[] {
-  return manifest.gauntlet.gates.flatMap((gate) => [
+function gateLines(gates: NonNullable<AdmissionManifest['gauntlet']>['gates']): string[] {
+  return gates.flatMap((gate) => [
     `#### ${gate.gate}: ${gate.title}`,
     `- Code: \`${gate.code}\`; status=${gate.status}; applicability=${gate.applicability}; verdict=${gate.verdict}`,
     `- Summary: ${gate.summary}`,
@@ -1035,13 +1088,82 @@ function gateLines(manifest: AdmissionManifest): string[] {
   ]);
 }
 
+function outcomeLines(manifest: AdmissionManifest, comparison: ComparisonReport | null): string[] {
+  if (manifest.comparison !== null && comparison !== null) {
+    return [
+      `- Comparison digest: \`${manifest.comparison.digest}\``,
+      `- Comparison summary: ${comparison.summary.text}`,
+      ...comparisonLines(manifest, comparison),
+    ];
+  }
+  // Guard (fixture-lane) variant: the fixtures ARE the measured claim — the
+  // release artifact is byte-identical, so there is no comparison to show.
+  return [
+    '- Fixture-lane update: golden fixtures only. The release artifact is unchanged, so no current/candidate comparison exists.',
+    ...(manifest.effectExemption === null ? [] : [`- Recorded exemption: ${manifest.effectExemption.rationale}`]),
+    '',
+  ];
+}
+
+function identityLines(manifest: AdmissionManifest, comparison: ComparisonReport | null): string[] {
+  if (manifest.candidate !== null && comparison !== null) {
+    return [
+      `- Current: engine=\`${comparison.referenceIdentity.engineVersion}\`; corpus=\`${comparison.referenceIdentity.corpusFingerprint}\`; layer=\`${comparison.referenceIdentity.layerFingerprint}\``,
+      `- Candidate: engine=\`${manifest.candidate.engineVersion}\`; corpus=\`${manifest.candidate.corpusFingerprint}\`; layer=\`${manifest.candidate.layerFingerprint}\``,
+      `- Database: \`${manifest.rebuiltCandidate.databaseSha256}\``,
+      `- Candidate descriptor: \`${manifest.candidate.descriptorSha256}\``,
+      `- Candidate source snapshot: \`${manifest.candidate.sourceSnapshotDigest}\``,
+    ];
+  }
+  const identity = manifest.baseIdentity!;
+  return [
+    `- Unchanged: engine=\`${identity.engineVersion}\`; corpus=\`${identity.corpusFingerprint}\`; layer=\`${identity.layerFingerprint}\``,
+    `- Database: \`${manifest.rebuiltCandidate.databaseSha256}\` (rebuilt and identical to the live release)`,
+  ];
+}
+
+function gateSection(manifest: AdmissionManifest): string[] {
+  if (manifest.gauntlet !== null) {
+    return [
+      `- Gauntlet digest: \`${manifest.gauntlet.digest}\`; report: \`${manifest.gauntlet.reportSha256}\`; payload: \`${manifest.gauntlet.payloadSha256}\``,
+      ...gateLines(manifest.gauntlet.gates),
+    ];
+  }
+  const release = manifest.releaseGauntlet;
+  if (release === undefined) return ['- No gauntlet evidence recorded.'];
+  return [
+    `- Release gauntlet digest: \`${release.digest}\`; report: \`${release.reportSha256}\`; payload: \`${release.payloadSha256}\``,
+    ...gateLines(release.gates),
+  ];
+}
+
+function triageLines(manifest: AdmissionManifest): string[] {
+  const classification = manifest.releaseGauntletClassification;
+  if (classification === null || classification === undefined) return [];
+  if (classification.kind === 'inherited-standing-red') {
+    return [
+      '### Standing findings triage',
+      'The release gauntlet reported findings, and every one of them also reproduces at the base commit with no train operations applied (verified control run). They are standing findings of the current release, inherited — not introduced — by this change.',
+      `- Control report: \`${classification.controlReportPath}\` (digest \`${classification.controlReportDigest}\`)`,
+      ...classification.trainFindings.map((finding) => `- Inherited \`${finding.gateId}\`/\`${finding.categoryCode}\`; subjects=${finding.subjects.map((entry) => `\`${entry}\``).join(', ') || 'none'}`),
+      '',
+    ];
+  }
+  return [
+    '### Deferred signing triage',
+    'The release gauntlet findings are exactly the approval findings predicted by the recorded deferred-signing marker (merge-first-sign-once): the post-merge identity is signed once after this merge lands.',
+    ...classification.findings.map((finding) => `- Predicted \`${finding.gateId}\`/\`${finding.categoryCode}\`; subjects=${finding.subjects.map((entry) => `\`${entry}\``).join(', ') || 'none'}`),
+    '',
+  ];
+}
+
 function buildPrBody(
   manifest: AdmissionManifest,
   proposal: ProposalManifest,
   branch: string,
   sourceDigest: string,
   fixtureDigest: string,
-  comparison: ComparisonReport,
+  comparison: ComparisonReport | null,
 ): string {
   const files = manifest.sourceChanges.filter((entry) => entry.changed).sort((a, b) => a.path.localeCompare(b.path));
   const exactFiles = files.map((entry) => `- \`${entry.path}\`: \`${entry.before.sha256}\` -> \`${entry.after.sha256}\``).join('\n');
@@ -1055,9 +1177,7 @@ function buildPrBody(
     ...manifest.linkedCaseIds.map((entry) => `- \`${entry}\``),
     '',
     '### Current / candidate outcomes',
-    `- Comparison digest: \`${manifest.comparison.digest}\``,
-    `- Comparison summary: ${comparison.summary.text}`,
-    ...comparisonLines(manifest, comparison),
+    ...outcomeLines(manifest, comparison),
     '### Probe and baseline movement',
     ...probeLines(manifest),
     '',
@@ -1066,15 +1186,11 @@ function buildPrBody(
     ...manifest.decisions.map((entry) => `- Signed ${entry.kind} decision by ${entry.reviewer} at ${entry.decidedAt}: ${entry.rationale} (\`${entry.decisionDigest}\`)`),
     '',
     '### Gates',
-    `- Gauntlet digest: \`${manifest.gauntlet.digest}\`; report: \`${manifest.gauntlet.reportSha256}\`; payload: \`${manifest.gauntlet.payloadSha256}\``,
-    ...gateLines(manifest),
+    ...gateSection(manifest),
     '',
+    ...triageLines(manifest),
     '### Artifact identity',
-    `- Current: engine=\`${comparison.referenceIdentity.engineVersion}\`; corpus=\`${comparison.referenceIdentity.corpusFingerprint}\`; layer=\`${comparison.referenceIdentity.layerFingerprint}\``,
-    `- Candidate: engine=\`${manifest.candidate.engineVersion}\`; corpus=\`${manifest.candidate.corpusFingerprint}\`; layer=\`${manifest.candidate.layerFingerprint}\``,
-    `- Database: \`${manifest.rebuiltCandidate.databaseSha256}\``,
-    `- Candidate descriptor: \`${manifest.candidate.descriptorSha256}\``,
-    `- Candidate source snapshot: \`${manifest.candidate.sourceSnapshotDigest}\``,
+    ...identityLines(manifest, comparison),
     '',
     '### Exact files and digests',
     exactFiles,
