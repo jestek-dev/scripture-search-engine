@@ -89,6 +89,7 @@ import {
   parseSigningForm,
 } from './signingOperations.js';
 import { createUpdatesOperations, UpdatesOperationsError } from './updatesOperations.js';
+import { createControlRunExecutor, createTrainOperations, TrainOperationsError } from './trainRunner.js';
 import { REVIEW_PRIORITY_FORMULA, type ReviewSessionCase } from './reviewSessions.js';
 import type { QualityDashboardReport } from './qualityDashboard.js';
 import type { SensitiveCategories, TelemetryBudgets } from '../../pipeline/src/telemetry/index.js';
@@ -229,6 +230,7 @@ function requiresTrustedJson(pathname: string): boolean {
     /^\/api\/v2\/sessions\/[^/]+\/(?:complete-item|skip-item|complete-session)$/.test(pathname) ||
     /^\/api\/v2\/admissions\/[^/]+\/admit$/.test(pathname) ||
     /^\/api\/v2\/updates\/cards\/[^/]+\/decide$/.test(pathname) ||
+    pathname === '/api/v2/updates/train' ||
     /^\/api\/v2\/publish\/[^/]+\/prepare$/.test(pathname) ||
     pathname === '/api/v2/signing/review-packet' ||
     pathname === '/api/v2/signing/preview' ||
@@ -314,6 +316,23 @@ function sendUpdatesError(response: http.ServerResponse, error: unknown): void {
     return;
   }
   sendV2Error(response, 500, 'updates_unavailable', 'Updates could not be derived. Reload and retry.');
+}
+
+function sendTrainError(response: http.ServerResponse, error: unknown): void {
+  response.setHeader('cache-control', 'no-store');
+  if (error instanceof TrainOperationsError) {
+    sendV2Error(response, error.status, error.code, error.message);
+    return;
+  }
+  sendV2Error(response, 500, 'train_unavailable', 'The update could not be started or read. Reload and retry.');
+}
+
+/** The failure code carried by any operations error, for train stop mapping. */
+function failureCodeOf(error: unknown): string | null {
+  if (typeof error === 'object' && error !== null && typeof (error as { code?: unknown }).code === 'string') {
+    return (error as { code: string }).code;
+  }
+  return null;
 }
 
 function digestJson(value: unknown): string {
@@ -574,6 +593,10 @@ async function main(): Promise<void> {
     evidencePath: ADMISSION_EVIDENCE_PATH,
     reviewer: REVIEWER,
     signingKey: process.env.WORKBENCH_ADMISSION_SIGNING_KEY,
+    // §5.5 gap 3 (guard half): when a guard train's release verdict is red,
+    // runAdmission classifies it against a base-commit control run the
+    // runner performs. Any non-inherited red refuses exactly as today.
+    controlRun: createControlRunExecutor(MUTATION_REPO_ROOT),
   });
   // D6: votes → cards. Deriving is read-only; a decide appends one line to
   // workbench/updates.jsonl through the fail-closed store. The deriver reads
@@ -585,6 +608,17 @@ async function main(): Promise<void> {
     updatesLogPath: UPDATES_PATH,
     judgmentsLogPath: JUDGMENTS_PATH,
     casesLogPath: CASES_PATH,
+    evidencePath: ADMISSION_EVIDENCE_PATH,
+  });
+  // D8: the train runner — seal + observed state over the same snapshot the
+  // deriver reads. The admit/publish tail stays on the existing endpoints.
+  const trainOperations = createTrainOperations({
+    repoRoot: MUTATION_REPO_ROOT,
+    reviewer: REVIEWER,
+    updatesLogPath: UPDATES_PATH,
+    judgmentsLogPath: JUDGMENTS_PATH,
+    casesLogPath: CASES_PATH,
+    evidencePath: ADMISSION_EVIDENCE_PATH,
   });
   if (engine !== null && caseLog !== null) {
     try {
@@ -1172,6 +1206,70 @@ async function main(): Promise<void> {
         return;
       }
 
+      if (url.pathname === '/api/v2/updates/train') {
+        if (request.method !== 'POST') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only POST is allowed to seal a train.');
+          return;
+        }
+        if ([...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Sealing does not accept query parameters.');
+          return;
+        }
+        // Guard trains are identity-neutral and defer only to an in-flight
+        // repo mutation (the existing 409 discipline) — §8.4 single-flight.
+        if (activeRepositoryMutation !== null || jobRunner.getActive() !== null) {
+          sendV2Error(response, 409, 'mutation_running', 'Another repository operation is already running.');
+          return;
+        }
+        if (engine === null) {
+          sendV2Error(response, 503, 'artifact_unavailable', artifactFailure);
+          return;
+        }
+        const sealMutationId = randomUUID();
+        activeRepositoryMutation = { kind: 'train-seal', id: sealMutationId };
+        try {
+          response.setHeader('cache-control', 'no-store');
+          await readJsonBody(request); // drain; the seal takes no input (V7: everything derives)
+          const train = await trainOperations.seal({
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          });
+          sendV2Success(response, 201, { train });
+        } catch (error) { sendTrainError(response, error); }
+        finally {
+          if (activeRepositoryMutation?.id === sealMutationId) activeRepositoryMutation = null;
+        }
+        return;
+      }
+
+      const trainStateMatch = /^\/api\/v2\/updates\/train\/([^/]+)$/.exec(url.pathname);
+      if (trainStateMatch !== null) {
+        if (request.method !== 'GET') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only GET is allowed to read a train.');
+          return;
+        }
+        const trainId = decodeSegment(trainStateMatch[1]!);
+        if (trainId === null || [...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Train route is invalid.');
+          return;
+        }
+        if (engine === null) {
+          sendV2Error(response, 503, 'artifact_unavailable', artifactFailure);
+          return;
+        }
+        try {
+          response.setHeader('cache-control', 'no-store');
+          const train = await trainOperations.train(trainId, {
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          });
+          sendV2Success(response, 200, { train, readOnly: degradedReadOnly });
+        } catch (error) { sendTrainError(response, error); }
+        return;
+      }
+
       if (url.pathname === '/api/v2/admissions') {
         if (request.method !== 'GET') {
           sendV2Error(response, 405, 'method_not_allowed', 'Only GET is allowed for admission discovery.');
@@ -1230,7 +1328,17 @@ async function main(): Promise<void> {
         try {
           const admission = await admissionPublishOperations.admit(reviewId, await readJsonBody(request));
           sendV2Success(response, 201, { admission });
-        } catch (error) { sendAdmissionPublishError(response, error); }
+        } catch (error) {
+          sendAdmissionPublishError(response, error);
+          // §03.8: a terminal admit failure on a sealed train records a stop
+          // from the closed enum; unmapped (transient) failures leave the
+          // train sealed and retryable. Best-effort: the stop never masks
+          // the response above.
+          const code = failureCodeOf(error);
+          if (code !== null) {
+            void trainOperations.stopFromFailure(reviewId, code).catch(() => undefined);
+          }
+        }
         finally {
           if (activeRepositoryMutation?.id === mutationId) activeRepositoryMutation = null;
         }
@@ -1295,7 +1403,15 @@ async function main(): Promise<void> {
         try {
           const publication = await admissionPublishOperations.prepare(reviewId, await readJsonBody(request));
           sendV2Success(response, 201, { publication });
-        } catch (error) { sendAdmissionPublishError(response, error); }
+        } catch (error) {
+          sendAdmissionPublishError(response, error);
+          // §03.8: terminal publish failures (main moved, GitHub away) stop
+          // the sealed train; transient refusals leave it retryable.
+          const code = failureCodeOf(error);
+          if (code !== null) {
+            void trainOperations.stopFromFailure(reviewId, code).catch(() => undefined);
+          }
+        }
         finally {
           if (activeRepositoryMutation?.id === mutationId) activeRepositoryMutation = null;
         }

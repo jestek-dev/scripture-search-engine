@@ -77,6 +77,17 @@ describe('study.html static snapshot contract', () => {
     expect(trustedBlock![0]).toContain(String.raw`\/api\/v2\/updates\/cards\/[^/]+\/decide`);
   });
 
+  it('wires the Phase-2 seal POST through requiresTrustedJson (votes-to-engine D8, server half)', () => {
+    // The page-side halves — the REQUIRED_INLINE_ROUTES literal and the
+    // ROUTES mirror — land with D8's Updates-screen wiring; adding the
+    // literal without the page edit fail-closes page serving (the D6
+    // precedent), so this test pins only the server list until then.
+    const serverSource = readFileSync(new URL('../src/server.ts', import.meta.url), 'utf8');
+    const trustedBlock = /function requiresTrustedJson\(pathname: string\): boolean \{[\s\S]*?\n\}/.exec(serverSource);
+    expect(trustedBlock, 'server.ts declares requiresTrustedJson').not.toBeNull();
+    expect(trustedBlock![0]).toContain(`'/api/v2/updates/train'`);
+  });
+
   it('carries the workbench-static-protocol marker in the head', () => {
     const source = readFileSync(studyUrl, 'utf8');
     expect(source).toContain('<meta name="workbench-static-protocol" content="1">');

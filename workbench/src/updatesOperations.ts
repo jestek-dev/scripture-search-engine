@@ -23,11 +23,12 @@ import {
   THEME_ANSWER_NONE,
   type DeriveSourceFile,
   type DeriveUpdatesInputs,
+  type PriorTrainArtifacts,
   type ReplayIdentity,
   type UpdateCard,
   type UpdatesDerivation,
 } from './deriveUpdates.js';
-import { createUpdatesStore, type UpdatesEvent, type UpdatesStore } from './updatesStore.js';
+import { createUpdatesStore, parseUpdatesLog, type UpdatesEvent, type UpdatesStore } from './updatesStore.js';
 
 export class UpdatesOperationsError extends Error {
   constructor(readonly code: string, message: string, readonly status = 400) {
@@ -45,6 +46,12 @@ export interface UpdatesOperationsOptions {
   readonly judgmentsLogPath?: string;
   /** Override for tests; defaults to `<repoRoot>/workbench/cases.jsonl`. */
   readonly casesLogPath?: string;
+  /**
+   * The admission evidence registry (D10) — where a sealed train's manifest is
+   * located for the §03.2 join. Defaults to
+   * `<repoRoot>/workbench/review-data/admission-evidence.json`.
+   */
+  readonly evidencePath?: string;
   readonly now?: () => Date;
 }
 
@@ -146,51 +153,124 @@ function validateDecisionAgainstCard(card: UpdateCard, request: DecideRequest): 
   }
 }
 
-export function createUpdatesOperations(options: UpdatesOperationsOptions): UpdatesOperations {
+/** The resolved file locations one derive snapshot reads (shared with D8's train runner). */
+export interface UpdatesInputPaths {
+  readonly repoRoot: string;
+  readonly updatesLogPath: string;
+  readonly judgmentsLogPath: string;
+  readonly casesLogPath: string;
+  readonly evidencePath: string;
+}
+
+export function resolveUpdatesInputPaths(options: {
+  readonly repoRoot: string;
+  readonly updatesLogPath?: string;
+  readonly judgmentsLogPath?: string;
+  readonly casesLogPath?: string;
+  readonly evidencePath?: string;
+}): UpdatesInputPaths {
   const repoRoot = options.repoRoot;
-  const updatesLogPath = options.updatesLogPath ?? path.join(repoRoot, 'workbench', 'updates.jsonl');
-  const judgmentsLogPath = options.judgmentsLogPath ?? path.join(repoRoot, 'workbench', 'judgments.jsonl');
-  const casesLogPath = options.casesLogPath ?? path.join(repoRoot, 'workbench', 'cases.jsonl');
-  const manifestPath = path.join(repoRoot, 'workbench', 'legacy', 'migration-manifest.json');
-  const store: UpdatesStore = createUpdatesStore({ logPath: updatesLogPath });
+  return {
+    repoRoot,
+    updatesLogPath: options.updatesLogPath ?? path.join(repoRoot, 'workbench', 'updates.jsonl'),
+    judgmentsLogPath: options.judgmentsLogPath ?? path.join(repoRoot, 'workbench', 'judgments.jsonl'),
+    casesLogPath: options.casesLogPath ?? path.join(repoRoot, 'workbench', 'cases.jsonl'),
+    evidencePath: options.evidencePath ?? path.join(repoRoot, 'workbench', 'review-data', 'admission-evidence.json'),
+  };
+}
+
+async function readOptional(filePath: string): Promise<string | null> {
+  return existsSync(filePath) ? readFile(filePath, 'utf8') : null;
+}
+
+async function readDirFiles(dirPath: string, repoRelativeDir: string, keep: (name: string) => boolean): Promise<DeriveSourceFile[]> {
+  if (!existsSync(dirPath)) return [];
+  const names = (await readdir(dirPath)).filter(keep).sort();
+  return Promise.all(names.map(async (name) => ({
+    path: `${repoRelativeDir}/${name}`,
+    contents: await readFile(path.join(dirPath, name), 'utf8'),
+  })));
+}
+
+/**
+ * Phase 2 (§03.2's join, D8/D10): locate each sealed train's outcome
+ * artifacts — the sealed manifest from the D10 evidence registry entry keyed
+ * `reviewId = <trainId>`, and the verified report at
+ * `eval/.runs/<trainId>.json` when one exists. The deriver re-verifies both
+ * against the stored seal digest and stop pin; anything that fails the join
+ * is honestly listed in `unverifiablePriorTrains` (fail-closed), so this
+ * loader never needs to trust what it reads.
+ */
+async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: string): Promise<PriorTrainArtifacts[]> {
+  let trainIds: string[];
+  try {
+    trainIds = [...new Set(parseUpdatesLog(updatesLog)
+      .filter((event) => event.kind === 'train-sealed')
+      .map((event) => (event as { trainId: string }).trainId))];
+  } catch {
+    // An unparseable log fails the derive itself with its own message.
+    return [];
+  }
+  if (trainIds.length === 0) return [];
+  const registryText = await readOptional(paths.evidencePath);
+  const manifestsByTrain = new Map<string, string>();
+  if (registryText !== null) {
+    try {
+      const registry = JSON.parse(registryText) as { admissions?: readonly { reviewId?: unknown; proposal?: unknown }[] };
+      for (const entry of registry.admissions ?? []) {
+        if (typeof entry.reviewId === 'string' && entry.proposal !== undefined) {
+          manifestsByTrain.set(entry.reviewId, JSON.stringify(entry.proposal));
+        }
+      }
+    } catch {
+      // A malformed registry locates nothing; the join reports it unverifiable.
+    }
+  }
+  return Promise.all(trainIds.sort().map(async (trainId) => {
+    const sealedManifestJson = manifestsByTrain.get(trainId);
+    const reportPath = path.join(paths.repoRoot, 'eval', '.runs', `${trainId}.json`);
+    const verifiedReportJson = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(trainId) ? await readOptional(reportPath) : null;
+    return {
+      trainId,
+      ...(sealedManifestJson === undefined ? {} : { sealedManifestJson }),
+      ...(verifiedReportJson === null ? {} : { verifiedReportJson }),
+    };
+  }));
+}
+
+/** Reads one complete observed-input snapshot for the deriver (§03.2's table). */
+export async function assembleUpdatesInputs(paths: UpdatesInputPaths, replayIdentity: ReplayIdentity): Promise<DeriveUpdatesInputs> {
+  const manifestPath = path.join(paths.repoRoot, 'workbench', 'legacy', 'migration-manifest.json');
+  const [judgmentsLog, casesLog, migrationManifestJson, updatesLog, ontologyFiles, goldenFixtureFiles, webSubsetJson] = await Promise.all([
+    readOptional(paths.judgmentsLogPath).then((text) => text ?? ''),
+    readOptional(paths.casesLogPath),
+    readOptional(manifestPath),
+    readOptional(paths.updatesLogPath).then((text) => text ?? ''),
+    readDirFiles(path.join(paths.repoRoot, 'ontology', 'concepts'), 'ontology/concepts', (name) => name.endsWith('.yaml')),
+    readDirFiles(path.join(paths.repoRoot, 'eval', 'golden'), 'eval/golden', (name) => name.endsWith('.json')),
+    readFile(path.join(paths.repoRoot, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8'),
+  ]);
+  const priorTrainArtifacts = await loadPriorTrainArtifacts(paths, updatesLog);
+  return {
+    judgmentsLog,
+    casesLog,
+    migrationManifestJson,
+    updatesLog,
+    replayIdentity,
+    ontologyFiles,
+    goldenFixtureFiles,
+    webSubsetJson,
+    ...(priorTrainArtifacts.length === 0 ? {} : { priorTrainArtifacts }),
+  };
+}
+
+export function createUpdatesOperations(options: UpdatesOperationsOptions): UpdatesOperations {
+  const paths = resolveUpdatesInputPaths(options);
+  const store: UpdatesStore = createUpdatesStore({ logPath: paths.updatesLogPath });
   const now = options.now ?? ((): Date => new Date());
 
-  async function readOptional(filePath: string): Promise<string | null> {
-    return existsSync(filePath) ? readFile(filePath, 'utf8') : null;
-  }
-
-  async function readDirFiles(dirPath: string, repoRelativeDir: string, keep: (name: string) => boolean): Promise<DeriveSourceFile[]> {
-    if (!existsSync(dirPath)) return [];
-    const names = (await readdir(dirPath)).filter(keep).sort();
-    return Promise.all(names.map(async (name) => ({
-      path: `${repoRelativeDir}/${name}`,
-      contents: await readFile(path.join(dirPath, name), 'utf8'),
-    })));
-  }
-
   async function assembleInputs(replayIdentity: ReplayIdentity): Promise<DeriveUpdatesInputs> {
-    const [judgmentsLog, casesLog, migrationManifestJson, updatesLog, ontologyFiles, goldenFixtureFiles, webSubsetJson] = await Promise.all([
-      readOptional(judgmentsLogPath).then((text) => text ?? ''),
-      readOptional(casesLogPath),
-      readOptional(manifestPath),
-      readOptional(updatesLogPath).then((text) => text ?? ''),
-      readDirFiles(path.join(repoRoot, 'ontology', 'concepts'), 'ontology/concepts', (name) => name.endsWith('.yaml')),
-      readDirFiles(path.join(repoRoot, 'eval', 'golden'), 'eval/golden', (name) => name.endsWith('.json')),
-      readFile(path.join(repoRoot, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8'),
-    ]);
-    // Phase 1 stores no sealed-manifest/report artifacts yet, so no prior
-    // train can pass the §03.2 join: stopped trains are honestly listed in
-    // unverifiablePriorTrains rather than silently converted (fail-closed).
-    return {
-      judgmentsLog,
-      casesLog,
-      migrationManifestJson,
-      updatesLog,
-      replayIdentity,
-      ontologyFiles,
-      goldenFixtureFiles,
-      webSubsetJson,
-    };
+    return assembleUpdatesInputs(paths, replayIdentity);
   }
 
   function deriveFrom(inputs: DeriveUpdatesInputs): UpdatesDerivation {
