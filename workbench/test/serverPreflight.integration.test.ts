@@ -98,6 +98,7 @@ describe('server startup preflight integration', () => {
       ['/api/v2/sessions', { kind: 'weekly-triage' }],
       ['/api/v2/audits/preview', { files: [] }],
       ['/api/v2/admissions/review-admission-one/admit', { decisions: [] }],
+      [`/api/v2/updates/cards/${'a'.repeat(64)}/decide`, { decision: 'approve', cardRevision: 'b'.repeat(64) }],
       ['/api/v2/publish/review-admission-one/prepare', { push: false }],
     ] as const) {
       const mutation = await fetch(`http://127.0.0.1:${port}${route}`, {

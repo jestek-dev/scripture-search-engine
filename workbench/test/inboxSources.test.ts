@@ -96,6 +96,44 @@ describe('inbox source generation', () => {
     expect(seeds.every((seed) => seed.blockingGateFinding === false)).toBe(true);
   });
 
+  it('skips stale-judgment seeds for the legacy-manifest-pinned lines, and only those (D6, §07.2)', async () => {
+    // The real closed manifest and the real judgment log: the filter must
+    // silence the three pinned v1 lines' immortal inbox ask (the legacy
+    // re-confirmation card is their sole surface from Phase 1 on)…
+    const { readFile } = await import('node:fs/promises');
+    const path = await import('node:path');
+    const repo = path.join(__dirname, '..', '..');
+    const manifest = JSON.parse(
+      await readFile(path.join(repo, 'workbench', 'legacy', 'migration-manifest.json'), 'utf8'),
+    ) as { cases: readonly { entries: readonly { judgment: { query: string; at: string; engineVersion: string; corpusFingerprint: string; layerFingerprint: string } }[] }[] };
+    const pinned = manifest.cases.flatMap((entry) => entry.entries.map(({ judgment }) => judgment));
+    expect(pinned).toHaveLength(3);
+    const judgments = [
+      ...pinned.map(({ query, at, engineVersion, corpusFingerprint, layerFingerprint }) => ({ query, at, engineVersion, corpusFingerprint, layerFingerprint })),
+      // …while an unpinned stale judgment on another query still seeds.
+      { query: 'old search', at: '2026-07-01T00:00:00.000Z', engineVersion: '0.8.0', corpusFingerprint: 'old-corpus', layerFingerprint: 'old-layers' },
+    ];
+    const withFilter = buildInboxSeeds({
+      cases: [], coverage: [], judgments, currentArtifact: ARTIFACT,
+      legacyPinnedJudgments: pinned.map(({ query, at }) => ({ query, at })),
+      now: new Date('2026-08-03T00:00:00.000Z'),
+    });
+    expect(withFilter.filter((seed) => seed.source === 'stale-judgment').map((seed) => seed.query)).toEqual(['old search']);
+    // Display routing only, not judgment semantics: the pinned lines remain
+    // readable and effective in the committed log.
+    const { effectiveJudgments, parseJudgmentLog } = await import('../src/effectiveJudgments.js');
+    const records = parseJudgmentLog(await readFile(path.join(repo, 'workbench', 'judgments.jsonl'), 'utf8'));
+    const effective = effectiveJudgments(records).filter((record) => !('schemaVersion' in record && record.schemaVersion === 2));
+    expect(effective).toHaveLength(3);
+    // Without the filter, the same rows would still seed (the filter narrows;
+    // it never rewrites) — guarding against the filter leaking into semantics.
+    const withoutFilter = buildInboxSeeds({
+      cases: [], coverage: [], judgments, currentArtifact: ARTIFACT,
+      now: new Date('2026-08-03T00:00:00.000Z'),
+    });
+    expect(withoutFilter.filter((seed) => seed.source === 'stale-judgment')).toHaveLength(2);
+  });
+
   it('is byte-order deterministic for equivalent input orderings', () => {
     const input = {
       cases: [CASE], coverage: [{ id: 'z-concept', status: 'uncovered' as const }], judgments: [],
