@@ -1,17 +1,20 @@
 import { expect, test, type Page } from '@playwright/test';
 
 import {
-  collectErrors, installRoutes, makeMock, startStudyServer, identity,
-  type MockState, type StudyServer,
+  collectErrors, derivationMock, installRoutes, makeMock, startStudyServer,
+  type Call, type MockState, type StudyServer,
 } from './study-shared';
 
-// P6 demo spec (votes-to-engine plan, Phase 0 D2): the read-only Updates
-// screen. Covers: the real-3-vote-log render (one legacy re-confirmation
-// card + the checklist preview in plain language, the §4.2 same-facts note
-// verbatim above the lines, Approve as the card's only action, the
-// two-read-calls/no-write guarantee, and the Approve hand-off into Review),
-// the steady empty state, the degraded read-only banner, and the D28 jargon
-// quarantine over the rendered screen text.
+// P6 demo spec (votes-to-engine plan, Phase 0 D2 → Phase 1 D7): the Updates
+// screen's legacy re-confirmation card. Phase 1 replaced the Phase-0
+// inbox-suggestion rendering with the DERIVED card from GET /api/v2/updates
+// (§07.2: the card is now the sole surface for the three v1 votes, and
+// Decline/Not now activate with the decide endpoint), so this spec covers:
+// the §07.2 card copy verbatim, the two read calls and nothing else before a
+// press, Approve = decide POST (cardRevision-pinned) + the fresh-look
+// hand-off into Review, Decline's required one-line reason actually
+// silencing the ask, the steady empty state, the degraded read-only state,
+// and the D28 jargon quarantine over the rendered screen.
 
 let server: StudyServer;
 let origin: string;
@@ -25,13 +28,13 @@ test.afterAll(async () => {
   await server.close();
 });
 
-// The real 3-vote log (workbench/judgments.jsonl:1-3), mirrored exactly:
-// what POST /api/v2/compile/preview's checklist and GET /api/v2/inbox's
-// deduped stale-judgment suggestion derive from it today. (The real server's
-// empty-log path is the WORKBENCH_JUDGMENTS_PATH override, server.ts; this
-// harness models it as the empty plan + empty inbox below.)
 const LEGACY_QUERY = 'Who is like the Lord?';
 const LEGACY_AT = '2026-08-06T16:35:14.936Z';
+const LEGACY_CARD_ID = 'a1'.repeat(32);
+const LEGACY_REVISION = 'b2'.repeat(32);
+
+// The real 3-vote checklist (workbench/judgments.jsonl:1-3), as the compile
+// preview still serves it — the read-only backlog until Phase 4 retires it.
 const REAL_CHECKLIST = [
   '[ ] missing: "Who is like the Lord?" should surface Exodus 15:11 — uses that exact wording.',
   '[ ] missing: "Who is like the Lord?" should surface Deuteronomy 3:24 — Fits the theme',
@@ -53,28 +56,35 @@ function realVotePlan(): unknown {
   };
 }
 
-function legacyInboxItem(): unknown {
+// The derived legacy re-confirmation card, §07.2's shape: the one card whose
+// judgmentIds are 64-hex line hashes; votes ride the manifest entries.
+function legacyCard(): Record<string, unknown> {
+  const lineHashes = ['c3'.repeat(32), 'd4'.repeat(32), 'e5'.repeat(32)];
   return {
-    kind: 'suggestion',
-    suggestion: { id: 'suggestion:legacy-stale', query: LEGACY_QUERY, source: 'stale-judgment' },
-    reason: 'The prior judgment was made under a different engine, corpus, or layer identity.',
-    resultCount: 10,
-    score: 1,
-    meta: {
-      source: 'stale-judgment',
-      state: 'new',
-      sensitivity: 'standard',
-      reviewer: null,
-      artifact: identity,
-      ageDays: (Date.now() - Date.parse(LEGACY_AT)) / 86_400_000,
-    },
+    cardId: LEGACY_CARD_ID,
+    cardRevision: LEGACY_REVISION,
+    kind: 're-confirmation',
+    query: LEGACY_QUERY,
+    targetKey: 'who is like the lord?',
+    judgmentIds: lineHashes,
+    contextJudgmentIds: [],
+    votes: [
+      { at: LEGACY_AT, reviewer: 'jesse', reference: 'Exodus 15:11', note: 'uses that exact wording.' },
+      { at: LEGACY_AT, reviewer: 'jesse', reference: 'Deuteronomy 3:24', note: 'Fits the theme' },
+      { at: LEGACY_AT, reviewer: 'jesse', reference: 'Deuteronomy 33:26', note: 'fits the theme' },
+    ],
+    derived: {},
+    preCheck: 'identity-moved',
+    identityNotes: [],
+    legacy: { lineHashes },
+    state: { decision: 'drafted' },
   };
 }
 
 function realVoteMock(): MockState {
   return makeMock({
     compilePlans: [realVotePlan()],
-    inboxItems: [legacyInboxItem()],
+    updatesPayload: derivationMock([legacyCard()]),
   });
 }
 
@@ -84,14 +94,19 @@ async function openUpdates(page: Page): Promise<void> {
 }
 
 // The D28 jargon quarantine, as a binding AC: neither regex may match the
-// rendered Updates screen text.
+// rendered Updates screen text (the payload's digests and line hashes stay
+// data-only).
 async function assertNoJargon(page: Page): Promise<void> {
   const text = await page.locator('#screen-updates').innerText();
   expect(/[0-9a-f]{8}-/.test(text), `jargon id in rendered text: ${text}`).toBe(false);
   expect(/sha256/i.test(text), `sha256 in rendered text: ${text}`).toBe(false);
 }
 
-test('D2: the real 3-vote log renders one legacy card + the checklist preview, read-only', async ({ page }) => {
+function decidePosts(mock: MockState): Call[] {
+  return mock.calls.filter((call) => call.method === 'POST' && /\/api\/v2\/updates\/cards\/[^/]+\/decide$/.test(call.path));
+}
+
+test('P1: the real 3-vote log renders the derived legacy card + the checklist backlog', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = realVoteMock();
   await installRoutes(page, mock);
@@ -118,12 +133,12 @@ test('D2: the real 3-vote log renders one legacy card + the checklist preview, r
     + 'normal path into the next reviewed update.',
   );
 
-  // Exactly one action — Approve. Decline and Not now are ABSENT, not
-  // disabled: no such element exists anywhere on the screen.
-  await expect(card.locator('button')).toHaveCount(1);
-  await expect(card.locator('button')).toHaveText('Approve');
-  await expect(page.locator('#screen-updates').getByText('Decline')).toHaveCount(0);
-  await expect(page.locator('#screen-updates').getByText('Not now')).toHaveCount(0);
+  // Phase 1's button set (§07.2): Approve + Decline + Not now, all live.
+  await expect(card.locator('button.updates-approve')).toHaveText(/Approve/);
+  await expect(card.locator('button.updates-decline')).toHaveText(/Decline/);
+  await expect(card.locator('button.updates-park')).toHaveText(/Not now/);
+  // The re-confirmation card keeps its dashed idiom — never the op border.
+  await expect(card).not.toHaveClass(/\bop\b/);
 
   // The §4.2 same-facts note, verbatim, rendered directly above the
   // checklist lines.
@@ -148,37 +163,109 @@ test('D2: the real 3-vote log renders one legacy card + the checklist preview, r
   await expect(page.locator('#screen-updates')).not.toContainText('missing:');
   await expect(page.locator('#screen-updates')).not.toContainText('[ ]');
 
+  // A re-confirmation card stages nothing, so the tally row stays absent.
+  await expect(page.locator('#updates-stats')).toHaveCount(0);
+
   await assertNoJargon(page);
 
-  // Before Approve is pressed the Updates screen has issued only the two
-  // read calls — POST /api/v2/compile/preview and GET /api/v2/inbox — and
-  // appended nothing to any log (no judgment, case, or apply POST anywhere).
+  // Before any press the screen has issued exactly its two read calls —
+  // GET /api/v2/updates and POST /api/v2/compile/preview — and appended
+  // nothing (no decide, judgment, case, or apply POST anywhere).
   const screenCalls = mock.calls.slice(callsBefore);
   expect(screenCalls.map((call) => `${call.method} ${call.path}`).sort()).toEqual([
-    'GET /api/v2/inbox',
+    'GET /api/v2/updates',
     'POST /api/v2/compile/preview',
   ]);
-  const writes = mock.calls.filter((call) => call.method === 'POST' && call.path !== '/api/v2/compile/preview');
-  expect(writes).toEqual([]);
-
-  // Approve is a pure hand-off into the existing stale-reconfirmation flow:
-  // the Review surface opens on the query. (That machinery's own requests —
-  // session creation included — are outside the screen's no-write assertion.)
-  await page.click('.updates-approve');
-  await expect(page.locator('#review-grid')).toBeVisible();
-  await expect(page.locator('#screen-updates')).toBeHidden();
-  await expect(page.locator('#search-input')).toHaveValue(LEGACY_QUERY);
-  expect(mock.calls.some((call) => call.method === 'GET' && call.path === '/api/search'
-    && decodeURIComponent(call.search.replace(/\+/g, ' ')).includes(LEGACY_QUERY))).toBe(true);
+  expect(decidePosts(mock)).toEqual([]);
 
   expect(errors).toEqual([]);
 });
 
-test('D2: an empty log renders the steady empty state', async ({ page }) => {
+test('P1: Approve records the pinned decide event AND opens the fresh look in Review (§07.2)', async ({ page }) => {
+  const errors = collectErrors(page);
+  const mock = realVoteMock();
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  await page.click('.updates-approve');
+
+  // The decide event, pinned by the card's cardRevision (§4.4).
+  await expect(page.locator('#review-grid')).toBeVisible();
+  const posts = decidePosts(mock);
+  expect(posts).toHaveLength(1);
+  expect(posts[0]!.path).toBe(`/api/v2/updates/cards/${LEGACY_CARD_ID}/decide`);
+  expect(posts[0]!.body).toEqual({ decision: 'approve', cardRevision: LEGACY_REVISION });
+
+  // The receipt is the opened session itself — Review on the query — with
+  // no "goes into the next update" toast (§4.4's divergent row).
+  await expect(page.locator('#screen-updates')).toBeHidden();
+  await expect(page.locator('#search-input')).toHaveValue(LEGACY_QUERY);
+  await expect(page.locator('#toast-slot .toast')).toHaveCount(0);
+  expect(mock.calls.some((call) => call.method === 'GET' && call.path === '/api/search'
+    && decodeURIComponent(call.search.replace(/\+/g, ' ')).includes(LEGACY_QUERY))).toBe(true);
+
+  // Back on Updates, the approved legacy card stays in the main list with
+  // the resumable status line — never an approved group or tally (§4.8).
+  await openUpdates(page);
+  await expect(page.locator('.updates-card')).toHaveCount(1);
+  await expect(page.locator('.updates-card')).toContainText('Fresh look opened — finish your calls in Review');
+  await expect(page.locator('#updates-approved-group')).toHaveCount(0);
+  await expect(page.locator('#updates-stats')).toHaveCount(0);
+  await assertNoJargon(page);
+
+  expect(errors).toEqual([]);
+});
+
+test('P1: Decline requires its one-line why and actually silences the ask', async ({ page }) => {
+  const errors = collectErrors(page);
+  const mock = realVoteMock();
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  // D opens the required-reason input; focus lands in it (§4.7).
+  await page.click('.updates-decline');
+  const input = page.locator('.decline-input');
+  await expect(input).toBeFocused();
+  await expect(page.locator('.decline-confirm')).toBeDisabled();
+  expect(decidePosts(mock)).toEqual([]);
+
+  // Esc cancels without recording anything; focus returns to the card.
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.decline-input')).toHaveCount(0);
+  expect(decidePosts(mock)).toEqual([]);
+
+  // The reason rides the decide body; the card leaves the inbox while the
+  // backlog lines stay (the checklist retires in Phase 4, not here).
+  await page.click('.updates-decline');
+  await page.fill('.decline-input', 'These were re-checked by hand already.');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#toast-slot .toast')).toContainText(
+    'Declined — kept on record with your reason. Your original call still stands.',
+  );
+  const posts = decidePosts(mock);
+  expect(posts).toHaveLength(1);
+  expect(posts[0]!.body).toEqual({
+    decision: 'decline',
+    cardRevision: LEGACY_REVISION,
+    reason: 'These were re-checked by hand already.',
+  });
+  await expect(page.locator('.updates-card')).toHaveCount(0);
+  await expect(page.locator('#updates-same-facts')).toHaveCount(0);
+  await expect(page.locator('#updates-backlog .write-line')).toHaveCount(3);
+  await assertNoJargon(page);
+
+  expect(errors).toEqual([]);
+});
+
+test('P1: an empty log renders the steady empty state', async ({ page }) => {
   const errors = collectErrors(page);
   // The empty-log picture (the real server reaches it through the
-  // WORKBENCH_JUDGMENTS_PATH override): an empty compile plan and no inbox
-  // suggestions.
+  // WORKBENCH_JUDGMENTS_PATH override): an empty derivation and an empty
+  // compile plan.
   const mock = makeMock();
   await installRoutes(page, mock);
   await page.goto(origin);
@@ -199,7 +286,7 @@ test('D2: an empty log renders the steady empty state', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test('D2: degraded mode renders the read-only banner and keeps the cards visible', async ({ page }) => {
+test('P1: degraded mode renders the read-only banner and disables every decide control', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = realVoteMock();
   mock.degraded.value = true;
@@ -211,9 +298,15 @@ test('D2: degraded mode renders the read-only banner and keeps the cards visible
   const banner = page.locator('#banner-slot .banner');
   await expect(banner).toBeVisible();
   await expect(banner).toContainText('Read-only right now.');
-  // The cards are already read-only, so they stay visible and unchanged.
+  // The card stays visible, but its decide controls are disabled (§4.8) and
+  // no keystroke can post.
   await expect(page.locator('.updates-card')).toHaveCount(1);
-  await expect(page.locator('.updates-card button')).toHaveText('Approve');
+  await expect(page.locator('.updates-approve')).toBeDisabled();
+  await expect(page.locator('.updates-decline')).toBeDisabled();
+  await expect(page.locator('.updates-park')).toBeDisabled();
+  await page.locator('.updates-card').first().focus();
+  await page.keyboard.press('n');
+  expect(decidePosts(mock)).toEqual([]);
   await expect(page.locator('#updates-backlog .write-line')).toHaveCount(3);
   await assertNoJargon(page);
 

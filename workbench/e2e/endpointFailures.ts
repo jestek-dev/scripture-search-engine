@@ -20,6 +20,10 @@ export const VALIDATION_TOAST = 'Something about this call was rejected — noth
 export const READ_ONLY_TOAST = 'Read-only right now — this call was not saved.';
 /** §3.11 nothing-renders entries. */
 export const NOTHING_RENDERS = 'nothing renders';
+/** Votes-to-engine plan §4.9 failure-copy parity: the Updates screen's GET. */
+export const UPDATES_LOAD_FAILED = 'Couldn’t load your updates just now — reload the page to try again.';
+/** Votes-to-engine plan §4.9 failure-copy parity: the decide POST. */
+export const UPDATES_DECIDE_FAILED = 'That decision didn’t save — check the connection and try again. Nothing was lost.';
 
 export interface EndpointFailureEntry {
   /** What the spec mocks to produce the failure. */
@@ -114,5 +118,13 @@ export const ENDPOINT_FAILURES: Readonly<Record<string, EndpointFailureEntry>> =
   apiCompileApply: {
     mockedFailure: 'POST /api/v2/compile/apply 500 on signing',
     expectedCopyOrToast: FALLBACK_POST, // unnamed POST failure toast
+  },
+  apiUpdates: {
+    mockedFailure: 'GET /api/v2/updates 500 on opening Updates',
+    expectedCopyOrToast: UPDATES_LOAD_FAILED, // inline, on the Updates screen (§4.9)
+  },
+  apiUpdatesDecide: {
+    mockedFailure: 'POST /api/v2/updates/cards/:id/decide 500 on Approve',
+    expectedCopyOrToast: UPDATES_DECIDE_FAILED, // toast (§4.9's decide sentence)
   },
 };

@@ -139,6 +139,8 @@ export const passages: Record<string, { reference?: string; verses: { verse: num
       { verse: 23, text: 'They are new every morning: great is thy faithfulness.' },
     ],
   },
+  'Jeremiah 4:10': { verses: [{ verse: 10, text: 'Ah, Lord GOD! surely thou hast greatly deceived this people, saying, Ye shall have peace; whereas the sword reacheth unto the soul.' }] },
+  'Exodus 15:11': { verses: [{ verse: 11, text: 'Who is like unto thee, O LORD, among the gods? who is like thee, glorious in holiness, fearful in praises, doing wonders?' }] },
 };
 for (let n = 4; n <= 14; n += 1) {
   passages[`Filler ${n}:${n}`] = { verses: [{ verse: n, text: `Filler verse text number ${n} with quiet words.` }] };
@@ -186,6 +188,15 @@ export interface MockState {
   applyCount: number;
   /** null-review case ids: GET /api/v2/cases/:uuid returns review:null. */
   nullReviewCases: Set<string>;
+  /** GET /api/v2/updates payload (default: the empty derivation). */
+  updatesPayload: Record<string, unknown> | null;
+  /** Whether GET /api/v2/updates 500s. */
+  updatesFails: boolean;
+  /** Custom decide POST responses; return null to fall through. */
+  decideResponder?: (cardId: string, body: Record<string, unknown>, n: number) => JudgmentResponse | null;
+  decideCount: number;
+  /** Extra discovery result sets by query (checked before the built-ins). */
+  extraSearches: Record<string, MockResult[]>;
 }
 
 export function caseMock(caseId: string, query: string, state = 'reviewing', at = '2026-08-20T00:00:00.000Z'): Record<string, unknown> {
@@ -228,7 +239,41 @@ export function makeMock(options: Partial<MockState> = {}): MockState {
     compilePreviewCount: 0,
     applyCount: 0,
     nullReviewCases: new Set(),
+    updatesPayload: null,
+    updatesFails: false,
+    decideCount: 0,
+    extraSearches: {},
     ...options,
+  };
+}
+
+/**
+ * A GET /api/v2/updates payload for the given derived cards, with the tally
+ * computed under the deriver's rule (op-bearing, un-routed cards only). The
+ * digest fields are 64-hex like the real server's — the D28 assertion must
+ * prove they never render.
+ */
+export function derivationMock(cards: readonly Record<string, unknown>[]): Record<string, unknown> {
+  const stateOf = (card: Record<string, unknown>): string => {
+    const state = card.state as Record<string, unknown> | undefined;
+    return state !== undefined && typeof state.decision === 'string' ? state.decision : 'drafted';
+  };
+  const opBearing = cards.filter((card) =>
+    card.kind !== 're-confirmation' && card.kind !== 'conflict' && card.kind !== 'needs-engineering'
+    && (card.routed === undefined || card.routed === null));
+  return {
+    cards,
+    derivationDigest: 'c'.repeat(64),
+    replayIdentity: identity,
+    trains: [],
+    unverifiablePriorTrains: [],
+    tally: {
+      drafted: opBearing.filter((card) => stateOf(card) === 'drafted').length,
+      approved: opBearing.filter((card) => stateOf(card) === 'approved' && card.parkedByDefault !== true).length,
+      declined: opBearing.filter((card) => stateOf(card) === 'declined').length,
+      parked: opBearing.filter((card) => stateOf(card) === 'parked' || card.parkedByDefault === true).length,
+    },
+    readOnly: false,
   };
 }
 
@@ -263,7 +308,9 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
   const review = (caseId: string, query: string) => {
     mock.tokenCounter += 1;
     mock.lastToken = `token-${mock.tokenCounter}`;
-    const results = mock.snapshotResults !== undefined ? mock.snapshotResults(query) : liveTop10(query);
+    const results = mock.snapshotResults !== undefined
+      ? mock.snapshotResults(query)
+      : mock.extraSearches[query] !== undefined ? mock.extraSearches[query].slice(0, 10) : liveTop10(query);
     return {
       freshness: 'fresh',
       token: mock.lastToken,
@@ -403,6 +450,48 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
       await route.fulfill(ok({ digest: body?.digest ?? '', outcome: { fixturesWritten: [], fixturesRemoved: [] } }));
       return;
     }
+    if (url.pathname === '/api/v2/updates' && request.method() === 'GET') {
+      if (mock.updatesFails) {
+        await route.fulfill(err(500, 'updates_unavailable', 'Updates could not be derived. Reload and retry.'));
+        return;
+      }
+      await route.fulfill(ok(mock.updatesPayload ?? derivationMock([])));
+      return;
+    }
+    const decideMatch = /^\/api\/v2\/updates\/cards\/([^/]+)\/decide$/.exec(url.pathname);
+    if (decideMatch !== null && request.method() === 'POST') {
+      mock.decideCount += 1;
+      if (mock.decideResponder !== undefined && body !== null) {
+        const custom = mock.decideResponder(decideMatch[1]!, body, mock.decideCount);
+        if (custom !== null) {
+          await route.fulfill({ status: custom.status, contentType: 'application/json', body: JSON.stringify(custom.payload) });
+          return;
+        }
+      }
+      // Default: validate the per-card pin and fold the decision onto the
+      // stored payload, so a refetch sees the decided state (the real
+      // store's latest-decide-wins fold).
+      const payload = mock.updatesPayload;
+      const cards = payload !== null && Array.isArray(payload.cards) ? payload.cards as Record<string, unknown>[] : [];
+      const index = cards.findIndex((card) => card.cardId === decideMatch[1]);
+      if (index === -1 || body === null) {
+        await route.fulfill(err(409, 'card_not_derived', 'You changed your call on this since the card was written. Reload your updates for the fresh card.'));
+        return;
+      }
+      const card = cards[index]!;
+      if (card.cardRevision !== body.cardRevision) {
+        await route.fulfill(err(409, 'stale_card_revision', 'The picture changed since you read this — reload your updates and decide against the fresh card.'));
+        return;
+      }
+      const decision = body.decision === 'approve' ? 'approved' : body.decision === 'decline' ? 'declined' : 'parked';
+      const cardState: Record<string, unknown> = { decision, decidedAt: '2026-08-28T00:00:00.000Z' };
+      if (body.answers !== undefined) cardState.answers = body.answers;
+      if (body.reason !== undefined) cardState.declineReason = body.reason;
+      const fresh = { ...card, state: cardState };
+      cards[index] = fresh;
+      await route.fulfill(created({ card: fresh }));
+      return;
+    }
     if (url.pathname === '/api/v2/judgments' && request.method() === 'GET') {
       const caseId = url.searchParams.get('caseId') ?? '';
       await route.fulfill(ok({ caseId, judgments: mock.judgments[caseId] ?? [] }));
@@ -440,6 +529,10 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
     }
     if (url.pathname === '/api/search') {
       const q = url.searchParams.get('q') ?? '';
+      if (mock.extraSearches[q] !== undefined) {
+        await route.fulfill(plain({ kind: 'discovery', query: q, results: mock.extraSearches[q], ...identity }));
+        return;
+      }
       if (q === 'mercy') {
         await route.fulfill(plain({ kind: 'discovery', query: q, results: mercyResults, ...identity }));
         return;

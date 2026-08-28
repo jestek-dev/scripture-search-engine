@@ -52,6 +52,31 @@ describe('study.html static snapshot contract', () => {
     expect(routes).toEqual(required);
   });
 
+  it('wires the Phase-1 updates routes through all three lists (votes-to-engine D6/F4)', () => {
+    // List 1: REQUIRED_INLINE_ROUTES — the serving layer fail-closes on it.
+    const snapshotSource = readFileSync(new URL('../src/staticSnapshot.ts', import.meta.url), 'utf8');
+    const requiredBlock = /const REQUIRED_INLINE_ROUTES = \[([\s\S]*?)\] as const;/.exec(snapshotSource);
+    const required = [...requiredBlock![1]!.matchAll(/'([^']+)'/g)].map((match) => match[1]!);
+    for (const literal of ['/api/v2/updates', '/api/v2/updates/cards/', '/decide']) {
+      expect(required, `REQUIRED_INLINE_ROUTES carries ${literal}`).toContain(literal);
+    }
+    // List 2: the page's ROUTES mirror (exact parity is asserted above; this
+    // pins the three literals by name so skipping the wiring goes red here).
+    const studySource = readFileSync(studyUrl, 'utf8');
+    const routesBlock = /const ROUTES = \[([\s\S]*?)\];/.exec(studySource);
+    const routes = [...routesBlock![1]!.matchAll(/'([^']+)'/g)].map((match) => match[1]!);
+    for (const literal of ['/api/v2/updates', '/api/v2/updates/cards/', '/decide']) {
+      expect(routes, `ROUTES mirrors ${literal}`).toContain(literal);
+    }
+    // List 3: requiresTrustedJson covers the decide POST (its runtime
+    // behavior is pinned by serverPreflight.integration.test.ts; this pins
+    // the literal so the three lists cannot silently drift apart).
+    const serverSource = readFileSync(new URL('../src/server.ts', import.meta.url), 'utf8');
+    const trustedBlock = /function requiresTrustedJson\(pathname: string\): boolean \{[\s\S]*?\n\}/.exec(serverSource);
+    expect(trustedBlock, 'server.ts declares requiresTrustedJson').not.toBeNull();
+    expect(trustedBlock![0]).toContain(String.raw`\/api\/v2\/updates\/cards\/[^/]+\/decide`);
+  });
+
   it('carries the workbench-static-protocol marker in the head', () => {
     const source = readFileSync(studyUrl, 'utf8');
     expect(source).toContain('<meta name="workbench-static-protocol" content="1">');

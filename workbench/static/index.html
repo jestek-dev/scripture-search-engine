@@ -319,6 +319,19 @@ button{font:inherit;}
 .updates-card{background:var(--surface);border:1px dashed var(--hairline-strong);border-radius:var(--r-panel);padding:14px 18px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
 .updates-card .card-because{color:var(--text-2);margin:0;max-width:64ch;}
 .updates-note{color:var(--text-3);margin:0;max-width:64ch;}
+/* Ordinary (op-bearing) cards are solid; the dashed base stays the
+   re-confirmation idiom (§4.3, the reopened chip's border style). */
+.updates-card.op{border-style:solid;}
+.updates-card h2{margin:0;font-size:17px;}
+.updates-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.updates-links{display:flex;gap:14px;}
+.updates-links button{border:0;background:none;padding:0;cursor:pointer;font-size:12px;text-decoration:underline;color:var(--text-3);}
+.updates-links button:hover{color:var(--text-2);}
+.updates-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.updates-decline-row{display:flex;gap:8px;align-items:center;width:100%;max-width:520px;}
+.updates-group{width:100%;}
+.updates-group summary{cursor:pointer;color:var(--text-2);padding:6px 0;}
+.updates-group .updates-card{margin-top:8px;}
 .write-group .group-query{font-weight:600;margin-bottom:4px;}
 .write-line{padding:3px 0;}
 .write-line .write-suffix{color:var(--text-3);}
@@ -427,6 +440,9 @@ button{font:inherit;}
     '/promotion/preview',
     '/promotion/apply',
     '/cancel',
+    '/api/v2/updates',
+    '/api/v2/updates/cards/',
+    '/decide',
   ];
   void ROUTES;
 
@@ -599,6 +615,54 @@ button{font:inherit;}
     updatesLineMissing: (ref, q, why) => ref + ' should show up for “' + q + '”' + (why !== '' ? ' — ' + why : ''),
     updatesLineDiagnosis: (ref, phrase, label, q, note) => ref + ' — ' + phrase + ' (“' + label + '”) for “' + q + '”' + (note !== '' ? ' — ' + note : ''),
     updatesLineFallback: 'One earlier suggestion still needs hand work.',
+    // §copy — P7 (the Updates screen, Phase 1 interactive — votes-to-engine
+    // plan §04 §4.3/§4.4/§4.8, §08 D7; strings §04 fixes ship verbatim).
+    updatesStatWaiting: (n) => n + ' waiting for your call',
+    updatesStatApproved: (n) => n + ' approved for the next update',
+    updatesHeadlineGuard: (ref, q) => 'Keep ' + ref + ' out of the top results for “' + q + '”',
+    updatesHeadlineExpect: (ref, n, q) => 'Make ' + ref + ' rank in the top ' + n + ' for “' + q + '”',
+    updatesHeadlineOrder: (above, below, q) => 'Keep ' + above + ' above ' + below + ' for “' + q + '”',
+    updatesHeadlineConflict: (ref, q) => 'Two of your calls disagree' + (ref !== null ? ' about ' + ref : '') + ' for “' + q + '”',
+    updatesHeadlineLookAgain: (q) => 'Look again: “' + q + '” has changed since your call',
+    updatesHeadlineEngineering: (q) => 'This one needs engineering: “' + q + '” needs more than the answer sheet',
+    updatesChangeGuard: (ref) => 'This will add a line to the answer sheet: ' + ref + ' must not rank for this search. The checks will hold every future update to it.',
+    updatesChangeAnchorRemove: (label) => 'It also removes this passage from the theme “' + label + '” in the theme files.',
+    updatesChangeSourceOwned: 'The theme listing comes from a published source, so it stays on record — the answer-sheet line keeps the passage out of results for this search.',
+    updatesChangeExpect: (ref, n) => 'This will add a line to the answer sheet saying ' + ref + ' belongs in the top ' + n + '.',
+    updatesChangeOrder: (above, below) => 'This will add a line to the answer sheet saying ' + above + ' should rank above ' + below + '.',
+    updatesChangeChapter: (book, chapter) => 'It also adds ' + book + ' ' + chapter + ' to the test corpus so this answer can be checked.',
+    updatesChangeThemeInvite: 'To help it rank, the passage can also be listed under a theme:',
+    updatesChangeEngineering: 'This adds nothing to the answer sheet. Approving sends the write-up to engineering with your calls attached; nothing else changes until an engineer takes it up.',
+    updatesEngineeringBecause: 'and the last update’s checks found the answer-sheet line alone doesn’t fix it',
+    updatesAlreadyInPlace: 'The answer sheet already has this line — approving records your call behind it.',
+    updatesRoutedApprove: 'Approving sends it to the curation queue with your call attached; nothing else changes here.',
+    updatesIdentityCarry: (names) => 'Since this call, ' + names + ' changed. The line still says what should be true for this search, so it carries over.',
+    updatesLookAgainBody: (frag, names) => 'You ' + frag + ', but ' + names + ' changed since then. Your call was about what you saw that day — take one fresh look before this goes into an update.',
+    updatesQuestionPrompt: 'Which theme should carry this passage?',
+    updatesNoneChip: 'None of these — needs a new theme',
+    updatesNoneSaved: 'Saved — the answer-sheet line goes in this update. Drafting the new theme is a separate, human-reviewed step.',
+    updatesConflictKeepOne: 'Keep one:',
+    updatesConflictHow: 'Picking one opens this search in Review so your pick is recorded as a fresh call.',
+    updatesSeeInSearch: 'See it in search',
+    updatesChangeCall: 'Change your call',
+    updatesLookAgain: 'Look again',
+    updatesDecline: 'Decline',
+    updatesNotNow: 'Not now',
+    updatesDeclineWhy: 'One line on why — this stays on record with the card.',
+    updatesChangeThis: 'Change this decision',
+    updatesGroupApproved: (n) => 'Approved for the next update (' + n + ')',
+    updatesGroupParked: (n) => 'Not now (' + n + ')',
+    updatesGroupEngineering: (n) => 'With engineering (' + n + ')',
+    updatesLegacyOpened: 'Fresh look opened — finish your calls in Review',
+    updatesApprovedToast: 'Approved — this goes into the next update. Nothing changes in search until that update is reviewed and goes live.',
+    updatesDeclinedToast: 'Declined — kept on record with your reason. Your original call still stands.',
+    updatesDecideFailed: 'That decision didn’t save — check the connection and try again. Nothing was lost.',
+    updatesStaleCard: 'The picture changed since you read this — reloading your updates now.',
+    updatesFreshCard: 'You changed your call on this since the card was written. Here is the fresh card.',
+    updatesEngineeringToast: 'It was written up for engineering with your calls attached.',
+    updatesStatusApproved: 'Approved — waiting for the next update.',
+    updatesStatusParked: 'Set aside — it returns at the top of the next cycle.',
+    updatesStatusEngineering: 'With engineering — nothing else changes until an engineer takes it up.',
     // §copy — P5 (onboarding, shortcut sheet, update notice)
     onboardTitle1: 'Move through the queue',
     onboardBody1: 'J moves to the next result, K moves back. Try it: press J.',
@@ -733,16 +797,27 @@ button{font:inherit;}
       outcome: null,     // null | {kind:'written', n} | {kind:'stale'} | {kind:'busy'}
       previewSeq: 0,
     },
-    // §state — P6 (the Updates screen, Phase 0 read-only). Data comes from
-    // the two existing calls only — POST /api/v2/compile/preview and
-    // GET /api/v2/inbox; the screen itself writes nothing.
+    // §state — P6/P7 (the Updates screen, Phase 1 interactive). Cards come
+    // from GET /api/v2/updates (the deriver); decisions post to the decide
+    // endpoint with the per-card cardRevision pin (§4.4). The compile plan's
+    // checklist still renders as the read-only backlog until the checklist
+    // retires (Phase 4).
     updates: {
       status: 'idle',    // 'idle' | 'loading' | 'done'
       seq: 0,            // drops stale open-screen fetches
+      derivation: null,  // GET /api/v2/updates payload, or null
+      deriveFailed: false,
       plan: null,        // the compile preview's plan, or null
       planFailed: false,
-      items: null,       // the inbox items, or null
-      inboxFailed: false,
+      reloading: false,  // a 409-triggered re-derive is in flight
+      focusCardId: null, // roving focus over the card list (§4.7)
+      answers: Object.create(null),     // cardId -> picked theme answer
+      declineOpen: Object.create(null), // cardId -> true (why input open)
+      posting: Object.create(null),     // cardId -> true (decide in flight)
+      reopened: Object.create(null),    // cardId -> true (U re-opened buttons)
+      refresh: Object.create(null),     // cardId -> true (§4.4 refresh line)
+      fm13: null,        // {query, targetKey} — FM-13 fresh-card notice slot
+      lastDecided: null, // cardId — the U target
     },
   };
 
@@ -825,6 +900,8 @@ button{font:inherit;}
   }
   function apiCompilePreview() { return postJson('/api/v2/compile/preview', {}); }
   function apiCompileApply(digest) { return postJson('/api/v2/compile/apply', { digest }); }
+  function apiUpdates() { return requestJson('/api/v2/updates'); }
+  function apiUpdatesDecide(cardId, body) { return postJson('/api/v2/updates/cards/' + encodeURIComponent(cardId) + '/decide', body); }
 
   // §stores
   // §3.6 client sort (binding): a case's touch time is the `at` of its LAST
@@ -4040,60 +4117,98 @@ button{font:inherit;}
     inner.appendChild(sign);
   }
 
-  // §updates — the Updates screen, Phase 0 read-only (votes-to-engine plan
-  // §04/§07/§08 D2). Three sections: (a) the legacy re-confirmation card —
-  // Approve alone, a pure hand-off that opens the query in Review (the
-  // existing stale-reconfirmation machinery's door; the screen itself writes
-  // nothing); (b) the compile plan's checklist as read-only backlog lines in
-  // plain language, headed by the same-facts note; (c) the steady empty
-  // state. Data comes from the two existing, fully-allowlisted calls only —
-  // POST /api/v2/compile/preview and GET /api/v2/inbox. No new endpoint, no
-  // server change. Raw diagnosis tokens and concept ids never render: they
-  // map through COPY.plainWhy and the boot /api/concepts labels.
+  // §updates — the Updates screen, Phase 1 interactive (votes-to-engine plan
+  // §04/§08 D7). Cards are DERIVED, never stored: GET /api/v2/updates runs
+  // the deterministic deriver over the logs and returns content-addressed
+  // cards; every decision is one POST to the decide endpoint pinned by the
+  // card's cardRevision (§4.4 — per card, never the global derivation
+  // digest, so a decide on one card never invalidates another). Decisions
+  // are pure staging: no file in eval/ or ontology/ changes, no build runs,
+  // no result moves — the honest-timing sentence (COPY.contract) stays
+  // exactly true. The compile plan's checklist still renders as the
+  // read-only backlog (it retires with Phase 4's D18), and every string maps
+  // through the reviewed COPY block — raw diagnosis tokens, concept ids,
+  // digests and UUIDs never render (D28).
   async function openUpdates() {
     const updates = state.updates;
     const seq = ++updates.seq;
     updates.status = 'loading';
+    updates.derivation = null;
+    updates.deriveFailed = false;
     updates.plan = null;
     updates.planFailed = false;
-    updates.items = null;
-    updates.inboxFailed = false;
+    updates.reloading = false;
+    updates.answers = Object.create(null);
+    updates.declineOpen = Object.create(null);
+    updates.posting = Object.create(null);
+    updates.reopened = Object.create(null);
+    updates.refresh = Object.create(null);
+    updates.fm13 = null;
     renderUpdates();
-    const [planOutcome, inboxOutcome] = await Promise.allSettled([apiCompilePreview(), apiInbox()]);
+    const [deriveOutcome, planOutcome] = await Promise.allSettled([apiUpdates(), apiCompilePreview()]);
     if (seq !== updates.seq) return;
+    if (deriveOutcome.status === 'fulfilled' && deriveOutcome.value !== null && Array.isArray(deriveOutcome.value.cards)) {
+      updates.derivation = deriveOutcome.value;
+    } else {
+      updates.deriveFailed = true;
+    }
     if (planOutcome.status === 'fulfilled' && planOutcome.value !== null && planOutcome.value.plan) {
       updates.plan = planOutcome.value.plan;
     } else {
       updates.planFailed = true;
     }
-    if (inboxOutcome.status === 'fulfilled' && inboxOutcome.value !== null && Array.isArray(inboxOutcome.value.items)) {
-      updates.items = inboxOutcome.value.items;
-    } else {
-      updates.inboxFailed = true;
-    }
     updates.status = 'done';
     renderUpdates();
   }
-  // Phase-0 cards are the pre-existing inbox stale-judgment suggestions
-  // rendered under §07.2's legacy re-confirmation copy (one per query — the
-  // inbox already dedupes per source:query). Phase 1's deriver replaces this
-  // rendering with real derived cards.
-  function updatesCardEntries() {
+  // §4.4's 409 recovery: re-derive only — never a silent retry of the
+  // decision. Answers and open inputs survive for cards that still derive;
+  // the same keystroke is one press away against the fresh card.
+  async function reloadUpdates() {
     const updates = state.updates;
-    if (updates.items === null) return [];
-    const seen = Object.create(null);
-    const cards = [];
-    for (const item of updates.items) {
-      if (!item || typeof item !== 'object' || item.kind !== 'suggestion') continue;
-      const source = item.meta && typeof item.meta.source === 'string' ? item.meta.source : null;
-      if (source !== 'stale-judgment') continue;
-      const query = item.suggestion && typeof item.suggestion.query === 'string' ? item.suggestion.query : null;
-      if (query === null || seen[normalizeQuery(query)] === true) continue;
-      seen[normalizeQuery(query)] = true;
-      const ageDays = item.meta && typeof item.meta.ageDays === 'number' ? item.meta.ageDays : null;
-      cards.push({ query, ageDays });
+    const seq = updates.seq;
+    updates.reloading = true;
+    renderUpdates();
+    let derivation = null;
+    try { derivation = await apiUpdates(); } catch (error) { derivation = null; }
+    if (seq !== updates.seq || state.screen !== 'updates') return;
+    updates.reloading = false;
+    updates.refresh = Object.create(null);
+    if (derivation !== null && Array.isArray(derivation.cards)) {
+      updates.derivation = derivation;
+      updates.deriveFailed = false;
+    } else {
+      updates.deriveFailed = true;
     }
-    return cards;
+    renderUpdates();
+  }
+  function updatesCards() {
+    const derivation = state.updates.derivation;
+    return derivation !== null && Array.isArray(derivation.cards) ? derivation.cards : [];
+  }
+  function cardDecision(card) {
+    return card.state && typeof card.state.decision === 'string' ? card.state.decision : 'drafted';
+  }
+  function isLegacyCard(card) {
+    return card.legacy !== undefined && card.legacy !== null;
+  }
+  // Op-bearing kinds queue a change; re-confirmation, conflict, and
+  // needs-engineering cards stage nothing (§4.2's tally exclusion).
+  function isOpBearing(card) {
+    return card.kind !== 're-confirmation' && card.kind !== 'conflict' && card.kind !== 'needs-engineering';
+  }
+  function latestVoteAt(card) {
+    let latest = '';
+    for (const vote of card.votes || []) {
+      if (typeof vote.at === 'string' && vote.at > latest) latest = vote.at;
+    }
+    return latest;
+  }
+  // The vote's day in words ("Aug 27"); UTC keeps it stable across timezones.
+  function shortDate(iso) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const then = new Date(iso);
+    if (typeof iso !== 'string' || Number.isNaN(then.getTime())) return 'an earlier visit';
+    return months[then.getUTCMonth()] + ' ' + then.getUTCDate();
   }
   function updatesChecklist() {
     const plan = state.updates.plan;
@@ -4141,22 +4256,6 @@ button{font:inherit;}
     if (phrase === undefined) return COPY.updatesLineFallback;
     return COPY.updatesLineDiagnosis(parsed.reference, phrase, conceptLabelOf(parsed.conceptId), parsed.query, parsed.note);
   }
-  // The card's because-line facts come from the same compile checklist the
-  // backlog lines render — same facts twice, one way to act (§4.2). The rote
-  // "fits the theme" note captured nothing (§07.1) and is not quoted.
-  function updatesBecauseRefs(query) {
-    const parts = [];
-    for (const line of updatesChecklist()) {
-      const parsed = parseChecklistLine(line);
-      if (parsed === null || parsed.kind !== 'missing') continue;
-      if (normalizeQuery(parsed.query) !== normalizeQuery(query)) continue;
-      const note = parsed.why;
-      const quotable = note !== '' && !note.startsWith('text: "')
-        && note.trim().toLowerCase() !== 'fits the theme';
-      parts.push(parsed.reference + (quotable ? ' (“' + note + '”)' : ''));
-    }
-    return parts;
-  }
   function joinRefList(parts) {
     if (parts.length <= 1) return parts.join('');
     if (parts.length === 2) return parts[0] + ' and ' + parts[1];
@@ -4166,17 +4265,546 @@ button{font:inherit;}
     const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
     return (n <= 9 ? words[n] : String(n)) + ' ' + (n === 1 ? 'passage' : 'passages');
   }
-  // The suggestion's age in days (the inbox's only time fact) recovers the
-  // vote date; UTC keeps the rendered day stable across timezones.
-  function updatesCardDate(ageDays) {
-    if (ageDays === null) return 'an earlier visit';
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const then = new Date(Date.now() - ageDays * 86400000);
-    return months[then.getUTCMonth()] + ' ' + then.getUTCDate();
+  // A vote's quotable note: his own words or the verse excerpt (§4.3's
+  // because-line rule). The rote "fits the theme" captured nothing (§07.1)
+  // and the `text: "…"` prefix is a storage token — neither is quoted as-is.
+  function quotableNote(vote) {
+    const note = typeof vote.note === 'string' ? vote.note : '';
+    if (note !== '' && !note.startsWith('text: "') && note.trim().toLowerCase() !== 'fits the theme') return note;
+    return typeof vote.excerpt === 'string' && vote.excerpt !== '' ? vote.excerpt : null;
+  }
+  function voteActionLabel(vote) {
+    if (vote.action === 'essential') return 'Essential' + (typeof vote.withinTop === 'number' ? ', top ' + vote.withinTop : '');
+    if (vote.action === 'irrelevant') return 'Not relevant';
+    if (vote.action === 'missing') return 'Missing passage';
+    if (vote.action === 'prefer') return 'Prefer ' + vote.preferredReference;
+    return 'Your call';
+  }
+  // One vote → one because-fragment ("you marked it Not relevant on Aug 27 —
+  // matched words, not meaning"). The card attributes, never adjudicates
+  // (covenant #6): diagnosis tokens map through COPY.plainWhy, never render.
+  function voteFragment(vote, headlineRef, withDate) {
+    const subject = typeof vote.reference === 'string' && vote.reference !== ''
+      ? (vote.reference === headlineRef ? 'it' : vote.reference)
+      : 'it';
+    const when = withDate ? ' on ' + shortDate(vote.at) : '';
+    const phrase = vote.diagnosis !== undefined ? COPY.plainWhy[vote.diagnosis] : undefined;
+    const note = quotableNote(vote);
+    if (vote.action === 'irrelevant') {
+      return 'you marked ' + subject + ' Not relevant' + when
+        + (phrase !== undefined ? ' — ' + phrase : note !== null ? ' — “' + note + '”' : '');
+    }
+    if (vote.action === 'missing') {
+      return 'you suggested ' + subject + ' as a Missing passage' + when + (note !== null ? ' — “' + note + '”' : '');
+    }
+    if (vote.action === 'essential') {
+      return 'you marked ' + subject + ' Essential' + (typeof vote.withinTop === 'number' ? ' (top ' + vote.withinTop + ')' : '')
+        + when + (note !== null ? ' — “' + note + '”' : '');
+    }
+    if (vote.action === 'prefer') {
+      return 'you said ' + vote.preferredReference + ' should rank above ' + vote.otherReference + when;
+    }
+    return 'you made a call' + when;
+  }
+  function cardPrimaryRef(card) {
+    const derived = card.derived || {};
+    if (derived.guard !== undefined) return derived.guard.ref;
+    if (derived.expectation !== undefined) return derived.expectation.ref;
+    const vote = (card.votes || [])[0];
+    return vote !== undefined && typeof vote.reference === 'string' ? vote.reference : null;
+  }
+  function cardHeadline(card) {
+    const derived = card.derived || {};
+    if (card.kind === 'needs-engineering') return COPY.updatesHeadlineEngineering(card.query);
+    if (card.kind === 'conflict') {
+      const refs = (card.votes || []).map((vote) => vote.reference).filter((ref) => typeof ref === 'string');
+      const shared = refs.length > 0 && refs.every((ref) => ref === refs[0]) ? refs[0] : null;
+      return COPY.updatesHeadlineConflict(shared, card.query);
+    }
+    if (card.kind === 're-confirmation') {
+      return isLegacyCard(card) ? COPY.updatesLegacyTitle(card.query) : COPY.updatesHeadlineLookAgain(card.query);
+    }
+    if (derived.guard !== undefined) return COPY.updatesHeadlineGuard(derived.guard.ref, card.query);
+    if (derived.expectation !== undefined) return COPY.updatesHeadlineExpect(derived.expectation.ref, derived.expectation.withinTop, card.query);
+    if (derived.preferredOrder !== undefined) return COPY.updatesHeadlineOrder(derived.preferredOrder.above, derived.preferredOrder.below, card.query);
+    // A routed card derives no operation; the vote's own reference heads it.
+    const vote = (card.votes || [])[0];
+    const ref = vote !== undefined && typeof vote.reference === 'string' ? vote.reference : null;
+    const withinTop = vote !== undefined && typeof vote.withinTop === 'number' ? vote.withinTop : 10;
+    return ref !== null ? COPY.updatesHeadlineExpect(ref, withinTop, card.query) : COPY.updatesHeadlineConflict(null, card.query);
+  }
+  function cardBecause(card) {
+    const headlineRef = cardPrimaryRef(card);
+    const useIt = card.kind !== 'needs-engineering'; // its headline names the query, not the passage
+    const parts = (card.votes || []).map((vote) => voteFragment(vote, useIt ? headlineRef : null, true));
+    let sentence = 'Because ' + parts.join(', and ');
+    if (card.kind === 'needs-engineering') sentence += ' — ' + COPY.updatesEngineeringBecause;
+    return sentence + '.';
+  }
+  // The what-will-change line(s), per the §4.3 grammar and the V3 ownership
+  // arms: answer-sheet lines in plain words, the theme-files arm only when
+  // the row is editorially owned, the source-owned explanation otherwise.
+  function cardChangeLines(card) {
+    const derived = card.derived || {};
+    const lines = [];
+    if (card.routed !== undefined && card.routed !== null) {
+      lines.push(String(card.routed.reason) + ' ' + COPY.updatesRoutedApprove);
+      return lines;
+    }
+    if (card.kind === 'needs-engineering') {
+      lines.push(COPY.updatesChangeEngineering);
+      return lines;
+    }
+    let main = '';
+    if (derived.guard !== undefined) {
+      main = COPY.updatesChangeGuard(derived.guard.ref);
+      if (derived.anchorRemove !== undefined) main += ' ' + COPY.updatesChangeAnchorRemove(conceptLabelOf(derived.anchorRemove.conceptId));
+      if (derived.sourceOwnedAnchor !== undefined) main += ' ' + COPY.updatesChangeSourceOwned;
+    } else if (derived.expectation !== undefined) {
+      main = COPY.updatesChangeExpect(derived.expectation.ref, derived.expectation.withinTop);
+    } else if (derived.preferredOrder !== undefined) {
+      main = COPY.updatesChangeOrder(derived.preferredOrder.above, derived.preferredOrder.below);
+    }
+    if (derived.chapterAdd !== undefined) {
+      main += (main !== '' ? ' ' : '') + COPY.updatesChangeChapter(derived.chapterAdd.book, derived.chapterAdd.chapter);
+    }
+    if (main !== '') lines.push(main);
+    if (card.question !== undefined && card.question !== null) lines.push(COPY.updatesChangeThemeInvite);
+    if (card.alreadyInPlace === true) lines.push(COPY.updatesAlreadyInPlace);
+    return lines;
+  }
+  // Identity dimensions in plain words (D28: the fingerprints themselves
+  // stay behind the Advanced door; only what moved is named here).
+  function identityNames(card) {
+    const names = [];
+    const plain = { engineVersion: 'the search engine', corpusFingerprint: 'the scripture text', layerFingerprint: 'the theme files' };
+    for (const identityNote of card.identityNotes || []) {
+      const name = plain[identityNote.dimension];
+      if (name !== undefined && names.indexOf(name) === -1) names.push(name);
+    }
+    return joinRefList(names.length > 0 ? names : ['the engine']);
+  }
+  function updatesReadOnly() {
+    const derivation = state.updates.derivation;
+    return degradedReadOnly() || (derivation !== null && derivation.readOnly === true);
+  }
+  function openInReview(query) {
+    document.getElementById('search-input').value = query;
+    void submitSearch(query);
+  }
+  // The zone-1 tally rule, mirrored from the deriver so the row stays
+  // current between derives: op-bearing, un-routed cards only (§4.2).
+  function updatesTallyOf(cards) {
+    const opBearing = cards.filter((card) => isOpBearing(card) && (card.routed === undefined || card.routed === null));
+    return {
+      drafted: opBearing.filter((card) => cardDecision(card) === 'drafted').length,
+      approved: opBearing.filter((card) => cardDecision(card) === 'approved' && card.parkedByDefault !== true).length,
+      declined: opBearing.filter((card) => cardDecision(card) === 'declined').length,
+      parked: opBearing.filter((card) => cardDecision(card) === 'parked' || card.parkedByDefault === true).length,
+    };
+  }
+  function replaceUpdatesCard(fresh) {
+    const derivation = state.updates.derivation;
+    if (derivation === null || fresh === null || typeof fresh.cardId !== 'string') return;
+    derivation.cards = derivation.cards.map((card) => card.cardId === fresh.cardId ? fresh : card);
+    derivation.tally = updatesTallyOf(derivation.cards);
+  }
+  function updatesGroups() {
+    const groups = { main: [], approved: [], engineering: [], parked: [] };
+    for (const card of updatesCards()) {
+      const decision = cardDecision(card);
+      if (decision === 'parked' || card.parkedByDefault === true) { groups.parked.push(card); continue; }
+      if (decision === 'declined') continue; // on record in the log; renders nowhere (§4.2)
+      if (decision === 'approved') {
+        // §4.8's approved-legacy row: a fresh look opened but not yet cast
+        // stays in the main list, resumable — never in the approved group.
+        if (card.kind === 're-confirmation') { groups.main.push(card); continue; }
+        if (card.kind === 'needs-engineering') { groups.engineering.push(card); continue; }
+        groups.approved.push(card);
+        continue;
+      }
+      groups.main.push(card);
+    }
+    // Most recent contributing vote first (§4.2); ties keep derived order.
+    groups.main.sort((a, b) => latestVoteAt(b) < latestVoteAt(a) ? -1 : latestVoteAt(b) > latestVoteAt(a) ? 1 : 0);
+    return groups;
+  }
+  // One decide POST per §4.4: the body carries the decision, the question's
+  // answer when one was asked, and the per-card cardRevision pin. The 409
+  // arms re-render before anything is recorded — never a silent retry.
+  async function decideCard(card, decision, reason) {
+    const updates = state.updates;
+    if (updatesReadOnly()) { showToast(COPY.readOnlyToast); return; }
+    if (updates.posting[card.cardId] === true) return;
+    const body = { decision, cardRevision: card.cardRevision };
+    if (decision === 'approve' && card.question !== undefined && card.question !== null) {
+      const answer = updates.answers[card.cardId];
+      if (typeof answer !== 'string' || answer === '') return; // Approve stays disabled until the human answers (V3)
+      const answers = {};
+      answers[card.question.id] = answer;
+      body.answers = answers;
+    }
+    if (decision === 'decline') {
+      if (typeof reason !== 'string' || reason.trim() === '') return;
+      body.reason = reason.trim();
+    }
+    updates.posting[card.cardId] = true;
+    renderUpdates();
+    let fresh = null;
+    try {
+      const data = await apiUpdatesDecide(card.cardId, body);
+      fresh = data !== null && typeof data === 'object' && data.card ? data.card : null;
+    } catch (error) {
+      delete updates.posting[card.cardId];
+      if (error && error.status === 409 && error.code === 'stale_card_revision') {
+        // §4.4 refreshed-card arm: the refresh line shows in place and the
+        // derivation reloads; the same decision is one keystroke away.
+        updates.refresh[card.cardId] = true;
+        renderUpdates();
+        void reloadUpdates();
+        return;
+      }
+      if (error && error.status === 409 && error.code === 'card_not_derived') {
+        // §4.4 replaced-card arm (FM-13): this id no longer derives; the
+        // fresh card renders where this one stood with the FM-13 sentence.
+        updates.fm13 = { query: card.query, targetKey: card.targetKey };
+        void reloadUpdates();
+        return;
+      }
+      if (error && (error.status === 503 || error.code === 'startup_degraded_read_only' || error.code === 'artifact_unavailable')) {
+        showToast(COPY.readOnlyToast);
+      } else {
+        showToast(COPY.updatesDecideFailed);
+      }
+      renderUpdates();
+      return;
+    }
+    delete updates.posting[card.cardId];
+    delete updates.declineOpen[card.cardId];
+    delete updates.reopened[card.cardId];
+    updates.lastDecided = card.cardId;
+    if (fresh !== null) replaceUpdatesCard(fresh);
+    const legacy = isLegacyCard(card);
+    if (decision === 'approve' && !legacy) {
+      if (card.kind === 'needs-engineering') showToast(COPY.updatesEngineeringToast);
+      else if (isOpBearing(card) && (card.routed === undefined || card.routed === null)) showToast(COPY.updatesApprovedToast);
+    }
+    if (decision === 'decline') showToast(COPY.updatesDeclinedToast);
+    renderUpdates();
+    if (decision === 'approve' && legacy) {
+      // §07.2: the same press records `approved` AND opens the fresh look —
+      // the receipt is the opened session itself, never an approved-group
+      // move or a "goes into the next update" toast (§4.4's divergent row).
+      openInReview(card.query);
+    }
+  }
+  function openDeclineInput(card) {
+    const updates = state.updates;
+    updates.declineOpen[card.cardId] = true;
+    updates.focusDecline = card.cardId;
+    renderUpdates();
+  }
+  function closeDeclineInput(card) {
+    delete state.updates.declineOpen[card.cardId];
+    state.updates.focusCardId = card.cardId;
+    renderUpdates();
+    focusUpdatesCardById(card.cardId);
+  }
+  // U (§4.7): re-open a decided card's buttons — the correction is simply
+  // another decide event from the closed set (latest wins pre-seal); U
+  // itself appends nothing.
+  function reopenCardButtons(card) {
+    const updates = state.updates;
+    updates.reopened[card.cardId] = true;
+    if (card.question && card.state && card.state.answers && typeof card.state.answers[card.question.id] === 'string') {
+      updates.answers[card.cardId] = card.state.answers[card.question.id];
+    }
+    updates.focusCardId = card.cardId;
+    renderUpdates();
+    focusUpdatesCardById(card.cardId);
+  }
+  function reopenLastDecided() {
+    const cardId = state.updates.lastDecided;
+    if (cardId === null) return;
+    const card = updatesCards().find((candidate) => candidate.cardId === cardId);
+    if (card === undefined || cardDecision(card) === 'drafted') return;
+    reopenCardButtons(card);
+  }
+  // §focus — roving tabindex over the rendered cards (§4.7), the Review
+  // results column's idiom applied to this list.
+  function updatesFocusables() {
+    return Array.prototype.slice.call(document.querySelectorAll('#screen-updates .updates-card'));
+  }
+  function focusUpdatesCardById(cardId) {
+    const els = updatesFocusables();
+    const index = els.findIndex((el) => el.dataset.cardId === cardId);
+    if (index === -1) return;
+    els.forEach((el, i) => { el.tabIndex = i === index ? 0 : -1; });
+    els[index].focus();
+    state.updates.focusCardId = cardId;
+  }
+  function moveUpdatesFocus(delta) {
+    const els = updatesFocusables();
+    if (els.length === 0) return;
+    let index = els.findIndex((el) => el.dataset.cardId === state.updates.focusCardId);
+    index = index === -1 ? 0 : Math.max(0, Math.min(els.length - 1, index + delta));
+    els.forEach((el, i) => { el.tabIndex = i === index ? 0 : -1; });
+    els[index].focus();
+    state.updates.focusCardId = els[index].dataset.cardId;
+  }
+  function focusedUpdatesCard() {
+    const cardId = state.updates.focusCardId;
+    if (cardId === null) return null;
+    return updatesCards().find((card) => card.cardId === cardId) ?? null;
+  }
+  // A/D/N on the focused card (§4.7). The variants keep their own shapes:
+  // conflict and look-again cards take Not now only; the legacy card's A is
+  // the fresh-look hand-off (§07.2).
+  function updatesKeyAction(card, key) {
+    const decision = cardDecision(card);
+    const legacy = isLegacyCard(card);
+    const lookAgain = card.kind === 're-confirmation' && !legacy;
+    const conflict = card.kind === 'conflict';
+    const buttonsOpen = decision === 'drafted' || state.updates.reopened[card.cardId] === true || legacy;
+    if (!buttonsOpen) return;
+    if (key === 'n') {
+      if (decision !== 'parked' || state.updates.reopened[card.cardId] === true) void decideCard(card, 'park');
+      return;
+    }
+    if (conflict || lookAgain) return; // their A/D live on explicit buttons only
+    if (key === 'a') {
+      if (legacy && decision === 'approved') { openInReview(card.query); return; }
+      void decideCard(card, 'approve');
+      return;
+    }
+    if (key === 'd') openDeclineInput(card);
+  }
+  // §4.7's button chrome: keycap chips are aria-hidden; the key rides the
+  // accessible name instead.
+  function updatesButton(keycap, labelText, className) {
+    const button = node('button', className);
+    button.type = 'button';
+    if (keycap !== null) {
+      const kbd = node('span', 'kbd', keycap);
+      kbd.setAttribute('aria-hidden', 'true');
+      button.appendChild(kbd);
+      button.setAttribute('aria-label', labelText + ' (' + keycap + ')');
+    }
+    button.appendChild(node('span', '', labelText));
+    return button;
+  }
+  function updatesQuietLink(labelText, onClick) {
+    const link = node('button', '', labelText);
+    link.type = 'button';
+    link.addEventListener('click', onClick);
+    return link;
+  }
+  function firstLetterUp(text) {
+    return text === '' ? text : text.charAt(0).toUpperCase() + text.slice(1);
+  }
+  // One full card, per the §4.3 grammar: headline, because-line,
+  // what-will-change, at most one question with deterministic chips, and the
+  // Approve / Decline / Not now row. Kind variants render their blessed
+  // shapes (§4.3): the two re-confirmation forms, the conflict card's
+  // two-choice row, and the needs-engineering hand-off.
+  function buildUpdatesFullCard(card) {
+    const updates = state.updates;
+    const readOnly = updatesReadOnly();
+    const decision = cardDecision(card);
+    const legacy = isLegacyCard(card);
+    const lookAgain = card.kind === 're-confirmation' && !legacy;
+    const conflict = card.kind === 'conflict';
+    const article = node('article', 'updates-card' + (card.kind === 're-confirmation' ? '' : ' op'));
+    article.dataset.cardId = card.cardId;
+    article.dataset.kind = card.kind;
+    article.tabIndex = -1;
+    article.addEventListener('focus', () => { state.updates.focusCardId = card.cardId; });
+    const headline = cardHeadline(card);
+    article.setAttribute('aria-label', headline);
+    if (updates.fm13 !== null && updates.fm13.query === card.query && updates.fm13.targetKey === card.targetKey) {
+      const freshLine = node('p', 'updates-note fm13-line', COPY.updatesFreshCard);
+      freshLine.setAttribute('role', 'status');
+      article.appendChild(freshLine);
+    }
+    article.appendChild(node('h2', '', headline));
+    if (legacy) {
+      const votes = card.votes || [];
+      const parts = votes.map((vote) => {
+        const noteText = quotableNote(vote);
+        return (vote.reference || '') + (noteText !== null ? ' (“' + noteText + '”)' : '');
+      });
+      if (parts.length > 0) {
+        article.appendChild(node('p', 'card-because', COPY.updatesLegacyBecause(
+          passageCountPhrase(parts.length), shortDate(votes[0].at), joinRefList(parts),
+        )));
+      }
+      article.appendChild(node('p', 'card-because', COPY.updatesLegacyBody));
+      if (decision === 'approved') article.appendChild(node('p', 'updates-note', COPY.updatesLegacyOpened));
+    } else if (lookAgain) {
+      const vote = (card.votes || [])[0] || {};
+      article.appendChild(node('p', 'card-because',
+        firstLetterUp(COPY.updatesLookAgainBody(voteFragment(vote, null, true), identityNames(card)))));
+    } else if (conflict) {
+      const sides = card.conflict && Array.isArray(card.conflict.sides) ? card.conflict.sides : [];
+      const sideText = sides.map((side) => {
+        const vote = (side.votes || [])[0] || {};
+        return 'On ' + shortDate(vote.at) + ' ' + voteFragment(vote, cardPrimaryRef(card), false) + '.';
+      }).join(' ');
+      article.appendChild(node('p', 'card-because', sideText));
+      article.appendChild(node('p', 'updates-note', COPY.updatesConflictHow));
+    } else {
+      article.appendChild(node('p', 'card-because', cardBecause(card)));
+      for (const line of cardChangeLines(card)) article.appendChild(node('p', 'card-because', line));
+      if ((card.identityNotes || []).length > 0) {
+        article.appendChild(node('p', 'updates-note', COPY.updatesIdentityCarry(identityNames(card))));
+      }
+    }
+    // At most one question (V3): deterministic candidate chips the deriver
+    // computed; the human answers — the machine never picks a concept.
+    const buttonsOpen = decision === 'drafted' || updates.reopened[card.cardId] === true || legacy;
+    if (!conflict && !lookAgain && card.question !== undefined && card.question !== null && buttonsOpen) {
+      const prompt = node('p', 'card-because');
+      prompt.appendChild(node('strong', '', COPY.updatesQuestionPrompt));
+      article.appendChild(prompt);
+      const chips = node('div', 'updates-chips');
+      chips.setAttribute('role', 'group');
+      chips.setAttribute('aria-label', COPY.updatesQuestionPrompt);
+      const addChip = (value, labelText) => {
+        const chip = node('button', 'pick-chip', labelText);
+        chip.type = 'button';
+        chip.setAttribute('aria-pressed', updates.answers[card.cardId] === value ? 'true' : 'false');
+        chip.addEventListener('click', () => {
+          updates.answers[card.cardId] = value;
+          updates.focusCardId = card.cardId;
+          renderUpdates();
+          focusUpdatesCardById(card.cardId);
+        });
+        chips.appendChild(chip);
+      };
+      for (const chip of card.question.chips || []) addChip(chip.conceptId, firstLetterUp(chip.label));
+      addChip('needs-new-theme', COPY.updatesNoneChip);
+      article.appendChild(chips);
+    }
+    if (decision === 'approved' && card.state && card.state.answers
+      && card.state.answers[card.question && card.question.id] === 'needs-new-theme') {
+      article.appendChild(node('p', 'updates-note', COPY.updatesNoneSaved));
+    }
+    // The two quiet links (§4.3) — ordinary and needs-engineering cards only.
+    if (!legacy && !lookAgain && !conflict) {
+      const links = node('div', 'updates-links');
+      links.appendChild(updatesQuietLink(COPY.updatesSeeInSearch, () => { openInReview(card.query); }));
+      links.appendChild(updatesQuietLink(COPY.updatesChangeCall, () => { openInReview(card.query); }));
+      article.appendChild(links);
+    }
+    if (updates.refresh[card.cardId] === true) {
+      const line = node('p', 'updates-note refresh-line', COPY.updatesStaleCard);
+      line.setAttribute('role', 'status');
+      article.appendChild(line);
+    }
+    // The action row. Every decision is reversible until the seal (§4.4's
+    // fold rule), so bare keystrokes are legal.
+    const posting = updates.posting[card.cardId] === true;
+    const actions = node('div', 'updates-actions');
+    if (conflict) {
+      actions.appendChild(node('strong', '', COPY.updatesConflictKeepOne));
+      for (const side of (card.conflict && card.conflict.sides) || []) {
+        const vote = (side.votes || [])[0] || {};
+        const pick = updatesButton(null, voteActionLabel(vote), 'btn-quiet');
+        pick.addEventListener('click', () => { openInReview(card.query); });
+        actions.appendChild(pick);
+      }
+    } else if (lookAgain) {
+      const look = updatesButton(null, COPY.updatesLookAgain, 'btn-primary updates-approve');
+      look.addEventListener('click', () => { openInReview(card.query); });
+      actions.appendChild(look);
+    } else if (buttonsOpen) {
+      const approve = updatesButton('A', COPY.updatesApprove, 'btn-primary updates-approve');
+      const needsAnswer = card.question !== undefined && card.question !== null
+        && (typeof updates.answers[card.cardId] !== 'string' || updates.answers[card.cardId] === '');
+      if ((readOnly || posting || needsAnswer) && !(legacy && decision === 'approved')) approve.disabled = readOnly || posting || needsAnswer;
+      if (legacy && decision === 'approved') {
+        // Resumable fresh look (§4.8): the primary re-opens the session.
+        approve.disabled = false;
+        approve.addEventListener('click', () => { openInReview(card.query); });
+      } else {
+        approve.addEventListener('click', () => { void decideCard(card, 'approve'); });
+      }
+      actions.appendChild(approve);
+      const decline = updatesButton('D', COPY.updatesDecline, 'btn-quiet updates-decline');
+      decline.disabled = readOnly || posting;
+      decline.addEventListener('click', () => { openDeclineInput(card); });
+      actions.appendChild(decline);
+    }
+    if (!lookAgain ? buttonsOpen || conflict : true) {
+      const park = updatesButton('N', COPY.updatesNotNow, 'btn-quiet updates-park');
+      park.disabled = readOnly || posting;
+      park.addEventListener('click', () => { void decideCard(card, 'park'); });
+      actions.appendChild(park);
+    }
+    if (actions.childNodes.length > 0) article.appendChild(actions);
+    // Decline's required one-line why (V5): focus lands in it, Esc cancels,
+    // Enter submits — mirroring the interview's why field.
+    if (updates.declineOpen[card.cardId] === true && !readOnly) {
+      const row = node('div', 'updates-decline-row');
+      const input = node('input', 'ref-input decline-input');
+      input.type = 'text';
+      input.setAttribute('aria-label', COPY.updatesDeclineWhy);
+      input.placeholder = COPY.updatesDeclineWhy;
+      const confirm = updatesButton(null, COPY.updatesDecline, 'btn-quiet decline-confirm');
+      confirm.disabled = true;
+      input.addEventListener('input', () => { confirm.disabled = input.value.trim() === ''; });
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') { event.preventDefault(); closeDeclineInput(card); }
+        if (event.key === 'Enter' && input.value.trim() !== '') { event.preventDefault(); void decideCard(card, 'decline', input.value); }
+      });
+      confirm.addEventListener('click', () => { void decideCard(card, 'decline', input.value); });
+      row.appendChild(input);
+      row.appendChild(confirm);
+      article.appendChild(row);
+    }
+    return article;
+  }
+  // A decided card's compact row inside its group: headline, an honest
+  // status line, and the way back — U or "Change this decision" re-opens the
+  // buttons (another decide event; latest wins pre-seal).
+  function buildUpdatesCompactCard(card, statusText) {
+    const article = node('article', 'updates-card' + (card.kind === 're-confirmation' ? '' : ' op'));
+    article.dataset.cardId = card.cardId;
+    article.dataset.kind = card.kind;
+    article.tabIndex = -1;
+    article.addEventListener('focus', () => { state.updates.focusCardId = card.cardId; });
+    const headline = cardHeadline(card);
+    article.setAttribute('aria-label', headline);
+    article.appendChild(node('h2', '', headline));
+    article.appendChild(node('p', 'updates-note', statusText));
+    if (card.question && card.state && card.state.answers && card.state.answers[card.question.id] === 'needs-new-theme') {
+      article.appendChild(node('p', 'updates-note', COPY.updatesNoneSaved));
+    }
+    const links = node('div', 'updates-links');
+    links.appendChild(updatesQuietLink(COPY.updatesChangeThis, () => { reopenCardButtons(card); }));
+    article.appendChild(links);
+    return article;
+  }
+  function buildUpdatesGroup(id, summaryText, cards, statusText, open) {
+    const details = node('details', 'updates-group');
+    details.id = id;
+    if (open || cards.some((card) => state.updates.reopened[card.cardId] === true)) details.open = true;
+    const summary = node('summary', '', summaryText);
+    details.appendChild(summary);
+    for (const card of cards) {
+      details.appendChild(state.updates.reopened[card.cardId] === true
+        ? buildUpdatesFullCard(card)
+        : buildUpdatesCompactCard(card, statusText));
+    }
+    return details;
   }
   function renderUpdates() {
     if (state.screen !== 'updates') return;
+    const updates = state.updates;
     const container = document.getElementById('screen-updates');
+    const activeBefore = document.activeElement;
+    const hadFocusInside = activeBefore !== null && typeof activeBefore.closest === 'function'
+      && activeBefore.closest('#screen-updates') !== null;
     clear(container);
     const inner = node('div', 'screen-inner');
     container.appendChild(inner);
@@ -4184,7 +4812,6 @@ button{font:inherit;}
     head.appendChild(node('h1', '', 'Updates'));
     head.appendChild(node('p', 'screen-sub', COPY.updatesIntro));
     inner.appendChild(head);
-    const updates = state.updates;
     if (updates.status === 'loading' || updates.status === 'idle') {
       const loading = node('p', 'screen-sub', COPY.updatesLoading);
       loading.id = 'updates-loading';
@@ -4192,41 +4819,61 @@ button{font:inherit;}
       for (let i = 0; i < 3; i += 1) inner.appendChild(node('div', 'skeleton-row'));
       return;
     }
-    // Section (a): the legacy re-confirmation card(s). Approve alone —
-    // Decline and Not now are absent, not disabled (they arrive with
-    // Phase 1's decide endpoint). Approve is a pure hand-off: it opens the
-    // query in Review for a fresh look; nothing is written from here.
-    const cards = updatesCardEntries();
-    for (const entry of cards) {
-      const card = node('div', 'updates-card');
-      card.appendChild(node('h2', '', COPY.updatesLegacyTitle(entry.query)));
-      const refs = updatesBecauseRefs(entry.query);
-      if (refs.length > 0) {
-        card.appendChild(node('p', 'card-because', COPY.updatesLegacyBecause(
-          passageCountPhrase(refs.length), updatesCardDate(entry.ageDays), joinRefList(refs),
-        )));
+    // Zone 1: the tally row (§4.2) — plain counts; re-confirmation, conflict
+    // and needs-engineering cards never count (they stage no change).
+    const derivation = updates.derivation;
+    if (derivation !== null && derivation.tally) {
+      const bits = [];
+      if (derivation.tally.drafted > 0) bits.push(COPY.updatesStatWaiting(derivation.tally.drafted));
+      if (derivation.tally.approved > 0) bits.push(COPY.updatesStatApproved(derivation.tally.approved));
+      if (bits.length > 0) {
+        const stats = node('p', 'screen-sub', bits.join(' · '));
+        stats.id = 'updates-stats';
+        inner.appendChild(stats);
       }
-      card.appendChild(node('p', 'card-because', COPY.updatesLegacyBody));
-      const approve = node('button', 'btn-primary updates-approve', COPY.updatesApprove);
-      approve.type = 'button';
-      const target = entry.query;
-      approve.addEventListener('click', () => {
-        document.getElementById('search-input').value = target;
-        void submitSearch(target);
-      });
-      card.appendChild(approve);
-      inner.appendChild(card);
     }
-    if (updates.inboxFailed) {
+    if (updates.reloading) {
+      const line = node('p', 'updates-note', COPY.updatesStaleCard);
+      line.id = 'updates-reloading';
+      line.setAttribute('role', 'status');
+      inner.appendChild(line);
+    }
+    // Zone 2: the card list — one column, most recent contributing vote
+    // first, a labeled region with roving focus (§4.2/§4.7).
+    const groups = updatesGroups();
+    if (groups.main.length > 0) {
+      const list = node('div', '');
+      list.id = 'updates-cards';
+      list.setAttribute('role', 'region');
+      list.setAttribute('aria-label', 'Suggested changes');
+      for (const card of groups.main) list.appendChild(buildUpdatesFullCard(card));
+      inner.appendChild(list);
+    }
+    if (updates.deriveFailed) {
       const failed = node('p', 'screen-sub', COPY.updatesFetchFailed);
       failed.id = 'updates-cards-failed';
       inner.appendChild(failed);
     }
-    // Section (b): the compile checklist as read-only backlog lines, headed
-    // by the same-facts note (rendered only when a card stands above it).
+    if (groups.approved.length > 0) {
+      inner.appendChild(buildUpdatesGroup('updates-approved-group',
+        COPY.updatesGroupApproved(groups.approved.length), groups.approved, COPY.updatesStatusApproved, true));
+    }
+    if (groups.engineering.length > 0) {
+      inner.appendChild(buildUpdatesGroup('updates-engineering-group',
+        COPY.updatesGroupEngineering(groups.engineering.length), groups.engineering, COPY.updatesStatusEngineering, false));
+    }
+    if (groups.parked.length > 0) {
+      inner.appendChild(buildUpdatesGroup('updates-parked-group',
+        COPY.updatesGroupParked(groups.parked.length), groups.parked, COPY.updatesStatusParked, false));
+    }
+    // Zone 3 (the update panel) arrives with Phase 2's trains.
+    // The backlog: the compile checklist as read-only lines, headed by the
+    // same-facts note when the legacy card stands above it (§4.2; the lines
+    // retire with the checklist, Phase 4).
     const lines = updatesChecklist();
+    const legacyRenders = groups.main.some((card) => isLegacyCard(card));
     if (lines.length > 0) {
-      if (cards.length > 0) {
+      if (legacyRenders) {
         const note = node('p', 'updates-note', COPY.updatesSameFacts);
         note.id = 'updates-same-facts';
         inner.appendChild(note);
@@ -4242,8 +4889,10 @@ button{font:inherit;}
       failed.id = 'updates-backlog-failed';
       inner.appendChild(failed);
     }
-    // Section (c): the steady empty state (§4.8 owns the string).
-    if (cards.length === 0 && lines.length === 0 && !updates.inboxFailed && !updates.planFailed) {
+    // The steady empty state (§4.8 owns the string).
+    const anyCard = groups.main.length > 0 || groups.approved.length > 0
+      || groups.engineering.length > 0 || groups.parked.length > 0;
+    if (!anyCard && lines.length === 0 && !updates.deriveFailed && !updates.planFailed) {
       const empty = node('p', 'screen-sub', COPY.updatesEmpty);
       empty.id = 'updates-empty';
       inner.appendChild(empty);
@@ -4252,6 +4901,23 @@ button{font:inherit;}
       go.id = 'updates-go-review';
       go.addEventListener('click', () => { setScreen('review'); });
       inner.appendChild(go);
+    }
+    // Roving tabindex: exactly one card is the tab stop (§4.7).
+    const els = updatesFocusables();
+    if (els.length > 0) {
+      let index = els.findIndex((el) => el.dataset.cardId === updates.focusCardId);
+      if (index === -1) { index = 0; updates.focusCardId = els[0].dataset.cardId; }
+      els.forEach((el, i) => { el.tabIndex = i === index ? 0 : -1; });
+      // A just-opened decline input takes focus (§4.7); otherwise a rebuild
+      // that destroyed the focused element restores the roving position.
+      if (updates.focusDecline !== undefined && updates.focusDecline !== null) {
+        const input = container.querySelector('.updates-card[data-card-id="' + updates.focusDecline + '"] .decline-input');
+        updates.focusDecline = null;
+        if (input !== null) input.focus();
+      } else if (hadFocusInside && document.activeElement !== null
+        && (document.activeElement === document.body || document.activeElement.closest('#screen-updates') === null)) {
+        els[index].focus();
+      }
     }
   }
 
@@ -4798,6 +5464,35 @@ button{font:inherit;}
         event.preventDefault();
         openCompareConfirm(choice, null);
       }
+      return;
+    }
+    // The Updates card list (§4.7): J/K and arrows rove; A/D/N decide the
+    // focused card (reversible until seal, so bare keystrokes are legal); U
+    // re-opens the last decided card's buttons. Typing targets returned
+    // above, so the decline why-input keeps its letters.
+    if (state.screen === 'updates') {
+      if ((letters && (event.key === 'j' || event.key === 'J')) || event.key === 'ArrowDown') {
+        event.preventDefault();
+        moveUpdatesFocus(1);
+        return;
+      }
+      if ((letters && (event.key === 'k' || event.key === 'K')) || event.key === 'ArrowUp') {
+        event.preventDefault();
+        moveUpdatesFocus(-1);
+        return;
+      }
+      if (!letters) return;
+      const updatesKey = event.key.toLowerCase();
+      if (updatesKey === 'u') {
+        event.preventDefault();
+        reopenLastDecided();
+        return;
+      }
+      if (updatesKey !== 'a' && updatesKey !== 'd' && updatesKey !== 'n') return;
+      const focusedCard = focusedUpdatesCard();
+      if (focusedCard === null) return;
+      event.preventDefault();
+      updatesKeyAction(focusedCard, updatesKey);
       return;
     }
     if (state.screen !== 'review') return;

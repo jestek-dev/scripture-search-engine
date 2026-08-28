@@ -37,6 +37,9 @@ const routes = [
   '/promotion/preview',
   '/promotion/apply',
   '/cancel',
+  '/api/v2/updates',
+  '/api/v2/updates/cards/',
+  '/decide',
 ];
 
 afterEach(async () => {
