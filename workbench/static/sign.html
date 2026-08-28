@@ -454,7 +454,7 @@ pre.commands{border:1px solid var(--hairline);border-radius:var(--r-ctl);backgro
       state.status = data.status;
       if (data.readOnly === true) {
         state.status = Object.assign({}, data.status, {
-          readOnlyNote: 'The workbench started read-only, so the write step will refuse until startup issues are fixed.',
+          readOnlyNote: 'The workbench started read-only (release artifact out of date) — signing still works; it does not use the release artifact.',
         });
       }
       renderStatus(state.status);
