@@ -233,6 +233,25 @@ function requiresTrustedJson(pathname: string): boolean {
   );
 }
 
+/**
+ * Signing (J39) is artifact-independent: its status, digests, and writes
+ * derive from a fresh fixture build and git history — the release artifact is
+ * never read. A stale artifact is exactly the state signing exists to repair,
+ * so these routes bypass the degraded-read-only gate. `/api/v2/checks` is
+ * listed because its degraded decision needs the parsed body: the handler
+ * itself still refuses every job except `gauntlet` (sign.html's verify step;
+ * it runs on the fixture bed, not the release artifact) while degraded.
+ * Every other mutation stays 503 in degraded mode.
+ */
+function bypassesDegradedReadOnly(pathname: string): boolean {
+  return (
+    pathname === '/api/v2/signing/review-packet' ||
+    pathname === '/api/v2/signing/preview' ||
+    pathname === '/api/v2/signing/write' ||
+    pathname === '/api/v2/checks'
+  );
+}
+
 function sendStudioError(response: http.ServerResponse, error: unknown): void {
   response.setHeader('cache-control', 'no-store');
   if (error instanceof StudioOperationsError) {
@@ -666,7 +685,7 @@ async function main(): Promise<void> {
         return;
       }
 
-      if (request.method === 'POST' && requiresTrustedJson(url.pathname) && degradedReadOnly) {
+      if (request.method === 'POST' && requiresTrustedJson(url.pathname) && degradedReadOnly && !bypassesDegradedReadOnly(url.pathname)) {
         if (isV2Request) {
           sendV2Error(
             response,
@@ -1353,6 +1372,20 @@ async function main(): Promise<void> {
           Object.keys(body).some((key) => key !== 'jobId')
         ) {
           sendV2Error(response, 400, 'bad_request', `Expected exactly one allowlisted jobId: ${JOB_IDS.join(', ')}.`);
+          return;
+        }
+        // Degraded-read-only carve-out (see bypassesDegradedReadOnly): only
+        // the gauntlet job — sign.html's verify step, which runs on the
+        // fixture bed and never reads the release artifact — may start while
+        // the workbench is degraded.
+        if (degradedReadOnly && body['jobId'] !== 'gauntlet') {
+          sendV2Error(
+            response,
+            503,
+            'startup_degraded_read_only',
+            'Workbench startup preflight failed; only the gauntlet check may run while degraded.',
+            machineStartup,
+          );
           return;
         }
         if (activeRepositoryMutation !== null || jobRunner.getActive() !== null) {
