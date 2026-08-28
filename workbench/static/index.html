@@ -316,6 +316,9 @@ button{font:inherit;}
 .tile .tile-label{color:var(--text-3);font-size:12px;margin-top:2px;}
 .pending-banner{padding:10px 14px;border:1px solid var(--hairline-strong);border-radius:var(--r-panel);background:var(--v-missing-wash);display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--ink);}
 .write-group{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-panel);padding:12px 16px;}
+.updates-card{background:var(--surface);border:1px dashed var(--hairline-strong);border-radius:var(--r-panel);padding:14px 18px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
+.updates-card .card-because{color:var(--text-2);margin:0;max-width:64ch;}
+.updates-note{color:var(--text-3);margin:0;max-width:64ch;}
 .write-group .group-query{font-weight:600;margin-bottom:4px;}
 .write-line{padding:3px 0;}
 .write-line .write-suffix{color:var(--text-3);}
@@ -355,6 +358,7 @@ button{font:inherit;}
     <button type="button" class="nav-item" data-nav="compare">Compare</button>
     <button type="button" class="nav-item" data-nav="history">History</button>
     <button type="button" class="nav-item" data-nav="finish">Finish up</button>
+    <button type="button" class="nav-item" data-nav="updates">Updates</button>
   </nav>
   <div class="header-spacer"></div>
   <button type="button" class="header-btn" id="lookup-open" aria-label="Quick lookup">
@@ -386,6 +390,7 @@ button{font:inherit;}
 <section class="screen" id="screen-compare" hidden aria-label="Compare"></section>
 <section class="screen" id="screen-history" hidden aria-label="History"></section>
 <section class="screen" id="screen-finish" hidden aria-label="Finish up"></section>
+<section class="screen" id="screen-updates" hidden aria-label="Updates"></section>
 <section class="screen" id="screen-advanced" hidden aria-label="Advanced"></section>
 <div id="actionbar-slot"></div>
 <div id="toast-slot"></div>
@@ -580,6 +585,20 @@ button{font:inherit;}
       'wrong-anchor': 'listed under a theme it does not speak about',
       'concept-misfire': 'speaks about the theme, but is not an answer for this query',
     },
+    // §copy — P6 (the Updates screen, Phase 0 read-only — votes-to-engine
+    // plan §04/§07/§08 D2; strings §04 and §07 fix ship verbatim from here)
+    updatesIntro: 'Your calls add up here. Each card below is one change your calls suggest — approve the ones that say what you meant, and they go into the next reviewed update.',
+    updatesLoading: 'Gathering your calls…',
+    updatesFetchFailed: 'Couldn’t load your updates just now — reload the page to try again.',
+    updatesEmpty: 'Nothing to review — your calls in Review will show up here as suggested changes.',
+    updatesSameFacts: 'These lines describe the same old suggestions as the card above — the card is the way to act on them.',
+    updatesLegacyTitle: (q) => 'Take a fresh look: “' + q + '”',
+    updatesLegacyBecause: (countPhrase, when, refs) => 'Because you suggested ' + countPhrase + ' for this search on ' + when + ' — ' + refs + ' — back before the engine covered the whole Bible.',
+    updatesLegacyBody: 'Nothing changes yet. The search has changed a lot since then, so your old suggestions need a fresh look before they can count. Approving opens this search with today’s results so you can make your calls again; passages that already show up well may not need anything. Your new calls then follow the normal path into the next reviewed update.',
+    updatesApprove: 'Approve',
+    updatesLineMissing: (ref, q, why) => ref + ' should show up for “' + q + '”' + (why !== '' ? ' — ' + why : ''),
+    updatesLineDiagnosis: (ref, phrase, label, q, note) => ref + ' — ' + phrase + ' (“' + label + '”) for “' + q + '”' + (note !== '' ? ' — ' + note : ''),
+    updatesLineFallback: 'One earlier suggestion still needs hand work.',
     // §copy — P5 (onboarding, shortcut sheet, update notice)
     onboardTitle1: 'Move through the queue',
     onboardBody1: 'J moves to the next result, K moves back. Try it: press J.',
@@ -676,7 +695,7 @@ button{font:inherit;}
     lastCommit: null,    // {kind:'verdict'|'rescue'|'suggestion'|'bulk', targetId?} — the U target
     caseSeq: 0,          // drops stale case-open fetches
     // §state — P4 (queue counts, screens, Compare, History, Finish up)
-    screen: 'review',    // 'review' | 'compare' | 'history' | 'finish' | 'advanced'
+    screen: 'review',    // 'review' | 'compare' | 'history' | 'finish' | 'updates' | 'advanced'
     caseCounts: Object.create(null),   // caseId -> {status,j,m,tiles,missingRefs,unjudgedTop} (§4.3 counts row)
     countsPending: Object.create(null),// caseId -> true while its pair is reserved/in flight
     compiledLocal: Object.create(null),// caseId -> true (§3.7 post-apply local compiled mark)
@@ -713,6 +732,17 @@ button{font:inherit;}
       applying: false,
       outcome: null,     // null | {kind:'written', n} | {kind:'stale'} | {kind:'busy'}
       previewSeq: 0,
+    },
+    // §state — P6 (the Updates screen, Phase 0 read-only). Data comes from
+    // the two existing calls only — POST /api/v2/compile/preview and
+    // GET /api/v2/inbox; the screen itself writes nothing.
+    updates: {
+      status: 'idle',    // 'idle' | 'loading' | 'done'
+      seq: 0,            // drops stale open-screen fetches
+      plan: null,        // the compile preview's plan, or null
+      planFailed: false,
+      items: null,       // the inbox items, or null
+      inboxFailed: false,
     },
   };
 
@@ -3110,6 +3140,7 @@ button{font:inherit;}
     if (name === 'compare') void openCompare();
     if (name === 'history') openHistory();
     if (name === 'finish') void openFinishUp();
+    if (name === 'updates') void openUpdates();
     renderAll({});
   }
   function renderScreenChrome() {
@@ -3117,6 +3148,7 @@ button{font:inherit;}
     document.getElementById('screen-compare').hidden = state.screen !== 'compare';
     document.getElementById('screen-history').hidden = state.screen !== 'history';
     document.getElementById('screen-finish').hidden = state.screen !== 'finish';
+    document.getElementById('screen-updates').hidden = state.screen !== 'updates';
     document.getElementById('screen-advanced').hidden = state.screen !== 'advanced';
     const navName = state.screen;
     document.querySelectorAll('.nav-item, .advanced-link').forEach((item) => {
@@ -3134,6 +3166,7 @@ button{font:inherit;}
     if (state.screen === 'compare') { renderCompare(); return; }
     if (state.screen === 'history') { renderHistory(); return; }
     if (state.screen === 'finish') { renderFinish(); return; }
+    if (state.screen === 'updates') { renderUpdates(); return; }
     if (state.screen === 'advanced') { renderAdvanced(); return; }
     // Re-rendering replaces the results DOM: when the focused element lived
     // there (or focus already fell back to body after an earlier rebuild),
@@ -4005,6 +4038,221 @@ button{font:inherit;}
     row.appendChild(write);
     sign.appendChild(row);
     inner.appendChild(sign);
+  }
+
+  // §updates — the Updates screen, Phase 0 read-only (votes-to-engine plan
+  // §04/§07/§08 D2). Three sections: (a) the legacy re-confirmation card —
+  // Approve alone, a pure hand-off that opens the query in Review (the
+  // existing stale-reconfirmation machinery's door; the screen itself writes
+  // nothing); (b) the compile plan's checklist as read-only backlog lines in
+  // plain language, headed by the same-facts note; (c) the steady empty
+  // state. Data comes from the two existing, fully-allowlisted calls only —
+  // POST /api/v2/compile/preview and GET /api/v2/inbox. No new endpoint, no
+  // server change. Raw diagnosis tokens and concept ids never render: they
+  // map through COPY.plainWhy and the boot /api/concepts labels.
+  async function openUpdates() {
+    const updates = state.updates;
+    const seq = ++updates.seq;
+    updates.status = 'loading';
+    updates.plan = null;
+    updates.planFailed = false;
+    updates.items = null;
+    updates.inboxFailed = false;
+    renderUpdates();
+    const [planOutcome, inboxOutcome] = await Promise.allSettled([apiCompilePreview(), apiInbox()]);
+    if (seq !== updates.seq) return;
+    if (planOutcome.status === 'fulfilled' && planOutcome.value !== null && planOutcome.value.plan) {
+      updates.plan = planOutcome.value.plan;
+    } else {
+      updates.planFailed = true;
+    }
+    if (inboxOutcome.status === 'fulfilled' && inboxOutcome.value !== null && Array.isArray(inboxOutcome.value.items)) {
+      updates.items = inboxOutcome.value.items;
+    } else {
+      updates.inboxFailed = true;
+    }
+    updates.status = 'done';
+    renderUpdates();
+  }
+  // Phase-0 cards are the pre-existing inbox stale-judgment suggestions
+  // rendered under §07.2's legacy re-confirmation copy (one per query — the
+  // inbox already dedupes per source:query). Phase 1's deriver replaces this
+  // rendering with real derived cards.
+  function updatesCardEntries() {
+    const updates = state.updates;
+    if (updates.items === null) return [];
+    const seen = Object.create(null);
+    const cards = [];
+    for (const item of updates.items) {
+      if (!item || typeof item !== 'object' || item.kind !== 'suggestion') continue;
+      const source = item.meta && typeof item.meta.source === 'string' ? item.meta.source : null;
+      if (source !== 'stale-judgment') continue;
+      const query = item.suggestion && typeof item.suggestion.query === 'string' ? item.suggestion.query : null;
+      if (query === null || seen[normalizeQuery(query)] === true) continue;
+      seen[normalizeQuery(query)] = true;
+      const ageDays = item.meta && typeof item.meta.ageDays === 'number' ? item.meta.ageDays : null;
+      cards.push({ query, ageDays });
+    }
+    return cards;
+  }
+  function updatesChecklist() {
+    const plan = state.updates.plan;
+    return plan !== null && Array.isArray(plan.checklist) ? plan.checklist : [];
+  }
+  // The compiler's two checklist line shapes (compileJudgments.ts, the
+  // manual-edit checklist), parsed for display only — the raw line never
+  // renders. Reference text never contains " — ", so the first em-dash after
+  // it is the boundary; notes may carry their own em-dashes.
+  function parseChecklistLine(line) {
+    if (typeof line !== 'string') return null;
+    const missing = /^\[ \] missing: "([\s\S]+?)" should surface ([\s\S]+?) — ([\s\S]*)$/.exec(line);
+    if (missing !== null) {
+      return { kind: 'missing', query: missing[1], reference: missing[2], why: missing[3] };
+    }
+    const diagnosis = /^\[ \] ([a-z-]+): concept (\S+) produced bad evidence on ([\s\S]+?) for "([\s\S]+?)" — ([\s\S]*)$/.exec(line);
+    if (diagnosis !== null) {
+      return {
+        kind: 'diagnosis', diagnosis: diagnosis[1], conceptId: diagnosis[2],
+        reference: diagnosis[3], query: diagnosis[4], note: diagnosis[5],
+      };
+    }
+    return null;
+  }
+  function conceptLabelOf(conceptId) {
+    for (const concept of state.concepts) {
+      if (concept && concept.id === conceptId && typeof concept.label === 'string') return concept.label;
+    }
+    // Fallback humanization — never the raw hyphenated id.
+    return String(conceptId).replace(/-/g, ' ');
+  }
+  // A missing line's why is the voter's note, or `text: "…"` when the
+  // server-attached passage text is the defense — render the quoted text
+  // itself then, never the `text:` token.
+  function missingWhyText(why) {
+    const excerpt = /^text: "([\s\S]*)"$/.exec(why);
+    return excerpt !== null ? '“' + excerpt[1] + '”' : why;
+  }
+  function updatesLineText(parsed) {
+    if (parsed === null) return COPY.updatesLineFallback;
+    if (parsed.kind === 'missing') {
+      return COPY.updatesLineMissing(parsed.reference, parsed.query, missingWhyText(parsed.why));
+    }
+    const phrase = COPY.plainWhy[parsed.diagnosis];
+    if (phrase === undefined) return COPY.updatesLineFallback;
+    return COPY.updatesLineDiagnosis(parsed.reference, phrase, conceptLabelOf(parsed.conceptId), parsed.query, parsed.note);
+  }
+  // The card's because-line facts come from the same compile checklist the
+  // backlog lines render — same facts twice, one way to act (§4.2). The rote
+  // "fits the theme" note captured nothing (§07.1) and is not quoted.
+  function updatesBecauseRefs(query) {
+    const parts = [];
+    for (const line of updatesChecklist()) {
+      const parsed = parseChecklistLine(line);
+      if (parsed === null || parsed.kind !== 'missing') continue;
+      if (normalizeQuery(parsed.query) !== normalizeQuery(query)) continue;
+      const note = parsed.why;
+      const quotable = note !== '' && !note.startsWith('text: "')
+        && note.trim().toLowerCase() !== 'fits the theme';
+      parts.push(parsed.reference + (quotable ? ' (“' + note + '”)' : ''));
+    }
+    return parts;
+  }
+  function joinRefList(parts) {
+    if (parts.length <= 1) return parts.join('');
+    if (parts.length === 2) return parts[0] + ' and ' + parts[1];
+    return parts.slice(0, -1).join(', ') + ', and ' + parts[parts.length - 1];
+  }
+  function passageCountPhrase(n) {
+    const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+    return (n <= 9 ? words[n] : String(n)) + ' ' + (n === 1 ? 'passage' : 'passages');
+  }
+  // The suggestion's age in days (the inbox's only time fact) recovers the
+  // vote date; UTC keeps the rendered day stable across timezones.
+  function updatesCardDate(ageDays) {
+    if (ageDays === null) return 'an earlier visit';
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const then = new Date(Date.now() - ageDays * 86400000);
+    return months[then.getUTCMonth()] + ' ' + then.getUTCDate();
+  }
+  function renderUpdates() {
+    if (state.screen !== 'updates') return;
+    const container = document.getElementById('screen-updates');
+    clear(container);
+    const inner = node('div', 'screen-inner');
+    container.appendChild(inner);
+    const head = node('div', '');
+    head.appendChild(node('h1', '', 'Updates'));
+    head.appendChild(node('p', 'screen-sub', COPY.updatesIntro));
+    inner.appendChild(head);
+    const updates = state.updates;
+    if (updates.status === 'loading' || updates.status === 'idle') {
+      const loading = node('p', 'screen-sub', COPY.updatesLoading);
+      loading.id = 'updates-loading';
+      inner.appendChild(loading);
+      for (let i = 0; i < 3; i += 1) inner.appendChild(node('div', 'skeleton-row'));
+      return;
+    }
+    // Section (a): the legacy re-confirmation card(s). Approve alone —
+    // Decline and Not now are absent, not disabled (they arrive with
+    // Phase 1's decide endpoint). Approve is a pure hand-off: it opens the
+    // query in Review for a fresh look; nothing is written from here.
+    const cards = updatesCardEntries();
+    for (const entry of cards) {
+      const card = node('div', 'updates-card');
+      card.appendChild(node('h2', '', COPY.updatesLegacyTitle(entry.query)));
+      const refs = updatesBecauseRefs(entry.query);
+      if (refs.length > 0) {
+        card.appendChild(node('p', 'card-because', COPY.updatesLegacyBecause(
+          passageCountPhrase(refs.length), updatesCardDate(entry.ageDays), joinRefList(refs),
+        )));
+      }
+      card.appendChild(node('p', 'card-because', COPY.updatesLegacyBody));
+      const approve = node('button', 'btn-primary updates-approve', COPY.updatesApprove);
+      approve.type = 'button';
+      const target = entry.query;
+      approve.addEventListener('click', () => {
+        document.getElementById('search-input').value = target;
+        void submitSearch(target);
+      });
+      card.appendChild(approve);
+      inner.appendChild(card);
+    }
+    if (updates.inboxFailed) {
+      const failed = node('p', 'screen-sub', COPY.updatesFetchFailed);
+      failed.id = 'updates-cards-failed';
+      inner.appendChild(failed);
+    }
+    // Section (b): the compile checklist as read-only backlog lines, headed
+    // by the same-facts note (rendered only when a card stands above it).
+    const lines = updatesChecklist();
+    if (lines.length > 0) {
+      if (cards.length > 0) {
+        const note = node('p', 'updates-note', COPY.updatesSameFacts);
+        note.id = 'updates-same-facts';
+        inner.appendChild(note);
+      }
+      const list = node('div', 'write-group');
+      list.id = 'updates-backlog';
+      for (const line of lines) {
+        list.appendChild(node('div', 'write-line', updatesLineText(parseChecklistLine(line))));
+      }
+      inner.appendChild(list);
+    } else if (updates.planFailed) {
+      const failed = node('p', 'screen-sub', COPY.updatesFetchFailed);
+      failed.id = 'updates-backlog-failed';
+      inner.appendChild(failed);
+    }
+    // Section (c): the steady empty state (§4.8 owns the string).
+    if (cards.length === 0 && lines.length === 0 && !updates.inboxFailed && !updates.planFailed) {
+      const empty = node('p', 'screen-sub', COPY.updatesEmpty);
+      empty.id = 'updates-empty';
+      inner.appendChild(empty);
+      const go = node('button', 'btn-primary', COPY.goToReview);
+      go.type = 'button';
+      go.id = 'updates-go-review';
+      go.addEventListener('click', () => { setScreen('review'); });
+      inner.appendChild(go);
+    }
   }
 
   // §advanced — the Advanced door (§3.8/D30): the identity trio lives here,
