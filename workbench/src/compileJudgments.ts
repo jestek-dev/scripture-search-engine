@@ -414,6 +414,8 @@ export async function planJudgmentCompilation(
   const descriptorPath = path.join(repoRoot, 'artifacts', 'content-artifact.json');
 
   const descriptor = JSON.parse(await readFile(descriptorPath, 'utf8')) as {
+    engineVersion: string;
+    corpusFingerprint: string;
     layerFingerprint: string;
   };
 
@@ -423,17 +425,28 @@ export async function planJudgmentCompilation(
   const effective = effectiveJudgments(records);
   const operations: PlannedCompilationFile[] = [];
 
-  // Fingerprint check (§5): warn, per judgment, when the layers have changed
-  // since the judgment was made — only for judgments that still influence the
-  // output; a superseded verdict influences nothing to re-confirm.
+  // Identity check (§5, extended by the votes-to-engine plan's D1): warn, per
+  // judgment and per moved dimension, when any of the full identity triple —
+  // engineVersion, corpusFingerprint, layerFingerprint — has changed since the
+  // judgment was made. Only judgments that still influence the output warn; a
+  // superseded verdict influences nothing to re-confirm. Interim honesty fix:
+  // superseded by V6's full-triple seal-time replay (Phase 4, D16).
+  const identityDimensions = [
+    { field: 'engineVersion', moved: 'the engine' },
+    { field: 'corpusFingerprint', moved: 'the scripture text' },
+    { field: 'layerFingerprint', moved: 'the layers' },
+  ] as const;
   const warnings: string[] = [];
   for (const record of effective) {
-    if (record.layerFingerprint !== descriptor.layerFingerprint) {
-      warnings.push(
-        `judgment at ${record.at} on "${record.query}" was made under layerFingerprint ` +
-          `${record.layerFingerprint}, current is ${descriptor.layerFingerprint} — the layers ` +
-          'have changed since; re-confirm rather than trust it.',
-      );
+    for (const { field, moved } of identityDimensions) {
+      if (record[field] !== descriptor[field]) {
+        warnings.push(
+          `judgment at ${record.at} on "${record.query}" was made under ${field} ` +
+            `${record[field]}, current is ${descriptor[field]} — ${moved} ` +
+            `${field === 'layerFingerprint' ? 'have' : 'has'} changed since; ` +
+            're-confirm rather than trust it.',
+        );
+      }
     }
   }
 

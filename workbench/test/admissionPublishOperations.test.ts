@@ -89,6 +89,25 @@ describe('AdmissionPublishOperations', () => {
     await expect(operations.admission('../escape', false)).rejects.toMatchObject({ code: 'invalid_route' });
   });
 
+  it('projects the main binding into AdmissionView.preview.baseCommit — the recorded labeling decision', async () => {
+    // Votes-to-engine plan D1: `preview.baseCommit` deliberately carries
+    // `expectedMainCommit` (the main binding the admission was reviewed
+    // against, labeled "Admitted main" by the Advanced UI), and publish
+    // preflight separately enforces admittedBaseCommit === expectedMainCommit
+    // before anything ships. This assertion pins that decision.
+    const repo = await repository();
+    const evidence = entry();
+    const preview = { ...previewFor(evidence), admittedBaseCommit: '0'.repeat(40) };
+    await writeFile(repo.evidence, `${JSON.stringify({ schemaVersion: 1, admissions: [evidence] })}\n`);
+    const operations = new AdmissionPublishOperations({
+      repoRoot: repo.root, evidencePath: repo.evidence, reviewer: 'local-reviewer',
+      operations: { previewAdmission: async () => preview },
+    });
+    const view = await operations.admission('review-admission-one', false);
+    expect(view.preview?.baseCommit).toBe(evidence.expectedMainCommit);
+    expect(view.preview?.baseCommit).not.toBe(preview.admittedBaseCommit);
+  });
+
   it('rejects an evidence registry outside the configured repository', async () => {
     const repo = await repository();
     const operations = new AdmissionPublishOperations({ repoRoot: repo.root, evidencePath: path.join(os.tmpdir(), 'outside-admission-evidence.json'), reviewer: 'local-reviewer' });

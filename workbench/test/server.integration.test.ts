@@ -373,7 +373,11 @@ function scaffoldCompilationRepo(): string {
   ]) mkdirSync(directory, { recursive: true });
   writeFileSync(
     path.join(root, 'artifacts', 'content-artifact.json'),
-    `${JSON.stringify({ layerFingerprint: 'api-layer' }, null, 2)}\n`,
+    `${JSON.stringify({
+      engineVersion: '0.9.0',
+      corpusFingerprint: 'api-corpus',
+      layerFingerprint: 'api-layer',
+    }, null, 2)}\n`,
   );
   writeFileSync(
     path.join(root, 'pipeline', 'fixtures', 'web-subset.json'),

@@ -211,6 +211,14 @@ function projectPreview(preview: AdmissionPreview): AdmissionView['preview'] {
   return {
     digest: preview.digest,
     proposalDigest: preview.proposalDigest,
+    // Deliberate (votes-to-engine plan, D1): this view field carries the main
+    // binding (`expectedMainCommit`), not `admittedBaseCommit`. The one UI
+    // consumer (advanced.html) labels it "Admitted main", and publish
+    // preflight refuses any admission whose baseCommit differs from its
+    // expectedMainCommit (#preflight below), so the two commits must be equal
+    // in every state that can ship. Any future Updates/train view reusing
+    // this projection inherits that meaning: baseCommit here = the main
+    // commit the admission was reviewed against.
     baseCommit: preview.expectedMainCommit,
     candidate: {
       cacheKey: preview.candidate.cacheKey,
