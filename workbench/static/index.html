@@ -637,7 +637,7 @@ button{font:inherit;}
     updatesAlreadyInPlace: 'The answer sheet already has this line — approving records your call behind it.',
     updatesRoutedApprove: 'Approving sends it to the curation queue with your call attached; nothing else changes here.',
     updatesIdentityCarry: (names) => 'Since this call, ' + names + ' changed. The line still says what should be true for this search, so it carries over.',
-    updatesLookAgainBody: (frag, names) => 'You ' + frag + ', but ' + names + ' changed since then. Your call was about what you saw that day — take one fresh look before this goes into an update.',
+    updatesLookAgainBody: (frag, names) => frag + ', but ' + names + ' changed since then. Your call was about what you saw that day — take one fresh look before this goes into an update.',
     updatesQuestionPrompt: 'Which theme should carry this passage?',
     updatesNoneChip: 'None of these — needs a new theme',
     updatesNoneSaved: 'Saved — the answer-sheet line goes in this update. Drafting the new theme is a separate, human-reviewed step.',
@@ -4849,6 +4849,10 @@ button{font:inherit;}
       for (const card of groups.main) list.appendChild(buildUpdatesFullCard(card));
       inner.appendChild(list);
     }
+    // Failure copy is scoped per data source (§4.9's parity rule: one
+    // sentence per api function): the "Couldn't load your updates" sentence
+    // belongs to GET /api/v2/updates alone and renders only when the cards
+    // themselves failed to load — loaded cards never sit under it.
     if (updates.deriveFailed) {
       const failed = node('p', 'screen-sub', COPY.updatesFetchFailed);
       failed.id = 'updates-cards-failed';
@@ -4885,7 +4889,12 @@ button{font:inherit;}
       }
       inner.appendChild(list);
     } else if (updates.planFailed) {
-      const failed = node('p', 'screen-sub', COPY.updatesFetchFailed);
+      // The backlog rides POST /api/v2/compile/preview, so its failure line
+      // is that endpoint's own D39 sentence (the same one Finish up renders)
+      // — never the §4.9 updates sentence, which would falsely claim the
+      // cards above failed to load (e.g. when conflicting votes 422 the
+      // compile while the derived cards render fine).
+      const failed = node('p', 'screen-sub', COPY.bootFetchFailed);
       failed.id = 'updates-backlog-failed';
       inner.appendChild(failed);
     }

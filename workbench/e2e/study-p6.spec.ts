@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
+import { FALLBACK_LOAD, UPDATES_LOAD_FAILED } from './endpointFailures';
 import {
   collectErrors, derivationMock, installRoutes, makeMock, startStudyServer,
   type Call, type MockState, type StudyServer,
@@ -282,6 +283,38 @@ test('P1: an empty log renders the steady empty state', async ({ page }) => {
   // The "Go to Review" button routes back to Review.
   await page.click('#updates-go-review');
   await expect(page.locator('#review-grid')).toBeVisible();
+
+  expect(errors).toEqual([]);
+});
+
+test('P1: a compile-preview failure never claims the loaded cards failed — failure copy scopes per endpoint', async ({ page }) => {
+  const errors = collectErrors(page);
+  const mock = realVoteMock();
+  await installRoutes(page, mock);
+  // The conflict-vote path: conflicting judgments 422 the compile preview
+  // while GET /api/v2/updates still derives and serves the cards (the
+  // deriver renders the conflict as a card; the compiler refuses).
+  await page.route('**/api/v2/compile/preview', async (route) => {
+    await route.fulfill({
+      status: 422,
+      contentType: 'application/json',
+      body: JSON.stringify({ ok: false, error: { code: 'conflicting_judgments', message: 'Conflicting judgments block the compile.' } }),
+    });
+  });
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  // The cards loaded, so the §4.9 GET-updates sentence never renders — a
+  // loaded card list never sits under a load-failure banner.
+  await expect(page.locator('.updates-card')).toHaveCount(1);
+  await expect(page.locator('#updates-cards-failed')).toHaveCount(0);
+  await expect(page.locator('#screen-updates')).not.toContainText(UPDATES_LOAD_FAILED);
+  // The backlog section reports its own data source's failure with
+  // apiCompilePreview's D39 sentence (the one Finish up renders).
+  await expect(page.locator('#updates-backlog-failed')).toHaveText(FALLBACK_LOAD);
+  await expect(page.locator('#updates-backlog')).toHaveCount(0);
+  await assertNoJargon(page);
 
   expect(errors).toEqual([]);
 });

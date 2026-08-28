@@ -104,7 +104,11 @@ function parseDecideRequest(input: unknown): DecideRequest {
  * plan states elsewhere: decline records a one-line reason (V5); a question
  * must be answered by the human before Approve (V3 — the machine never picks
  * a concept); a conflict is resolved by a superseding vote in Review, so the
- * card itself only accepts Not now (§02.7).
+ * card itself only accepts Not now (§02.7); the V6 identity-drift
+ * re-confirmation card keeps its two-button form (§4.3 example 3 — "Look
+ * again" is a pure hand-off that posts nothing), so Not now is the only
+ * decide it accepts — only §07.2's day-one legacy card carries Approve (the
+ * fresh-look hand-off) and Decline.
  */
 function validateDecisionAgainstCard(card: UpdateCard, request: DecideRequest): void {
   if (request.decision === 'decline') {
@@ -117,6 +121,13 @@ function validateDecisionAgainstCard(card: UpdateCard, request: DecideRequest): 
     throw new UpdatesOperationsError(
       'conflict_requires_vote',
       'A conflict is resolved by a superseding call in Review, or set aside with Not now — never approved or declined here.',
+      409,
+    );
+  }
+  if (card.kind === 're-confirmation' && card.legacy === undefined && request.decision !== 'park') {
+    throw new UpdatesOperationsError(
+      'reconfirmation_requires_fresh_look',
+      'A changed situation is resolved by a fresh look in Review, or set aside with Not now — never approved or declined here.',
       409,
     );
   }

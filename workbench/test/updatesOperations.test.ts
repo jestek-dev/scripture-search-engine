@@ -217,6 +217,31 @@ describe('updates operations (derive + decide)', () => {
     expect(parked.state.decision).toBe('parked');
   });
 
+  it('a V6 re-confirmation card accepts only Not now — "Look again" is a hand-off, never a decide', async () => {
+    // An identity-moved prefer vote derives the non-legacy re-confirmation
+    // card (§03.5's observation-bound remainder). The UI renders its
+    // two-button form (§4.3 example 3: Look again + Not now); the endpoint
+    // enforces the same shape — only §07.2's legacy card takes A/D.
+    const rows = [
+      v2({ judgmentId: 'v6-prefer', query: 'who is like the lord', action: 'prefer', at: '2026-08-12T10:00:00.000Z', preferredTargetId: 'WEB:59001022', otherTargetId: 'WEB:19046001', layerFingerprint: 'layer-old' }),
+    ];
+    await writeFile(path.join(repo, 'workbench', 'judgments.jsonl'), rows.map((row) => `${JSON.stringify(row)}\n`).join(''));
+    await writeFile(path.join(repo, 'workbench', 'cases.jsonl'), casesFor(rows));
+    const ops = operations();
+    const { cards } = await ops.derive(CURRENT);
+    const reconfirm = cards.find((card) => card.kind === 're-confirmation')!;
+    expect(reconfirm).toBeDefined();
+    expect(reconfirm.legacy).toBeUndefined();
+    await expect(ops.decide(reconfirm.cardId, { decision: 'approve', cardRevision: reconfirm.cardRevision }, CURRENT))
+      .rejects.toMatchObject({ code: 'reconfirmation_requires_fresh_look', status: 409 });
+    await expect(ops.decide(reconfirm.cardId, { decision: 'decline', reason: 'checked by hand', cardRevision: reconfirm.cardRevision }, CURRENT))
+      .rejects.toMatchObject({ code: 'reconfirmation_requires_fresh_look', status: 409 });
+    // Nothing invalid reached the log; Not now still records normally.
+    await expect(readFile(path.join(repo, 'workbench', 'updates.jsonl'), 'utf8')).rejects.toThrow();
+    const parked = await ops.decide(reconfirm.cardId, { decision: 'park', cardRevision: reconfirm.cardRevision }, CURRENT);
+    expect(parked.state.decision).toBe('parked');
+  });
+
   it('refuses malformed decide bodies before touching anything', async () => {
     const ops = operations();
     const { cards } = await ops.derive(CURRENT);

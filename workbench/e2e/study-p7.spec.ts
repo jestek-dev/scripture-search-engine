@@ -144,6 +144,37 @@ function conflictCard(): Record<string, unknown> {
   };
 }
 
+// The V6 identity-drift re-confirmation card (§4.3 example 3), as Phase 1's
+// derive-time pre-check produces it: an identity-moved prefer vote routes
+// its whole ordering entry here (the observation-bound remainder, §03.5).
+// No `legacy` field — that marks §07.2's day-one card, a different variant.
+function lookAgainCard(): Record<string, unknown> {
+  return {
+    cardId: 'aa'.repeat(32),
+    cardRevision: 'bb'.repeat(32),
+    kind: 're-confirmation',
+    query: 'comfort in suffering',
+    targetKey: 'kjv:47001004|kjv:19023004',
+    judgmentIds: ['8e9fa0b1-5555-4666-a777-d88899990000'],
+    contextJudgmentIds: [],
+    votes: [{
+      judgmentId: '8e9fa0b1-5555-4666-a777-d88899990000',
+      at: '2026-08-20T09:00:00.000Z',
+      reviewer: 'jesse',
+      action: 'prefer',
+      preferredReference: '2 Corinthians 1:4',
+      otherReference: 'Psalm 23:4',
+      observedRank: 4,
+      observedWindow: 10,
+      ...DIGESTS,
+    }],
+    derived: {},
+    preCheck: 'identity-moved',
+    identityNotes: [{ dimension: 'layerFingerprint', recorded: 'layer-old', current: 'layer-current' }],
+    state: { decision: 'drafted' },
+  };
+}
+
 async function openUpdates(page: Page): Promise<void> {
   await page.click('.nav-item[data-nav="updates"]');
   await expect(page.locator('#screen-updates')).toBeVisible();
@@ -307,8 +338,9 @@ test('D7: approving a question card requires the answer; the chip rides the deci
   await expect(chips.nth(0)).toHaveAttribute('aria-pressed', 'true');
   await expect(cardEl.locator('.updates-approve')).toBeEnabled();
   await cardEl.locator('.updates-approve').click();
+  // The decide POST is async; await it in the harness log before asserting.
+  await expect.poll(() => decidePosts(mock).length).toBe(1);
   const posts = decidePosts(mock);
-  expect(posts).toHaveLength(1);
   expect(posts[0]!.body).toEqual({
     decision: 'approve',
     cardRevision: card.cardRevision,
@@ -330,8 +362,9 @@ test('D7: "None of these — needs a new theme" approves the line alone and says
 
   await page.locator('.updates-chips .pick-chip', { hasText: 'None of these — needs a new theme' }).click();
   await page.locator('.updates-approve').click();
+  // The decide POST is async; await it in the harness log before asserting.
+  await expect.poll(() => decidePosts(mock).length).toBe(1);
   const posts = decidePosts(mock);
-  expect(posts).toHaveLength(1);
   expect(posts[0]!.body).toEqual({
     decision: 'approve',
     cardRevision: card.cardRevision,
@@ -405,6 +438,83 @@ test('D7: picking a conflict side hands off into Review for the superseding call
   await expect(page.locator('#review-grid')).toBeVisible();
   await expect(page.locator('#search-input')).toHaveValue('refuge in trouble');
   expect(decidePosts(mock)).toEqual([]);
+
+  expect(errors).toEqual([]);
+});
+
+// ---------------------------------------------------------------------------
+// D7 — the V6 identity-drift "Look again" card (§4.3 example 3)
+// ---------------------------------------------------------------------------
+
+test('D7: the V6 identity-drift card renders the two-button "Look again" form', async ({ page }) => {
+  const errors = collectErrors(page);
+  const mock = makeMock({ updatesPayload: derivationMock([lookAgainCard()]) });
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  const card = page.locator('.updates-card');
+  await expect(card).toHaveCount(1);
+  // Headline + body: the situation changed since the vote, in plain words —
+  // the moved dimension is named ("the theme files"), never a fingerprint.
+  await expect(card.locator('h2')).toHaveText('Look again: “comfort in suffering” has changed since your call');
+  await expect(card).toContainText(
+    'You said 2 Corinthians 1:4 should rank above Psalm 23:4 on Aug 20, but the theme files '
+    + 'changed since then. Your call was about what you saw that day — take one fresh look '
+    + 'before this goes into an update.',
+  );
+  // The blessed two-button form (§4.3/§4.4): "Look again" primary + Not now.
+  // Approve is suppressed (the primary is the hand-off), Decline is absent —
+  // this variant keeps the two-button shape the legacy card diverges from.
+  const primary = card.locator('.updates-approve');
+  await expect(primary).toHaveText('Look again');
+  await expect(card.locator('.updates-decline')).toHaveCount(0);
+  await expect(card.locator('.updates-park')).toHaveCount(1);
+  // Dashed re-confirmation idiom, never the op border; no operation derives
+  // on it, so no what-will-change line, no question, no quiet links, and the
+  // tally row stays absent (it stages nothing).
+  await expect(card).not.toHaveClass(/\bop\b/);
+  await expect(card.locator('.updates-chips')).toHaveCount(0);
+  await expect(card.locator('.updates-links')).toHaveCount(0);
+  await expect(page.locator('#updates-stats')).toHaveCount(0);
+
+  // A and D keystrokes are inert — its A/D never post and no decline input
+  // opens (the decide endpoint refuses approve/decline on this variant).
+  await card.focus();
+  await page.keyboard.press('a');
+  await page.keyboard.press('d');
+  await expect(page.locator('.decline-input')).toHaveCount(0);
+  expect(decidePosts(mock)).toEqual([]);
+  await assertNoJargon(page);
+
+  // "Look again" is a pure hand-off: it opens the query in Review as the
+  // fresh-look door and records nothing — no decide POST, ever.
+  await primary.click();
+  await expect(page.locator('#review-grid')).toBeVisible();
+  await expect(page.locator('#search-input')).toHaveValue('comfort in suffering');
+  expect(decidePosts(mock)).toEqual([]);
+
+  expect(errors).toEqual([]);
+});
+
+test('D7: Not now is the only decide a "Look again" card posts', async ({ page }) => {
+  const errors = collectErrors(page);
+  const card = lookAgainCard();
+  const mock = makeMock({ updatesPayload: derivationMock([card]) });
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  await page.locator('.updates-card').focus();
+  await page.keyboard.press('n');
+  await expect(page.locator('#updates-parked-group summary')).toHaveText('Not now (1)');
+  const posts = decidePosts(mock);
+  expect(posts).toHaveLength(1);
+  expect(posts[0]!.path).toBe(`/api/v2/updates/cards/${card.cardId as string}/decide`);
+  expect(posts[0]!.body).toEqual({ decision: 'park', cardRevision: card.cardRevision });
+  await assertNoJargon(page);
 
   expect(errors).toEqual([]);
 });
@@ -555,7 +665,8 @@ test('D7: J/K rove the card list; A/D/N decide the focused card; U re-opens it',
   await expect(page.locator('#updates-parked-group .updates-approve')).toBeVisible();
   expect(decidePosts(mock)).toHaveLength(1);
   await page.locator('#updates-parked-group .updates-approve').click();
-  expect(decidePosts(mock)).toHaveLength(2);
+  // The decide POST is async; await it in the harness log before asserting.
+  await expect.poll(() => decidePosts(mock).length).toBe(2);
   expect(decidePosts(mock)[1]!.body).toEqual({ decision: 'approve', cardRevision: guard.cardRevision });
   await expect(page.locator('#updates-approved-group summary')).toHaveText('Approved for the next update (1)');
   await assertNoJargon(page);
