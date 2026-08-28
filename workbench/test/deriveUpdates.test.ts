@@ -743,15 +743,25 @@ describe('manifest emission: approved cards → the pipeline\'s own vocabulary',
       .toThrow(/must carry its answer/);
   });
 
-  it('refuses a multi-query approval set until the 02.7 amendment (single-query trains)', () => {
+  it('ships a multi-query approval set as ONE manifest under the 02.7 amendment (D8a)', () => {
     const one = v2({ judgmentId: 'sq1', query: 'hearing and doing', action: 'essential', at: nextAt(), targetId: 'WEB:59001022', withinTop: 3 });
     const two = v2({ judgmentId: 'sq2', query: 'refuge in trouble', action: 'essential', at: nextAt(), targetId: 'WEB:19046001', withinTop: 3 });
     const base = inputs({ records: [one, two] });
     const first = deriveUpdates(base);
     const updatesLog = decideEvents(first.cards, first.cards.map((card) => ({ cardId: card.cardId, kind: 'card-approved' as const })));
     const derivation = deriveUpdates({ ...base, updatesLog });
-    expect(() => buildUpdatesManifest(derivation, base, { trainId: 'train-multi' }))
-      .toThrow(/one update covers one search at a time/);
+    const { manifest } = buildUpdatesManifest(derivation, base, { trainId: 'train-multi' });
+    const upserts = manifest.operations.filter((operation) => operation.type === 'golden-fixture-upsert');
+    expect(upserts.map((operation) => operation.type === 'golden-fixture-upsert' ? operation.goldenFixtureId : '').sort())
+      .toEqual(['hearing-and-doing', 'refuge-in-trouble']);
+    // 02.7: the top-level fixtureId is the lexicographically first touched
+    // fixture id — a deterministic label, no longer a constraint.
+    expect(manifest.fixtureId).toBe('hearing-and-doing');
+    // Each upsert still owns exactly its own fixture path.
+    for (const upsert of upserts) {
+      if (upsert.type !== 'golden-fixture-upsert') continue;
+      expect(upsert.sourcePaths).toEqual([`eval/golden/${upsert.goldenFixtureId}.json`]);
+    }
   });
 
   it('declined and parked cards never board; a guard-and-anchor approval emits the remove op', () => {

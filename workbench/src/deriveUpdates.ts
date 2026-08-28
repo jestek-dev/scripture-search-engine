@@ -1195,9 +1195,10 @@ export interface UpdatesManifestResult {
 
 /**
  * Builds the train's ProposalManifest from the derivation's APPROVED
- * op-bearing cards. Single-query until the 02.7 multi-fixture amendment
- * merges (Phase 2, D8a) — a multi-query approval set is refused with the
- * §4.5 sentence's meaning, and Phase 2's seal endpoint owns the copy.
+ * op-bearing cards. With the 02.7 per-operation fixture-targeting amendment
+ * (D8a) in place, a multi-query approval set ships as ONE manifest — one
+ * `golden-fixture-upsert` per touched query, the top-level fixtureId set to
+ * the lexicographically first touched fixture id (a label, per 02.7).
  */
 export function buildUpdatesManifest(
   derivation: UpdatesDerivation,
@@ -1212,28 +1213,9 @@ export function buildUpdatesManifest(
   if (boarding.length === 0) {
     throw new UpdatesManifestError('No approved cards carry a change to seal.');
   }
-  const queries = [...new Set(boarding.map((card) => card.query))].sort();
-  if (queries.length > 1) {
-    throw new UpdatesManifestError('For now, one update covers one search at a time.');
-  }
-  const query = queries[0]!;
-  const slug = slugOf(query);
-  // Conflicts block the query, not the train (§03.7): a conflict card exists
-  // exactly as long as the contradictory leaves do, and it is resolved only
-  // by a recorded pick (a superseding vote) — never by a decide here.
-  const conflicts = derivation.cards.filter((card) => card.kind === 'conflict' && card.query === query);
-  if (conflicts.length > 0) {
-    throw new UpdatesManifestError('Two calls on this search still disagree; the conflict card must be decided first.');
-  }
+  const queries = [...new Set(boarding.map((card) => card.query))].sort((a, b) => slugOf(a).localeCompare(slugOf(b)));
 
   const goldenFiles = [...inputs.goldenFixtureFiles].sort((a, b) => a.path.localeCompare(b.path));
-  const ownedFixturePath = `eval/golden/${slug}.json`;
-  const existing = goldenFiles.find((file) => file.path === ownedFixturePath);
-  const existingValue = existing === undefined ? undefined : JSON.parse(existing.contents) as Record<string, unknown>;
-  if (existingValue !== undefined && existingValue.generatedBy !== 'workbench') {
-    throw new UpdatesManifestError('This search has a hand-curated answer sheet; it routes to curation.');
-  }
-
   const concepts = [...inputs.ontologyFiles].sort((a, b) => a.path.localeCompare(b.path)).map(parseOntologyFile);
   const conceptsById = new Map(concepts.map((concept) => [concept.id, concept]));
 
@@ -1241,154 +1223,175 @@ export function buildUpdatesManifest(
   const operations: Record<string, unknown>[] = [];
   const preconditions = new Map<string, string>();
   const caseIds = new Set<string>();
-  const expectedTop: Record<string, unknown>[] = [];
-  const mustNotRank: Record<string, unknown>[] = [];
-  const preferredOrder: Record<string, unknown>[] = [];
 
   const targetDigest = (targetKey: string): string => sha256(targetKey).slice(0, 8);
 
-  for (const card of boarding) {
-    for (const vote of card.votes) {
-      if (vote.caseId !== undefined) caseIds.add(vote.caseId);
+  for (const query of queries) {
+    const slug = slugOf(query);
+    const queryCards = boarding.filter((card) => card.query === query);
+    // Conflicts block the query, not the train (§03.7): a conflict card exists
+    // exactly as long as the contradictory leaves do, and it is resolved only
+    // by a recorded pick (a superseding vote) — never by a decide here.
+    const conflicts = derivation.cards.filter((card) => card.kind === 'conflict' && card.query === query);
+    if (conflicts.length > 0) {
+      throw new UpdatesManifestError('Two calls on this search still disagree; the conflict card must be decided first.');
     }
-    if (card.derived.expectation !== undefined) {
-      const answers = card.state.answers;
-      const themeAnswer = answers?.theme;
-      if (card.question !== undefined && (themeAnswer === undefined || themeAnswer === '')) {
-        throw new UpdatesManifestError('An approved card with an open question must carry its answer.');
+    const ownedFixturePath = `eval/golden/${slug}.json`;
+    const existing = goldenFiles.find((file) => file.path === ownedFixturePath);
+    const existingValue = existing === undefined ? undefined : JSON.parse(existing.contents) as Record<string, unknown>;
+    if (existingValue !== undefined && existingValue.generatedBy !== 'workbench') {
+      throw new UpdatesManifestError('This search has a hand-curated answer sheet; it routes to curation.');
+    }
+    const expectedTop: Record<string, unknown>[] = [];
+    const mustNotRank: Record<string, unknown>[] = [];
+    const preferredOrder: Record<string, unknown>[] = [];
+
+    for (const card of queryCards) {
+      for (const vote of card.votes) {
+        if (vote.caseId !== undefined) caseIds.add(vote.caseId);
       }
-      const chosenConcept = themeAnswer !== undefined && themeAnswer !== THEME_ANSWER_NONE
-        ? conceptsById.get(themeAnswer)
-        : undefined;
-      if (themeAnswer !== undefined && themeAnswer !== THEME_ANSWER_NONE && chosenConcept === undefined) {
-        throw new UpdatesManifestError('The answered theme does not exist in the reviewed ontology snapshot.');
-      }
-      expectedTop.push({
-        ref: card.derived.expectation.ref,
-        withinTop: card.derived.expectation.withinTop,
-        // A6: an answered theme upgrades the expectation to assert the
-        // REASON, not just the presence — the right passage for the wrong
-        // reason is still a failure.
-        ...(chosenConcept === undefined
-          ? {}
-          : { requiredReasonFamily: 'concept_anchor', requiredReasonLabel: `Theme: ${chosenConcept.label}` }),
-      });
-      if (chosenConcept !== undefined) {
-        const alreadyAnchored = chosenConcept.anchors.some((anchor) => {
-          try {
-            const range = anchorRangeOf(anchor.locator, chosenConcept.id);
-            const target = anchorRangeOf(card.derived.expectation!.ref, chosenConcept.id);
-            return range.start <= target.end && target.start <= range.end;
-          } catch {
-            return false;
-          }
+      if (card.derived.expectation !== undefined) {
+        const answers = card.state.answers;
+        const themeAnswer = answers?.theme;
+        if (card.question !== undefined && (themeAnswer === undefined || themeAnswer === '')) {
+          throw new UpdatesManifestError('An approved card with an open question must carry its answer.');
+        }
+        const chosenConcept = themeAnswer !== undefined && themeAnswer !== THEME_ANSWER_NONE
+          ? conceptsById.get(themeAnswer)
+          : undefined;
+        if (themeAnswer !== undefined && themeAnswer !== THEME_ANSWER_NONE && chosenConcept === undefined) {
+          throw new UpdatesManifestError('The answered theme does not exist in the reviewed ontology snapshot.');
+        }
+        expectedTop.push({
+          ref: card.derived.expectation.ref,
+          withinTop: card.derived.expectation.withinTop,
+          // A6: an answered theme upgrades the expectation to assert the
+          // REASON, not just the presence — the right passage for the wrong
+          // reason is still a failure.
+          ...(chosenConcept === undefined
+            ? {}
+            : { requiredReasonFamily: 'concept_anchor', requiredReasonLabel: `Theme: ${chosenConcept.label}` }),
         });
-        // State-aware derivation (§03.6): an anchor already present derives
-        // no op — re-running is idempotent against merged history.
-        if (!alreadyAnchored) {
-          const conceptPath = chosenConcept.path;
-          preconditions.set(conceptPath, chosenConcept.sha256);
+        if (chosenConcept !== undefined) {
+          const alreadyAnchored = chosenConcept.anchors.some((anchor) => {
+            try {
+              const range = anchorRangeOf(anchor.locator, chosenConcept.id);
+              const target = anchorRangeOf(card.derived.expectation!.ref, chosenConcept.id);
+              return range.start <= target.end && target.start <= range.end;
+            } catch {
+              return false;
+            }
+          });
+          // State-aware derivation (§03.6): an anchor already present derives
+          // no op — re-running is idempotent against merged history.
+          if (!alreadyAnchored) {
+            const conceptPath = chosenConcept.path;
+            preconditions.set(conceptPath, chosenConcept.sha256);
+            operations.push({
+              operationId: `editorial-anchor-add-${slug}-${targetDigest(card.targetKey)}`,
+              type: 'editorial-anchor-add',
+              conceptId: chosenConcept.id,
+              anchor: { locator: card.derived.expectation.ref, weight: 1, sources: ['editorial'] },
+              sourcePaths: [conceptPath],
+              provenance: {
+                source: 'editorial',
+                confirmed: true,
+                reviewer,
+                evidence: evidenceOf(card.votes, `answer: theme ${chosenConcept.id} ("Theme: ${chosenConcept.label}")`),
+              },
+              reason: `Lists ${card.derived.expectation.ref} under the theme "${chosenConcept.label}", as the reviewer chose.`,
+            });
+          }
+        }
+        if (card.derived.chapterAdd !== undefined) {
+          preconditions.set('pipeline/fixtures/web-subset.json', sha256(inputs.webSubsetJson));
           operations.push({
-            operationId: `editorial-anchor-add-${slug}-${targetDigest(card.targetKey)}`,
-            type: 'editorial-anchor-add',
-            conceptId: chosenConcept.id,
-            anchor: { locator: card.derived.expectation.ref, weight: 1, sources: ['editorial'] },
-            sourcePaths: [conceptPath],
+            operationId: `fixture-corpus-chapter-add-${slug}-${targetDigest(card.targetKey)}`,
+            type: 'fixture-corpus-chapter-add',
+            book: card.derived.chapterAdd.book,
+            chapter: card.derived.chapterAdd.chapter,
+            why: `workbench judgment: ${query}`,
+            sourcePaths: ['pipeline/fixtures/web-subset.json'],
             provenance: {
               source: 'editorial',
               confirmed: true,
               reviewer,
-              evidence: evidenceOf(card.votes, `answer: theme ${chosenConcept.id} ("Theme: ${chosenConcept.label}")`),
+              evidence: evidenceOf(card.votes),
             },
-            reason: `Lists ${card.derived.expectation.ref} under the theme "${chosenConcept.label}", as the reviewer chose.`,
+            reason: `Brings ${card.derived.chapterAdd.book} ${card.derived.chapterAdd.chapter} into the fixture corpus so the answer sheet can measure it.`,
           });
         }
       }
-      if (card.derived.chapterAdd !== undefined) {
-        preconditions.set('pipeline/fixtures/web-subset.json', sha256(inputs.webSubsetJson));
+      if (card.derived.guard !== undefined) {
+        mustNotRank.push({ ref: card.derived.guard.ref, why: card.derived.guard.why });
+      }
+      if (card.derived.preferredOrder !== undefined) {
+        preferredOrder.push({ ...card.derived.preferredOrder });
+      }
+      if (card.derived.anchorRemove !== undefined) {
+        const concept = conceptsById.get(card.derived.anchorRemove.conceptId);
+        if (concept === undefined) {
+          throw new UpdatesManifestError('The named theme no longer exists in the reviewed ontology snapshot.');
+        }
+        preconditions.set(concept.path, concept.sha256);
         operations.push({
-          operationId: `fixture-corpus-chapter-add-${slug}-${targetDigest(card.targetKey)}`,
-          type: 'fixture-corpus-chapter-add',
-          book: card.derived.chapterAdd.book,
-          chapter: card.derived.chapterAdd.chapter,
-          why: `workbench judgment: ${query}`,
-          sourcePaths: ['pipeline/fixtures/web-subset.json'],
+          operationId: `editorial-anchor-remove-${slug}-${targetDigest(card.targetKey)}`,
+          type: 'editorial-anchor-remove',
+          conceptId: concept.id,
+          locator: card.derived.anchorRemove.locator,
+          currentSources: ['editorial'],
+          sourcePaths: [concept.path],
           provenance: {
             source: 'editorial',
             confirmed: true,
             reviewer,
             evidence: evidenceOf(card.votes),
           },
-          reason: `Brings ${card.derived.chapterAdd.book} ${card.derived.chapterAdd.chapter} into the fixture corpus so the answer sheet can measure it.`,
+          reason: `Removes this passage from the theme "${concept.label}" — the reviewer judged its listing wrong for this search.`,
         });
       }
     }
-    if (card.derived.guard !== undefined) {
-      mustNotRank.push({ ref: card.derived.guard.ref, why: card.derived.guard.why });
-    }
-    if (card.derived.preferredOrder !== undefined) {
-      preferredOrder.push({ ...card.derived.preferredOrder });
-    }
-    if (card.derived.anchorRemove !== undefined) {
-      const concept = conceptsById.get(card.derived.anchorRemove.conceptId);
-      if (concept === undefined) {
-        throw new UpdatesManifestError('The named theme no longer exists in the reviewed ontology snapshot.');
-      }
-      preconditions.set(concept.path, concept.sha256);
-      operations.push({
-        operationId: `editorial-anchor-remove-${slug}-${targetDigest(card.targetKey)}`,
-        type: 'editorial-anchor-remove',
-        conceptId: concept.id,
-        locator: card.derived.anchorRemove.locator,
-        currentSources: ['editorial'],
-        sourcePaths: [concept.path],
-        provenance: {
-          source: 'editorial',
-          confirmed: true,
-          reviewer,
-          evidence: evidenceOf(card.votes),
-        },
-        reason: `Removes this passage from the theme "${concept.label}" — the reviewer judged its listing wrong for this search.`,
-      });
-    }
-  }
 
-  const byRef = (left: Record<string, unknown>, right: Record<string, unknown>): number => {
-    const a = anchorRangeOf(String(left.ref ?? left.above), 'manifest fixture');
-    const b = anchorRangeOf(String(right.ref ?? right.above), 'manifest fixture');
-    return a.start - b.start || a.end - b.end;
-  };
-  const fixture: Record<string, unknown> = {
-    id: slug,
-    generatedBy: 'workbench',
-    status: 'pending',
-    query,
-    expectedTop: [...expectedTop].sort(byRef),
-    mustNotRank: [...mustNotRank].sort(byRef),
-    ...(preferredOrder.length > 0 ? { preferredOrder: [...preferredOrder].sort(byRef) } : {}),
-  };
-  preconditions.set(ownedFixturePath, existing === undefined ? EMPTY_SHA256 : sha256(existing.contents));
-  // V4, structural: every layer-affecting operation travels with the
-  // golden-fixture-upsert measuring it, in the same manifest.
-  operations.push({
-    operationId: `golden-fixture-upsert-${slug}`,
-    type: 'golden-fixture-upsert',
-    goldenFixtureId: slug,
-    fixture,
-    sourcePaths: [ownedFixturePath],
-    provenance: {
-      source: 'editorial',
-      confirmed: true,
-      reviewer,
-      evidence: evidenceOf(boarding.flatMap((card) => card.votes)),
-    },
-    reason: `Adds the answer-sheet lines the approved calls asked for on "${query}".`,
-  });
+    const byRef = (left: Record<string, unknown>, right: Record<string, unknown>): number => {
+      const a = anchorRangeOf(String(left.ref ?? left.above), 'manifest fixture');
+      const b = anchorRangeOf(String(right.ref ?? right.above), 'manifest fixture');
+      return a.start - b.start || a.end - b.end;
+    };
+    const fixture: Record<string, unknown> = {
+      id: slug,
+      generatedBy: 'workbench',
+      status: 'pending',
+      query,
+      expectedTop: [...expectedTop].sort(byRef),
+      mustNotRank: [...mustNotRank].sort(byRef),
+      ...(preferredOrder.length > 0 ? { preferredOrder: [...preferredOrder].sort(byRef) } : {}),
+    };
+    preconditions.set(ownedFixturePath, existing === undefined ? EMPTY_SHA256 : sha256(existing.contents));
+    // V4, structural: every layer-affecting operation travels with the
+    // golden-fixture-upsert measuring it — paired per fixture under 02.7's
+    // per-operation targeting amendment (D8a) — in the same manifest.
+    operations.push({
+      operationId: `golden-fixture-upsert-${slug}`,
+      type: 'golden-fixture-upsert',
+      goldenFixtureId: slug,
+      fixture,
+      sourcePaths: [ownedFixturePath],
+      provenance: {
+        source: 'editorial',
+        confirmed: true,
+        reviewer,
+        evidence: evidenceOf(queryCards.flatMap((card) => card.votes)),
+      },
+      reason: `Adds the answer-sheet lines the approved calls asked for on "${query}".`,
+    });
+  }
 
   const manifestInput = {
     schemaVersion: 1,
     proposalId: options.trainId,
-    fixtureId: slug,
+    // 02.7 (D8a): the top-level fixtureId is a deterministic label — the
+    // lexicographically first touched fixture id — no longer a constraint.
+    fixtureId: queries.map(slugOf).sort()[0]!,
     caseIds: [...caseIds].sort(),
     sourcePreconditions: [...preconditions.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
@@ -1418,4 +1421,94 @@ export function buildUpdatesManifest(
       ...boarding.flatMap((card) => card.contextJudgmentIds),
     ])].sort(),
   };
+}
+
+// ---------------------------------------------------------------------------
+// Seal-time train classification and the V4 fixtures-travel-with-data
+// invariant (§05 §5.2/§5.3; enforcement locus fixed by §03 §03.5 step 3 —
+// the deriver's seal-time validator, deliberately NOT parseProposalManifest,
+// which is shared with hand-authored manifests).
+// ---------------------------------------------------------------------------
+
+/** V7: classification is derived from the manifest, never chosen by a caller. */
+export function deriveTrainFlavor(manifest: ProposalManifest): 'guard' | 'data' {
+  return manifest.operations.every((operation) => operation.type === 'golden-fixture-upsert') ? 'guard' : 'data';
+}
+
+interface FixtureAssertionRange {
+  readonly start: number;
+  readonly end: number;
+}
+
+function fixtureAssertionRanges(fixture: Record<string, unknown>): FixtureAssertionRange[] {
+  const ranges: FixtureAssertionRange[] = [];
+  for (const key of ['expectedTop', 'mustNotRank'] as const) {
+    const entries = fixture[key];
+    if (!Array.isArray(entries)) continue;
+    for (const entry of entries) {
+      if (typeof entry !== 'object' || entry === null) continue;
+      const reference = (entry as Record<string, unknown>).ref ?? (entry as Record<string, unknown>).reference;
+      if (typeof reference !== 'string') continue;
+      try {
+        ranges.push(anchorRangeOf(reference, 'seal-time fixture assertion'));
+      } catch {
+        // An unparseable reference measures nothing; the gauntlet's own
+        // validator refuses it at parse time (proposals.ts).
+      }
+    }
+  }
+  return ranges;
+}
+
+/**
+ * The V4 invariant, enforced at seal (§05 §5.3): a manifest containing any
+ * layer-affecting operation MUST also contain, in the same manifest, the
+ * `golden-fixture-upsert` operation(s) measuring IT — pairing per operation
+ * and fixture (02.7's per-operation targeting). Anchor and chapter operations
+ * pair by reference overlap with a fixture assertion; the remaining
+ * layer-affecting types (which the deriver never emits) pair only against the
+ * conservative manifest-level floor — at least one fixture upsert present.
+ * Returns the unmeasured operations; the seal refuses when any exist.
+ */
+export function unmeasuredLayerAffectingOperations(manifest: ProposalManifest): readonly ProposalOperation[] {
+  const upserts = manifest.operations.filter((operation) => operation.type === 'golden-fixture-upsert');
+  const assertionRanges = upserts.flatMap((operation) =>
+    operation.type === 'golden-fixture-upsert' ? fixtureAssertionRanges(operation.fixture as Record<string, unknown>) : []);
+  const unmeasured: ProposalOperation[] = [];
+  for (const operation of manifest.operations) {
+    if (operation.type === 'golden-fixture-upsert') continue;
+    if (operation.type === 'fixture-corpus-chapter-add') {
+      const book = findBook(operation.book);
+      const measured = book !== undefined && assertionRanges.some((range) => {
+        const start = parseVerseId(range.start);
+        const end = parseVerseId(range.end);
+        return start.bookId === book.id && start.chapter <= operation.chapter && operation.chapter <= end.chapter;
+      });
+      if (!measured) unmeasured.push(operation);
+      continue;
+    }
+    const locator = operation.type === 'editorial-anchor-add'
+      ? operation.anchor.locator
+      : operation.type === 'editorial-anchor-remove'
+        ? operation.locator
+        : operation.type === 'editorial-anchor-adjust'
+          ? operation.current.locator
+          : null;
+    if (locator !== null) {
+      let range: FixtureAssertionRange | null = null;
+      try {
+        range = anchorRangeOf(locator, `operation ${operation.operationId}`);
+      } catch {
+        range = null;
+      }
+      const measured = range !== null && assertionRanges.some((assertion) =>
+        assertion.start <= range!.end && range!.start <= assertion.end);
+      if (!measured) unmeasured.push(operation);
+      continue;
+    }
+    // Lexicon/related/concept operations: no reference to pair on — the
+    // conservative floor requires at least one measuring fixture upsert.
+    if (upserts.length === 0) unmeasured.push(operation);
+  }
+  return unmeasured;
 }
