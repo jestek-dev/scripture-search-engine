@@ -680,6 +680,10 @@ button{font:inherit;}
     updatesStatusApproved: 'Approved — waiting for the next update.',
     updatesGroupSealed: (n) => 'Riding the current update (' + n + ')',
     updatesStatusSealed: 'Riding the current update — locked in until it finishes or stops.',
+    // §03.6's achieved resting state: the sealing update was merged, so the
+    // riding copy would be false forever — the card rests as done.
+    updatesGroupShipped: (n) => 'On the answer sheet (' + n + ')',
+    updatesStatusShipped: 'Live — this line is on the answer sheet now. A new call on this search in Review starts a fresh card.',
     updatesStatusParked: 'Set aside — it returns at the top of the next cycle.',
     updatesStatusEngineering: 'With engineering — nothing else changes until an engineer takes it up.',
     // §copy — P8 (the update panel: train summary, progress, the Update
@@ -4515,7 +4519,10 @@ button{font:inherit;}
     const opBearing = cards.filter((card) => isOpBearing(card) && (card.routed === undefined || card.routed === null));
     return {
       drafted: opBearing.filter((card) => cardDecision(card) === 'drafted').length,
-      approved: opBearing.filter((card) => cardDecision(card) === 'approved' && card.parkedByDefault !== true).length,
+      // A shipped card (its sealing update went live) is achieved, never
+      // "approved for the next update" — mirror the deriver's exclusion.
+      approved: opBearing.filter((card) => cardDecision(card) === 'approved' && card.parkedByDefault !== true
+        && !(card.state && card.state.sealedTrainLive === true)).length,
       declined: opBearing.filter((card) => cardDecision(card) === 'declined').length,
       parked: opBearing.filter((card) => cardDecision(card) === 'parked' || card.parkedByDefault === true).length,
     };
@@ -4527,7 +4534,7 @@ button{font:inherit;}
     derivation.tally = updatesTallyOf(derivation.cards);
   }
   function updatesGroups() {
-    const groups = { main: [], approved: [], sealed: [], engineering: [], parked: [] };
+    const groups = { main: [], approved: [], sealed: [], shipped: [], engineering: [], parked: [] };
     for (const card of updatesCards()) {
       const decision = cardDecision(card);
       if (decision === 'parked' || card.parkedByDefault === true) { groups.parked.push(card); continue; }
@@ -4537,6 +4544,10 @@ button{font:inherit;}
         // stays in the main list, resumable — never in the approved group.
         if (card.kind === 're-confirmation') { groups.main.push(card); continue; }
         if (card.kind === 'needs-engineering') { groups.engineering.push(card); continue; }
+        // A card whose sealing update went LIVE is achieved — §03.6's
+        // consumed rule: it never re-boards, never re-counts, and the
+        // riding copy would be false forever. Its own resting group.
+        if (card.state && card.state.sealedTrainLive === true) { groups.shipped.push(card); continue; }
         // A card frozen by a live seal is riding the CURRENT update — it is
         // not "waiting for the next update", and its decision cannot change
         // until the train finishes or stops (the fold ignores later decide
@@ -4588,8 +4599,9 @@ button{font:inherit;}
       }
       if (error && error.status === 409 && error.code === 'card_sealed') {
         // The card was sealed aboard a train under this tab — the fresh
-        // derivation renders it in its honest riding position.
-        showToast(COPY.updatesStatusSealed);
+        // derivation renders it in its honest position: riding, or (when
+        // the sealing update already merged) resting on the answer sheet.
+        showToast(card.state && card.state.sealedTrainLive === true ? COPY.updatesStatusShipped : COPY.updatesStatusSealed);
         void reloadUpdates();
         return;
       }
@@ -5535,6 +5547,12 @@ button{font:inherit;}
       // frozen by the seal until the train finishes or stops.
       inner.appendChild(buildUpdatesGroup('updates-sealed-group',
         COPY.updatesGroupSealed(groups.sealed.length), groups.sealed, COPY.updatesStatusSealed, false));
+    }
+    if (groups.shipped.length > 0) {
+      // Shipped cards (§03.6): the sealing update merged, the line is on the
+      // answer sheet — an achieved resting state, never "riding".
+      inner.appendChild(buildUpdatesGroup('updates-shipped-group',
+        COPY.updatesGroupShipped(groups.shipped.length), groups.shipped, COPY.updatesStatusShipped, false));
     }
     if (groups.engineering.length > 0) {
       inner.appendChild(buildUpdatesGroup('updates-engineering-group',

@@ -622,6 +622,38 @@ test('D8: a sealed-aboard card says it is riding the update and loses the decisi
   expect(errors).toEqual([]);
 });
 
+test('D8: a card whose update went live rests on the answer sheet — no riding copy, no approved count', async ({ page }) => {
+  const errors = collectErrors(page);
+  const shippedCard = {
+    ...approvedGuardCard(),
+    state: { decision: 'approved', decidedAt: '2026-08-27T13:00:00.000Z', sealedInTrain: 'train-0001', sealedTrainLive: true },
+  };
+  const mock = makeMock({ updatesPayload: derivationMock([shippedCard], [sealedTrainSnapshot()]) });
+  mock.trainView = guardTrainView('live');
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  // The achieved resting group — never the (now false) riding copy, and the
+  // shipped card no longer counts as "approved for the next update".
+  await expect(page.locator('#updates-shipped-group summary')).toHaveText('On the answer sheet (1)');
+  await expect(page.locator('#updates-sealed-group')).toHaveCount(0);
+  await expect(page.locator('#updates-stats')).toHaveCount(0);
+  await page.click('#updates-shipped-group summary');
+  const shipped = page.locator('#updates-shipped-group .updates-card');
+  await expect(shipped).toContainText('Live — this line is on the answer sheet now.');
+  await expect(shipped).not.toContainText('Riding the current update');
+  // Consumed forever: no decision door — the way to a change is a fresh
+  // call in Review, which derives a fresh card.
+  await expect(shipped.locator('.updates-links button')).toHaveCount(0);
+  // The live receipt itself still renders above.
+  await expect(page.locator('#train-status')).toHaveText('Live. These searches now answer the way you called them.');
+  await assertNoJargon(page);
+
+  expect(errors).toEqual([]);
+});
+
 // ---------------------------------------------------------------------------
 // §4.8 — the live receipt
 // ---------------------------------------------------------------------------

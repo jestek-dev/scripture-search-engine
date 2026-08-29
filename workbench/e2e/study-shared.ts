@@ -281,6 +281,10 @@ export function derivationMock(cards: readonly Record<string, unknown>[], trains
   const opBearing = cards.filter((card) =>
     card.kind !== 're-confirmation' && card.kind !== 'conflict' && card.kind !== 'needs-engineering'
     && (card.routed === undefined || card.routed === null));
+  const shipped = (card: Record<string, unknown>): boolean => {
+    const state = card.state as Record<string, unknown> | undefined;
+    return state !== undefined && state.sealedTrainLive === true;
+  };
   return {
     cards,
     derivationDigest: 'c'.repeat(64),
@@ -289,7 +293,7 @@ export function derivationMock(cards: readonly Record<string, unknown>[], trains
     unverifiablePriorTrains: [],
     tally: {
       drafted: opBearing.filter((card) => stateOf(card) === 'drafted').length,
-      approved: opBearing.filter((card) => stateOf(card) === 'approved' && card.parkedByDefault !== true).length,
+      approved: opBearing.filter((card) => stateOf(card) === 'approved' && card.parkedByDefault !== true && !shipped(card)).length,
       declined: opBearing.filter((card) => stateOf(card) === 'declined').length,
       parked: opBearing.filter((card) => stateOf(card) === 'parked' || card.parkedByDefault === true).length,
     },
