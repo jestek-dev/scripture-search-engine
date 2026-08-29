@@ -701,6 +701,12 @@ button{font:inherit;}
     // guard sentence carries the control-run doubling in the shipped copy).
     trainTimeGuard: 'This update only writes lines on the answer sheet, so the checks are quicker — usually inside three quarters of an hour, about double that until a one-time independent sign-off clears two standing checks. The screen shows how long each run actually takes.',
     trainTimeData: 'The checks run next — they usually take between half an hour and an hour and a half. You don’t need to stay. When they finish, the report shows exactly what changed in which searches, and nothing goes live until you’ve read it, signed it, and merged it.',
+    // §8.4's honest-timing rule: the screen shows how long each run
+    // ACTUALLY takes — the running elapsed from the train's start, and the
+    // measured check-run number once one completed (never an estimate).
+    trainElapsedLine: (t) => 'This update started ' + t + ' ago.',
+    trainChecksTook: (t) => 'The checks took ' + t + '.',
+    trainLastChecksTook: (t) => 'Last update’s checks took ' + t + '.',
     trainStart: 'Start the update',
     trainConfirmTitle: 'You’re starting the update.',
     trainConfirmBody: 'Once it starts, these approved changes travel together — new calls you make will go into the next update instead.',
@@ -927,6 +933,7 @@ button{font:inherit;}
         panelError: null,  // one inline sentence for the panel (§4.9 parity)
         confirm: null,     // {kind:'seal'|'approve', opener} one-confirm slot
         pollTimer: null,
+        elapsedTimer: null, // re-render tick while an elapsed line shows
         dismissedLive: null, // trainId — the dismissed live receipt
       },
     },
@@ -4975,6 +4982,8 @@ button{font:inherit;}
     train.panelError = null;
     train.confirm = null;
     train.pollTimer = null;
+    if (train.elapsedTimer !== null && train.elapsedTimer !== undefined) clearTimeout(train.elapsedTimer);
+    train.elapsedTimer = null;
     const ui = readUiState();
     train.dismissedLive = typeof ui.dismissedLiveTrain === 'string' ? ui.dismissedLiveTrain : null;
   }
@@ -5309,6 +5318,34 @@ button{font:inherit;}
     writeUiState({ dismissedLiveTrain: trainId });
     renderUpdates();
   }
+  // §8.4's honest-timing rule: the screen shows how long each run ACTUALLY
+  // takes. Durations render in plain words at minute granularity (D28).
+  function durationWords(ms) {
+    const minutes = Math.round(ms / 60000);
+    if (minutes < 1) return 'under a minute';
+    const hours = Math.floor(minutes / 60);
+    const rest = minutes % 60;
+    if (hours === 0) return minutes + (minutes === 1 ? ' minute' : ' minutes');
+    const hourWords = hours + (hours === 1 ? ' hour' : ' hours');
+    return rest === 0 ? hourWords : hourWords + ' ' + rest + (rest === 1 ? ' minute' : ' minutes');
+  }
+  function elapsedSince(openedAt) {
+    const started = typeof openedAt === 'string' ? Date.parse(openedAt) : NaN;
+    if (isNaN(started)) return null;
+    const ms = Date.now() - started;
+    return ms < 0 ? null : durationWords(ms);
+  }
+  // While an elapsed line is on screen it re-renders once a minute so the
+  // number stays true even when no poll is scheduled (e.g. during the
+  // in-request approve act).
+  function scheduleElapsedTick() {
+    const train = state.updates.train;
+    if (train.elapsedTimer !== null && train.elapsedTimer !== undefined) clearTimeout(train.elapsedTimer);
+    train.elapsedTimer = setTimeout(() => {
+      train.elapsedTimer = null;
+      if (state.screen === 'updates') renderUpdates();
+    }, 60_000);
+  }
   function renderTrainView(panel, view) {
     const train = state.updates.train;
     panel.appendChild(trainStrip(view.state));
@@ -5325,6 +5362,23 @@ button{font:inherit;}
       const checking = node('p', 'train-status', COPY.trainGuardChecking);
       checking.id = 'train-guard-checking';
       panel.appendChild(checking);
+    }
+    // §8.4 honest timing: the running update's elapsed (from its start)…
+    if (view.state !== 'live' && view.state !== 'stopped') {
+      const elapsed = elapsedSince(view.openedAt);
+      if (elapsed !== null) {
+        const line = node('p', 'train-status', COPY.trainElapsedLine(elapsed));
+        line.id = 'train-elapsed';
+        panel.appendChild(line);
+        scheduleElapsedTick();
+      }
+    }
+    // …and the MEASURED check-run number once one completed (never an
+    // estimate — the server reads it from the recorded admission).
+    if (typeof view.checksDurationMs === 'number' && view.checksDurationMs >= 0) {
+      const took = node('p', 'train-status', COPY.trainChecksTook(durationWords(view.checksDurationMs)));
+      took.id = 'train-checks-took';
+      panel.appendChild(took);
     }
     if (view.state === 'pr-open' && typeof view.draftPrUrl === 'string' && view.draftPrUrl !== '') {
       const link = node('a', 'btn-quiet', COPY.trainPrLink);
@@ -5466,6 +5520,18 @@ button{font:inherit;}
         for (const line of summary.lines) list.appendChild(node('li', '', line));
         start.appendChild(list);
         start.appendChild(node('p', 'train-status', summary.flavor === 'guard' ? COPY.trainTimeGuard : COPY.trainTimeData));
+        // §8.4: "measure in the shakedown and print the measured number in
+        // the train view thereafter" — once a completed update carries a
+        // measured check-run duration, the estimate travels with the real
+        // number from the last run.
+        const lastMeasured = train.view !== null && typeof train.view.checksDurationMs === 'number' && train.view.checksDurationMs >= 0
+          ? train.view.checksDurationMs
+          : null;
+        if (lastMeasured !== null) {
+          const measured = node('p', 'train-status', COPY.trainLastChecksTook(durationWords(lastMeasured)));
+          measured.id = 'train-last-checks-took';
+          start.appendChild(measured);
+        }
         const button = updatesButton(null, COPY.trainStart, 'btn-primary');
         button.id = 'train-start';
         button.disabled = updatesReadOnly() || train.sealing;

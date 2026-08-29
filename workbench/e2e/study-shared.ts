@@ -350,6 +350,7 @@ export function guardTrainView(state: string, overrides: Record<string, unknown>
       digest: 'ab'.repeat(32),
     },
     draftPrUrl: null,
+    checksDurationMs: null,
     ...overrides,
   };
 }

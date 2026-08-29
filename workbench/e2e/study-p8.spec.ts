@@ -479,6 +479,50 @@ test('D8: the §4.8 parked outcome — §5.4 copy plus the tried-on line, in the
 });
 
 // ---------------------------------------------------------------------------
+// §8.4 — honest timing: the screen shows how long each run actually takes
+// ---------------------------------------------------------------------------
+
+test('D8: the running panel shows the elapsed time and the measured check-run number', async ({ page }) => {
+  const errors = collectErrors(page);
+  const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
+  mock.trainView = guardTrainView('pr-open', {
+    draftPrUrl: 'https://github.com/example/scripture-search-engine/pull/999',
+    checksDurationMs: 26 * 60_000,
+  });
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  // The elapsed line renders from the train's own openedAt — a fact, not an
+  // estimate — and the measured number is the recorded run's wall time.
+  await expect(page.locator('#train-elapsed')).toContainText(/^This update started .+ ago\.$/);
+  await expect(page.locator('#train-checks-took')).toHaveText('The checks took 26 minutes.');
+  await assertNoJargon(page);
+
+  expect(errors).toEqual([]);
+});
+
+test('D8: after a measured run, the §4.5 summary prints the measured number beside the estimate', async ({ page }) => {
+  const errors = collectErrors(page);
+  const mock = makeMock({ updatesPayload: derivationMock([approvedGuardCard()], [sealedTrainSnapshot()]) });
+  // The previous update finished (live) with a measured check run — §8.4:
+  // "print the measured number in the train view thereafter".
+  mock.trainView = guardTrainView('live', { checksDurationMs: 69 * 60_000 });
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  const summary = page.locator('#updates-train-summary');
+  await expect(summary).toContainText('The screen shows how long each run actually takes.');
+  await expect(summary.locator('#train-last-checks-took')).toHaveText('Last update’s checks took 1 hour 9 minutes.');
+  await assertNoJargon(page);
+
+  expect(errors).toEqual([]);
+});
+
+// ---------------------------------------------------------------------------
 // §4.5 — single-flight: one update at a time
 // ---------------------------------------------------------------------------
 

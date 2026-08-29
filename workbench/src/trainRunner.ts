@@ -97,6 +97,13 @@ export interface TrainView {
   readonly stopped: { readonly reason: TrainStopReason; readonly reportDigest?: string; readonly refusedOperationIds?: readonly string[] } | null;
   readonly report: GuardUpdateReport | null;
   readonly draftPrUrl: string | null;
+  /**
+   * §8.4's measured number: wall-clock milliseconds of this train's release
+   * check run, read from the admission manifest's verified release-gauntlet
+   * timestamps (startedAt→finishedAt) — a MEASURED figure from the run that
+   * actually happened, never an estimate. Null until the checks completed.
+   */
+  readonly checksDurationMs: number | null;
 }
 
 export interface TrainOperationsOptions {
@@ -258,19 +265,33 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     }
   }
 
-  async function admissionManifestExists(proposalDigest: string): Promise<boolean> {
+  async function admissionManifestFor(proposalDigest: string): Promise<Record<string, unknown> | null> {
     const directory = path.join(paths.repoRoot, 'workbench', 'admissions');
-    if (!existsSync(directory)) return false;
+    if (!existsSync(directory)) return null;
     const names = (await readdir(directory)).filter((name) => /^[0-9a-f]{64}\.json$/.test(name));
     for (const name of names) {
       try {
-        const parsed = JSON.parse(await readFile(path.join(directory, name), 'utf8')) as { proposalDigest?: unknown };
-        if (parsed.proposalDigest === proposalDigest) return true;
+        const parsed = JSON.parse(await readFile(path.join(directory, name), 'utf8')) as Record<string, unknown>;
+        if (parsed.proposalDigest === proposalDigest) return parsed;
       } catch {
         // An unreadable manifest proves nothing.
       }
     }
-    return false;
+    return null;
+  }
+
+  /**
+   * §8.4's measured number: the verified release-gauntlet run's wall time,
+   * from the admission manifest that recorded it. Never an estimate — null
+   * whenever the timestamps are absent or do not read as a real interval.
+   */
+  function checksDurationOf(admissionRecord: Record<string, unknown> | null): number | null {
+    const gauntlet = admissionRecord?.releaseGauntlet as { startedAt?: unknown; finishedAt?: unknown } | null | undefined;
+    if (gauntlet === undefined || gauntlet === null) return null;
+    const started = typeof gauntlet.startedAt === 'string' ? Date.parse(gauntlet.startedAt) : Number.NaN;
+    const finished = typeof gauntlet.finishedAt === 'string' ? Date.parse(gauntlet.finishedAt) : Number.NaN;
+    if (Number.isNaN(started) || Number.isNaN(finished) || finished < started) return null;
+    return finished - started;
   }
 
   async function publishJournal(trainId: string): Promise<{ phase?: string; draftPrUrl?: string | null } | null> {
@@ -304,35 +325,39 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     return true;
   }
 
-  async function observedState(snapshot: TrainSnapshot): Promise<{ state: TrainState; manifest: ProposalManifest | null; draftPrUrl: string | null }> {
-    if (snapshot.state === 'stopped') return { state: 'stopped', manifest: await manifestFromRegistry(snapshot.trainId), draftPrUrl: null };
-    if (snapshot.state === 'open') return { state: 'open', manifest: null, draftPrUrl: null };
+  async function observedState(snapshot: TrainSnapshot): Promise<{ state: TrainState; manifest: ProposalManifest | null; draftPrUrl: string | null; checksDurationMs: number | null }> {
+    if (snapshot.state === 'open') return { state: 'open', manifest: null, draftPrUrl: null, checksDurationMs: null };
     const manifest = await manifestFromRegistry(snapshot.trainId);
-    if (manifest === null) return { state: 'sealed', manifest: null, draftPrUrl: null };
-    let proposalDigest: string;
-    try {
-      proposalDigest = proposalManifestDigest(manifest);
-    } catch {
-      return { state: 'sealed', manifest: null, draftPrUrl: null };
+    let proposalDigest: string | null = null;
+    if (manifest !== null) {
+      try {
+        proposalDigest = proposalManifestDigest(manifest);
+      } catch {
+        proposalDigest = null;
+      }
     }
+    const admissionRecord = proposalDigest === null ? null : await admissionManifestFor(proposalDigest);
+    const checksDurationMs = checksDurationOf(admissionRecord);
+    if (snapshot.state === 'stopped') return { state: 'stopped', manifest, draftPrUrl: null, checksDurationMs };
+    if (manifest === null || proposalDigest === null) return { state: 'sealed', manifest: null, draftPrUrl: null, checksDurationMs: null };
     if (snapshot.flavor === 'guard' && await operationsLanded(manifest)) {
       const journal = await publishJournal(snapshot.trainId);
-      return { state: 'live', manifest, draftPrUrl: journal?.draftPrUrl ?? null };
+      return { state: 'live', manifest, draftPrUrl: journal?.draftPrUrl ?? null, checksDurationMs };
     }
     const journal = await publishJournal(snapshot.trainId);
     if (journal?.phase === 'draft-pr-opened') {
-      return { state: 'pr-open', manifest, draftPrUrl: journal.draftPrUrl ?? null };
+      return { state: 'pr-open', manifest, draftPrUrl: journal.draftPrUrl ?? null, checksDurationMs };
     }
-    if (await admissionManifestExists(proposalDigest)) {
-      return { state: 'admitted', manifest, draftPrUrl: null };
+    if (admissionRecord !== null) {
+      return { state: 'admitted', manifest, draftPrUrl: null, checksDurationMs };
     }
     // Guard trains never enter built/measured (§5.2): with the registry entry
     // written and the report assembled from it, the sealed train IS ready.
-    return { state: snapshot.flavor === 'guard' ? 'ready' : 'sealed', manifest, draftPrUrl: null };
+    return { state: snapshot.flavor === 'guard' ? 'ready' : 'sealed', manifest, draftPrUrl: null, checksDurationMs };
   }
 
   async function view(snapshot: TrainSnapshot): Promise<TrainView> {
-    const { state, manifest, draftPrUrl } = await observedState(snapshot);
+    const { state, manifest, draftPrUrl, checksDurationMs } = await observedState(snapshot);
     return {
       trainId: snapshot.trainId,
       flavor: snapshot.flavor,
@@ -349,6 +374,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
         },
       report: manifest === null || snapshot.flavor !== 'guard' ? null : buildGuardUpdateReport(snapshot.trainId, manifest),
       draftPrUrl,
+      checksDurationMs,
     };
   }
 

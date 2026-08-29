@@ -27,7 +27,7 @@ import {
   type ReplayIdentity,
 } from '../src/deriveUpdates.js';
 import type { JudgmentRecordV2 } from '../src/judgments.js';
-import { parseProposalManifest } from '../src/proposals.js';
+import { parseProposalManifest, proposalManifestDigest } from '../src/proposals.js';
 import {
   buildGuardUpdateReport,
   createTrainOperations,
@@ -514,6 +514,38 @@ describe('stops (§03.8) and the closed reason enum', () => {
       reason: 'outside-allowlist',
       refusedOperationIds: ['golden-fixture-upsert-hearing-and-doing'],
     });
+  });
+});
+
+describe('§8.4 measured timing: the view carries the recorded check-run duration', () => {
+  it('is null before any admission, then read from the admission manifest’s release-gauntlet timestamps', async () => {
+    const root = await makeRepo([guardRecord()]);
+    const { updates, trains } = operationsFor(root);
+    await approveEveryCard(updates);
+    const sealed = await sealNow(updates, trains);
+    expect(sealed.checksDurationMs).toBeNull();
+
+    // The admit act records the verified release run; the view reads its
+    // measured wall time — never an estimate.
+    const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+      admissions: { proposal: unknown }[];
+    };
+    const digest = proposalManifestDigest(parseProposalManifest(registry.admissions[0]!.proposal));
+    await mkdir(path.join(root, 'workbench', 'admissions'), { recursive: true });
+    await writeFile(path.join(root, 'workbench', 'admissions', `${'ab'.repeat(32)}.json`), `${JSON.stringify({
+      proposalDigest: digest,
+      releaseGauntlet: { startedAt: '2026-08-12T10:00:00.000Z', finishedAt: '2026-08-12T10:26:06.000Z' },
+    })}\n`);
+    const view = await trains.train('train-0001', CURRENT);
+    expect(view.state).toBe('admitted');
+    expect(view.checksDurationMs).toBe(26 * 60_000 + 6_000);
+
+    // Unreadable timestamps degrade to null, never to a made-up number.
+    await writeFile(path.join(root, 'workbench', 'admissions', `${'ab'.repeat(32)}.json`), `${JSON.stringify({
+      proposalDigest: digest,
+      releaseGauntlet: { startedAt: 'not-a-time', finishedAt: '2026-08-12T10:26:06.000Z' },
+    })}\n`);
+    expect((await trains.train('train-0001', CURRENT)).checksDurationMs).toBeNull();
   });
 });
 
