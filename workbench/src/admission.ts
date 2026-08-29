@@ -868,8 +868,13 @@ function parseGauntletBytes(
     }
     return gateValue as unknown as MachineGate;
   });
+  // A required gate's `warn` is the ADMIT_WITH_WARNINGS shape — worth
+  // reading, never a block (the CLI's own --require-admit accepts it). A
+  // required gate that did NOT run (`not-applicable`) still blocks: an unrun
+  // guardrail must never read as protection (gate discipline, CLAUDE.md).
   const blocking = payload.verdict === 'REJECT' || gates.some((gate, index) =>
-    gate.status === 'fail' || (GAUNTLET_GATE_ROSTER[index]!.applicability === 'required' && gate.status !== 'pass'));
+    gate.status === 'fail'
+    || (GAUNTLET_GATE_ROSTER[index]!.applicability === 'required' && gate.status !== 'pass' && gate.status !== 'warn'));
   const verdictAcceptable = payload.verdict === 'ADMIT' || payload.verdict === 'ADMIT_WITH_WARNINGS'
     || (acceptance === 'tolerate-reject' && targetKind === 'release' && payload.verdict === 'REJECT');
   if (!verdictAcceptable || (blocking && !(acceptance === 'tolerate-reject' && targetKind === 'release'))) {

@@ -252,6 +252,12 @@ function fakeBuildCandidate(root: string): { build: TrainStageDependencies['buil
 function fakeRunComparison(captured: { universe: ComparisonUniverseInput | null }): NonNullable<TrainStageDependencies['runComparison']> {
   return (async (options) => {
     captured.universe = options.universe;
+    // The runner's real precondition pins the CANDIDATE descriptor bytes on
+    // disk — a base-descriptor sha here refused every real measure (D15).
+    const descriptorBytes = await readFile(options.candidate.descriptorPath);
+    if (createHash('sha256').update(descriptorBytes).digest('hex') !== options.descriptorPreconditionSha256) {
+      throw new Error('descriptorPreconditionSha256 must pin the CANDIDATE descriptor bytes.');
+    }
     const report = await compareEngines(options.universe, options.referenceEngine, options.candidateEngine);
     const binding: ComparisonCandidateBinding = {
       cacheKey: options.candidate.cacheKey,
@@ -673,7 +679,10 @@ describe('D14 sign act and the frozen-awaiting-signer hold on a ready data train
         return { exitCode: 0, stdout: '', stderr: '' };
       }
       const target = args.includes('--update-baseline') ? 'eval/baselines/probes.json' : 'eval/baselines/ordering.snapshot.json';
-      await writeFile(path.join(cwd, ...target.split('/')), `{"stable":"${target}"}\n`);
+      // The regenerated baselines carry their embedded fixture-bed identity
+      // stamp — the deferred-signing marker mint reads it, and an unstamped
+      // regen is marker_identity_unreadable when a signer is named.
+      await writeFile(path.join(cwd, ...target.split('/')), `${JSON.stringify({ ...REFERENCE, stable: target }, null, 2)}\n`);
       return { exitCode: 0, stdout: '', stderr: '' };
     };
     await runTrainStage('gauntlet', repo.options({
@@ -698,19 +707,47 @@ describe('D14 sign act and the frozen-awaiting-signer hold on a ready data train
 
   it('with a signer named but the historic debt standing, the DEBT_STANDS hold renders and the sign act still refuses', async () => {
     const repo = await readyRepo('Named Independent Signer');
+    // The committed approvals do not bind the identities the committed
+    // baselines carry (here: no approvals exist at all) — the D12a debt
+    // stands and the hold renders even with a signer named.
     const trains = trainOps(repo, 'Named Independent Signer');
     const view = await trains.train('train-0001', REFERENCE);
     expect(view.state).toBe('ready');
-    // The committed approvals do not bind the train's own base identity.
     expect(view.signingHold).toBe(SIGNING_HOLD_DEBT_STANDS);
     await expect(trains.sign('train-0001', view.report!.digest, REFERENCE))
       .rejects.toMatchObject({ code: 'awaiting_signer', status: 409 });
   });
 
-  it('with the signer named and the approvals binding the base identity, signing verifies the digest and records EXACTLY the changed queries', async () => {
+  it('with a signer named but the approvals binding an OLDER baseline identity than the committed baselines, the debt still stands', async () => {
     const repo = await readyRepo('Named Independent Signer');
-    // Pay the standing debt: both committed approvals bind the base identity.
-    const approval = (extra: Record<string, unknown>): string => `${JSON.stringify({ engine: { ...REFERENCE }, ...extra }, null, 2)}\n`;
+    // Baselines carry today's fixture-bed identity; the approvals bind a
+    // 0.9.0-era identity — exactly the real repo's historic J39 debt shape.
+    const FIXTURE_BED = { engineVersion: '0.14.0', corpusFingerprint: 'c'.repeat(64), layerFingerprint: 'f'.repeat(64) };
+    const STALE = { ...FIXTURE_BED, engineVersion: '0.9.0' };
+    const stamped = (identity: Record<string, unknown>, body: Record<string, unknown>): string => `${JSON.stringify({ ...identity, ...body }, null, 2)}\n`;
+    await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.json'), stamped(FIXTURE_BED, { observations: [] }));
+    await writeFile(path.join(repo.root, 'eval', 'baselines', 'ordering.snapshot.json'), stamped(FIXTURE_BED, { orderings: [] }));
+    await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.approval.json'), `${JSON.stringify({ engine: STALE }, null, 2)}\n`);
+    await writeFile(path.join(repo.root, 'eval', 'baselines', 'ordering.snapshot.approval.json'), `${JSON.stringify({ engine: STALE }, null, 2)}\n`);
+    const trains = trainOps(repo, 'Named Independent Signer');
+    const view = await trains.train('train-0001', REFERENCE);
+    expect(view.state).toBe('ready');
+    expect(view.signingHold).toBe(SIGNING_HOLD_DEBT_STANDS);
+    await expect(trains.sign('train-0001', view.report!.digest, REFERENCE))
+      .rejects.toMatchObject({ code: 'awaiting_signer', status: 409 });
+  });
+
+  it('with the signer named and each approval binding its committed baseline identity, signing verifies the digest and records EXACTLY the changed queries', async () => {
+    const repo = await readyRepo('Named Independent Signer');
+    // Pay the standing debt the way D12a pays it: the committed approvals
+    // bind the identity the committed BASELINES carry (the fixture-bed
+    // domain — never the train's artifact identity, which lives in a
+    // different fingerprint domain).
+    const FIXTURE_BED = { engineVersion: '0.14.0', corpusFingerprint: 'c'.repeat(64), layerFingerprint: 'f'.repeat(64) };
+    const stamped = (body: Record<string, unknown>): string => `${JSON.stringify({ ...FIXTURE_BED, ...body }, null, 2)}\n`;
+    await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.json'), stamped({ observations: [] }));
+    await writeFile(path.join(repo.root, 'eval', 'baselines', 'ordering.snapshot.json'), stamped({ orderings: [] }));
+    const approval = (extra: Record<string, unknown>): string => `${JSON.stringify({ engine: { ...FIXTURE_BED }, ...extra }, null, 2)}\n`;
     await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.approval.json'), approval({ schema: 'probe-approval/v1' }));
     await writeFile(path.join(repo.root, 'eval', 'baselines', 'ordering.snapshot.approval.json'), approval({ schema: 'ordering-approval/v1' }));
     const trains = trainOps(repo, 'Named Independent Signer');

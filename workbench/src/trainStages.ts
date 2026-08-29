@@ -275,8 +275,13 @@ async function defaultOpenEngine(databasePath: string): Promise<TrainStageEngine
     layerFingerprint: engine.layerFingerprint,
     research: (query: string) => engine.research(query),
     close: async () => {
-      await engine.close();
-      port.close?.();
+      // Defensive on both handles: the comparison runner may already have
+      // closed the engine (double-close threw ERR_INVALID_STATE from the
+      // sqlite port in the D15 ride, masking the real failure). Both closes
+      // are async — an un-awaited rejection here crashed the measure stage
+      // as an unhandled rejection (second D15 ride finding).
+      try { await engine.close(); } catch { /* already closed */ }
+      try { await port.close?.(); } catch { /* already closed */ }
     },
   } as unknown as TrainStageEngine;
 }
@@ -385,7 +390,11 @@ export async function runTrainStage(stage: TrainStage, options: TrainStageOption
     const openEngine = options.dependencies?.openEngine ?? defaultOpenEngine;
     const runComparison = options.dependencies?.runComparison ?? runAndPublishCandidateComparison;
     const universe = await buildTrainComparisonUniverse(paths.repoRoot, entry.proposal as ProposalManifest);
-    const baseDescriptorBytes = await readFile(path.join(paths.repoRoot, 'artifacts', 'content-artifact.json'));
+    // The runner's precondition pins the CANDIDATE's descriptor bytes on
+    // disk (it refuses when the built candidate drifted after the build) —
+    // the base repo descriptor plays no part here (D15 ride finding: the
+    // base descriptor sha made every real measure refuse as stale).
+    const candidateDescriptorBytes = await readFile(result.descriptorPath);
     const reference = await openEngine(path.join(paths.repoRoot, 'workbench', '.artifact', 'content.db'));
     const candidateEngine = await openEngine(result.databasePath);
     let published: { report: ComparisonReport; binding: ComparisonCandidateBinding };
@@ -393,7 +402,7 @@ export async function runTrainStage(stage: TrainStage, options: TrainStageOption
       published = await runComparison({
         candidateRootDirectory: path.join(paths.repoRoot, 'workbench', '.state', 'candidates'),
         candidate: result,
-        descriptorPreconditionSha256: sha256(baseDescriptorBytes),
+        descriptorPreconditionSha256: sha256(candidateDescriptorBytes),
         universe,
         referenceEngine: reference as never,
         candidateEngine: candidateEngine as never,
@@ -518,20 +527,42 @@ export async function runTrainStage(stage: TrainStage, options: TrainStageOption
   // only when governance has named the A2 independent signer. Without one
   // the entry carries the regenerated baselines and no marker — the train
   // freezes honestly at `ready` awaiting a signer (the A1 frozen queue).
+  // Identity domain (D15 ride finding): the marker's two identities live in
+  // the BASELINE (fixture-bed) domain, never the artifact's — admission's
+  // pairing assertion compares expectedPostMergeIdentity against the
+  // REGENERATED baseline's embedded identity, and the post-merge G2/G8
+  // staleness findings quote baseline/approval identities. The artifact
+  // triple lives in a different fingerprint domain and can never match.
+  const embeddedIdentity = (text: string): DeferredSigningMarker['preRegenIdentity'] | null => {
+    try {
+      const parsed = JSON.parse(text) as Record<string, unknown>;
+      if (typeof parsed.engineVersion !== 'string' || typeof parsed.corpusFingerprint !== 'string'
+        || typeof parsed.layerFingerprint !== 'string') return null;
+      return { engineVersion: parsed.engineVersion, corpusFingerprint: parsed.corpusFingerprint, layerFingerprint: parsed.layerFingerprint };
+    } catch {
+      return null;
+    }
+  };
   const signer = options.independentSigner ?? null;
-  const marker: DeferredSigningMarker | null = signer === null || signer.trim().length < 2
-    ? null
-    : {
+  let marker: DeferredSigningMarker | null = null;
+  if (signer !== null && signer.trim().length >= 2) {
+    const preRegenIdentity = embeddedIdentity(probeBefore);
+    const postMergeIdentity = embeddedIdentity(regen.probeBaselineText);
+    const orderingIdentity = embeddedIdentity(regen.orderingSnapshotText);
+    if (preRegenIdentity === null || postMergeIdentity === null) {
+      fail('marker_identity_unreadable', 'The committed or regenerated probe baseline carries no readable engine identity — the deferred-signing marker cannot be minted honestly.');
+    }
+    if (orderingIdentity !== null && sha256(JSON.stringify(orderingIdentity)) !== sha256(JSON.stringify(postMergeIdentity))) {
+      fail('marker_identity_unreadable', 'The regenerated probe baseline and ordering snapshot disagree on the engine identity — the deferred-signing marker cannot be minted honestly.');
+    }
+    marker = {
       kind: 'deferred-signing',
-      preRegenIdentity: entry.baseIdentity as DeferredSigningMarker['preRegenIdentity'],
-      expectedPostMergeIdentity: {
-        engineVersion: entry.candidate.engineVersion,
-        corpusFingerprint: entry.candidate.corpusFingerprint,
-        layerFingerprint: entry.candidate.layerFingerprint,
-      },
+      preRegenIdentity,
+      expectedPostMergeIdentity: postMergeIdentity,
       independentReviewer: signer,
       citation: 'merge-first-sign-once (V8, the J39 ruling): the approvals are signed once, after this update merges, against the settled identity — the machine never writes an approval.',
     };
+  }
 
   await writeRegistryEntry(paths.evidencePath, {
     ...entry,

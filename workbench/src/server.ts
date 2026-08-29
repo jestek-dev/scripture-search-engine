@@ -684,6 +684,52 @@ async function main(): Promise<void> {
   const jobRunner = createJobRunner({ mutationRepoRoot: MUTATION_REPO_ROOT });
   await jobRunner.ready();
   let activeRepositoryMutation: { readonly kind: string; readonly id: string } | null = null;
+
+  // D12 §5.2: a sealed DATA train moves unattended — the three fixed stages
+  // run in order as the same allowlisted jobs the checks door exposes, under
+  // the same single-flight discipline (never two at once, never while any
+  // other mutation runs). Stages are idempotent and self-locate the one
+  // sealed data train, so re-triggering is safe: after a mid-run server
+  // restart the chain resumes from whichever stage is incomplete the next
+  // time the train is sealed or read (ALREADY_DONE legs no-op), and it
+  // halts the moment a stage does not pass — a STOPPED stage has already
+  // appended the honest stop event, and a crashed one leaves the train
+  // retryable by restart rather than silently spinning rebuilds.
+  const TRAIN_STAGE_JOBS: readonly JobId[] = ['train-build', 'train-measure', 'train-gauntlet'];
+  let trainStagesAdvancing = false;
+  let trainStageChainHalted = false;
+  function advanceDataTrainStages(): void {
+    if (trainStagesAdvancing || trainStageChainHalted || shuttingDown || degradedReadOnly) return;
+    trainStagesAdvancing = true;
+    void (async () => {
+      try {
+        for (const jobId of TRAIN_STAGE_JOBS) {
+          if (shuttingDown) return;
+          if (activeRepositoryMutation !== null || jobRunner.getActive() !== null) return;
+          const mutationId = randomUUID();
+          activeRepositoryMutation = { kind: `check:${jobId}`, id: mutationId };
+          let record: JobRecord;
+          try {
+            const handle = jobRunner.enqueue({
+              jobId,
+              origin: { source: 'workbench-train', requestId: randomUUID(), requestedBy: REVIEWER },
+            });
+            record = await handle.result;
+          } finally {
+            if (activeRepositoryMutation?.id === mutationId) activeRepositoryMutation = null;
+          }
+          if (record.state !== 'passed') {
+            trainStageChainHalted = true;
+            return;
+          }
+        }
+      } catch {
+        trainStageChainHalted = true;
+      } finally {
+        trainStagesAdvancing = false;
+      }
+    })();
+  }
   const inboxResultCountByQuery = new Map<string, number>();
   let v2JudgmentTail: Promise<void> = Promise.resolve();
 
@@ -1249,6 +1295,13 @@ async function main(): Promise<void> {
             layerFingerprint: engine.layerFingerprint,
           }, derivationDigest);
           sendV2Success(response, 201, { train });
+          // §5.2: a fresh data seal starts the unattended stage chain (the
+          // seal mutation slot is released in the finally below; the chain
+          // re-checks single-flight before each stage).
+          if (train.flavor === 'data' && train.state === 'sealed') {
+            trainStageChainHalted = false;
+            setImmediate(() => advanceDataTrainStages());
+          }
         } catch (error) { sendTrainError(response, error); }
         finally {
           if (activeRepositoryMutation?.id === sealMutationId) activeRepositoryMutation = null;
@@ -1279,6 +1332,13 @@ async function main(): Promise<void> {
             layerFingerprint: engine.layerFingerprint,
           });
           sendV2Success(response, 200, { train, readOnly: degradedReadOnly });
+          // Restart-resume (D12): a data train observed mid-flight resumes
+          // its unattended chain — idempotent stages make this a no-op when
+          // everything already ran, and a halted chain stays halted until a
+          // fresh seal or a server restart clears it.
+          if (train.flavor === 'data' && (train.state === 'sealed' || train.state === 'built' || train.state === 'measured')) {
+            setImmediate(() => advanceDataTrainStages());
+          }
         } catch (error) { sendTrainError(response, error); }
         return;
       }

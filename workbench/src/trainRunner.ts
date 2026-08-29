@@ -364,6 +364,25 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     };
   }
 
+  /**
+   * The identity stamp a committed BASELINE carries (probes.json /
+   * ordering.snapshot.json write their own engine identity at capture time).
+   * Baselines live in the fixture-bed identity domain — the D12a debt test
+   * must compare an approval against ITS baseline's stamp, never against a
+   * train's artifact identity: those are different fingerprint domains and
+   * the comparison would be structurally unsatisfiable (D15 ride finding).
+   */
+  async function baselineIdentity(relativePath: string): Promise<{ engineVersion: string; corpusFingerprint: string; layerFingerprint: string } | null> {
+    try {
+      const parsed = JSON.parse(await readFile(path.join(paths.repoRoot, ...relativePath.split('/')), 'utf8')) as Record<string, unknown>;
+      if (typeof parsed.engineVersion !== 'string' || typeof parsed.corpusFingerprint !== 'string'
+        || typeof parsed.layerFingerprint !== 'string') return null;
+      return { engineVersion: parsed.engineVersion, corpusFingerprint: parsed.corpusFingerprint, layerFingerprint: parsed.layerFingerprint };
+    } catch {
+      return null;
+    }
+  }
+
   function identityEquals(left: unknown, right: unknown): boolean {
     return left !== null && right !== null && canonicalJson(left) === canonicalJson(right);
   }
@@ -506,16 +525,26 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
    * The frozen-awaiting-signer sentence for a data train at `ready` (A1
    * frozen queue; ruling on open call 4): non-null while no independent
    * signer is named, or while the one-time historic sign-off (D12a) has not
-   * landed — the standing approvals do not bind the train's own base
-   * identity, so no data admission can pass and the sign act must refuse.
+   * landed. D12a's landed-state is exactly "the release gauntlet's G2/G8
+   * rows read green on clean main": each committed approval binds the
+   * identity its committed BASELINE carries. The historic 0.9.0-era
+   * approvals bind an older identity than the current baselines, so the
+   * debt stands until a J39-class signing refreshes them; a stale approval
+   * left behind by any future baseline regen re-opens the hold the same
+   * way. (Comparing approvals against the train's ARTIFACT identity would
+   * be structurally unsatisfiable — baselines are captured on the fixture
+   * bed and live in a different fingerprint domain; D15 ride finding.)
    */
-  async function signingHoldOf(snapshot: TrainSnapshot, state: TrainState, entry: AdmissionEvidenceEntry | null): Promise<string | null> {
+  async function signingHoldOf(snapshot: TrainSnapshot, state: TrainState, _entry: AdmissionEvidenceEntry | null): Promise<string | null> {
     if (snapshot.flavor !== 'data' || state !== 'ready') return null;
     const signer = options.independentSigner ?? null;
     if (signer === null || signer.trim().length < 2) return SIGNING_HOLD_NO_SIGNER;
     const approvals = await committedApprovalIdentities();
-    const base = entry?.baseIdentity ?? null;
-    if (base === null || !identityEquals(approvals.probes, base) || !identityEquals(approvals.ordering, base)) {
+    const baselines = {
+      probes: await baselineIdentity('eval/baselines/probes.json'),
+      ordering: await baselineIdentity('eval/baselines/ordering.snapshot.json'),
+    };
+    if (!identityEquals(approvals.probes, baselines.probes) || !identityEquals(approvals.ordering, baselines.ordering)) {
       return SIGNING_HOLD_DEBT_STANDS;
     }
     return null;

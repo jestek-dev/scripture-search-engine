@@ -490,6 +490,29 @@ describe('M10 controlled source admission', () => {
     })).rejects.toMatchObject({ code: 'invalid_gauntlet' });
   });
 
+  it('accepts a required gate at WARN — the ADMIT_WITH_WARNINGS shape is admissible, never a blocking red (D15 ride finding)', async () => {
+    const repo = await repository();
+    const input = await previewInput(repo.root, repo.commit, repo.sourceText);
+    const requiredIndex = GAUNTLET_GATE_ROSTER.findIndex((gate) => gate.applicability === 'required');
+    expect(requiredIndex).toBeGreaterThanOrEqual(0);
+    await expect(previewAdmission({
+      ...input,
+      trustedGauntletLoader: trustedGauntletLoader({
+        mutate(report) {
+          const gates = (report.payload.gates as unknown as Record<string, unknown>[]).map((gate, index) => index === requiredIndex
+            ? { ...gate, status: 'warn', verdict: 'warn', summary: 'Pending fixtures still failing — worth reading before merge.' }
+            : gate);
+          const payload = { ...report.payload, verdict: 'ADMIT_WITH_WARNINGS', gates } as never;
+          return redigestMachineReport({
+            ...report,
+            payload,
+            payloadSha256: sha256(canonicalJson(payload)),
+          });
+        },
+      }),
+    })).resolves.toBeDefined();
+  });
+
   it('rejects candidate reports with the wrong target kind, descriptor, database, or identity', async () => {
     const repo = await repository();
     const input = await previewInput(repo.root, repo.commit, repo.sourceText);
