@@ -121,7 +121,7 @@ function stoppedTrainSnapshot(reason: string, at = '2026-08-27T18:00:00.000Z'): 
       at,
       reviewer: 'jesse',
       kind: 'train-stopped',
-      trainId: 'train-1',
+      trainId: 'train-0001',
       reason,
     },
   });
@@ -363,7 +363,7 @@ test('D8: Approve this update round-trips — confirm, admit with exact body, dr
   );
   const admits = admitPosts(mock);
   expect(admits).toHaveLength(1);
-  expect(admits[0]!.path).toBe('/api/v2/admissions/train-1/admit');
+  expect(admits[0]!.path).toBe('/api/v2/admissions/train-0001/admit');
   expect(admits[0]!.body).toEqual({
     previewDigest: 'd1'.repeat(32),
     decisions: [{
@@ -373,7 +373,7 @@ test('D8: Approve this update round-trips — confirm, admit with exact body, dr
   });
   const prepares = preparePosts(mock);
   expect(prepares).toHaveLength(1);
-  expect(prepares[0]!.path).toBe('/api/v2/publish/train-1/prepare');
+  expect(prepares[0]!.path).toBe('/api/v2/publish/train-0001/prepare');
   expect(prepares[0]!.body).toEqual({ admissionDigest: 'ad'.repeat(32), push: true, openDraftPr: true });
   // The draft-PR hand-off: the one act left is the merge, on GitHub.
   await expect(page.locator('#train-pr-link')).toHaveText('Open the draft on GitHub');
@@ -550,6 +550,73 @@ test('D8: a data-flavored seal refusal renders the server’s plain-language sen
   await expect(page.locator('#updates-train-error')).toHaveText(dataWaiting);
   // The approvals are untouched: the summary still stands for the next try.
   await expect(page.locator('#updates-train-summary')).toBeVisible();
+  await assertNoJargon(page);
+
+  expect(errors).toEqual([]);
+});
+
+test('D8: a stale seal is refused 409 — the reload line renders and nothing seals', async ({ page }) => {
+  const errors = collectErrors(page);
+  const mock = makeMock({ updatesPayload: derivationMock([approvedGuardCard()]) });
+  // §03.5 step 3: the server re-derives and compares — a moved derivation
+  // refuses the seal with stale_preview; the panel renders the reload line.
+  mock.trainSealResponder = () => ({
+    status: 409,
+    payload: {
+      ok: false,
+      error: {
+        code: 'stale_preview',
+        message: 'The picture changed since this summary was rendered — reload your updates and review the fresh summary. Nothing was sealed.',
+      },
+    },
+  });
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  await page.click('#train-start');
+  await page.click('#train-confirm-commit');
+  await expect(page.locator('#updates-train-error')).toHaveText(
+    'The picture changed since this preview — reloading it now.',
+  );
+  // Exactly one attempt went out, carrying the digest the panel rendered
+  // from; the refusal recorded nothing — the summary stands for a fresh try.
+  const posts = sealPosts(mock);
+  expect(posts).toHaveLength(1);
+  expect(posts[0]!.body).toEqual({ derivationDigest: 'c'.repeat(64) });
+  await expect(page.locator('#updates-train-summary')).toBeVisible();
+  await assertNoJargon(page);
+
+  expect(errors).toEqual([]);
+});
+
+// ---------------------------------------------------------------------------
+// §4.8 — cards riding a sealed train: honest status, no live decision door
+// ---------------------------------------------------------------------------
+
+test('D8: a sealed-aboard card says it is riding the update and loses the decision door', async ({ page }) => {
+  const errors = collectErrors(page);
+  const ridingCard = {
+    ...approvedGuardCard(),
+    state: { decision: 'approved', decidedAt: '2026-08-27T13:00:00.000Z', sealedInTrain: 'train-0001' },
+  };
+  const mock = makeMock({ updatesPayload: derivationMock([ridingCard], [sealedTrainSnapshot()]) });
+  mock.trainView = guardTrainView('ready');
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  // The card renders in its own group with the honest status — it is not
+  // "waiting for the next update"; it is aboard this one.
+  await expect(page.locator('#updates-sealed-group summary')).toHaveText('Riding the current update (1)');
+  await page.click('#updates-sealed-group summary');
+  const riding = page.locator('#updates-sealed-group .updates-card');
+  await expect(riding).toContainText('Riding the current update — locked in until it finishes or stops.');
+  // No live no-op: the "Change this decision" door is gone while the card
+  // rides (the fold would refuse the write anyway — the UI never offers it).
+  await expect(riding.locator('.updates-links button')).toHaveCount(0);
   await assertNoJargon(page);
 
   expect(errors).toEqual([]);

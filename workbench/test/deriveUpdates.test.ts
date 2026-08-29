@@ -789,4 +789,62 @@ describe('manifest emission: approved cards → the pipeline\'s own vocabulary',
     expect(fixture.expectedTop).toEqual([]);
     expect(fixture.mustNotRank).toHaveLength(1);
   });
+
+  // §03.6 rule 2 + §5.1's two-writer coexistence: the upsert rewrites the
+  // whole owned fixture file, so existing workbench-owned rows must survive
+  // the seal unless a superseding vote's boarding derivation contradicts them.
+  it('carries an existing owned-fixture line forward when its card merely sits undecided (never a silent delete)', () => {
+    const drafted = v2({ judgmentId: 'mx1', query: 'refuge in trouble', action: 'irrelevant', at: nextAt(), targetId: 'WEB:19046001', diagnosis: 'lexical-noise' });
+    const approved = v2({ judgmentId: 'mx2', query: 'refuge in trouble', action: 'irrelevant', at: nextAt(), targetId: 'WEB:19046002', diagnosis: 'lexical-noise' });
+    const ownedFixture = {
+      path: 'eval/golden/refuge-in-trouble.json',
+      contents: `${JSON.stringify({
+        id: 'refuge-in-trouble',
+        generatedBy: 'workbench',
+        status: 'pending',
+        query: 'refuge in trouble',
+        expectedTop: [],
+        mustNotRank: [{ ref: 'Psalms 46:1', why: 'compiled earlier from the drafted call' }],
+      }, null, 2)}\n`,
+    };
+    const base = inputs({ records: [drafted, approved], goldenFixtureFiles: [ownedFixture] });
+    const first = deriveUpdates(base);
+    const approvedCard = first.cards.find((card) => card.judgmentIds.includes(approved.judgmentId))!;
+    const updatesLog = decideEvents(first.cards, [{ cardId: approvedCard.cardId, kind: 'card-approved' }]);
+    const derivation = deriveUpdates({ ...base, updatesLog });
+    const { manifest } = buildUpdatesManifest(derivation, base, { trainId: 'train-merge-keep' });
+    const upsert = manifest.operations.find((operation) => operation.type === 'golden-fixture-upsert')!;
+    const fixture = upsert.fixture as { mustNotRank: { ref: string; why: string }[] };
+    // The shipped 46:1 guard survives; the newly approved 46:2 guard joins it.
+    expect(fixture.mustNotRank.map((row) => row.ref)).toEqual(['Psalms 46:1', 'Psalms 46:2']);
+    expect(fixture.mustNotRank.find((row) => row.ref === 'Psalms 46:1')!.why).toBe('compiled earlier from the drafted call');
+  });
+
+  it('drops an existing guard line exactly when a superseding vote derives the contradicting boarding assertion (§02.3 reversibility)', () => {
+    const banned = v2({ judgmentId: 'mr1', query: 'refuge in trouble', action: 'irrelevant', at: nextAt(), targetId: 'WEB:19046001', diagnosis: 'lexical-noise' });
+    const restored = v2({ judgmentId: 'mr2', query: 'refuge in trouble', action: 'essential', at: nextAt(), targetId: 'WEB:19046001', withinTop: 3, supersedes: 'mr1' });
+    const ownedFixture = {
+      path: 'eval/golden/refuge-in-trouble.json',
+      contents: `${JSON.stringify({
+        id: 'refuge-in-trouble',
+        generatedBy: 'workbench',
+        status: 'pending',
+        query: 'refuge in trouble',
+        expectedTop: [],
+        mustNotRank: [{ ref: 'Psalms 46:1', why: 'shipped by the superseded call' }],
+      }, null, 2)}\n`,
+    };
+    const base = inputs({ records: [banned, restored], goldenFixtureFiles: [ownedFixture] });
+    const first = deriveUpdates(base);
+    expect(first.cards).toHaveLength(1); // only the superseding leaf derives
+    const updatesLog = decideEvents(first.cards, [{ cardId: first.cards[0]!.cardId, kind: 'card-approved' }]);
+    const derivation = deriveUpdates({ ...base, updatesLog });
+    const { manifest } = buildUpdatesManifest(derivation, base, { trainId: 'train-merge-drop' });
+    const upsert = manifest.operations.find((operation) => operation.type === 'golden-fixture-upsert')!;
+    const fixture = upsert.fixture as { expectedTop: { ref: string }[]; mustNotRank: unknown[] };
+    // The guard is removed by the same pipeline that added it, and the
+    // superseding expectation ships in its place.
+    expect(fixture.mustNotRank).toEqual([]);
+    expect(fixture.expectedTop.map((row) => row.ref)).toEqual(['Psalms 46:1']);
+  });
 });

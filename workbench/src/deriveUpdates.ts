@@ -1352,6 +1352,65 @@ export function buildUpdatesManifest(
       }
     }
 
+    // §03.6 rule 2 (state-aware derivation) + §5.1's two-writer coexistence:
+    // the upsert REWRITES the whole owned fixture file, so it must carry the
+    // existing workbench-owned rows forward — a shipped guard line whose card
+    // merely sits undecided this cycle is never silently deleted. An existing
+    // row is dropped only when a boarding card derives a CONTRADICTING
+    // assertion on an overlapping range — the product of a superseding vote
+    // (§02.3's reversibility rule: the guard is removed by the same pipeline
+    // that added it); a same-range row of the same kind is replaced by the
+    // boarding card's fresher call.
+    const rangeOf = (ref: unknown): { start: number; end: number } | null => {
+      if (typeof ref !== 'string') return null;
+      try {
+        return anchorRangeOf(ref, 'owned fixture row');
+      } catch {
+        return null;
+      }
+    };
+    const overlaps = (a: { start: number; end: number }, b: { start: number; end: number }): boolean =>
+      a.start <= b.end && b.start <= a.end;
+    const sameRange = (a: { start: number; end: number }, b: { start: number; end: number }): boolean =>
+      a.start === b.start && a.end === b.end;
+    const rowsOf = (value: unknown): Record<string, unknown>[] =>
+      Array.isArray(value) ? value.filter((entry): entry is Record<string, unknown> => typeof entry === 'object' && entry !== null && !Array.isArray(entry)) : [];
+    if (existingValue !== undefined) {
+      const derivedExpectedRanges = expectedTop.map((row) => rangeOf(row.ref)).filter((range): range is { start: number; end: number } => range !== null);
+      const derivedGuardRanges = mustNotRank.map((row) => rangeOf(row.ref)).filter((range): range is { start: number; end: number } => range !== null);
+      const keptExpected = rowsOf(existingValue.expectedTop).filter((row) => {
+        const range = rangeOf(row.ref ?? row.reference);
+        if (range === null) return true; // the strict parser rules on it honestly below
+        if (derivedExpectedRanges.some((derived) => sameRange(derived, range))) return false; // replaced by the boarding call
+        return !derivedGuardRanges.some((derived) => overlaps(derived, range)); // dropped only by a superseding guard
+      });
+      const keptGuards = rowsOf(existingValue.mustNotRank).filter((row) => {
+        const range = rangeOf(row.ref ?? row.reference);
+        if (range === null) return true;
+        if (derivedGuardRanges.some((derived) => sameRange(derived, range))) return false;
+        return !derivedExpectedRanges.some((derived) => overlaps(derived, range));
+      });
+      const pairKeyOf = (above: unknown, below: unknown): string | null => {
+        const aboveRange = rangeOf(above);
+        const belowRange = rangeOf(below);
+        if (aboveRange === null || belowRange === null) return null;
+        return `${aboveRange.start}:${aboveRange.end}${NUL}${belowRange.start}:${belowRange.end}`;
+      };
+      const derivedPairKeys = new Set(preferredOrder
+        .flatMap((row) => {
+          const forward = pairKeyOf(row.above, row.below);
+          const reverse = pairKeyOf(row.below, row.above);
+          return forward === null || reverse === null ? [] : [forward, reverse];
+        }));
+      const keptOrder = rowsOf(existingValue.preferredOrder).filter((row) => {
+        const key = pairKeyOf(row.above, row.below);
+        return key === null || !derivedPairKeys.has(key);
+      });
+      expectedTop.unshift(...keptExpected);
+      mustNotRank.unshift(...keptGuards);
+      preferredOrder.unshift(...keptOrder);
+    }
+
     const byRef = (left: Record<string, unknown>, right: Record<string, unknown>): number => {
       const a = anchorRangeOf(String(left.ref ?? left.above), 'manifest fixture');
       const b = anchorRangeOf(String(right.ref ?? right.above), 'manifest fixture');

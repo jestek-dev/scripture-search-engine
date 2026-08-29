@@ -319,6 +319,18 @@ export function createUpdatesOperations(options: UpdatesOperationsOptions): Upda
             409,
           );
         }
+        if (card.state.sealedInTrain !== undefined) {
+          // §02.6's fold freezes a sealed card's decision until its train
+          // reaches a terminal state — a decide here would append a line the
+          // fold ignores, a control that appears to succeed and changes
+          // nothing. Refuse honestly instead; the freeze lifts if the train
+          // stops (the fold clears it) and the next decide counts again.
+          throw new UpdatesOperationsError(
+            'card_sealed',
+            'This call is riding the current update — it is locked in until that update finishes or stops.',
+            409,
+          );
+        }
         validateDecisionAgainstCard(card, request);
 
         const at = now().toISOString();

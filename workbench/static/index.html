@@ -678,6 +678,8 @@ button{font:inherit;}
     updatesFreshCard: 'You changed your call on this since the card was written. Here is the fresh card.',
     updatesEngineeringToast: 'It was written up for engineering with your calls attached.',
     updatesStatusApproved: 'Approved — waiting for the next update.',
+    updatesGroupSealed: (n) => 'Riding the current update (' + n + ')',
+    updatesStatusSealed: 'Riding the current update — locked in until it finishes or stops.',
     updatesStatusParked: 'Set aside — it returns at the top of the next cycle.',
     updatesStatusEngineering: 'With engineering — nothing else changes until an engineer takes it up.',
     // §copy — P8 (the update panel: train summary, progress, the Update
@@ -4525,7 +4527,7 @@ button{font:inherit;}
     derivation.tally = updatesTallyOf(derivation.cards);
   }
   function updatesGroups() {
-    const groups = { main: [], approved: [], engineering: [], parked: [] };
+    const groups = { main: [], approved: [], sealed: [], engineering: [], parked: [] };
     for (const card of updatesCards()) {
       const decision = cardDecision(card);
       if (decision === 'parked' || card.parkedByDefault === true) { groups.parked.push(card); continue; }
@@ -4535,6 +4537,11 @@ button{font:inherit;}
         // stays in the main list, resumable — never in the approved group.
         if (card.kind === 're-confirmation') { groups.main.push(card); continue; }
         if (card.kind === 'needs-engineering') { groups.engineering.push(card); continue; }
+        // A card frozen by a live seal is riding the CURRENT update — it is
+        // not "waiting for the next update", and its decision cannot change
+        // until the train finishes or stops (the fold ignores later decide
+        // lines, and the server refuses them 409). Its own honest group.
+        if (card.state && typeof card.state.sealedInTrain === 'string') { groups.sealed.push(card); continue; }
         groups.approved.push(card);
         continue;
       }
@@ -4576,6 +4583,13 @@ button{font:inherit;}
         // derivation reloads; the same decision is one keystroke away.
         updates.refresh[card.cardId] = true;
         renderUpdates();
+        void reloadUpdates();
+        return;
+      }
+      if (error && error.status === 409 && error.code === 'card_sealed') {
+        // The card was sealed aboard a train under this tab — the fresh
+        // derivation renders it in its honest riding position.
+        showToast(COPY.updatesStatusSealed);
         void reloadUpdates();
         return;
       }
@@ -4630,6 +4644,9 @@ button{font:inherit;}
   // itself appends nothing.
   function reopenCardButtons(card) {
     const updates = state.updates;
+    // Seal-frozen: the decision rides the current update; re-opening the
+    // buttons would offer decides the server refuses (card_sealed 409).
+    if (card.state && typeof card.state.sealedInTrain === 'string') return;
     updates.reopened[card.cardId] = true;
     if (card.question && card.state && card.state.answers && typeof card.state.answers[card.question.id] === 'string') {
       updates.answers[card.cardId] = card.state.answers[card.question.id];
@@ -4904,9 +4921,14 @@ button{font:inherit;}
     if (card.question && card.state && card.state.answers && card.state.answers[card.question.id] === 'needs-new-theme') {
       article.appendChild(node('p', 'updates-note', COPY.updatesNoneSaved));
     }
-    const links = node('div', 'updates-links');
-    links.appendChild(updatesQuietLink(COPY.updatesChangeThis, () => { reopenCardButtons(card); }));
-    article.appendChild(links);
+    // A seal-frozen card's decision cannot change while its train runs (the
+    // fold ignores later decides; the server refuses them 409) — so the
+    // "Change this decision" door is suppressed, not left to no-op.
+    if (!(card.state && typeof card.state.sealedInTrain === 'string')) {
+      const links = node('div', 'updates-links');
+      links.appendChild(updatesQuietLink(COPY.updatesChangeThis, () => { reopenCardButtons(card); }));
+      article.appendChild(links);
+    }
     return article;
   }
   function buildUpdatesGroup(id, summaryText, cards, statusText, open) {
@@ -5127,6 +5149,10 @@ button{font:inherit;}
       if (code === 'train_running') {
         // §4.5: a second start is refused — the one-at-a-time line stands.
         train.panelError = { id: 'updates-train-one-at-a-time', text: COPY.trainOneAtATime };
+      } else if (code === 'stale_preview') {
+        // §4.8's mid-seal row: the derivation moved under the summary — the
+        // reload line renders and the fresh derivation re-renders the panel.
+        train.panelError = { id: 'updates-train-error', text: COPY.staleLine };
       } else if (code === 'mutation_running') {
         train.panelError = { id: 'updates-train-error', text: COPY.busyLine };
       } else if (error && error.status === 409 && typeof error.message === 'string' && error.message !== '') {
@@ -5504,6 +5530,12 @@ button{font:inherit;}
       inner.appendChild(buildUpdatesGroup('updates-approved-group',
         COPY.updatesGroupApproved(groups.approved.length), groups.approved, COPY.updatesStatusApproved, true));
     }
+    if (groups.sealed.length > 0) {
+      // Sealed-aboard cards (§4.5): riding the CURRENT update, decisions
+      // frozen by the seal until the train finishes or stops.
+      inner.appendChild(buildUpdatesGroup('updates-sealed-group',
+        COPY.updatesGroupSealed(groups.sealed.length), groups.sealed, COPY.updatesStatusSealed, false));
+    }
     if (groups.engineering.length > 0) {
       inner.appendChild(buildUpdatesGroup('updates-engineering-group',
         COPY.updatesGroupEngineering(groups.engineering.length), groups.engineering, COPY.updatesStatusEngineering, false));
@@ -5551,7 +5583,7 @@ button{font:inherit;}
     }
     // The steady empty state (§4.8 owns the string).
     const anyCard = groups.main.length > 0 || groups.approved.length > 0
-      || groups.engineering.length > 0 || groups.parked.length > 0;
+      || groups.sealed.length > 0 || groups.engineering.length > 0 || groups.parked.length > 0;
     if (!anyCard && lines.length === 0 && !updates.deriveFailed && !updates.planFailed) {
       const empty = node('p', 'screen-sub', COPY.updatesEmpty);
       empty.id = 'updates-empty';

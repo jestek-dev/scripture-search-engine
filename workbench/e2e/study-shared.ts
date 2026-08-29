@@ -307,7 +307,7 @@ export const GUARD_REPORT_LEAD_TEXT = 'This update only writes lines on the answ
 /** A stored sealed-train snapshot as GET /api/v2/updates payloads carry it. */
 export function sealedTrainSnapshot(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
-    trainId: 'train-1',
+    trainId: 'train-0001',
     flavor: 'guard',
     openedAt: '2026-08-28T12:00:00.000Z',
     state: 'sealed',
@@ -317,7 +317,7 @@ export function sealedTrainSnapshot(overrides: Record<string, unknown> = {}): Re
       at: '2026-08-28T12:00:00.000Z',
       reviewer: 'jesse',
       kind: 'train-sealed',
-      trainId: 'train-1',
+      trainId: 'train-0001',
       sealDigest: 'a1'.repeat(32),
       cardIds: ['11'.repeat(32)],
       judgmentIds: ['0a1b2c3d-1111-4222-8333-944445555666'],
@@ -330,7 +330,7 @@ export function sealedTrainSnapshot(overrides: Record<string, unknown> = {}): Re
 /** An observed TrainView as GET /api/v2/updates/train/:id serves it. */
 export function guardTrainView(state: string, overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
-    trainId: 'train-1',
+    trainId: 'train-0001',
     flavor: 'guard',
     state,
     openedAt: '2026-08-28T12:00:00.000Z',
@@ -340,7 +340,7 @@ export function guardTrainView(state: string, overrides: Record<string, unknown>
     report: {
       schemaVersion: 1,
       kind: 'guard-update-report',
-      trainId: 'train-1',
+      trainId: 'train-0001',
       lead: GUARD_REPORT_LEAD_TEXT,
       lines: ['For "it is well with my soul", Jeremiah 4:10 must not rank. Why: matched words, not meaning; judged not a fit for this query'],
       digest: 'ab'.repeat(32),
@@ -350,11 +350,11 @@ export function guardTrainView(state: string, overrides: Record<string, unknown>
   };
 }
 
-/** A READY AdmissionView detail for `GET /api/v2/admissions/train-1`. */
+/** A READY AdmissionView detail for `GET /api/v2/admissions/train-0001`. */
 export function readyAdmissionDetail(): Record<string, unknown> {
   return {
-    reviewId: 'train-1',
-    proposalId: 'train-1',
+    reviewId: 'train-0001',
+    proposalId: 'train-0001',
     state: 'READY',
     readOnly: false,
     blockers: [],
@@ -607,7 +607,7 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
       // and every approved card rides it (the fold's sealedInTrain freeze).
       const sealedPayload = mock.updatesPayload;
       if (sealedPayload !== null) {
-        const trainId = typeof mock.trainView.trainId === 'string' ? mock.trainView.trainId : 'train-1';
+        const trainId = typeof mock.trainView.trainId === 'string' ? mock.trainView.trainId : 'train-0001';
         const priorTrains = Array.isArray(sealedPayload.trains) ? sealedPayload.trains as Record<string, unknown>[] : [];
         sealedPayload.trains = [...priorTrains, sealedTrainSnapshot({ trainId })];
         if (Array.isArray(sealedPayload.cards)) {
@@ -682,7 +682,7 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
       // like the real observed-state derivation would.
       const prUrl = 'https://github.com/example/scripture-search-engine/pull/999';
       if (mock.trainView !== null) mock.trainView = { ...mock.trainView, state: 'pr-open', draftPrUrl: prUrl };
-      await route.fulfill(created({ publication: { status: 'prepared', branch: 'refinement/2026-08-28-train-1', draftPrUrl: prUrl } }));
+      await route.fulfill(created({ publication: { status: 'prepared', branch: 'refinement/2026-08-28-train-0001', draftPrUrl: prUrl } }));
       return;
     }
     if (url.pathname === '/api/v2/judgments' && request.method() === 'GET') {

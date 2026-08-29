@@ -21,6 +21,7 @@ import type { ComparisonReport } from './comparison.js';
 import type { ComparisonCandidateBinding } from './comparisonRunner.js';
 import { prepareDraftPublication, type PublishPreparationResult } from './publishPreparation.js';
 import { parseProposalManifest, proposalManifestDigest, type ProposalManifest } from './proposals.js';
+import { provisionDetachedWorktree } from './worktreeProvision.js';
 
 const execFileAsync = promisify(execFile);
 const SHA256 = /^[0-9a-f]{64}$/;
@@ -456,7 +457,18 @@ export class AdmissionPublishOperations {
       decisions,
       linkedCaseIds: parseProposalManifest(entry.proposal).caseIds,
       provenance: entry.provenance,
-      ...(this.#options.controlRun === undefined ? {} : { dependencies: { controlRun: this.#options.controlRun } }),
+      dependencies: {
+        ...(this.#options.controlRun === undefined ? {} : { controlRun: this.#options.controlRun }),
+        // §8.4 (a D11 shakedown finding): the detached admission worktree
+        // holds only tracked files, so the fixed rebuild/verify commands need
+        // the primary root's installed dependencies and fetched sources
+        // shared in first (worktreeProvision.ts owns the rationale).
+        onPhase: async (phase, context): Promise<void> => {
+          if (phase === 'worktree-created' && context.worktree !== undefined) {
+            await provisionDetachedWorktree(this.#options.repoRoot, context.worktree);
+          }
+        },
+      },
     });
     return this.admission(entry.reviewId, false);
   }
@@ -487,6 +499,15 @@ export class AdmissionPublishOperations {
       evidence: { admissionPreview: await this.#preview(this.#previewInput(entry)), comparisonReport: entry.comparison },
       push: choice.push,
       openDraftPr: choice.openDraftPr,
+      dependencies: {
+        // Same D11 finding as the admit path: the publish worktree runs the
+        // fixed full verification, which needs the shared gitignored inputs.
+        onPhase: async (phase, context): Promise<void> => {
+          if (phase === 'worktree-created') {
+            await provisionDetachedWorktree(this.#options.repoRoot, context.worktree);
+          }
+        },
+      },
     });
     return projectPublishResult(result);
   }

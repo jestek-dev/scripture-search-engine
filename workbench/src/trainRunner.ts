@@ -112,8 +112,13 @@ export interface TrainOperationsOptions {
 }
 
 export interface TrainOperations {
-  /** §03.5 step 3 / D8: seal the approved cards into a train. */
-  seal(replayIdentity: ReplayIdentity): Promise<TrainView>;
+  /**
+   * §03.5 step 3 / D8: seal the approved cards into a train. The second
+   * argument is the derivation digest the update panel rendered from — the
+   * one mutation that digest pins (§4.5); the seal re-derives and refuses
+   * 409 `stale_preview` on inequality.
+   */
+  seal(replayIdentity: ReplayIdentity, derivationDigest: string): Promise<TrainView>;
   /** D8: observed state + the fixture-lane Update Report. */
   train(trainId: string, replayIdentity: ReplayIdentity): Promise<TrainView>;
   /** §03.8: append a stop with its pins. Refuses on a train that cannot stop. */
@@ -356,10 +361,26 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
   let sealChain: Promise<unknown> = Promise.resolve();
 
   return {
-    async seal(replayIdentity: ReplayIdentity): Promise<TrainView> {
+    async seal(replayIdentity: ReplayIdentity, derivationDigest: string): Promise<TrainView> {
       const run = sealChain.then(async () => {
         const inputs = await assemble(replayIdentity);
         const derivation = derive(inputs);
+
+        // §03.5 step 3: the seal carries the derivation digest the update
+        // panel rendered from, re-derives from scratch, and refuses on
+        // inequality — a panel showing stale state (another tab's decide, a
+        // new vote, a moved input file) can never seal a set the reviewer
+        // did not read. Checked before the single-flight and registry writes.
+        if (typeof derivationDigest !== 'string' || !/^[0-9a-f]{64}$/.test(derivationDigest)) {
+          fail('invalid_request', 'The seal must carry the derivation digest the update panel rendered from.', 400);
+        }
+        if (derivationDigest !== derivation.derivationDigest) {
+          fail(
+            'stale_preview',
+            'The picture changed since this summary was rendered — reload your updates and review the fresh summary. Nothing was sealed.',
+            409,
+          );
+        }
 
         // Single-flight (V7): at most one non-terminal train, ever.
         for (const snapshot of derivation.trains) {
@@ -369,7 +390,13 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
           }
         }
 
-        const trainId = `train-${derivation.trains.length + 1}`;
+        // The minted id must satisfy the admissions surface's REVIEW_ID shape
+        // (admissionPublishOperations.ts: /^[a-z0-9][a-z0-9-]{7,79}$/ —
+        // minimum 8 characters, so 'train-1' at 7 would 400 the admission
+        // routes and 500 the whole registry). Zero-padded to four digits the
+        // id is 10 characters, sorts naturally, and keeps the kebab-case
+        // shape every train reader accepts.
+        const trainId = `train-${String(derivation.trains.length + 1).padStart(4, '0')}`;
         let manifest: ProposalManifest;
         let digest: string;
         let cardIds: readonly string[];
@@ -428,7 +455,16 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
         // so a crash between the two leaves no sealed train without its
         // evidence (a dangling entry with no train is inert).
         const registry = await readRegistry(paths.evidencePath);
-        if (registry.admissions.some((entry) => entry.reviewId === trainId)) {
+        // FM-7 crash recovery: a crash between the registry write below and
+        // the seal-event append leaves a DANGLING entry — its trainId has no
+        // train-opened event, so nothing derives state from it, but the next
+        // seal recomputes the same id and would find it forever. A dangling
+        // entry is therefore reclaimed (overwritten); only an entry whose id
+        // actually has train events (unreachable for a count-minted id, kept
+        // as defense) still refuses.
+        const priorEntries = registry.admissions.filter((entry) => entry.reviewId !== trainId);
+        if (priorEntries.length !== registry.admissions.length
+          && derivation.trains.some((candidate) => candidate.trainId === trainId)) {
           fail('train_running', 'An update with this name already has saved evidence. Reload your updates.', 409);
         }
         const entry: AdmissionEvidenceEntry = {
@@ -451,7 +487,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
         await mkdir(path.dirname(paths.evidencePath), { recursive: true });
         await writeFile(
           paths.evidencePath,
-          `${JSON.stringify({ schemaVersion: 1, admissions: [...registry.admissions, entry] }, null, 2)}\n`,
+          `${JSON.stringify({ schemaVersion: 1, admissions: [...priorEntries, entry] }, null, 2)}\n`,
           'utf8',
         );
 
@@ -552,6 +588,11 @@ export function createControlRunExecutor(repoRoot: string): NonNullable<Admissio
     };
     try {
       await run('git', ['worktree', 'add', '--detach', worktree, preview.admittedBaseCommit], repoRoot);
+      // A detached worktree carries only tracked files; the fixed build and
+      // gauntlet commands below need the primary root's node_modules and
+      // fetched sources (worktreeProvision.ts owns the rationale).
+      const { provisionDetachedWorktree } = await import('./worktreeProvision.js');
+      await provisionDetachedWorktree(repoRoot, worktree);
       const npmCli = resolveNpmCliPath();
       const databaseRelative = 'workbench/.artifact/content.db';
       await mkdir(path.join(worktree, 'workbench', '.artifact'), { recursive: true });

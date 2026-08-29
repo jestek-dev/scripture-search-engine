@@ -1229,12 +1229,19 @@ async function main(): Promise<void> {
         activeRepositoryMutation = { kind: 'train-seal', id: sealMutationId };
         try {
           response.setHeader('cache-control', 'no-store');
-          await readJsonBody(request); // drain; the seal takes no input (V7: everything derives)
+          // §03.5 step 3 / §4.5: the seal carries the derivation digest the
+          // update panel rendered from — the one mutation that digest pins.
+          // Everything else still derives server-side (V7); the pin exists
+          // only so a stale panel refuses 409 instead of sealing unread state.
+          const sealBody = await readJsonBody(request);
+          const derivationDigest = isPlainObject(sealBody) && typeof sealBody['derivationDigest'] === 'string'
+            ? sealBody['derivationDigest']
+            : '';
           const train = await trainOperations.seal({
             engineVersion: engine.engineVersion,
             corpusFingerprint: engine.corpusFingerprint,
             layerFingerprint: engine.layerFingerprint,
-          });
+          }, derivationDigest);
           sendV2Success(response, 201, { train });
         } catch (error) { sendTrainError(response, error); }
         finally {

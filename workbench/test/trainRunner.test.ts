@@ -160,6 +160,12 @@ function operationsFor(root: string): { updates: UpdatesOperations; trains: Trai
   };
 }
 
+/** Seals against the freshly derived digest — the §03.5 step-3 pin. */
+async function sealNow(updates: UpdatesOperations, trains: TrainOperations) {
+  const derivation = await updates.derive(CURRENT);
+  return trains.seal(CURRENT, derivation.derivationDigest);
+}
+
 async function approveEveryCard(updates: UpdatesOperations, answers?: Record<string, string>): Promise<string[]> {
   const derivation = await updates.derive(CURRENT);
   const approved: string[] = [];
@@ -187,14 +193,14 @@ afterEach(async () => {
 });
 
 describe('train seal (D8) and the evidence writer (D10)', () => {
-  it('seals approved guard cards into train-1: ready state, verbatim report lead, D10 entry that round-trips previewAdmission', async () => {
+  it('seals approved guard cards into train-0001: ready state, verbatim report lead, D10 entry that round-trips previewAdmission', async () => {
     const root = await makeRepo([guardRecord()]);
     const { updates, trains } = operationsFor(root);
     const approved = await approveEveryCard(updates);
     expect(approved).toHaveLength(1);
 
-    const view = await trains.seal(CURRENT);
-    expect(view.trainId).toBe('train-1');
+    const view = await sealNow(updates, trains);
+    expect(view.trainId).toBe('train-0001');
     expect(view.flavor).toBe('guard');
     // Guard trains never enter built/measured: the assembled report IS ready.
     expect(view.state).toBe('ready');
@@ -216,14 +222,14 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
     };
     expect(registry.admissions).toHaveLength(1);
     const entry = registry.admissions[0]!;
-    expect(entry.reviewId).toBe('train-1');
+    expect(entry.reviewId).toBe('train-0001');
     expect(entry.candidate).toBeNull();
     expect(entry.comparison).toBeNull();
     expect(entry.comparisonBinding).toBeNull();
     expect(entry.gauntlet).toBeNull();
     expect(entry.baseIdentity).toEqual(CURRENT);
     expect(entry.reviewedComparisonQueries).toEqual([]);
-    expect(entry.provenance).toContain('train:train-1');
+    expect(entry.provenance).toContain('train:train-0001');
 
     // The entry round-trips previewAdmission without hand edits (D10 AC).
     const preview = await previewAdmission({
@@ -248,9 +254,9 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
     const root = await makeRepo([guardRecord()]);
     const { updates, trains } = operationsFor(root);
     await approveEveryCard(updates);
-    const first = await trains.seal(CURRENT);
+    const first = await sealNow(updates, trains);
 
-    await expect(trains.seal(CURRENT)).rejects.toMatchObject({ code: 'train_running', status: 409 });
+    await expect(sealNow(updates, trains)).rejects.toMatchObject({ code: 'train_running', status: 409 });
 
     // A vote cast after seal joins the NEXT train: the sealed digest and card
     // set never move (V8 — the train cannot silently change under him).
@@ -264,7 +270,7 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
     const lateCards = await approveEveryCard(updates);
     expect(lateCards).toHaveLength(1);
 
-    const after = await trains.train('train-1', CURRENT);
+    const after = await trains.train('train-0001', CURRENT);
     expect(after.sealDigest).toBe(first.sealDigest);
     expect(after.cardIds).toEqual(first.cardIds);
     expect(after.cardIds).not.toContain(lateCards[0]);
@@ -272,8 +278,8 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
 
   it('refuses an all-parked or empty approval set instead of sealing weight without value', async () => {
     const root = await makeRepo([guardRecord()]);
-    const { trains } = operationsFor(root);
-    await expect(trains.seal(CURRENT)).rejects.toMatchObject({ code: 'nothing_to_seal', status: 409 });
+    const { updates, trains } = operationsFor(root);
+    await expect(sealNow(updates, trains)).rejects.toMatchObject({ code: 'nothing_to_seal', status: 409 });
   });
 
   it('refuses to seal a data-flavored approval set (Phase 2 scope) with the approvals kept', async () => {
@@ -284,7 +290,7 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
     const root = await makeRepo([missing]);
     const { updates, trains } = operationsFor(root);
     await approveEveryCard(updates);
-    await expect(trains.seal(CURRENT)).rejects.toMatchObject({ code: 'data_train_waiting', status: 409 });
+    await expect(sealNow(updates, trains)).rejects.toMatchObject({ code: 'data_train_waiting', status: 409 });
     // Nothing was sealed and the approvals survive for Phase 3's machinery.
     const derivation = await updates.derive(CURRENT);
     expect(derivation.trains).toHaveLength(0);
@@ -353,27 +359,27 @@ describe('stops (§03.8) and the closed reason enum', () => {
     const root = await makeRepo([guardRecord()]);
     const { updates, trains } = operationsFor(root);
     await approveEveryCard(updates);
-    const first = await trains.seal(CURRENT);
+    const first = await sealNow(updates, trains);
 
     // An unmapped code leaves the train sealed and retryable.
-    expect(await trains.stopFromFailure('train-1', 'mutation_running')).toBeNull();
-    expect((await trains.train('train-1', CURRENT)).state).toBe('ready');
+    expect(await trains.stopFromFailure('train-0001', 'mutation_running')).toBeNull();
+    expect((await trains.train('train-0001', CURRENT)).state).toBe('ready');
 
-    expect(await trains.stopFromFailure('train-1', 'verify_failed')).toBe('verify-failed');
-    const stopped = await trains.train('train-1', CURRENT);
+    expect(await trains.stopFromFailure('train-0001', 'verify_failed')).toBe('verify-failed');
+    const stopped = await trains.train('train-0001', CURRENT);
     expect(stopped.state).toBe('stopped');
     expect(stopped.stopped).toEqual({ reason: 'verify-failed' });
 
     // Stopping twice is a no-op through the failure path and a refusal directly.
-    expect(await trains.stopFromFailure('train-1', 'verify_failed')).toBeNull();
-    await expect(trains.recordStop('train-1', 'verify-failed')).rejects.toMatchObject({ code: 'train_already_stopped' });
-    await expect(trains.recordStop('train-1', 'made-up-reason' as never)).rejects.toMatchObject({ code: 'invalid_stop_reason' });
+    expect(await trains.stopFromFailure('train-0001', 'verify_failed')).toBeNull();
+    await expect(trains.recordStop('train-0001', 'verify-failed')).rejects.toMatchObject({ code: 'train_already_stopped' });
+    await expect(trains.recordStop('train-0001', 'made-up-reason' as never)).rejects.toMatchObject({ code: 'invalid_stop_reason' });
 
     // The stop released the seal: the cards fold back to approved and the next
     // seal produces the SAME digest over the same votes and identity (seal
     // determinism), under the next train id.
-    const second = await trains.seal(CURRENT);
-    expect(second.trainId).toBe('train-2');
+    const second = await sealNow(updates, trains);
+    expect(second.trainId).toBe('train-0002');
     expect(second.sealDigest).toBe(first.sealDigest);
   });
 
@@ -381,7 +387,7 @@ describe('stops (§03.8) and the closed reason enum', () => {
     const root = await makeRepo([guardRecord()]);
     const { updates, trains } = operationsFor(root);
     await approveEveryCard(updates);
-    await trains.seal(CURRENT);
+    await sealNow(updates, trains);
 
     // The verified report a verify-failed stop pins (shape per §03.8's reader).
     const report = `${JSON.stringify({
@@ -393,8 +399,8 @@ describe('stops (§03.8) and the closed reason enum', () => {
       },
     })}\n`;
     await mkdir(path.join(root, 'eval', '.runs'), { recursive: true });
-    await writeFile(path.join(root, 'eval', '.runs', 'train-1.json'), report);
-    await trains.recordStop('train-1', 'verify-failed', { reportDigest: sha256(report) });
+    await writeFile(path.join(root, 'eval', '.runs', 'train-0001.json'), report);
+    await trains.recordStop('train-0001', 'verify-failed', { reportDigest: sha256(report) });
 
     const derivation = await updates.derive(CURRENT);
     // The join verified: the stopped train is NOT listed unverifiable, and the
@@ -403,7 +409,7 @@ describe('stops (§03.8) and the closed reason enum', () => {
     const converted = derivation.cards.find((card) => card.kind === 'needs-engineering');
     expect(converted).toBeDefined();
     expect(converted!.engineering).toMatchObject({
-      trainId: 'train-1',
+      trainId: 'train-0001',
       stopReason: 'verify-failed',
       reportDigest: sha256(report),
     });
@@ -413,9 +419,9 @@ describe('stops (§03.8) and the closed reason enum', () => {
     const root = await makeRepo([guardRecord()]);
     const { updates, trains } = operationsFor(root);
     await approveEveryCard(updates);
-    await trains.seal(CURRENT);
-    await trains.recordStop('train-1', 'outside-allowlist', { refusedOperationIds: ['golden-fixture-upsert-hearing-and-doing'] });
-    const view = await trains.train('train-1', CURRENT);
+    await sealNow(updates, trains);
+    await trains.recordStop('train-0001', 'outside-allowlist', { refusedOperationIds: ['golden-fixture-upsert-hearing-and-doing'] });
+    const view = await trains.train('train-0001', CURRENT);
     expect(view.stopped).toEqual({
       reason: 'outside-allowlist',
       refusedOperationIds: ['golden-fixture-upsert-hearing-and-doing'],
@@ -428,14 +434,14 @@ describe('the fixture-lane Update Report (§4.6)', () => {
     const root = await makeRepo([guardRecord()]);
     const { updates, trains } = operationsFor(root);
     await approveEveryCard(updates);
-    const sealed = await trains.seal(CURRENT);
-    const readBack = await trains.train('train-1', CURRENT);
+    const sealed = await sealNow(updates, trains);
+    const readBack = await trains.train('train-0001', CURRENT);
     expect(readBack.report).toEqual(sealed.report);
 
     const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
       admissions: { proposal: unknown }[];
     };
-    const recomputed = buildGuardUpdateReport('train-1', parseProposalManifest(registry.admissions[0]!.proposal));
+    const recomputed = buildGuardUpdateReport('train-0001', parseProposalManifest(registry.admissions[0]!.proposal));
     expect(recomputed).toEqual(sealed.report);
   });
 
@@ -444,5 +450,72 @@ describe('the fixture-lane Update Report (§4.6)', () => {
     const { trains } = operationsFor(root);
     await expect(trains.train('train-9', CURRENT)).rejects.toMatchObject({ code: 'train_not_found', status: 404 });
     await expect(trains.train('Not A Train', CURRENT)).rejects.toBeInstanceOf(TrainOperationsError);
+  });
+});
+
+describe('seal hardening: the admissions-surface id, the §03.5 digest pin, and FM-7 reclaim', () => {
+  // The exact shape admissionPublishOperations enforces on every review id
+  // (REVIEW_ID, admissionPublishOperations.ts) — minimum 8 characters. A
+  // minted id below it would 400 the admission routes and 500 the registry.
+  const REVIEW_ID = /^[a-z0-9][a-z0-9-]{7,79}$/;
+
+  it('mints train ids that satisfy the admissions REVIEW_ID shape (zero-padded)', async () => {
+    const root = await makeRepo([guardRecord()]);
+    const { updates, trains } = operationsFor(root);
+    await approveEveryCard(updates);
+    const view = await sealNow(updates, trains);
+    expect(view.trainId).toBe('train-0001');
+    expect(REVIEW_ID.test(view.trainId)).toBe(true);
+  });
+
+  it('refuses a stale or missing derivation digest 409/400 before anything is written (§03.5 step 3)', async () => {
+    const root = await makeRepo([guardRecord()]);
+    const { updates, trains } = operationsFor(root);
+    await approveEveryCard(updates);
+
+    await expect(trains.seal(CURRENT, 'f'.repeat(64))).rejects.toMatchObject({ code: 'stale_preview', status: 409 });
+    await expect(trains.seal(CURRENT, '')).rejects.toMatchObject({ code: 'invalid_request', status: 400 });
+    // Nothing was sealed and no evidence entry was written by the refusals.
+    const derivation = await updates.derive(CURRENT);
+    expect(derivation.trains).toHaveLength(0);
+    expect((await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8').catch(() => null))).toBeNull();
+
+    // The true pin seals.
+    const view = await trains.seal(CURRENT, derivation.derivationDigest);
+    expect(view.trainId).toBe('train-0001');
+  });
+
+  it('reclaims a dangling evidence entry left by a crash between the registry write and the seal events (FM-7)', async () => {
+    const root = await makeRepo([guardRecord()]);
+    const { updates, trains } = operationsFor(root);
+    await approveEveryCard(updates);
+
+    // Simulate the crash window: the registry entry exists for the id the
+    // next seal will mint, but no train event was ever appended.
+    const evidencePath = path.join(root, 'workbench', 'review-data', 'admission-evidence.json');
+    await mkdir(path.dirname(evidencePath), { recursive: true });
+    await writeFile(evidencePath, `${JSON.stringify({
+      schemaVersion: 1,
+      admissions: [{
+        reviewId: 'train-0001',
+        admittedBaseCommit: BASE_COMMIT,
+        expectedMainCommit: BASE_COMMIT,
+        proposal: { crashed: true },
+        candidate: null,
+        comparison: null,
+        comparisonBinding: null,
+        gauntlet: null,
+        baseIdentity: CURRENT,
+        reviewedComparisonQueries: [],
+        provenance: ['train:train-0001'],
+      }],
+    }, null, 2)}\n`, 'utf8');
+
+    // The next seal reclaims the dangling entry instead of wedging 409.
+    const view = await sealNow(updates, trains);
+    expect(view.trainId).toBe('train-0001');
+    const registry = JSON.parse(await readFile(evidencePath, 'utf8')) as { admissions: { reviewId: string; proposal: unknown }[] };
+    expect(registry.admissions).toHaveLength(1);
+    expect(registry.admissions[0]!.proposal).not.toEqual({ crashed: true });
   });
 });

@@ -337,7 +337,12 @@ export interface CommandOutcome {
   readonly command: string;
   readonly args: readonly string[];
   readonly cwd: string;
-  readonly exitCode: 0;
+  /**
+   * 0 for every command except the release gauntlet, whose REJECT exit is
+   * recorded honestly and then CLASSIFIED (§5.5 gap 3 — inherited via the
+   * control run or marker-predicted) rather than tolerated silently.
+   */
+  readonly exitCode: number;
   readonly stdoutSha256: string;
   readonly stderrSha256: string;
   readonly stdoutTail: string;
@@ -1471,12 +1476,34 @@ async function defaultVerify(worktree: string): Promise<VerifyEvidence> {
   const npmCli = resolveNpmCliPath();
   const command = await fixedCommand(process.execPath, [npmCli, 'run', 'verify'], worktree);
   const reportPath = 'eval/.runs/admission-release-report.json' as const;
-  const gauntletCommand = await fixedCommand(
-    process.execPath,
-    [npmCli, 'run', 'gauntlet', '--workspace', 'eval', '--', '--require-admit', '--json', reportPath,
-      '--release-database', 'workbench/.artifact/content.db'],
-    worktree,
-  );
+  // §5.5 gap 3 (the reviewed verdict-acceptance amendment, D8/D9): a REJECT
+  // release gauntlet exits non-zero but still writes its verified report.
+  // The red is then CLASSIFIED — inherited via the base-commit control run
+  // (guard trains) or exactly marker-predicted (data trains) — by
+  // classifyReleaseRed, which refuses everything unclassified. So the fixed
+  // command tolerates a non-zero exit exactly when the report file was
+  // produced; a run that produced no report fails exactly as before. The
+  // real exit code is recorded honestly in the command outcome.
+  const gauntletArgs = [npmCli, 'run', 'gauntlet', '--workspace', 'eval', '--', '--require-admit', '--json', reportPath,
+    '--release-database', 'workbench/.artifact/content.db'] as const;
+  let gauntletCommand: CommandOutcome;
+  try {
+    gauntletCommand = await fixedCommand(process.execPath, gauntletArgs, worktree);
+  } catch (error) {
+    const produced = await readConfinedRegularFile(worktree, reportPath, true);
+    if (produced === null) throw error;
+    const failure = error instanceof Error ? error : new Error(String(error));
+    gauntletCommand = {
+      command: process.execPath,
+      args: [...gauntletArgs],
+      cwd: worktree,
+      exitCode: 1,
+      stdoutSha256: sha256(''),
+      stderrSha256: sha256(failure.message),
+      stdoutTail: '',
+      stderrTail: tail(failure.message),
+    };
+  }
   const reportBytes = await readConfinedRegularFile(worktree, reportPath, false);
   let parsed: unknown;
   try { parsed = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(reportBytes!)); }

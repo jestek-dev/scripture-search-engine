@@ -16,6 +16,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { THEME_ANSWER_NONE } from '../src/deriveUpdates.js';
 import type { JudgmentRecordV2 } from '../src/judgments.js';
+import { createTrainOperations } from '../src/trainRunner.js';
 import { createUpdatesOperations, UpdatesOperationsError } from '../src/updatesOperations.js';
 
 const CURRENT = {
@@ -257,5 +258,33 @@ describe('updates operations (derive + decide)', () => {
       await expect(ops.decide(guard.cardId, body, CURRENT)).rejects.toBeInstanceOf(UpdatesOperationsError);
     }
     await expect(readFile(path.join(repo, 'workbench', 'updates.jsonl'), 'utf8')).rejects.toThrow();
+  });
+
+  it('refuses every decide on a seal-frozen card 409 card_sealed — the fold would ignore it (§02.6)', async () => {
+    const ops = operations();
+    const { cards } = await ops.derive(CURRENT);
+    const guard = cards.find((card) => card.kind === 'guard')!;
+    await ops.decide(guard.cardId, { decision: 'approve', cardRevision: guard.cardRevision }, CURRENT);
+    const trains = createTrainOperations({
+      repoRoot: repo,
+      reviewer: 'jesse',
+      now: () => new Date((clock += 60_000)),
+      readMain: async () => 'a'.repeat(40),
+    });
+    const { derivationDigest } = await ops.derive(CURRENT);
+    await trains.seal(CURRENT, derivationDigest);
+
+    const sealed = (await ops.derive(CURRENT)).cards.find((card) => card.cardId === guard.cardId)!;
+    expect(sealed.state.sealedInTrain).toBe('train-0001');
+    for (const decision of [
+      { decision: 'decline', reason: 'changed my mind', cardRevision: sealed.cardRevision },
+      { decision: 'park', cardRevision: sealed.cardRevision },
+    ]) {
+      await expect(ops.decide(guard.cardId, decision, CURRENT)).rejects.toMatchObject({ code: 'card_sealed', status: 409 });
+    }
+    // The frozen decision stands untouched.
+    const after = (await ops.derive(CURRENT)).cards.find((card) => card.cardId === guard.cardId)!;
+    expect(after.state.decision).toBe('approved');
+    expect(after.state.sealedInTrain).toBe('train-0001');
   });
 });
