@@ -289,6 +289,20 @@ describe('legacy migration manifest', () => {
     // even when live appends follow it.
     const tamperedPrefix = grown.replace('Who is like the Lord?', 'Who compares to the Lord?');
     expect(() => validateCanonicalLegacyCaseLog(tamperedPrefix, manifest, judgments)).toThrow(/not the canonical/);
+    // And the identity pin is keyed by eventId, never positional: a live
+    // case whose caseId sorts BEFORE the legacy case's lands at the front
+    // of the deterministic causal order, and derivation must survive it
+    // (found in anger by the D15 shakedown — a positional slice bricked
+    // the log on the first fresh case).
+    const early: CaseEvent = {
+      ...appended,
+      eventId: '11111111-1111-4111-8111-111111111111',
+      caseId: '00000000-0000-4000-8000-000000000000',
+      query: 'quiet waters',
+    };
+    const grownEarly = `${rawCases}${JSON.stringify(early)}\n`;
+    const survived = validateCanonicalLegacyCaseLog(grownEarly, manifest, judgments);
+    expect(survived.some((event) => event.eventId === early.eventId)).toBe(true);
   });
 
   it('exposes read-only read, validate, and fold helpers for later integrations', async () => {
