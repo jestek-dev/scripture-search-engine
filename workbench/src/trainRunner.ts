@@ -41,7 +41,7 @@ import {
 } from './deriveUpdates.js';
 import type { AdmissionEvidenceEntry } from './admissionPublishOperations.js';
 import { proposalManifestDigest, type ProposalManifest } from './proposals.js';
-import { assembleUpdatesInputs, resolveUpdatesInputPaths, type UpdatesInputPaths } from './updatesOperations.js';
+import { assembleUpdatesInputs, resolveUpdatesInputPaths, type GoldenMainHistoryReader, type UpdatesInputPaths } from './updatesOperations.js';
 import {
   createUpdatesStore,
   TRAIN_STOP_REASONS,
@@ -98,10 +98,13 @@ export interface TrainView {
   readonly report: GuardUpdateReport | null;
   readonly draftPrUrl: string | null;
   /**
-   * §8.4's measured number: wall-clock milliseconds of this train's release
-   * check run, read from the admission manifest's verified release-gauntlet
-   * timestamps (startedAt→finishedAt) — a MEASURED figure from the run that
-   * actually happened, never an estimate. Null until the checks completed.
+   * §8.4's measured number: wall-clock milliseconds of this train's WHOLE
+   * verified admit leg — the sign act (`decisions[].decidedAt`) to
+   * `admittedAt`, read from the admission manifest that recorded both. This
+   * is the per-train machine-time quantity §8.4's estimate describes
+   * (provisioning + rebuild + verify + release gauntlet + control run) — a
+   * MEASURED figure from the run that actually happened, never an estimate
+   * and never the gauntlet subprocess alone. Null until the checks completed.
    */
   readonly checksDurationMs: number | null;
 }
@@ -116,6 +119,11 @@ export interface TrainOperationsOptions {
   readonly now?: () => Date;
   /** Test seam: the trusted main reader. Defaults to the admission git adapter. */
   readonly readMain?: (repoRoot: string) => Promise<string>;
+  /**
+   * Test seam: main's golden-fixture history for the §03.6 live observation.
+   * Defaults to real git history (`readGoldenMainHistoryFromGit`).
+   */
+  readonly readGoldenMainHistory?: GoldenMainHistoryReader;
 }
 
 export interface TrainOperations {
@@ -243,7 +251,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
   const readMain = options.readMain ?? ((repoRoot: string): Promise<string> => DEFAULT_ADMISSION_GIT_ADAPTER.readMain(repoRoot));
 
   async function assemble(replayIdentity: ReplayIdentity): Promise<DeriveUpdatesInputs> {
-    return assembleUpdatesInputs(paths, replayIdentity);
+    return assembleUpdatesInputs(paths, replayIdentity, options.readGoldenMainHistory);
   }
 
   function derive(inputs: DeriveUpdatesInputs): UpdatesDerivation {
@@ -281,17 +289,29 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
   }
 
   /**
-   * §8.4's measured number: the verified release-gauntlet run's wall time,
-   * from the admission manifest that recorded it. Never an estimate — null
-   * whenever the timestamps are absent or do not read as a real interval.
+   * §8.4's measured number: the WHOLE verified admit leg's wall time — the
+   * sign act (the earliest `decisions[].decidedAt` the manifest records) to
+   * `admittedAt`. That is the quantity §8.4's estimate describes ("roughly
+   * 15–40 minutes … plus a comparable base-commit control run"): worktree
+   * provisioning, the identity-verified rebuild, `npm run verify`, the
+   * release gauntlet, and the control run together — never the gauntlet
+   * subprocess alone, which under-reports the leg by an order of magnitude
+   * (live: a 26m26s admit leg whose gauntlet span was 74s). Both timestamps
+   * are machine-recorded in the admission manifest. Never an estimate — null
+   * whenever they are absent or do not read as a real interval.
    */
   function checksDurationOf(admissionRecord: Record<string, unknown> | null): number | null {
-    const gauntlet = admissionRecord?.releaseGauntlet as { startedAt?: unknown; finishedAt?: unknown } | null | undefined;
-    if (gauntlet === undefined || gauntlet === null) return null;
-    const started = typeof gauntlet.startedAt === 'string' ? Date.parse(gauntlet.startedAt) : Number.NaN;
-    const finished = typeof gauntlet.finishedAt === 'string' ? Date.parse(gauntlet.finishedAt) : Number.NaN;
-    if (Number.isNaN(started) || Number.isNaN(finished) || finished < started) return null;
-    return finished - started;
+    if (admissionRecord === null) return null;
+    const admitted = typeof admissionRecord.admittedAt === 'string' ? Date.parse(admissionRecord.admittedAt) : Number.NaN;
+    const decisions = Array.isArray(admissionRecord.decisions) ? admissionRecord.decisions : [];
+    const decided = decisions.map((entry) => {
+      const decidedAt = (entry as { decidedAt?: unknown } | null)?.decidedAt;
+      return typeof decidedAt === 'string' ? Date.parse(decidedAt) : Number.NaN;
+    });
+    if (Number.isNaN(admitted) || decided.length === 0 || decided.some(Number.isNaN)) return null;
+    const started = Math.min(...decided);
+    if (admitted < started) return null;
+    return admitted - started;
   }
 
   async function publishJournal(trainId: string): Promise<{ phase?: string; draftPrUrl?: string | null } | null> {
@@ -304,28 +324,11 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     }
   }
 
-  /**
-   * Observed liveness for a guard train: every answer-sheet line the sealed
-   * manifest writes is present, byte-for-content, in the working tree — the
-   * merge landed. Derived, never stored (V5).
-   */
-  async function operationsLanded(manifest: ProposalManifest): Promise<boolean> {
-    if (manifest.operations.length === 0) return false;
-    for (const operation of manifest.operations) {
-      if (operation.type !== 'golden-fixture-upsert') return false;
-      const filePath = path.join(paths.repoRoot, 'eval', 'golden', `${operation.goldenFixtureId}.json`);
-      if (!existsSync(filePath)) return false;
-      try {
-        const current = JSON.parse(await readFile(filePath, 'utf8'));
-        if (canonicalJson(current) !== canonicalJson(operation.fixture)) return false;
-      } catch {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  async function observedState(snapshot: TrainSnapshot): Promise<{ state: TrainState; manifest: ProposalManifest | null; draftPrUrl: string | null; checksDurationMs: number | null }> {
+  // Observed liveness (§03.6/§5.2): the deriver's ONE implementation —
+  // `derivation.liveTrainIds`, anchored to main's git history so the
+  // observation is monotonic (a later same-search merge rewriting the golden
+  // file never regresses an earlier merged train). Derived, never stored (V5).
+  async function observedState(snapshot: TrainSnapshot, derivation: UpdatesDerivation): Promise<{ state: TrainState; manifest: ProposalManifest | null; draftPrUrl: string | null; checksDurationMs: number | null }> {
     if (snapshot.state === 'open') return { state: 'open', manifest: null, draftPrUrl: null, checksDurationMs: null };
     const manifest = await manifestFromRegistry(snapshot.trainId);
     let proposalDigest: string | null = null;
@@ -340,7 +343,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     const checksDurationMs = checksDurationOf(admissionRecord);
     if (snapshot.state === 'stopped') return { state: 'stopped', manifest, draftPrUrl: null, checksDurationMs };
     if (manifest === null || proposalDigest === null) return { state: 'sealed', manifest: null, draftPrUrl: null, checksDurationMs: null };
-    if (snapshot.flavor === 'guard' && await operationsLanded(manifest)) {
+    if (snapshot.flavor === 'guard' && derivation.liveTrainIds.includes(snapshot.trainId)) {
       const journal = await publishJournal(snapshot.trainId);
       return { state: 'live', manifest, draftPrUrl: journal?.draftPrUrl ?? null, checksDurationMs };
     }
@@ -356,8 +359,8 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     return { state: snapshot.flavor === 'guard' ? 'ready' : 'sealed', manifest, draftPrUrl: null, checksDurationMs };
   }
 
-  async function view(snapshot: TrainSnapshot): Promise<TrainView> {
-    const { state, manifest, draftPrUrl, checksDurationMs } = await observedState(snapshot);
+  async function view(snapshot: TrainSnapshot, derivation: UpdatesDerivation): Promise<TrainView> {
+    const { state, manifest, draftPrUrl, checksDurationMs } = await observedState(snapshot, derivation);
     return {
       trainId: snapshot.trainId,
       flavor: snapshot.flavor,
@@ -410,7 +413,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
 
         // Single-flight (V7): at most one non-terminal train, ever.
         for (const snapshot of derivation.trains) {
-          const { state } = await observedState(snapshot);
+          const { state } = await observedState(snapshot, derivation);
           if (!terminal(state)) {
             fail('train_running', 'An update is already on its way. One update travels at a time — it finishes or stops before the next one starts.', 409);
           }
@@ -543,7 +546,9 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
         ];
         const fold = await store.append(events);
         const snapshot = fold.trains.find((candidate) => candidate.trainId === trainId)!;
-        return view(snapshot);
+        // The pre-append derivation carries the live observation; the train
+        // sealed a moment ago cannot be in it, which is exactly right.
+        return view(snapshot, derivation);
       });
       sealChain = run.catch(() => undefined);
       return run;
@@ -555,7 +560,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
       const derivation = derive(inputs);
       const snapshot = derivation.trains.find((candidate) => candidate.trainId === trainId);
       if (snapshot === undefined) fail('train_not_found', 'No update with this name exists yet.', 404);
-      return view(snapshot);
+      return view(snapshot, derivation);
     },
 
     async recordStop(trainId, reason, pins = {}): Promise<void> {

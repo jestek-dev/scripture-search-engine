@@ -22,8 +22,10 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { previewAdmission } from '../src/admission.js';
 import type { AdmissionEvidenceEntry } from '../src/admissionPublishOperations.js';
 import {
+  fixtureContentDigest,
   unmeasuredLayerAffectingOperations,
   THEME_ANSWER_NONE,
+  type MainGoldenHistoryEntry,
   type ReplayIdentity,
 } from '../src/deriveUpdates.js';
 import type { JudgmentRecordV2 } from '../src/judgments.js';
@@ -152,8 +154,35 @@ async function makeRepo(records: readonly JudgmentRecordV2[]): Promise<string> {
   return root;
 }
 
+/**
+ * The test double for main's golden history (§03.6's live anchor): a JSON
+ * file `markTrainLive` appends each merged version's content digest to —
+ * append-only, like the real git history it stands in for. Absent file =
+ * nothing ever merged.
+ */
+function historyPathOf(root: string): string {
+  return path.join(root, 'workbench', '.test-main-history.json');
+}
+
+async function readTestMainHistory(root: string, goldenPaths: readonly string[]): Promise<MainGoldenHistoryEntry[]> {
+  let recorded: Record<string, readonly string[]>;
+  try {
+    recorded = JSON.parse(await readFile(historyPathOf(root), 'utf8')) as Record<string, readonly string[]>;
+  } catch {
+    return [];
+  }
+  return goldenPaths
+    .filter((goldenPath) => recorded[goldenPath] !== undefined)
+    .map((goldenPath) => ({ path: goldenPath, fixtureDigests: recorded[goldenPath]! }));
+}
+
 function operationsFor(root: string): { updates: UpdatesOperations; trains: TrainOperations } {
-  const shared = { repoRoot: root, reviewer: 'jesse', now: testNow };
+  const shared = {
+    repoRoot: root,
+    reviewer: 'jesse',
+    now: testNow,
+    readGoldenMainHistory: (repoRoot: string, goldenPaths: readonly string[]) => readTestMainHistory(repoRoot, goldenPaths),
+  };
   return {
     updates: createUpdatesOperations(shared),
     trains: createTrainOperations({ ...shared, readMain: async () => BASE_COMMIT }),
@@ -189,9 +218,12 @@ function guardRecord(): JudgmentRecordV2 {
 }
 
 /**
- * Observes the merge for a sealed guard train: writes every fixture its
- * registry manifest upserts into eval/golden/, exactly as the merged PR
- * would land them — the runner then derives `live` (V5, never stored).
+ * Observes the merge for a sealed guard train: appends every fixture its
+ * registry manifest upserts to the append-only main-history double (the
+ * squash merge landing the content on main), and writes the working-tree
+ * golden files exactly as a post-merge checkout would hold them — the runner
+ * then derives `live` (V5, never stored). Liveness reads ONLY the history:
+ * later rewrites of the working-tree file never regress it.
  */
 async function markTrainLive(root: string, trainId: string): Promise<void> {
   const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
@@ -199,13 +231,22 @@ async function markTrainLive(root: string, trainId: string): Promise<void> {
   };
   const entry = registry.admissions.find((candidate) => candidate.reviewId === trainId);
   if (entry === undefined) throw new Error(`No registry entry for ${trainId}.`);
+  let history: Record<string, string[]>;
+  try {
+    history = JSON.parse(await readFile(historyPathOf(root), 'utf8')) as Record<string, string[]>;
+  } catch {
+    history = {};
+  }
   for (const operation of entry.proposal.operations) {
     if (operation.type !== 'golden-fixture-upsert') continue;
+    const goldenPath = `eval/golden/${operation.goldenFixtureId!}.json`;
+    history[goldenPath] = [...(history[goldenPath] ?? []), fixtureContentDigest(operation.fixture)];
     await writeFile(
       path.join(root, 'eval', 'golden', `${operation.goldenFixtureId!}.json`),
       `${JSON.stringify(operation.fixture, null, 2)}\n`,
     );
   }
+  await writeFile(historyPathOf(root), `${JSON.stringify(history, null, 2)}\n`);
 }
 
 afterEach(async () => {
@@ -427,6 +468,71 @@ describe('§03.6 consumed cards: a live (merged) train never re-boards', () => {
     // The rewritten fixture keeps the shipped guard row beside the new one.
     expect(entry.proposal.operations[0]!.fixture!.mustNotRank.map((row) => row.ref)).toEqual(['Psalms 46:1', 'James 1:22']);
   });
+
+  it('liveness is monotonic (§5.2): a second same-search merge never regresses the first train — it stays live, its card rests, and a third seal departs', async () => {
+    const root = await makeRepo([guardRecord()]);
+    const { updates, trains } = operationsFor(root);
+    await approveEveryCard(updates);
+    await sealNow(updates, trains);
+    await markTrainLive(root, 'train-0001');
+
+    // A second approved call on the same search: its sealed fixture merges
+    // the shipped row with the new one (§03.6's row merge), and its merge
+    // REWRITES the golden file — the system's own normal operation. Under
+    // the old working-tree-equality observation this destroyed train-0001's
+    // liveness; anchored to main's history it cannot.
+    const log = path.join(root, 'workbench', 'judgments.jsonl');
+    const late = v2({
+      judgmentId: 'g-same-2', query: 'hearing and doing', action: 'irrelevant', at: nextAt(),
+      targetId: 'WEB:59001022', diagnosis: 'lexical-noise',
+    });
+    await writeFile(log, `${await readFile(log, 'utf8')}${JSON.stringify(late)}\n`);
+    await approveEveryCard(updates);
+    await sealNow(updates, trains);
+    await markTrainLive(root, 'train-0002');
+
+    // (a) The first train is still live — never re-presented as "ready".
+    expect((await trains.train('train-0001', CURRENT)).state).toBe('live');
+    expect((await trains.train('train-0002', CURRENT)).state).toBe('live');
+
+    // (b) Both consumed cards rest as achieved: neither re-enters the
+    // approved tally, and the derivation lists both trains live.
+    const derivation = await updates.derive(CURRENT);
+    expect(derivation.liveTrainIds).toEqual(['train-0001', 'train-0002']);
+    expect(derivation.tally.approved).toBe(0);
+    expect(derivation.cards.filter((card) => card.state.sealedTrainLive === true)).toHaveLength(2);
+
+    // (c) A third seal on an unrelated search departs — both prior trains
+    // are terminal, so single-flight admits it; no eternal train_running.
+    const third = v2({
+      judgmentId: 'g-third', query: 'doers of the word', action: 'irrelevant', at: nextAt(),
+      targetId: 'WEB:19046001', diagnosis: 'lexical-noise',
+    });
+    await writeFile(log, `${await readFile(log, 'utf8')}${JSON.stringify(third)}\n`);
+    await writeFile(path.join(root, 'workbench', 'cases.jsonl'), casesFor([guardRecord(), late, third]));
+    const thirdCards = await approveEveryCard(updates);
+    expect(thirdCards).toHaveLength(1);
+    const view = await sealNow(updates, trains);
+    expect(view.trainId).toBe('train-0003');
+    expect(view.state).toBe('ready');
+  });
+
+  it('a hand edit or promotion rewriting a merged fixture never regresses the train (history, not the working tree, is the anchor)', async () => {
+    const root = await makeRepo([guardRecord()]);
+    const { updates, trains } = operationsFor(root);
+    await approveEveryCard(updates);
+    await sealNow(updates, trains);
+    await markTrainLive(root, 'train-0001');
+
+    // The §8.4 gate-wiring promotion trigger (or a hand edit) rewrites the
+    // file AFTER the merge. The merged content remains in main's history.
+    await writeFile(
+      path.join(root, 'eval', 'golden', 'hearing-and-doing.json'),
+      `${JSON.stringify({ id: 'hearing-and-doing', query: 'hearing and doing', status: 'active', mustNotRank: [] }, null, 2)}\n`,
+    );
+    expect((await trains.train('train-0001', CURRENT)).state).toBe('live');
+    expect((await updates.derive(CURRENT)).liveTrainIds).toEqual(['train-0001']);
+  });
 });
 
 describe('stops (§03.8) and the closed reason enum', () => {
@@ -517,16 +623,20 @@ describe('stops (§03.8) and the closed reason enum', () => {
   });
 });
 
-describe('§8.4 measured timing: the view carries the recorded check-run duration', () => {
-  it('is null before any admission, then read from the admission manifest’s release-gauntlet timestamps', async () => {
+describe('§8.4 measured timing: the view carries the whole verified admit leg’s wall time', () => {
+  it('is null before any admission, then admittedAt − the sign act’s decidedAt — never the gauntlet subprocess span alone', async () => {
     const root = await makeRepo([guardRecord()]);
     const { updates, trains } = operationsFor(root);
     await approveEveryCard(updates);
     const sealed = await sealNow(updates, trains);
     expect(sealed.checksDurationMs).toBeNull();
 
-    // The admit act records the verified release run; the view reads its
-    // measured wall time — never an estimate.
+    // The admit act records the whole leg it ran — the sign act
+    // (decisions[].decidedAt) through admittedAt: provisioning, the
+    // identity-verified rebuild, verify, the release gauntlet, and the
+    // control run. The view prints THAT measured wall time — never an
+    // estimate, and never the release-gauntlet subprocess alone (live: a
+    // 26m26s leg whose gauntlet span was 74s printed as "1 minute").
     const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
       admissions: { proposal: unknown }[];
     };
@@ -534,16 +644,27 @@ describe('§8.4 measured timing: the view carries the recorded check-run duratio
     await mkdir(path.join(root, 'workbench', 'admissions'), { recursive: true });
     await writeFile(path.join(root, 'workbench', 'admissions', `${'ab'.repeat(32)}.json`), `${JSON.stringify({
       proposalDigest: digest,
-      releaseGauntlet: { startedAt: '2026-08-12T10:00:00.000Z', finishedAt: '2026-08-12T10:26:06.000Z' },
+      admittedAt: '2026-08-12T10:26:26.000Z',
+      decisions: [{ subject: 'hearing-and-doing', decidedAt: '2026-08-12T10:00:00.000Z' }],
+      releaseGauntlet: { startedAt: '2026-08-12T10:23:05.000Z', finishedAt: '2026-08-12T10:24:19.000Z' },
     })}\n`);
     const view = await trains.train('train-0001', CURRENT);
     expect(view.state).toBe('admitted');
-    expect(view.checksDurationMs).toBe(26 * 60_000 + 6_000);
+    expect(view.checksDurationMs).toBe(26 * 60_000 + 26_000);
 
     // Unreadable timestamps degrade to null, never to a made-up number.
     await writeFile(path.join(root, 'workbench', 'admissions', `${'ab'.repeat(32)}.json`), `${JSON.stringify({
       proposalDigest: digest,
-      releaseGauntlet: { startedAt: 'not-a-time', finishedAt: '2026-08-12T10:26:06.000Z' },
+      admittedAt: '2026-08-12T10:26:26.000Z',
+      decisions: [{ subject: 'hearing-and-doing', decidedAt: 'not-a-time' }],
+    })}\n`);
+    expect((await trains.train('train-0001', CURRENT)).checksDurationMs).toBeNull();
+
+    // So does a manifest recording no decisions at all.
+    await writeFile(path.join(root, 'workbench', 'admissions', `${'ab'.repeat(32)}.json`), `${JSON.stringify({
+      proposalDigest: digest,
+      admittedAt: '2026-08-12T10:26:26.000Z',
+      decisions: [],
     })}\n`);
     expect((await trains.train('train-0001', CURRENT)).checksDurationMs).toBeNull();
   });

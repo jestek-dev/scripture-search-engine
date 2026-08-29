@@ -20,9 +20,11 @@ import path from 'node:path';
 
 import {
   deriveUpdates,
+  fixtureContentDigest,
   THEME_ANSWER_NONE,
   type DeriveSourceFile,
   type DeriveUpdatesInputs,
+  type MainGoldenHistoryEntry,
   type PriorTrainArtifacts,
   type ReplayIdentity,
   type UpdateCard,
@@ -53,6 +55,11 @@ export interface UpdatesOperationsOptions {
    */
   readonly evidencePath?: string;
   readonly now?: () => Date;
+  /**
+   * Test seam: main's golden-fixture history for the §03.6 live observation.
+   * Defaults to `readGoldenMainHistoryFromGit` (real git history).
+   */
+  readonly readGoldenMainHistory?: GoldenMainHistoryReader;
 }
 
 export type DecideDecision = 'approve' | 'decline' | 'park';
@@ -238,8 +245,97 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
   }));
 }
 
+/** The §03.6 live-observation source: main's history for named golden paths. */
+export type GoldenMainHistoryReader = (repoRoot: string, goldenPaths: readonly string[]) => Promise<readonly MainGoldenHistoryEntry[]>;
+
+const GOLDEN_FIXTURE_ID = /^[a-z0-9][a-z0-9-]{0,127}$/;
+const COMMIT_HEX = /^[0-9a-f]{40}$/;
+
+/**
+ * The golden paths whose main-history the live observation needs: exactly
+ * the files sealed manifests upsert. Parsed loosely — a manifest that does
+ * not parse contributes no paths and the §03.2 join reports it unverifiable.
+ */
+function sealedGoldenPathsOf(priorTrainArtifacts: readonly PriorTrainArtifacts[]): string[] {
+  const goldenPaths = new Set<string>();
+  for (const artifact of priorTrainArtifacts) {
+    if (artifact.sealedManifestJson === undefined) continue;
+    try {
+      const manifest = JSON.parse(artifact.sealedManifestJson) as { operations?: readonly { type?: unknown; goldenFixtureId?: unknown }[] };
+      for (const operation of Array.isArray(manifest.operations) ? manifest.operations : []) {
+        if (operation.type === 'golden-fixture-upsert' && typeof operation.goldenFixtureId === 'string' && GOLDEN_FIXTURE_ID.test(operation.goldenFixtureId)) {
+          goldenPaths.add(`eval/golden/${operation.goldenFixtureId}.json`);
+        }
+      }
+    } catch {
+      // The join reports the unparseable manifest; no path to observe.
+    }
+  }
+  return [...goldenPaths].sort();
+}
+
+/**
+ * The default `GoldenMainHistoryReader`: every content version of each named
+ * golden path reachable from main — local `refs/heads/main` and, when
+ * present, `refs/remotes/origin/main` (a squash merge lands on origin/main
+ * first; the primary checkout's main may lag). §03.6/§5.2 anchor the `live`
+ * observation here because git history only grows: a train whose sealed
+ * fixtures all appear in it stays live no matter how the working tree moves
+ * later. Not a git repository, no main ref, an unreadable or unparseable
+ * version: observed as absent, never an error — the observation fails closed
+ * to "riding".
+ */
+export async function readGoldenMainHistoryFromGit(repoRoot: string, goldenPaths: readonly string[]): Promise<MainGoldenHistoryEntry[]> {
+  if (goldenPaths.length === 0) return [];
+  const { execFile } = await import('node:child_process');
+  const { promisify } = await import('node:util');
+  const execFileAsync = promisify(execFile);
+  const capture = async (args: readonly string[]): Promise<string | null> => {
+    try {
+      const result = await execFileAsync('git', [...args], { cwd: repoRoot, windowsHide: true, maxBuffer: 64 * 1024 * 1024 });
+      return result.stdout;
+    } catch {
+      return null;
+    }
+  };
+  const tips: string[] = [];
+  for (const ref of ['refs/heads/main', 'refs/remotes/origin/main']) {
+    const resolved = (await capture(['rev-parse', '--verify', '--quiet', `${ref}^{commit}`]))?.trim();
+    if (resolved !== undefined && COMMIT_HEX.test(resolved) && !tips.includes(resolved)) tips.push(resolved);
+  }
+  if (tips.length === 0) return [];
+  const entries: MainGoldenHistoryEntry[] = [];
+  for (const goldenPath of [...goldenPaths].sort()) {
+    if (!goldenPath.startsWith('eval/golden/')) continue;
+    const versionDigests = new Set<string>();
+    const seenCommits = new Set<string>();
+    for (const tip of tips) {
+      const listed = await capture(['rev-list', tip, '--', goldenPath]);
+      if (listed === null) continue;
+      for (const line of listed.split('\n')) {
+        const commit = line.trim();
+        if (!COMMIT_HEX.test(commit) || seenCommits.has(commit)) continue;
+        seenCommits.add(commit);
+        const contents = await capture(['show', `${commit}:${goldenPath}`]);
+        if (contents === null) continue;
+        try {
+          versionDigests.add(fixtureContentDigest(JSON.parse(contents)));
+        } catch {
+          // An unparseable historical version proves nothing.
+        }
+      }
+    }
+    entries.push({ path: goldenPath, fixtureDigests: [...versionDigests].sort() });
+  }
+  return entries;
+}
+
 /** Reads one complete observed-input snapshot for the deriver (§03.2's table). */
-export async function assembleUpdatesInputs(paths: UpdatesInputPaths, replayIdentity: ReplayIdentity): Promise<DeriveUpdatesInputs> {
+export async function assembleUpdatesInputs(
+  paths: UpdatesInputPaths,
+  replayIdentity: ReplayIdentity,
+  readGoldenMainHistory: GoldenMainHistoryReader = readGoldenMainHistoryFromGit,
+): Promise<DeriveUpdatesInputs> {
   const manifestPath = path.join(paths.repoRoot, 'workbench', 'legacy', 'migration-manifest.json');
   const [judgmentsLog, casesLog, migrationManifestJson, updatesLog, ontologyFiles, goldenFixtureFiles, webSubsetJson] = await Promise.all([
     readOptional(paths.judgmentsLogPath).then((text) => text ?? ''),
@@ -251,6 +347,8 @@ export async function assembleUpdatesInputs(paths: UpdatesInputPaths, replayIden
     readFile(path.join(paths.repoRoot, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8'),
   ]);
   const priorTrainArtifacts = await loadPriorTrainArtifacts(paths, updatesLog);
+  const sealedGoldenPaths = sealedGoldenPathsOf(priorTrainArtifacts);
+  const mainGoldenHistory = sealedGoldenPaths.length === 0 ? [] : await readGoldenMainHistory(paths.repoRoot, sealedGoldenPaths);
   return {
     judgmentsLog,
     casesLog,
@@ -261,6 +359,7 @@ export async function assembleUpdatesInputs(paths: UpdatesInputPaths, replayIden
     goldenFixtureFiles,
     webSubsetJson,
     ...(priorTrainArtifacts.length === 0 ? {} : { priorTrainArtifacts }),
+    ...(mainGoldenHistory.length === 0 ? {} : { mainGoldenHistory }),
   };
 }
 
@@ -270,7 +369,7 @@ export function createUpdatesOperations(options: UpdatesOperationsOptions): Upda
   const now = options.now ?? ((): Date => new Date());
 
   async function assembleInputs(replayIdentity: ReplayIdentity): Promise<DeriveUpdatesInputs> {
-    return assembleUpdatesInputs(paths, replayIdentity);
+    return assembleUpdatesInputs(paths, replayIdentity, options.readGoldenMainHistory);
   }
 
   function deriveFrom(inputs: DeriveUpdatesInputs): UpdatesDerivation {

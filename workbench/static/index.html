@@ -5373,8 +5373,10 @@ button{font:inherit;}
         scheduleElapsedTick();
       }
     }
-    // …and the MEASURED check-run number once one completed (never an
-    // estimate — the server reads it from the recorded admission).
+    // …and the MEASURED number once a run completed: the whole verified
+    // admit leg's wall time (sign act -> admitted — provisioning, rebuild,
+    // verify, release gauntlet, control run), read by the server from the
+    // recorded admission. Never an estimate, never the gauntlet span alone.
     if (typeof view.checksDurationMs === 'number' && view.checksDurationMs >= 0) {
       const took = node('p', 'train-status', COPY.trainChecksTook(durationWords(view.checksDurationMs)));
       took.id = 'train-checks-took';

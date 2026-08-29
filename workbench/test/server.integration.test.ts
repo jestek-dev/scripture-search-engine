@@ -1327,4 +1327,62 @@ describe('v2 guard train sealing HTTP contracts (D10 AC)', () => {
     expect(detail.data.admission.preview!.digest).toMatch(/^[0-9a-f]{64}$/);
     expect(detail.data.admission.preview!.decisions.length).toBeGreaterThan(0);
   }, 60_000);
+
+  it('observes live from REAL git history (§5.2): the merged content on main makes the train live, monotonically — a later working-tree rewrite never regresses it', async () => {
+    const port = await unusedPort();
+    const fixture = scaffoldGuardTrainRepo();
+    await startReviewedFixtureServer(port, {
+      WORKBENCH_REPO_ROOT: fixture.root,
+      WORKBENCH_JUDGMENTS_PATH: fixture.judgmentsPath,
+      WORKBENCH_CASES_PATH: fixture.casesPath,
+      WORKBENCH_UPDATES_PATH: fixture.updatesPath,
+    });
+    const origin = `http://127.0.0.1:${port}`;
+
+    const derived = await responseJson(await fetch(`${origin}/api/v2/updates`)) as {
+      data: { cards: { cardId: string; cardRevision: string; kind: string }[] };
+    };
+    const guardCard = derived.data.cards.find((card) => card.kind === 'guard')!;
+    expect((await postJson(`${origin}/api/v2/updates/cards/${guardCard.cardId}/decide`, {
+      decision: 'approve',
+      cardRevision: guardCard.cardRevision,
+    })).status).toBe(201);
+    const rederived = await responseJson(await fetch(`${origin}/api/v2/updates`)) as { data: { derivationDigest: string } };
+    const sealed = await postJson(`${origin}/api/v2/updates/train`, { derivationDigest: rederived.data.derivationDigest });
+    expect(sealed.status).toBe(201);
+
+    // Before any merge the sealed train rides — the fixture is not on main.
+    const riding = await responseJson(await fetch(`${origin}/api/v2/updates/train/train-0001`)) as { data: { train: { state: string } } };
+    expect(riding.data.train.state).toBe('ready');
+
+    // The squash merge lands the sealed fixture content on main — a real
+    // commit, read back by the DEFAULT git-history observation (no seam).
+    const registry = JSON.parse(readFileSync(path.join(fixture.root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+      admissions: { reviewId: string; proposal: { operations: { type: string; goldenFixtureId?: string; fixture?: unknown }[] } }[];
+    };
+    const operations = registry.admissions.find((entry) => entry.reviewId === 'train-0001')!.proposal.operations;
+    const goldenRelatives: string[] = [];
+    for (const operation of operations) {
+      if (operation.type !== 'golden-fixture-upsert') continue;
+      const relative = `eval/golden/${operation.goldenFixtureId!}.json`;
+      goldenRelatives.push(relative);
+      writeFileSync(path.join(fixture.root, relative), `${JSON.stringify(operation.fixture, null, 2)}\n`);
+    }
+    expect(goldenRelatives.length).toBeGreaterThan(0);
+    for (const args of [
+      ['add', ...goldenRelatives],
+      ['commit', '--quiet', '--message', 'guard train train-0001 (squash merge)'],
+    ]) {
+      const result = spawnSync('git', args, { cwd: fixture.root, encoding: 'utf8' });
+      expect(result.status, result.stderr).toBe(0);
+    }
+    const live = await responseJson(await fetch(`${origin}/api/v2/updates/train/train-0001`)) as { data: { train: { state: string } } };
+    expect(live.data.train.state).toBe('live');
+
+    // Monotonic: a working-tree rewrite (the next same-search merge's file,
+    // a promotion, a hand edit) never regresses the merged train to ready.
+    writeFileSync(path.join(fixture.root, goldenRelatives[0]!), `${JSON.stringify({ id: 'rewritten', query: 'hearing and doing' }, null, 2)}\n`);
+    const after = await responseJson(await fetch(`${origin}/api/v2/updates/train/train-0001`)) as { data: { train: { state: string } } };
+    expect(after.data.train.state).toBe('live');
+  }, 60_000);
 });

@@ -485,9 +485,13 @@ test('D8: the §4.8 parked outcome — §5.4 copy plus the tried-on line, in the
 test('D8: the running panel shows the elapsed time and the measured check-run number', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
+  // §8.4's measured number is the WHOLE verified admit leg — the sign act
+  // (decisions[].decidedAt) to admittedAt: provisioning + rebuild + verify +
+  // release gauntlet + control run — never the gauntlet subprocess alone.
+  // 26m26s is the leg the D11 tip ride actually measured (train-0010).
   mock.trainView = guardTrainView('pr-open', {
     draftPrUrl: 'https://github.com/example/scripture-search-engine/pull/999',
-    checksDurationMs: 26 * 60_000,
+    checksDurationMs: 26 * 60_000 + 26_000,
   });
   await installRoutes(page, mock);
   await page.goto(origin);
@@ -495,7 +499,8 @@ test('D8: the running panel shows the elapsed time and the measured check-run nu
   await openUpdates(page);
 
   // The elapsed line renders from the train's own openedAt — a fact, not an
-  // estimate — and the measured number is the recorded run's wall time.
+  // estimate — and the measured number is the recorded admit leg's wall
+  // time, in plain words at minute granularity.
   await expect(page.locator('#train-elapsed')).toContainText(/^This update started .+ ago\.$/);
   await expect(page.locator('#train-checks-took')).toHaveText('The checks took 26 minutes.');
   await assertNoJargon(page);
@@ -507,7 +512,10 @@ test('D8: after a measured run, the §4.5 summary prints the measured number bes
   const errors = collectErrors(page);
   const mock = makeMock({ updatesPayload: derivationMock([approvedGuardCard()], [sealedTrainSnapshot()]) });
   // The previous update finished (live) with a measured check run — §8.4:
-  // "print the measured number in the train view thereafter".
+  // "print the measured number in the train view thereafter". The number is
+  // the whole verified admit leg (sign act → admitted), the same quantity
+  // the estimate beside it describes ("inside three quarters of an hour,
+  // about double that" with the control run).
   mock.trainView = guardTrainView('live', { checksDurationMs: 69 * 60_000 });
   await installRoutes(page, mock);
   await page.goto(origin);

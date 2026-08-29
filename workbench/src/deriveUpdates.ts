@@ -90,6 +90,19 @@ export interface PriorTrainArtifacts {
   readonly verifiedReportJson?: string;
 }
 
+/**
+ * The §03.6 live observation's anchor: for one golden fixture path, the
+ * content address (`fixtureContentDigest`) of every version of that file ever
+ * reachable from `main` — git HISTORY, never the mutable working tree, so the
+ * observation only grows. Assembled by the caller (the deriver does no I/O).
+ */
+export interface MainGoldenHistoryEntry {
+  /** Repo-root-relative POSIX path (eval/golden/<id>.json). */
+  readonly path: string;
+  /** `fixtureContentDigest` of each version ever reachable from main. */
+  readonly fixtureDigests: readonly string[];
+}
+
 /** The observed-input snapshot (§03.2's table, assembled by the caller). */
 export interface DeriveUpdatesInputs {
   /** Raw workbench/judgments.jsonl; '' when the file is absent. */
@@ -110,6 +123,12 @@ export interface DeriveUpdatesInputs {
   readonly webSubsetJson: string;
   /** Outcome artifacts for trains the updates log references, when located. */
   readonly priorTrainArtifacts?: readonly PriorTrainArtifacts[];
+  /**
+   * Main's golden-fixture history for the paths sealed manifests touch —
+   * the §03.6/§5.2 live anchor. Absent or empty observes nothing as merged
+   * (fail-closed: every sealed train merely rides).
+   */
+  readonly mainGoldenHistory?: readonly MainGoldenHistoryEntry[];
 }
 
 export interface IdentityNote {
@@ -243,6 +262,12 @@ export interface UpdatesDerivation {
   readonly derivationDigest: string;
   readonly replayIdentity: ReplayIdentity;
   readonly trains: readonly TrainSnapshot[];
+  /**
+   * Sealed trains whose manifest is observed MERGED on main (§03.6/§5.2's
+   * `live`), anchored to main's git history via `mainGoldenHistory` —
+   * monotonic: history only grows, so a train observed live stays live.
+   */
+  readonly liveTrainIds: readonly string[];
   /** Prior-train artifacts that failed the §03.2 join — fail-closed notes. */
   readonly unverifiablePriorTrains: readonly UnverifiablePriorTrain[];
   readonly tally: {
@@ -293,6 +318,16 @@ export function computeSealDigest(input: {
     operations: input.operations,
     replayIdentity: input.replayIdentity,
   }));
+}
+
+/**
+ * The content address the §03.6 live observation compares: sha256 over the
+ * canonical JSON of a golden fixture's parsed content, so formatting can
+ * never split identical fixtures. One implementation for both sides — the
+ * sealed operation's fixture and each historical version on main.
+ */
+export function fixtureContentDigest(fixture: unknown): string {
+  return sha256(canonicalJson(fixture));
 }
 
 /** The §02.6 content address: same votes → same key → the same card. */
@@ -516,6 +551,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   const ontologyFiles = [...inputs.ontologyFiles].sort((a, b) => a.path.localeCompare(b.path));
   const goldenFiles = [...inputs.goldenFixtureFiles].sort((a, b) => a.path.localeCompare(b.path));
   const priorArtifacts = [...(inputs.priorTrainArtifacts ?? [])].sort((a, b) => a.trainId.localeCompare(b.trainId));
+  const mainHistory = [...(inputs.mainGoldenHistory ?? [])].sort((a, b) => a.path.localeCompare(b.path));
 
   const derivationDigest = sha256(canonicalJson({
     judgmentsLog: sha256(inputs.judgmentsLog),
@@ -530,6 +566,10 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       trainId: entry.trainId,
       manifest: entry.sealedManifestJson === undefined ? null : sha256(entry.sealedManifestJson),
       report: entry.verifiedReportJson === undefined ? null : sha256(entry.verifiedReportJson),
+    })),
+    mainGoldenHistory: mainHistory.map((entry) => ({
+      path: entry.path,
+      fixtureDigests: [...entry.fixtureDigests].sort(),
     })),
   }));
 
@@ -1068,14 +1108,26 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   }
   cards.push(...converted);
 
-  // ---- 3c. Live observation (§03.6): a sealed (unstopped) guard train whose
-  // manifest LANDED — every fixture the seal wrote is present,
-  // byte-for-content, in the observed golden files — finished; its cards are
-  // consumed and rest as achieved. Same §03.2 join discipline as the stop
-  // conversion (locate, recompute the seal digest, compare), fail-closed:
-  // anything that does not verify leaves the train merely riding. Pure over
-  // the snapshot — the golden files are already inputs.
-  const goldenByPath = new Map(inputs.goldenFixtureFiles.map((file) => [file.path, file.contents]));
+  // ---- 3c. Live observation (§03.6/§5.2): a sealed (unstopped) guard train
+  // whose manifest MERGED ON MAIN — every fixture the seal wrote has, at some
+  // commit reachable from main, been the exact content of its golden file
+  // (`mainGoldenHistory`, assembled from git history) — finished; its cards
+  // are consumed and rest as achieved. Anchored to history, never to the
+  // mutable working tree: a later same-search train rewriting the file (the
+  // §03.6 row merge), a promotion, or a hand edit can never regress a merged
+  // train back to riding — the observation is MONOTONIC because history only
+  // grows. Squash merges make the prepared commit itself unreachable from
+  // main, so reachability is tested by content, the quantity a guard train's
+  // merge actually lands. Same §03.2 join discipline as the stop conversion
+  // (locate, recompute the seal digest, compare), fail-closed: anything that
+  // does not verify — including an absent history — leaves the train merely
+  // riding. Pure over the snapshot — the history is an assembled input.
+  const historyDigestsByPath = new Map<string, Set<string>>();
+  for (const entry of mainHistory) {
+    const set = historyDigestsByPath.get(entry.path) ?? new Set<string>();
+    for (const versionDigest of entry.fixtureDigests) set.add(versionDigest);
+    historyDigestsByPath.set(entry.path, set);
+  }
   const landedTrains = new Set<string>();
   for (const train of fold.trains) {
     if (train.state !== 'sealed' || train.flavor !== 'guard' || train.sealed === undefined) continue;
@@ -1097,13 +1149,9 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     if (manifest.operations.length === 0) continue;
     const landed = manifest.operations.every((operation) => {
       if (operation.type !== 'golden-fixture-upsert') return false;
-      const contents = goldenByPath.get(`eval/golden/${operation.goldenFixtureId}.json`);
-      if (contents === undefined) return false;
-      try {
-        return canonicalJson(JSON.parse(contents)) === canonicalJson(operation.fixture);
-      } catch {
-        return false;
-      }
+      return historyDigestsByPath
+        .get(`eval/golden/${operation.goldenFixtureId}.json`)
+        ?.has(fixtureContentDigest(operation.fixture)) === true;
     });
     if (landed) landedTrains.add(train.trainId);
   }
@@ -1195,6 +1243,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     derivationDigest,
     replayIdentity: inputs.replayIdentity,
     trains: fold.trains,
+    liveTrainIds: [...landedTrains].sort(),
     unverifiablePriorTrains: unverifiable.sort((a, b) => a.trainId.localeCompare(b.trainId)),
     tally,
   };

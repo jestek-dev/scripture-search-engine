@@ -7,6 +7,7 @@
  * exactly when THIS card changed. Decides on other cards never invalidate
  * a pending decide.
  */
+import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
@@ -14,10 +15,10 @@ import path from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { THEME_ANSWER_NONE } from '../src/deriveUpdates.js';
+import { fixtureContentDigest, THEME_ANSWER_NONE, type MainGoldenHistoryEntry } from '../src/deriveUpdates.js';
 import type { JudgmentRecordV2 } from '../src/judgments.js';
 import { createTrainOperations } from '../src/trainRunner.js';
-import { createUpdatesOperations, UpdatesOperationsError } from '../src/updatesOperations.js';
+import { createUpdatesOperations, readGoldenMainHistoryFromGit, UpdatesOperationsError } from '../src/updatesOperations.js';
 
 const CURRENT = {
   engineVersion: '0.14.0-test',
@@ -96,6 +97,12 @@ const SUBSET = JSON.stringify({
 describe('updates operations (derive + decide)', () => {
   let repo: string;
   let clock: number;
+  // The §03.6 live anchor's test double: main's append-only golden history.
+  let mainHistory: Record<string, string[]>;
+  const readTestMainHistory = async (_repoRoot: string, goldenPaths: readonly string[]): Promise<MainGoldenHistoryEntry[]> =>
+    goldenPaths
+      .filter((goldenPath) => mainHistory[goldenPath] !== undefined)
+      .map((goldenPath) => ({ path: goldenPath, fixtureDigests: mainHistory[goldenPath]! }));
 
   const records = (): JudgmentRecordV2[] => [
     v2({ judgmentId: 'op-guard', query: 'who is like the lord', action: 'irrelevant', at: '2026-08-12T10:00:00.000Z', diagnosis: 'lexical-noise', targetId: 'WEB:19046001' }),
@@ -105,6 +112,7 @@ describe('updates operations (derive + decide)', () => {
   beforeEach(async () => {
     repo = await mkdtemp(path.join(os.tmpdir(), 'updates-operations-'));
     clock = Date.parse('2026-08-13T09:00:00.000Z');
+    mainHistory = {};
     await mkdir(path.join(repo, 'ontology', 'concepts'), { recursive: true });
     await mkdir(path.join(repo, 'eval', 'golden'), { recursive: true });
     await mkdir(path.join(repo, 'pipeline', 'fixtures'), { recursive: true });
@@ -125,6 +133,7 @@ describe('updates operations (derive + decide)', () => {
       repoRoot: repo,
       reviewer: 'jesse',
       now: () => new Date((clock += 60_000)),
+      readGoldenMainHistory: readTestMainHistory,
     });
   }
 
@@ -270,6 +279,7 @@ describe('updates operations (derive + decide)', () => {
       reviewer: 'jesse',
       now: () => new Date((clock += 60_000)),
       readMain: async () => 'a'.repeat(40),
+      readGoldenMainHistory: readTestMainHistory,
     });
     const { derivationDigest } = await ops.derive(CURRENT);
     await trains.seal(CURRENT, derivationDigest);
@@ -298,6 +308,7 @@ describe('updates operations (derive + decide)', () => {
       reviewer: 'jesse',
       now: () => new Date((clock += 60_000)),
       readMain: async () => 'a'.repeat(40),
+      readGoldenMainHistory: readTestMainHistory,
     });
     const { derivationDigest } = await ops.derive(CURRENT);
     await trains.seal(CURRENT, derivationDigest);
@@ -308,12 +319,16 @@ describe('updates operations (derive + decide)', () => {
     expect(riding.tally.approved).toBe(1);
     expect(riding.cards.find((card) => card.cardId === guard.cardId)!.state.sealedTrainLive).toBeUndefined();
 
-    // Observe the merge: the sealed manifest's fixture lands in eval/golden.
+    // Observe the merge: the sealed manifest's fixture content lands on
+    // main — recorded in main's history (the §03.6/§5.2 anchor), with the
+    // post-merge checkout's working-tree file written alongside.
     const registry = JSON.parse(await readFile(path.join(repo, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
       admissions: { reviewId: string; proposal: { operations: { type: string; goldenFixtureId: string; fixture: unknown }[] } }[];
     };
     for (const operation of registry.admissions[0]!.proposal.operations) {
       if (operation.type !== 'golden-fixture-upsert') continue;
+      const goldenPath = `eval/golden/${operation.goldenFixtureId}.json`;
+      mainHistory[goldenPath] = [...(mainHistory[goldenPath] ?? []), fixtureContentDigest(operation.fixture)];
       await writeFile(path.join(repo, 'eval', 'golden', `${operation.goldenFixtureId}.json`), `${JSON.stringify(operation.fixture, null, 2)}\n`);
     }
 
@@ -332,5 +347,57 @@ describe('updates operations (derive + decide)', () => {
         status: 409,
         message: expect.stringContaining('rode an update that finished'),
       });
+  });
+});
+
+describe('readGoldenMainHistoryFromGit (§03.6/§5.2 live anchor)', () => {
+  let repo: string;
+
+  beforeEach(async () => {
+    repo = await mkdtemp(path.join(os.tmpdir(), 'golden-main-history-'));
+  });
+
+  afterEach(async () => {
+    await rm(repo, { recursive: true, force: true });
+  });
+
+  function git(args: readonly string[]): void {
+    const result = spawnSync('git', [...args], { cwd: repo, encoding: 'utf8' });
+    if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${result.stderr}`);
+  }
+
+  it('returns every content version reachable from main — history, so a later rewrite keeps earlier versions', async () => {
+    git(['init', '--quiet', '--initial-branch=main']);
+    git(['config', 'user.email', 'workbench-test@example.invalid']);
+    git(['config', 'user.name', 'Workbench Test']);
+    await mkdir(path.join(repo, 'eval', 'golden'), { recursive: true });
+    const goldenPath = 'eval/golden/hope.json';
+    const v1 = { id: 'hope', query: 'hope', mustNotRank: [{ ref: 'Psalms 46:1', why: 'test' }] };
+    const v2Content = { ...v1, mustNotRank: [...v1.mustNotRank, { ref: 'James 1:22', why: 'merged later' }] };
+    await writeFile(path.join(repo, goldenPath), `${JSON.stringify(v1, null, 2)}\n`);
+    git(['add', '.']);
+    git(['commit', '--quiet', '--message', 'first merge']);
+    await writeFile(path.join(repo, goldenPath), `${JSON.stringify(v2Content, null, 2)}\n`);
+    git(['add', '.']);
+    git(['commit', '--quiet', '--message', 'second merge rewrites the file']);
+
+    const entries = await readGoldenMainHistoryFromGit(repo, [goldenPath, 'eval/golden/never-merged.json']);
+    expect(entries.map((entry) => entry.path)).toEqual(['eval/golden/hope.json', 'eval/golden/never-merged.json']);
+    const hope = entries.find((entry) => entry.path === goldenPath)!;
+    // BOTH versions are in main's history — the first train's content
+    // remains observed merged after the second train rewrote the file.
+    expect(hope.fixtureDigests).toContain(fixtureContentDigest(v1));
+    expect(hope.fixtureDigests).toContain(fixtureContentDigest(v2Content));
+    // A working-tree-only edit is NOT history: it changes nothing observed.
+    await writeFile(path.join(repo, goldenPath), `${JSON.stringify({ id: 'hope' }, null, 2)}\n`);
+    const after = await readGoldenMainHistoryFromGit(repo, [goldenPath]);
+    expect(after[0]!.fixtureDigests).toEqual(hope.fixtureDigests);
+    // A path never merged observes no versions (fail-closed to riding).
+    expect(entries.find((entry) => entry.path === 'eval/golden/never-merged.json')!.fixtureDigests).toEqual([]);
+  });
+
+  it('observes nothing outside a git repository or with no main ref — never an error', async () => {
+    await expect(readGoldenMainHistoryFromGit(repo, ['eval/golden/hope.json'])).resolves.toEqual([]);
+    await expect(readGoldenMainHistoryFromGit(repo, [])).resolves.toEqual([]);
   });
 });
