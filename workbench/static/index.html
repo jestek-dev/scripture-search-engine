@@ -332,6 +332,18 @@ button{font:inherit;}
 .updates-group{width:100%;}
 .updates-group summary{cursor:pointer;color:var(--text-2);padding:6px 0;}
 .updates-group .updates-card{margin-top:8px;}
+.train-panel{width:100%;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--hairline-strong);border-radius:var(--r-panel);padding:14px 18px;align-items:flex-start;}
+.train-panel h2{margin:0;font-size:17px;}
+.train-panel h3{margin:0;font-size:15px;}
+.train-contains{margin:0;padding-left:18px;color:var(--text-2);max-width:64ch;}
+.train-contains li{margin:2px 0;}
+.train-strip{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+.train-step{font-size:12px;color:var(--text-3);border:1px solid var(--hairline);border-radius:99px;padding:3px 10px;}
+.train-step.done{color:var(--text-2);border-color:var(--hairline-strong);}
+.train-step.current{color:var(--accent);border-color:var(--accent);font-weight:600;}
+.train-status{color:var(--text-2);margin:0;max-width:64ch;}
+.train-report-lines{margin:0;padding-left:18px;color:var(--text-2);max-width:64ch;}
+.train-report-lines li{margin:2px 0;}
 .write-group .group-query{font-weight:600;margin-bottom:4px;}
 .write-line{padding:3px 0;}
 .write-line .write-suffix{color:var(--text-3);}
@@ -443,6 +455,11 @@ button{font:inherit;}
     '/api/v2/updates',
     '/api/v2/updates/cards/',
     '/decide',
+    '/api/v2/updates/train',
+    '/api/v2/admissions/',
+    '/admit',
+    '/api/v2/publish/',
+    '/prepare',
   ];
   void ROUTES;
 
@@ -663,6 +680,79 @@ button{font:inherit;}
     updatesStatusApproved: 'Approved — waiting for the next update.',
     updatesStatusParked: 'Set aside — it returns at the top of the next cycle.',
     updatesStatusEngineering: 'With engineering — nothing else changes until an engineer takes it up.',
+    // §copy — P8 (the update panel: train summary, progress, the Update
+    // Report, and the Phase-2 approve act — votes-to-engine plan §4.5/§4.6/
+    // §4.8/§4.9, §05 §5.1/§5.4, §06 §06.2; quoted strings ship verbatim).
+    updatesAllApproved: (n) => 'All caught up — ' + n + ' ' + (n === 1 ? 'change' : 'changes') + ' approved and waiting. Start the update below when you’re ready.',
+    trainStartTitle: 'Start the update',
+    trainContains: 'This update will contain:',
+    trainLineSheet: (n, m, parts) => n + ' answer-sheet ' + (n === 1 ? 'line' : 'lines') + ' across ' + m + ' ' + (m === 1 ? 'search' : 'searches') + ' (' + parts + ')',
+    trainLineThemes: (n, details) => n + ' theme ' + (n === 1 ? 'change' : 'changes') + ' (' + details + ')',
+    trainLineCorpus: (n) => n === 1
+      ? '1 addition to the test corpus so a new answer can be checked'
+      : n + ' additions to the test corpus so new answers can be checked',
+    // §4.5's lane-aware machine-time sentences (both ship verbatim; the
+    // guard sentence carries the control-run doubling in the shipped copy).
+    trainTimeGuard: 'This update only writes lines on the answer sheet, so the checks are quicker — usually inside three quarters of an hour, about double that until a one-time independent sign-off clears two standing checks. The screen shows how long each run actually takes.',
+    trainTimeData: 'The checks run next — they usually take between half an hour and an hour and a half. You don’t need to stay. When they finish, the report shows exactly what changed in which searches, and nothing goes live until you’ve read it, signed it, and merged it.',
+    trainStart: 'Start the update',
+    trainConfirmTitle: 'You’re starting the update.',
+    trainConfirmBody: 'Once it starts, these approved changes travel together — new calls you make will go into the next update instead.',
+    trainOneAtATime: 'One update at a time — approve cards now and they’ll ride the next one.',
+    // §4.9 failure-copy parity (one sentence per api function, D39-style).
+    trainSealFailed: 'The update couldn’t start — reload and try again. Your approvals are all still here.',
+    trainProgressFailed: 'Couldn’t load the update’s progress — reload to try again. The update itself keeps running.',
+    trainAdmitFailed: 'The approval didn’t go through — reload the report and try again. Nothing was merged.',
+    trainDetailFailed: 'Couldn’t load the approval step — reload and try again. Nothing was approved.',
+    trainPrepareFailed: 'The draft change couldn’t be opened on GitHub — reload the update to see where it stands. Nothing was merged.',
+    // §05 §5.1's reviewer-visible step labels and status sentences (§4.6's
+    // table is the single writer; guard trains never show built/measured).
+    trainStepSealed: 'Update started',
+    trainStepReady: 'Ready for your review',
+    trainStepAdmitted: 'Approved',
+    trainStepPrOpen: 'Waiting for merge',
+    trainStepLive: 'Live',
+    trainStepStopped: 'Stopped',
+    trainSealedLine: 'Your approved changes are locked in — the checks are starting.',
+    trainGuardChecking: 'Checking your answer-sheet lines — no trial build needed, nothing can move in search.',
+    trainReadyLine: 'The report is ready — read it and approve below.',
+    trainAdmittedLine: 'Approved. Preparing the change for review on GitHub…',
+    trainPrOpenLine: 'Waiting for the final merge. One click on GitHub makes it live.',
+    trainPrLink: 'Open the draft on GitHub',
+    trainLiveLine: 'Live. These searches now answer the way you called them.',
+    trainLiveDismiss: 'Dismiss',
+    trainReportTitle: 'Update Report',
+    // Phase 2's approve control (§4.6; retires with the typed-digest sign
+    // panel, Phase 3 D14) and the recorded per-slot review rationale.
+    trainApprove: 'Approve this update',
+    trainApproveTitle: 'You’re approving this update.',
+    trainApproveBody: 'This records your review of the answer-sheet lines above and opens the change as a draft on GitHub. Nothing goes live until a human merges it — that final click is the approval that counts.',
+    trainDecisionRationale: 'Approved from the Update Report — the answer-sheet lines in this update were reviewed and hold.',
+    // §06 §06.2's per-stop-reason sentences (the single owner of this copy;
+    // the enum token itself never renders — D28).
+    trainStopReasons: {
+      'conflicting-judgments': ['Two of your calls disagree about the same passage for this search. Nothing was chosen for you — open the conflict card and pick which call stands.'],
+      'stale-artifact-identity': ['The search data changed while this update was being prepared. Each affected call was re-checked; the ones that need a fresh look are back in your inbox.'],
+      'protected-expectation-regressed': ['This change would break an answer the answer sheet already protects. It was stopped before anything shipped — the report shows which answer.'],
+      'unreviewed-top10-movement': ['This change moves results nobody has reviewed yet. Open the Update Report to look at each one, then continue.'],
+      'outside-allowlist': ['Part of this change touches files this system is not allowed to edit on its own. That part was set aside as a job for engineering, with your calls attached.'],
+      'provenance-ambiguity': ['The system could not tell which of your calls asked for part of this change, so it stopped rather than guess.'],
+      'engineering-required': ['This needs a code change, not a data change. It was written up for engineering with your calls attached.'],
+      'g8-baseline-moved-needs-independent-approval': ['This update moved the reference measurements the checks compare against. An independent person has to approve the new ones — the update waits as a draft until they do.'],
+      'no-measurable-effect': [
+        'The checks found this change wouldn’t alter any result — it wasn’t merged; here’s what that usually means.',
+        'Usually the problem was already fixed by an earlier update, or the change is real but too small to move anything yet. Your calls are still on record.',
+      ],
+      'main-moved': ['Other work was merged while this update was running. It will be rebuilt against the newest version before it continues — nothing was lost.'],
+      'source-drift': ['A file this update was built from changed underneath it. The update stopped and will be rebuilt from the current files.'],
+      'verify-failed': ['The checks failed. Nothing was written. The report names which check and shows why in plain words.'],
+      'required-check-failed': ['The final checks on the draft did not pass. The update waits as a draft — nothing merges until they do.'],
+      'github-unavailable': ['GitHub could not be reached. Everything is saved locally, and the exact next step is written on the update’s card — nothing was lost.'],
+    },
+    // §05 §5.4's pruned-card outcome (renders on parked-by-default cards)
+    // and 06 FM-5's tried-on line.
+    trainParkedOutcome: 'The checks found this change wouldn’t alter any search result yet, so it wasn’t included in this update. Your call is now written on the answer sheet as a goal — when a future update reaches it, the checks will announce it and hold it there. You can leave it parked, or decline it.',
+    trainParkedTried: (when) => 'This was tried on ' + when + ' and would not have changed any result.',
     // §copy — P5 (onboarding, shortcut sheet, update notice)
     onboardTitle1: 'Move through the queue',
     onboardBody1: 'J moves to the next result, K moves back. Try it: press J.',
@@ -818,6 +908,21 @@ button{font:inherit;}
       refresh: Object.create(null),     // cardId -> true (§4.4 refresh line)
       fm13: null,        // {query, targetKey} — FM-13 fresh-card notice slot
       lastDecided: null, // cardId — the U target
+      // §state — P8 (the update panel, Phase 2 guard trains). Everything
+      // after `sealed` is observed via GET /api/v2/updates/train/:id; the
+      // panel polls while a train is non-terminal (jobs/SSE wiring for
+      // trains is Phase 3's D12 — no train job exists yet).
+      train: {
+        view: null,        // the observed TrainView, or null
+        viewFailed: false, // GET train/:id failed → §4.9 progress sentence
+        loading: false,    // first view fetch in flight
+        sealing: false,    // seal POST in flight
+        approving: false,  // the admit→prepare act in flight
+        panelError: null,  // one inline sentence for the panel (§4.9 parity)
+        confirm: null,     // {kind:'seal'|'approve', opener} one-confirm slot
+        pollTimer: null,
+        dismissedLive: null, // trainId — the dismissed live receipt
+      },
     },
   };
 
@@ -902,6 +1007,11 @@ button{font:inherit;}
   function apiCompileApply(digest) { return postJson('/api/v2/compile/apply', { digest }); }
   function apiUpdates() { return requestJson('/api/v2/updates'); }
   function apiUpdatesDecide(cardId, body) { return postJson('/api/v2/updates/cards/' + encodeURIComponent(cardId) + '/decide', body); }
+  function apiTrainSeal(body) { return postJson('/api/v2/updates/train', body); }
+  function apiTrain(trainId) { return requestJson('/api/v2/updates/train/' + encodeURIComponent(trainId)); }
+  function apiAdmission(reviewId) { return requestJson('/api/v2/admissions/' + encodeURIComponent(reviewId)); }
+  function apiAdmissionAdmit(reviewId, body) { return postJson('/api/v2/admissions/' + encodeURIComponent(reviewId) + '/admit', body); }
+  function apiPublishPrepare(reviewId, body) { return postJson('/api/v2/publish/' + encodeURIComponent(reviewId) + '/prepare', body); }
 
   // §stores
   // §3.6 client sort (binding): a case's touch time is the `at` of its LAST
@@ -4144,6 +4254,7 @@ button{font:inherit;}
     updates.reopened = Object.create(null);
     updates.refresh = Object.create(null);
     updates.fm13 = null;
+    resetTrainPanel();
     renderUpdates();
     const [deriveOutcome, planOutcome] = await Promise.allSettled([apiUpdates(), apiCompilePreview()]);
     if (seq !== updates.seq) return;
@@ -4159,6 +4270,7 @@ button{font:inherit;}
     }
     updates.status = 'done';
     renderUpdates();
+    void syncTrainView();
   }
   // §4.4's 409 recovery: re-derive only — never a silent retry of the
   // decision. Answers and open inputs survive for cards that still derive;
@@ -4180,6 +4292,9 @@ button{font:inherit;}
       updates.deriveFailed = true;
     }
     renderUpdates();
+    // A fresh derivation can carry a fresh train (a just-sealed one, or one
+    // stopped underneath us) — re-observe it.
+    void syncTrainView();
   }
   function updatesCards() {
     const derivation = state.updates.derivation;
@@ -4776,7 +4891,16 @@ button{font:inherit;}
     const headline = cardHeadline(card);
     article.setAttribute('aria-label', headline);
     article.appendChild(node('h2', '', headline));
-    article.appendChild(node('p', 'updates-note', statusText));
+    // §4.8's pruned card: a parked-by-default card carries §5.4's outcome
+    // copy (and FM-5's tried-on line) instead of the plain parked status —
+    // re-approval stays an explicit human act ("Change this decision").
+    if (card.parkedByDefault === true) {
+      article.appendChild(node('p', 'updates-note parked-outcome', COPY.trainParkedOutcome));
+      const when = parkedStopDate(card);
+      if (when !== null) article.appendChild(node('p', 'updates-note parked-tried', COPY.trainParkedTried(when)));
+    } else {
+      article.appendChild(node('p', 'updates-note', statusText));
+    }
     if (card.question && card.state && card.state.answers && card.state.answers[card.question.id] === 'needs-new-theme') {
       article.appendChild(node('p', 'updates-note', COPY.updatesNoneSaved));
     }
@@ -4797,6 +4921,524 @@ button{font:inherit;}
         : buildUpdatesCompactCard(card, statusText));
     }
     return details;
+  }
+
+  // §train — the update panel (votes-to-engine plan Phase 2, §4.5/§4.6).
+  // A train's stored state is only open|sealed|stopped (the append-only
+  // log); everything after `sealed` is OBSERVED from artifacts via
+  // GET /api/v2/updates/train/:id, so the panel polls that endpoint while a
+  // train is non-terminal. (The jobs/SSE wiring for train runs is Phase 3's
+  // D12 — the Phase-2 server runs the checks inside the admit request and
+  // mints no job, so there is no event stream to subscribe to yet.)
+  function resetTrainPanel() {
+    const train = state.updates.train;
+    if (train.pollTimer !== null) clearTimeout(train.pollTimer);
+    train.view = null;
+    train.viewFailed = false;
+    train.loading = false;
+    train.sealing = false;
+    train.approving = false;
+    train.panelError = null;
+    train.confirm = null;
+    train.pollTimer = null;
+    const ui = readUiState();
+    train.dismissedLive = typeof ui.dismissedLiveTrain === 'string' ? ui.dismissedLiveTrain : null;
+  }
+  function latestTrainSnapshot() {
+    const derivation = state.updates.derivation;
+    const trains = derivation !== null && Array.isArray(derivation.trains) ? derivation.trains : [];
+    return trains.length > 0 ? trains[trains.length - 1] : null;
+  }
+  // Single-flight, as the panel sees it (V7): a stored-sealed train whose
+  // observed state is not yet live/stopped is on its way. An unknown
+  // observation counts as running — fail closed, never a second seal.
+  function trainNonTerminal() {
+    const snapshot = latestTrainSnapshot();
+    if (snapshot === null || snapshot.state !== 'sealed') return false;
+    const view = state.updates.train.view;
+    return view === null || (view.state !== 'live' && view.state !== 'stopped');
+  }
+  async function syncTrainView() {
+    const updates = state.updates;
+    const snapshot = latestTrainSnapshot();
+    if (snapshot === null || snapshot.state !== 'sealed') return;
+    updates.train.loading = true;
+    await refreshTrainView(snapshot.trainId, updates.seq);
+  }
+  async function refreshTrainView(trainId, seq) {
+    const updates = state.updates;
+    const train = updates.train;
+    let data = null;
+    try { data = await apiTrain(trainId); } catch (error) { data = null; }
+    if (seq !== updates.seq || state.screen !== 'updates') return;
+    train.loading = false;
+    if (data !== null && data.train && typeof data.train.state === 'string') {
+      train.view = data.train;
+      train.viewFailed = false;
+    } else {
+      train.viewFailed = true;
+    }
+    renderUpdates();
+    scheduleTrainPoll();
+  }
+  function scheduleTrainPoll() {
+    const updates = state.updates;
+    const train = updates.train;
+    if (train.pollTimer !== null) { clearTimeout(train.pollTimer); train.pollTimer = null; }
+    if (state.screen !== 'updates' || train.viewFailed) return;
+    if (train.sealing || train.approving) return;
+    const view = train.view;
+    if (view === null) return;
+    // `ready` waits on the human; live/stopped are terminal — no machine run
+    // to watch. Everything else may move underneath us (the merge included).
+    if (view.state === 'ready' || view.state === 'live' || view.state === 'stopped') return;
+    const seq = updates.seq;
+    train.pollTimer = setTimeout(() => {
+      train.pollTimer = null;
+      void refreshTrainView(view.trainId, seq);
+    }, 4000);
+  }
+  // §4.5's summary inputs: the approved, un-routed cards not already frozen
+  // by a live seal (a routed card stages nothing here — it went to the
+  // curation queue; a sealed card is riding the current update, so it never
+  // re-boards or re-counts — the fold clears the freeze if the train stops).
+  function trainApprovableCards(groups) {
+    return groups.approved.filter((card) => (card.routed === undefined || card.routed === null)
+      && !(card.state && typeof card.state.sealedInTrain === 'string'));
+  }
+  function trainThemeChangeDetails(cards) {
+    const details = [];
+    for (const card of cards) {
+      const derived = card.derived || {};
+      if (card.question !== undefined && card.question !== null && card.state && card.state.answers) {
+        const answer = card.state.answers[card.question.id];
+        if (typeof answer === 'string' && answer !== '' && answer !== 'needs-new-theme') {
+          const chip = (card.question.chips || []).find((candidate) => candidate.conceptId === answer);
+          const label = chip !== undefined && typeof chip.label === 'string' ? chip.label : conceptLabelOf(answer);
+          const ref = cardPrimaryRef(card);
+          details.push('add ' + (ref !== null ? ref : 'the passage') + ' under “' + label + '”');
+        }
+      }
+      if (derived.anchorRemove !== undefined) {
+        const ref = cardPrimaryRef(card);
+        details.push('remove ' + (ref !== null ? ref : 'the passage') + ' from “' + conceptLabelOf(derived.anchorRemove.conceptId) + '”');
+      }
+    }
+    return details;
+  }
+  // The §4.5 "This update will contain" lines — counts of approved intents,
+  // Jesse's own words played back; never a predicted reordering (r8 §4).
+  // The flavor mirrors the server's derivation (guard = answer-sheet lines
+  // only) so the machine-time sentence is lane-aware before anything runs.
+  function trainSummary(cards) {
+    let mustRank = 0;
+    let mustNot = 0;
+    let order = 0;
+    const queries = Object.create(null);
+    for (const card of cards) {
+      const derived = card.derived || {};
+      if (derived.guard !== undefined) mustNot += 1;
+      else if (derived.expectation !== undefined) mustRank += 1;
+      else if (derived.preferredOrder !== undefined) order += 1;
+      else continue;
+      queries[card.query] = true;
+    }
+    const lines = [];
+    const total = mustRank + mustNot + order;
+    if (total > 0) {
+      const parts = [];
+      if (mustRank > 0) parts.push(mustRank + ' must-rank');
+      if (mustNot > 0) parts.push(mustNot + ' must-not-rank');
+      if (order > 0) parts.push(order + ' preferred order');
+      lines.push(COPY.trainLineSheet(total, Object.keys(queries).length, parts.join(', ')));
+    }
+    const themes = trainThemeChangeDetails(cards);
+    if (themes.length > 0) lines.push(COPY.trainLineThemes(themes.length, themes.join('; ')));
+    const corpus = cards.filter((card) => (card.derived || {}).chapterAdd !== undefined).length;
+    if (corpus > 0) lines.push(COPY.trainLineCorpus(corpus));
+    return { lines, flavor: themes.length > 0 || corpus > 0 ? 'data' : 'guard' };
+  }
+  // The one-confirm layer (§4.5/§4.6): the Compare pattern reused — initial
+  // focus on Cancel, Esc closes, and only the layer's own button commits.
+  function openTrainConfirm(kind, opener) {
+    if (updatesReadOnly()) { showToast(COPY.readOnlyToast); return; }
+    state.updates.train.confirm = {
+      kind,
+      opener: opener !== undefined && opener !== null ? opener : document.activeElement,
+    };
+    renderTrainConfirm();
+  }
+  function closeTrainConfirm() {
+    const confirm = state.updates.train.confirm;
+    if (confirm === null) return;
+    state.updates.train.confirm = null;
+    closeLayerDialog(confirm.opener);
+  }
+  function renderTrainConfirm() {
+    const confirm = state.updates.train.confirm;
+    if (confirm === null) return;
+    const seal = confirm.kind === 'seal';
+    const dialog = openLayerDialog(seal ? COPY.trainConfirmTitle : COPY.trainApproveTitle, 'train-confirm-title');
+    dialog.id = 'train-confirm-dialog';
+    dialog.appendChild(node('p', 'layer-prompt', seal ? COPY.trainConfirmBody : COPY.trainApproveBody));
+    const actions = node('div', 'layer-actions');
+    const cancel = node('button', 'btn-quiet', 'Cancel');
+    cancel.type = 'button';
+    cancel.id = 'train-confirm-cancel';
+    cancel.addEventListener('click', closeTrainConfirm);
+    actions.appendChild(cancel);
+    const commit = node('button', 'btn-primary', seal ? COPY.trainStart : COPY.trainApprove);
+    commit.type = 'button';
+    commit.id = 'train-confirm-commit';
+    if (updatesReadOnly() || state.updates.train.sealing || state.updates.train.approving) commit.disabled = true;
+    commit.addEventListener('click', () => {
+      if (seal) void sealTrain();
+      else void approveTrain();
+    });
+    actions.appendChild(commit);
+    dialog.appendChild(actions);
+    // Initial focus is Cancel, never the commit (§4.7, the Compare rule).
+    cancel.focus();
+  }
+  // The seal (§4.5): one POST carrying the derivation digest the panel
+  // rendered from. The server re-derives and refuses rather than trusts —
+  // every refusal renders in place, never a silent retry.
+  async function sealTrain() {
+    const updates = state.updates;
+    const train = updates.train;
+    if (updatesReadOnly()) { showToast(COPY.readOnlyToast); return; }
+    if (train.sealing) return;
+    const derivation = updates.derivation;
+    train.sealing = true;
+    train.panelError = null;
+    renderTrainConfirm();
+    let data = null;
+    try {
+      data = await apiTrainSeal({ derivationDigest: derivation !== null ? derivation.derivationDigest : null });
+    } catch (error) {
+      train.sealing = false;
+      closeTrainConfirm();
+      const code = error && typeof error.code === 'string' ? error.code : '';
+      if (error && (error.status === 503 || code === 'startup_degraded_read_only' || code === 'artifact_unavailable')) {
+        showToast(COPY.readOnlyToast);
+        renderUpdates();
+        return;
+      }
+      if (code === 'train_running') {
+        // §4.5: a second start is refused — the one-at-a-time line stands.
+        train.panelError = { id: 'updates-train-one-at-a-time', text: COPY.trainOneAtATime };
+      } else if (code === 'mutation_running') {
+        train.panelError = { id: 'updates-train-error', text: COPY.busyLine };
+      } else if (error && error.status === 409 && typeof error.message === 'string' && error.message !== '') {
+        // The seal's own reviewed plain-language refusals (a data train
+        // waiting for the full machinery, nothing to seal, an unmeasured
+        // operation) render in the server's words — the single writer.
+        train.panelError = { id: 'updates-train-error', text: error.message };
+      } else {
+        train.panelError = { id: 'updates-train-error', text: COPY.trainSealFailed };
+      }
+      void reloadUpdates();
+      return;
+    }
+    train.sealing = false;
+    closeTrainConfirm();
+    if (data !== null && data.train && typeof data.train.state === 'string') {
+      train.view = data.train;
+      train.viewFailed = false;
+    }
+    // The sealed cards leave the approved group — re-derive the fresh fold.
+    void reloadUpdates();
+    scheduleTrainPoll();
+  }
+  // Phase 2's approve act (§4.6): one human confirm records the per-slot
+  // review through the EXISTING admit surface, then opens the draft on
+  // GitHub through the existing publish preparation — the draft PR is the
+  // ceiling; nothing here merges or marks ready. Retires with D14's
+  // typed-digest sign panel.
+  async function approveTrain() {
+    const updates = state.updates;
+    const train = updates.train;
+    if (updatesReadOnly()) { showToast(COPY.readOnlyToast); return; }
+    const view = train.view;
+    if (view === null || view.state !== 'ready' || train.approving) return;
+    train.approving = true;
+    train.panelError = null;
+    closeTrainConfirm();
+    renderUpdates();
+    const seq = updates.seq;
+    const failWith = (text) => {
+      if (seq !== updates.seq || state.screen !== 'updates') return;
+      train.approving = false;
+      train.panelError = { id: 'updates-train-error', text };
+      renderUpdates();
+      // A terminal failure may have stopped the train — observe it.
+      void refreshTrainView(view.trainId, seq);
+    };
+    let detail = null;
+    try { detail = await apiAdmission(view.trainId); } catch (error) { failWith(COPY.trainDetailFailed); return; }
+    const admissionView = detail !== null && typeof detail === 'object' ? detail.admission : null;
+    const preview = admissionView && admissionView.preview ? admissionView.preview : null;
+    if (preview === null || typeof preview.digest !== 'string' || !Array.isArray(preview.decisions)) {
+      failWith(COPY.trainDetailFailed);
+      return;
+    }
+    // The one confirm IS the recorded review of the listed lines (§4.6):
+    // every decision slot carries the same reviewed rationale sentence.
+    const decisions = preview.decisions.map((slot) => {
+      const decision = { slotId: slot.slotId, rationale: COPY.trainDecisionRationale };
+      if (slot.kind === 'probe-baseline') {
+        decision.probeRationales = (slot.probes || []).map((probe) => ({ probeId: probe.probeId, rationale: COPY.trainDecisionRationale }));
+      }
+      return decision;
+    });
+    let admitted = null;
+    try {
+      admitted = await apiAdmissionAdmit(view.trainId, { previewDigest: preview.digest, decisions });
+    } catch (error) {
+      const code = error && typeof error.code === 'string' ? error.code : '';
+      if (code === 'stale_preview') { failWith(COPY.staleLine); return; }
+      if (code === 'mutation_running') { failWith(COPY.busyLine); return; }
+      failWith(COPY.trainAdmitFailed);
+      return;
+    }
+    const admittedView = admitted !== null && typeof admitted === 'object' ? admitted.admission : null;
+    const admissionDigest = admittedView && admittedView.admission && typeof admittedView.admission.digest === 'string'
+      ? admittedView.admission.digest
+      : null;
+    if (admissionDigest === null) { failWith(COPY.trainAdmitFailed); return; }
+    if (seq === updates.seq && state.screen === 'updates') {
+      // "Approved. Preparing the change for review on GitHub…" (§5.1) — the
+      // draft opens next from this same single confirm.
+      if (train.view !== null && train.view.state === 'ready') {
+        train.view = Object.assign({}, train.view, { state: 'admitted' });
+      }
+      renderUpdates();
+    }
+    try {
+      await apiPublishPrepare(view.trainId, { admissionDigest, push: true, openDraftPr: true });
+    } catch (error) {
+      failWith(COPY.trainPrepareFailed);
+      return;
+    }
+    if (seq !== updates.seq || state.screen !== 'updates') return;
+    train.approving = false;
+    void refreshTrainView(view.trainId, seq);
+  }
+  // The progress strip: §05 §5.1's reviewer-visible labels only. A guard
+  // train renders its three machine steps plus the two human-wait states —
+  // never the trial-build or comparison waypoints (§4.6's fixture-lane rule).
+  function trainStrip(stateKey) {
+    const strip = node('div', 'train-strip');
+    strip.setAttribute('aria-label', 'Update progress');
+    if (stateKey === 'stopped') {
+      strip.appendChild(node('span', 'train-step current', COPY.trainStepStopped));
+      return strip;
+    }
+    const order = ['sealed', 'ready', 'admitted', 'pr-open', 'live'];
+    const labels = {
+      sealed: COPY.trainStepSealed,
+      ready: COPY.trainStepReady,
+      admitted: COPY.trainStepAdmitted,
+      'pr-open': COPY.trainStepPrOpen,
+      live: COPY.trainStepLive,
+    };
+    const current = order.indexOf(stateKey);
+    order.forEach((key, index) => {
+      strip.appendChild(node('span', 'train-step' + (index < current ? ' done' : index === current ? ' current' : ''), labels[key]));
+    });
+    return strip;
+  }
+  function trainStatusSentence(stateKey) {
+    if (stateKey === 'ready') return COPY.trainReadyLine;
+    if (stateKey === 'admitted') return COPY.trainAdmittedLine;
+    if (stateKey === 'pr-open') return COPY.trainPrOpenLine;
+    if (stateKey === 'live') return COPY.trainLiveLine;
+    return COPY.trainSealedLine;
+  }
+  // The live receipt's query chips: the report's own lines name the updated
+  // searches (the report is the reviewed record — no digest travels here).
+  function trainReportQueries(view) {
+    const queries = [];
+    const lines = view.report && Array.isArray(view.report.lines) ? view.report.lines : [];
+    for (const line of lines) {
+      const match = /^For "([\s\S]+?)", /.exec(line);
+      if (match !== null && queries.indexOf(match[1]) === -1) queries.push(match[1]);
+    }
+    return queries;
+  }
+  function dismissLiveReceipt(trainId) {
+    state.updates.train.dismissedLive = trainId;
+    writeUiState({ dismissedLiveTrain: trainId });
+    renderUpdates();
+  }
+  function renderTrainView(panel, view) {
+    const train = state.updates.train;
+    panel.appendChild(trainStrip(view.state));
+    const status = node('p', 'train-status');
+    status.id = 'train-status';
+    status.setAttribute('role', 'status');
+    // While the approve act runs, the checks are actually running (the
+    // Phase-2 server runs them inside the admit act) — say so honestly.
+    status.textContent = train.approving ? COPY.trainGuardChecking : trainStatusSentence(view.state);
+    panel.appendChild(status);
+    if (!train.approving && view.state === 'sealed' && view.flavor === 'guard') {
+      // §4.6's fixture-lane interim sentence, between "Update started" and
+      // "Ready for your review".
+      const checking = node('p', 'train-status', COPY.trainGuardChecking);
+      checking.id = 'train-guard-checking';
+      panel.appendChild(checking);
+    }
+    if (view.state === 'pr-open' && typeof view.draftPrUrl === 'string' && view.draftPrUrl !== '') {
+      const link = node('a', 'btn-quiet', COPY.trainPrLink);
+      link.id = 'train-pr-link';
+      link.href = view.draftPrUrl;
+      link.target = '_blank';
+      link.rel = 'noreferrer';
+      panel.appendChild(link);
+    }
+    // The Update Report (§4.6's one-block guard variant). The lead sentence
+    // is rendered verbatim from the payload — the server's report module is
+    // its single writer (E4); this page mints no rival.
+    if (view.report !== null && view.report !== undefined && view.state !== 'sealed') {
+      const report = node('section', '');
+      report.id = 'updates-report';
+      report.appendChild(node('h3', '', COPY.trainReportTitle));
+      report.appendChild(node('p', 'train-status', view.report.lead));
+      const lines = node('ul', 'train-report-lines');
+      for (const line of view.report.lines || []) lines.appendChild(node('li', '', line));
+      report.appendChild(lines);
+      panel.appendChild(report);
+    }
+    if (view.state === 'ready') {
+      const approve = updatesButton(null, COPY.trainApprove, 'btn-primary');
+      approve.id = 'train-approve';
+      approve.disabled = updatesReadOnly() || train.approving;
+      approve.addEventListener('click', (event) => { openTrainConfirm('approve', event.currentTarget); });
+      panel.appendChild(approve);
+    }
+    if (view.state === 'live') {
+      const queries = trainReportQueries(view);
+      if (queries.length > 0) {
+        const chips = node('div', 'updates-chips');
+        chips.setAttribute('role', 'group');
+        chips.setAttribute('aria-label', 'Updated searches');
+        for (const query of queries) {
+          const chip = node('button', 'query-chip', '“' + query + '”');
+          chip.type = 'button';
+          chip.addEventListener('click', () => { openInReview(query); });
+          chips.appendChild(chip);
+        }
+        panel.appendChild(chips);
+      }
+      const links = node('div', 'updates-links');
+      links.appendChild(updatesQuietLink(COPY.trainLiveDismiss, () => { dismissLiveReceipt(view.trainId); }));
+      panel.appendChild(links);
+    }
+  }
+  // The pruned/parked outcome's stop date (06 FM-5): the no-effect stop
+  // whose sealed set carried this card.
+  function parkedStopDate(card) {
+    const derivation = state.updates.derivation;
+    const trains = derivation !== null && Array.isArray(derivation.trains) ? derivation.trains : [];
+    for (let index = trains.length - 1; index >= 0; index -= 1) {
+      const train = trains[index];
+      if (train.state !== 'stopped' || !train.stopped || train.stopped.reason !== 'no-measurable-effect') continue;
+      if (train.sealed && Array.isArray(train.sealed.cardIds) && train.sealed.cardIds.indexOf(card.cardId) !== -1) {
+        return typeof train.stopped.at === 'string' ? shortDate(train.stopped.at) : null;
+      }
+    }
+    return null;
+  }
+  // Zone 3 — the update panel: a stopped train's card, the running train's
+  // observed progress, and the §4.5 summary + Start position.
+  function renderTrainPanel(inner, groups) {
+    const updates = state.updates;
+    const train = updates.train;
+    if (updates.derivation === null) return; // cards failed to load — §4.9's sentence stands alone
+    const snapshot = latestTrainSnapshot();
+    const panel = node('section', 'train-panel');
+    panel.id = 'updates-train-panel';
+    panel.setAttribute('aria-label', 'The update');
+    let hasContent = false;
+
+    if (snapshot !== null && snapshot.state === 'stopped') {
+      // §4.8's stopped train: the plain-language reason (§06.2's table owns
+      // every sentence); the enum token itself never renders (D28). Its
+      // cards are already back in the inbox above.
+      panel.appendChild(trainStrip('stopped'));
+      const reason = snapshot.stopped && typeof snapshot.stopped.reason === 'string' ? snapshot.stopped.reason : '';
+      const sentences = COPY.trainStopReasons[reason] || [];
+      const stopCard = node('div', '');
+      stopCard.id = 'train-stop-card';
+      for (const sentence of sentences) stopCard.appendChild(node('p', 'train-status', sentence));
+      panel.appendChild(stopCard);
+      hasContent = true;
+    }
+
+    if (snapshot !== null && snapshot.state === 'sealed') {
+      const view = train.view;
+      const liveDismissed = view !== null && view.state === 'live'
+        && (train.dismissedLive === view.trainId || groups.main.length > 0 || trainApprovableCards(groups).length > 0);
+      if (train.viewFailed) {
+        const failed = node('p', 'train-status', COPY.trainProgressFailed);
+        failed.id = 'updates-train-view-failed';
+        panel.appendChild(failed);
+        hasContent = true;
+      } else if (view === null) {
+        // First observation still loading — the honest position is the seal.
+        panel.appendChild(trainStrip('sealed'));
+        const status = node('p', 'train-status', COPY.trainSealedLine);
+        status.setAttribute('role', 'status');
+        panel.appendChild(status);
+        hasContent = true;
+      } else if (!liveDismissed) {
+        renderTrainView(panel, view);
+        hasContent = true;
+      }
+    }
+
+    if (train.panelError !== null) {
+      const line = node('p', 'train-status', train.panelError.text);
+      line.id = train.panelError.id;
+      line.setAttribute('role', 'status');
+      panel.appendChild(line);
+      hasContent = true;
+    }
+
+    // §4.5: the train summary — counts of approved intents in Jesse's own
+    // words, the lane-aware machine-time sentence, one Start behind the
+    // one-confirm layer. A running train replaces the button with the
+    // one-at-a-time line.
+    const approvable = trainApprovableCards(groups);
+    if (approvable.length > 0) {
+      if (trainNonTerminal()) {
+        if (train.panelError === null || train.panelError.id !== 'updates-train-one-at-a-time') {
+          const line = node('p', 'train-status', COPY.trainOneAtATime);
+          line.id = 'updates-train-one-at-a-time';
+          panel.appendChild(line);
+        }
+        hasContent = true;
+      } else {
+        const summary = trainSummary(approvable);
+        const start = node('div', '');
+        start.id = 'updates-train-summary';
+        start.appendChild(node('h2', '', COPY.trainStartTitle));
+        start.appendChild(node('p', 'train-status', COPY.trainContains));
+        const list = node('ul', 'train-contains');
+        for (const line of summary.lines) list.appendChild(node('li', '', line));
+        start.appendChild(list);
+        start.appendChild(node('p', 'train-status', summary.flavor === 'guard' ? COPY.trainTimeGuard : COPY.trainTimeData));
+        const button = updatesButton(null, COPY.trainStart, 'btn-primary');
+        button.id = 'train-start';
+        button.disabled = updatesReadOnly() || train.sealing;
+        button.addEventListener('click', (event) => { openTrainConfirm('seal', event.currentTarget); });
+        start.appendChild(button);
+        panel.appendChild(start);
+        hasContent = true;
+      }
+    }
+
+    if (hasContent) inner.appendChild(panel);
   }
   function renderUpdates() {
     if (state.screen !== 'updates') return;
@@ -4870,7 +5512,16 @@ button{font:inherit;}
       inner.appendChild(buildUpdatesGroup('updates-parked-group',
         COPY.updatesGroupParked(groups.parked.length), groups.parked, COPY.updatesStatusParked, false));
     }
-    // Zone 3 (the update panel) arrives with Phase 2's trains.
+    // §4.8 "Empty (all approved)": nothing waits for a call, but approved
+    // changes are queued — point at the Start button below.
+    const approvableNow = trainApprovableCards(groups);
+    if (groups.main.length === 0 && approvableNow.length > 0 && !updates.deriveFailed) {
+      const allApproved = node('p', 'screen-sub', COPY.updatesAllApproved(approvableNow.length));
+      allApproved.id = 'updates-all-approved';
+      inner.appendChild(allApproved);
+    }
+    // Zone 3 — the update panel (Phase 2's trains, §4.5/§4.6).
+    renderTrainPanel(inner, groups);
     // The backlog: the compile checklist as read-only lines, headed by the
     // same-facts note when the legacy card stands above it (§4.2; the lines
     // retire with the checklist, Phase 4).
@@ -5437,6 +6088,14 @@ button{font:inherit;}
     // preview and missing form (at most one of the three is ever open).
     if (state.compareConfirm !== null) {
       if (event.key === 'Escape') { event.preventDefault(); closeCompareConfirm(); return; }
+      if (event.key === 'Tab') { trapTab(event); }
+      return;
+    }
+    // The train's one-confirm layer (§4.5/§4.6) rides the same slot: Esc
+    // closes without committing; the seal and approve acts are
+    // mouse-or-focused-button only — no bare keystroke commits (§4.7).
+    if (state.updates.train.confirm !== null) {
+      if (event.key === 'Escape') { event.preventDefault(); closeTrainConfirm(); return; }
       if (event.key === 'Tab') { trapTab(event); }
       return;
     }

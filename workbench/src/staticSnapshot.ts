@@ -35,6 +35,11 @@ const REQUIRED_INLINE_ROUTES = [
   '/api/v2/updates',
   '/api/v2/updates/cards/',
   '/decide',
+  '/api/v2/updates/train',
+  '/api/v2/admissions/',
+  '/admit',
+  '/api/v2/publish/',
+  '/prepare',
 ] as const;
 
 export type StaticSnapshotIssueCode =
