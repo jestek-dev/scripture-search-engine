@@ -426,6 +426,14 @@ export interface GitAdapter {
     readonly commands: readonly CommandOutcome[];
   }>;
   treeHash(worktree: string): Promise<{ readonly hash: string; readonly commands: readonly CommandOutcome[] }>;
+  /**
+   * Restores the given repo-relative paths to their committed (HEAD) state
+   * inside the worktree, skipping paths not tracked at HEAD. Used to drop
+   * the rebuild's tracked outputs before the admitted tree is fixed: the
+   * rebuilt descriptor is evidence (rebuiltCandidate), not a reviewed
+   * change, and it is not byte-stable across runs (D11 finding).
+   */
+  restoreTrackedPaths(worktree: string, paths: readonly string[]): Promise<readonly CommandOutcome[]>;
   removeWorktree(repoRoot: string, worktree: string): Promise<CommandOutcome>;
 }
 
@@ -720,16 +728,19 @@ function parseGauntletBytes(
   const identity = parsedValue.identity;
   const payload = parsedValue.payload;
   exactKeys(identity, ['gitCommitSha', 'dirtyTreeSha256', 'descriptor', 'engine', 'target', 'budgetsSha256', 'fixtureInputSha256', 'flags'], 'Gauntlet identity');
-  // `battery`, `rankMetrics`, and `noMeasurableEffect` (schema v2) are the
+  // `battery`, `rankMetrics`, `noMeasurableEffect` (schema v2), and `tiers`
+  // (E6 — rides the report exactly when the battery evidence does) are the
   // G12/E3 evidence sections; admission verdicts read the G12 roster row and
-  // the payload verdict, so the sections themselves are optional here. A
+  // the payload verdict, so the sections themselves are optional here. The
+  // D11 shakedown caught the missing `tiers`: every release-target run emits
+  // it, so the release-gauntlet leg refused its own honest report. A
   // NO_MEASURABLE_EFFECT verdict still fails closed below — this parser
   // admits only ADMIT / ADMIT_WITH_WARNINGS.
   exactKeys(
     payload,
     [
       'verdict', 'headline', 'gates',
-      ...['battery', 'rankMetrics', 'noMeasurableEffect'].filter((key) => isRecord(payload) && key in payload),
+      ...['battery', 'rankMetrics', 'noMeasurableEffect', 'tiers'].filter((key) => isRecord(payload) && key in payload),
     ],
     'Gauntlet payload',
   );
@@ -1436,6 +1447,16 @@ export const DEFAULT_ADMISSION_GIT_ADAPTER: GitAdapter = {
       await rm(`${indexPath}.lock`, { force: true }).catch(() => undefined);
     }
   },
+  async restoreTrackedPaths(worktree, paths) {
+    const outcomes: CommandOutcome[] = [];
+    for (const relative of paths) {
+      const tracked = await fixedCommandCapture('git', ['ls-files', '--', relative], worktree);
+      outcomes.push(tracked.outcome);
+      if (tracked.stdout.trim() === '') continue;
+      outcomes.push(await fixedCommand('git', ['checkout', 'HEAD', '--', relative], worktree));
+    }
+    return outcomes;
+  },
   removeWorktree(repoRoot, worktree) {
     return fixedCommand('git', ['worktree', 'remove', '--force', worktree], repoRoot);
   },
@@ -1474,7 +1495,16 @@ async function defaultRebuild(worktree: string): Promise<RebuildEvidence> {
 
 async function defaultVerify(worktree: string): Promise<VerifyEvidence> {
   const npmCli = resolveNpmCliPath();
-  const command = await fixedCommand(process.execPath, [npmCli, 'run', 'verify'], worktree);
+  let command: CommandOutcome;
+  try {
+    command = await fixedCommand(process.execPath, [npmCli, 'run', 'verify'], worktree);
+  } catch (error) {
+    // §06.2: a failed verify is the 'verify-failed' stop, so the failure
+    // must carry the verify_failed code — the generic command_failed maps
+    // to NO stop reason and left the train sealed with no recorded stop
+    // (found in anger by the D11 shakedown).
+    fail('verify_failed', `Verification failed in the admission worktree: ${error instanceof Error ? error.message : String(error)}`);
+  }
   const reportPath = 'eval/.runs/admission-release-report.json' as const;
   // §5.5 gap 3 (the reviewed verdict-acceptance amendment, D8/D9): a REJECT
   // release gauntlet exits non-zero but still writes its verified report.
@@ -1518,7 +1548,18 @@ async function defaultVerify(worktree: string): Promise<VerifyEvidence> {
 
 function sourceMutations(preview: AdmissionPreview): MutationInput[] {
   return preview.diffs.filter((entry) => entry.changed).map((entry) => ({
-    path: entry.path, beforeSha256: entry.before.sha256, after: Buffer.from(entry.after.base64, 'base64'),
+    path: entry.path,
+    // The preview reads a missing source as empty text (readConfinedSource),
+    // but the worktree mutation plan distinguishes 'must match this digest'
+    // from 'must not exist' (beforeSha256 null). A CREATED file — the
+    // fixture lane's primary operation (its golden-fixture upsert writes a
+    // new eval/golden file; found in anger by the D11 shakedown) — must map
+    // to the null precondition or every create refuses stale_plan against
+    // the freshly materialized worktree. A tracked-but-zero-byte source is
+    // refused by the same mapping ('expected missing') — fail-closed, and
+    // no reviewed source owner permits an empty file.
+    beforeSha256: entry.before.text === '' ? null : entry.before.sha256,
+    after: Buffer.from(entry.after.base64, 'base64'),
   }));
 }
 
@@ -1566,6 +1607,13 @@ async function auditAppliedWorktree(
   preview: AdmissionPreview,
   rebuilt: RebuildEvidence | null,
   git: GitAdapter,
+  // After the pre-treeHash restore of tracked rebuild outputs (evidence,
+  // not change — D11), a tracked output is expected BACK at its committed
+  // bytes: it then no longer appears in status, and the measured-sha check
+  // is waived exactly for outputs that are clean in status. An output that
+  // is still dirty (e.g. the untracked database) must still match its
+  // measured bytes.
+  outputsRestored = false,
 ): Promise<readonly CommandOutcome[]> {
   const inspection = await assertWorktreeIdentity(repoRoot, worktree, preview.admittedBaseCommit, git);
   const changedDiffs = preview.diffs.filter((entry) => entry.changed);
@@ -1575,18 +1623,19 @@ async function auditAppliedWorktree(
       fail('post_verify_source_mismatch', `Admission source ${entry.path} does not match the exact reviewed after bytes.`);
     }
   }
+  const status = parsePorcelainStatus(inspection.statusPorcelainZ);
   const outputFiles = [...(rebuilt?.outputFiles ?? [])];
   const allowedOutputPaths = new Set(['artifacts/content-artifact.json', 'workbench/.artifact/content.db']);
   for (const output of outputFiles) {
     if (!allowedOutputPaths.has(output.path)) fail('worktree_mutation', `Rebuild output ${output.path} is not allowlisted.`);
     requireDigest(output.sha256, `rebuild output ${output.path}`);
+    if (outputsRestored && !status.some((entry) => entry.path === output.path)) continue;
     const actual = await readConfinedRegularFile(worktree, output.path, false);
     if (actual === null || sha256(actual) !== output.sha256) fail('worktree_mutation', `Rebuild output ${output.path} changed after it was measured.`);
   }
   const approved = new Map<string, 'existing' | 'new' | 'output'>();
   for (const entry of changedDiffs) approved.set(entry.path, entry.before.text === '' ? 'new' : 'existing');
   for (const output of outputFiles) approved.set(output.path, 'output');
-  const status = parsePorcelainStatus(inspection.statusPorcelainZ);
   for (const entry of status) {
     const kind = approved.get(entry.path);
     if (kind === undefined || entry.status.includes('D') || entry.status.includes('R') || entry.status.includes('C')
@@ -1963,12 +2012,21 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
       : null;
     await dependencies.onPhase?.('verified', { worktree });
     commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git));
+    // The rebuild's tracked outputs are recorded EVIDENCE
+    // (rebuiltCandidate.outputFiles), not part of the reviewed change set —
+    // and the rebuilt descriptor is not byte-stable across runs (its builtAt
+    // stamp and the raw SQLite database bytes differ on every rebuild), so
+    // leaving it in place would bake an unreproducible hash into the
+    // manifest and the publish leg could never reproduce the admitted tree
+    // (D11 finding: every prepare refused tree_mismatch). Restore them to
+    // their committed state before the admitted tree is fixed.
+    commands.push(...await git.restoreTrackedPaths(worktree, (rebuilt.outputFiles ?? []).map((entry) => entry.path)));
     const tree = await git.treeHash(worktree);
     commands.push(...tree.commands);
-    commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git));
+    commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git, true));
     await assertAdmissionState(previewInput, preview, git);
     await dependencies.onPhase?.('before-manifest', { worktree, manifestPath });
-    commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git));
+    commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git, true));
 
     const admittedAt = (dependencies.now?.() ?? new Date()).toISOString();
     const body = manifestWithoutDigest({
@@ -2015,7 +2073,7 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
       : manifest;
     admitted = true;
     await dependencies.onPhase?.('manifest-published', { worktree, manifestPath });
-    await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git);
+    await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git, true);
     return { status: publication.status === 'SKIPPED' && !published ? 'ALREADY_ADMITTED' : 'ADMITTED', preview, manifestPath, manifest: finalManifest };
   } finally {
     if (created) await quarantineFailedWorktree(input.repoRoot, parent, worktree, git);

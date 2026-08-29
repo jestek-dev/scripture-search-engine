@@ -118,6 +118,11 @@ describe('job runner', () => {
   it('keeps only the environment allowlist', () => {
     expect(buildJobEnvironment({ PATH: 'C:\\Tools', HOME: 'C:\\Users\\Jeste', GITHUB_TOKEN: 'secret' })).toEqual({ PATH: 'C:\\Tools', HOME: 'C:\\Users\\Jeste' });
     expect(JOB_ENV_ALLOWLIST).toContain('PATH');
+    // Operator heap tuning travels (tsx does not forward the parent's
+    // --max-old-space-size to its node child — the artifact rebuild OOMs
+    // without it); secrets still do not.
+    expect(buildJobEnvironment({ NODE_OPTIONS: '--max-old-space-size=8192', GITHUB_TOKEN: 'secret' }))
+      .toEqual({ NODE_OPTIONS: '--max-old-space-size=8192' });
   });
 
   it('admits exactly one job from enqueue onward instead of creating an unbounded queue', async () => {

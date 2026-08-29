@@ -222,7 +222,7 @@ function machineReport(expectation: AdmissionGauntletExpectation, reportPath: st
 function releaseMachineReport(
   preview: AdmissionPreview,
   rebuilt: Pick<RebuildEvidence, 'descriptorSha256' | 'databaseSha256'>,
-  options: { gates?: ReturnType<typeof pass>[]; reportPath?: string } = {},
+  options: { gates?: ReturnType<typeof pass>[]; reportPath?: string; tiers?: unknown } = {},
 ): Uint8Array {
   const reportPath = options.reportPath ?? 'eval/.runs/admission-release-report.json';
   const engineIdentity = preview.candidate === null
@@ -251,6 +251,7 @@ function releaseMachineReport(
       },
     },
     report: buildReport({ gates: options.gates ?? GAUNTLET_GATE_ROSTER.map((gate) => pass(gate.id, gate.title, 'Rebuilt release gate passed.', undefined, { explicitTarget: true })) }),
+    ...(options.tiers === undefined ? {} : { tiers: options.tiers as never }),
   });
   return Buffer.from(`${JSON.stringify(report, null, 2)}\n`);
 }
@@ -369,6 +370,59 @@ describe('M10 controlled source admission', () => {
     const repeated = await execute(input);
     expect(repeated.status).toBe('ALREADY_ADMITTED');
     expect(repeated.manifest?.digest).toBe(result.manifest?.digest);
+  });
+
+  it('keeps the rebuild’s tracked descriptor output OUT of the admitted tree (evidence, not change — D11 finding)', async () => {
+    // The rebuilt descriptor is not byte-stable across runs (builtAt stamp,
+    // raw SQLite bytes), so baking it into worktreeTreeHash made every
+    // publish preparation refuse tree_mismatch. It is recorded evidence
+    // (rebuiltCandidate.outputFiles) and must be restored before the
+    // admitted tree is fixed.
+    const repo = await repository();
+    await mkdir(path.join(repo.root, 'artifacts'), { recursive: true });
+    await writeFile(path.join(repo.root, 'artifacts', 'content-artifact.json'), '{"committed": true}\n');
+    await git(repo.root, ['add', '--all']);
+    await git(repo.root, ['-c', 'user.name=Admission Test', '-c', 'user.email=admission@example.test', 'commit', '-m', 'descriptor']);
+    const commit = await git(repo.root, ['rev-parse', 'HEAD']);
+    const input = await previewInput(repo.root, commit, repo.sourceText);
+    const result = await execute(input, dependencies({
+      async rebuild(worktree, preview) {
+        const rebuiltText = '{"rebuilt": "not byte-stable"}\n';
+        await writeFile(path.join(worktree, 'artifacts', 'content-artifact.json'), rebuiltText);
+        const built = descriptor(preview);
+        return {
+          status: 'REBUILT', descriptor: built, descriptorSha256: sha256(rebuiltText), databaseSha256: built.databaseSha256,
+          command: outcome('build'),
+          outputFiles: [{ path: 'artifacts/content-artifact.json', sha256: sha256(rebuiltText) }],
+        };
+      },
+    }));
+    expect(result.status).toBe('ADMITTED');
+    expect(await git(repo.root, ['ls-tree', result.manifest!.worktreeTreeHash, '--', 'artifacts/content-artifact.json']))
+      .toBe(await git(repo.root, ['ls-tree', commit, '--', 'artifacts/content-artifact.json']));
+  });
+
+  it('accepts a release report carrying the E6 tiers evidence section (D11 finding)', async () => {
+    // Every release-target gauntlet run rides the tiers section with the
+    // battery evidence; refusing it made the release-gauntlet leg reject its
+    // own honest report in the D11 shakedown.
+    const repo = await repository();
+    const input = await previewInput(repo.root, repo.commit, repo.sourceText);
+    const result = await execute(input, dependencies({
+      async verify(_worktree, preview, rebuilt) {
+        return {
+          status: 'PASSED', command: outcome('verify'),
+          releaseGauntlet: {
+            reportPath: 'eval/.runs/admission-release-report.json',
+            reportBytes: releaseMachineReport(preview, rebuilt, {
+              tiers: { schema: 'scripture-search-engine/tier-report/v1', attained: 'T0', tiers: [] },
+            }),
+            command: outcome('release-gauntlet'),
+          },
+        };
+      },
+    }));
+    expect(result.status).toBe('ADMITTED');
   });
 
   it('returns NO MEASURABLE EFFECT without decisions, worktree creation, or a manifest', async () => {
@@ -928,6 +982,36 @@ describe('fixture-lane admission (votes-to-engine §5.3)', () => {
       provenance: ['review:no-op'], dependencies: dependencies({ async rebuild() { throw new Error('must not build'); } }),
     });
     expect(refused.status).toBe('NO_MEASURABLE_EFFECT');
+  });
+
+  it('admits a guard manifest that CREATES its golden fixture file (the lane’s primary operation)', async () => {
+    // Found in anger by the D11 shakedown: the preview reads a missing
+    // source as empty text, so the worktree mutation plan was handed
+    // beforeSha256 = sha256('') and refused every create with stale_plan
+    // ('expected e3b0…, found missing'). A missing before must map to the
+    // plan's null (must-not-exist) precondition.
+    const repo = await guardRepository();
+    const created = {
+      schemaVersion: 1, proposalId: 'quiet-guard', fixtureId: 'quiet-gap', caseIds: [CASE_ID],
+      sourcePreconditions: [{ path: 'eval/golden/quiet-gap.json', sha256: sha256('') }],
+      operations: [{
+        operationId: OPERATION_ID, type: 'golden-fixture-upsert', sourcePaths: ['eval/golden/quiet-gap.json'],
+        provenance: { source: 'editorial', confirmed: true, reviewer: 'Guard Reviewer', evidence: 'Approved study card for the quiet query.' },
+        reason: 'Bind the reviewed guard for the demonstrated quiet query.', goldenFixtureId: 'quiet-gap',
+        fixture: {
+          id: 'quiet-gap', query: 'quiet waters', status: 'pending',
+          mustNotRank: [{ reference: 'Psalm 46:1', why: 'matched words, not meaning' }],
+        },
+      }],
+    };
+    const input = { ...guardInput(repo.root, repo.commit, repo.fixtureText), proposal: created };
+    const result = await execute(input, guardDependencies());
+    expect(result.status).toBe('ADMITTED');
+    const change = result.manifest?.sourceChanges.find((entry) => entry.path === 'eval/golden/quiet-gap.json');
+    expect(change?.before.text).toBe('');
+    expect(change?.after.text).toContain('quiet waters');
+    // The primary tree stays untouched: the create happened in the worktree only.
+    await expect(readFile(path.join(repo.root, 'eval', 'golden', 'quiet-gap.json'), 'utf8')).rejects.toThrow();
   });
 
   it('proves identity neutrality: a rebuild that moves any fingerprint refuses the guard admission', async () => {

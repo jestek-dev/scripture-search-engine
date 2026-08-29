@@ -804,8 +804,16 @@ async function fileState(worktree: string, changes: readonly AdmissionFileDiff[]
   let before = true;
   let after = true;
   for (const change of changes) {
-    const bytes = await readConfinedFile(worktree, change.path);
-    const current = sha256(bytes);
+    // A CREATE — the fixture lane's primary operation — has no file in its
+    // before state: the admission manifest records `before` as the empty
+    // marker and the publish worktree at the base commit has nothing to
+    // read, so a missing file IS the before state (mirrors admission.ts's
+    // sourceMutations; found by the D11 shakedown).
+    const bytes = await readConfinedFile(worktree, change.path).catch((error: unknown) => {
+      if (error instanceof PublishPreparationError && error.code === 'missing_evidence' && change.before.text === '') return null;
+      throw error;
+    });
+    const current = bytes === null ? change.before.sha256 : sha256(bytes);
     before &&= current === change.before.sha256;
     after &&= current === change.after.sha256;
   }
@@ -819,7 +827,9 @@ async function applyAdmittedFiles(worktree: string, manifest: AdmissionManifest,
   if (state !== 'before') fail('digest_mismatch', 'Worktree contains a mixed or stale admitted patch.');
   const plan = await createMutationPlan(worktree, changes.map((entry) => ({
     path: entry.path,
-    beforeSha256: entry.before.sha256,
+    // null is the plan's must-not-exist precondition: a create's before is
+    // the empty marker and the worktree has no file (mirrors admission.ts).
+    beforeSha256: entry.before.text === '' ? null : entry.before.sha256,
     after: Buffer.from(entry.after.base64, 'base64'),
   })));
   await applyMutationPlan(worktree, plan, options);
@@ -846,17 +856,28 @@ async function inspectIndex(commands: Commands, worktree: string, allowed: reado
   return requireCommit(await commands.git(['write-tree'], worktree), 'prepared tree hash');
 }
 
-async function assertNoForbiddenOutputs(worktree: string): Promise<void> {
-  const candidates = [
+/**
+ * Removes the operational exhaust the fixed verification itself
+ * legitimately recreates inside the publish worktree — the workbench's own
+ * server integration tests run real jobs against the checkout root and
+ * write workbench/.state/jobs records (D11 finding: the old existence
+ * assertion refused every real `npm run verify`, doubly so because
+ * pipeline/telemetry also holds TRACKED schema files, so its mere existence
+ * check could never pass on a real checkout). `git clean` removes only
+ * untracked and ignored content under these paths — tracked files are
+ * untouched — and that exhaust can never reach the commit anyway:
+ * inspectIndex runs right after, pins the index to exactly the reviewed
+ * paths, refuses any unapproved worktree file, and refuses forbidden
+ * ignored leftovers outside these directories — the guard stays live, only
+ * verification's own expected exhaust is cleaned instead of refused.
+ */
+async function removeVerificationState(commands: Commands, worktree: string): Promise<void> {
+  await commands.git(['clean', '-ffdx', '--',
     'workbench/.state',
     'workbench/.artifact',
     'pipeline/telemetry',
     'telemetry',
-  ];
-  for (const relative of candidates) {
-    const exists = await lstat(path.join(worktree, ...relative.split('/'))).then(() => true, () => false);
-    if (exists) fail('forbidden_output', `Verification produced forbidden ${relative} content.`);
-  }
+  ], worktree);
 }
 
 async function runFixedVerify(
@@ -961,7 +982,17 @@ async function proveAdmittedCommit(
   if (canonical(committedPaths) !== canonical(changedPaths)) return false;
   const statuses = (await commands.git(['diff-tree', '--no-commit-id', '--name-status', '-r', manifest.baseCommit, commit], worktree))
     .split(/\r?\n/).filter(Boolean);
-  if (statuses.length !== changedPaths.length || statuses.some((entry) => !/^M\t/.test(entry))) return false;
+  if (statuses.length !== changedPaths.length) return false;
+  // A CREATE (before is the empty marker; the file was absent at base and the
+  // apply used the must-not-exist precondition) proves as an addition; every
+  // other change proves as exactly a modification (D11 finding).
+  const statusByPath = new Map(statuses.map((entry) => {
+    const [code = '', ...rest] = entry.split('\t');
+    return [rest.join('\t'), code] as const;
+  }));
+  for (const change of manifest.sourceChanges.filter((entry) => entry.changed)) {
+    if (statusByPath.get(change.path) !== (change.before.text === '' ? 'A' : 'M')) return false;
+  }
   for (const change of manifest.sourceChanges.filter((entry) => entry.changed)) {
     const mode = await commands.git(['ls-tree', commit, '--', change.path], worktree);
     if (!/^100644 blob [0-9a-f]{40,64}\t/.test(mode) && !/^100755 blob [0-9a-f]{40,64}\t/.test(mode)) return false;
@@ -1324,7 +1355,7 @@ export async function prepareDraftPublication(input: PreparePublishInput): Promi
     if (preVerifyTree !== manifest.worktreeTreeHash) fail('tree_mismatch', 'Prepared tree does not match the admitted tree.');
     await assertMain(commands, root, remote, expectedMain);
     const preCommitVerification = await runFixedVerify(commands, worktree, manifest, preVerifyTree);
-    await assertNoForbiddenOutputs(worktree);
+    await removeVerificationState(commands, worktree);
     await commands.git(['reset'], worktree);
     await commands.git(['add', '--', ...changedPaths], worktree);
     const verifiedTree = await inspectIndex(commands, worktree, changedPaths);
@@ -1342,7 +1373,7 @@ export async function prepareDraftPublication(input: PreparePublishInput): Promi
     const committedTree = requireCommit(await commands.git(['rev-parse', 'HEAD^{tree}'], worktree), 'committed tree');
     if (committedTree !== manifest.worktreeTreeHash) fail('tree_mismatch', 'Committed tree differs from admission.');
     const committedVerificationRun = await runFixedVerify(commands, worktree, manifest, committedTree);
-    await assertNoForbiddenOutputs(worktree);
+    await removeVerificationState(commands, worktree);
     const verificationBody = {
       schemaVersion: 2 as const,
       manifestDigest: manifest.digest,

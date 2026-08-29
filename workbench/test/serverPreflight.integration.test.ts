@@ -10,8 +10,17 @@ const children: ChildProcess[] = [];
 const directories: string[] = [];
 
 afterEach(async () => {
-  for (const child of children.splice(0)) child.kill();
-  for (const directory of directories.splice(0)) rmSync(directory, { recursive: true, force: true });
+  // Wait for each child to actually exit before deleting its state directory:
+  // a dying server can still be writing .state/jobs entries, and a recursive
+  // remove racing those writes fails ENOTEMPTY (found by the D11 shakedown).
+  await Promise.all(children.splice(0).map((child) => new Promise<void>((resolve) => {
+    if (child.exitCode !== null || child.signalCode !== null) return resolve();
+    child.once('exit', () => resolve());
+    child.kill();
+  })));
+  for (const directory of directories.splice(0)) {
+    rmSync(directory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+  }
 });
 
 async function unusedPort(): Promise<number> {
