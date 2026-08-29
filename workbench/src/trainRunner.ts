@@ -40,6 +40,8 @@ import {
   type DeriveUpdatesInputs,
 } from './deriveUpdates.js';
 import type { AdmissionEvidenceEntry } from './admissionPublishOperations.js';
+import type { ComparisonReport } from './comparison.js';
+import { buildDataUpdateReport, type DataUpdateReport } from './dataUpdateReport.js';
 import { proposalManifestDigest, type ProposalManifest } from './proposals.js';
 import { assembleUpdatesInputs, readOriginMainTipFromGit, resolveUpdatesInputPaths, type GoldenMainHistoryReader, type UpdatesInputPaths } from './updatesOperations.js';
 import {
@@ -71,6 +73,34 @@ const TRAIN_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const GUARD_REPORT_LEAD =
   'This update only writes lines on the answer sheet — no search result can move, so there is nothing to compare. The checks confirmed every line holds.';
 
+/**
+ * §06 FM-8's unpaid-marker refusal — ships verbatim: a merged data train
+ * whose deferred signing has not happened counts as an open identity mover,
+ * and the next DATA train's seal refuses until the signing pull request has
+ * merged. Guard trains still travel (identity-neutral, the PR #66 precedent).
+ */
+export const UNPAID_MARKER_SEAL_REFUSAL =
+  "The last update's independent sign-off hasn't happened yet. New data updates wait until it does.";
+
+/**
+ * The frozen-awaiting-signer sentences (A1 frozen-queue default; §09.1 and
+ * the ruling on open call 4). Single writer — the page renders these
+ * verbatim; plain language, no fake progress, no jargon (D28).
+ */
+/**
+ * D14: the reviewed rationale the sign act records on every admission
+ * decision slot. The human act is the typed digest against the assembled
+ * Update Report; the server writes this one sentence into each slot (and
+ * each probe rationale) as the recorded form of that review.
+ */
+export const TRAIN_SIGN_RATIONALE =
+  'Signed from the Update Report — every listed change was reviewed and holds.';
+
+export const SIGNING_HOLD_NO_SIGNER =
+  'This update is checked and its report is complete. It waits here for one thing: the independent sign-off role has not been assigned yet. Nothing more happens until a signer is named — your approvals and this report stay saved.';
+export const SIGNING_HOLD_DEBT_STANDS =
+  'This update is checked and its report is complete. It waits for a one-time independent sign-off that clears two standing checks for the whole project. When that lands, this update can be signed and merged.';
+
 /** The observed train states (V5) — closed set; §5.2: guard trains skip built/measured. */
 export const TRAIN_STATES = ['open', 'sealed', 'built', 'measured', 'ready', 'admitted', 'pr-open', 'live', 'stopped'] as const;
 export type TrainState = (typeof TRAIN_STATES)[number];
@@ -95,8 +125,17 @@ export interface TrainView {
   readonly sealDigest: string | null;
   readonly cardIds: readonly string[];
   readonly stopped: { readonly reason: TrainStopReason; readonly reportDigest?: string; readonly refusedOperationIds?: readonly string[] } | null;
-  readonly report: GuardUpdateReport | null;
+  readonly report: GuardUpdateReport | DataUpdateReport | null;
   readonly draftPrUrl: string | null;
+  /**
+   * The frozen-awaiting-signer state (A1 frozen-queue default; §09.1): a
+   * plain-language sentence, non-null exactly when a DATA train at `ready`
+   * cannot be signed yet — no independent signer has been named (governance
+   * call 4 open), or the one-time historic sign-off (D12a) has not landed.
+   * The server is this sentence's single writer; the page renders it
+   * verbatim in place of the sign panel — honest, no fake progress (D28).
+   */
+  readonly signingHold: string | null;
   /**
    * §8.4's measured number: wall-clock milliseconds of this train's WHOLE
    * verified admit leg — the sign act (`decisions[].decidedAt`) to
@@ -131,6 +170,14 @@ export interface TrainOperationsOptions {
    * Defaults to real git history (`readGoldenMainHistoryFromGit`).
    */
   readonly readGoldenMainHistory?: GoldenMainHistoryReader;
+  /**
+   * A2 (§09.2): the per-review designated independent signer — never the
+   * change author. Null/absent while governance has not named one (call 4
+   * open): every data train then freezes at `ready` with an honest
+   * signingHold instead of a sign panel. Configured by the server from
+   * `WORKBENCH_INDEPENDENT_SIGNER`; never invented by the machine.
+   */
+  readonly independentSigner?: string | null;
 }
 
 export interface TrainOperations {
@@ -143,6 +190,19 @@ export interface TrainOperations {
   seal(replayIdentity: ReplayIdentity, derivationDigest: string): Promise<TrainView>;
   /** D8: observed state + the fixture-lane Update Report. */
   train(trainId: string, replayIdentity: ReplayIdentity): Promise<TrainView>;
+  /**
+   * D14: the typed-digest sign act fronting `ready → admitted` for BOTH
+   * train flavors (§5.1's state table). Verifies the posted digest against
+   * the assembled Update Report (409 `stale_preview` on any mismatch),
+   * refuses while the frozen-awaiting-signer hold stands (409
+   * `awaiting_signer` — A1 frozen queue, open call 4: the hold sentence IS
+   * the response body), and records the per-query review: EXACTLY the
+   * report's changed queries, no extras — the set admission.ts's
+   * comparisonBlockers verifies (`reviewedComparisonQueries`). A guard
+   * train has no comparison, so the coverage rule does not arise (§5.3).
+   * The admit + publish tail runs behind the same act at the server.
+   */
+  sign(trainId: string, digest: string, replayIdentity: ReplayIdentity): Promise<TrainView>;
   /** §03.8: append a stop with its pins. Refuses on a train that cannot stop. */
   recordStop(trainId: string, reason: TrainStopReason, pins?: { readonly reportDigest?: string; readonly refusedOperationIds?: readonly string[] }): Promise<void>;
   /**
@@ -186,6 +246,8 @@ export function stopReasonForFailure(code: string): TrainStopReason | null {
     main_moved: 'main-moved',
     source_drift: 'source-drift',
     probe_approval_missing: 'g8-baseline-moved-needs-independent-approval',
+    ordering_approval_missing: 'g8-baseline-moved-needs-independent-approval',
+    ordering_approval_mismatch: 'g8-baseline-moved-needs-independent-approval',
     unapproved_path: 'outside-allowlist',
     stale_candidate: 'stale-artifact-identity',
     stale_base: 'stale-artifact-identity',
@@ -270,15 +332,79 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     }
   }
 
-  async function manifestFromRegistry(trainId: string): Promise<ProposalManifest | null> {
+  async function entryFromRegistry(trainId: string): Promise<AdmissionEvidenceEntry | null> {
     const registry = await readRegistry(paths.evidencePath).catch(() => null);
-    const entry = registry?.admissions.find((candidate) => candidate.reviewId === trainId);
-    if (entry === undefined) return null;
+    return registry?.admissions.find((candidate) => candidate.reviewId === trainId) ?? null;
+  }
+
+  /**
+   * The engine identity a committed approval document binds, or null when
+   * the file is unreadable — read for the D12a debt check and the FM-8
+   * unpaid-marker rule; never mutated by the runner.
+   */
+  async function approvalIdentity(relativePath: string): Promise<{ engineVersion: string; corpusFingerprint: string; layerFingerprint: string } | null> {
     try {
-      return entry.proposal as ProposalManifest;
+      const parsed = JSON.parse(await readFile(path.join(paths.repoRoot, ...relativePath.split('/')), 'utf8')) as Record<string, unknown>;
+      const engine = parsed.engine as Record<string, unknown> | undefined;
+      if (engine === undefined || typeof engine.engineVersion !== 'string'
+        || typeof engine.corpusFingerprint !== 'string' || typeof engine.layerFingerprint !== 'string') return null;
+      return { engineVersion: engine.engineVersion, corpusFingerprint: engine.corpusFingerprint, layerFingerprint: engine.layerFingerprint };
     } catch {
       return null;
     }
+  }
+
+  async function committedApprovalIdentities(): Promise<{
+    probes: Awaited<ReturnType<typeof approvalIdentity>>;
+    ordering: Awaited<ReturnType<typeof approvalIdentity>>;
+  }> {
+    return {
+      probes: await approvalIdentity('eval/baselines/probes.approval.json'),
+      ordering: await approvalIdentity('eval/baselines/ordering.snapshot.approval.json'),
+    };
+  }
+
+  function identityEquals(left: unknown, right: unknown): boolean {
+    return left !== null && right !== null && canonicalJson(left) === canonicalJson(right);
+  }
+
+  /**
+   * §06 FM-8's unpaid-marker rule (§5.6's third seal precondition): a merged
+   * (live) data train whose recorded deferred-signing marker has no merged
+   * approval for its declared post-merge identity holds the next DATA
+   * train's seal exactly like an open identity-moving PR.
+   */
+  async function unpaidMarkerStands(derivation: UpdatesDerivation): Promise<boolean> {
+    const directory = path.join(paths.repoRoot, 'workbench', 'admissions');
+    if (!existsSync(directory)) return false;
+    const names = (await readdir(directory).catch(() => [] as string[])).filter((name) => /^[0-9a-f]{64}\.json$/.test(name));
+    if (names.length === 0) return false;
+    const registry = await readRegistry(paths.evidencePath).catch(() => null);
+    if (registry === null) return false;
+    const approvals = await committedApprovalIdentities();
+    for (const name of names) {
+      let manifest: Record<string, unknown>;
+      try {
+        manifest = JSON.parse(await readFile(path.join(directory, name), 'utf8')) as Record<string, unknown>;
+      } catch {
+        continue;
+      }
+      const marker = manifest.deferredSigning as { expectedPostMergeIdentity?: unknown } | null | undefined;
+      if (marker === null || marker === undefined || marker.expectedPostMergeIdentity === undefined) continue;
+      const entry = registry.admissions.find((candidate) => {
+        try {
+          return proposalManifestDigest(candidate.proposal as ProposalManifest) === manifest.proposalDigest;
+        } catch {
+          return false;
+        }
+      });
+      if (entry === undefined) continue;
+      if (!derivation.liveTrainIds.includes(entry.reviewId)) continue;
+      const paid = identityEquals(approvals.probes, marker.expectedPostMergeIdentity)
+        && identityEquals(approvals.ordering, marker.expectedPostMergeIdentity);
+      if (!paid) return true;
+    }
+    return false;
   }
 
   async function admissionManifestFor(proposalDigest: string): Promise<Record<string, unknown> | null> {
@@ -336,9 +462,10 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
   // `derivation.liveTrainIds`, anchored to main's git history so the
   // observation is monotonic (a later same-search merge rewriting the golden
   // file never regresses an earlier merged train). Derived, never stored (V5).
-  async function observedState(snapshot: TrainSnapshot, derivation: UpdatesDerivation): Promise<{ state: TrainState; manifest: ProposalManifest | null; draftPrUrl: string | null; checksDurationMs: number | null }> {
-    if (snapshot.state === 'open') return { state: 'open', manifest: null, draftPrUrl: null, checksDurationMs: null };
-    const manifest = await manifestFromRegistry(snapshot.trainId);
+  async function observedState(snapshot: TrainSnapshot, derivation: UpdatesDerivation): Promise<{ state: TrainState; entry: AdmissionEvidenceEntry | null; manifest: ProposalManifest | null; draftPrUrl: string | null; checksDurationMs: number | null }> {
+    if (snapshot.state === 'open') return { state: 'open', entry: null, manifest: null, draftPrUrl: null, checksDurationMs: null };
+    const entry = await entryFromRegistry(snapshot.trainId);
+    const manifest = entry === null ? null : (entry.proposal as ProposalManifest);
     let proposalDigest: string | null = null;
     if (manifest !== null) {
       try {
@@ -349,26 +476,65 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     }
     const admissionRecord = proposalDigest === null ? null : await admissionManifestFor(proposalDigest);
     const checksDurationMs = checksDurationOf(admissionRecord);
-    if (snapshot.state === 'stopped') return { state: 'stopped', manifest, draftPrUrl: null, checksDurationMs };
-    if (manifest === null || proposalDigest === null) return { state: 'sealed', manifest: null, draftPrUrl: null, checksDurationMs: null };
-    if (snapshot.flavor === 'guard' && derivation.liveTrainIds.includes(snapshot.trainId)) {
+    if (snapshot.state === 'stopped') return { state: 'stopped', entry, manifest, draftPrUrl: null, checksDurationMs };
+    if (manifest === null || proposalDigest === null) return { state: 'sealed', entry: null, manifest: null, draftPrUrl: null, checksDurationMs: null };
+    if (derivation.liveTrainIds.includes(snapshot.trainId)) {
       const journal = await publishJournal(snapshot.trainId);
-      return { state: 'live', manifest, draftPrUrl: journal?.draftPrUrl ?? null, checksDurationMs };
+      return { state: 'live', entry, manifest, draftPrUrl: journal?.draftPrUrl ?? null, checksDurationMs };
     }
     const journal = await publishJournal(snapshot.trainId);
     if (journal?.phase === 'draft-pr-opened') {
-      return { state: 'pr-open', manifest, draftPrUrl: journal.draftPrUrl ?? null, checksDurationMs };
+      return { state: 'pr-open', entry, manifest, draftPrUrl: journal.draftPrUrl ?? null, checksDurationMs };
     }
     if (admissionRecord !== null) {
-      return { state: 'admitted', manifest, draftPrUrl: null, checksDurationMs };
+      return { state: 'admitted', entry, manifest, draftPrUrl: null, checksDurationMs };
     }
     // Guard trains never enter built/measured (§5.2): with the registry entry
     // written and the report assembled from it, the sealed train IS ready.
-    return { state: snapshot.flavor === 'guard' ? 'ready' : 'sealed', manifest, draftPrUrl: null, checksDurationMs };
+    if (snapshot.flavor === 'guard') return { state: 'ready', entry, manifest, draftPrUrl: null, checksDurationMs };
+    // Data trains (§5.2's full lane): every state past `sealed` is DERIVED
+    // from artifacts the three stage jobs already produced — the candidate
+    // directory ⇒ built, the comparison publication ⇒ measured, the
+    // candidate gauntlet report ⇒ ready — never stored (V5).
+    if (entry !== null && entry.gauntlet !== null) return { state: 'ready', entry, manifest, draftPrUrl: null, checksDurationMs };
+    if (entry !== null && entry.comparison !== null) return { state: 'measured', entry, manifest, draftPrUrl: null, checksDurationMs };
+    if (entry !== null && entry.candidate !== null) return { state: 'built', entry, manifest, draftPrUrl: null, checksDurationMs };
+    return { state: 'sealed', entry, manifest, draftPrUrl: null, checksDurationMs };
+  }
+
+  /**
+   * The frozen-awaiting-signer sentence for a data train at `ready` (A1
+   * frozen queue; ruling on open call 4): non-null while no independent
+   * signer is named, or while the one-time historic sign-off (D12a) has not
+   * landed — the standing approvals do not bind the train's own base
+   * identity, so no data admission can pass and the sign act must refuse.
+   */
+  async function signingHoldOf(snapshot: TrainSnapshot, state: TrainState, entry: AdmissionEvidenceEntry | null): Promise<string | null> {
+    if (snapshot.flavor !== 'data' || state !== 'ready') return null;
+    const signer = options.independentSigner ?? null;
+    if (signer === null || signer.trim().length < 2) return SIGNING_HOLD_NO_SIGNER;
+    const approvals = await committedApprovalIdentities();
+    const base = entry?.baseIdentity ?? null;
+    if (base === null || !identityEquals(approvals.probes, base) || !identityEquals(approvals.ordering, base)) {
+      return SIGNING_HOLD_DEBT_STANDS;
+    }
+    return null;
+  }
+
+  function reportOf(snapshot: TrainSnapshot, state: TrainState, entry: AdmissionEvidenceEntry | null, manifest: ProposalManifest | null, signingHold: string | null): GuardUpdateReport | DataUpdateReport | null {
+    if (manifest === null) return null;
+    if (snapshot.flavor === 'guard') return buildGuardUpdateReport(snapshot.trainId, manifest);
+    const comparison = entry?.comparison ?? null;
+    if (comparison === null || state === 'sealed' || state === 'built') return null;
+    return buildDataUpdateReport(snapshot.trainId, manifest, comparison as ComparisonReport, {
+      regenerated: entry?.regenEvidence !== undefined && entry?.regenEvidence !== null,
+      standingRedStands: signingHold !== null,
+    });
   }
 
   async function view(snapshot: TrainSnapshot, derivation: UpdatesDerivation): Promise<TrainView> {
-    const { state, manifest, draftPrUrl, checksDurationMs } = await observedState(snapshot, derivation);
+    const { state, entry, manifest, draftPrUrl, checksDurationMs } = await observedState(snapshot, derivation);
+    const signingHold = await signingHoldOf(snapshot, state, entry);
     return {
       trainId: snapshot.trainId,
       flavor: snapshot.flavor,
@@ -383,9 +549,10 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
           ...(snapshot.stopped.reportDigest === undefined ? {} : { reportDigest: snapshot.stopped.reportDigest }),
           ...(snapshot.stopped.refusedOperationIds === undefined ? {} : { refusedOperationIds: snapshot.stopped.refusedOperationIds }),
         },
-      report: manifest === null || snapshot.flavor !== 'guard' ? null : buildGuardUpdateReport(snapshot.trainId, manifest),
+      report: reportOf(snapshot, state, entry, manifest, signingHold),
       draftPrUrl,
       checksDurationMs,
+      signingHold,
     };
   }
 
@@ -464,15 +631,17 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
           );
         }
 
-        // Phase 2 scope (§8.4): a fingerprint-moving manifest is a data
-        // train, and data trains wait for Phase 3's machinery. Derived from
-        // operation types (V7) — never chosen by a caller.
-        if (deriveTrainFlavor(manifest) === 'data') {
-          fail(
-            'data_train_waiting',
-            'This update would change the data the engine searches, not just the answer sheet. That kind of update waits for the full update machinery — your approvals are saved and will ride it.',
-            409,
-          );
+        // The flavor is DERIVED from operation types (V7) — never chosen by
+        // a caller. Phase 3 (D12): data trains seal and run the full lane.
+        const flavor = deriveTrainFlavor(manifest);
+
+        // §5.6's third seal precondition (§06 FM-8's unpaid-marker rule,
+        // test case g): a merged data train whose deferred signing has not
+        // happened counts as an open identity mover — the next DATA train's
+        // seal refuses until the signing pull request has merged. Guard
+        // trains still travel (identity-neutral, the PR #66 precedent).
+        if (flavor === 'data' && await unpaidMarkerStands(derivation)) {
+          fail('signing_debt', UNPAID_MARKER_SEAL_REFUSAL, 409);
         }
 
         const admittedBaseCommit = await readMain(paths.repoRoot).catch(() => {
@@ -547,7 +716,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
             reviewer: options.reviewer,
             kind: 'train-opened',
             trainId,
-            flavor: 'guard',
+            flavor,
           },
           {
             schemaVersion: 1,
@@ -579,6 +748,53 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
       const snapshot = derivation.trains.find((candidate) => candidate.trainId === trainId);
       if (snapshot === undefined) fail('train_not_found', 'No update with this name exists yet.', 404);
       return view(snapshot, derivation);
+    },
+
+    async sign(trainId, digest, replayIdentity): Promise<TrainView> {
+      if (!TRAIN_ID.test(trainId)) fail('invalid_route', 'Train identifier is invalid.', 400);
+      const inputs = await assemble(replayIdentity);
+      const derivation = derive(inputs);
+      const snapshot = derivation.trains.find((candidate) => candidate.trainId === trainId);
+      if (snapshot === undefined) fail('train_not_found', 'No update with this name exists yet.', 404);
+      const current = await view(snapshot, derivation);
+      if (current.state !== 'ready') {
+        fail('not_signable', 'This update is not at the signing step — reload to see where it stands.', 409);
+      }
+      // The frozen-awaiting-signer refusal (A1 frozen-queue default while
+      // governance call 4 is open): no sign act completes. The hold sentence
+      // is the single-writer response the page already renders in place of
+      // the sign panel — same words here, no rival phrasing (D28/E4).
+      if (current.signingHold !== null) fail('awaiting_signer', current.signingHold, 409);
+      const report = current.report;
+      if (report === null) {
+        fail('not_signable', 'This update has no report to sign yet — reload to see where it stands.', 409);
+      }
+      // The panel posts the FULL digest (the chip shows its first 12 hex);
+      // any mismatch means the reviewer signed a report that no longer
+      // exists — the Finish-up stale semantics, never a partial accept.
+      const posted = typeof digest === 'string' ? digest.trim().toLowerCase() : '';
+      if (posted !== report.digest) {
+        fail('stale_preview', 'The picture changed since this preview — reload the report and sign the fresh code. Nothing was approved.', 409);
+      }
+      // D14's per-query review capture: signing records the review of
+      // EXACTLY the changed queries the report listed — no extras — which
+      // is what satisfies admission's coverage blocker (admission.ts
+      // comparisonBlockers stays the safety net behind this write).
+      if (snapshot.flavor === 'data' && report.kind === 'data-update-report') {
+        const registry = await readRegistry(paths.evidencePath);
+        const index = registry.admissions.findIndex((candidate) => candidate.reviewId === trainId);
+        if (index < 0) {
+          fail('evidence_registry_invalid', 'The saved update evidence could not be read. Nothing was changed.', 500);
+        }
+        const entry = registry.admissions[index]!;
+        registry.admissions[index] = { ...entry, reviewedComparisonQueries: [...report.changedQueries] };
+        await writeFile(
+          paths.evidencePath,
+          `${JSON.stringify({ schemaVersion: 1, admissions: registry.admissions }, null, 2)}\n`,
+          'utf8',
+        );
+      }
+      return current;
     },
 
     async recordStop(trainId, reason, pins = {}): Promise<void> {

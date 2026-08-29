@@ -65,6 +65,23 @@ export interface AdmissionEvidenceEntry {
   readonly fixturePromotions?: AdmissionPreviewInput['fixturePromotions'];
   readonly probeBaseline?: AdmissionPreviewInput['probeBaseline'];
   readonly probeApproval?: AdmissionPreviewInput['probeApproval'];
+  readonly orderingSnapshot?: AdmissionPreviewInput['orderingSnapshot'];
+  readonly orderingSnapshotApproval?: AdmissionPreviewInput['orderingSnapshotApproval'];
+  /**
+   * D13: the sanctioned regen's double-run evidence — two separate update
+   * runs, each executed twice and byte-compared. Recorded by the
+   * train-gauntlet stage; surfaced in the Update Report. Never contains an
+   * approval document: the machine refuses to write one.
+   */
+  readonly regenEvidence?: {
+    readonly probeBaselineRuns: 2;
+    readonly orderingSnapshotRuns: 2;
+    readonly probeBaselineByteIdentical: true;
+    readonly orderingSnapshotByteIdentical: true;
+    readonly probeBaselineSha256: string;
+    readonly orderingSnapshotSha256: string;
+    readonly regeneratedAt: string;
+  } | null;
   readonly provenance: readonly string[];
 }
 
@@ -218,7 +235,7 @@ async function readTrustedRegistry(repoRoot: string, evidencePath: string): Prom
   }
   const entries = raw['admissions'].map((entry, index) => {
     if (!isRecord(entry)) fail('invalid_evidence', `Admission evidence ${index + 1} is invalid.`, 500);
-    const keys = ['reviewId', 'admittedBaseCommit', 'admittedOriginBaseCommit', 'expectedMainCommit', 'proposal', 'candidate', 'comparison', 'comparisonBinding', 'gauntlet', 'baseIdentity', 'deferredSigningMarker', 'reviewedComparisonQueries', 'provenance', 'fixturePromotions', 'probeBaseline', 'probeApproval'];
+    const keys = ['reviewId', 'admittedBaseCommit', 'admittedOriginBaseCommit', 'expectedMainCommit', 'proposal', 'candidate', 'comparison', 'comparisonBinding', 'gauntlet', 'baseIdentity', 'deferredSigningMarker', 'reviewedComparisonQueries', 'provenance', 'fixturePromotions', 'probeBaseline', 'probeApproval', 'orderingSnapshot', 'orderingSnapshotApproval', 'regenEvidence'];
     const actual = Object.keys(entry);
     if (actual.some((key) => !keys.includes(key))) fail('invalid_evidence', `Admission evidence ${index + 1} has unsupported fields.`, 500);
     if (typeof entry['reviewId'] !== 'string' || !REVIEW_ID.test(entry['reviewId'])) fail('invalid_evidence', `Admission evidence ${index + 1} has an invalid review id.`, 500);
@@ -549,6 +566,8 @@ export class AdmissionPublishOperations {
       ...(entry.fixturePromotions === undefined ? {} : { fixturePromotions: entry.fixturePromotions }),
       ...(entry.probeBaseline === undefined ? {} : { probeBaseline: entry.probeBaseline }),
       ...(entry.probeApproval === undefined ? {} : { probeApproval: entry.probeApproval }),
+      ...(entry.orderingSnapshot === undefined ? {} : { orderingSnapshot: entry.orderingSnapshot }),
+      ...(entry.orderingSnapshotApproval === undefined ? {} : { orderingSnapshotApproval: entry.orderingSnapshotApproval }),
     };
   }
 

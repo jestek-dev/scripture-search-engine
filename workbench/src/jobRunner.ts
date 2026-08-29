@@ -23,7 +23,7 @@ import { promisify } from 'node:util';
 import { repoRoot } from './descriptor.js';
 import { withMutationJournalLock } from './applyJournal.js';
 
-export const JOB_IDS = ['typecheck', 'test', 'gauntlet', 'verify'] as const;
+export const JOB_IDS = ['typecheck', 'test', 'gauntlet', 'verify', 'train-build', 'train-measure', 'train-gauntlet'] as const;
 export type JobId = (typeof JOB_IDS)[number];
 export type JobState = 'queued' | 'running' | 'passed' | 'failed' | 'timed-out' | 'cancelled' | 'interrupted';
 export type JobStopReason = Extract<JobState, 'timed-out' | 'cancelled'>;
@@ -217,6 +217,15 @@ export const JOB_DEFINITIONS: Readonly<Record<JobId, JobDefinition>> = Object.fr
   test: definition(['run', 'test'], 15 * 60_000),
   gauntlet: definition(['run', 'gauntlet'], 20 * 60_000),
   verify: definition(['run', 'verify'], 30 * 60_000),
+  // D12: the three data-train stages — fixed root npm scripts (no free-form
+  // command crosses the HTTP boundary); the stage CLI locates the one
+  // sealed data train itself. Timeouts follow the measured §8.5 machine
+  // budget (30–90 minutes unattended for the whole lane).
+  'train-build': definition(['run', 'train:build'], 60 * 60_000),
+  'train-measure': definition(['run', 'train:measure'], 30 * 60_000),
+  // The gauntlet stage carries the candidate gauntlet AND the D13 regen
+  // (worktree + rebuild + 4 update runs) — the longest leg by design.
+  'train-gauntlet': definition(['run', 'train:gauntlet'], 150 * 60_000),
 });
 
 export const JOB_ENV_ALLOWLIST = Object.freeze([
@@ -232,6 +241,17 @@ export const JOB_ENV_ALLOWLIST = Object.freeze([
   // scrub otherwise makes the workbench's fixed commands FAIL where the
   // operator's own shell succeeds (found in anger by the D11 shakedown).
   'NODE_OPTIONS',
+  // D12: the train-stage jobs honor the same workbench state-root knobs the
+  // server honors, so a sandboxed state root (tests, the D15 shakedown)
+  // steers the panel and the stage jobs together. Operator-trust-level
+  // configuration, exactly like NODE_OPTIONS above — never a caller input.
+  'WORKBENCH_REPO_ROOT',
+  'WORKBENCH_REVIEWER',
+  'WORKBENCH_INDEPENDENT_SIGNER',
+  'WORKBENCH_UPDATES_PATH',
+  'WORKBENCH_JUDGMENTS_PATH',
+  'WORKBENCH_CASES_PATH',
+  'WORKBENCH_ADMISSION_EVIDENCE_PATH',
 ] as const);
 
 interface OutputAccumulator {

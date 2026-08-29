@@ -37,6 +37,7 @@ import {
   GUARD_REPORT_LEAD,
   stopReasonForFailure,
   TrainOperationsError,
+  UNPAID_MARKER_SEAL_REFUSAL,
   type TrainOperations,
 } from '../src/trainRunner.js';
 import { createUpdatesOperations, type TrainGoldenHistoryWindow, type UpdatesOperations } from '../src/updatesOperations.js';
@@ -390,7 +391,7 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
     await expect(sealNow(updates, trains)).rejects.toMatchObject({ code: 'nothing_to_seal', status: 409 });
   });
 
-  it('refuses to seal a data-flavored approval set (Phase 2 scope) with the approvals kept', async () => {
+  it('seals a data-flavored approval set into the full lane (Phase 3 D12): sealed, no report yet, evidence entry written', async () => {
     const missing = v2({
       judgmentId: 'm1', query: 'love your enemies', action: 'missing', at: nextAt(),
       reference: 'Matthew 5:44', withinTop: 10, note: 'uses that exact wording',
@@ -398,11 +399,20 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
     const root = await makeRepo([missing]);
     const { updates, trains } = operationsFor(root);
     await approveEveryCard(updates);
-    await expect(sealNow(updates, trains)).rejects.toMatchObject({ code: 'data_train_waiting', status: 409 });
-    // Nothing was sealed and the approvals survive for Phase 3's machinery.
-    const derivation = await updates.derive(CURRENT);
-    expect(derivation.trains).toHaveLength(0);
-    expect(derivation.cards.every((card) => card.state.decision === 'approved')).toBe(true);
+    const view = await sealNow(updates, trains);
+    expect(view.flavor).toBe('data');
+    // The stage jobs have produced nothing yet: the observed state is the
+    // seal itself, and no Update Report exists before the comparison ran.
+    expect(view.state).toBe('sealed');
+    expect(view.report).toBeNull();
+    expect(view.signingHold).toBeNull();
+    const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+      admissions: AdmissionEvidenceEntry[];
+    };
+    expect(registry.admissions).toHaveLength(1);
+    expect(registry.admissions[0]!.candidate).toBeNull();
+    const sealedManifest = parseProposalManifest(registry.admissions[0]!.proposal);
+    expect(sealedManifest.operations.some((operation) => operation.type === 'fixture-corpus-chapter-add')).toBe(true);
   });
 
   it('V4 (synthetic): a layer-affecting operation with no same-manifest fixture measuring it is named unmeasured', () => {
@@ -446,6 +456,63 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
       ],
     });
     expect(unmeasuredLayerAffectingOperations(paired)).toEqual([]);
+  });
+});
+
+describe('§5.6 FM-8 case g: an unpaid deferred-signing marker holds the next DATA seal', () => {
+  it('refuses signing_debt with the verbatim sentence while the merged train is unpaid, then seals once both approvals bind the identity', async () => {
+    const firstVote = v2({
+      judgmentId: 'm1', query: 'love your enemies', action: 'missing', at: nextAt(),
+      reference: 'Matthew 5:44', withinTop: 10, note: 'uses that exact wording',
+    });
+    const root = await makeRepo([firstVote]);
+    const { updates, trains } = operationsFor(root);
+    await approveEveryCard(updates);
+    const first = await sealNow(updates, trains);
+    expect(first.flavor).toBe('data');
+    await markTrainLive(root, 'train-0001');
+    expect((await trains.train('train-0001', CURRENT)).state).toBe('live');
+
+    // The merged train's admission manifest carries the deferred-signing
+    // marker: its expected post-merge identity is what the two committed
+    // approvals must bind before the next data train may seal.
+    const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+      admissions: AdmissionEvidenceEntry[];
+    };
+    const expectedPostMergeIdentity = {
+      engineVersion: CURRENT.engineVersion,
+      corpusFingerprint: 'post-merge-corpus',
+      layerFingerprint: CURRENT.layerFingerprint,
+    };
+    await mkdir(path.join(root, 'workbench', 'admissions'), { recursive: true });
+    await writeFile(path.join(root, 'workbench', 'admissions', `${'a'.repeat(64)}.json`), `${JSON.stringify({
+      proposalDigest: proposalManifestDigest(parseProposalManifest(registry.admissions[0]!.proposal)),
+      deferredSigning: { kind: 'deferred-signing', expectedPostMergeIdentity },
+    }, null, 2)}\n`);
+
+    // A second data vote arrives and is approved: the seal must refuse with
+    // §06 FM-8's verbatim sentence until the sign-off lands.
+    const secondVote = v2({
+      judgmentId: 'm2', query: 'all things work together', action: 'missing', at: nextAt(),
+      reference: 'Romans 8:28', withinTop: 10, note: 'the exact phrase lives here',
+    });
+    const log = path.join(root, 'workbench', 'judgments.jsonl');
+    await writeFile(log, `${await readFile(log, 'utf8')}${JSON.stringify(secondVote)}\n`);
+    await writeFile(path.join(root, 'workbench', 'cases.jsonl'), casesFor([firstVote, secondVote]));
+    await approveEveryCard(updates);
+    await expect(sealNow(updates, trains)).rejects.toMatchObject({
+      code: 'signing_debt', status: 409, message: UNPAID_MARKER_SEAL_REFUSAL,
+    });
+
+    // Paying the debt — both committed approvals binding the declared
+    // post-merge identity — releases the hold; the next data train seals.
+    await mkdir(path.join(root, 'eval', 'baselines'), { recursive: true });
+    const approval = (schema: string): string => `${JSON.stringify({ schema, engine: expectedPostMergeIdentity }, null, 2)}\n`;
+    await writeFile(path.join(root, 'eval', 'baselines', 'probes.approval.json'), approval('probe-approval/v2'));
+    await writeFile(path.join(root, 'eval', 'baselines', 'ordering.snapshot.approval.json'), approval('ordering-approval/v1'));
+    const second = await sealNow(updates, trains);
+    expect(second.trainId).toBe('train-0002');
+    expect(second.flavor).toBe('data');
   });
 });
 

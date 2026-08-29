@@ -1172,7 +1172,11 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   }
   const landedTrains = new Set<string>();
   for (const train of fold.trains) {
-    if (train.state !== 'sealed' || train.flavor !== 'guard' || train.sealed === undefined) continue;
+    // Both flavors observe live through their fixtures: a data train's
+    // fixture upserts merge in the same PR as its layer/corpus operations
+    // (§5.2), so the fixture content landing on main observes the whole
+    // train landed — flavor-agnostic (V4 guarantees at least one fixture).
+    if (train.state !== 'sealed' || train.sealed === undefined) continue;
     const artifacts = artifactsByTrain.get(train.trainId);
     if (artifacts?.sealedManifestJson === undefined) continue;
     let manifest: ProposalManifest;
@@ -1191,7 +1195,13 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     if (manifest.operations.length === 0) continue;
     const windowDigestsByPath = historyDigestsByTrain.get(train.trainId);
     if (windowDigestsByPath === undefined) continue;
-    const landed = manifest.operations.every((operation) => {
+    // The observation reads the manifest's golden-fixture upserts — every
+    // train carries at least one (V4: a layer-affecting operation travels
+    // with the fixture measuring it), and a data train's fixtures merge in
+    // the same PR as its layer operations, so fixture content landing on
+    // main observes the WHOLE train landed for both flavors (§03.6/§5.2).
+    const fixtureUpserts = manifest.operations.filter((operation) => operation.type === 'golden-fixture-upsert');
+    const landed = fixtureUpserts.length > 0 && fixtureUpserts.every((operation) => {
       if (operation.type !== 'golden-fixture-upsert') return false;
       return windowDigestsByPath
         .get(`eval/golden/${operation.goldenFixtureId}.json`)

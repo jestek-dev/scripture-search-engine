@@ -89,7 +89,7 @@ import {
   parseSigningForm,
 } from './signingOperations.js';
 import { createUpdatesOperations, UpdatesOperationsError } from './updatesOperations.js';
-import { createControlRunExecutor, createTrainOperations, TrainOperationsError } from './trainRunner.js';
+import { createControlRunExecutor, createTrainOperations, TRAIN_SIGN_RATIONALE, TrainOperationsError } from './trainRunner.js';
 import { REVIEW_PRIORITY_FORMULA, type ReviewSessionCase } from './reviewSessions.js';
 import type { QualityDashboardReport } from './qualityDashboard.js';
 import type { SensitiveCategories, TelemetryBudgets } from '../../pipeline/src/telemetry/index.js';
@@ -231,6 +231,7 @@ function requiresTrustedJson(pathname: string): boolean {
     /^\/api\/v2\/admissions\/[^/]+\/admit$/.test(pathname) ||
     /^\/api\/v2\/updates\/cards\/[^/]+\/decide$/.test(pathname) ||
     pathname === '/api/v2/updates/train' ||
+    /^\/api\/v2\/updates\/train\/[^/]+\/sign$/.test(pathname) ||
     /^\/api\/v2\/publish\/[^/]+\/prepare$/.test(pathname) ||
     pathname === '/api/v2/signing/review-packet' ||
     pathname === '/api/v2/signing/preview' ||
@@ -1274,6 +1275,86 @@ async function main(): Promise<void> {
           });
           sendV2Success(response, 200, { train, readOnly: degradedReadOnly });
         } catch (error) { sendTrainError(response, error); }
+        return;
+      }
+
+      // D14: the typed-digest sign act — the last of the five fixed
+      // endpoints. One POST fronts `ready → admitted` for BOTH train
+      // flavors: trainOperations verifies the digest, refuses the
+      // frozen-awaiting-signer hold, and records the per-query review; then
+      // the SAME act runs the admit + publish tail the Phase-2 approve
+      // button used to drive from the page (the server constructs the
+      // decision slots from its own preview — the typed digest was the
+      // human act). The merge on GitHub remains the admission event.
+      const trainSignMatch = /^\/api\/v2\/updates\/train\/([^/]+)\/sign$/.exec(url.pathname);
+      if (trainSignMatch !== null) {
+        if (request.method !== 'POST') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only POST is allowed to sign an update.');
+          return;
+        }
+        if (activeRepositoryMutation !== null || jobRunner.getActive() !== null) {
+          sendV2Error(response, 409, 'mutation_running', 'Another repository operation is already running.');
+          return;
+        }
+        const trainId = decodeSegment(trainSignMatch[1]!);
+        if (trainId === null || [...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Train sign route is invalid.');
+          return;
+        }
+        if (engine === null) {
+          sendV2Error(response, 503, 'artifact_unavailable', artifactFailure);
+          return;
+        }
+        const signMutationId = randomUUID();
+        activeRepositoryMutation = { kind: 'train-sign', id: signMutationId };
+        try {
+          response.setHeader('cache-control', 'no-store');
+          const signBody = await readJsonBody(request);
+          if (!isPlainObject(signBody) || Object.keys(signBody).length !== 1 || typeof signBody['digest'] !== 'string') {
+            sendV2Error(response, 400, 'invalid_request', 'The sign act carries exactly the report digest it approves.');
+            return;
+          }
+          const replayIdentity = {
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          };
+          await trainOperations.sign(trainId, signBody['digest'], replayIdentity);
+          const admissionView = await admissionPublishOperations.admission(trainId, false);
+          const preview = admissionView.preview;
+          if (preview === null) {
+            sendV2Error(response, 409, 'not_signable', 'This update is not at the signing step — reload to see where it stands.');
+            return;
+          }
+          const decisions = preview.decisions.map((slot) => ({
+            slotId: slot.slotId,
+            rationale: TRAIN_SIGN_RATIONALE,
+            ...(slot.kind === 'probe-baseline'
+              ? { probeRationales: slot.probes.map((probe) => ({ probeId: probe.probeId, rationale: TRAIN_SIGN_RATIONALE })) }
+              : {}),
+          }));
+          const admitted = await admissionPublishOperations.admit(trainId, { previewDigest: preview.digest, decisions });
+          const admissionDigest = admitted.admission?.digest ?? null;
+          if (admissionDigest === null) {
+            sendV2Error(response, 500, 'admission_failed', 'The approval did not record — reload the report and try again. Nothing was merged.');
+            return;
+          }
+          await admissionPublishOperations.prepare(trainId, { admissionDigest, push: true, openDraftPr: true });
+          const train = await trainOperations.train(trainId, replayIdentity);
+          sendV2Success(response, 201, { train });
+        } catch (error) {
+          if (error instanceof TrainOperationsError) sendTrainError(response, error);
+          else sendAdmissionPublishError(response, error);
+          // §03.8: a terminal failure in the admit/publish tail stops the
+          // sealed train from the closed enum; transient refusals leave it
+          // retryable. Best-effort — the stop never masks the response.
+          const code = failureCodeOf(error);
+          if (code !== null) {
+            void trainOperations.stopFromFailure(trainId, code).catch(() => undefined);
+          }
+        } finally {
+          if (activeRepositoryMutation?.id === signMutationId) activeRepositoryMutation = null;
+        }
         return;
       }
 

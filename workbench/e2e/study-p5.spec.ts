@@ -4,12 +4,12 @@ import { expect, test, type Page } from '@playwright/test';
 
 import {
   ENDPOINT_FAILURES, FALLBACK_LOAD, FALLBACK_POST, NOTHING_RENDERS,
-  READ_ONLY_TOAST, SEARCH_ERROR, TRAIN_ADMIT_FAILED, TRAIN_DETAIL_FAILED, TRAIN_PREPARE_FAILED,
-  TRAIN_PROGRESS_FAILED, TRAIN_SEAL_FAILED, UPDATES_DECIDE_FAILED, UPDATES_LOAD_FAILED, VALIDATION_TOAST,
+  READ_ONLY_TOAST, SEARCH_ERROR,
+  TRAIN_PROGRESS_FAILED, TRAIN_SEAL_FAILED, TRAIN_SIGN_FAILED, UPDATES_DECIDE_FAILED, UPDATES_LOAD_FAILED, VALIDATION_TOAST,
 } from './endpointFailures';
 import {
   caseMock, casePosts, collectErrors, derivationMock, guardTrainView, installRoutes, judgmentMock,
-  judgmentPosts, makeMock, readyAdmissionDetail, sealedTrainSnapshot, startStudyServer, submit,
+  judgmentPosts, makeMock, sealedTrainSnapshot, startStudyServer, submit,
   type MockState, type StudyServer,
 } from './study-shared';
 
@@ -940,41 +940,17 @@ const FAILURE_DRIVERS: Record<string, (page: Page) => Promise<void>> = {
     await page.click('.nav-item[data-nav="updates"]');
     await expect(page.locator('#updates-train-view-failed')).toContainText(TRAIN_PROGRESS_FAILED);
   },
-  apiAdmission: async (page) => {
+  apiTrainSign: async (page) => {
+    // D14: the typed-digest sign act 500s — §4.9's sign sentence inline.
     const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
     mock.trainView = guardTrainView('ready');
-    mock.admissionDetail = readyAdmissionDetail();
     await installRoutes(page, mock);
-    await fail(page, '**/api/v2/admissions/*', 'GET');
+    await fail(page, '**/sign', 'POST');
     await page.goto(origin);
     await page.click('.nav-item[data-nav="updates"]');
-    await page.click('#train-approve');
-    await page.click('#train-confirm-commit');
-    await expect(page.locator('#updates-train-error')).toContainText(TRAIN_DETAIL_FAILED);
-  },
-  apiAdmissionAdmit: async (page) => {
-    const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
-    mock.trainView = guardTrainView('ready');
-    mock.admissionDetail = readyAdmissionDetail();
-    await installRoutes(page, mock);
-    await fail(page, '**/admit', 'POST');
-    await page.goto(origin);
-    await page.click('.nav-item[data-nav="updates"]');
-    await page.click('#train-approve');
-    await page.click('#train-confirm-commit');
-    await expect(page.locator('#updates-train-error')).toContainText(TRAIN_ADMIT_FAILED);
-  },
-  apiPublishPrepare: async (page) => {
-    const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
-    mock.trainView = guardTrainView('ready');
-    mock.admissionDetail = readyAdmissionDetail();
-    await installRoutes(page, mock);
-    await fail(page, '**/prepare', 'POST');
-    await page.goto(origin);
-    await page.click('.nav-item[data-nav="updates"]');
-    await page.click('#train-approve');
-    await page.click('#train-confirm-commit');
-    await expect(page.locator('#updates-train-error')).toContainText(TRAIN_PREPARE_FAILED);
+    await page.fill('#train-sign-input', 'abab abab abab');
+    await page.click('#train-sign');
+    await expect(page.locator('#updates-train-error')).toContainText(TRAIN_SIGN_FAILED);
   },
   apiCompileApply: async (page) => {
     const fixtureText = JSON.stringify({

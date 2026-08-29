@@ -456,10 +456,7 @@ button{font:inherit;}
     '/api/v2/updates/cards/',
     '/decide',
     '/api/v2/updates/train',
-    '/api/v2/admissions/',
-    '/admit',
-    '/api/v2/publish/',
-    '/prepare',
+    '/sign',
   ];
   void ROUTES;
 
@@ -714,32 +711,36 @@ button{font:inherit;}
     // §4.9 failure-copy parity (one sentence per api function, D39-style).
     trainSealFailed: 'The update couldn’t start — reload and try again. Your approvals are all still here.',
     trainProgressFailed: 'Couldn’t load the update’s progress — reload to try again. The update itself keeps running.',
-    trainAdmitFailed: 'The approval didn’t go through — reload the report and try again. Nothing was merged.',
-    trainDetailFailed: 'Couldn’t load the approval step — reload and try again. Nothing was approved.',
-    trainPrepareFailed: 'The draft change couldn’t be opened on GitHub — reload the update to see where it stands. Nothing was merged.',
+    trainSignFailed: 'The signature didn’t go through — the code may have changed. Reloading the report now.',
     // §05 §5.1's reviewer-visible step labels and status sentences (§4.6's
     // table is the single writer; guard trains never show built/measured).
     trainStepSealed: 'Update started',
+    trainStepBuilt: 'Building the trial run',
+    trainStepMeasured: 'Measuring what changes',
     trainStepReady: 'Ready for your review',
     trainStepAdmitted: 'Approved',
     trainStepPrOpen: 'Waiting for merge',
     trainStepLive: 'Live',
     trainStepStopped: 'Stopped',
     trainSealedLine: 'Your approved changes are locked in — the checks are starting.',
+    trainBuiltLine: 'Building a test copy of the search with your changes…',
+    trainMeasuredLine: 'Comparing results before and after…',
     trainGuardChecking: 'Checking your answer-sheet lines — no trial build needed, nothing can move in search.',
-    trainReadyLine: 'The report is ready — read it and approve below.',
+    trainReadyLine: 'The report is ready — read it and sign below.',
     trainAdmittedLine: 'Approved. Preparing the change for review on GitHub…',
     trainPrOpenLine: 'Waiting for the final merge. One click on GitHub makes it live.',
     trainPrLink: 'Open the draft on GitHub',
     trainLiveLine: 'Live. These searches now answer the way you called them.',
     trainLiveDismiss: 'Dismiss',
     trainReportTitle: 'Update Report',
-    // Phase 2's approve control (§4.6; retires with the typed-digest sign
-    // panel, Phase 3 D14) and the recorded per-slot review rationale.
-    trainApprove: 'Approve this update',
-    trainApproveTitle: 'You’re approving this update.',
-    trainApproveBody: 'This records your review of the answer-sheet lines above and opens the change as a draft on GitHub. Nothing goes live until a human merges it — that final click is the approval that counts.',
-    trainDecisionRationale: 'Approved from the Update Report — the answer-sheet lines in this update were reviewed and hold.',
+    // D14's typed-digest sign panel (§4.6): the Finish-up mechanics reused
+    // exactly — COPY.signBody is the shared explanation sentence; the merge
+    // line ships verbatim; the sign act runs the final checks server-side.
+    trainSignTitle: 'Sign this update',
+    trainSignMergeLine: 'After you sign, this becomes a draft change on GitHub. It goes live only when a human merges it — that final click is the approval that counts.',
+    trainSignButton: 'Sign this update',
+    trainSignRunning: 'Signature received — the final checks are running now. This can take a while; the screen updates when the draft opens on GitHub.',
+    trainCompareBlind: 'Compare blind',
     // §06 §06.2's per-stop-reason sentences (the single owner of this copy;
     // the enum token itself never renders — D28).
     trainStopReasons: {
@@ -929,9 +930,10 @@ button{font:inherit;}
         viewFailed: false, // GET train/:id failed → §4.9 progress sentence
         loading: false,    // first view fetch in flight
         sealing: false,    // seal POST in flight
-        approving: false,  // the admit→prepare act in flight
+        signing: false,    // the sign act (server runs the admit→publish tail)
+        signInput: '',     // the typed sign code (D14; mirrors Finish up)
         panelError: null,  // one inline sentence for the panel (§4.9 parity)
-        confirm: null,     // {kind:'seal'|'approve', opener} one-confirm slot
+        confirm: null,     // {kind:'seal', opener} one-confirm slot (the seal)
         pollTimer: null,
         elapsedTimer: null, // re-render tick while an elapsed line shows
         dismissedLive: null, // trainId — the dismissed live receipt
@@ -1022,9 +1024,11 @@ button{font:inherit;}
   function apiUpdatesDecide(cardId, body) { return postJson('/api/v2/updates/cards/' + encodeURIComponent(cardId) + '/decide', body); }
   function apiTrainSeal(body) { return postJson('/api/v2/updates/train', body); }
   function apiTrain(trainId) { return requestJson('/api/v2/updates/train/' + encodeURIComponent(trainId)); }
-  function apiAdmission(reviewId) { return requestJson('/api/v2/admissions/' + encodeURIComponent(reviewId)); }
-  function apiAdmissionAdmit(reviewId, body) { return postJson('/api/v2/admissions/' + encodeURIComponent(reviewId) + '/admit', body); }
-  function apiPublishPrepare(reviewId, body) { return postJson('/api/v2/publish/' + encodeURIComponent(reviewId) + '/prepare', body); }
+  // D14: the typed-digest sign act — one POST carrying the FULL report
+  // digest; the server verifies it, records the per-query review, and runs
+  // the admit + publish tail itself (the Phase-2 admit/prepare calls retired
+  // with the "Approve this update" button — §4.9).
+  function apiTrainSign(trainId, digest) { return postJson('/api/v2/updates/train/' + encodeURIComponent(trainId) + '/sign', { digest }); }
 
   // §stores
   // §3.6 client sort (binding): a case's touch time is the `at` of its LAST
@@ -4978,7 +4982,8 @@ button{font:inherit;}
     train.viewFailed = false;
     train.loading = false;
     train.sealing = false;
-    train.approving = false;
+    train.signing = false;
+    train.signInput = '';
     train.panelError = null;
     train.confirm = null;
     train.pollTimer = null;
@@ -5029,7 +5034,7 @@ button{font:inherit;}
     const train = updates.train;
     if (train.pollTimer !== null) { clearTimeout(train.pollTimer); train.pollTimer = null; }
     if (state.screen !== 'updates' || train.viewFailed) return;
-    if (train.sealing || train.approving) return;
+    if (train.sealing || train.signing) return;
     const view = train.view;
     if (view === null) return;
     // `ready` waits on the human; live/stopped are terminal — no machine run
@@ -5118,26 +5123,24 @@ button{font:inherit;}
     closeLayerDialog(confirm.opener);
   }
   function renderTrainConfirm() {
+    // D14 retired the approve confirm: only the seal keeps its one-confirm
+    // layer ("sealing is recoverable and needs friction, not a signature").
     const confirm = state.updates.train.confirm;
     if (confirm === null) return;
-    const seal = confirm.kind === 'seal';
-    const dialog = openLayerDialog(seal ? COPY.trainConfirmTitle : COPY.trainApproveTitle, 'train-confirm-title');
+    const dialog = openLayerDialog(COPY.trainConfirmTitle, 'train-confirm-title');
     dialog.id = 'train-confirm-dialog';
-    dialog.appendChild(node('p', 'layer-prompt', seal ? COPY.trainConfirmBody : COPY.trainApproveBody));
+    dialog.appendChild(node('p', 'layer-prompt', COPY.trainConfirmBody));
     const actions = node('div', 'layer-actions');
     const cancel = node('button', 'btn-quiet', 'Cancel');
     cancel.type = 'button';
     cancel.id = 'train-confirm-cancel';
     cancel.addEventListener('click', closeTrainConfirm);
     actions.appendChild(cancel);
-    const commit = node('button', 'btn-primary', seal ? COPY.trainStart : COPY.trainApprove);
+    const commit = node('button', 'btn-primary', COPY.trainStart);
     commit.type = 'button';
     commit.id = 'train-confirm-commit';
-    if (updatesReadOnly() || state.updates.train.sealing || state.updates.train.approving) commit.disabled = true;
-    commit.addEventListener('click', () => {
-      if (seal) void sealTrain();
-      else void approveTrain();
-    });
+    if (updatesReadOnly() || state.updates.train.sealing || state.updates.train.signing) commit.disabled = true;
+    commit.addEventListener('click', () => { void sealTrain(); });
     actions.appendChild(commit);
     dialog.appendChild(actions);
     // Initial focus is Cancel, never the commit (§4.7, the Compare rule).
@@ -5197,93 +5200,98 @@ button{font:inherit;}
     void reloadUpdates();
     scheduleTrainPoll();
   }
-  // Phase 2's approve act (§4.6): one human confirm records the per-slot
-  // review through the EXISTING admit surface, then opens the draft on
-  // GitHub through the existing publish preparation — the draft PR is the
-  // ceiling; nothing here merges or marks ready. Retires with D14's
-  // typed-digest sign panel.
-  async function approveTrain() {
+  // D14's typed-digest sign act (§4.6): the Finish-up mechanics reused. The
+  // chip shows the report digest's first 12 hex grouped 4-4-4; matching is
+  // exact, case-insensitive, spaces ignored; the POST carries the FULL
+  // digest. The server verifies the digest, records the per-query review,
+  // and runs the admit + publish tail itself — the draft PR stays the
+  // ceiling; the merge on GitHub remains the approval that counts.
+  function trainSignCode() {
+    const view = state.updates.train.view;
+    if (view === null || view.report === null || view.report === undefined || typeof view.report.digest !== 'string') return null;
+    return view.report.digest.slice(0, 12);
+  }
+  function trainSignMatches() {
+    const code = trainSignCode();
+    if (code === null) return false;
+    return state.updates.train.signInput.replace(/\s+/g, '').toLowerCase() === code.toLowerCase();
+  }
+  async function signTrain() {
     const updates = state.updates;
     const train = updates.train;
     if (updatesReadOnly()) { showToast(COPY.readOnlyToast); return; }
     const view = train.view;
-    if (view === null || view.state !== 'ready' || train.approving) return;
-    train.approving = true;
+    if (view === null || view.state !== 'ready' || train.signing) return;
+    if (typeof view.signingHold === 'string' && view.signingHold !== '') return; // frozen awaiting signer
+    if (view.report === null || typeof view.report.digest !== 'string' || !trainSignMatches()) return;
+    train.signing = true;
     train.panelError = null;
-    closeTrainConfirm();
     renderUpdates();
     const seq = updates.seq;
     const failWith = (text) => {
       if (seq !== updates.seq || state.screen !== 'updates') return;
-      train.approving = false;
+      train.signing = false;
       train.panelError = { id: 'updates-train-error', text };
       renderUpdates();
       // A terminal failure may have stopped the train — observe it.
       void refreshTrainView(view.trainId, seq);
     };
-    let detail = null;
-    try { detail = await apiAdmission(view.trainId); } catch (error) { failWith(COPY.trainDetailFailed); return; }
-    const admissionView = detail !== null && typeof detail === 'object' ? detail.admission : null;
-    const preview = admissionView && admissionView.preview ? admissionView.preview : null;
-    if (preview === null || typeof preview.digest !== 'string' || !Array.isArray(preview.decisions)) {
-      failWith(COPY.trainDetailFailed);
-      return;
-    }
-    // The one confirm IS the recorded review of the listed lines (§4.6):
-    // every decision slot carries the same reviewed rationale sentence.
-    const decisions = preview.decisions.map((slot) => {
-      const decision = { slotId: slot.slotId, rationale: COPY.trainDecisionRationale };
-      if (slot.kind === 'probe-baseline') {
-        decision.probeRationales = (slot.probes || []).map((probe) => ({ probeId: probe.probeId, rationale: COPY.trainDecisionRationale }));
-      }
-      return decision;
-    });
-    let admitted = null;
+    let data = null;
     try {
-      admitted = await apiAdmissionAdmit(view.trainId, { previewDigest: preview.digest, decisions });
+      data = await apiTrainSign(view.trainId, view.report.digest);
     } catch (error) {
       const code = error && typeof error.code === 'string' ? error.code : '';
-      if (code === 'stale_preview') { failWith(COPY.staleLine); return; }
-      if (code === 'mutation_running') { failWith(COPY.busyLine); return; }
-      failWith(COPY.trainAdmitFailed);
-      return;
-    }
-    const admittedView = admitted !== null && typeof admitted === 'object' ? admitted.admission : null;
-    const admissionDigest = admittedView && admittedView.admission && typeof admittedView.admission.digest === 'string'
-      ? admittedView.admission.digest
-      : null;
-    if (admissionDigest === null) { failWith(COPY.trainAdmitFailed); return; }
-    if (seq === updates.seq && state.screen === 'updates') {
-      // "Approved. Preparing the change for review on GitHub…" (§5.1) — the
-      // draft opens next from this same single confirm.
-      if (train.view !== null && train.view.state === 'ready') {
-        train.view = Object.assign({}, train.view, { state: 'admitted' });
+      if (error && (error.status === 503 || code === 'startup_degraded_read_only' || code === 'artifact_unavailable')) {
+        if (seq === updates.seq && state.screen === 'updates') {
+          train.signing = false;
+          showToast(COPY.readOnlyToast);
+          renderUpdates();
+        }
+        return;
       }
-      renderUpdates();
-    }
-    try {
-      await apiPublishPrepare(view.trainId, { admissionDigest, push: true, openDraftPr: true });
-    } catch (error) {
-      failWith(COPY.trainPrepareFailed);
+      // 409 semantics mirror Finish up (§4.6): a changed report reloads with
+      // a fresh code; a concurrent mutation asks for a moment; the frozen
+      // awaiting-signer refusal renders the server's own hold sentence.
+      if (code === 'stale_preview') { train.signInput = ''; failWith(COPY.staleLine); return; }
+      if (code === 'mutation_running') { failWith(COPY.busyLine); return; }
+      if (error && error.status === 409 && typeof error.message === 'string' && error.message !== '') {
+        failWith(error.message);
+        return;
+      }
+      failWith(COPY.trainSignFailed);
       return;
     }
     if (seq !== updates.seq || state.screen !== 'updates') return;
-    train.approving = false;
+    train.signing = false;
+    train.signInput = '';
+    if (data !== null && data.train && typeof data.train.state === 'string') {
+      train.view = data.train;
+      train.viewFailed = false;
+      renderUpdates();
+      scheduleTrainPoll();
+      return;
+    }
     void refreshTrainView(view.trainId, seq);
   }
   // The progress strip: §05 §5.1's reviewer-visible labels only. A guard
   // train renders its three machine steps plus the two human-wait states —
-  // never the trial-build or comparison waypoints (§4.6's fixture-lane rule).
-  function trainStrip(stateKey) {
+  // never the trial-build or comparison waypoints (§4.6's fixture-lane
+  // rule). A data train's strip carries the full lane, built and measured
+  // included (Phase 3 D12).
+  function trainStrip(stateKey, flavor) {
     const strip = node('div', 'train-strip');
     strip.setAttribute('aria-label', 'Update progress');
     if (stateKey === 'stopped') {
       strip.appendChild(node('span', 'train-step current', COPY.trainStepStopped));
       return strip;
     }
-    const order = ['sealed', 'ready', 'admitted', 'pr-open', 'live'];
+    const order = flavor === 'data'
+      ? ['sealed', 'built', 'measured', 'ready', 'admitted', 'pr-open', 'live']
+      : ['sealed', 'ready', 'admitted', 'pr-open', 'live'];
     const labels = {
       sealed: COPY.trainStepSealed,
+      built: COPY.trainStepBuilt,
+      measured: COPY.trainStepMeasured,
       ready: COPY.trainStepReady,
       admitted: COPY.trainStepAdmitted,
       'pr-open': COPY.trainStepPrOpen,
@@ -5296,6 +5304,8 @@ button{font:inherit;}
     return strip;
   }
   function trainStatusSentence(stateKey) {
+    if (stateKey === 'built') return COPY.trainBuiltLine;
+    if (stateKey === 'measured') return COPY.trainMeasuredLine;
     if (stateKey === 'ready') return COPY.trainReadyLine;
     if (stateKey === 'admitted') return COPY.trainAdmittedLine;
     if (stateKey === 'pr-open') return COPY.trainPrOpenLine;
@@ -5348,15 +5358,15 @@ button{font:inherit;}
   }
   function renderTrainView(panel, view) {
     const train = state.updates.train;
-    panel.appendChild(trainStrip(view.state));
+    panel.appendChild(trainStrip(view.state, view.flavor));
     const status = node('p', 'train-status');
     status.id = 'train-status';
     status.setAttribute('role', 'status');
-    // While the approve act runs, the checks are actually running (the
-    // Phase-2 server runs them inside the admit act) — say so honestly.
-    status.textContent = train.approving ? COPY.trainGuardChecking : trainStatusSentence(view.state);
+    // While the sign act runs, the final checks are actually running (the
+    // server runs them inside the same act) — say so honestly.
+    status.textContent = train.signing ? COPY.trainSignRunning : trainStatusSentence(view.state);
     panel.appendChild(status);
-    if (!train.approving && view.state === 'sealed' && view.flavor === 'guard') {
+    if (!train.signing && view.state === 'sealed' && view.flavor === 'guard') {
       // §4.6's fixture-lane interim sentence, between "Update started" and
       // "Ready for your review".
       const checking = node('p', 'train-status', COPY.trainGuardChecking);
@@ -5390,25 +5400,67 @@ button{font:inherit;}
       link.rel = 'noreferrer';
       panel.appendChild(link);
     }
-    // The Update Report (§4.6's one-block guard variant). The lead sentence
-    // is rendered verbatim from the payload — the server's report module is
-    // its single writer (E4); this page mints no rival.
-    if (view.report !== null && view.report !== undefined && view.state !== 'sealed') {
+    // The Update Report (§4.6). Every sentence renders verbatim from the
+    // payload — the server's report modules are the single writers (E4);
+    // this page mints no rival. The guard variant is one block (lead +
+    // answer-sheet lines); the data variant carries the full anatomy: one
+    // block per changed query (before → after in plain language, its
+    // attribution, and blind Compare one click away), then the checks line,
+    // the regen line, and the merge-first-sign-once signing note. No digest
+    // appears anywhere in the body — the sign chip below is the single
+    // sanctioned hex surface (D28).
+    if (view.report !== null && view.report !== undefined && view.state !== 'sealed' && view.state !== 'built') {
       const report = node('section', '');
       report.id = 'updates-report';
       report.appendChild(node('h3', '', COPY.trainReportTitle));
       report.appendChild(node('p', 'train-status', view.report.lead));
+      if (view.report.kind === 'data-update-report') {
+        const blocks = Array.isArray(view.report.blocks) ? view.report.blocks : [];
+        for (const block of blocks) {
+          const item = node('div', 'train-report-query');
+          item.appendChild(node('h4', '', '“' + block.query + '”'));
+          const movements = node('ul', 'train-report-lines');
+          for (const line of block.movementLines || []) movements.appendChild(node('li', '', line));
+          item.appendChild(movements);
+          item.appendChild(node('p', 'screen-sub', block.attributionLine));
+          if (block.compareAvailable) {
+            // §4.6 anatomy item 4: the spot check, one click away — the
+            // train's comparison publication is a Compare review through
+            // the existing blind machinery.
+            const compare = node('button', 'btn-quiet train-compare-blind', COPY.trainCompareBlind);
+            compare.type = 'button';
+            compare.addEventListener('click', () => { setScreen('compare'); });
+            item.appendChild(compare);
+          }
+          report.appendChild(item);
+        }
+        report.appendChild(node('p', 'train-status', view.report.checksLine));
+        if (typeof view.report.regenLine === 'string' && view.report.regenLine !== '') {
+          report.appendChild(node('p', 'screen-sub', view.report.regenLine));
+        }
+        report.appendChild(node('p', 'screen-sub', view.report.signingLine));
+        if (typeof view.report.standingRedLine === 'string' && view.report.standingRedLine !== '') {
+          const standing = node('p', 'screen-sub', view.report.standingRedLine);
+          standing.id = 'train-standing-red';
+          report.appendChild(standing);
+        }
+      }
       const lines = node('ul', 'train-report-lines');
       for (const line of view.report.lines || []) lines.appendChild(node('li', '', line));
       report.appendChild(lines);
       panel.appendChild(report);
     }
-    if (view.state === 'ready') {
-      const approve = updatesButton(null, COPY.trainApprove, 'btn-primary');
-      approve.id = 'train-approve';
-      approve.disabled = updatesReadOnly() || train.approving;
-      approve.addEventListener('click', (event) => { openTrainConfirm('approve', event.currentTarget); });
-      panel.appendChild(approve);
+    if (view.state === 'ready' && typeof view.signingHold === 'string' && view.signingHold !== '') {
+      // The frozen-awaiting-signer state (A1 frozen queue, open call 4):
+      // the server's hold sentence renders in place of the sign panel —
+      // honest, plain, no fake progress. Nothing here is clickable.
+      const hold = node('p', 'train-status');
+      hold.id = 'train-signing-hold';
+      hold.setAttribute('role', 'status');
+      hold.textContent = view.signingHold;
+      panel.appendChild(hold);
+    } else if (view.state === 'ready' && !train.signing) {
+      panel.appendChild(renderTrainSignPanel(view));
     }
     if (view.state === 'live') {
       const queries = trainReportQueries(view);
@@ -5428,6 +5480,55 @@ button{font:inherit;}
       links.appendChild(updatesQuietLink(COPY.trainLiveDismiss, () => { dismissLiveReceipt(view.trainId); }));
       panel.appendChild(links);
     }
+  }
+  // D14's sign panel (§4.6): the Finish-up typed-digest mechanics reused
+  // exactly — the shared explanation sentence (COPY.signBody), the 12-hex
+  // chip grouped 4-4-4, exact case-insensitive spaces-ignored matching, and
+  // deliberately a plain div, never a native <form>, so no raw browser
+  // submit can fire. The button posts the FULL digest.
+  function renderTrainSignPanel(view) {
+    const train = state.updates.train;
+    const sign = node('div', 'sign-panel');
+    sign.id = 'train-sign-panel';
+    sign.appendChild(node('h3', '', COPY.trainSignTitle));
+    sign.appendChild(node('p', 'screen-sub', COPY.signBody));
+    const code = trainSignCode();
+    const codeText = code === null ? '' : code.slice(0, 4) + ' ' + code.slice(4, 8) + ' ' + code.slice(8, 12);
+    const chip = node('div', 'sign-chip', codeText);
+    chip.id = 'train-sign-code';
+    sign.appendChild(chip);
+    // The covenant, said on the panel: the merge remains the admission event.
+    sign.appendChild(node('p', 'screen-sub', COPY.trainSignMergeLine));
+    const row = node('div', 'sign-row');
+    const input = node('input', 'sign-input');
+    input.id = 'train-sign-input';
+    input.type = 'text';
+    input.autocomplete = 'off';
+    input.setAttribute('aria-label', COPY.signInputLabel);
+    input.placeholder = COPY.signInputLabel;
+    input.value = train.signInput;
+    const controlsEnabled = !updatesReadOnly() && !train.signing;
+    if (!controlsEnabled) input.disabled = true;
+    const button = node('button', 'btn-primary', COPY.trainSignButton);
+    button.type = 'button';
+    button.id = 'train-sign';
+    button.disabled = !trainSignMatches() || !controlsEnabled;
+    button.addEventListener('click', () => { void signTrain(); });
+    input.addEventListener('input', () => {
+      train.signInput = input.value;
+      button.disabled = !trainSignMatches() || !controlsEnabled;
+    });
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      // Enter activates the sign button only while it is enabled (§4.7's
+      // rule: Enter never doubles as an uncorrectable commit).
+      if (!button.disabled) void signTrain();
+    });
+    row.appendChild(input);
+    row.appendChild(button);
+    sign.appendChild(row);
+    return sign;
   }
   // The pruned/parked outcome's stop date (06 FM-5): the no-effect stop
   // whose sealed set carried this card.
@@ -5480,7 +5581,7 @@ button{font:inherit;}
         hasContent = true;
       } else if (view === null) {
         // First observation still loading — the honest position is the seal.
-        panel.appendChild(trainStrip('sealed'));
+        panel.appendChild(trainStrip('sealed', snapshot.flavor));
         const status = node('p', 'train-status', COPY.trainSealedLine);
         status.setAttribute('role', 'status');
         panel.appendChild(status);

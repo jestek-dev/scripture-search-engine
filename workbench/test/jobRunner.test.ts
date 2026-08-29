@@ -125,6 +125,20 @@ describe('job runner', () => {
       .toEqual({ NODE_OPTIONS: '--max-old-space-size=8192' });
   });
 
+  it('D12: the three data-train stages are FIXED allowlisted npm scripts — no free-form command crosses any boundary', () => {
+    // The browser posts only a jobId; each definition is a fixed root npm
+    // script and the stage CLI locates the sealed train itself.
+    expect(JOB_DEFINITIONS['train-build']!.args.slice(1)).toEqual(['run', 'train:build']);
+    expect(JOB_DEFINITIONS['train-measure']!.args.slice(1)).toEqual(['run', 'train:measure']);
+    expect(JOB_DEFINITIONS['train-gauntlet']!.args.slice(1)).toEqual(['run', 'train:gauntlet']);
+    // The sandboxed-state-root knobs the server honors reach the stage jobs
+    // through the scrubbed environment (operator trust, like NODE_OPTIONS).
+    for (const key of ['WORKBENCH_REPO_ROOT', 'WORKBENCH_REVIEWER', 'WORKBENCH_INDEPENDENT_SIGNER',
+      'WORKBENCH_UPDATES_PATH', 'WORKBENCH_JUDGMENTS_PATH', 'WORKBENCH_CASES_PATH', 'WORKBENCH_ADMISSION_EVIDENCE_PATH']) {
+      expect(JOB_ENV_ALLOWLIST).toContain(key);
+    }
+  });
+
   it('admits exactly one job from enqueue onward instead of creating an unbounded queue', async () => {
     const { clock, children, calls, runner } = createHarness();
     const first = runner.enqueue({ jobId: 'typecheck', origin: { source: 'manual' } });

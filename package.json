@@ -23,6 +23,9 @@
     "check:drift": "npm run check:drift --workspace pipeline",
     "gauntlet": "npm run gauntlet --workspace eval --",
     "gauntlet:report": "npm run gauntlet -- --require-admit --json eval/.runs/gauntlet-report.json",
+    "train:build": "tsx workbench/src/trainStageCli.ts build",
+    "train:measure": "tsx workbench/src/trainStageCli.ts measure",
+    "train:gauntlet": "tsx workbench/src/trainStageCli.ts gauntlet",
     "verify": "npm run build:engine && npm run typecheck && npm run test && npm run gauntlet --"
   },
   "devDependencies": {
