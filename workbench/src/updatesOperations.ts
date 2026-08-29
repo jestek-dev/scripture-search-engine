@@ -222,9 +222,10 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
   const registryText = await readOptional(paths.evidencePath);
   const manifestsByTrain = new Map<string, string>();
   const baseCommitsByTrain = new Map<string, string>();
+  const originBaseCommitsByTrain = new Map<string, string | null>();
   if (registryText !== null) {
     try {
-      const registry = JSON.parse(registryText) as { admissions?: readonly { reviewId?: unknown; proposal?: unknown; admittedBaseCommit?: unknown }[] };
+      const registry = JSON.parse(registryText) as { admissions?: readonly { reviewId?: unknown; proposal?: unknown; admittedBaseCommit?: unknown; admittedOriginBaseCommit?: unknown }[] };
       for (const entry of registry.admissions ?? []) {
         if (typeof entry.reviewId === 'string' && entry.proposal !== undefined) {
           manifestsByTrain.set(entry.reviewId, JSON.stringify(entry.proposal));
@@ -233,6 +234,15 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
           // malformed base yields no window (fail-closed to riding).
           if (typeof entry.admittedBaseCommit === 'string' && COMMIT_HEX.test(entry.admittedBaseCommit)) {
             baseCommitsByTrain.set(entry.reviewId, entry.admittedBaseCommit);
+          }
+          // The seal-time origin/main tip (null: the ref did not exist at
+          // seal). A malformed value carries forward as ABSENT — the same
+          // unknown-seal-state footing as a legacy entry, which the reader
+          // observes only while origin/main cannot hold history the local
+          // base misses.
+          if (entry.admittedOriginBaseCommit === null
+            || (typeof entry.admittedOriginBaseCommit === 'string' && COMMIT_HEX.test(entry.admittedOriginBaseCommit))) {
+            originBaseCommitsByTrain.set(entry.reviewId, entry.admittedOriginBaseCommit);
           }
         }
       }
@@ -243,6 +253,7 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
   return Promise.all(trainIds.sort().map(async (trainId) => {
     const sealedManifestJson = manifestsByTrain.get(trainId);
     const admittedBaseCommit = baseCommitsByTrain.get(trainId);
+    const hasOriginBase = originBaseCommitsByTrain.has(trainId);
     const reportPath = path.join(paths.repoRoot, 'eval', '.runs', `${trainId}.json`);
     const verifiedReportJson = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(trainId) ? await readOptional(reportPath) : null;
     return {
@@ -250,6 +261,7 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
       ...(sealedManifestJson === undefined ? {} : { sealedManifestJson }),
       ...(verifiedReportJson === null ? {} : { verifiedReportJson }),
       ...(admittedBaseCommit === undefined ? {} : { admittedBaseCommit }),
+      ...(hasOriginBase ? { admittedOriginBaseCommit: originBaseCommitsByTrain.get(trainId) ?? null } : {}),
     };
   }));
 }
@@ -264,6 +276,17 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
 export interface TrainGoldenHistoryWindow {
   readonly trainId: string;
   readonly baseCommit: string | null;
+  /**
+   * The seal-time tip of `refs/remotes/origin/main` (`admittedOriginBaseCommit`
+   * from the same D10 entry): a string excludes that ref's seal-time history
+   * from the window alongside `baseCommit`; `null` records that the ref did
+   * not exist at seal (the local base bounds everything observable then);
+   * ABSENT marks a legacy entry with no recorded seal-time origin state —
+   * the reader observes it only while origin/main is absent or an ancestor
+   * of `baseCommit` or of the local main tip (nothing beyond local main to
+   * see), and otherwise observes NOTHING (fail-closed to riding).
+   */
+  readonly originBaseCommit?: string | null;
   readonly goldenPaths: readonly string[];
 }
 
@@ -295,11 +318,18 @@ function sealedGoldenWindowsOf(priorTrainArtifacts: readonly PriorTrainArtifacts
       // The join reports the unparseable manifest; no window to observe.
     }
     if (goldenPaths.size === 0) continue;
+    const originBase = artifact.admittedOriginBaseCommit;
     windows.push({
       trainId: artifact.trainId,
       baseCommit: artifact.admittedBaseCommit !== undefined && COMMIT_HEX.test(artifact.admittedBaseCommit)
         ? artifact.admittedBaseCommit
         : null,
+      // A malformed recorded value degrades to ABSENT — the legacy footing,
+      // which the reader only observes while origin/main cannot hold
+      // history the local base misses.
+      ...(originBase === null || (typeof originBase === 'string' && COMMIT_HEX.test(originBase))
+        ? { originBaseCommit: originBase }
+        : {}),
       goldenPaths: [...goldenPaths].sort(),
     });
   }
@@ -309,18 +339,30 @@ function sealedGoldenWindowsOf(priorTrainArtifacts: readonly PriorTrainArtifacts
 /**
  * The default `GoldenMainHistoryReader`: for each train's window, every
  * content version of each named golden path at commits reachable from main
- * but NOT from the train's own base (`git rev-list <main> ^<base> -- <path>`)
- * — history the train could actually have produced. Main is the local
- * `refs/heads/main` and, when present, `refs/remotes/origin/main` (a squash
- * merge lands on origin/main first; the primary checkout's main may lag).
- * §03.6/§5.2 anchor the `live` observation here because the base is fixed at
- * seal and git history only grows: each window is monotonic, so a train
+ * but NOT from the train's own bases
+ * (`git rev-list <main> ^<base> ^<originBase> -- <path>`) — history the
+ * train could actually have produced. Main is the local `refs/heads/main`
+ * and, when present, `refs/remotes/origin/main` (a squash merge lands on
+ * origin/main first; the primary checkout's main may lag). Because the tips
+ * include the fetched origin ref, the window must be bounded by BOTH bases
+ * recorded at seal: the local `admittedBaseCommit` alone leaves every commit
+ * already fetched onto origin/main during exactly that lag INSIDE a newly
+ * sealed train's window, and a reversal chain re-deriving byte-identical
+ * ancestor content would observe a never-merged train live at seal.
+ * §03.6/§5.2 anchor the `live` observation here because both bases are fixed
+ * at seal and git history only grows: each window is monotonic, so a train
  * whose sealed fixtures all appear in its window stays live no matter how
  * the working tree moves later — while a version merged BEFORE the train's
- * base (a reversal chain re-deriving byte-identical ancestor content) never
- * marks it live. Not a git repository, no main ref, no usable base for a
- * train, an unreadable or unparseable version: observed as absent, never an
- * error — the observation fails closed to "riding".
+ * bases never marks it live. A legacy window with NO recorded seal-time
+ * origin state is observed only while origin/main is absent or an ancestor
+ * of the window's base or of the local main tip (the tips then see nothing
+ * beyond local main, and the local base bounds the window exactly as it
+ * did before origin bases were recorded); origin/main ahead of or
+ * divergent from local main leaves that window unboundable and it
+ * observes NOTHING. Not a git repository, no main ref, no usable base for a
+ * train, an unresolvable recorded origin base, an unreadable or unparseable
+ * version: observed as absent, never an error — the observation fails
+ * closed to "riding".
  */
 export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: readonly TrainGoldenHistoryWindow[]): Promise<MainGoldenHistoryEntry[]> {
   if (windows.length === 0) return [];
@@ -335,25 +377,27 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: re
       return null;
     }
   };
-  const tips: string[] = [];
-  for (const ref of ['refs/heads/main', 'refs/remotes/origin/main']) {
-    const resolved = (await capture(['rev-parse', '--verify', '--quiet', `${ref}^{commit}`]))?.trim();
-    if (resolved !== undefined && COMMIT_HEX.test(resolved) && !tips.includes(resolved)) tips.push(resolved);
-  }
+  const resolveCommit = async (revision: string): Promise<string | undefined> => {
+    const resolved = (await capture(['rev-parse', '--verify', '--quiet', `${revision}^{commit}`]))?.trim();
+    return resolved !== undefined && COMMIT_HEX.test(resolved) ? resolved : undefined;
+  };
+  const localTip = await resolveCommit('refs/heads/main');
+  const originTip = await resolveCommit('refs/remotes/origin/main');
+  const tips = [...new Set([localTip, originTip].filter((tip): tip is string => tip !== undefined))];
   if (tips.length === 0) return [];
-  // Shared across trains: sealed windows overlap ((base, path) pairs repeat
-  // when same-search trains chain), and version contents repeat across
-  // commits; read each only once.
+  // Shared across trains: sealed windows overlap ((bases, path) tuples
+  // repeat when same-search trains chain), and version contents repeat
+  // across commits; read each only once.
   const digestsByWindowKey = new Map<string, readonly string[]>();
   const digestByCommitPath = new Map<string, string | null>();
-  const readWindowDigests = async (baseCommit: string, goldenPath: string): Promise<readonly string[]> => {
-    const windowKey = `${baseCommit} ${goldenPath}`;
+  const readWindowDigests = async (baseCommits: readonly string[], goldenPath: string): Promise<readonly string[]> => {
+    const windowKey = `${baseCommits.join(' ')} ${goldenPath}`;
     const memoized = digestsByWindowKey.get(windowKey);
     if (memoized !== undefined) return memoized;
     const versionDigests = new Set<string>();
     const seenCommits = new Set<string>();
     for (const tip of tips) {
-      const listed = await capture(['rev-list', tip, `^${baseCommit}`, '--', goldenPath]);
+      const listed = await capture(['rev-list', tip, ...baseCommits.map((baseCommit) => `^${baseCommit}`), '--', goldenPath]);
       if (listed === null) continue;
       for (const line of listed.split('\n')) {
         const commit = line.trim();
@@ -385,18 +429,67 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: re
     // No usable base = no window: fall back to NOTHING, never to unscoped
     // history — unscoped history is exactly the reversal-chain false 'live'.
     if (window.baseCommit === null || !COMMIT_HEX.test(window.baseCommit)) continue;
-    const base = (await capture(['rev-parse', '--verify', '--quiet', `${window.baseCommit}^{commit}`]))?.trim();
+    const base = await resolveCommit(window.baseCommit);
     if (base !== window.baseCommit) continue;
+    const baseCommits = [window.baseCommit];
+    if (typeof window.originBaseCommit === 'string') {
+      // Recorded at seal: exclude everything origin/main could already
+      // serve then. A malformed or unresolvable recorded base leaves the
+      // window unboundable — observe NOTHING (fail-closed to riding).
+      if (!COMMIT_HEX.test(window.originBaseCommit)) continue;
+      if (await resolveCommit(window.originBaseCommit) !== window.originBaseCommit) continue;
+      if (!baseCommits.includes(window.originBaseCommit)) baseCommits.push(window.originBaseCommit);
+    } else if (window.originBaseCommit === undefined && originTip !== undefined) {
+      // A legacy window records no seal-time origin state. It stays
+      // observable only while origin/main holds nothing beyond what the
+      // tips already see through local main — the ref is an ancestor of
+      // (or equal to) the window's base or of the local main tip, so the
+      // window reduces to `rev-list <localTip> ^<base>` exactly as before
+      // origin bases were recorded (the D11 sandbox's geometry: the
+      // sandbox pushes main AFTER merging, so origin/main trails local
+      // main). Origin/main AHEAD of or divergent from local main is the
+      // lag geometry this bound exists for, and a legacy window cannot
+      // say what the seal could already see: unboundable, observe
+      // NOTHING (fail-closed to riding).
+      const withinBase = await capture(['merge-base', '--is-ancestor', originTip, window.baseCommit]);
+      const withinLocalTip = localTip === undefined
+        ? null
+        : await capture(['merge-base', '--is-ancestor', originTip, localTip]);
+      if (withinBase === null && withinLocalTip === null) continue;
+    }
+    // window.originBaseCommit === null: the seal recorded that origin/main
+    // did not exist — the local base bounds everything observable then.
     for (const goldenPath of [...window.goldenPaths].sort()) {
       if (!goldenPath.startsWith('eval/golden/')) continue;
       entries.push({
         trainId: window.trainId,
         path: goldenPath,
-        fixtureDigests: await readWindowDigests(window.baseCommit, goldenPath),
+        fixtureDigests: await readWindowDigests(baseCommits, goldenPath),
       });
     }
   }
   return entries;
+}
+
+/**
+ * The seal-time recorder's reader for the OTHER half of a train's base: the
+ * commit at `refs/remotes/origin/main`, or null when the ref does not exist
+ * (or the directory is not a git repository). The train runner records this
+ * beside `admittedBaseCommit` at seal so the §03.6 window can exclude
+ * everything origin/main could already serve — during exactly the lag the
+ * fetched ref exists for, origin/main is AHEAD of the local main the seal
+ * records. Never throws.
+ */
+export async function readOriginMainTipFromGit(repoRoot: string): Promise<string | null> {
+  const { execFile } = await import('node:child_process');
+  const { promisify } = await import('node:util');
+  try {
+    const result = await promisify(execFile)('git', ['rev-parse', '--verify', '--quiet', 'refs/remotes/origin/main^{commit}'], { cwd: repoRoot, windowsHide: true });
+    const commit = result.stdout.trim();
+    return COMMIT_HEX.test(commit) ? commit : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Reads one complete observed-input snapshot for the deriver (§03.2's table). */

@@ -699,6 +699,115 @@ describe('§03.6 consumed cards: a live (merged) train never re-boards', () => {
     expect((await updates.derive(CURRENT)).liveTrainIds).toEqual(['train-0001', 'train-0002', 'train-0003']);
   });
 
+  it('origin-lag variant: merges reachable only from fetched origin/main — the reversal chain\'s third train stays ready until its OWN post-seal origin merge', async () => {
+    // The round-4 critique's PoC geometry: a squash merge lands on
+    // origin/main first and the primary checkout only FETCHES — local main
+    // never moves, so every seal records the same lagging local base B0
+    // while liveness is observed through refs/remotes/origin/main (the
+    // designed lag flow). The seal-time origin tip recorded beside the base
+    // must bound each train's window: bounded by the local base alone,
+    // train-0001's pre-seal merge sits inside train-0003's ^B0 window and
+    // the never-merged, ancestor-identical third train would be observed
+    // live the moment it seals.
+    const root = await makeRepo([guardRecord()]);
+    const git = (args: readonly string[], env?: NodeJS.ProcessEnv): string => {
+      const result = spawnSync('git', [...args], { cwd: root, encoding: 'utf8', ...(env === undefined ? {} : { env: { ...process.env, ...env } }) });
+      if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${result.stderr}`);
+      return result.stdout.trim();
+    };
+    git(['init', '--quiet', '--initial-branch=main']);
+    git(['config', 'user.email', 'workbench-test@example.invalid']);
+    git(['config', 'user.name', 'Workbench Test']);
+    git(['add', '--all']);
+    git(['commit', '--quiet', '--message', 'base (local main lags here forever)']);
+    const b0 = git(['rev-parse', 'HEAD']);
+    const shared = { repoRoot: root, reviewer: 'jesse', now: testNow };
+    const updates = createUpdatesOperations(shared);
+    const trains = createTrainOperations({ ...shared, readMain: async () => git(['rev-parse', 'refs/heads/main']) });
+    const readRegistryEntries = async (): Promise<{ reviewId: string; admittedBaseCommit: string; admittedOriginBaseCommit?: string | null; proposal: { operations: { type: string; goldenFixtureId?: string; fixture?: unknown }[] } }[]> => (JSON.parse(
+      await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8'),
+    ) as { admissions: { reviewId: string; admittedBaseCommit: string; admittedOriginBaseCommit?: string | null; proposal: { operations: { type: string; goldenFixtureId?: string; fixture?: unknown }[] } }[] }).admissions;
+    // A squash merge on GitHub, then a fetch: pure plumbing grows a commit
+    // chain under refs/remotes/origin/main; working tree and local main are
+    // untouched.
+    const mergeTrainOnOrigin = async (trainId: string): Promise<string> => {
+      const entry = (await readRegistryEntries()).find((candidate) => candidate.reviewId === trainId)!;
+      const probe = spawnSync('git', ['rev-parse', '--verify', '--quiet', 'refs/remotes/origin/main'], { cwd: root, encoding: 'utf8' });
+      const parent = probe.status === 0 && probe.stdout.trim() !== '' ? probe.stdout.trim() : b0;
+      const env = { GIT_INDEX_FILE: path.join(root, `.origin-index-${trainId}`) };
+      git(['read-tree', `${parent}^{tree}`], env);
+      for (const operation of entry.proposal.operations) {
+        if (operation.type !== 'golden-fixture-upsert') continue;
+        const blobPath = path.join(root, `.origin-blob-${trainId}.json`);
+        await writeFile(blobPath, `${JSON.stringify(operation.fixture, null, 2)}\n`);
+        const blob = git(['hash-object', '-w', blobPath]);
+        git(['update-index', '--add', '--cacheinfo', `100644,${blob},eval/golden/${operation.goldenFixtureId!}.json`], env);
+      }
+      const tree = git(['write-tree'], env);
+      const commit = git(['commit-tree', tree, '-p', parent, '-m', `${trainId} (squash merge on GitHub, fetched)`]);
+      git(['update-ref', 'refs/remotes/origin/main', commit]);
+      return commit;
+    };
+    const log = path.join(root, 'workbench', 'judgments.jsonl');
+
+    // Train 1: sealed before any origin ref exists (recorded null), merged
+    // on origin/main — observed live through the fetched ref during the lag
+    // (the flow the origin tip exists to serve).
+    await approveEveryCard(updates);
+    await sealNow(updates, trains);
+    const m1 = await mergeTrainOnOrigin('train-0001');
+    expect((await trains.train('train-0001', CURRENT)).state).toBe('live');
+
+    // Train 2: the superseding removal, sealed at base B0 with origin tip
+    // M1 recorded, merged on origin/main.
+    const removal = v2({
+      judgmentId: 'g-origin-reversal-1', query: 'hearing and doing', action: 'essential', at: nextAt(),
+      targetId: 'WEB:19046001', withinTop: 10, supersedes: stableUuid('g1'),
+    });
+    await writeFile(log, `${await readFile(log, 'utf8')}${JSON.stringify(removal)}\n`);
+    await approveEveryCard(updates);
+    await sealNow(updates, trains);
+    const m2 = await mergeTrainOnOrigin('train-0002');
+    expect((await trains.train('train-0002', CURRENT)).state).toBe('live');
+
+    // Train 3: the second reversal re-derives the guard — content-identical
+    // to train-0001's merged version — and seals at base B0 with origin tip
+    // M2 recorded.
+    const reversal = v2({
+      judgmentId: 'g-origin-reversal-2', query: 'hearing and doing', action: 'irrelevant', at: nextAt(),
+      targetId: 'WEB:19046001', diagnosis: 'lexical-noise', supersedes: stableUuid('g-origin-reversal-1'),
+    });
+    await writeFile(log, `${await readFile(log, 'utf8')}${JSON.stringify(reversal)}\n`);
+    await approveEveryCard(updates);
+    const third = await sealNow(updates, trains);
+    expect(third.trainId).toBe('train-0003');
+    const entries = await readRegistryEntries();
+    const fixtureDigestOf = (trainId: string): string => fixtureContentDigest(
+      entries.find((candidate) => candidate.reviewId === trainId)!.proposal.operations
+        .find((operation) => operation.type === 'golden-fixture-upsert')!.fixture,
+    );
+    expect(fixtureDigestOf('train-0003')).toBe(fixtureDigestOf('train-0001'));
+    // Every seal recorded the lagging local base — and the seal-time origin
+    // tip beside it.
+    expect(entries.map((entry) => [entry.admittedBaseCommit, entry.admittedOriginBaseCommit])).toEqual([
+      [b0, null], [b0, m1], [b0, m2],
+    ]);
+
+    // Never merged, never admitted, no PR: train-0001's pre-seal merge M1
+    // sits between the lagging local base and the recorded origin tip —
+    // OUTSIDE train-0003's window. The third train stays READY, its card
+    // still counts approved.
+    expect((await trains.train('train-0003', CURRENT)).state).toBe('ready');
+    const derivation = await updates.derive(CURRENT);
+    expect(derivation.liveTrainIds).toEqual(['train-0001', 'train-0002']);
+    expect(derivation.tally.approved).toBe(1);
+
+    // Its OWN merge — fetched onto origin/main after ITS seal — finishes it.
+    await mergeTrainOnOrigin('train-0003');
+    expect((await trains.train('train-0003', CURRENT)).state).toBe('live');
+    expect((await updates.derive(CURRENT)).liveTrainIds).toEqual(['train-0001', 'train-0002', 'train-0003']);
+  });
+
   it('a hand edit or promotion rewriting a merged fixture never regresses the train (history, not the working tree, is the anchor)', async () => {
     const root = await makeRepo([guardRecord()]);
     const { updates, trains } = operationsFor(root);

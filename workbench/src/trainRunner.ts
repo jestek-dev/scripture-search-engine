@@ -41,7 +41,7 @@ import {
 } from './deriveUpdates.js';
 import type { AdmissionEvidenceEntry } from './admissionPublishOperations.js';
 import { proposalManifestDigest, type ProposalManifest } from './proposals.js';
-import { assembleUpdatesInputs, resolveUpdatesInputPaths, type GoldenMainHistoryReader, type UpdatesInputPaths } from './updatesOperations.js';
+import { assembleUpdatesInputs, readOriginMainTipFromGit, resolveUpdatesInputPaths, type GoldenMainHistoryReader, type UpdatesInputPaths } from './updatesOperations.js';
 import {
   createUpdatesStore,
   TRAIN_STOP_REASONS,
@@ -119,6 +119,13 @@ export interface TrainOperationsOptions {
   readonly now?: () => Date;
   /** Test seam: the trusted main reader. Defaults to the admission git adapter. */
   readonly readMain?: (repoRoot: string) => Promise<string>;
+  /**
+   * Test seam: the seal-time `refs/remotes/origin/main` tip (null: the ref
+   * does not exist). Recorded beside `admittedBaseCommit` so the §03.6 live
+   * window is bounded by BOTH refs main is read through. Defaults to
+   * `readOriginMainTipFromGit`.
+   */
+  readonly readOriginMain?: (repoRoot: string) => Promise<string | null>;
   /**
    * Test seam: main's golden-fixture history for the §03.6 live observation.
    * Defaults to real git history (`readGoldenMainHistoryFromGit`).
@@ -249,6 +256,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
   const store: UpdatesStore = createUpdatesStore({ logPath: paths.updatesLogPath });
   const now = options.now ?? ((): Date => new Date());
   const readMain = options.readMain ?? ((repoRoot: string): Promise<string> => DEFAULT_ADMISSION_GIT_ADAPTER.readMain(repoRoot));
+  const readOriginMain = options.readOriginMain ?? readOriginMainTipFromGit;
 
   async function assemble(replayIdentity: ReplayIdentity): Promise<DeriveUpdatesInputs> {
     return assembleUpdatesInputs(paths, replayIdentity, options.readGoldenMainHistory);
@@ -470,6 +478,15 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
         const admittedBaseCommit = await readMain(paths.repoRoot).catch(() => {
           fail('repository_unavailable', 'The saved history could not be read. Nothing was changed.', 503);
         });
+        // The OTHER half of the base: what origin/main could already serve
+        // at seal. A squash merge lands on origin/main first, so during
+        // exactly the local-main lag the §03.6 live window must exclude the
+        // fetched origin history too — bounded only by the lagging local
+        // main, a reversal chain's ancestor-identical content sitting
+        // between the two refs would observe a never-merged train live the
+        // moment it seals. Null records that the ref does not exist.
+        const originTip = await readOriginMain(paths.repoRoot).catch(() => null);
+        const admittedOriginBaseCommit = typeof originTip === 'string' && /^[0-9a-f]{40}$/.test(originTip) ? originTip : null;
 
         const sealDigest = computeSealDigest({
           judgmentIds,
@@ -499,6 +516,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
         const entry: AdmissionEvidenceEntry = {
           reviewId: trainId,
           admittedBaseCommit,
+          admittedOriginBaseCommit,
           expectedMainCommit: admittedBaseCommit,
           proposal: manifest,
           candidate: null,

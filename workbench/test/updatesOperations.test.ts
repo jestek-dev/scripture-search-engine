@@ -466,4 +466,115 @@ describe('readGoldenMainHistoryFromGit (§03.6/§5.2 live anchor, per-train post
     ])).resolves.toEqual([]);
     await expect(readGoldenMainHistoryFromGit(repo, [])).resolves.toEqual([]);
   });
+
+  /**
+   * A squash merge lands on `refs/remotes/origin/main` first — pure plumbing
+   * (a fetch): a new commit chain grows under the remote-tracking ref while
+   * the working tree and local main never move.
+   */
+  async function commitOnOrigin(content: unknown, message: string): Promise<string> {
+    const probe = spawnSync('git', ['rev-parse', '--verify', '--quiet', 'refs/remotes/origin/main'], { cwd: repo, encoding: 'utf8' });
+    const parent = probe.status === 0 && probe.stdout.trim() !== '' ? probe.stdout.trim() : git(['rev-parse', 'HEAD']);
+    const blobPath = path.join(repo, '.origin-blob.json');
+    await writeFile(blobPath, `${JSON.stringify(content, null, 2)}\n`);
+    const blob = git(['hash-object', '-w', blobPath]);
+    const env = { ...process.env, GIT_INDEX_FILE: path.join(repo, '.origin-index') };
+    const gitIdx = (args: readonly string[]): string => {
+      const result = spawnSync('git', [...args], { cwd: repo, encoding: 'utf8', env });
+      if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${result.stderr}`);
+      return result.stdout.trim();
+    };
+    gitIdx(['read-tree', `${parent}^{tree}`]);
+    gitIdx(['update-index', '--add', '--cacheinfo', `100644,${blob},${goldenPath}`]);
+    const tree = gitIdx(['write-tree']);
+    const commit = git(['commit-tree', tree, '-p', parent, '-m', message]);
+    git(['update-ref', 'refs/remotes/origin/main', commit]);
+    return commit;
+  }
+
+  it('the recorded seal-time origin base bounds the window: already-fetched origin history is outside, a post-seal origin merge is inside', async () => {
+    // Local main lags at C0 forever (the checkout only fetches); merges are
+    // reachable only from refs/remotes/origin/main.
+    git(['init', '--quiet', '--initial-branch=main']);
+    git(['config', 'user.email', 'workbench-test@example.invalid']);
+    git(['config', 'user.name', 'Workbench Test']);
+    await writeFile(path.join(repo, 'README.md'), 'seed\n');
+    git(['add', '.']);
+    git(['commit', '--quiet', '--message', 'seed (lagging local main)']);
+    const c0 = git(['rev-parse', 'HEAD']);
+    const o1 = await commitOnOrigin(v1, 'first merge, fetched before this train sealed');
+
+    // Sealed with base C0 AND the seal-time origin tip O1: O1's version is
+    // history this train could not have produced — outside its window.
+    const preSeal = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0002', baseCommit: c0, originBaseCommit: o1, goldenPaths: [goldenPath] },
+    ]);
+    expect(preSeal).toEqual([{ trainId: 'train-0002', path: goldenPath, fixtureDigests: [] }]);
+
+    // The train's OWN merge lands on origin/main after seal: inside.
+    await commitOnOrigin(v2Content, 'second merge, after this train sealed');
+    const postSeal = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0002', baseCommit: c0, originBaseCommit: o1, goldenPaths: [goldenPath] },
+    ]);
+    expect(postSeal[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+
+    // originBaseCommit null records that NO origin ref existed at seal —
+    // every origin commit is then post-seal history, inside the window.
+    const nullRecorded = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c0, originBaseCommit: null, goldenPaths: [goldenPath] },
+    ]);
+    expect(nullRecorded[0]!.fixtureDigests).toContain(fixtureContentDigest(v1));
+    expect(nullRecorded[0]!.fixtureDigests).toContain(fixtureContentDigest(v2Content));
+
+    // An unresolvable recorded origin base leaves the window unboundable:
+    // observe NOTHING (fail-closed to riding), never a fall-back to the
+    // local base alone.
+    const unresolvable = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0003', baseCommit: c0, originBaseCommit: 'f'.repeat(40), goldenPaths: [goldenPath] },
+    ]);
+    expect(unresolvable).toEqual([]);
+  });
+
+  it('a legacy window (no recorded seal-time origin state) observes only while origin/main trails local main — an ahead or divergent origin/main observes NOTHING', async () => {
+    const { c1, c2 } = await seedMainHistory();
+    // No origin ref at all (a D11-sandbox-shaped repo): the local base
+    // bounds everything the tips can see — the legacy window keeps
+    // observing.
+    const noOrigin = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c1, goldenPaths: [goldenPath] },
+    ]);
+    expect(noOrigin[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+
+    // origin/main as an ANCESTOR of the base holds no history the base
+    // misses: still observing.
+    git(['update-ref', 'refs/remotes/origin/main', c1]);
+    const ancestorOfBase = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c1, goldenPaths: [goldenPath] },
+    ]);
+    expect(ancestorOfBase[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+
+    // origin/main BETWEEN the base and the local tip (the D11 sandbox's
+    // geometry — the sandbox pushes main after merging, so origin trails):
+    // the tips see nothing beyond local main, the window reduces to
+    // `rev-list <localTip> ^<base>` — still observing.
+    git(['update-ref', 'refs/remotes/origin/main', c2]);
+    const trailingOrigin = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c1, goldenPaths: [goldenPath] },
+    ]);
+    expect(trailingOrigin[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+
+    // An origin/main AHEAD of (or divergent from) local main could have
+    // been ahead at seal too, and the legacy entry cannot say what the
+    // seal could already see — the window is unboundable, so the train
+    // observes nothing (fail-closed to riding) while a window that
+    // RECORDED its seal-time origin base still reads.
+    git(['update-ref', 'refs/remotes/origin/main', c1]);
+    const aheadOrigin = await commitOnOrigin(v1, 'merge fetched at an unknown time');
+    const withDivergence = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c1, goldenPaths: [goldenPath] },
+      { trainId: 'train-0002', baseCommit: c1, originBaseCommit: aheadOrigin, goldenPaths: [goldenPath] },
+    ]);
+    expect(withDivergence.map((entry) => entry.trainId)).toEqual(['train-0002']);
+    expect(withDivergence[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+  });
 });

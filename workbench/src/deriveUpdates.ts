@@ -95,6 +95,19 @@ export interface PriorTrainArtifacts {
    * reads only the per-train `mainGoldenHistory` built from it.
    */
   readonly admittedBaseCommit?: string;
+  /**
+   * The seal-time tip of `refs/remotes/origin/main` from the same D10 entry.
+   * `null` records that the ref did not exist at seal; ABSENT means the entry
+   * predates origin-base recording (legacy). The ASSEMBLY uses it to bound
+   * the window from BOTH refs main is read through — origin/main can be
+   * ahead of the lagging local main at seal, and that already-fetched
+   * history is history the train could not have produced. A legacy entry is
+   * observed only while origin/main is absent or an ancestor of
+   * `admittedBaseCommit` or of the local main tip; otherwise the window
+   * cannot be bounded and the train observes nothing (fail-closed to
+   * riding).
+   */
+  readonly admittedOriginBaseCommit?: string | null;
 }
 
 /**
