@@ -10,7 +10,7 @@ import { createHash } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
 
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { planJudgmentCompilation } from '../src/compileJudgments.js';
 import {
@@ -157,6 +157,25 @@ describe('D3 golden refactor proof', () => {
     const second = await planJudgmentCompilation(root);
     expect(second.digest).toBe(first.digest);
     expect(JSON.stringify(second.operations)).toBe(JSON.stringify(first.operations));
+  });
+
+  it('the digest does not depend on the platform path separator', async () => {
+    // On Windows, path.join/path.relative spell separators as '\\', and those
+    // bytes reached the digest-visible plan paths: backslashing every plan
+    // path reproduces the windows-latest divergence exactly (8298b855… where
+    // the golden digest is expected). The planner now spells input paths as
+    // '/' literals and normalizes computed relatives, so forcing win32
+    // relative-path semantics must leave the digest — and every plan path —
+    // byte-identical to the golden.
+    const relativeSpy = vi.spyOn(path, 'relative').mockImplementation(path.win32.relative);
+    try {
+      const plan = await planJudgmentCompilation(root);
+      expect(plan.digest).toBe(PRE_REFACTOR_PLAN_DIGEST);
+      for (const input of plan.inputs) expect(input.path).not.toContain('\\');
+      for (const operation of plan.operations) expect(operation.path).not.toContain('\\');
+    } finally {
+      relativeSpy.mockRestore();
+    }
   });
 });
 

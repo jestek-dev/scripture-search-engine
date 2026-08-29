@@ -182,6 +182,17 @@ function sha256(value: string | Buffer): string {
   return createHash('sha256').update(value).digest('hex');
 }
 
+/**
+ * Repo-root-relative plan path, always spelled with '/'. Plan paths are
+ * digest-visible bytes, so they must be identical on every platform: on POSIX
+ * the replace is the identity, on Windows it undoes path.relative's '\\'
+ * separators (which otherwise yield a different digest for the same plan —
+ * the windows-latest golden-refactor failure).
+ */
+function planPathOf(repoRoot: string, target: string): string {
+  return path.relative(repoRoot, target).replaceAll('\\', '/');
+}
+
 function canonicalPlanDigest(
   inputs: readonly ObservedCompilationInput[],
   operations: readonly PlannedCompilationFile[],
@@ -190,12 +201,14 @@ function canonicalPlanDigest(
 }
 
 async function observeCompilationInputs(repoRoot: string): Promise<ObservedCompilationInput[]> {
+  // Digest-visible paths: '/'-separated on every platform (path.join spells
+  // them with '\\' on Windows, which must never reach the plan bytes).
   const inputs = [
-    path.join('artifacts', 'content-artifact.json'),
-    path.join('pipeline', 'fixtures', 'web-subset.json'),
-    path.join('workbench', 'cases.jsonl'),
-    path.join('workbench', 'judgments.jsonl'),
-    path.join('workbench', 'legacy', 'migration-manifest.json'),
+    'artifacts/content-artifact.json',
+    'pipeline/fixtures/web-subset.json',
+    'workbench/cases.jsonl',
+    'workbench/judgments.jsonl',
+    'workbench/legacy/migration-manifest.json',
   ];
   return Promise.all(inputs.map(async (relativePath) => {
     const target = path.join(repoRoot, relativePath);
@@ -554,7 +567,7 @@ export async function planJudgmentCompilation(
     if (!existsSync(target)) continue;
     const existing = JSON.parse(await readFile(target, 'utf8')) as { generatedBy?: string };
     if (existing.generatedBy !== 'workbench') continue;
-    const relativeTarget = path.relative(repoRoot, target);
+    const relativeTarget = planPathOf(repoRoot, target);
     operations.push({
       path: relativeTarget,
       beforeSha256: sha256(await readFile(target)),
@@ -583,7 +596,7 @@ export async function planJudgmentCompilation(
       ? { ...pendingFixture, status: 'active' }
       : pendingFixture;
     const target = path.join(goldenDir, `${entry.slug}.json`);
-    const relativeTarget = path.relative(repoRoot, target);
+    const relativeTarget = planPathOf(repoRoot, target);
     operations.push({
       path: relativeTarget,
       beforeSha256: existsSync(target) ? sha256(await readFile(target)) : null,
@@ -652,7 +665,7 @@ export async function planJudgmentCompilation(
     // The file round-trips byte-identically through JSON.parse/stringify at
     // indent 2, so untouched entries (and the verses array) keep their bytes.
     operations.push({
-      path: path.relative(repoRoot, webSubsetPath),
+      path: planPathOf(repoRoot, webSubsetPath),
       beforeSha256: sha256(await readFile(webSubsetPath)),
       afterText: `${JSON.stringify(subset, null, 2)}\n`,
     });
