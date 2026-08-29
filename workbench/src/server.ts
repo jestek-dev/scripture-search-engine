@@ -103,6 +103,10 @@ const UPDATES_PATH = process.env.WORKBENCH_UPDATES_PATH ?? path.join(repoRoot, '
 const GAUNTLET_REPORT_PATH = process.env.WORKBENCH_GAUNTLET_REPORT_PATH ?? path.join(repoRoot, 'eval', '.runs', 'gauntlet-report.json');
 const MUTATION_REPO_ROOT = process.env.WORKBENCH_REPO_ROOT ?? repoRoot;
 const REVIEWER = process.env.WORKBENCH_REVIEWER ?? 'jesse';
+// The A2 independent signer, when governance has named one (Call 4). Absent,
+// every ready data train freezes honestly behind its signingHold — the sign
+// endpoint refuses and the panel renders the hold sentence instead.
+const INDEPENDENT_SIGNER = process.env.WORKBENCH_INDEPENDENT_SIGNER ?? null;
 const CANDIDATES_ROOT = process.env.WORKBENCH_CANDIDATES_ROOT ?? path.join(MUTATION_REPO_ROOT, 'workbench', '.state', 'candidates');
 const BLIND_EVENTS_PATH = process.env.WORKBENCH_BLIND_EVENTS_PATH ?? path.join(MUTATION_REPO_ROOT, 'workbench', 'review-data', 'blind-comparison.jsonl');
 const BLIND_LOCK_ROOT = process.env.WORKBENCH_BLIND_LOCK_ROOT ?? MUTATION_REPO_ROOT;
@@ -620,6 +624,7 @@ async function main(): Promise<void> {
     judgmentsLogPath: JUDGMENTS_PATH,
     casesLogPath: CASES_PATH,
     evidencePath: ADMISSION_EVIDENCE_PATH,
+    independentSigner: INDEPENDENT_SIGNER,
   });
   if (engine !== null && caseLog !== null) {
     try {
