@@ -49,6 +49,22 @@ const SYMLINKED_DIRECTORIES = [
   'curation/node_modules',
 ] as const;
 
+/**
+ * Transient scratch entries that must NOT be shared into a worktree — a D11
+ * shakedown finding, proven in anger. Vite creates `node_modules/.vite-temp`
+ * while bundling a vitest config and deletes it afterwards, so a worktree
+ * provisioned during that window carries a symlink that dangles the moment
+ * vite cleans up (or the primary's node_modules is reinstalled) — and every
+ * later in-worktree vitest then dies at startup: its recursive mkdir of
+ * `.vite-temp` resolves through the dangling link to ENOENT, which stopped a
+ * real train's verify. Even a live link would be wrong: the primary and the
+ * worktree would share one scratch directory that either side deletes under
+ * the other. Left unlinked, vite creates a real per-worktree directory inside
+ * the worktree's own (real) node_modules directory. `.vite` is vite's mutable
+ * cache — excluded for the same reason pipeline/.cache is never provisioned.
+ */
+const TRANSIENT_SCRATCH_ENTRIES = new Set(['.vite-temp', '.vite']);
+
 const HARDLINKED_DIRECTORIES = ['pipeline/sources'] as const;
 
 /**
@@ -64,10 +80,20 @@ const MATERIALIZED_DIRECTORIES = ['eval/.runs'] as const;
 async function linkContents(sourceDir: string, targetDir: string): Promise<void> {
   await mkdir(targetDir, { recursive: true });
   for (const name of await readdir(sourceDir)) {
+    if (TRANSIENT_SCRATCH_ENTRIES.has(name)) continue;
     const target = path.join(targetDir, name);
     if (existsSync(target)) continue;
     const source = path.join(sourceDir, name);
-    const stats = await stat(source);
+    // stat() follows symlinks; a dangling entry in the primary farm throws
+    // ENOENT. Skip it — linking it would only reproduce the dangle in the
+    // worktree (the module's stated policy: missing sources are skipped, the
+    // fixed commands fail with their own honest errors if one mattered).
+    let stats;
+    try {
+      stats = await stat(source);
+    } catch {
+      continue;
+    }
     await symlink(source, target, stats.isDirectory() ? 'junction' : 'file');
   }
 }
