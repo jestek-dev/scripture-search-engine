@@ -88,18 +88,34 @@ export interface PriorTrainArtifacts {
   readonly sealedManifestJson?: string;
   /** UTF-8 text of the verified report (eval/.runs/<trainId>.json). */
   readonly verifiedReportJson?: string;
+  /**
+   * The train's base at seal — `admittedBaseCommit` from its D10 registry
+   * entry. The ASSEMBLY uses it to scope the train's §03.6 history window
+   * (commits reachable from main but not from this base); the deriver itself
+   * reads only the per-train `mainGoldenHistory` built from it.
+   */
+  readonly admittedBaseCommit?: string;
 }
 
 /**
- * The §03.6 live observation's anchor: for one golden fixture path, the
- * content address (`fixtureContentDigest`) of every version of that file ever
- * reachable from `main` — git HISTORY, never the mutable working tree, so the
- * observation only grows. Assembled by the caller (the deriver does no I/O).
+ * The §03.6 live observation's anchor, scoped to ONE sealed train: for one
+ * golden fixture path, the content address (`fixtureContentDigest`) of every
+ * version of that file at commits reachable from `main` but NOT from the
+ * train's own base (`admittedBaseCommit`, recorded at seal) — history the
+ * train could actually have produced. Git HISTORY, never the mutable working
+ * tree, and the base is fixed at seal, so each window only grows. Scoping
+ * matters: fixture derivation is deterministic, so a reversal chain re-derives
+ * content byte-identical to an ANCESTOR version merged before this train
+ * existed; an unscoped history would observe the never-merged train live at
+ * seal and silently skip the human merge. Assembled by the caller (the
+ * deriver does no I/O).
  */
 export interface MainGoldenHistoryEntry {
+  /** The sealed train whose post-base window this entry observes. */
+  readonly trainId: string;
   /** Repo-root-relative POSIX path (eval/golden/<id>.json). */
   readonly path: string;
-  /** `fixtureContentDigest` of each version ever reachable from main. */
+  /** `fixtureContentDigest` of each version in the train's post-base window. */
   readonly fixtureDigests: readonly string[];
 }
 
@@ -124,9 +140,10 @@ export interface DeriveUpdatesInputs {
   /** Outcome artifacts for trains the updates log references, when located. */
   readonly priorTrainArtifacts?: readonly PriorTrainArtifacts[];
   /**
-   * Main's golden-fixture history for the paths sealed manifests touch —
-   * the §03.6/§5.2 live anchor. Absent or empty observes nothing as merged
-   * (fail-closed: every sealed train merely rides).
+   * Main's golden-fixture history for the paths sealed manifests touch,
+   * scoped per train to its post-base window — the §03.6/§5.2 live anchor.
+   * Absent or empty observes nothing as merged (fail-closed: every sealed
+   * train merely rides).
    */
   readonly mainGoldenHistory?: readonly MainGoldenHistoryEntry[];
 }
@@ -551,7 +568,8 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   const ontologyFiles = [...inputs.ontologyFiles].sort((a, b) => a.path.localeCompare(b.path));
   const goldenFiles = [...inputs.goldenFixtureFiles].sort((a, b) => a.path.localeCompare(b.path));
   const priorArtifacts = [...(inputs.priorTrainArtifacts ?? [])].sort((a, b) => a.trainId.localeCompare(b.trainId));
-  const mainHistory = [...(inputs.mainGoldenHistory ?? [])].sort((a, b) => a.path.localeCompare(b.path));
+  const mainHistory = [...(inputs.mainGoldenHistory ?? [])]
+    .sort((a, b) => a.trainId.localeCompare(b.trainId) || a.path.localeCompare(b.path));
 
   const derivationDigest = sha256(canonicalJson({
     judgmentsLog: sha256(inputs.judgmentsLog),
@@ -568,6 +586,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       report: entry.verifiedReportJson === undefined ? null : sha256(entry.verifiedReportJson),
     })),
     mainGoldenHistory: mainHistory.map((entry) => ({
+      trainId: entry.trainId,
       path: entry.path,
       fixtureDigests: [...entry.fixtureDigests].sort(),
     })),
@@ -1109,24 +1128,34 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   cards.push(...converted);
 
   // ---- 3c. Live observation (§03.6/§5.2): a sealed (unstopped) guard train
-  // whose manifest MERGED ON MAIN — every fixture the seal wrote has, at some
-  // commit reachable from main, been the exact content of its golden file
-  // (`mainGoldenHistory`, assembled from git history) — finished; its cards
-  // are consumed and rest as achieved. Anchored to history, never to the
-  // mutable working tree: a later same-search train rewriting the file (the
-  // §03.6 row merge), a promotion, or a hand edit can never regress a merged
-  // train back to riding — the observation is MONOTONIC because history only
-  // grows. Squash merges make the prepared commit itself unreachable from
-  // main, so reachability is tested by content, the quantity a guard train's
-  // merge actually lands. Same §03.2 join discipline as the stop conversion
-  // (locate, recompute the seal digest, compare), fail-closed: anything that
-  // does not verify — including an absent history — leaves the train merely
-  // riding. Pure over the snapshot — the history is an assembled input.
-  const historyDigestsByPath = new Map<string, Set<string>>();
+  // whose OWN commit MERGED ON MAIN — every fixture the seal wrote has, at
+  // some commit reachable from main but NOT from the train's own base
+  // (`mainGoldenHistory`, assembled per train from `admittedBaseCommit`
+  // forward), been the exact content of its golden file — finished; its
+  // cards are consumed and rest as achieved. Anchored to history, never to
+  // the mutable working tree: a later same-search train rewriting the file
+  // (the §03.6 row merge), a promotion, or a hand edit can never regress a
+  // merged train back to riding — the base is fixed at seal, so each window
+  // is MONOTONIC (it only grows as main grows). Squash merges make the
+  // prepared commit itself unreachable from main, so reachability is tested
+  // by content, the quantity a guard train's merge actually lands — but only
+  // within the train's post-base window: fixture derivation is deterministic,
+  // so a reversal chain (guard merged, superseding removal merged, guard
+  // re-derived) re-produces content byte-identical to an ANCESTOR version;
+  // an unscoped history would mark that third, never-merged train live at
+  // seal and the approved change would silently never land. Same §03.2 join
+  // discipline as the stop conversion (locate, recompute the seal digest,
+  // compare), fail-closed: anything that does not verify — an absent
+  // history, a train with no window (no recorded base) — leaves the train
+  // merely riding. Pure over the snapshot — the history is an assembled
+  // input.
+  const historyDigestsByTrain = new Map<string, Map<string, Set<string>>>();
   for (const entry of mainHistory) {
-    const set = historyDigestsByPath.get(entry.path) ?? new Set<string>();
+    const byPath = historyDigestsByTrain.get(entry.trainId) ?? new Map<string, Set<string>>();
+    const set = byPath.get(entry.path) ?? new Set<string>();
     for (const versionDigest of entry.fixtureDigests) set.add(versionDigest);
-    historyDigestsByPath.set(entry.path, set);
+    byPath.set(entry.path, set);
+    historyDigestsByTrain.set(entry.trainId, byPath);
   }
   const landedTrains = new Set<string>();
   for (const train of fold.trains) {
@@ -1147,9 +1176,11 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     });
     if (recomputedSeal !== train.sealed.sealDigest) continue;
     if (manifest.operations.length === 0) continue;
+    const windowDigestsByPath = historyDigestsByTrain.get(train.trainId);
+    if (windowDigestsByPath === undefined) continue;
     const landed = manifest.operations.every((operation) => {
       if (operation.type !== 'golden-fixture-upsert') return false;
-      return historyDigestsByPath
+      return windowDigestsByPath
         .get(`eval/golden/${operation.goldenFixtureId}.json`)
         ?.has(fixtureContentDigest(operation.fixture)) === true;
     });

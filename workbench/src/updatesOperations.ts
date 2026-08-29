@@ -221,12 +221,19 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
   if (trainIds.length === 0) return [];
   const registryText = await readOptional(paths.evidencePath);
   const manifestsByTrain = new Map<string, string>();
+  const baseCommitsByTrain = new Map<string, string>();
   if (registryText !== null) {
     try {
-      const registry = JSON.parse(registryText) as { admissions?: readonly { reviewId?: unknown; proposal?: unknown }[] };
+      const registry = JSON.parse(registryText) as { admissions?: readonly { reviewId?: unknown; proposal?: unknown; admittedBaseCommit?: unknown }[] };
       for (const entry of registry.admissions ?? []) {
         if (typeof entry.reviewId === 'string' && entry.proposal !== undefined) {
           manifestsByTrain.set(entry.reviewId, JSON.stringify(entry.proposal));
+          // The train's base at seal — it scopes the §03.6 live window to
+          // history the train could actually have produced. A missing or
+          // malformed base yields no window (fail-closed to riding).
+          if (typeof entry.admittedBaseCommit === 'string' && COMMIT_HEX.test(entry.admittedBaseCommit)) {
+            baseCommitsByTrain.set(entry.reviewId, entry.admittedBaseCommit);
+          }
         }
       }
     } catch {
@@ -235,31 +242,48 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
   }
   return Promise.all(trainIds.sort().map(async (trainId) => {
     const sealedManifestJson = manifestsByTrain.get(trainId);
+    const admittedBaseCommit = baseCommitsByTrain.get(trainId);
     const reportPath = path.join(paths.repoRoot, 'eval', '.runs', `${trainId}.json`);
     const verifiedReportJson = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(trainId) ? await readOptional(reportPath) : null;
     return {
       trainId,
       ...(sealedManifestJson === undefined ? {} : { sealedManifestJson }),
       ...(verifiedReportJson === null ? {} : { verifiedReportJson }),
+      ...(admittedBaseCommit === undefined ? {} : { admittedBaseCommit }),
     };
   }));
 }
 
-/** The §03.6 live-observation source: main's history for named golden paths. */
-export type GoldenMainHistoryReader = (repoRoot: string, goldenPaths: readonly string[]) => Promise<readonly MainGoldenHistoryEntry[]>;
+/**
+ * One sealed train's §03.6 history window request: the golden paths its
+ * manifest upserts, and the base its window starts AFTER (`admittedBaseCommit`
+ * from the D10 registry entry, recorded at seal). `baseCommit` null means the
+ * registry records no usable base — the reader must observe nothing for that
+ * train (fail-closed to riding), never fall back to unscoped history.
+ */
+export interface TrainGoldenHistoryWindow {
+  readonly trainId: string;
+  readonly baseCommit: string | null;
+  readonly goldenPaths: readonly string[];
+}
+
+/** The §03.6 live-observation source: per-train post-base golden history. */
+export type GoldenMainHistoryReader = (repoRoot: string, windows: readonly TrainGoldenHistoryWindow[]) => Promise<readonly MainGoldenHistoryEntry[]>;
 
 const GOLDEN_FIXTURE_ID = /^[a-z0-9][a-z0-9-]{0,127}$/;
 const COMMIT_HEX = /^[0-9a-f]{40}$/;
 
 /**
- * The golden paths whose main-history the live observation needs: exactly
- * the files sealed manifests upsert. Parsed loosely — a manifest that does
- * not parse contributes no paths and the §03.2 join reports it unverifiable.
+ * The per-train history windows the live observation needs: for each sealed
+ * train, exactly the files its manifest upserts, bounded below by its own
+ * `admittedBaseCommit`. Parsed loosely — a manifest that does not parse
+ * contributes no window and the §03.2 join reports it unverifiable.
  */
-function sealedGoldenPathsOf(priorTrainArtifacts: readonly PriorTrainArtifacts[]): string[] {
-  const goldenPaths = new Set<string>();
-  for (const artifact of priorTrainArtifacts) {
+function sealedGoldenWindowsOf(priorTrainArtifacts: readonly PriorTrainArtifacts[]): TrainGoldenHistoryWindow[] {
+  const windows: TrainGoldenHistoryWindow[] = [];
+  for (const artifact of [...priorTrainArtifacts].sort((a, b) => a.trainId.localeCompare(b.trainId))) {
     if (artifact.sealedManifestJson === undefined) continue;
+    const goldenPaths = new Set<string>();
     try {
       const manifest = JSON.parse(artifact.sealedManifestJson) as { operations?: readonly { type?: unknown; goldenFixtureId?: unknown }[] };
       for (const operation of Array.isArray(manifest.operations) ? manifest.operations : []) {
@@ -268,25 +292,38 @@ function sealedGoldenPathsOf(priorTrainArtifacts: readonly PriorTrainArtifacts[]
         }
       }
     } catch {
-      // The join reports the unparseable manifest; no path to observe.
+      // The join reports the unparseable manifest; no window to observe.
     }
+    if (goldenPaths.size === 0) continue;
+    windows.push({
+      trainId: artifact.trainId,
+      baseCommit: artifact.admittedBaseCommit !== undefined && COMMIT_HEX.test(artifact.admittedBaseCommit)
+        ? artifact.admittedBaseCommit
+        : null,
+      goldenPaths: [...goldenPaths].sort(),
+    });
   }
-  return [...goldenPaths].sort();
+  return windows;
 }
 
 /**
- * The default `GoldenMainHistoryReader`: every content version of each named
- * golden path reachable from main — local `refs/heads/main` and, when
- * present, `refs/remotes/origin/main` (a squash merge lands on origin/main
- * first; the primary checkout's main may lag). §03.6/§5.2 anchor the `live`
- * observation here because git history only grows: a train whose sealed
- * fixtures all appear in it stays live no matter how the working tree moves
- * later. Not a git repository, no main ref, an unreadable or unparseable
- * version: observed as absent, never an error — the observation fails closed
- * to "riding".
+ * The default `GoldenMainHistoryReader`: for each train's window, every
+ * content version of each named golden path at commits reachable from main
+ * but NOT from the train's own base (`git rev-list <main> ^<base> -- <path>`)
+ * — history the train could actually have produced. Main is the local
+ * `refs/heads/main` and, when present, `refs/remotes/origin/main` (a squash
+ * merge lands on origin/main first; the primary checkout's main may lag).
+ * §03.6/§5.2 anchor the `live` observation here because the base is fixed at
+ * seal and git history only grows: each window is monotonic, so a train
+ * whose sealed fixtures all appear in its window stays live no matter how
+ * the working tree moves later — while a version merged BEFORE the train's
+ * base (a reversal chain re-deriving byte-identical ancestor content) never
+ * marks it live. Not a git repository, no main ref, no usable base for a
+ * train, an unreadable or unparseable version: observed as absent, never an
+ * error — the observation fails closed to "riding".
  */
-export async function readGoldenMainHistoryFromGit(repoRoot: string, goldenPaths: readonly string[]): Promise<MainGoldenHistoryEntry[]> {
-  if (goldenPaths.length === 0) return [];
+export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: readonly TrainGoldenHistoryWindow[]): Promise<MainGoldenHistoryEntry[]> {
+  if (windows.length === 0) return [];
   const { execFile } = await import('node:child_process');
   const { promisify } = await import('node:util');
   const execFileAsync = promisify(execFile);
@@ -304,28 +341,60 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, goldenPaths
     if (resolved !== undefined && COMMIT_HEX.test(resolved) && !tips.includes(resolved)) tips.push(resolved);
   }
   if (tips.length === 0) return [];
-  const entries: MainGoldenHistoryEntry[] = [];
-  for (const goldenPath of [...goldenPaths].sort()) {
-    if (!goldenPath.startsWith('eval/golden/')) continue;
+  // Shared across trains: sealed windows overlap ((base, path) pairs repeat
+  // when same-search trains chain), and version contents repeat across
+  // commits; read each only once.
+  const digestsByWindowKey = new Map<string, readonly string[]>();
+  const digestByCommitPath = new Map<string, string | null>();
+  const readWindowDigests = async (baseCommit: string, goldenPath: string): Promise<readonly string[]> => {
+    const windowKey = `${baseCommit} ${goldenPath}`;
+    const memoized = digestsByWindowKey.get(windowKey);
+    if (memoized !== undefined) return memoized;
     const versionDigests = new Set<string>();
     const seenCommits = new Set<string>();
     for (const tip of tips) {
-      const listed = await capture(['rev-list', tip, '--', goldenPath]);
+      const listed = await capture(['rev-list', tip, `^${baseCommit}`, '--', goldenPath]);
       if (listed === null) continue;
       for (const line of listed.split('\n')) {
         const commit = line.trim();
         if (!COMMIT_HEX.test(commit) || seenCommits.has(commit)) continue;
         seenCommits.add(commit);
-        const contents = await capture(['show', `${commit}:${goldenPath}`]);
-        if (contents === null) continue;
-        try {
-          versionDigests.add(fixtureContentDigest(JSON.parse(contents)));
-        } catch {
-          // An unparseable historical version proves nothing.
+        const contentKey = `${commit} ${goldenPath}`;
+        let versionDigest = digestByCommitPath.get(contentKey);
+        if (versionDigest === undefined) {
+          const contents = await capture(['show', `${commit}:${goldenPath}`]);
+          versionDigest = null;
+          if (contents !== null) {
+            try {
+              versionDigest = fixtureContentDigest(JSON.parse(contents));
+            } catch {
+              // An unparseable historical version proves nothing.
+            }
+          }
+          digestByCommitPath.set(contentKey, versionDigest);
         }
+        if (versionDigest !== null) versionDigests.add(versionDigest);
       }
     }
-    entries.push({ path: goldenPath, fixtureDigests: [...versionDigests].sort() });
+    const digests = [...versionDigests].sort();
+    digestsByWindowKey.set(windowKey, digests);
+    return digests;
+  };
+  const entries: MainGoldenHistoryEntry[] = [];
+  for (const window of [...windows].sort((a, b) => a.trainId.localeCompare(b.trainId))) {
+    // No usable base = no window: fall back to NOTHING, never to unscoped
+    // history — unscoped history is exactly the reversal-chain false 'live'.
+    if (window.baseCommit === null || !COMMIT_HEX.test(window.baseCommit)) continue;
+    const base = (await capture(['rev-parse', '--verify', '--quiet', `${window.baseCommit}^{commit}`]))?.trim();
+    if (base !== window.baseCommit) continue;
+    for (const goldenPath of [...window.goldenPaths].sort()) {
+      if (!goldenPath.startsWith('eval/golden/')) continue;
+      entries.push({
+        trainId: window.trainId,
+        path: goldenPath,
+        fixtureDigests: await readWindowDigests(window.baseCommit, goldenPath),
+      });
+    }
   }
   return entries;
 }
@@ -347,8 +416,8 @@ export async function assembleUpdatesInputs(
     readFile(path.join(paths.repoRoot, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8'),
   ]);
   const priorTrainArtifacts = await loadPriorTrainArtifacts(paths, updatesLog);
-  const sealedGoldenPaths = sealedGoldenPathsOf(priorTrainArtifacts);
-  const mainGoldenHistory = sealedGoldenPaths.length === 0 ? [] : await readGoldenMainHistory(paths.repoRoot, sealedGoldenPaths);
+  const sealedGoldenWindows = sealedGoldenWindowsOf(priorTrainArtifacts);
+  const mainGoldenHistory = sealedGoldenWindows.length === 0 ? [] : await readGoldenMainHistory(paths.repoRoot, sealedGoldenWindows);
   return {
     judgmentsLog,
     casesLog,
