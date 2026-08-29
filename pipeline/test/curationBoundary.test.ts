@@ -973,3 +973,71 @@ describe('curation/ stays outside the artifact build graph', () => {
     expect(rootPackage.workspaces).not.toContain('curation');
   });
 });
+
+/**
+ * §03.9 extension: the votes→updates deriver runs at review time, not
+ * build time, but it derives what a human will approve into the artifact
+ * inputs — so it gets the same fail-closed scan. Beyond curation-freedom,
+ * the deriver and the shared judgment core must be PURE: their card and
+ * manifest output is a function of the observed snapshot alone, which the
+ * determinism AC replays byte-for-byte. A network module, filesystem read,
+ * subprocess, or randomness source in these files would let two replays of
+ * the same snapshot disagree — so the direct import surface is pinned to a
+ * reviewed allowlist and the nondeterminism idioms are refused by name.
+ */
+describe('workbench deriver purity (votes→updates, plan §03.9)', () => {
+  const DERIVER_FILES = [
+    join(REPO_ROOT, 'workbench', 'src', 'deriveUpdates.ts'),
+    join(REPO_ROOT, 'workbench', 'src', 'effectiveJudgments.ts'),
+    join(REPO_ROOT, 'workbench', 'src', 'updatesStore.ts'),
+  ] as const;
+
+  it('the deriver files carry no curation imports and no static execution vectors', () => {
+    for (const file of DERIVER_FILES) {
+      // Witness that the scanned set is the real files, not empty paths.
+      expect(statSync(file).isFile(), file).toBe(true);
+      expect(boundaryFindingsIn(file, []), file).toEqual([]);
+    }
+  });
+
+  it('deriveUpdates.ts and effectiveJudgments.ts import no I/O, network, or subprocess module', () => {
+    // updatesStore.ts is the one seam that touches disk (node:fs/promises
+    // append/read of updates.jsonl); the deriver itself must not.
+    const pureFiles = DERIVER_FILES.slice(0, 2);
+    const allowedNodeModules = new Set(['node:crypto', 'crypto']);
+    for (const file of pureFiles) {
+      const source = ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
+      const specifiers: string[] = [];
+      const visit = (node: ts.Node): void => {
+        if (
+          (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+          node.moduleSpecifier !== undefined &&
+          ts.isStringLiteralLike(node.moduleSpecifier)
+        ) {
+          specifiers.push(node.moduleSpecifier.text);
+        }
+        ts.forEachChild(node, visit);
+      };
+      visit(source);
+      expect(specifiers.length, file).toBeGreaterThan(0);
+      for (const specifier of specifiers) {
+        const isNodeBuiltin = specifier.startsWith('node:') || /^(fs|path|os|http|https|net|tls|dns|dgram|child_process|worker_threads|vm)(\/|$)/.test(specifier);
+        if (isNodeBuiltin) {
+          expect(allowedNodeModules.has(specifier), `${file} imports ${specifier}`).toBe(true);
+        }
+      }
+    }
+  });
+
+  it('no nondeterminism idiom appears in the deriver files', () => {
+    // Textual refusal of the named idioms — Math.random, Date.now, and
+    // `new Date()` with no argument (wall-clock reads). The deriver only
+    // ever RE-SERIALIZES timestamps that arrived in its inputs.
+    for (const file of DERIVER_FILES.slice(0, 2)) {
+      const text = readFileSync(file, 'utf8');
+      expect(text.includes('Math.random'), `${file} uses Math.random`).toBe(false);
+      expect(/\bDate\.now\s*\(/.test(text), `${file} uses Date.now()`).toBe(false);
+      expect(/new\s+Date\s*\(\s*\)/.test(text), `${file} reads the wall clock`).toBe(false);
+    }
+  });
+});

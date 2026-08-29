@@ -20,6 +20,20 @@ export const VALIDATION_TOAST = 'Something about this call was rejected — noth
 export const READ_ONLY_TOAST = 'Read-only right now — this call was not saved.';
 /** §3.11 nothing-renders entries. */
 export const NOTHING_RENDERS = 'nothing renders';
+/** Votes-to-engine plan §4.9 failure-copy parity: the Updates screen's GET. */
+export const UPDATES_LOAD_FAILED = 'Couldn’t load your updates just now — reload the page to try again.';
+/** Votes-to-engine plan §4.9 failure-copy parity: the decide POST. */
+export const UPDATES_DECIDE_FAILED = 'That decision didn’t save — check the connection and try again. Nothing was lost.';
+/** Votes-to-engine plan §4.9: the seal ("Start the update"). */
+export const TRAIN_SEAL_FAILED = 'The update couldn’t start — reload and try again. Your approvals are all still here.';
+/** Votes-to-engine plan §4.9: the train state/report GET. */
+export const TRAIN_PROGRESS_FAILED = 'Couldn’t load the update’s progress — reload to try again. The update itself keeps running.';
+/** Votes-to-engine plan §4.9: the borrowed Phase-2 admit act. */
+export const TRAIN_ADMIT_FAILED = 'The approval didn’t go through — reload the report and try again. Nothing was merged.';
+/** Phase-2 approve act, step 1 (the admission detail GET) — P2-14. */
+export const TRAIN_DETAIL_FAILED = 'Couldn’t load the approval step — reload and try again. Nothing was approved.';
+/** Phase-2 approve act, step 3 (the draft-PR preparation) — P2-14. */
+export const TRAIN_PREPARE_FAILED = 'The draft change couldn’t be opened on GitHub — reload the update to see where it stands. Nothing was merged.';
 
 export interface EndpointFailureEntry {
   /** What the spec mocks to produce the failure. */
@@ -114,5 +128,33 @@ export const ENDPOINT_FAILURES: Readonly<Record<string, EndpointFailureEntry>> =
   apiCompileApply: {
     mockedFailure: 'POST /api/v2/compile/apply 500 on signing',
     expectedCopyOrToast: FALLBACK_POST, // unnamed POST failure toast
+  },
+  apiUpdates: {
+    mockedFailure: 'GET /api/v2/updates 500 on opening Updates',
+    expectedCopyOrToast: UPDATES_LOAD_FAILED, // inline, on the Updates screen (§4.9)
+  },
+  apiUpdatesDecide: {
+    mockedFailure: 'POST /api/v2/updates/cards/:id/decide 500 on Approve',
+    expectedCopyOrToast: UPDATES_DECIDE_FAILED, // toast (§4.9's decide sentence)
+  },
+  apiTrainSeal: {
+    mockedFailure: 'POST /api/v2/updates/train 500 on Start the update',
+    expectedCopyOrToast: TRAIN_SEAL_FAILED, // inline, in the update panel (§4.9)
+  },
+  apiTrain: {
+    mockedFailure: 'GET /api/v2/updates/train/:id 500 with a sealed train',
+    expectedCopyOrToast: TRAIN_PROGRESS_FAILED, // inline, in the update panel (§4.9)
+  },
+  apiAdmission: {
+    mockedFailure: 'GET /api/v2/admissions/:id 500 on Approve this update',
+    expectedCopyOrToast: TRAIN_DETAIL_FAILED, // inline, in the update panel
+  },
+  apiAdmissionAdmit: {
+    mockedFailure: 'POST /api/v2/admissions/:id/admit 500 on the confirm',
+    expectedCopyOrToast: TRAIN_ADMIT_FAILED, // inline (§4.9's admit sentence)
+  },
+  apiPublishPrepare: {
+    mockedFailure: 'POST /api/v2/publish/:id/prepare 500 after the admit',
+    expectedCopyOrToast: TRAIN_PREPARE_FAILED, // inline, in the update panel
   },
 };

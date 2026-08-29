@@ -13,12 +13,15 @@ import {
   type AdmissionManifest,
   type AdmissionPreview,
   type AdmissionPreviewInput,
+  type DeferredSigningMarker,
+  type EngineIdentity,
   type ProbeDecisionRationale,
 } from './admission.js';
 import type { ComparisonReport } from './comparison.js';
 import type { ComparisonCandidateBinding } from './comparisonRunner.js';
 import { prepareDraftPublication, type PublishPreparationResult } from './publishPreparation.js';
 import { parseProposalManifest, proposalManifestDigest, type ProposalManifest } from './proposals.js';
+import { provisionDetachedWorktree } from './worktreeProvision.js';
 
 const execFileAsync = promisify(execFile);
 const SHA256 = /^[0-9a-f]{64}$/;
@@ -38,10 +41,17 @@ export interface AdmissionEvidenceEntry {
   readonly admittedBaseCommit: string;
   readonly expectedMainCommit: string;
   readonly proposal: unknown;
-  readonly candidate: AdmissionCandidateBinding;
-  readonly comparison: ComparisonReport;
-  readonly comparisonBinding: ComparisonCandidateBinding;
-  readonly gauntlet: { readonly reportPath: string };
+  /**
+   * Fixture-lane (all-golden-fixture-upsert) entries record no candidate
+   * artifact — the four evidence fields are null together and `baseIdentity`
+   * pins the identity the rebuild must reproduce (identity-neutrality proof).
+   */
+  readonly candidate: AdmissionCandidateBinding | null;
+  readonly comparison: ComparisonReport | null;
+  readonly comparisonBinding: ComparisonCandidateBinding | null;
+  readonly gauntlet: { readonly reportPath: string } | null;
+  readonly baseIdentity?: EngineIdentity | null;
+  readonly deferredSigningMarker?: DeferredSigningMarker | null;
   readonly reviewedComparisonQueries: readonly string[];
   readonly fixturePromotions?: AdmissionPreviewInput['fixturePromotions'];
   readonly probeBaseline?: AdmissionPreviewInput['probeBaseline'];
@@ -59,6 +69,12 @@ export interface AdmissionPublishOperationsOptions {
   readonly evidencePath: string;
   readonly reviewer: string;
   readonly signingKey?: string;
+  /**
+   * §5.5 gap 3 (guard half): executes the base-commit control run when a
+   * guard-train release verdict is red. Without it, a red release verdict
+   * refuses exactly as today.
+   */
+  readonly controlRun?: NonNullable<Parameters<typeof runAdmission>[0]['dependencies']>['controlRun'];
   readonly now?: () => Date;
   readonly operations?: {
     readonly previewAdmission?: typeof previewAdmission;
@@ -93,16 +109,17 @@ export interface AdmissionView {
       readonly engineVersion: string;
       readonly corpusFingerprint: string;
       readonly layerFingerprint: string;
-    };
+    } | null;
     readonly diffs: AdmissionPreview['diffs'];
     readonly decisions: readonly PublicDecisionSlot[];
     readonly measurableEffect: boolean;
+    readonly effectExemption: AdmissionPreview['effectExemption'];
     readonly reviewedComparisonQueries: readonly string[];
     readonly gauntlet: {
       readonly verdict: string;
       readonly blocking: boolean;
       readonly gates: readonly { readonly gate: string; readonly title: string; readonly status: string; readonly verdict: string; readonly summary: string; readonly findings: readonly { readonly message: string; readonly subjects: readonly string[] }[] }[];
-    };
+    } | null;
   } | null;
   readonly admission: {
     readonly digest: string;
@@ -192,7 +209,7 @@ async function readTrustedRegistry(repoRoot: string, evidencePath: string): Prom
   }
   const entries = raw['admissions'].map((entry, index) => {
     if (!isRecord(entry)) fail('invalid_evidence', `Admission evidence ${index + 1} is invalid.`, 500);
-    const keys = ['reviewId', 'admittedBaseCommit', 'expectedMainCommit', 'proposal', 'candidate', 'comparison', 'comparisonBinding', 'gauntlet', 'reviewedComparisonQueries', 'provenance', 'fixturePromotions', 'probeBaseline', 'probeApproval'];
+    const keys = ['reviewId', 'admittedBaseCommit', 'expectedMainCommit', 'proposal', 'candidate', 'comparison', 'comparisonBinding', 'gauntlet', 'baseIdentity', 'deferredSigningMarker', 'reviewedComparisonQueries', 'provenance', 'fixturePromotions', 'probeBaseline', 'probeApproval'];
     const actual = Object.keys(entry);
     if (actual.some((key) => !keys.includes(key))) fail('invalid_evidence', `Admission evidence ${index + 1} has unsupported fields.`, 500);
     if (typeof entry['reviewId'] !== 'string' || !REVIEW_ID.test(entry['reviewId'])) fail('invalid_evidence', `Admission evidence ${index + 1} has an invalid review id.`, 500);
@@ -211,8 +228,16 @@ function projectPreview(preview: AdmissionPreview): AdmissionView['preview'] {
   return {
     digest: preview.digest,
     proposalDigest: preview.proposalDigest,
+    // Deliberate (votes-to-engine plan, D1): this view field carries the main
+    // binding (`expectedMainCommit`), not `admittedBaseCommit`. The one UI
+    // consumer (advanced.html) labels it "Admitted main", and publish
+    // preflight refuses any admission whose baseCommit differs from its
+    // expectedMainCommit (#preflight below), so the two commits must be equal
+    // in every state that can ship. Any future Updates/train view reusing
+    // this projection inherits that meaning: baseCommit here = the main
+    // commit the admission was reviewed against.
     baseCommit: preview.expectedMainCommit,
-    candidate: {
+    candidate: preview.candidate === null ? null : {
       cacheKey: preview.candidate.cacheKey,
       descriptorSha256: preview.candidate.descriptorSha256,
       databaseSha256: preview.candidate.databaseSha256,
@@ -226,8 +251,9 @@ function projectPreview(preview: AdmissionPreview): AdmissionView['preview'] {
       probes: slot.kind === 'probe-baseline' ? preview.probeMovements : [],
     })),
     measurableEffect: preview.measurableEffect,
+    effectExemption: preview.effectExemption,
     reviewedComparisonQueries: preview.reviewedComparisonQueries,
-    gauntlet: {
+    gauntlet: preview.gauntlet === null ? null : {
       verdict: preview.gauntlet.verdict,
       blocking: preview.gauntlet.blocking,
       gates: preview.gauntlet.gates.map((gate) => ({
@@ -398,7 +424,7 @@ export class AdmissionPublishOperations {
       proposalId: proposal.proposalId,
       state: existing === undefined ? 'READY' : 'ADMITTED',
       readOnly,
-      blockers: preview.measurableEffect ? [] : ['The approved comparison has no measurable effect; admission is refused.'],
+      blockers: preview.measurableEffect || preview.effectExemption !== null ? [] : ['The approved comparison has no measurable effect; admission is refused.'],
       recovery: existing === undefined
         ? ['If any source, candidate, or main binding moved, rebuild and repeat comparison review.']
         : ['Admission is recorded. Continue through isolated publish preparation.'],
@@ -431,6 +457,18 @@ export class AdmissionPublishOperations {
       decisions,
       linkedCaseIds: parseProposalManifest(entry.proposal).caseIds,
       provenance: entry.provenance,
+      dependencies: {
+        ...(this.#options.controlRun === undefined ? {} : { controlRun: this.#options.controlRun }),
+        // §8.4 (a D11 shakedown finding): the detached admission worktree
+        // holds only tracked files, so the fixed rebuild/verify commands need
+        // the primary root's installed dependencies and fetched sources
+        // shared in first (worktreeProvision.ts owns the rationale).
+        onPhase: async (phase, context): Promise<void> => {
+          if (phase === 'worktree-created' && context.worktree !== undefined) {
+            await provisionDetachedWorktree(this.#options.repoRoot, context.worktree);
+          }
+        },
+      },
     });
     return this.admission(entry.reviewId, false);
   }
@@ -461,6 +499,15 @@ export class AdmissionPublishOperations {
       evidence: { admissionPreview: await this.#preview(this.#previewInput(entry)), comparisonReport: entry.comparison },
       push: choice.push,
       openDraftPr: choice.openDraftPr,
+      dependencies: {
+        // Same D11 finding as the admit path: the publish worktree runs the
+        // fixed full verification, which needs the shared gitignored inputs.
+        onPhase: async (phase, context): Promise<void> => {
+          if (phase === 'worktree-created') {
+            await provisionDetachedWorktree(this.#options.repoRoot, context.worktree);
+          }
+        },
+      },
     });
     return projectPublishResult(result);
   }
@@ -484,6 +531,8 @@ export class AdmissionPublishOperations {
       comparisonBinding: entry.comparisonBinding,
       gauntlet: entry.gauntlet,
       reviewedComparisonQueries: entry.reviewedComparisonQueries,
+      ...(entry.baseIdentity === undefined ? {} : { baseIdentity: entry.baseIdentity }),
+      ...(entry.deferredSigningMarker === undefined ? {} : { deferredSigningMarker: entry.deferredSigningMarker }),
       ...(entry.fixturePromotions === undefined ? {} : { fixturePromotions: entry.fixturePromotions }),
       ...(entry.probeBaseline === undefined ? {} : { probeBaseline: entry.probeBaseline }),
       ...(entry.probeApproval === undefined ? {} : { probeApproval: entry.probeApproval }),
@@ -494,9 +543,14 @@ export class AdmissionPublishOperations {
     const proposalDigest = proposalManifestDigest(proposal);
     return (await manifests(this.#options.repoRoot)).find((manifest) => (
       manifest.proposalDigest === proposalDigest
-      && manifest.candidate.cacheKey === entry.candidate.cacheKey
-      && manifest.candidate.descriptorSha256 === entry.candidate.descriptorSha256
-      && manifest.candidate.databaseSha256 === entry.candidate.databaseSha256
+      && (entry.candidate === null
+        // Fixture-lane admissions have no candidate artifact: the proposal
+        // digest is the binding, and the manifest must record the same lane.
+        ? manifest.candidate === null
+        : manifest.candidate !== null
+          && manifest.candidate.cacheKey === entry.candidate.cacheKey
+          && manifest.candidate.descriptorSha256 === entry.candidate.descriptorSha256
+          && manifest.candidate.databaseSha256 === entry.candidate.databaseSha256)
     )) ?? null;
   }
 

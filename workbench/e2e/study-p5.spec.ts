@@ -4,11 +4,12 @@ import { expect, test, type Page } from '@playwright/test';
 
 import {
   ENDPOINT_FAILURES, FALLBACK_LOAD, FALLBACK_POST, NOTHING_RENDERS,
-  READ_ONLY_TOAST, SEARCH_ERROR, VALIDATION_TOAST,
+  READ_ONLY_TOAST, SEARCH_ERROR, TRAIN_ADMIT_FAILED, TRAIN_DETAIL_FAILED, TRAIN_PREPARE_FAILED,
+  TRAIN_PROGRESS_FAILED, TRAIN_SEAL_FAILED, UPDATES_DECIDE_FAILED, UPDATES_LOAD_FAILED, VALIDATION_TOAST,
 } from './endpointFailures';
 import {
-  caseMock, casePosts, collectErrors, installRoutes, judgmentMock, judgmentPosts,
-  makeMock, startStudyServer, submit,
+  caseMock, casePosts, collectErrors, derivationMock, guardTrainView, installRoutes, judgmentMock,
+  judgmentPosts, makeMock, readyAdmissionDetail, sealedTrainSnapshot, startStudyServer, submit,
   type MockState, type StudyServer,
 } from './study-shared';
 
@@ -710,6 +711,22 @@ const expectToast = async (page: Page, text: string) => {
   await expect(page.locator('#toast-slot .toast')).toContainText(text);
 };
 
+// One approved guard card — the D39 train drivers' summary input.
+const approvedTrainCard = (): Record<string, unknown> => ({
+  cardId: '11'.repeat(32),
+  cardRevision: '22'.repeat(32),
+  kind: 'guard',
+  query: 'it is well with my soul',
+  targetKey: 'kjv:24004010',
+  judgmentIds: [],
+  contextJudgmentIds: [],
+  votes: [{ at: '2026-08-27T12:00:00.000Z', reviewer: 'jesse', action: 'irrelevant', reference: 'Jeremiah 4:10', diagnosis: 'lexical-noise', observedWindow: 10 }],
+  derived: { guard: { ref: 'Jeremiah 4:10', why: 'matched words, not meaning' } },
+  preCheck: 'current',
+  identityNotes: [],
+  state: { decision: 'approved', decidedAt: '2026-08-27T13:00:00.000Z' },
+});
+
 // One driver per api-layer function: mocks the entry's failure, drives the
 // UI to the fetch site, and asserts the mapped §3.11 copy renders.
 const FAILURE_DRIVERS: Record<string, (page: Page) => Promise<void>> = {
@@ -869,6 +886,95 @@ const FAILURE_DRIVERS: Record<string, (page: Page) => Promise<void>> = {
     await page.goto(origin);
     await page.click('.nav-item[data-nav="finish"]');
     await expect(page.locator('#screen-finish')).toContainText(FALLBACK_LOAD);
+  },
+  apiUpdates: async (page) => {
+    await installRoutes(page, makeMock({ updatesFails: true }));
+    await page.goto(origin);
+    await page.click('.nav-item[data-nav="updates"]');
+    await expect(page.locator('#updates-cards-failed')).toContainText(UPDATES_LOAD_FAILED);
+  },
+  apiUpdatesDecide: async (page) => {
+    // One drafted guard card; the decide POST 500s → the §4.9 toast, and the
+    // card stays undecided ("Nothing was lost").
+    const card = {
+      cardId: 'f'.repeat(64),
+      cardRevision: 'e'.repeat(64),
+      kind: 'guard',
+      query: 'mercy',
+      targetKey: 'kjv:1:1',
+      judgmentIds: [],
+      contextJudgmentIds: [],
+      votes: [{ at: '2026-08-27T00:00:00.000Z', reviewer: 'jesse', action: 'irrelevant', reference: 'Hosea 6:6', diagnosis: 'lexical-noise', observedWindow: 10 }],
+      derived: { guard: { ref: 'Hosea 6:6', why: 'matched words, not meaning' } },
+      preCheck: 'current',
+      identityNotes: [],
+      state: { decision: 'drafted' },
+    };
+    await installRoutes(page, makeMock({ updatesPayload: derivationMock([card]) }));
+    await fail(page, '**/decide', 'POST');
+    await page.goto(origin);
+    await page.click('.nav-item[data-nav="updates"]');
+    await page.click('.updates-approve');
+    await expectToast(page, UPDATES_DECIDE_FAILED);
+    await expect(page.locator('.updates-approve')).toBeVisible();
+  },
+  apiTrainSeal: async (page) => {
+    // One approved guard card; the seal POST 500s → §4.9's seal sentence in
+    // the update panel, and the approvals are untouched.
+    await installRoutes(page, makeMock({ updatesPayload: derivationMock([approvedTrainCard()]) }));
+    await fail(page, '**/api/v2/updates/train', 'POST');
+    await page.goto(origin);
+    await page.click('.nav-item[data-nav="updates"]');
+    await page.click('#train-start');
+    await page.click('#train-confirm-commit');
+    await expect(page.locator('#updates-train-error')).toContainText(TRAIN_SEAL_FAILED);
+  },
+  apiTrain: async (page) => {
+    // A sealed train whose observed-state GET 500s → §4.9's progress
+    // sentence in the update panel.
+    const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
+    mock.trainView = guardTrainView('ready');
+    await installRoutes(page, mock);
+    await fail(page, '**/api/v2/updates/train/*', 'GET');
+    await page.goto(origin);
+    await page.click('.nav-item[data-nav="updates"]');
+    await expect(page.locator('#updates-train-view-failed')).toContainText(TRAIN_PROGRESS_FAILED);
+  },
+  apiAdmission: async (page) => {
+    const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
+    mock.trainView = guardTrainView('ready');
+    mock.admissionDetail = readyAdmissionDetail();
+    await installRoutes(page, mock);
+    await fail(page, '**/api/v2/admissions/*', 'GET');
+    await page.goto(origin);
+    await page.click('.nav-item[data-nav="updates"]');
+    await page.click('#train-approve');
+    await page.click('#train-confirm-commit');
+    await expect(page.locator('#updates-train-error')).toContainText(TRAIN_DETAIL_FAILED);
+  },
+  apiAdmissionAdmit: async (page) => {
+    const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
+    mock.trainView = guardTrainView('ready');
+    mock.admissionDetail = readyAdmissionDetail();
+    await installRoutes(page, mock);
+    await fail(page, '**/admit', 'POST');
+    await page.goto(origin);
+    await page.click('.nav-item[data-nav="updates"]');
+    await page.click('#train-approve');
+    await page.click('#train-confirm-commit');
+    await expect(page.locator('#updates-train-error')).toContainText(TRAIN_ADMIT_FAILED);
+  },
+  apiPublishPrepare: async (page) => {
+    const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
+    mock.trainView = guardTrainView('ready');
+    mock.admissionDetail = readyAdmissionDetail();
+    await installRoutes(page, mock);
+    await fail(page, '**/prepare', 'POST');
+    await page.goto(origin);
+    await page.click('.nav-item[data-nav="updates"]');
+    await page.click('#train-approve');
+    await page.click('#train-confirm-commit');
+    await expect(page.locator('#updates-train-error')).toContainText(TRAIN_PREPARE_FAILED);
   },
   apiCompileApply: async (page) => {
     const fixtureText = JSON.stringify({

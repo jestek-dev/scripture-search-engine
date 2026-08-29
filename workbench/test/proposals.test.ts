@@ -583,3 +583,59 @@ describe('proposal collision review', () => {
     expect(() => parseProposalManifest(manifest)).toThrow(ProposalValidationError);
   });
 });
+
+// D8a (votes-to-engine plan §02.7): per-operation fixture targeting — one
+// manifest may carry golden-fixture-upsert operations for several fixtures,
+// so a multi-query train ships as one manifest (V8's one-report-one-signing
+// shape). The top-level fixtureId is a label, no longer a constraint.
+describe('per-operation fixture targeting (D8a)', () => {
+  const PATIENT_FIXTURE_PATH = 'eval/golden/patient-hope.json';
+
+  function multiFixtureManifest(): unknown {
+    return {
+      schemaVersion: 1,
+      proposalId: 'multi-query-train',
+      fixtureId: 'hope-in-god',
+      caseIds: [CASE_A, CASE_B],
+      sourcePreconditions: [
+        { path: FIXTURE_PATH, sha256: HASH_A },
+        { path: PATIENT_FIXTURE_PATH, sha256: HASH_B },
+      ],
+      operations: [
+        {
+          ...common('op-golden-hope', [FIXTURE_PATH]), type: 'golden-fixture-upsert', goldenFixtureId: 'hope-in-god',
+          fixture: { id: 'hope-in-god', query: 'hope', status: 'pending', expectedTop: [{ reference: 'Romans 8:24-25' }] },
+        },
+        {
+          ...common('op-golden-patient', [PATIENT_FIXTURE_PATH]), type: 'golden-fixture-upsert', goldenFixtureId: 'patient-hope',
+          fixture: { id: 'patient-hope', query: 'patient hope', status: 'pending', expectedTop: [{ reference: 'Romans 8:25' }] },
+        },
+      ],
+    };
+  }
+
+  it('round-trips a manifest whose upserts target two different fixtureIds', () => {
+    const parsed = parseProposalManifest(multiFixtureManifest());
+    expect(parsed.fixtureId).toBe('hope-in-god');
+    expect(parsed.operations.map((operation) => operation.type === 'golden-fixture-upsert' ? operation.goldenFixtureId : '')).toEqual([
+      'hope-in-god', 'patient-hope',
+    ]);
+    // Digest is stable across a reparse of its own normalized output.
+    expect(proposalManifestDigest(parseProposalManifest(JSON.parse(JSON.stringify(parsed))))).toBe(proposalManifestDigest(parsed));
+  });
+
+  it('still derives each operation path from its OWN goldenFixtureId and refuses a mismatched path', () => {
+    const manifest = multiFixtureManifest() as { operations: { sourcePaths: string[] }[] };
+    // Point the second upsert at the first fixture's owned path: refused.
+    manifest.operations[1]!.sourcePaths = [FIXTURE_PATH];
+    expect(() => parseProposalManifest(manifest)).toThrow(/outside the owned source surface/);
+  });
+
+  it('keeps refusing two upserts against the SAME fixture id', () => {
+    const manifest = multiFixtureManifest() as { operations: { goldenFixtureId?: string; sourcePaths: string[]; fixture?: Record<string, unknown> }[] };
+    manifest.operations[1]!.goldenFixtureId = 'hope-in-god';
+    manifest.operations[1]!.sourcePaths = [FIXTURE_PATH];
+    manifest.operations[1]!.fixture = { id: 'hope-in-god', query: 'patient hope', status: 'pending', expectedTop: [{ reference: 'Romans 8:25' }] };
+    expect(() => parseProposalManifest(manifest)).toThrow(/already written elsewhere in the proposal/);
+  });
+});

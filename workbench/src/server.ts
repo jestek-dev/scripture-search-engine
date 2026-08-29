@@ -88,6 +88,8 @@ import {
   SigningOperationsError,
   parseSigningForm,
 } from './signingOperations.js';
+import { createUpdatesOperations, UpdatesOperationsError } from './updatesOperations.js';
+import { createControlRunExecutor, createTrainOperations, TrainOperationsError } from './trainRunner.js';
 import { REVIEW_PRIORITY_FORMULA, type ReviewSessionCase } from './reviewSessions.js';
 import type { QualityDashboardReport } from './qualityDashboard.js';
 import type { SensitiveCategories, TelemetryBudgets } from '../../pipeline/src/telemetry/index.js';
@@ -97,6 +99,7 @@ const STATIC_PAGE = process.env.WORKBENCH_STATIC_PAGE_PATH ?? path.join(repoRoot
 const JUDGMENTS_PATH = process.env.WORKBENCH_JUDGMENTS_PATH ?? path.join(repoRoot, 'workbench', 'judgments.jsonl');
 const CASES_PATH = process.env.WORKBENCH_CASES_PATH ?? path.join(repoRoot, 'workbench', 'cases.jsonl');
 const RUNTIME_DATABASE_PATH = process.env.WORKBENCH_DATABASE_PATH ?? databasePath;
+const UPDATES_PATH = process.env.WORKBENCH_UPDATES_PATH ?? path.join(repoRoot, 'workbench', 'updates.jsonl');
 const GAUNTLET_REPORT_PATH = process.env.WORKBENCH_GAUNTLET_REPORT_PATH ?? path.join(repoRoot, 'eval', '.runs', 'gauntlet-report.json');
 const MUTATION_REPO_ROOT = process.env.WORKBENCH_REPO_ROOT ?? repoRoot;
 const REVIEWER = process.env.WORKBENCH_REVIEWER ?? 'jesse';
@@ -226,6 +229,8 @@ function requiresTrustedJson(pathname: string): boolean {
     pathname === '/api/v2/sessions' ||
     /^\/api\/v2\/sessions\/[^/]+\/(?:complete-item|skip-item|complete-session)$/.test(pathname) ||
     /^\/api\/v2\/admissions\/[^/]+\/admit$/.test(pathname) ||
+    /^\/api\/v2\/updates\/cards\/[^/]+\/decide$/.test(pathname) ||
+    pathname === '/api/v2/updates/train' ||
     /^\/api\/v2\/publish\/[^/]+\/prepare$/.test(pathname) ||
     pathname === '/api/v2/signing/review-packet' ||
     pathname === '/api/v2/signing/preview' ||
@@ -277,6 +282,57 @@ function sendAdmissionPublishError(response: http.ServerResponse, error: unknown
     return;
   }
   sendV2Error(response, 500, 'admission_publish_failed', 'Admission or publish preparation failed. Reload and retry.');
+}
+
+/**
+ * `{query, at}` of every judgment line pinned by the closed legacy migration
+ * manifest — the Phase-1 stale-judgment inbox filter's key set (§07.2). A
+ * missing or unreadable manifest pins nothing: the filter only ever narrows
+ * the inbox, so absence degrades to the pre-filter behavior.
+ */
+async function readLegacyPinnedJudgments(): Promise<readonly { query: string; at: string }[]> {
+  try {
+    const manifest = JSON.parse(
+      await readFile(path.join(repoRoot, 'workbench', 'legacy', 'migration-manifest.json'), 'utf8'),
+    ) as { cases?: readonly { entries?: readonly { judgment?: { query?: unknown; at?: unknown } }[] }[] };
+    const pins: { query: string; at: string }[] = [];
+    for (const legacyCase of manifest.cases ?? []) {
+      for (const entry of legacyCase.entries ?? []) {
+        if (typeof entry.judgment?.query === 'string' && typeof entry.judgment.at === 'string') {
+          pins.push({ query: entry.judgment.query, at: entry.judgment.at });
+        }
+      }
+    }
+    return pins;
+  } catch {
+    return [];
+  }
+}
+
+function sendUpdatesError(response: http.ServerResponse, error: unknown): void {
+  response.setHeader('cache-control', 'no-store');
+  if (error instanceof UpdatesOperationsError) {
+    sendV2Error(response, error.status, error.code, error.message);
+    return;
+  }
+  sendV2Error(response, 500, 'updates_unavailable', 'Updates could not be derived. Reload and retry.');
+}
+
+function sendTrainError(response: http.ServerResponse, error: unknown): void {
+  response.setHeader('cache-control', 'no-store');
+  if (error instanceof TrainOperationsError) {
+    sendV2Error(response, error.status, error.code, error.message);
+    return;
+  }
+  sendV2Error(response, 500, 'train_unavailable', 'The update could not be started or read. Reload and retry.');
+}
+
+/** The failure code carried by any operations error, for train stop mapping. */
+function failureCodeOf(error: unknown): string | null {
+  if (typeof error === 'object' && error !== null && typeof (error as { code?: unknown }).code === 'string') {
+    return (error as { code: string }).code;
+  }
+  return null;
 }
 
 function digestJson(value: unknown): string {
@@ -537,6 +593,32 @@ async function main(): Promise<void> {
     evidencePath: ADMISSION_EVIDENCE_PATH,
     reviewer: REVIEWER,
     signingKey: process.env.WORKBENCH_ADMISSION_SIGNING_KEY,
+    // §5.5 gap 3 (guard half): when a guard train's release verdict is red,
+    // runAdmission classifies it against a base-commit control run the
+    // runner performs. Any non-inherited red refuses exactly as today.
+    controlRun: createControlRunExecutor(MUTATION_REPO_ROOT),
+  });
+  // D6: votes → cards. Deriving is read-only; a decide appends one line to
+  // workbench/updates.jsonl through the fail-closed store. The deriver reads
+  // the same repository the compiler mutates, so it follows MUTATION_REPO_ROOT
+  // for ontology/eval/subset, with the logs at their served paths.
+  const updatesOperations = createUpdatesOperations({
+    repoRoot: MUTATION_REPO_ROOT,
+    reviewer: REVIEWER,
+    updatesLogPath: UPDATES_PATH,
+    judgmentsLogPath: JUDGMENTS_PATH,
+    casesLogPath: CASES_PATH,
+    evidencePath: ADMISSION_EVIDENCE_PATH,
+  });
+  // D8: the train runner — seal + observed state over the same snapshot the
+  // deriver reads. The admit/publish tail stays on the existing endpoints.
+  const trainOperations = createTrainOperations({
+    repoRoot: MUTATION_REPO_ROOT,
+    reviewer: REVIEWER,
+    updatesLogPath: UPDATES_PATH,
+    judgmentsLogPath: JUDGMENTS_PATH,
+    casesLogPath: CASES_PATH,
+    evidencePath: ADMISSION_EVIDENCE_PATH,
   });
   if (engine !== null && caseLog !== null) {
     try {
@@ -805,6 +887,7 @@ async function main(): Promise<void> {
             judgments: judgmentRows,
             currentArtifact: identity,
             gauntletReport,
+            legacyPinnedJudgments: await readLegacyPinnedJudgments(),
             now,
           }).filter((seed) => seed.state === 'new' || seed.state === 'reviewing');
           const scored: { readonly seed: (typeof seeds)[number]; readonly item: InboxCaseSnapshot }[] = [];
@@ -1071,6 +1154,129 @@ async function main(): Promise<void> {
         return;
       }
 
+      if (url.pathname === '/api/v2/updates') {
+        if (request.method !== 'GET') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only GET is allowed to derive updates.');
+          return;
+        }
+        if ([...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Updates derivation does not accept query parameters.');
+          return;
+        }
+        if (engine === null) {
+          sendV2Error(response, 503, 'artifact_unavailable', artifactFailure);
+          return;
+        }
+        try {
+          response.setHeader('cache-control', 'no-store');
+          const derivation = await updatesOperations.derive({
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          });
+          sendV2Success(response, 200, { ...derivation, readOnly: degradedReadOnly });
+        } catch (error) { sendUpdatesError(response, error); }
+        return;
+      }
+
+      const updatesDecideMatch = /^\/api\/v2\/updates\/cards\/([^/]+)\/decide$/.exec(url.pathname);
+      if (updatesDecideMatch !== null) {
+        if (request.method !== 'POST') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only POST is allowed to decide a card.');
+          return;
+        }
+        const cardId = decodeSegment(updatesDecideMatch[1]!);
+        if (cardId === null || !/^[0-9a-f]{64}$/.test(cardId) || [...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Card decide route is invalid.');
+          return;
+        }
+        if (engine === null) {
+          sendV2Error(response, 503, 'artifact_unavailable', artifactFailure);
+          return;
+        }
+        try {
+          response.setHeader('cache-control', 'no-store');
+          const card = await updatesOperations.decide(cardId, await readJsonBody(request), {
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          });
+          sendV2Success(response, 201, { card });
+        } catch (error) { sendUpdatesError(response, error); }
+        return;
+      }
+
+      if (url.pathname === '/api/v2/updates/train') {
+        if (request.method !== 'POST') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only POST is allowed to seal a train.');
+          return;
+        }
+        if ([...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Sealing does not accept query parameters.');
+          return;
+        }
+        // Guard trains are identity-neutral and defer only to an in-flight
+        // repo mutation (the existing 409 discipline) — §8.4 single-flight.
+        if (activeRepositoryMutation !== null || jobRunner.getActive() !== null) {
+          sendV2Error(response, 409, 'mutation_running', 'Another repository operation is already running.');
+          return;
+        }
+        if (engine === null) {
+          sendV2Error(response, 503, 'artifact_unavailable', artifactFailure);
+          return;
+        }
+        const sealMutationId = randomUUID();
+        activeRepositoryMutation = { kind: 'train-seal', id: sealMutationId };
+        try {
+          response.setHeader('cache-control', 'no-store');
+          // §03.5 step 3 / §4.5: the seal carries the derivation digest the
+          // update panel rendered from — the one mutation that digest pins.
+          // Everything else still derives server-side (V7); the pin exists
+          // only so a stale panel refuses 409 instead of sealing unread state.
+          const sealBody = await readJsonBody(request);
+          const derivationDigest = isPlainObject(sealBody) && typeof sealBody['derivationDigest'] === 'string'
+            ? sealBody['derivationDigest']
+            : '';
+          const train = await trainOperations.seal({
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          }, derivationDigest);
+          sendV2Success(response, 201, { train });
+        } catch (error) { sendTrainError(response, error); }
+        finally {
+          if (activeRepositoryMutation?.id === sealMutationId) activeRepositoryMutation = null;
+        }
+        return;
+      }
+
+      const trainStateMatch = /^\/api\/v2\/updates\/train\/([^/]+)$/.exec(url.pathname);
+      if (trainStateMatch !== null) {
+        if (request.method !== 'GET') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only GET is allowed to read a train.');
+          return;
+        }
+        const trainId = decodeSegment(trainStateMatch[1]!);
+        if (trainId === null || [...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Train route is invalid.');
+          return;
+        }
+        if (engine === null) {
+          sendV2Error(response, 503, 'artifact_unavailable', artifactFailure);
+          return;
+        }
+        try {
+          response.setHeader('cache-control', 'no-store');
+          const train = await trainOperations.train(trainId, {
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          });
+          sendV2Success(response, 200, { train, readOnly: degradedReadOnly });
+        } catch (error) { sendTrainError(response, error); }
+        return;
+      }
+
       if (url.pathname === '/api/v2/admissions') {
         if (request.method !== 'GET') {
           sendV2Error(response, 405, 'method_not_allowed', 'Only GET is allowed for admission discovery.');
@@ -1129,7 +1335,17 @@ async function main(): Promise<void> {
         try {
           const admission = await admissionPublishOperations.admit(reviewId, await readJsonBody(request));
           sendV2Success(response, 201, { admission });
-        } catch (error) { sendAdmissionPublishError(response, error); }
+        } catch (error) {
+          sendAdmissionPublishError(response, error);
+          // §03.8: a terminal admit failure on a sealed train records a stop
+          // from the closed enum; unmapped (transient) failures leave the
+          // train sealed and retryable. Best-effort: the stop never masks
+          // the response above.
+          const code = failureCodeOf(error);
+          if (code !== null) {
+            void trainOperations.stopFromFailure(reviewId, code).catch(() => undefined);
+          }
+        }
         finally {
           if (activeRepositoryMutation?.id === mutationId) activeRepositoryMutation = null;
         }
@@ -1194,7 +1410,15 @@ async function main(): Promise<void> {
         try {
           const publication = await admissionPublishOperations.prepare(reviewId, await readJsonBody(request));
           sendV2Success(response, 201, { publication });
-        } catch (error) { sendAdmissionPublishError(response, error); }
+        } catch (error) {
+          sendAdmissionPublishError(response, error);
+          // §03.8: terminal publish failures (main moved, GitHub away) stop
+          // the sealed train; transient refusals leave it retryable.
+          const code = failureCodeOf(error);
+          if (code !== null) {
+            void trainOperations.stopFromFailure(reviewId, code).catch(() => undefined);
+          }
+        }
         finally {
           if (activeRepositoryMutation?.id === mutationId) activeRepositoryMutation = null;
         }

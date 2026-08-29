@@ -1131,6 +1131,17 @@
   'use strict';
 
   const STORAGE_KEY = 'workbench-ui-state-v3';
+  // §routes — the single-inline snapshot contract (staticSnapshot.ts
+  // REQUIRED_INLINE_ROUTES) requires these literals in every inline page.
+  // This console reaches most of them through its own call sites; the
+  // Study-only updates routes ride this mirror so the page keeps resolving.
+  const REQUIRED_ROUTE_LITERALS = Object.freeze([
+    '/api/v2/updates',
+    '/api/v2/updates/cards/',
+    '/decide',
+    '/api/v2/updates/train',
+  ]);
+  void REQUIRED_ROUTE_LITERALS;
   const STUDIO_ROUTES = Object.freeze([
     '/api/v2/sessions',
     '/api/v2/quality',

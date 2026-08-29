@@ -15,6 +15,7 @@ import { buildReport } from '../../eval/src/report.js';
 import {
   AdmissionError,
   DEFAULT_ADMISSION_GIT_ADAPTER,
+  classifyManifestLanes,
   previewAdmission,
   runAdmission,
   signAdmissionDecision,
@@ -165,7 +166,11 @@ function comparisonBinding(candidate: AdmissionCandidateBinding, comparison: Com
   };
 }
 
-async function previewInput(root: string, commit: string, sourceText: string, suppliedComparison?: ComparisonReport): Promise<AdmissionPreviewInput> {
+async function previewInput(root: string, commit: string, sourceText: string, suppliedComparison?: ComparisonReport): Promise<AdmissionPreviewInput & {
+  readonly candidate: AdmissionCandidateBinding;
+  readonly comparison: ComparisonReport;
+  readonly comparisonBinding: ComparisonCandidateBinding;
+}> {
   const comparison = suppliedComparison ?? await report();
   const parsedProposal = proposal(sourceText) as { proposalId: string };
   const proposalDigest = (await import('../src/proposals.js')).proposalManifestDigest(
@@ -214,13 +219,19 @@ function machineReport(expectation: AdmissionGauntletExpectation, reportPath: st
   });
 }
 
-function releaseMachineReport(preview: AdmissionPreview, rebuilt: RebuildEvidence): Uint8Array {
-  const reportPath = 'eval/.runs/admission-release-report.json';
-  const engineIdentity = {
-    engineVersion: preview.candidate.engineVersion,
-    corpusFingerprint: preview.candidate.corpusFingerprint,
-    layerFingerprint: preview.candidate.layerFingerprint,
-  };
+function releaseMachineReport(
+  preview: AdmissionPreview,
+  rebuilt: Pick<RebuildEvidence, 'descriptorSha256' | 'databaseSha256'>,
+  options: { gates?: ReturnType<typeof pass>[]; reportPath?: string; tiers?: unknown } = {},
+): Uint8Array {
+  const reportPath = options.reportPath ?? 'eval/.runs/admission-release-report.json';
+  const engineIdentity = preview.candidate === null
+    ? preview.baseIdentity!
+    : {
+      engineVersion: preview.candidate.engineVersion,
+      corpusFingerprint: preview.candidate.corpusFingerprint,
+      layerFingerprint: preview.candidate.layerFingerprint,
+    };
   const report = buildMachineReport({
     startedAt: at(-2 * HOUR_MS + 2000), finishedAt: at(-2 * HOUR_MS + 3000),
     identity: {
@@ -239,7 +250,8 @@ function releaseMachineReport(preview: AdmissionPreview, rebuilt: RebuildEvidenc
         argv: ['--require-admit', '--json', reportPath, '--release-database', 'workbench/.artifact/content.db'],
       },
     },
-    report: buildReport({ gates: GAUNTLET_GATE_ROSTER.map((gate) => pass(gate.id, gate.title, 'Rebuilt release gate passed.', undefined, { explicitTarget: true })) }),
+    report: buildReport({ gates: options.gates ?? GAUNTLET_GATE_ROSTER.map((gate) => pass(gate.id, gate.title, 'Rebuilt release gate passed.', undefined, { explicitTarget: true })) }),
+    ...(options.tiers === undefined ? {} : { tiers: options.tiers as never }),
   });
   return Buffer.from(`${JSON.stringify(report, null, 2)}\n`);
 }
@@ -269,17 +281,18 @@ function releaseReportTarget(report: GauntletMachineReport) {
 }
 
 function descriptor(preview: AdmissionPreview) {
+  const candidate = preview.candidate!;
   return {
-    formatVersion: 1, kind: 'scripture-search-candidate', cacheKey: preview.candidate.cacheKey,
-    proposalDigest: preview.proposalDigest, sourceSnapshotDigest: preview.candidate.sourceSnapshotDigest,
+    formatVersion: 1, kind: 'scripture-search-candidate', cacheKey: candidate.cacheKey,
+    proposalDigest: preview.proposalDigest, sourceSnapshotDigest: candidate.sourceSnapshotDigest,
     provenancePolicyFingerprint: '6'.repeat(64),
     base: {
-      databaseSha256: '7'.repeat(64), schemaVersion: '6', engineVersion: preview.candidate.engineVersion,
-      tokenizerVersion: 'test', corpusFingerprint: preview.candidate.corpusFingerprint,
+      databaseSha256: '7'.repeat(64), schemaVersion: '6', engineVersion: candidate.engineVersion,
+      tokenizerVersion: 'test', corpusFingerprint: candidate.corpusFingerprint,
       layerFingerprint: '8'.repeat(64), manifestFingerprint: '9'.repeat(64), provenancePolicyFingerprint: '6'.repeat(64),
     },
-    schemaVersion: '6', engineVersion: preview.candidate.engineVersion, tokenizerVersion: 'test',
-    corpusFingerprint: preview.candidate.corpusFingerprint, layerFingerprint: preview.candidate.layerFingerprint,
+    schemaVersion: '6', engineVersion: candidate.engineVersion, tokenizerVersion: 'test',
+    corpusFingerprint: candidate.corpusFingerprint, layerFingerprint: candidate.layerFingerprint,
     manifestFingerprint: '9'.repeat(64), databaseSha256: 'a'.repeat(64), databaseBytes: 1,
     logicalTableDigest: 'b'.repeat(64), tableDigests: {},
     counts: { concepts: 1, lexiconEntries: 2, editorialAnchors: 0, topicAnchors: 0, crossReferences: 0, verseTerms: 0, translationTokens: 0 },
@@ -346,7 +359,7 @@ describe('M10 controlled source admission', () => {
     expect(result.status).toBe('ADMITTED');
     expect(result.manifest?.sourceChanges[0]?.after.text).toContain('hope in God');
     expect(result.manifest?.commands.map((entry) => entry.command)).toContain('build');
-    expect(result.manifest?.gauntlet.candidateDescriptorSha256).toBe(input.candidate.descriptorSha256);
+    expect(result.manifest?.gauntlet?.candidateDescriptorSha256).toBe(input.candidate.descriptorSha256);
     expect(result.manifest?.releaseGauntlet?.descriptorSha256).toBe('c'.repeat(64));
     expect(result.manifest?.releaseGauntlet?.descriptorSha256).not.toBe(input.candidate.descriptorSha256);
     expect(result.manifest?.rollback[0]?.restoreSha256).toBe(sha256(repo.sourceText));
@@ -357,6 +370,59 @@ describe('M10 controlled source admission', () => {
     const repeated = await execute(input);
     expect(repeated.status).toBe('ALREADY_ADMITTED');
     expect(repeated.manifest?.digest).toBe(result.manifest?.digest);
+  });
+
+  it('keeps the rebuild’s tracked descriptor output OUT of the admitted tree (evidence, not change — D11 finding)', async () => {
+    // The rebuilt descriptor is not byte-stable across runs (builtAt stamp,
+    // raw SQLite bytes), so baking it into worktreeTreeHash made every
+    // publish preparation refuse tree_mismatch. It is recorded evidence
+    // (rebuiltCandidate.outputFiles) and must be restored before the
+    // admitted tree is fixed.
+    const repo = await repository();
+    await mkdir(path.join(repo.root, 'artifacts'), { recursive: true });
+    await writeFile(path.join(repo.root, 'artifacts', 'content-artifact.json'), '{"committed": true}\n');
+    await git(repo.root, ['add', '--all']);
+    await git(repo.root, ['-c', 'user.name=Admission Test', '-c', 'user.email=admission@example.test', 'commit', '-m', 'descriptor']);
+    const commit = await git(repo.root, ['rev-parse', 'HEAD']);
+    const input = await previewInput(repo.root, commit, repo.sourceText);
+    const result = await execute(input, dependencies({
+      async rebuild(worktree, preview) {
+        const rebuiltText = '{"rebuilt": "not byte-stable"}\n';
+        await writeFile(path.join(worktree, 'artifacts', 'content-artifact.json'), rebuiltText);
+        const built = descriptor(preview);
+        return {
+          status: 'REBUILT', descriptor: built, descriptorSha256: sha256(rebuiltText), databaseSha256: built.databaseSha256,
+          command: outcome('build'),
+          outputFiles: [{ path: 'artifacts/content-artifact.json', sha256: sha256(rebuiltText) }],
+        };
+      },
+    }));
+    expect(result.status).toBe('ADMITTED');
+    expect(await git(repo.root, ['ls-tree', result.manifest!.worktreeTreeHash, '--', 'artifacts/content-artifact.json']))
+      .toBe(await git(repo.root, ['ls-tree', commit, '--', 'artifacts/content-artifact.json']));
+  });
+
+  it('accepts a release report carrying the E6 tiers evidence section (D11 finding)', async () => {
+    // Every release-target gauntlet run rides the tiers section with the
+    // battery evidence; refusing it made the release-gauntlet leg reject its
+    // own honest report in the D11 shakedown.
+    const repo = await repository();
+    const input = await previewInput(repo.root, repo.commit, repo.sourceText);
+    const result = await execute(input, dependencies({
+      async verify(_worktree, preview, rebuilt) {
+        return {
+          status: 'PASSED', command: outcome('verify'),
+          releaseGauntlet: {
+            reportPath: 'eval/.runs/admission-release-report.json',
+            reportBytes: releaseMachineReport(preview, rebuilt, {
+              tiers: { schema: 'scripture-search-engine/tier-report/v1', attained: 'T0', tiers: [] },
+            }),
+            command: outcome('release-gauntlet'),
+          },
+        };
+      },
+    }));
+    expect(result.status).toBe('ADMITTED');
   });
 
   it('returns NO MEASURABLE EFFECT without decisions, worktree creation, or a manifest', async () => {
@@ -724,5 +790,409 @@ describe('M10 controlled source admission', () => {
     const names = await readdir(path.join(repo.root, 'workbench', 'admissions'));
     expect(names.filter((name) => name.endsWith('.json'))).toHaveLength(1);
     expect(left.manifest?.digest).toBe(right.manifest?.digest);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Votes-to-engine §5.3/§5.5 (Phase 2, D9): fixture-lane exemption, control-run
+// inherited-red classification, and the deferred-signing marker.
+// ---------------------------------------------------------------------------
+
+const GUARD_PROPOSAL_ID = 'hope-guard';
+
+function guardFixtureBefore(): Record<string, unknown> {
+  return { id: 'hope-gap', query: 'hope', status: 'pending', expectedTop: [{ reference: 'Psalm 42:5' }] };
+}
+
+function guardProposal(beforeText: string): unknown {
+  return {
+    schemaVersion: 1, proposalId: GUARD_PROPOSAL_ID, fixtureId: 'hope-gap', caseIds: [CASE_ID],
+    sourcePreconditions: [{ path: 'eval/golden/hope-gap.json', sha256: sha256(beforeText) }],
+    operations: [{
+      operationId: OPERATION_ID, type: 'golden-fixture-upsert', sourcePaths: ['eval/golden/hope-gap.json'],
+      provenance: { source: 'editorial', confirmed: true, reviewer: 'Guard Reviewer', evidence: 'Approved study card for the hope query.' },
+      reason: 'Bind the reviewed expectation for the demonstrated hope query.', goldenFixtureId: 'hope-gap',
+      fixture: {
+        id: 'hope-gap', query: 'hope', status: 'pending',
+        expectedTop: [{ reference: 'Psalm 42:5' }, { reference: 'Romans 8:24-25' }],
+      },
+    }],
+  };
+}
+
+async function guardRepository(): Promise<{ root: string; commit: string; fixtureText: string }> {
+  const repo = await repository();
+  const fixtureText = `${JSON.stringify(guardFixtureBefore(), null, 2)}\n`;
+  await mkdir(path.join(repo.root, 'eval', 'golden'), { recursive: true });
+  await writeFile(path.join(repo.root, 'eval', 'golden', 'hope-gap.json'), fixtureText);
+  await git(repo.root, ['add', '--all']);
+  await git(repo.root, ['-c', 'user.name=Admission Test', '-c', 'user.email=admission@example.test', 'commit', '-m', 'guard base']);
+  return { root: repo.root, commit: await git(repo.root, ['rev-parse', 'HEAD']), fixtureText };
+}
+
+function guardInput(root: string, commit: string, fixtureText: string): AdmissionPreviewInput {
+  return {
+    repoRoot: root, admittedBaseCommit: commit, expectedMainCommit: commit,
+    proposal: guardProposal(fixtureText),
+    candidate: null, comparison: null, comparisonBinding: null, gauntlet: null,
+    baseIdentity: REFERENCE,
+    now: testNow,
+    reviewedComparisonQueries: [],
+  };
+}
+
+function guardRebuild(): AdmissionDependencies['rebuild'] {
+  return async () => ({
+    status: 'REBUILT',
+    descriptor: { ...REFERENCE, databaseSha256: sha256('release database') },
+    descriptorSha256: sha256('release descriptor'),
+    databaseSha256: sha256('release database'),
+    command: outcome('build'),
+  });
+}
+
+function redGates(params?: Record<string, unknown>): ReturnType<typeof pass>[] {
+  return GAUNTLET_GATE_ROSTER.map((gate) => gate.id === 'G2-determinism'
+    ? fail(gate.id, gate.title, 'Ordering approval identity is stale.', [{
+      message: 'Ordering snapshot approval does not match the approved engine identity.',
+      subjects: ['ordering-snapshot-approval'],
+      categoryCode: 'sse.gauntlet.v1.finding.g2-determinism.ordering-approval-engine-mismatch',
+      ...(params === undefined ? {} : { params: params as never }),
+    }], undefined, { explicitTarget: true })
+    : pass(gate.id, gate.title, 'Release gate passed.', undefined, { explicitTarget: true }));
+}
+
+function guardDependencies(options: {
+  releaseGates?: ReturnType<typeof pass>[];
+  controlRun?: AdmissionDependencies['controlRun'];
+} = {}): AdmissionDependencies {
+  return dependencies({
+    rebuild: guardRebuild(),
+    async verify(_worktree, preview, rebuilt) {
+      return {
+        status: 'PASSED', command: outcome('verify'),
+        releaseGauntlet: {
+          reportPath: 'eval/.runs/admission-release-report.json',
+          reportBytes: releaseMachineReport(preview, rebuilt, { gates: options.releaseGates }),
+          command: outcome('release-gauntlet'),
+        },
+      };
+    },
+    ...(options.controlRun === undefined ? {} : { controlRun: options.controlRun }),
+  });
+}
+
+function inheritedControlRun(gates?: ReturnType<typeof pass>[]): AdmissionDependencies['controlRun'] {
+  return async (preview) => {
+    const descriptorSha256 = sha256('base descriptor');
+    const databaseSha256 = sha256('base database');
+    return {
+      reportPath: 'eval/.runs/hope-guard-control.json',
+      reportBytes: releaseMachineReport(preview, { descriptorSha256, databaseSha256 }, {
+        gates: gates ?? redGates(), reportPath: 'eval/.runs/hope-guard-control.json',
+      }),
+      descriptorSha256, databaseSha256, engineIdentity: REFERENCE,
+    };
+  };
+}
+
+describe('fixture-lane admission (votes-to-engine §5.3)', () => {
+  it('derives the two lane values from operation types alone', () => {
+    const guard = classifyManifestLanes(guardProposal('irrelevant') as never);
+    expect(guard.fixtureLane).toEqual({ operationTypes: ['golden-fixture-upsert'] });
+    expect(guard.effectExemption?.lane).toBe('fixture-lane');
+    expect(guard.effectExemption?.rationale).toContain('PR #63');
+
+    const mixed = classifyManifestLanes({
+      operations: [
+        { type: 'golden-fixture-upsert' }, { type: 'fixture-corpus-chapter-add' },
+      ],
+    } as never);
+    expect(mixed.fixtureLane).toBeNull();
+    expect(mixed.effectExemption?.lane).toBe('full-lane');
+
+    const identityMoving = classifyManifestLanes({
+      operations: [{ type: 'golden-fixture-upsert' }, { type: 'lexicon-phrase-add' }],
+    } as never);
+    expect(identityMoving.fixtureLane).toBeNull();
+    expect(identityMoving.effectExemption).toBeNull();
+  });
+
+  it('refuses candidate: null for an identity-moving manifest and partial null evidence', async () => {
+    const repo = await guardRepository();
+    const base = guardInput(repo.root, repo.commit, repo.fixtureText);
+
+    // Identity-moving manifest (lexicon op) can never take the null evidence shape.
+    await expect(previewAdmission({
+      ...base, proposal: proposal('id: hope\nlabel: Hope\nlexicon:\n  - hope\n'),
+    })).rejects.toMatchObject({ code: 'fixture_lane_required' });
+
+    // Partial nulls are a forged evidence shape, not a lane.
+    const full = await previewInput(repo.root, repo.commit, 'id: hope\nlabel: Hope\nlexicon:\n  - hope\n');
+    await expect(previewAdmission({ ...full, candidate: null })).rejects.toMatchObject({ code: 'invalid_input' });
+
+    // The base identity to reproduce is required, and no comparison review can exist.
+    await expect(previewAdmission({ ...base, baseIdentity: null })).rejects.toMatchObject({ code: 'invalid_input' });
+    await expect(previewAdmission({ ...base, reviewedComparisonQueries: ['hope'] })).rejects.toMatchObject({ code: 'invalid_input' });
+  });
+
+  it('previews the fixture lane with null evidence digests and the recorded derived exemption', async () => {
+    const repo = await guardRepository();
+    const preview = await previewAdmission(guardInput(repo.root, repo.commit, repo.fixtureText));
+    expect(preview.candidate).toBeNull();
+    expect(preview.gauntlet).toBeNull();
+    expect(preview.comparisonDigest).toBeNull();
+    expect(preview.comparisonUniverseDigest).toBeNull();
+    expect(preview.comparisonReviewDigest).toBeNull();
+    expect(preview.gauntletDigest).toBeNull();
+    expect(preview.measurableEffect).toBe(false);
+    expect(preview.baseIdentity).toEqual(REFERENCE);
+    expect(preview.fixtureLane).toEqual({ operationTypes: ['golden-fixture-upsert'] });
+    expect(preview.effectExemption).toEqual({
+      kind: 'fixture-class-effect', lane: 'fixture-lane', operationTypes: ['golden-fixture-upsert'],
+      rationale: 'fixtures are the measuring instrument, not the data being measured — the merge IS the ruling (PR #63)',
+    });
+    expect(preview.diffs).toHaveLength(1);
+    expect(preview.diffs[0]?.path).toBe('eval/golden/hope-gap.json');
+    expect(preview.diffs[0]?.changed).toBe(true);
+  });
+
+  it('admits a guard manifest past the no-measurable-effect refusal while a full-lane no-op still refuses', async () => {
+    const repo = await guardRepository();
+    const input = guardInput(repo.root, repo.commit, repo.fixtureText);
+    const result = await execute(input, guardDependencies());
+    expect(result.status).toBe('ADMITTED');
+    expect(result.manifest?.candidate).toBeNull();
+    expect(result.manifest?.comparison).toBeNull();
+    expect(result.manifest?.gauntlet).toBeNull();
+    expect(result.manifest?.baseIdentity).toEqual(REFERENCE);
+    expect(result.manifest?.effectExemption?.lane).toBe('fixture-lane');
+    expect(result.manifest?.releaseGauntlet?.verdict).toBe('ADMIT');
+    expect(result.manifest?.releaseGauntletClassification).toBeNull();
+    expect(result.manifest?.deferredSigning).toBeNull();
+
+    // The other direction of the exemption: an identity-moving manifest whose
+    // comparison shows nothing still refuses — the exemption is derived, never granted.
+    const sourceText = 'id: hope\nlabel: Hope\nlexicon:\n  - hope\n';
+    const noop = await previewInput(repo.root, repo.commit, sourceText, await report('noop'));
+    const noopPreview = await previewAdmission(noop);
+    expect(noopPreview.effectExemption).toBeNull();
+    const refused = await runAdmission({
+      ...noop, expectedPreviewDigest: noopPreview.digest, decisions: [], linkedCaseIds: [CASE_ID],
+      provenance: ['review:no-op'], dependencies: dependencies({ async rebuild() { throw new Error('must not build'); } }),
+    });
+    expect(refused.status).toBe('NO_MEASURABLE_EFFECT');
+  });
+
+  it('admits a guard manifest that CREATES its golden fixture file (the lane’s primary operation)', async () => {
+    // Found in anger by the D11 shakedown: the preview reads a missing
+    // source as empty text, so the worktree mutation plan was handed
+    // beforeSha256 = sha256('') and refused every create with stale_plan
+    // ('expected e3b0…, found missing'). A missing before must map to the
+    // plan's null (must-not-exist) precondition.
+    const repo = await guardRepository();
+    const created = {
+      schemaVersion: 1, proposalId: 'quiet-guard', fixtureId: 'quiet-gap', caseIds: [CASE_ID],
+      sourcePreconditions: [{ path: 'eval/golden/quiet-gap.json', sha256: sha256('') }],
+      operations: [{
+        operationId: OPERATION_ID, type: 'golden-fixture-upsert', sourcePaths: ['eval/golden/quiet-gap.json'],
+        provenance: { source: 'editorial', confirmed: true, reviewer: 'Guard Reviewer', evidence: 'Approved study card for the quiet query.' },
+        reason: 'Bind the reviewed guard for the demonstrated quiet query.', goldenFixtureId: 'quiet-gap',
+        fixture: {
+          id: 'quiet-gap', query: 'quiet waters', status: 'pending',
+          mustNotRank: [{ reference: 'Psalm 46:1', why: 'matched words, not meaning' }],
+        },
+      }],
+    };
+    const input = { ...guardInput(repo.root, repo.commit, repo.fixtureText), proposal: created };
+    const result = await execute(input, guardDependencies());
+    expect(result.status).toBe('ADMITTED');
+    const change = result.manifest?.sourceChanges.find((entry) => entry.path === 'eval/golden/quiet-gap.json');
+    expect(change?.before.text).toBe('');
+    expect(change?.after.text).toContain('quiet waters');
+    // The primary tree stays untouched: the create happened in the worktree only.
+    await expect(readFile(path.join(repo.root, 'eval', 'golden', 'quiet-gap.json'), 'utf8')).rejects.toThrow();
+  });
+
+  it('proves identity neutrality: a rebuild that moves any fingerprint refuses the guard admission', async () => {
+    const repo = await guardRepository();
+    const input = guardInput(repo.root, repo.commit, repo.fixtureText);
+    await expect(execute(input, dependencies({
+      async rebuild() {
+        return {
+          status: 'REBUILT',
+          descriptor: { ...REFERENCE, layerFingerprint: '0'.repeat(64), databaseSha256: sha256('moved database') },
+          descriptorSha256: sha256('moved descriptor'), databaseSha256: sha256('moved database'), command: outcome('build'),
+        };
+      },
+    }))).rejects.toMatchObject({ code: 'rebuild_identity_mismatch' });
+  });
+});
+
+describe('release-gauntlet red classification (votes-to-engine §5.5 gap 3)', () => {
+  it('admits a guard train over a red release verdict only when a verified control run reproduces every finding', async () => {
+    const repo = await guardRepository();
+    const input = guardInput(repo.root, repo.commit, repo.fixtureText);
+    const result = await execute(input, guardDependencies({
+      releaseGates: redGates(), controlRun: inheritedControlRun(),
+    }));
+    expect(result.status).toBe('ADMITTED');
+    expect(result.manifest?.releaseGauntlet?.verdict).toBe('REJECT');
+    expect(result.manifest?.releaseGauntlet?.blocking).toBe(true);
+    const classification = result.manifest?.releaseGauntletClassification;
+    expect(classification?.kind).toBe('inherited-standing-red');
+    if (classification?.kind === 'inherited-standing-red') {
+      expect(classification.controlReportPath).toBe('eval/.runs/hope-guard-control.json');
+      expect(classification.controlReportDigest).toMatch(/^[0-9a-f]{64}$/);
+      expect(classification.trainFindings).toEqual([{
+        gateId: 'G2-determinism',
+        categoryCode: 'sse.gauntlet.v1.finding.g2-determinism.ordering-approval-engine-mismatch',
+        subjects: ['ordering-snapshot-approval'],
+      }]);
+      expect(classification.controlFindings).toEqual(classification.trainFindings);
+    }
+  });
+
+  it('refuses a red guard release when the control run is clean or unavailable', async () => {
+    const repo = await guardRepository();
+    const input = guardInput(repo.root, repo.commit, repo.fixtureText);
+    await expect(execute(input, guardDependencies({
+      releaseGates: redGates(),
+      controlRun: inheritedControlRun(GAUNTLET_GATE_ROSTER.map((gate) =>
+        pass(gate.id, gate.title, 'Clean base gate.', undefined, { explicitTarget: true }))),
+    }))).rejects.toMatchObject({ code: 'blocking_gauntlet' });
+
+    await expect(execute(input, guardDependencies({ releaseGates: redGates() })))
+      .rejects.toMatchObject({ code: 'blocking_gauntlet' });
+  });
+
+  it('still refuses a red release verdict outright for a candidate-bearing admission without a marker', async () => {
+    const repo = await repository();
+    const input = await previewInput(repo.root, repo.commit, repo.sourceText);
+    await expect(execute(input, dependencies({
+      async verify(_worktree, preview, rebuilt) {
+        return {
+          status: 'PASSED', command: outcome('verify'),
+          releaseGauntlet: {
+            reportPath: 'eval/.runs/admission-release-report.json',
+            reportBytes: releaseMachineReport(preview, rebuilt, { gates: redGates() }),
+            command: outcome('release-gauntlet'),
+          },
+        };
+      },
+    }))).rejects.toMatchObject({ code: 'blocking_gauntlet' });
+  });
+});
+
+describe('deferred-signing marker (votes-to-engine §5.5 gap 2, ratified call 2)', () => {
+  const marker = {
+    kind: 'deferred-signing' as const,
+    preRegenIdentity: REFERENCE,
+    expectedPostMergeIdentity: CANDIDATE,
+    independentReviewer: 'Designated Independent Reviewer',
+    citation: 'Deferred per the standing J39 merge-first-sign-once ruling (HANDOFF.md; PR #64).',
+  };
+
+  it('validates the marker structurally: differing identities, a reviewer, and the citation', async () => {
+    const repo = await repository();
+    const input = await previewInput(repo.root, repo.commit, repo.sourceText);
+    await expect(previewAdmission({
+      ...input, deferredSigningMarker: { ...marker, expectedPostMergeIdentity: REFERENCE },
+    })).rejects.toMatchObject({ code: 'invalid_deferred_signing_marker' });
+    await expect(previewAdmission({
+      ...input, deferredSigningMarker: { ...marker, citation: 'Deferred by an unnamed convention.' },
+    })).rejects.toMatchObject({ code: 'invalid_deferred_signing_marker' });
+    const preview = await previewAdmission({ ...input, deferredSigningMarker: marker });
+    expect(preview.deferredSigningMarker).toEqual(marker);
+  });
+
+  it('waives the paired-approval refusal only when the marker matches the regenerated baseline identity', async () => {
+    const repo = await repository();
+    const probes = {
+      engineVersion: CANDIDATE.engineVersion, corpusFingerprint: CANDIDATE.corpusFingerprint, layerFingerprint: CANDIDATE.layerFingerprint,
+      observations: [{ id: 'one', top: ['A'] }],
+    };
+    const before = { ...probes, engineVersion: REFERENCE.engineVersion, layerFingerprint: REFERENCE.layerFingerprint, observations: [{ id: 'one', top: ['B'] }] };
+    await mkdir(path.join(repo.root, 'eval', 'baselines'), { recursive: true });
+    const beforeText = `${JSON.stringify(before, null, 2)}\n`;
+    await writeFile(path.join(repo.root, 'eval', 'baselines', 'probes.json'), beforeText);
+    await git(repo.root, ['add', '--all']);
+    await git(repo.root, ['-c', 'user.name=Admission Test', '-c', 'user.email=admission@example.test', 'commit', '-m', 'baseline base']);
+    const commit = await git(repo.root, ['rev-parse', 'HEAD']);
+    const input = {
+      ...(await previewInput(repo.root, commit, repo.sourceText)),
+      probeBaseline: { path: 'eval/baselines/probes.json' as const, beforeSha256: sha256(beforeText), after: probes },
+    };
+
+    // Without the marker the refusal stands in full force.
+    await expect(previewAdmission(input)).rejects.toMatchObject({ code: 'probe_approval_missing' });
+    // A marker predicting a DIFFERENT post-merge identity buys nothing.
+    await expect(previewAdmission({
+      ...input,
+      deferredSigningMarker: { ...marker, expectedPostMergeIdentity: { ...CANDIDATE, corpusFingerprint: '9'.repeat(64) } },
+    })).rejects.toMatchObject({ code: 'probe_approval_missing' });
+    // The exact recorded deferral lets the moved baseline travel unaccompanied.
+    const preview = await previewAdmission({ ...input, deferredSigningMarker: marker });
+    expect(preview.probeMovements.map((entry) => entry.probeId)).toEqual(['one']);
+    expect(preview.diffs.some((entry) => entry.kind === 'probe-approval')).toBe(false);
+  });
+
+  it('accepts a red release verdict only when every red is the marker-predicted approval finding set', async () => {
+    const repo = await repository();
+    const input = { ...(await previewInput(repo.root, repo.commit, repo.sourceText)), deferredSigningMarker: marker };
+    const predictedParams = { approvedEngine: REFERENCE, observedEngine: CANDIDATE };
+    const result = await execute(input, dependencies({
+      async verify(_worktree, preview, rebuilt) {
+        return {
+          status: 'PASSED', command: outcome('verify'),
+          releaseGauntlet: {
+            reportPath: 'eval/.runs/admission-release-report.json',
+            reportBytes: releaseMachineReport(preview, rebuilt, { gates: redGates(predictedParams) }),
+            command: outcome('release-gauntlet'),
+          },
+        };
+      },
+    }));
+    expect(result.status).toBe('ADMITTED');
+    const classification = result.manifest?.releaseGauntletClassification;
+    expect(classification?.kind).toBe('deferred-signing-predicted-red');
+    if (classification?.kind === 'deferred-signing-predicted-red') {
+      expect(classification.predictedIdentity).toEqual(REFERENCE);
+      expect(classification.findings[0]?.gateId).toBe('G2-determinism');
+    }
+    expect(result.manifest?.deferredSigning).toEqual(marker);
+  });
+
+  it('refuses marker-predicted reds that quote a foreign identity or fail outside G2/G8', async () => {
+    const repo = await repository();
+    const input = { ...(await previewInput(repo.root, repo.commit, repo.sourceText)), deferredSigningMarker: marker };
+    const historicDebt = {
+      approvedEngine: { engineVersion: '0.9.0', corpusFingerprint: '1'.repeat(64), layerFingerprint: '2'.repeat(64) },
+      observedEngine: CANDIDATE,
+    };
+    const verifyWith = (gates: ReturnType<typeof pass>[]): AdmissionDependencies => dependencies({
+      async verify(_worktree, preview, rebuilt) {
+        return {
+          status: 'PASSED', command: outcome('verify'),
+          releaseGauntlet: {
+            reportPath: 'eval/.runs/admission-release-report.json',
+            reportBytes: releaseMachineReport(preview, rebuilt, { gates }),
+            command: outcome('release-gauntlet'),
+          },
+        };
+      },
+    });
+    // The historic v1 @ 0.9.0 debt can never ride a marker.
+    await expect(execute(input, verifyWith(redGates(historicDebt)))).rejects.toMatchObject({ code: 'blocking_gauntlet' });
+    // A red without any quoted identity is unverifiable and refuses.
+    await expect(execute(input, verifyWith(redGates()))).rejects.toMatchObject({ code: 'blocking_gauntlet' });
+    // A red outside G2/G8 is never the marker's prediction.
+    const outside = GAUNTLET_GATE_ROSTER.map((gate) => gate.id === 'G4-collision'
+      ? fail(gate.id, gate.title, 'Deliberate non-approval failure.', [{
+        message: 'Collision unrelated to approvals.', subjects: ['collision'],
+        categoryCode: 'sse.gauntlet.v1.finding.g4-collision.reported',
+      }], undefined, { explicitTarget: true })
+      : pass(gate.id, gate.title, 'Release gate passed.', undefined, { explicitTarget: true }));
+    await expect(execute(input, verifyWith(outside))).rejects.toMatchObject({ code: 'blocking_gauntlet' });
   });
 });

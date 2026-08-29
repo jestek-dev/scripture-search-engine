@@ -810,11 +810,15 @@ export function parseProposalManifest(value: unknown, context?: ProposalValidati
     sourcePreconditions: preconditions,
     operations,
   };
-  operations.forEach((operation, index) => {
-    if (operation.type === 'golden-fixture-upsert' && operation.goldenFixtureId !== manifest.fixtureId) {
-      issues.push(issue('schema', `operations[${index}].goldenFixtureId`, 'must equal the proposal fixtureId.'));
-    }
-  });
+  // Per-operation fixture targeting (votes-to-engine plan §02.7, D8a): each
+  // `golden-fixture-upsert` names its own target fixture, so one manifest can
+  // carry a multi-query train. The former manifest-level equality check
+  // ("must equal the proposal fixtureId.") is deliberately gone: the
+  // top-level fixtureId is a label — set by emitters to the lexicographically
+  // first touched fixture id — no longer a constraint. Per-operation path
+  // ownership still holds (`operationPathIssues` derives each op's sole legal
+  // path from its OWN goldenFixtureId), and the in-manifest collision check
+  // already keys on per-op ids.
   issues.push(...validateProposalCollisions(manifest, context));
   if (issues.length > 0) {
     const deduplicated = [...new Map(issues.map((entry) => [`${entry.code}|${entry.path}|${entry.message}`, entry])).values()]
