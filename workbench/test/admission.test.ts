@@ -15,6 +15,7 @@ import { buildReport } from '../../eval/src/report.js';
 import {
   AdmissionError,
   DEFAULT_ADMISSION_GIT_ADAPTER,
+  WORKTREE_VERIFY_ARGS,
   classifyManifestLanes,
   previewAdmission,
   runAdmission,
@@ -1217,5 +1218,28 @@ describe('deferred-signing marker (votes-to-engine §5.5 gap 2, ratified call 2)
       }], undefined, { explicitTarget: true })
       : pass(gate.id, gate.title, 'Release gate passed.', undefined, { explicitTarget: true }));
     await expect(execute(input, verifyWith(outside))).rejects.toMatchObject({ code: 'blocking_gauntlet' });
+  });
+});
+
+describe('worktree verification command (the verify:suites split)', () => {
+  // A baseline-moving data train's worktree deliberately carries regenerated
+  // baselines with NO approval change (merge-first-sign-once, D13), so the
+  // default-gauntlet tail of the repo-root `verify` script REJECTS there on
+  // exactly the designed G2/G8 approval-staleness findings — with no report
+  // and no classification, hard-failing every data train's sign act (found
+  // in anger by the D15 sandbox ride). The admission and publish worktrees
+  // therefore run the suite half only; the gauntlet still gates via the
+  // strictly stronger RELEASE run whose reds classifyReleaseRed verifies
+  // finding-for-finding (inherited or marker-predicted, never waived).
+  it('pins the fixed worktree verification argv to the suite half of verify', () => {
+    expect([...WORKTREE_VERIFY_ARGS]).toEqual(['run', 'verify:suites']);
+  });
+
+  it('the root scripts keep the contract: verify = verify:suites + the default gauntlet, and the suite half carries no gauntlet', async () => {
+    const rootPackage = JSON.parse(
+      await readFile(path.join(process.cwd(), '..', 'package.json'), 'utf8'),
+    ) as { scripts: Record<string, string> };
+    expect(rootPackage.scripts['verify:suites']).toBe('npm run build:engine && npm run typecheck && npm run test');
+    expect(rootPackage.scripts.verify).toBe('npm run verify:suites && npm run gauntlet --');
   });
 });

@@ -146,7 +146,15 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
   await writeFile(path.join(root, 'ontology', 'concepts', 'hope.yaml'), beforeText);
   await writeFile(path.join(root, '.gitignore'), 'workbench/.state/\n');
   await writeFile(path.join(root, 'README.md'), 'base\n');
-  await writeFile(path.join(root, 'package.json'), `${JSON.stringify({ private: true, scripts: { verify: verifyScript } }, null, 2)}\n`);
+  // The publish leg invokes verify:suites (the suite half; WORKTREE_VERIFY_ARGS)
+  // and must NOT invoke the full `verify` — whose default-gauntlet tail can
+  // never be green in a worktree carrying a data train's regenerated-but-
+  // unsigned baselines (merge-first-sign-once). The fake `verify` script
+  // therefore always fails: a regression to the full script fails these tests.
+  await writeFile(path.join(root, 'package.json'), `${JSON.stringify({
+    private: true,
+    scripts: { 'verify:suites': verifyScript, verify: `${verifyScript} && node -e "process.exit(1)"` },
+  }, null, 2)}\n`);
   await git(root, ['add', '--all']);
   await git(root, ['commit', '-m', 'base']);
   await git(root, ['remote', 'add', 'origin', remote]);
@@ -863,7 +871,7 @@ describe('M14 isolated draft publication preparation', () => {
     let verifyRuns = 0;
     let crashed = false;
     const runner = new RecordingRunner(async (commandName, args) => {
-      if (path.resolve(commandName) === path.resolve(process.execPath) && args.at(-2) === 'run' && args.at(-1) === 'verify') verifyRuns += 1;
+      if (path.resolve(commandName) === path.resolve(process.execPath) && args.at(-2) === 'run' && args.at(-1) === 'verify:suites') verifyRuns += 1;
       return null;
     });
     await expect(prepareDraftPublication(input(repo, {

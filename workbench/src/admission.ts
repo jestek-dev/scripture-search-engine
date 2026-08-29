@@ -1650,11 +1650,32 @@ async function defaultRebuild(worktree: string): Promise<RebuildEvidence> {
   };
 }
 
+/**
+ * The fixed verification command run inside admission and publish worktrees:
+ * the verify script's suite half (`build:engine && typecheck && test`),
+ * WITHOUT the default-gauntlet tail the repo-root `verify` script appends.
+ * The gauntlet is not skipped at these sites — it runs immediately after as
+ * the strictly stronger RELEASE run (explicit target, so G12 executes), whose
+ * non-zero exit is tolerated only when the verified report was produced and
+ * whose reds are then CLASSIFIED — inherited via the base-commit control run
+ * (guard trains) or exactly marker-predicted (data trains) — with everything
+ * unclassified still refusing. The embedded default gauntlet had no report
+ * and no classification, so it hard-failed `npm run verify` on exactly the
+ * reds the ratified amendments exist to classify: the standing pre-D12a
+ * G2/G8 approvals red (guard trains, inherited), and the DESIGNED post-regen
+ * approval staleness of a baseline-moving data train (merge-first-sign-once:
+ * the regenerated baselines land unsigned by construction, so the worktree's
+ * default gauntlet can never be green) — found in anger by the D15 sandbox
+ * ride, where every data train's sign act died verify_failed on the two
+ * designed probe-baseline-approval findings.
+ */
+export const WORKTREE_VERIFY_ARGS = ['run', 'verify:suites'] as const;
+
 async function defaultVerify(worktree: string): Promise<VerifyEvidence> {
   const npmCli = resolveNpmCliPath();
   let command: CommandOutcome;
   try {
-    command = await fixedCommand(process.execPath, [npmCli, 'run', 'verify'], worktree);
+    command = await fixedCommand(process.execPath, [npmCli, ...WORKTREE_VERIFY_ARGS], worktree);
   } catch (error) {
     // §06.2: a failed verify is the 'verify-failed' stop, so the failure
     // must carry the verify_failed code — the generic command_failed maps

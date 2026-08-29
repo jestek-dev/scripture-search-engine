@@ -26,7 +26,8 @@
     "train:build": "tsx workbench/src/trainStageCli.ts build",
     "train:measure": "tsx workbench/src/trainStageCli.ts measure",
     "train:gauntlet": "tsx workbench/src/trainStageCli.ts gauntlet",
-    "verify": "npm run build:engine && npm run typecheck && npm run test && npm run gauntlet --"
+    "verify:suites": "npm run build:engine && npm run typecheck && npm run test",
+    "verify": "npm run verify:suites && npm run gauntlet --"
   },
   "devDependencies": {
     "tsx": "4.23.1",

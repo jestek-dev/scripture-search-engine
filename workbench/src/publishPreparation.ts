@@ -12,7 +12,7 @@ import {
   withMutationJournalLock,
   type ApplyOptions,
 } from './applyJournal.js';
-import { orderingApprovalBindingIssues, probeApprovalBindingIssues, type AdmissionDecision, type AdmissionFileDiff, type AdmissionManifest, type AdmissionPreview, type CommandOutcome } from './admission.js';
+import { orderingApprovalBindingIssues, probeApprovalBindingIssues, WORKTREE_VERIFY_ARGS, type AdmissionDecision, type AdmissionFileDiff, type AdmissionManifest, type AdmissionPreview, type CommandOutcome } from './admission.js';
 import { assertComparisonReportIntegrity, type ComparisonQueryReport, type ComparisonReport } from './comparison.js';
 import { resolveNpmCliPath } from './jobRunner.js';
 import { parseProposalManifest, proposalManifestDigest, type ProposalManifest } from './proposals.js';
@@ -944,7 +944,13 @@ async function runFixedVerify(
   manifest: AdmissionManifest,
   treeHash: string,
 ): Promise<PublishVerificationRun> {
-  const args = [resolveNpmCliPath(), 'run', 'verify'] as const;
+  // The suite half of verify only — the gauntlet's roster is covered by the
+  // admission manifest's classified release run over the SAME bytes (the
+  // tree hash is pinned), and the publish worktree, like the admission
+  // worktree, deliberately carries regenerated-but-unsigned baselines on a
+  // data train (merge-first-sign-once), so the default-gauntlet tail of
+  // `npm run verify` can never be green there. See WORKTREE_VERIFY_ARGS.
+  const args = [resolveNpmCliPath(), ...WORKTREE_VERIFY_ARGS] as const;
   const result = await commands.raw(process.execPath, args, worktree);
   if (result.exitCode !== 0) fail('verify_failed', `Fixed full verification failed: ${tail(result.stderr || result.stdout)}`);
   const body = {
@@ -999,7 +1005,11 @@ function validVerificationRun(verification: PublishVerificationRun, manifest: Ad
     && verification.manifestDigest === manifest.digest
     && verification.treeHash === manifest.worktreeTreeHash
     && path.resolve(verification.command) === path.resolve(process.execPath)
-    && canonical(verification.args) === canonical([resolveNpmCliPath(), 'run', 'verify']);
+    // The current fixed argv, or the pre-verify:suites legacy argv — stored
+    // verification evidence from journals written before the split stays
+    // valid (its run really did include the suites, plus the gauntlet tail).
+    && (canonical(verification.args) === canonical([resolveNpmCliPath(), ...WORKTREE_VERIFY_ARGS])
+      || canonical(verification.args) === canonical([resolveNpmCliPath(), 'run', 'verify']));
 }
 
 function validVerificationEvidence(
