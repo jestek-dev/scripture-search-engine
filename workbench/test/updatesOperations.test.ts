@@ -287,4 +287,50 @@ describe('updates operations (derive + decide)', () => {
     expect(after.state.decision).toBe('approved');
     expect(after.state.sealedInTrain).toBe('train-0001');
   });
+
+  it('a card consumed by a finished (live) update rests as achieved: out of the approved tally, decide refused with the finished sentence (§03.6)', async () => {
+    const ops = operations();
+    const { cards } = await ops.derive(CURRENT);
+    const guard = cards.find((card) => card.kind === 'guard')!;
+    await ops.decide(guard.cardId, { decision: 'approve', cardRevision: guard.cardRevision }, CURRENT);
+    const trains = createTrainOperations({
+      repoRoot: repo,
+      reviewer: 'jesse',
+      now: () => new Date((clock += 60_000)),
+      readMain: async () => 'a'.repeat(40),
+    });
+    const { derivationDigest } = await ops.derive(CURRENT);
+    await trains.seal(CURRENT, derivationDigest);
+
+    // While the train merely rides, the card still counts as approved and
+    // renders riding — the freeze copy is true.
+    const riding = await ops.derive(CURRENT);
+    expect(riding.tally.approved).toBe(1);
+    expect(riding.cards.find((card) => card.cardId === guard.cardId)!.state.sealedTrainLive).toBeUndefined();
+
+    // Observe the merge: the sealed manifest's fixture lands in eval/golden.
+    const registry = JSON.parse(await readFile(path.join(repo, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+      admissions: { reviewId: string; proposal: { operations: { type: string; goldenFixtureId: string; fixture: unknown }[] } }[];
+    };
+    for (const operation of registry.admissions[0]!.proposal.operations) {
+      if (operation.type !== 'golden-fixture-upsert') continue;
+      await writeFile(path.join(repo, 'eval', 'golden', `${operation.goldenFixtureId}.json`), `${JSON.stringify(operation.fixture, null, 2)}\n`);
+    }
+
+    // The card now rests as achieved: flagged live, out of the approved
+    // tally (§4.2's "approved for the next update" must not overcount).
+    const live = await ops.derive(CURRENT);
+    const shipped = live.cards.find((card) => card.cardId === guard.cardId)!;
+    expect(shipped.state.sealedInTrain).toBe('train-0001');
+    expect(shipped.state.sealedTrainLive).toBe(true);
+    expect(live.tally.approved).toBe(0);
+
+    // The freeze never lifts (consumed), and the refusal says what is true.
+    await expect(ops.decide(guard.cardId, { decision: 'park', cardRevision: shipped.cardRevision }, CURRENT))
+      .rejects.toMatchObject({
+        code: 'card_sealed',
+        status: 409,
+        message: expect.stringContaining('rode an update that finished'),
+      });
+  });
 });

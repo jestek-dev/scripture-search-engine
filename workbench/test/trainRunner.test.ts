@@ -188,6 +188,26 @@ function guardRecord(): JudgmentRecordV2 {
   });
 }
 
+/**
+ * Observes the merge for a sealed guard train: writes every fixture its
+ * registry manifest upserts into eval/golden/, exactly as the merged PR
+ * would land them — the runner then derives `live` (V5, never stored).
+ */
+async function markTrainLive(root: string, trainId: string): Promise<void> {
+  const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+    admissions: { reviewId: string; proposal: { operations: { type: string; goldenFixtureId?: string; fixture?: unknown }[] } }[];
+  };
+  const entry = registry.admissions.find((candidate) => candidate.reviewId === trainId);
+  if (entry === undefined) throw new Error(`No registry entry for ${trainId}.`);
+  for (const operation of entry.proposal.operations) {
+    if (operation.type !== 'golden-fixture-upsert') continue;
+    await writeFile(
+      path.join(root, 'eval', 'golden', `${operation.goldenFixtureId!}.json`),
+      `${JSON.stringify(operation.fixture, null, 2)}\n`,
+    );
+  }
+}
+
 afterEach(async () => {
   for (const directory of temporary.splice(0)) await rm(directory, { recursive: true, force: true });
 });
@@ -338,6 +358,74 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
       ],
     });
     expect(unmeasuredLayerAffectingOperations(paired)).toEqual([]);
+  });
+});
+
+describe('§03.6 consumed cards: a live (merged) train never re-boards', () => {
+  it('excludes consumed cards from the next seal, and refuses nothing_to_seal when only frozen cards remain', async () => {
+    const root = await makeRepo([guardRecord()]);
+    const { updates, trains } = operationsFor(root);
+    const firstCards = await approveEveryCard(updates);
+    await sealNow(updates, trains);
+    await markTrainLive(root, 'train-0001');
+    expect((await trains.train('train-0001', CURRENT)).state).toBe('live');
+
+    // Only the consumed card remains approved: the next seal refuses
+    // honestly instead of re-boarding it forever.
+    await expect(sealNow(updates, trains)).rejects.toMatchObject({ code: 'nothing_to_seal', status: 409 });
+
+    // A new approval on a DIFFERENT search seals a train that carries ONLY
+    // the new card's lines — summary, report, and manifest agree.
+    const log = path.join(root, 'workbench', 'judgments.jsonl');
+    const late = v2({
+      judgmentId: 'g-late', query: 'doers of the word', action: 'irrelevant', at: nextAt(),
+      targetId: 'WEB:19046001', diagnosis: 'lexical-noise',
+    });
+    await writeFile(log, `${await readFile(log, 'utf8')}${JSON.stringify(late)}\n`);
+    await writeFile(path.join(root, 'workbench', 'cases.jsonl'), casesFor([guardRecord(), late]));
+    const lateCards = await approveEveryCard(updates);
+    expect(lateCards).toHaveLength(1);
+
+    const second = await sealNow(updates, trains);
+    expect(second.trainId).toBe('train-0002');
+    expect(second.cardIds).toEqual(lateCards);
+    expect(second.cardIds).not.toContain(firstCards[0]);
+    expect(second.report!.lines).toHaveLength(1);
+    expect(second.report!.lines[0]).toContain('For "doers of the word"');
+    // The sealed manifest touches only the new fixture: the shipped line is
+    // not presented as a change of this update.
+    const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+      admissions: { reviewId: string; proposal: { operations: { operationId: string }[] } }[];
+    };
+    const entry = registry.admissions.find((candidate) => candidate.reviewId === 'train-0002')!;
+    expect(entry.proposal.operations.map((operation) => operation.operationId)).toEqual(['golden-fixture-upsert-doers-of-the-word']);
+  });
+
+  it('keeps the §03.6 row merge: a new call on the same search carries shipped rows forward without the consumed card riding again', async () => {
+    const root = await makeRepo([guardRecord()]);
+    const { updates, trains } = operationsFor(root);
+    await approveEveryCard(updates);
+    await sealNow(updates, trains);
+    await markTrainLive(root, 'train-0001');
+
+    const log = path.join(root, 'workbench', 'judgments.jsonl');
+    const late = v2({
+      judgmentId: 'g-same', query: 'hearing and doing', action: 'irrelevant', at: nextAt(),
+      targetId: 'WEB:59001022', diagnosis: 'lexical-noise',
+    });
+    await writeFile(log, `${await readFile(log, 'utf8')}${JSON.stringify(late)}\n`);
+    const lateCards = await approveEveryCard(updates);
+    expect(lateCards).toHaveLength(1);
+
+    const second = await sealNow(updates, trains);
+    expect(second.cardIds).toEqual(lateCards);
+    const registry = JSON.parse(await readFile(path.join(root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+      admissions: { reviewId: string; proposal: { operations: { operationId: string; fixture?: { mustNotRank: { ref: string }[] } }[] } }[];
+    };
+    const entry = registry.admissions.find((candidate) => candidate.reviewId === 'train-0002')!;
+    expect(entry.proposal.operations.map((operation) => operation.operationId)).toEqual(['golden-fixture-upsert-hearing-and-doing']);
+    // The rewritten fixture keeps the shipped guard row beside the new one.
+    expect(entry.proposal.operations[0]!.fixture!.mustNotRank.map((row) => row.ref)).toEqual(['Psalms 46:1', 'James 1:22']);
   });
 });
 

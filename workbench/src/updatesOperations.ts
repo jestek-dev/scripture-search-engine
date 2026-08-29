@@ -324,10 +324,15 @@ export function createUpdatesOperations(options: UpdatesOperationsOptions): Upda
           // reaches a terminal state — a decide here would append a line the
           // fold ignores, a control that appears to succeed and changes
           // nothing. Refuse honestly instead; the freeze lifts if the train
-          // stops (the fold clears it) and the next decide counts again.
+          // stops (the fold clears it) and the next decide counts again. A
+          // FINISHED update never releases the freeze (§03.6's consumed
+          // rule), so its refusal says what is actually true: the line
+          // already shipped.
           throw new UpdatesOperationsError(
             'card_sealed',
-            'This call is riding the current update — it is locked in until that update finishes or stops.',
+            card.state.sealedTrainLive === true
+              ? 'This call rode an update that finished — its line is on the answer sheet now. A new call on this search in Review starts a fresh card.'
+              : 'This call is riding the current update — it is locked in until that update finishes or stops.',
             409,
           );
         }

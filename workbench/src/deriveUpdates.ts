@@ -187,6 +187,15 @@ export interface CardState {
   readonly answers?: Readonly<Record<string, string>>;
   readonly declineReason?: string;
   readonly sealedInTrain?: string;
+  /**
+   * Set when the sealing train's manifest is observed LANDED — every fixture
+   * the seal wrote is present, byte-for-content, in the observed golden
+   * files (the merge happened). The card is consumed (§03.6): it rests as
+   * already achieved, never re-boards, never re-counts as "approved and
+   * waiting". Derived from the §03.2 artifact join, fail-closed: an
+   * unlocatable or unverifiable manifest leaves the card merely riding.
+   */
+  readonly sealedTrainLive?: true;
 }
 
 export interface UpdateCard {
@@ -1059,6 +1068,46 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   }
   cards.push(...converted);
 
+  // ---- 3c. Live observation (§03.6): a sealed (unstopped) guard train whose
+  // manifest LANDED — every fixture the seal wrote is present,
+  // byte-for-content, in the observed golden files — finished; its cards are
+  // consumed and rest as achieved. Same §03.2 join discipline as the stop
+  // conversion (locate, recompute the seal digest, compare), fail-closed:
+  // anything that does not verify leaves the train merely riding. Pure over
+  // the snapshot — the golden files are already inputs.
+  const goldenByPath = new Map(inputs.goldenFixtureFiles.map((file) => [file.path, file.contents]));
+  const landedTrains = new Set<string>();
+  for (const train of fold.trains) {
+    if (train.state !== 'sealed' || train.flavor !== 'guard' || train.sealed === undefined) continue;
+    const artifacts = artifactsByTrain.get(train.trainId);
+    if (artifacts?.sealedManifestJson === undefined) continue;
+    let manifest: ProposalManifest;
+    try {
+      manifest = normalizeProposalManifest(parseProposalManifest(JSON.parse(artifacts.sealedManifestJson)));
+    } catch {
+      continue;
+    }
+    const recomputedSeal = computeSealDigest({
+      judgmentIds: train.sealed.judgmentIds,
+      cardIds: train.sealed.cardIds,
+      operations: manifest.operations,
+      replayIdentity: train.sealed.replayIdentity,
+    });
+    if (recomputedSeal !== train.sealed.sealDigest) continue;
+    if (manifest.operations.length === 0) continue;
+    const landed = manifest.operations.every((operation) => {
+      if (operation.type !== 'golden-fixture-upsert') return false;
+      const contents = goldenByPath.get(`eval/golden/${operation.goldenFixtureId}.json`);
+      if (contents === undefined) return false;
+      try {
+        return canonicalJson(JSON.parse(contents)) === canonicalJson(operation.fixture);
+      } catch {
+        return false;
+      }
+    });
+    if (landed) landedTrains.add(train.trainId);
+  }
+
   // ---- 4. Fold decisions and derived defaults onto the cards.
   const finished: UpdateCard[] = cards.map((card) => {
     const decision = fold.decisions.get(card.cardId);
@@ -1070,6 +1119,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
           ...(decision.answers === undefined ? {} : { answers: decision.answers }),
           ...(decision.reason === undefined ? {} : { declineReason: decision.reason }),
           ...(decision.sealedInTrain === undefined ? {} : { sealedInTrain: decision.sealedInTrain }),
+          ...(decision.sealedInTrain !== undefined && landedTrains.has(decision.sealedInTrain) ? { sealedTrainLive: true as const } : {}),
         };
     // FM-5 parked-by-default: after a no-measurable-effect stop, a card that
     // was sealed in the stopped attempt, re-derived unchanged at the same
@@ -1133,7 +1183,9 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     card.kind !== 're-confirmation' && card.kind !== 'conflict' && card.kind !== 'needs-engineering' && card.routed === undefined);
   const tally = {
     drafted: opBearing.filter((card) => card.state.decision === 'drafted').length,
-    approved: opBearing.filter((card) => card.state.decision === 'approved' && card.parkedByDefault !== true).length,
+    // A card whose sealing train landed is achieved, not "approved and
+    // waiting" — it never re-counts (§03.6's consumed rule).
+    approved: opBearing.filter((card) => card.state.decision === 'approved' && card.parkedByDefault !== true && card.state.sealedTrainLive !== true).length,
     declined: opBearing.filter((card) => card.state.decision === 'declined').length,
     parked: opBearing.filter((card) => card.state.decision === 'parked' || card.parkedByDefault === true).length,
   };
@@ -1207,6 +1259,13 @@ export function buildUpdatesManifest(
 ): UpdatesManifestResult {
   const boarding = derivation.cards.filter((card) =>
     card.state.decision === 'approved' &&
+    // §03.6's consumed rule: a judgment is consumed exactly when it appears
+    // in a sealed train's seal event. A card frozen by a live seal —
+    // whether that train is still running or already merged — NEVER
+    // re-boards; the fold clears the freeze only when the train stops. Its
+    // shipped rows survive through the file-level row merge below without
+    // the card riding again.
+    card.state.sealedInTrain === undefined &&
     card.parkedByDefault !== true &&
     card.routed === undefined &&
     (card.kind === 'expectation' || card.kind === 'guard' || card.kind === 'guard-and-anchor' || card.kind === 'missing-passage'));
