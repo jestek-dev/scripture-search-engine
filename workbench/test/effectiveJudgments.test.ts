@@ -167,7 +167,11 @@ describe('D3 golden refactor proof', () => {
     // '/' literals and normalizes computed relatives, so forcing win32
     // relative-path semantics must leave the digest — and every plan path —
     // byte-identical to the golden.
-    const relativeSpy = vi.spyOn(path, 'relative').mockImplementation(path.win32.relative);
+    // Capture the implementation BEFORE installing the spy: on Windows the
+    // `path` module IS `path.win32`, so reading `path.win32.relative` after
+    // the spy is installed hands the spy its own mock and recurses.
+    const win32Relative = path.win32.relative.bind(path.win32);
+    const relativeSpy = vi.spyOn(path, 'relative').mockImplementation(win32Relative);
     try {
       const plan = await planJudgmentCompilation(root);
       expect(plan.digest).toBe(PRE_REFACTOR_PLAN_DIGEST);

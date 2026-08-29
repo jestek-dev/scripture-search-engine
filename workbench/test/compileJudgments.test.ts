@@ -226,9 +226,11 @@ afterEach(async () => {
 describe('compile-judgments — routing (§5)', () => {
   it('routes every judgment kind into the CorpusFixture shape, pending-first', async () => {
     const outcome = await compileJudgments(root);
+    // Plan paths are spelled with '/' on every platform (determinism is the
+    // product) — literal strings here, never a platform-native join.
     expect(outcome.fixturesWritten.map((written) => written.path).sort()).toEqual([
-      path.join('eval', 'golden', 'hearing-and-doing.json'),
-      path.join('eval', 'golden', 'shelter-in-the-storm.json'),
+      'eval/golden/hearing-and-doing.json',
+      'eval/golden/shelter-in-the-storm.json',
     ]);
 
     const fixture = await readGolden('hearing-and-doing');
@@ -561,7 +563,8 @@ describe('compile-judgments — determinism and ownership', () => {
     });
     await writeV2History([irrelevant, helpful]);
     const outcome = await compileJudgments(root);
-    expect(outcome.fixturesRemoved).toEqual([path.join('eval', 'golden', 'remove-obsolete-fixture.json')]);
+    // Plan paths are '/' on every platform; expect the literal spelling.
+    expect(outcome.fixturesRemoved).toEqual(['eval/golden/remove-obsolete-fixture.json']);
     await expect(readFile(goldenPath('remove-obsolete-fixture'))).rejects.toThrow();
   });
 
