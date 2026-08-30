@@ -1,8 +1,9 @@
 /**
  * MS-6 verification: the workflow is workflow_dispatch-only, fails closed
- * on unmet preconditions (currently HONESTLY unmet: no terminus mint for
- * this engine, no J43 signature), keeps AI grading out of CI, and the
- * precondition CLI exits non-zero with the not-applicable reasons.
+ * on unmet preconditions (2026-08-30 honest state: the v0.14.0 descriptor
+ * is committed so the terminus mint exists, but J43 has still signed
+ * nothing), keeps AI grading out of CI, and the precondition CLI exits
+ * non-zero with the not-applicable reasons.
  */
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -58,15 +59,17 @@ describe('mega-sweep.yml shape', () => {
 });
 
 describe('certified preconditions (honest current state)', () => {
-  it('reports both preconditions unmet with not-applicable reasons', () => {
+  it('reports the terminus precondition met and J43 numbers unmet', () => {
     const findings = checkCertifiedPreconditions();
     const byName = new Map(findings.map((finding) => [finding.name, finding]));
     const terminus = byName.get('terminus-identity')!;
     const numbers = byName.get('j43-numbers')!;
-    // The committed descriptor pins an older engine (no terminus mint yet)
-    // and J43 has signed nothing: both must be honest failures.
-    expect(terminus.ok).toBe(false);
-    expect(terminus.reason).toMatch(/not-applicable/);
+    // 2026-08-30: the v0.14.0 descriptor is committed, so the terminus mint
+    // exists and the identity precondition is honestly MET. J43 has still
+    // signed nothing (every sweep-block value in eval/budgets.json is null),
+    // so the numbers precondition must remain an honest failure.
+    expect(terminus.ok).toBe(true);
+    expect(terminus.reason).toMatch(/committed descriptor pins engineVersion/);
     expect(numbers.ok).toBe(false);
     expect(numbers.reason).toMatch(/not-applicable.*J43/);
   });
