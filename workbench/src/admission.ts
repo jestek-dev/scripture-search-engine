@@ -1930,13 +1930,26 @@ async function assertCleanAdmissionWorktree(
   return inspection.commands;
 }
 
+/**
+ * The one red predicate classification uses — the SAME shape as the blocking
+ * predicate in `parseGauntletBytes`: `fail` is red, and a required gate that
+ * did not run (`not-applicable`) is red, but a required gate's `warn` is the
+ * ADMIT_WITH_WARNINGS shape — worth reading, never a block, so never a red
+ * to classify. (The D15 shakedown caught the drift: G3-golden's standing
+ * advisory warn — pending fixtures — read as an unpredicted red here while
+ * the blocking predicate correctly tolerated it.)
+ */
+function isRedGate(gate: MachineGate, roster: (typeof GAUNTLET_GATE_ROSTER)[number]): boolean {
+  return gate.status === 'fail'
+    || (roster.applicability === 'required' && gate.status !== 'pass' && gate.status !== 'warn');
+}
+
 /** Projects a report's failing gates to the fields verification checks. */
 function failingRedFindings(gates: readonly MachineGate[]): GauntletRedFinding[] {
   const findings: GauntletRedFinding[] = [];
   gates.forEach((gate, index) => {
     const roster = GAUNTLET_GATE_ROSTER[index]!;
-    const failing = gate.status === 'fail' || (roster.applicability === 'required' && gate.status !== 'pass');
-    if (!failing) return;
+    if (!isRedGate(gate, roster)) return;
     if (gate.findings.length === 0) {
       // A failing gate with no findings still counts as one red, so a
       // finding-free failure can never vacuously pass the inheritance check.
@@ -1984,8 +1997,7 @@ function markerPredictionIssues(gates: readonly MachineGate[], marker: DeferredS
   const issues: string[] = [];
   gates.forEach((gate, index) => {
     const roster = GAUNTLET_GATE_ROSTER[index]!;
-    const failing = gate.status === 'fail' || (roster.applicability === 'required' && gate.status !== 'pass');
-    if (!failing) return;
+    if (!isRedGate(gate, roster)) return;
     if (!DEFERRED_SIGNING_GATES.has(gate.gate)) {
       issues.push(`${gate.gate} is red outside the marker's G2/G8 prediction.`);
       return;

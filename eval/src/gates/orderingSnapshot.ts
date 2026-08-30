@@ -146,11 +146,27 @@ function isReviewDate(value: unknown): value is string {
   return new Date(`${value}T00:00:00.000Z`).toISOString().slice(0, 10) === value;
 }
 
-function approvalFinding(category: string, message: string): GateFinding {
+/**
+ * When the approval parsed far enough to name the engine identity it bound,
+ * every *-mismatch finding quotes that identity in `params` (flat, additive:
+ * the machine report's params policy). The admission classifier's deferred-
+ * signing marker check verifies the quoted identity against the marker's
+ * recorded pre-regen identity — a mismatch finding that quotes no identity
+ * cannot be classified and blocks (which is the point: it keeps an
+ * unpredicted staleness from riding the marker's exemption).
+ */
+function approvalFinding(category: string, message: string, approvedEngine?: OrderingEngineIdentity): GateFinding {
   return {
     categoryCode: `sse.gauntlet.v1.finding.g2-determinism.${category}`,
     message,
     subjects: ['ordering-snapshot-approval'],
+    ...(approvedEngine === undefined ? {} : {
+      params: {
+        engineVersion: approvedEngine.engineVersion,
+        corpusFingerprint: approvedEngine.corpusFingerprint,
+        layerFingerprint: approvedEngine.layerFingerprint,
+      },
+    }),
   };
 }
 
@@ -313,22 +329,24 @@ export function validateOrderingSnapshotApproval(input: {
     const evidence = approval['evidence'] as { readonly path: string; readonly sha256: string };
     if (input.evidenceSha256 === null) {
       findings.push(approvalFinding('ordering-approval-evidence-mismatch',
-        `Ordering snapshot approval evidence ${evidence.path} is missing or unreadable.`));
+        `Ordering snapshot approval evidence ${evidence.path} is missing or unreadable.`,
+        approval['engine'] as OrderingEngineIdentity));
     } else if (input.evidenceSha256 !== evidence.sha256) {
       findings.push(approvalFinding('ordering-approval-evidence-mismatch',
-        `Ordering snapshot approval evidence ${evidence.path} does not match the approved review-record digest.`));
+        `Ordering snapshot approval evidence ${evidence.path} does not match the approved review-record digest.`,
+        approval['engine'] as OrderingEngineIdentity));
     }
   } else {
     return [approvalFinding('ordering-approval-malformed', 'Ordering snapshot approval does not declare a supported approval schema.')];
   }
 
+  const approvalEngine = approval['engine'] as OrderingEngineIdentity;
   if (approval['snapshotSha256'] !== input.snapshotSha256) {
-    findings.push(approvalFinding('ordering-approval-snapshot-mismatch', 'Ordering snapshot bytes differ from the approved snapshot digest.'));
+    findings.push(approvalFinding('ordering-approval-snapshot-mismatch', 'Ordering snapshot bytes differ from the approved snapshot digest.', approvalEngine));
   }
   if (approval['probeListsSha256'] !== input.probeListsSha256) {
-    findings.push(approvalFinding('ordering-approval-probe-lists-mismatch', 'Ordering snapshot probe lists differ from the approved probe-lists digest.'));
+    findings.push(approvalFinding('ordering-approval-probe-lists-mismatch', 'Ordering snapshot probe lists differ from the approved probe-lists digest.', approvalEngine));
   }
-  const approvalEngine = approval['engine'] as OrderingEngineIdentity;
   const triples: readonly [keyof OrderingEngineIdentity, string, string][] = [
     ['engineVersion', approvalEngine.engineVersion, input.engine.engineVersion],
     ['corpusFingerprint', approvalEngine.corpusFingerprint, input.engine.corpusFingerprint],
@@ -336,7 +354,7 @@ export function validateOrderingSnapshotApproval(input: {
   ];
   for (const [field, approved, observed] of triples) {
     if (approved !== observed || input.snapshot[field] !== observed) {
-      findings.push(approvalFinding('ordering-approval-engine-mismatch', `Ordering snapshot ${field} does not match the approved engine identity.`));
+      findings.push(approvalFinding('ordering-approval-engine-mismatch', `Ordering snapshot ${field} does not match the approved engine identity.`, approvalEngine));
     }
   }
   return findings;
