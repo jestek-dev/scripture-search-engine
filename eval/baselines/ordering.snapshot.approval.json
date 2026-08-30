@@ -1,14 +1,28 @@
 {
-  "schema": "scripture-search-engine/ordering-snapshot-approval/v1",
-  "snapshotSha256": "a1b6c521fc3feac657a2b589757e567bcb25d14fb668d0a725167ff2adf361f9",
-  "probeListsSha256": "bb88765d2918e4e90e4197ed2392e714101ae59d61fa362f6339d3c4005eb6f9",
+  "schema": "scripture-search-engine/ordering-snapshot-approval/v2",
+  "snapshotSha256": "15607e856dd6b59a8b8e3c12efa98360e927b06d428f665af4fdcf4e8ff551ce",
+  "probeListsSha256": "98247ceef7fc6b20978be9d61e6ad1af412beae85eef2260a98e00d24f1964f7",
   "engine": {
-    "engineVersion": "0.9.0",
-    "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
-    "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a"
+    "engineVersion": "0.14.0",
+    "corpusFingerprint": "6450b7d79c8c7e6254384c628efd63b3baed91fe49f351049f336ac2e782db33",
+    "layerFingerprint": "9a11fd56edd7511bc7139db642dee26c19e5d4ce4456ed11bdc99b8bf181b8c5"
   },
-  "reviewer": "project owner (bootstrap ordering snapshot, approved by merging PR-A)",
-  "reviewedAt": "2026-08-17",
-  "rationale": "Bootstrap ordering snapshot: pins every probe's full default page at engine 0.9.0 with the re-pinned source fingerprints, matching the identity of the independently approved G8 probe baseline. No prior snapshot exists, so priorProvenance is null; from the next regeneration onward it must name the merge-base blob.",
-  "priorProvenance": null
+  "reviewerName": "Jesse",
+  "reviewerContact": "jestek@gmail.com",
+  "independence": "Under review: the regenerated probes.json and ordering.snapshot.json binding engine 0.14.0. I did not author these files or the data changes behind them — they were produced by the project's tooling; I reviewed and merged each contributing PR myself.\"",
+  "evidence": {
+    "path": "docs/reviews/2026-08-29-j39-baseline-signing.md",
+    "sha256": "609eb3c4b876aedc553627f62566cec33fc89f6ba91b2c5af4f2a0706e3cd852"
+  },
+  "reviewedAt": "2026-08-29",
+  "rationale": "he movement matches the intended full-Bible corpus expansion and concept-pack additions. Every contributing change was fixture-gated, gauntlet-admitted, and merged by me.",
+  "priorProvenance": {
+    "snapshotGitBlobSha1": "93d0e2573ac52dcb90f504f7023ec2c02ff71523",
+    "probeListsSha256": "bb88765d2918e4e90e4197ed2392e714101ae59d61fa362f6339d3c4005eb6f9",
+    "engine": {
+      "engineVersion": "0.9.0",
+      "corpusFingerprint": "60b7f88879866bdd50f5560c2bbd5334c869358383fba5179183a9737b7c27ed",
+      "layerFingerprint": "b3ac103348f7f6fe43977bae9c010c51ef0162a755c7644b34e7405c6416e51a"
+    }
+  }
 }
