@@ -219,6 +219,12 @@ test('D14: a 409 stale sign renders the reload line with a fresh code and re-pre
   await page.goto(origin);
   await expect(page.locator('#search-input')).toBeVisible();
   await openUpdates(page);
+  // Let the ORIGINAL view render before the mock advances: openUpdates only
+  // awaits screen visibility, so without this the initial train-view GET can
+  // settle after the swap below and re-render the panel with the fresh 'ef'
+  // digest — the 'cdcd' input then never matches and the button stays
+  // disabled (the race behind the old ~1/3 flake).
+  await expect(page.locator('#train-sign-code')).toHaveText('cdcd cdcd cdcd');
 
   // The report moved server-side: the fresh view carries a NEW digest.
   mock.trainView = dataTrainView('ready', { report: dataReport({ digest: 'ef'.repeat(32) }) });
