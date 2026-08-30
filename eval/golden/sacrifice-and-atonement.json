@@ -1,0 +1,41 @@
+{
+  "id": "sacrifice-and-atonement",
+  "query": "atonement in the old testament",
+  "status": "active",
+  "additionalQueries": [
+    "sin offering meaning"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 1 (Theme A, 6 requesting books). Deferred",
+    "through batches 1-6 because every distinctive anchor (Lev 16; 17:11;",
+    "Exod 29-30; Num; Deut 21; Ezek 43/45; 2 Chr 29) was outside the",
+    "211-chapter fixture corpus; all now present in the 31,098-verse bed.",
+    "OT-ritual register kept distinct from the-cross (NT atonement) exactly",
+    "as the review's why demands: 'the conventions bar reading it back onto",
+    "OT ritual'. the-cross keeps bare 'atonement' (its live lexicon entry).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'atonement in the old testament' answered ENTIRELY by the-cross NT",
+    "anchors (Rom 5:8, 1 John 4:10, 1 Cor 15:3, Isa 53:5 ranks 1-6) — the",
+    "read-back class; Lev 17:11 and Lev 16 nowhere in the top 10.",
+    "'sin offering meaning' answered by sin's wages anchors (Rom 6:23,",
+    "John 8:34) plus Heb 10:18 token luck — no OT ritual text with a chip."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Leviticus 17:11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Sacrifice and atonement"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Leviticus 16:20-22",
+    "Leviticus 16:29-30",
+    "Exodus 30:10",
+    "Numbers 15:25"
+  ],
+  "coversConcepts": [
+    "sacrifice-and-atonement"
+  ]
+}

@@ -36,6 +36,14 @@ export interface InboxSourceInputs {
   readonly currentArtifact: CaseArtifactIdentity;
   readonly gauntletReport?: unknown;
   readonly candidateRegressions?: readonly CandidateRegressionSeed[];
+  /**
+   * `{query, at}` of every judgment line pinned in the closed legacy
+   * migration manifest (workbench/legacy/migration-manifest.json). Phase 1
+   * (§07.2): those lines surface only as the legacy re-confirmation card on
+   * the Updates screen, so the stale-judgment source skips them — display
+   * routing only; the lines stay effective in the judgment log.
+   */
+  readonly legacyPinnedJudgments?: readonly { readonly query: string; readonly at: string }[];
   readonly now?: Date;
 }
 
@@ -162,8 +170,10 @@ export function buildInboxSeeds(input: InboxSourceInputs): readonly InboxSeed[] 
     });
   }
 
+  const legacyPinned = new Set((input.legacyPinnedJudgments ?? []).map((pin) => `${pin.query}\n${pin.at}`));
   for (const judgment of input.judgments) {
     if (sameIdentity(judgment, input.currentArtifact)) continue;
+    if (legacyPinned.has(`${judgment.query}\n${judgment.at}`)) continue;
     candidates.push({
       id: suggestionId('stale-judgment', judgment.query, judgment.at),
       kind: 'suggestion',

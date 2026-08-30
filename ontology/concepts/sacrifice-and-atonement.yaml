@@ -1,0 +1,91 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme A row, 6 requesting books: Exodus, Leviticus,
+# Numbers, Deuteronomy, Ezekiel, 2 Chronicles). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR. Deferred through batches 1-6:
+# every distinctive anchor was outside the 211-chapter fixture corpus.
+#
+# REGISTER: OT sacrificial ritual — the sin offering, the Day of
+# Atonement, blood-makes-atonement. the-cross is the NT atonement
+# concept and the conventions bar reading it back onto OT ritual (the
+# review's own why). the-cross KEEPS bare "atonement" (its live lexicon
+# entry since 2026-08-08); this pack carries only multi-word OT-ritual
+# phrasings, so the bare query still reaches the NT teaching while the
+# OT-ritual phrasings reach the ritual texts. Cross-related so each
+# surfaces the other as weak evidence — the NT reading is a related
+# edge, never a claimed fulfillment adjudication.
+#
+# BOUNDARIES: appointed-feasts keeps Lev 23:1-44 (the Day of Atonement
+# CALENDAR verses 23:26-32 live inside its whole-chapter anchor); this
+# pack anchors the Lev 16 ritual itself — disjoint. passover keeps
+# Exod 12 and Lev 23:4-8. priesthood keeps the office texts (its
+# Hebrews high-priest merge note anticipated this row; cross-related).
+# confession-of-sin (forgiveness-of-sins extension) keeps Lev 5:5 /
+# 16:21's confession register — this pack anchors 16:20-22 for the
+# scapegoat bearing, recorded there as a span sibling (the two claims
+# are different registers of the same scene).
+#
+# TOKENIZER NOTE (G-4): "the scapegoat" collapses to bare `scapegoat`
+# (a deliberate one-token trigger — the word people type for Lev 16:22,
+# absent from WEB bytes, colliding with no concept; collapse row
+# recorded). No bare "sacrifice"/"offering"/"atonement" (inventory
+# skips with reasons — the first two are corpus-wide common words, the
+# third is the-cross's).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist describes what the texts say the offerings did; it does not
+# adjudicate atonement theories, OT-NT typology, or any communion
+# doctrine.
+id: sacrifice-and-atonement
+label: Sacrifice and atonement
+lexicon:
+  - atonement in the old testament
+  - day of atonement
+  - sin offering
+  - guilt offering
+  - blood makes atonement
+  - the scapegoat
+  - why did god require sacrifices
+anchors:
+  # "For the life of the flesh is in the blood. I have given it to you
+  # on the altar to make atonement for your souls; for it is the blood
+  # that makes atonement by reason of the life." (WEB, in corpus). The
+  # keystone — the Torah's own statement of what sacrifice is for.
+  - ref: Leviticus 17:11
+    sources: [editorial]
+    weight: 1.0
+  # "Aaron shall lay both his hands on the head of the live goat, and
+  # confess over him all the iniquities of the children of Israel...
+  # The goat shall carry all their iniquities on himself to a solitary
+  # land" (WEB, in corpus). The scapegoat. (16:21's confession clause
+  # is confession-of-sin's register — span sibling, recorded there.)
+  - ref: Leviticus 16:20-22
+    sources: [editorial]
+    weight: 0.95
+  # "for on this day shall atonement be made for you, to cleanse you.
+  # You shall be clean from all your sins before the LORD." (WEB, in
+  # corpus). The Day of Atonement's own summary.
+  - ref: Leviticus 16:29-30
+    sources: [editorial]
+    weight: 0.9
+  # "Aaron shall make atonement on its horns once in the year; with
+  # the blood of the sin offering of atonement" (WEB, in corpus).
+  - ref: Exodus 30:10
+    sources: [editorial]
+    weight: 0.8
+  # "The priest shall make atonement for all the congregation of the
+  # children of Israel, and they shall be forgiven... their sin
+  # offering before the LORD" (WEB, in corpus). Atonement for
+  # unintentional sin.
+  - ref: Numbers 15:25
+    sources: [editorial]
+    weight: 0.75
+related:
+  - the-cross
+  - passover
+  - priesthood
+  - appointed-feasts
+  - forgiveness-of-sins
+  - clean-and-unclean
+sources: [editorial]

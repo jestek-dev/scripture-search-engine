@@ -1,0 +1,44 @@
+{
+  "id": "death-and-burial",
+  "query": "funerals in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "burial in the bible"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 22 (Theme F, 7 requesting books). Deferred",
+    "because only 1 Sam 31:11-13 of the whole row was in corpus — the",
+    "burial-practice register was unmintable.",
+    "Two-registers-vs-mortality decision (batch 4) executed: mortality",
+    "keeps the you-are-dust teaching register (its lexicon and anchors",
+    "untouched); this pack is the PRACTICE register — burial charges, the",
+    "family grave, dying well (Ecclesiastes' own recorded decline from",
+    "this row honored: its material stays mortality's).",
+    "serious-illness-and-dying keeps bare death and the death-of-a-",
+    "believer register (no bare death/die/funeral tokens here — inventory",
+    "skips with reasons).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'funerals in the bible' pure preached-vocabulary noise (Matt 11:17",
+    "flute-players, Deut 14:1); 'burial in the bible' token scatter",
+    "(Matt 27:66, Heb 11:9) — no burial narrative with a curated home."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Genesis 49:29-31",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Death and burial"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "John 19:38-42",
+    "Luke 23:50-53",
+    "1 Samuel 31:11-13",
+    "Deuteronomy 34:5-6",
+    "Genesis 50:24-26"
+  ],
+  "coversConcepts": [
+    "death-and-burial"
+  ]
+}

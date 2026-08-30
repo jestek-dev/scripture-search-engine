@@ -1,0 +1,43 @@
+{
+  "id": "wholehearted-devotion",
+  "query": "wholehearted devotion",
+  "status": "active",
+  "additionalQueries": [
+    "divided heart"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 18 (Theme E, 2 requesting books: 1 Kings,",
+    "1 Chronicles). DESIGN-RESOLVED in batch 5 (recorded in loving-god.yaml,",
+    "seeking-god.yaml, and the ledger): whole-heart vocabulary lands on",
+    "loving-god + seeking-god; wholehearted-devotion resolves as their",
+    "LEXICON+ANCHOR EXTENSION, not a third id. Executed here (reversible):",
+    "loving-god gains the devotion entries and the kings' measuring-rod",
+    "anchors (1 Kgs 8:61; 11:4; Ps 86:11); seeking-god's existing 'seek",
+    "him with all your heart' entry and 1 Chr 28:9 anchor already carry",
+    "its half — no change there beyond the cross-note.",
+    "1 Kgs 18:21 ('halting between two opinions') stays idolatry's",
+    "anchor, exactly as the batch-3 deferral recorded.",
+    "Measured gap before the extension (2026-08-27, pre-pack run):",
+    "'wholehearted devotion' translation-variant scatter, ALL CHIPLESS",
+    "(1 Kgs 8:23, 2 Kgs 20:3, 1 Chr 28:9, 29:19); 'divided heart'",
+    "Hos 10:2 rank 1 chipless token luck, then Gen 1:4 light-dividing",
+    "noise."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Kings 8:61",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Loving God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 86:11",
+    "1 Kings 11:4",
+    "Hosea 10:2"
+  ],
+  "coversConcepts": [
+    "loving-god"
+  ]
+}

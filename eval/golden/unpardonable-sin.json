@@ -5,7 +5,7 @@
     "unforgivable sin",
     "blasphemy against the holy spirit"
   ],
-  "status": "pending",
+  "status": "active",
   "note": [
     "INNER-LIFE FIXTURE (cluster B draft, 2026-08-18). Fixtures-first for a",
     "future blasphemy-against-the-spirit concept. BLOCKED ON CORPUS: none of",
@@ -29,7 +29,21 @@
     "for sins… a fearful expectation of judgment') — serving it to an",
     "anxious searcher as if it named their case is the sense-inverted",
     "pairing this family exists to prevent. It IS in the fixture corpus, so",
-    "that assertion can already fail."
+    "that assertion can already fail.",
+    "",
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27):",
+    "the naming passages are now in corpus; the pack lands in this PR per",
+    "this fixture's own activation note (concept + chapters + coversConcepts",
+    "together), honoring the anxious-searcher guard: the pack locates and",
+    "never adjudicates; the pastoral hand-off is the related",
+    "forgiveness-of-sins link; Heb 10:26-27 is NOT anchored (it stays",
+    "backsliding's, and no related edge to backsliding exists here, so the",
+    "mustNotRank guard is protected by design). Flipped active in this PR",
+    "after measurement.",
+    "Ref updated at pack authoring (pending fixture, never active): Mark",
+    "3:28-29 -> 3:28-30 — the anchor span includes v30, the narrator's own",
+    "reason ('because they said, \"He has an unclean spirit\"'), which the",
+    "review's row quotes as the register's key."
   ],
   "expectedTop": [
     {
@@ -39,7 +53,7 @@
       "requiredReasonLabel": "Theme: Blasphemy against the Spirit"
     },
     {
-      "reference": "Mark 3:28-29",
+      "reference": "Mark 3:28-30",
       "withinTop": 5
     }
   ],
@@ -52,5 +66,8 @@
       "reference": "Hebrews 10:26-27",
       "why": "'There remains no more a sacrifice for sins… a fearful expectation of judgment' — a warning passage about willful apostasy, not a definition of the unpardonable sin; served to an anxious 'have I committed it' searcher it reads as their verdict. It ranks honestly for apostasy/warning queries."
     }
+  ],
+  "coversConcepts": [
+    "blasphemy-against-the-spirit"
   ]
 }

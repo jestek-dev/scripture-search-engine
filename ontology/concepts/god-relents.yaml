@@ -1,0 +1,97 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme C row, requesting book: Jeremiah; the review's
+# own flag adds Jonah 3-4 and Joel 2:13-14). Adopted as display
+# vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11); ENGINE
+# admission only by his merge of this PR. Deferred through batches 1-6:
+# Jer 18/26, Jonah 3-4, Joel 2 all corpus-blocked; the carried gist
+# care and keep-separate cross-note execute here.
+#
+# GIST CARE (carried verbatim from the deferral): this is the
+# CONDITIONAL-PROPHECY pattern — "if that nation... turns from their
+# evil, I will repent of the evil that I thought to do" — never divine
+# fickleness. The pack reports the texts' own pattern; it harmonizes
+# nothing.
+#
+# KEEP-SEPARATE (recorded cross-note, executed): gods-unchanging-nature
+# stays untouched and both witnesses stand — Num 23:19 / Mal 3:6 AND
+# Jer 18:7-10 / Jonah 3:10 are all described, adjudicated by NEITHER
+# pack (the hardness-of-heart both-statements precedent). On "does god
+# change his mind" the two packs' anchors legitimately share the list.
+# Its active fixture ("does god change" -> Mal 3:6 within 10) verified
+# undisturbed: this pack's entries never fire on that query (entry
+# tokens are supersets).
+#
+# BOUNDARIES: Jonah 4:2 stays with gods-compassion-for-outsiders (same
+# PR) — the disjoint Jonah split recorded in both files: this pack
+# takes 3:10 (the relenting), that pack 4:2/4:10-11 (the compassion
+# argument). slow-to-anger keeps the Exod 34:6-7 formula family;
+# Joel 2:13 is anchored HERE for its final clause ("relents from
+# sending calamity") with the overlap recorded — slow-to-anger's
+# in-corpus anchors (Ps 86:15; 103:8) are disjoint verses.
+# Exod 32:14 is anchored as the narrative fact (WEB wording "turned
+# away from the evil" — no relent token; the anchor is honest to the
+# event, the lexicon never claims the wording).
+#
+# TOKENIZER NOTE (G-4): "god relents" collapses to bare `relent`
+# ("god" is NOT a stopword — verified two significant tokens; no
+# collapse). No single-token entries.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack describes the conditional-prophecy pattern and adjudicates no
+# doctrine of immutability.
+id: god-relents
+label: God relents
+lexicon:
+  - god relents
+  - does god change his mind
+  - god relented
+  - god repents of evil
+  - conditional prophecy
+anchors:
+  # "If that nation, concerning which I have spoken, turns from their
+  # evil, I will repent of the evil that I thought to do to them."
+  # (WEB, in corpus). The potter's-house statement of the pattern —
+  # the keystone.
+  - ref: Jeremiah 18:7-10
+    sources: [editorial]
+    weight: 1.0
+  # "God saw their works, that they turned from their evil way. God
+  # relented of the disaster which he said he would do to them, and he
+  # didn't do it." (WEB, in corpus). Nineveh — the pattern narrated.
+  # (Jonah 4:2/4:10-11 stay gods-compassion-for-outsiders', same PR.)
+  - ref: Jonah 3:10
+    sources: [editorial]
+    weight: 0.95
+  # "Tear your heart and not your garments... for he is gracious and
+  # merciful, slow to anger... and relents from sending calamity."
+  # (WEB, in corpus). Anchored for the final clause; the formula
+  # family stays slow-to-anger's (disjoint in-corpus anchors).
+  - ref: Joel 2:13
+    sources: [editorial]
+    weight: 0.85
+  # "It may be they will listen... that I may relent from the evil
+  # which I intend to do to them" (WEB, in corpus). The temple sermon
+  # offering the condition.
+  - ref: Jeremiah 26:3
+    sources: [editorial]
+    weight: 0.8
+  # "So the LORD turned away from the evil which he said he would do
+  # to his people." (WEB, in corpus — WEB says "turned away", not
+  # "relented"; the anchor is the narrative fact after Moses'
+  # intercession).
+  - ref: Exodus 32:14
+    sources: [editorial]
+    weight: 0.8
+  # "The LORD relented concerning this. 'It shall not be,' says the
+  # LORD." (WEB, in corpus). Amos's visions — intercession answered.
+  - ref: Amos 7:3
+    sources: [editorial]
+    weight: 0.7
+related:
+  - gods-unchanging-nature
+  - repentance
+  - gods-compassion-for-outsiders
+  - slow-to-anger
+  - prayer
+sources: [editorial]

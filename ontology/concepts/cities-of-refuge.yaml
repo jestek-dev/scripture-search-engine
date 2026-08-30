@@ -1,0 +1,63 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme G row 25 (4 requesting books: Joshua, Exodus, Numbers,
+# Deuteronomy). Deferred because Josh 20, Exod 21:13, Num 35 and
+# Deut 4:41-43 / 19 were ALL absent.
+#
+# The standing MISROUTE WARNING honored: refuge-in-trouble (the Psalm
+# God-is-my-refuge register) and refuge-and-justice-for-the-oppressed
+# (the abuse-crisis pastoral register) are adjacent but WRONG for this
+# lookup query — tagging Josh 20 with either would misroute their
+# pastoral queries. So the lexicon-extension either/or is DECIDED as a
+# narrow MINT (reversible): neither pastoral pack touched, zero shared
+# phrases — every entry here is institution-qualified ("cities of
+# refuge" is two-token and cannot fire on bare refuge queries), and no
+# related edge points at either pastoral pack (a weak edge would still
+# leak Psalm anchors into a civil-law lookup and vice versa).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the institution in the text's own terms.
+id: cities-of-refuge
+label: Cities of refuge
+lexicon:
+  - cities of refuge
+  - city of refuge
+  - avenger of blood
+  - accidental killing in the bible
+anchors:
+  # "Assign the cities of refuge... that the man slayer who kills any
+  # person accidentally or unintentionally may flee there. They shall
+  # be to you for a refuge from the avenger of blood." (WEB, in
+  # corpus). The command executed — name and purpose in one sentence.
+  - ref: Joshua 20:2-3
+    sources: [editorial]
+    weight: 1.0
+  # "then you shall appoint for yourselves cities to be cities of
+  # refuge... that the man slayer not die until he stands before the
+  # congregation for judgment." (WEB, in corpus). The institution's
+  # legal core: refuge pending judgment, not escape from it.
+  - ref: Numbers 35:11-12
+    sources: [editorial]
+    weight: 0.9
+  # "but not if it is unintentional, but God allows it to happen; then
+  # I will appoint you a place where he shall flee." (WEB, in corpus).
+  # The seed text — the appointed place promised at Sinai.
+  - ref: Exodus 21:13
+    sources: [editorial]
+    weight: 0.8
+  # "you shall set apart three cities... that every man slayer may
+  # flee there... Whoever kills his neighbor unintentionally, and
+  # didn't hate him in time past" (WEB, in corpus). The case law.
+  - ref: Deuteronomy 19:2-4
+    sources: [editorial]
+    weight: 0.8
+  # "Then Moses set apart three cities beyond the Jordan... Bezer...
+  # Ramoth... Golan" (WEB, in corpus). The first three, named.
+  - ref: Deuteronomy 4:41-43
+    sources: [editorial]
+    weight: 0.7
+related:
+  - justice-and-oppression
+  - restitution
+  - mercy
+sources: [editorial]

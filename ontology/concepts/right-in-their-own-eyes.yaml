@@ -1,0 +1,65 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme E row, requesting book: Judges — the book's
+# own thesis statement). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission only by his
+# merge of this PR. Deferred through batches 1-6: Judg 17:6; 21:25
+# absent (Judges' corpus was ch. 16 only), Prov 21:2; 12:15 also
+# blocked.
+#
+# FOLD ALTERNATIVE DECIDED at curation (the row flags it to curation
+# judgment; reversible): no discernment/authority concept exists in
+# the vocabulary to fold into, and the widely-searched thesis line
+# deserves the book's own texts — MINTED narrow.
+#
+# BOUNDARIES: Prov 21:2 stays god-looks-at-the-heart's anchor (same
+# PR — its second clause, "the LORD weighs the hearts", is that
+# register; cross-noted both files). This pack takes Prov 12:15 (the
+# fool's-own-eyes verse, whose second clause hands off to counsel —
+# cross-related to counsel-and-advisers, same PR). Judg 18:1/19:1
+# (the refrain's short forms) left unclaimed — the two full-thesis
+# verses carry the pack.
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses
+# ("no king in israel" -> {king, israel}).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the book's own verdict formula; it adjudicates no
+# modern authority question.
+id: right-in-their-own-eyes
+label: Right in their own eyes
+lexicon:
+  - right in their own eyes
+  - everyone did what was right in his own eyes
+  - no king in israel
+anchors:
+  # "In those days there was no king in Israel. Everyone did that
+  # which was right in his own eyes." (WEB, in corpus). The book's
+  # closing verdict — the keystone.
+  - ref: Judges 21:25
+    sources: [editorial]
+    weight: 1.0
+  # "In those days there was no king in Israel. Everyone did that
+  # which was right in his own eyes." (WEB, in corpus). The thesis'
+  # first full statement.
+  - ref: Judges 17:6
+    sources: [editorial]
+    weight: 0.95
+  # "The way of a fool is right in his own eyes, but he who is wise
+  # listens to counsel." (WEB, in corpus). The proverb form. (Prov
+  # 21:2 stays god-looks-at-the-heart's.)
+  - ref: Proverbs 12:15
+    sources: [editorial]
+    weight: 0.85
+  # "You shall not do all the things that we do here today, every man
+  # whatever is right in his own eyes" (WEB, in corpus). The Torah's
+  # own use of the formula.
+  - ref: Deuteronomy 12:8
+    sources: [editorial]
+    weight: 0.75
+related:
+  - counsel-and-advisers
+  - god-looks-at-the-heart
+  - self-deception
+  - obedience-to-the-word
+sources: [editorial]

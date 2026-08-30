@@ -20,12 +20,23 @@
     "expected top in the PR that adds Philippians 3. Until then Rom 8:11 is",
     "the honest expected answer: the believer-facing resurrection-life",
     "verse, distinct from the he-is-risen event anchors the concept already",
-    "carries."
+    "carries.",
+    "",
+    "CORPUS-EXPANSION EXECUTION (ruling row 12, approved 2026-08-26, also",
+    "a catch-up-ruling fixture — one decision covers both): Philippians 3",
+    "is now IN the corpus, but Phil 3:10 carries no anchor, so the note's",
+    "recorded flip cannot execute yet. Per the ruling: a small association",
+    "follow-up adds Phil 3:10 as a resurrection anchor (its lexicon entry",
+    "'resurrection power' already exists), then the recorded flip executes",
+    "in that PR. Interim, Rom 8:11's window widens to 10 (measured #6 for",
+    "'resurrection power' behind the activated he-is-risen event anchors,",
+    "#2 for 'raised with christ') rather than asserting an event anchor as",
+    "the believer-facing top."
   ],
   "expectedTop": [
     {
       "reference": "Romans 8:11",
-      "withinTop": 5,
+      "withinTop": 10,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: He is risen"
     }

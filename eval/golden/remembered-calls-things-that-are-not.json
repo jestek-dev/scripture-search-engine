@@ -1,0 +1,56 @@
+{
+  "id": "remembered-calls-things-that-are-not",
+  "query": "calleth the things that are not as though they were",
+  "status": "active",
+  "note": [
+    "ALIAS/LEXICON MINING BATCH 1 — HELD ROW, admitted post corpus expansion",
+    "(2026-08-27, whole-Bible coverage plan §2.3 item 2 / §4.3; battery",
+    "re-grade seed row ad11 'speak things into existence' — X: Romans 4:17,",
+    "the verse people mean). Held out of the original batch-1 push because",
+    "Romans 4 was outside the 5,726-verse fixture corpus; the full-Bible",
+    "expansion (#64) made it measurable. 'Calleth the things that are not as",
+    "though they were' is the ASV's own wording (1901, public domain); the",
+    "WEB reads 'calls the things that are not, as though they were'. Decision",
+    "#4/#5 defaults: ASV/YLT/Darby/BSB/WEB wording only.",
+    "",
+    "Measured miss, fixture written FIRST, before any data: on the",
+    "post-expansion merged tree (0.14.0, corpus 6450b7d7…, layer d91b8776…,",
+    "fixture bed) this ASV query returns Romans 4:17 at #3 on chipless",
+    "token_overlap/proximity only (8.37, behind Luke 6:46 at 9.61 and",
+    "1 Corinthians 8:5 at 9.40 — bare {call, thing} scatter). The WEB's own",
+    "wording already leads (#1, exact_phrase, 40.00) and needs no row. The",
+    "fix is the remembered-calls-things-that-are-not pack (single anchor,",
+    "Romans 4:17 at 1.0), narrow by design.",
+    "",
+    "ADMITTED 2026-08-27 on the same identity except the layer this row moves",
+    "(0.14.0, corpus 6450b7d7…): Romans 4:17 #3 chipless -> #1 (48.37,",
+    "concept_anchor). CAUTION carried from the draft and measured: the phrase",
+    "tokenizes to the generic 2-token set {call, thing}, so any query with",
+    "both stems fires the anchor — measured: bare 'call things' -> Romans",
+    "4:17 #1 with the chip; 'called to do great things' -> #2 behind the",
+    "exact-phrase leader. Accepted per the {cast, care} pair precedent (the",
+    "paired form IS the register carrier; chip honest); both tokens skipped",
+    "in the bare-word inventory with reasons; deny-list review candidate if",
+    "the pair proves broad. The J9 slogan boundary is guarded by the sibling",
+    "fixture remembered-calls-things-slogan-guard.",
+    "",
+    "DELIBERATELY NOT INCLUDED: routing the slogan 'speak things into",
+    "existence' itself — prosperity-teaching vocabulary, not translation",
+    "wording; the re-grade marks ad11's corrective framing J9-gated (Jesse's",
+    "editorial call, not a data row).",
+    "",
+    "requiredReasonFamily is concept_anchor on purpose: the assertion is that",
+    "a curated anchor put the quoted verse first and can say who says so."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Romans 4:17",
+      "withinTop": 1,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Calling things that are not"
+    }
+  ],
+  "coversConcepts": [
+    "remembered-calls-things-that-are-not"
+  ]
+}

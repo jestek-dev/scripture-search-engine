@@ -1,0 +1,15 @@
+---
+name: popular-verses-top200-2026-08-25
+description: 2026-08-25 top-200 popular Bible verses list DELIVERED for Jesse (memorization use case) — /mnt/project-files/research/popular-verses/ (top-200-verses.json + .md + dedupe-log.md + build_ranking.py + sources/); 60 source lists, class-weighted rank scoring, tiers 10/20/73/97, WEB text 200/200 VPL-verified (175 fixture-verified), fresh-critic approved round 2 with zero objections
+metadata:
+  type: project
+  modified: 2026-08-25T00:54:55.649Z
+---
+
+# Top-200 popular Bible verses — delivered 2026-08-25
+
+Jesse asked (thread cmsg_01P3QsU2j86UJUbajEtMTYp2YEm8rtp6uvHMFHzXXBvW4n) for a pullable ranked top-200 most popular Bible verses list for memorization recommendations. Delivered to /mnt/project-files/research/popular-verses/: top-200-verses.json (machine-pullable; rank, tier, reference, book/chapter/verses, WEB text, 4-decimal score, source_lists traceability, source_classes), top-200-verses.md (methodology + tiered tables + caveats), dedupe-log.md (124 logged decisions), build_ranking.py (deterministic, byte-reproducible; reads sources/ and a WEB VPL file — paths were relative to the original scratchpad layout: ../sources/ and ../web-text/engwebp_vpl.txt from ebible.org/Scriptures/engwebp_vpl.zip), and sources/ (the five research JSONs: youversion 24 lists, biblegateway 19, search-volume 9, memorization 5, listicles 10; 60 usable after exclusions).
+
+Method: class-weighted rank scoring (platform usage 3.0, memorization 2.0, listicle 1.0; ranked contribution w×((N−pos+1)/N)^1.5, unranked w×0.6, country tables w×0.2/year, broad citations ×0.5 credited to most-cited verse; once per list; per-publisher-family diminishing 1, 1/2, 1/3…). Tiers rule-based, not rank-sliced (T1: all 3 classes + ≥8 platform lists + score ≥12). Tier 1 (10): John 3:16, Jeremiah 29:11, Philippians 4:13, Philippians 4:6, Proverbs 3:5-6, Isaiah 41:10, Romans 12:2, Romans 8:28, Joshua 1:9, Matthew 6:33. Overlapping citations merged (only pair-merges: Prov 3:5-6, Gal 5:22-23, Deut 6:6-7); non-overlapping singles stay separate.
+
+Key caveats recorded in the MD: Matthew 28:19 at #12 is the one top-15 non-consensus entry (disclosed); Acts 18:9/18:10/18:11 + 17:11 rest solely on BG-2009 with known Acts 17–18 traffic artifacts; Psalm 91 contributes 16 single-verse entries, Psalm 121 eight, Psalm 23 six (passage consolidation left downstream); YouVersion "Matthew 6:13" (2013) conservatively corrected to 6:33 and logged. WEB text: live engwebp download whose only drift from the repo pin (pipeline/manifests/web.json, sha256 3458ca34…) across the 5,727-verse fixture is a U+00A0 in Acts 20:35; all 200 texts byte-identical to the VPL, 175/200 also byte-verified against pipeline/fixtures/web-subset.json. Two fresh-critic rounds: round 1 zero hard defects + 6 low advisories (all fixed, ranking order unchanged), round 2 APPROVED zero objections — both critics traced all 1,052 source citations and re-derived scores/tiers independently. Display/data only — no engine or repo changes. Related: [[bible-rollout-conventions-2026-08-23]].

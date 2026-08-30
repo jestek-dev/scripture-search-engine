@@ -781,8 +781,16 @@ export async function readFoldedCaseEventLog(casesPath: string): Promise<readonl
 }
 
 /**
- * Confirms that `cases.jsonl` is the byte-canonical migration output for the
- * committed manifest and immutable v1 judgment lines.
+ * Confirms that `cases.jsonl` STARTS with the byte-canonical migration
+ * output for the committed manifest and immutable v1 judgment lines.
+ *
+ * Prefix, not whole-file equality: the closed migration wrote the log's
+ * opening bytes once, and the live workbench (the second writer, §5.1)
+ * appends v2 case events after them — a whole-file pin would brick every
+ * derivation the moment the first live case lands (found in anger by the
+ * D11 shakedown). The legacy prefix stays byte-pinned and identity-checked;
+ * everything appended after it is validated as ordinary case events by
+ * `validateCaseEvents` above, exactly like a log with no legacy history.
  */
 export function validateCanonicalLegacyCaseLog(
   casesJsonl: string,
@@ -791,7 +799,10 @@ export function validateCanonicalLegacyCaseLog(
 ): readonly CaseEvent[] {
   const actual = validateCaseEvents(parseCaseEventLog(casesJsonl));
   const expected = deriveLegacyCaseEvents(manifest, judgments);
-  if (casesJsonl !== serializeCaseEventLog(expected) || !sameJsonIdentity(actual, expected)) {
+  if (
+    !casesJsonl.startsWith(serializeCaseEventLog(expected))
+    || !sameJsonIdentity(actual.slice(0, expected.length), expected)
+  ) {
     throw new CaseValidationError('cases.jsonl is not the canonical deterministic legacy migration output.');
   }
   return actual;

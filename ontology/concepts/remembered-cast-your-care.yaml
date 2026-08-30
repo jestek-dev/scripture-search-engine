@@ -1,0 +1,38 @@
+# REMEMBERED-PHRASING PACK — alias-mining batch 1 (2026-08-26, whole-Bible
+# coverage plan §2.3 item 2 / §4.3; battery re-grade seed row ph4, the
+# 'care' register only).
+#
+# PD-ONLY WORDING (decision #4/#5 defaults): every phrase below is the
+# verbatim wording of an approved public-domain translation — no ESV/NIV/
+# NLT-derived wording anywhere in this pack.
+#   - "having cast all your care upon him" — Darby (1890), 1 Peter 5:7.
+#   - "all your care having cast upon him" — Young's Literal (1898),
+#     1 Peter 5:7.
+# The WEB itself reads "casting all your worries on him" and already leads
+# for that register (guarded by popular-1-peter-5-7); the 'care' register
+# reached only translation-variant junk (measured: Matthew 6:30 #1, the
+# quoted verse #2 chipless — see eval/golden/remembered-cast-your-care.json).
+#
+# DELIBERATELY NOT the anxiety register: peace-of-god's own lexicon carries
+# "cast all your anxiety on him", and the ACTIVE peace-of-god.json guards
+# Philippians 4:6-7 above 1 Peter 5:7 for it (2026-08-18 dedup guard); the
+# batch-000 triage routed that flip needs-jesse (J4/J8). Both phrases here
+# tokenize to {cast, care}, disjoint from that entry's {cast, anxiety}, so
+# the guarded query is untouched by construction.
+#
+# ONE anchor per pack, deliberately (the remembered-* design): the phrase
+# names exactly one verse; narrow anchor, narrow claim. peace-of-god keeps
+# its reviewed torrey anchor on the same verse at 0.75 — coexistence over
+# one verse per the remembered-anxious-for-nothing / peace-of-god precedent.
+id: remembered-cast-your-care
+label: Casting your care on him
+lexicon:
+  - having cast all your care upon him
+  - all your care having cast upon him
+anchors:
+  # "casting all your worries on him, because he cares for you" (WEB).
+  - ref: 1 Peter 5:7
+    sources: [editorial]
+    weight: 1.0
+related:
+  - peace-of-god

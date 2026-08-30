@@ -1,0 +1,70 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme L row 46 (2 requesting books: 1-2 Samuel). Deferred because
+# 1 Sam 24; 26 and 2 Sam 1; 19 were absent (1 Sam corpus was chs 15,
+# 31).
+#
+# MISAPPLICATION-GUARD (the row's own design note): "touch not the
+# Lord's anointed" is a heavy lay query often misapplied to modern
+# leaders. This pack carries the phrase's actual narrative meaning as
+# attributed fact — David refusing to harm king Saul, and the Psalm
+# protecting the patriarch-prophets — and adjudicates NOTHING about
+# the phrase's modern use. Described, not applied.
+#
+# The Psalms delivery's WITHDRAWN alternative id honored: its messiah
+# material went to messianic-prophecy (cross-related); no messianic
+# anchor here.
+#
+# BOUNDARIES: 1 Sam 16:7 stays god-looks-at-the-heart's (and
+# identity-in-christ's); 16:11-12 stays gods-surprising-choice's;
+# this pack takes the free 16:13 — the anointing that grounds the
+# restraint. Ps 105:15's parallel 1 Chr 16:22 surfaces by exact
+# phrase (both-tags note: one claim suffices; the twin text rides
+# retrieval).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: the-lords-anointed
+label: The Lord's anointed
+lexicon:
+  - touch not the lords anointed
+  - the lords anointed
+  - gods anointed
+anchors:
+  # "The LORD forbid that I should do this thing to my lord, the
+  # LORD's anointed, to stretch out my hand against him, since he is
+  # the LORD's anointed." (WEB, in corpus). The cave at En Gedi — the
+  # phrase's defining scene.
+  - ref: 1 Samuel 24:6
+    sources: [editorial]
+    weight: 1.0
+  # "'Don't destroy him, for who can stretch out his hand against the
+  # LORD's anointed, and be guiltless?... the LORD will strike him;
+  # or his day shall come'" (WEB, in corpus). The refusal repeated —
+  # vengeance left to the LORD.
+  - ref: 1 Samuel 26:9-11
+    sources: [editorial]
+    weight: 0.9
+  # "'Why were you not afraid to stretch out your hand to destroy the
+  # LORD's anointed?'" (WEB, in corpus). The sequel — the claim held
+  # even over a dead rival.
+  - ref: 2 Samuel 1:14-16
+    sources: [editorial]
+    weight: 0.8
+  # "'Don't touch my anointed ones! Do my prophets no harm!'" (WEB,
+  # in corpus). The Psalm's register — the anointed ones here are the
+  # wandering patriarch-prophets (v12-14), reported as such.
+  - ref: Psalms 105:15
+    sources: [editorial]
+    weight: 0.75
+  # "Then Samuel took the horn of oil and anointed him in the middle
+  # of his brothers. Then the LORD's Spirit came mightily on David"
+  # (WEB, in corpus). The anointing that grounds the restraint
+  # (16:7 and 16:11-12 stay with their owners).
+  - ref: 1 Samuel 16:13
+    sources: [editorial]
+    weight: 0.7
+related:
+  - messianic-prophecy
+  - vengeance
+  - governing-authorities
+sources: [editorial]

@@ -1,0 +1,292 @@
+# What Christians Search For in the Bible: A Data-Driven Master Test Set for a Scripture Search Engine
+
+## TL;DR
+
+- **Christian Bible search is overwhelmingly “felt-need-first”:** the top real-world queries cluster around emotional survival (anxiety/fear/peace), comfort/God’s presence, hope for the future, strength, and love — YouVersion’s official 2025 report states, “the most searched terms included love, anxiety, and peace,” and **Isaiah 41:10, Jeremiah 29:11, Philippians 4:6, Psalm 23:4, John 3:16, and Romans 8:28** are the recurring head-term verses across every platform.
+- **Three query formats coexist and should all be tested:** single keywords (“healing,” “forgiveness”), topic phrases (“bible verses about anxiety,” “scriptures on marriage”), and natural-language questions (“what does the Bible say about worry,” “does God forgive me,” “why is God allowing this”) — with question-format and long-tail “what does the Bible say about X” queries being the fastest-growing format and the specialty of OpenBible.info and GotQuestions.org.
+- **This report delivers 700+ categorized test queries** grouped by felt-need, flagged as hard-data-backed vs. reasonably inferred, plus documented seasonal/crisis spikes (fear during COVID, “justice” 100x after George Floyd, John 3:16 at Easter, Jeremiah 29:11 at graduation) and KJV-vs-modern term variants (“charity”/“love”) to build a realistic test suite.
+
+## Key Findings
+
+**1. The felt-need drives the search, not the citation.** Across YouVersion (1B+ installs), Bible Gateway (viewed “hundreds of billions of times” per year), BibleStudyTools, Logos, and OpenBible.info, the same emotional themes recur year after year: fear/anxiety, comfort/God’s presence, hope, strength, peace, healing, and love. YouVersion’s most-engaged verse was **Isaiah 41:10 (“do not fear, for I am with you”)** — named 2025 Verse of the Year, “the fourth time in six years the verse has claimed the top spot” (also #1 in 2018, 2020, 2022, and 2023). **Philippians 4:6 (“do not be anxious about anything”)** won 2024.  The most-searched in-app terms were **“fear” (2020), “prayer” and “peace” (2024), and “love,” “anxiety,” and “peace” (2025).**
+
+**2. Verse-reference head terms are dominated by a small canon.** Per a World Vision UK digital survey (2022) using Ahrefs Keyword Explorer across 172 countries: **John 3:16 had “by far the most monthly searches across the globe at 2.1 million, followed by Jeremiah 29:11 and Philippians 4:13 in joint second at 82,000. John 10:10 was third place with 73,000,”** with Proverbs 3:5 (~58,000), Matthew 28:19 (~50,000), Philippians 4:8 (~42,000), Philippians 4:6 (~37,000), and Romans 8:28 and James 1:3 (~33,000) rounding out the top tier. On Bible Gateway’s own 2024–2025 rankings, however, the **Psalms dominate** — Psalm 23:4 was the #1 read verse  in both 2024 and 2025, with Psalms 23, 91, and 121 filling most of the top 25. 
+
+**3. Platform differences reveal audience differences.** YouVersion (lay/devotional) skews to emotional-promise verses (Isaiah 41:10, Philippians 4:6). Bible Gateway skews to the Psalms (comfort/protection). Logos (pastors/scholars) had all top-25 clicked verses from the New Testament, led by Philippians 4:6 and Matthew 11:28.  GotQuestions.org (which states it averages ~18 million monthly visitors, doctrinal/apologetic) is dominated by theology and ethics questions — its top-5 FAQs are **women pastors, homosexuality, tattoos, eternal security (“once saved always saved”), and masturbation.** A single search engine must serve all these intents.
+
+**4. Search is seasonal and crisis-reactive.** Documented spikes: “fear” became YouVersion’s top term in early 2020 (YouVersion searches rose 80% in 2020, to nearly 600 million). Per Christianity Today citing Bible Gateway, sickness verses “got around 90 times more queries than average” at the March 2020 lockdown; racism/justice/oppression queries spiked to **100 times the average in the week following George Floyd’s death**, and government-authority verses rose **at least 50 times the average on Election Day.** John 3:16, “resurrection,” “risen,” and “crucifixion” spike every Easter; Jeremiah 29:11 and Philippians 4:13 spike at graduation; New Year drives Bible-plan and “fresh start” searches (3+ million subscribed to one-year plans on New Year’s Day 2025).
+
+**5. The gap between “what people feel” and “what Scripture offers.”** Scholars (e.g., Biola’s Carmen Joy Imes) note readers gravitate to “a handful of inspirational or comforting verses without realizing the wide spectrum of spiritual riches available to us in the Psalms.” This matters for search design: a good engine should surface the expected comfort verse AND relevant lesser-known passages.
+
+-----
+
+## Details: The Categorized Master Query List
+
+Each category lists queries in all three formats. **[HARD]** = directly backed by named search/engagement data; **[INFERRED]** = reasonably extrapolated from documented patterns and topical-index structures.
+
+### CATEGORY 1 — Anxiety, Fear & Worry (highest-volume felt-need)
+
+**[HARD]** — YouVersion Verse of the Year 2024 (Philippians 4:6); “fear” top search 2020; “anxiety” among top terms 2025; “worry/anxiety” BibleStudyTools #6 topic 2024.
+
+- **Keywords:** anxiety, fear, worry, stress, panic, overwhelmed, afraid, nervous, dread, calm, peace of mind
+- **Topic phrases:** bible verses about anxiety; bible verses about fear; scriptures on worry; verses for stress; bible verses for overwhelmed; scriptures to calm anxiety; bible verses for panic attacks; verses about fear of the future; scriptures for peace; KJV verses about fear (“fear not”); bible verses for anxiety and depression
+- **Questions:** what does the Bible say about anxiety; what does God say about fear; how do I stop worrying; does God care about my worries; how can I find peace; why am I so anxious; what does the Bible say about overthinking
+- **Head verses:** Philippians 4:6-7, Isaiah 41:10, 1 Peter 5:7, Matthew 6:25-34, 2 Timothy 1:7, Psalm 94:19, John 14:27, Psalm 34:4, Joshua 1:9
+
+### CATEGORY 2 — Comfort, God’s Presence & Reassurance
+
+**[HARD]** — Isaiah 41:10 (YouVersion #1 in five of eight recent years); Psalm 23:4 (Bible Gateway #1, 2024 & 2025).
+
+- **Keywords:** comfort, presence of God, God is with me, reassurance, not alone, refuge, shelter, safe
+- **Topic phrases:** comforting bible verses; bible verses about God’s presence; scriptures for hard times; verses about God being with you; bible verses for when you feel alone; scriptures for troubled times; God is my refuge verses
+- **Questions:** is God with me; does God see me; where is God when I’m hurting; how do I feel God’s presence; what does the Bible say about God being with us
+- **Head verses:** Isaiah 41:10, Psalm 23, Psalm 91, Deuteronomy 31:6, Matthew 28:20, Psalm 46:1, Psalm 34:18, Psalm 121
+
+### CATEGORY 3 — Hope & the Future
+
+**[HARD]** — Jeremiah 29:11 (global #2 most-searched verse, ~82,000/mo); “hope” BibleStudyTools #18 topic 2024.
+
+- **Keywords:** hope, future, God’s plan, purpose, destiny, plans, tomorrow
+- **Topic phrases:** bible verses about hope; scriptures about the future; verses about God’s plan for my life; bible verses for hope in hard times; scriptures on God’s promises
+- **Questions:** what does God say about my future; does God have a plan for me; what is God’s plan for my life; is there hope; what does the Bible say about the future
+- **Head verses:** Jeremiah 29:11, Romans 8:28, Romans 15:13, Proverbs 3:5-6, Romans 5:5, Lamentations 3:22-23, Isaiah 40:31
+
+### CATEGORY 4 — Strength & Endurance
+
+**[HARD]** — Philippians 4:13 (global #2 tie, ~82,000/mo); “strength” BibleStudyTools #7 topic 2024; strength named a top theme across popular verses.
+
+- **Keywords:** strength, endurance, perseverance, courage, weakness, tired, weary, giving up
+- **Topic phrases:** bible verses about strength; scriptures for strength in hard times; verses about perseverance; bible verses when you feel weak; scriptures for courage; bible verses about not giving up
+- **Questions:** how do I find strength; what does the Bible say about being strong; how do I keep going; where does my strength come from
+- **Head verses:** Philippians 4:13, Isaiah 40:29-31, 2 Corinthians 12:9-10, Joshua 1:9, Psalm 46:1, Nehemiah 8:10, Ephesians 6:10
+
+### CATEGORY 5 — Healing & Sickness
+
+**[HARD]** — “Healing” was BibleStudyTools’ #2 topic 2024; “healing” trended all year on YouVersion 2020; pandemic sickness verses spiked ~90x on Bible Gateway; healing a common YouVersion prayer theme.
+
+- **Keywords:** healing, sickness, health, disease, recovery, illness, cancer, pain
+- **Topic phrases:** bible verses about healing; scriptures for the sick; healing scriptures; bible verses for surgery; verses for a sick loved one; scriptures for physical healing; bible verses about health; scripture about visiting sick in the hospital
+- **Questions:** what does the Bible say about healing; does God heal today; will God heal me; how do I pray for healing; why hasn’t God healed me
+- **Head verses:** Jeremiah 30:17, Isaiah 53:5, James 5:14-15, Psalm 103:2-3, Exodus 15:26, 1 Peter 2:24, Matthew 9:35
+
+### CATEGORY 6 — Grief, Loss & Death
+
+**[HARD]** — “Overcoming grief” was BibleStudyTools’ #14 topic 2024; Psalm 23 (funeral/comfort) is Bible Gateway’s #1 chapter.
+
+- **Keywords:** grief, loss, death, mourning, bereavement, heartbroken, loss of loved one
+- **Topic phrases:** bible verses about grief; scriptures for loss of a loved one; comforting verses for death; bible verses for mourning; scriptures for funerals; verses about grieving; bible verses for a grieving friend
+- **Questions:** what does the Bible say about grief; where do we go when we die; will I see my loved ones again; how do I cope with loss; does God care when I’m grieving; what does the Bible say about heaven
+- **Head verses:** Psalm 34:18, Matthew 5:4, Revelation 21:4, John 11:25-26, Psalm 23:4, 1 Thessalonians 4:13-14, 2 Corinthians 1:3-4
+
+### CATEGORY 7 — Depression, Loneliness & Despair
+
+**[INFERRED from HARD patterns]** — “bible verses for depression and worry” is a documented long-tail search; loneliness is a named State of the Bible research chapter theme; Psalm 34:18 among top comfort verses; suicide among GotQuestions top-20.
+
+- **Keywords:** depression, loneliness, sadness, despair, hopelessness, empty, numb, brokenhearted, suicidal
+- **Topic phrases:** bible verses about depression; scriptures for loneliness; verses for when you feel alone; bible verses for sadness; scriptures for the brokenhearted; bible verses about feeling worthless; verses for dark times
+- **Questions:** what does the Bible say about depression; does God care that I’m depressed; why do I feel so alone; is it a sin to be depressed; what does the Bible say about suicide; where is God in my pain
+- **Head verses:** Psalm 34:18, Psalm 42:11, Psalm 40:1-3, Matthew 11:28-30, 1 Kings 19 (Elijah), Psalm 143, Isaiah 43:2
+
+### CATEGORY 8 — Love (God’s love & human love)
+
+**[HARD]** — “love” among the top in-app search terms on YouVersion 2025; “God’s love” BibleStudyTools #10 topic; John 3:16 is the #1 searched verse worldwide. 
+
+- **Keywords:** love, God’s love, agape, charity (KJV), loved, unconditional love
+- **Topic phrases:** bible verses about love; scriptures on God’s love; verses about loving others; bible verses about love and relationships; what is love bible; love is patient verse; charity bible verses (KJV)
+- **Questions:** does God love me; how much does God love me; what does the Bible say about love; what is real love; how do I love difficult people
+- **Head verses:** John 3:16, 1 Corinthians 13:4-7, 1 John 4:18-19, Romans 8:38-39, John 15:13, 1 John 4:8, Romans 5:8
+
+### CATEGORY 9 — Forgiveness (receiving & giving)
+
+**[HARD]** — “Forgiveness” was BibleStudyTools #16 topic; a top-4 OpenBible topic during major news cycles; among the core “verses on…” clusters (faith/hope/love/forgiveness/prayer).
+
+- **Keywords:** forgiveness, forgive, guilt, shame, mercy, grace, repentance
+- **Topic phrases:** bible verses about forgiveness; scriptures on forgiving others; verses about God’s forgiveness; bible verses for guilt; how to forgive bible; scriptures about mercy; bible verses about second chances
+- **Questions:** does God forgive me; how many times should I forgive; how do I forgive someone who hurt me; will God forgive my sin; does God forgive all sins; how do I forgive myself; what sins won’t God forgive
+- **Head verses:** 1 John 1:9, Ephesians 4:32, Colossians 3:13, Matthew 6:14-15, Psalm 103:12, Matthew 18:21-22, Micah 7:18-19
+
+### CATEGORY 10 — Marriage, Dating & Relationships
+
+**[HARD]** — “Marriage” BibleStudyTools #15 topic; marriage among YouVersion’s common global prayer themes; a perennial OpenBible top topic; a top sermon topic for 2024–2025.
+
+- **Keywords:** marriage, spouse, husband, wife, dating, love, divorce, relationships, singleness
+- **Topic phrases:** bible verses about marriage; scriptures for a struggling marriage; verses about husbands and wives; bible verses for dating; scriptures on divorce; bible verses about love and marriage; verses for wedding; managing money in marriage; bible verses about singleness
+- **Questions:** what does the Bible say about marriage; what does the Bible say about divorce; does the Bible allow remarriage after divorce; what does the Bible say about dating; how do I save my marriage; who should I marry; what does the Bible say about sex before marriage
+- **Head verses:** Ephesians 5:22-33, 1 Corinthians 13, Genesis 2:24, 1 Corinthians 7, Ecclesiastes 4:9-12, Proverbs 31, Mark 10:9
+
+### CATEGORY 11 — Parenting, Children & Family
+
+**[HARD]** — Family a top YouVersion prayer theme; child character development a State of the Bible finding; family/relationships a top 2025 sermon topic.
+
+- **Keywords:** parenting, children, kids, family, motherhood, fatherhood, discipline, prodigal child
+- **Topic phrases:** bible verses about children; scriptures for parents; verses about raising kids; bible verses for a wayward child; scriptures about family; bible verses for a new baby; verses about honoring parents
+- **Questions:** what does the Bible say about parenting; how do I raise godly children; what does the Bible say about disciplining children; how do I pray for my children; what does the Bible say about honoring parents
+- **Head verses:** Proverbs 22:6, Ephesians 6:1-4, Deuteronomy 6:6-7, Psalm 127:3-5, Proverbs 29:17, Colossians 3:20-21, 3 John 1:4
+
+### CATEGORY 12 — Money, Finances, Work & Provision
+
+**[HARD]** — Finances a common YouVersion prayer theme; “money in marriage” a documented OpenBible long-tail; tithing/gambling among GotQuestions top-20.
+
+- **Keywords:** money, finances, debt, provision, wealth, tithing, generosity, work, job, career, contentment
+- **Topic phrases:** bible verses about money; scriptures on finances; verses about provision; bible verses for financial breakthrough; scriptures about tithing; bible verses about work; verses about contentment; bible verses for job seekers; scriptures about generosity
+- **Questions:** what does the Bible say about money; what does the Bible say about tithing; does God provide; what does the Bible say about debt; is gambling a sin; what does the Bible say about work; how do I find a job biblically
+- **Head verses:** Philippians 4:19, Matthew 6:33, Malachi 3:10, Proverbs 3:9-10, 1 Timothy 6:10, Hebrews 13:5, Matthew 6:24, Luke 6:38
+
+### CATEGORY 13 — Guidance, Decisions & God’s Will
+
+**[HARD]** — Guidance a named driver of Scripture engagement (State of the Bible); Proverbs 3:5 a top-5 global head verse (~58,000/mo).
+
+- **Keywords:** guidance, God’s will, decisions, direction, wisdom, discernment, calling, purpose
+- **Topic phrases:** bible verses about God’s will; scriptures for making decisions; verses about direction; bible verses for guidance; scriptures on wisdom; verses about trusting God’s plan
+- **Questions:** how do I know God’s will; what does God want me to do; how do I make the right decision; what is my purpose; how do I hear God’s voice; is this God’s will for me; what does the Bible say about decision making
+- **Head verses:** Proverbs 3:5-6, James 1:5, Jeremiah 29:11, Psalm 32:8, Romans 12:2, Proverbs 16:9, Isaiah 30:21
+
+### CATEGORY 14 — Faith, Doubt & Trust
+
+**[HARD]** — “Faith” BibleStudyTools #17 topic; core “verses on…” cluster; James 1:3 a global head verse (~33,000/mo).
+
+- **Keywords:** faith, doubt, trust, belief, unbelief, faithfulness
+- **Topic phrases:** bible verses about faith; scriptures on trusting God; verses about doubt; bible verses for weak faith; scriptures about believing; verses about trusting God in hard times
+- **Questions:** what does the Bible say about faith; how do I grow my faith; is it okay to doubt God; how do I trust God; what is faith; how can I believe when I don’t feel it
+- **Head verses:** Hebrews 11:1, Hebrews 11:6, 2 Corinthians 5:7, Mark 9:24, Proverbs 3:5-6, James 1:3, Romans 10:17
+
+### CATEGORY 15 — Prayer
+
+**[HARD]** — “Prayer” a top YouVersion 2024 in-app term; YouVersion’s 2024 report states “engagement with these YouVersion Prayer features went up by 46% this year compared to last year,” with common prayer themes “finances, healing, family, marriage, and anxiety”; core “verses on…” cluster.
+
+- **Keywords:** prayer, praying, intercession, answered prayer, how to pray
+- **Topic phrases:** bible verses about prayer; scriptures on prayer; verses about answered prayer; bible verses for when you can’t pray; the Lord’s prayer; scriptures about praying for others
+- **Questions:** how do I pray; does God hear my prayers; why aren’t my prayers answered; what does the Bible say about prayer; does God answer prayer; how should I pray
+- **Head verses:** Philippians 4:6-7, Matthew 6:9-13, 1 Thessalonians 5:16-18, James 5:16, 1 John 5:14, Jeremiah 33:3, Matthew 7:7
+
+### CATEGORY 16 — Salvation, Eternal Life & Assurance
+
+**[HARD]** — John 3:16 #1 verse worldwide; salvation/eternal security among GotQuestions top-20 (#4); Romans 3:23, Ephesians 2:8, Romans 6:23 among top head verses.
+
+- **Keywords:** salvation, saved, eternal life, heaven, hell, born again, grace, gospel
+- **Topic phrases:** bible verses about salvation; scriptures on eternal life; verses about being saved; Romans road to salvation; bible verses about grace; scriptures about heaven
+- **Questions:** how do I get to heaven; how can I be saved; what happens after death; can a Christian lose salvation; once saved always saved; am I really saved; what must I do to be saved; is Jesus God
+- **Head verses:** John 3:16, Romans 10:9-10, Ephesians 2:8-9, Romans 6:23, Romans 3:23, John 14:6, Acts 4:12, Titus 3:5
+
+### CATEGORY 17 — Identity & Self-Worth
+
+**[INFERRED from HARD patterns]** — “identity in Christ” is a major devotional/sermon theme; 2 Timothy 1:7 (self-worth/power) among top-10 U.S. YouVersion verses 2024.
+
+- **Keywords:** identity, self-worth, value, who I am in Christ, worth, confidence, insecurity
+- **Topic phrases:** bible verses about identity; scriptures on who I am in Christ; verses about self-worth; bible verses for confidence; scriptures about being God’s child; verses about being fearfully and wonderfully made
+- **Questions:** who am I in Christ; what does God say about me; am I good enough for God; does my life matter to God; what does the Bible say about self-worth
+- **Head verses:** Psalm 139:13-14, 2 Corinthians 5:17, Ephesians 2:10, 1 Peter 2:9, Galatians 2:20, John 1:12, Jeremiah 1:5
+
+### CATEGORY 18 — Temptation, Sin, Addiction & Self-Control
+
+**[HARD]** — Alcohol/gambling/masturbation among GotQuestions top-20 (masturbation #5); self-control (2 Timothy 1:7) a top verse.
+
+- **Keywords:** temptation, sin, addiction, self-control, lust, pornography, alcohol, habits
+- **Topic phrases:** bible verses about temptation; scriptures for overcoming sin; verses about self-control; bible verses about addiction; scriptures on purity; bible verses about lust; verses for breaking bad habits
+- **Questions:** what does the Bible say about temptation; how do I overcome sin; is masturbation a sin; is drinking alcohol a sin; what does the Bible say about pornography; how do I resist temptation; does God still love me when I keep sinning
+- **Head verses:** 1 Corinthians 10:13, James 4:7, James 1:13-15, Galatians 5:22-23, Romans 6:14, 1 Corinthians 6:18-20, Hebrews 4:15-16
+
+### CATEGORY 19 — Anger, Conflict & Relationships with Others
+
+**[HARD/INFERRED]** — Anger a documented topical-guide theme; “power of words” a top-4 OpenBible topic during the 2016 news cycle.
+
+- **Keywords:** anger, conflict, forgiveness, patience, enemies, gossip, words, reconciliation
+- **Topic phrases:** bible verses about anger; scriptures on controlling your temper; verses about conflict; bible verses about enemies; scriptures on the power of words; verses about patience; bible verses about gossip
+- **Questions:** what does the Bible say about anger; how do I control my temper; what does the Bible say about revenge; how do I deal with difficult people; is it a sin to be angry; how do I make peace with someone
+- **Head verses:** Ephesians 4:26-27, James 1:19-20, Proverbs 15:1, Proverbs 29:11, Romans 12:18-21, Matthew 5:44, Colossians 3:8
+
+### CATEGORY 20 — Suffering, Trials & “Why”
+
+**[HARD]** — “Why does God allow bad things to happen” is a named GotQuestions FAQ;  suffering a perennial topical theme; James 1:3 (trials) a head verse.
+
+- **Keywords:** suffering, trials, pain, hardship, testing, endurance, why
+- **Topic phrases:** bible verses about suffering; scriptures for trials; verses about why God allows suffering; bible verses for hard times; scriptures about endurance; verses about God’s purpose in pain
+- **Questions:** why does God allow suffering; why is God allowing this; why do bad things happen to good people; where is God in my suffering; what is God teaching me; does God cause suffering; why me
+- **Head verses:** Romans 8:28, James 1:2-4, Romans 5:3-5, 2 Corinthians 4:17-18, 1 Peter 5:10, John 16:33, Psalm 34:19
+
+### CATEGORY 21 — Peace & Rest
+
+**[HARD]** — “Peace” a top YouVersion in-app term 2024 & 2025; “Peace” BibleStudyTools #12 topic 2024.
+
+- **Keywords:** peace, rest, calm, stillness, burnout, exhausted, busy
+- **Topic phrases:** bible verses about peace; scriptures for rest; verses about God’s peace; bible verses for a busy life; scriptures about being still; bible verses for burnout
+- **Questions:** how do I find peace; what does the Bible say about rest; how do I find rest in God; what does “be still” mean; how do I stop being so busy
+- **Head verses:** John 14:27, Philippians 4:7, Matthew 11:28-30, Psalm 46:10, Isaiah 26:3, Colossians 3:15, Psalm 4:8
+
+### CATEGORY 22 — Gratitude, Joy & Encouragement
+
+**[HARD]** — “Inspirational Bible verses” was BibleStudyTools’ verbatim #1 topic 2024; “Encouraging Bible verses” #4; “being thankful” a high-ranked OpenBible topic.
+
+- **Keywords:** gratitude, thankfulness, joy, happiness, encouragement, praise, blessings
+- **Topic phrases:** inspirational bible verses; encouraging bible verses; bible verses about joy; scriptures on gratitude; verses about thankfulness; bible verses about blessings; uplifting scriptures
+- **Questions:** what does the Bible say about gratitude; how do I find joy; what does the Bible say about being thankful; how can I be happy; why should I praise God in hard times
+- **Head verses:** 1 Thessalonians 5:18, Philippians 4:4, Psalm 118:24, James 1:17, Nehemiah 8:10, Psalm 100, Colossians 3:15-17
+
+### CATEGORY 23 — Protection & Safety
+
+**[HARD]** — “Protection” BibleStudyTools #13 topic 2024; Psalm 91 (16 verses in Bible Gateway top 25);  “Psalm 91” spiked during COVID. 
+
+- **Keywords:** protection, safety, refuge, shield, danger, travel, spiritual warfare, armor of God
+- **Topic phrases:** bible verses about protection; scriptures for safety; verses about God’s protection; bible verses for travel; scriptures for spiritual warfare; the armor of God; verses about protection from enemies
+- **Questions:** what does the Bible say about protection; does God protect us; how do I pray for protection; what does the Bible say about spiritual warfare; how do I fight the devil
+- **Head verses:** Psalm 91, Psalm 121, Isaiah 54:17, Ephesians 6:10-18, Psalm 46:1, 2 Thessalonians 3:3, Proverbs 18:10
+
+### CATEGORY 24 — Theology & Doctrine Questions (secondary/ministry-adjacent)
+
+**[HARD]** — Directly from GotQuestions’ top-20 most-asked and most-visited lists (~18M monthly visitors). Top-5 FAQs are, in order: women pastors, homosexuality, tattoos, eternal security, masturbation.
+
+- **Topic phrases / Questions:** what does the Bible say about the Trinity; is Jesus God; who is the Holy Spirit; what happens after death; do pets go to heaven; what does the Bible say about baptism; what is speaking in tongues; what does the Bible say about the end times / rapture / mark of the beast; who was Cain’s wife; what does the Bible say about dinosaurs; did Jesus go to hell between death and resurrection; what are the names of God; why does God allow evil; is there absolute truth; what is predestination/election; what does the Bible say about angels and demons; can Christians be demon possessed
+- **Ethics/culture questions:** what does the Bible say about homosexuality (BibleStudyTools #3 topic 2024; GotQuestions #2); tattoos; women pastors; interracial marriage; the death penalty; abortion; alcohol; gambling; cremation; suicide
+
+### CATEGORY 25 — Seasonal & Occasion-Based
+
+**[HARD]** — Documented Easter/Christmas/graduation/New Year spikes (Pew, Lifeway, Bible Gateway, Google Trends).
+
+- **Christmas:** bible verses about Jesus’ birth; the Christmas story; Isaiah 9:6; Luke 2; scriptures about the nativity; Advent verses; what does the Bible say about Christmas
+- **Easter:** resurrection bible verses; John 3:16; scriptures about the crucifixion; Matthew 28:6; “he is risen”; Good Friday verses; what does the Bible say about Easter; why did Jesus die
+- **New Year:** bible verses for the new year; scriptures for a fresh start; verses about new beginnings; Isaiah 43:19; Lamentations 3:22-23; bible verses about God’s plans for the year
+- **Graduation:** Jeremiah 29:11; Philippians 4:13; Joshua 1:9; Proverbs 3:5-6; bible verses for graduates
+- **Other occasions:** bible verses for weddings; verses for a new baby / baptism; verses for a funeral; bible verses for a birthday; scriptures for Mother’s Day / Father’s Day; Thanksgiving verses; verses for a new home / new job
+
+### CATEGORY 26 — Ministry-Use Searches (secondary audience)
+
+**[HARD/INFERRED]** — From SermonSearch top sermon topics, Logos click data, and small-group study demand.
+
+- **Sermon prep:** sermon on faith/grace/love/hope; sermon series ideas; names of Jesus sermon; Beatitudes; fruit of the Spirit; armor of God; parables of Jesus; “I Am” statements; Sermon on the Mount; stewardship/generosity sermon; marriage & family series
+- **Worship planning:** scriptures about worship (BibleStudyTools #19 topic 2024); verses behind worship songs; psalms of praise; scriptures for a call to worship
+- **Biblical counseling / pastoral care:** verses for someone grieving; scriptures for the dying / hospice; verses for addiction recovery; scriptures for a couple in crisis; verses for a suicidal person; scriptures for anxiety/depression counseling; verses for the incarcerated
+- **Small group / discipleship:** bible study topics on prayer/fear/money/relationships; verses about Christian community (BibleStudyTools “friendship” #8 topic 2024); discipleship verses; spiritual disciplines; the Great Commission (Matthew 28:19)
+- **Fasting:** bible verses about fasting (surprise #20 topic on BibleStudyTools 2024)
+
+-----
+
+## Insights for Search-Engine Design
+
+1. **Design felt-need-first.** The dominant query is not “look up John 3:16” but “I feel X — what does God say?” The home experience should foreground emotional/situational entry points (anxiety, grief, hope, guidance) because that is where documented volume concentrates.
+1. **Support all three formats natively, and expect question growth.** Keyword (“anxiety”), phrase (“bible verses about anxiety”), and natural-language question (“what does the Bible say about anxiety”) must all resolve to the same high-quality result set. The “what does the Bible say about X” pattern is the backbone of OpenBible.info  and GotQuestions and is the fastest-growing format.
+1. **Two retrieval modes: reference lookup vs. topical/semantic.** A minority of queries are exact references (John 3:16, Psalm 23); the majority are topical/felt-need. The engine needs both a precise citation parser and a strong topical/semantic layer (OpenBible explicitly added “semantic similarity search that finds verses close in meaning rather than just words”). 
+1. **Handle translation-term variants.** KJV vs. modern wording changes the query and the match: “charity” (KJV) vs. “love” (modern) for 1 Corinthians 13; “fear not” (KJV) vs. “do not be afraid”; “be careful for nothing” (KJV) vs. “do not be anxious” (Philippians 4:6). Also handle synonyms (“worry”/“anxiety”/“stress”; “scriptures”/“verses”/“passages”) and misspellings.
+1. **Build seasonal and crisis responsiveness.** Boost resurrection/John 3:16 at Easter, nativity verses at Christmas, fresh-start verses at New Year, and be ready for reactive spikes (disease/“fear not” during health crises, “justice” during social unrest, government-authority verses during elections) — all documented on YouVersion and Bible Gateway.
+1. **Expect a “comfort-verse” concentration but reward breadth.** Users gravitate to a small canon (Psalm 23, Psalm 91, Isaiah 41:10, Philippians 4:6, Jeremiah 29:11). Surfacing the expected verse builds trust; surfacing relevant lesser-known passages (especially the wider Psalms) adds value scholars say readers are missing.
+1. **Serve lay and ministry intents distinctly.** The same term (“peace,” “marriage”) serves a hurting layperson and a sermon-prepping pastor. Consider intent signals or result groupings (comfort/application vs. study/exposition), mirroring the YouVersion-vs-Logos split in the data.
+
+-----
+
+## Recommendations
+
+**Stage 1 — Build the core test set now (head terms).** Seed your test suite with the 26 categories above, prioritizing Categories 1–16 (the documented high-volume felt-needs). Include the top verse-reference queries with their known volume tiers: John 3:16 (~2.1M/mo, tier 1); Jeremiah 29:11 / Philippians 4:13 (~82K, tier 2); John 10:10, Proverbs 3:5, Matthew 28:19, Philippians 4:8/4:6, Romans 8:28, James 1:3 (tier 3).  *Benchmark:* the engine should return the community-consensus top verse for each felt-need (e.g., Philippians 4:6 for anxiety, Psalm 23 for grief/comfort) in the top 3 results.
+
+**Stage 2 — Expand to long-tail and questions.** Add the natural-language question variants and long-tail phrases in each category. Pull the actual OpenBible.info topic list (its downloadable `topic-votes.txt` / `topic-scores.zip` files, updated weekly, linked from openbible.info/topics/) and GotQuestions’ published top-20 lists to generate hundreds more real queries verbatim. *Benchmark:* ≥90% of “what does the Bible say about X” queries should resolve to a relevant curated verse set, not a keyword dump.
+
+**Stage 3 — Add seasonal, crisis, and translation-variant test cases.** Build a rotating seasonal test bank (Easter, Christmas, New Year, graduation) and a crisis-simulation bank (health scare, financial hardship, national tragedy). Add KJV/modern term-pair tests. *Benchmark:* “charity” and “love,” “fear not” and “do not be afraid,” “worry” and “anxiety” should return equivalent top results.
+
+**Thresholds that would change the plan:** If your own query logs show a higher share of exact-reference lookups than topical searches (inverting the public pattern), shift investment toward citation parsing and cross-references. If question-format queries exceed ~40% of volume, prioritize a conversational/RAG answer layer over ranked verse lists. If a specific felt-need (e.g., addiction, identity) over-indexes in your logs versus this public data, deepen curation there first.
+
+## Caveats
+
+- **“Most engaged” ≠ “most searched.”** YouVersion’s Verse of the Year reflects highlights/bookmarks/shares,  not raw search queries; Bible Gateway’s ranking reflects page views/downloads; Google volumes reflect search. These are different signals and explain why Isaiah 41:10 tops YouVersion while Psalm 23:4 tops Bible Gateway (Isaiah 41:10 ranked only 26th on Bible Gateway in 2025). Treat cross-platform verse rankings as directional, not identical.
+- **Search-volume figures vary by source and method.** The ~2.1M/mo for John 3:16 and ~82K for Jeremiah 29:11/Philippians 4:13 come from the World Vision UK / Ahrefs study across 172 countries; a separate narrower keyword definition yields much lower absolute figures (John 3:16 at ~6,500/mo). Use volume tiers, not precise absolute numbers.
+- **Some queries are [INFERRED].** Categories like Identity (17) and Depression/Loneliness (7) are extrapolated from documented adjacent data and topical-index structures rather than a named ranking; they are realistic but should be validated against your own logs.
+- **The precise OpenBible.info topic ranking was not directly retrievable.** Its authoritative ranked list lives in downloadable data files; the perennial top topics reported here (love, faith, marriage, forgiveness, fear, healing, hope, prayer) are synthesized from OpenBible’s own 2016 election chart, its “verses on…” analysis, and third-party reviews/SEO tools. Download and sort `topic-votes.txt` for exact current rankings.
+- **US/English-centric.** Most granular data is US/English. YouVersion documents country differences (e.g., Philippians 4 was 2024’s top verse across 17 countries;  Joshua 1:9 ranks higher in Australia;  Central/South America favors Genesis verses),  so a global engine should localize.
+- **Recency:** Data spans 2020–2026 annual reports; the strongest recent points are YouVersion 2024/2025, Bible Gateway 2024/2025, BibleStudyTools 2024, and State of the Bible 2025/2026. Verse popularity is stable year-to-year, so the list should age well, but re-pull annual reports each December.

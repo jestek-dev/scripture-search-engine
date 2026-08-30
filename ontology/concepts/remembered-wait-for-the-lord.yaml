@@ -1,0 +1,34 @@
+# REMEMBERED-PHRASING PACK — alias-mining batch 1 (2026-08-26, whole-Bible
+# coverage plan §2.3 item 2 / §4.3; mined from the popular-verses Tier 1
+# seed — Isaiah 40:31 is rank 11 of the verified top-200).
+#
+# PD-ONLY WORDING (decision #4/#5 defaults): every phrase below is the
+# verbatim wording of an approved public-domain source — no ESV/NIV/NLT-
+# derived wording anywhere in this pack.
+#   - "those who wait for the LORD will renew their strength" — the WEB's
+#     own text of Isaiah 40:31 (byte-verified against
+#     pipeline/fixtures/web-subset.json). Verbatim it already leads by
+#     exact phrase; the entry exists because its TOKEN SET {wait, lord,
+#     renew, strength} is what the remembered 'wait upon the lord' register
+#     tokenizes to, and that register measured #2 behind Psalms 23:3 (see
+#     eval/golden/remembered-wait-for-the-lord.json).
+#   - "they that wait upon Jehovah shall renew their strength" — Darby
+#     (1890), Isaiah 40:31; the Jehovah register YLT shares.
+#
+# ONE anchor per pack, deliberately (the remembered-* design). ADDITIVE on
+# purpose: rest-for-the-weary (0.85) and trust-in-god (0.75) keep their
+# reviewed Isaiah 40:31 anchors and weights — coexistence over one verse
+# per the remembered-anxious-for-nothing / peace-of-god precedent.
+id: remembered-wait-for-the-lord
+label: Strength for those who wait on the Lord
+lexicon:
+  - those who wait for the LORD will renew their strength
+  - they that wait upon Jehovah shall renew their strength
+anchors:
+  # "but those who wait for the LORD will renew their strength. They will
+  # mount up with wings like eagles." (WEB)
+  - ref: Isaiah 40:31
+    sources: [editorial]
+    weight: 1.0
+related:
+  - rest-for-the-weary

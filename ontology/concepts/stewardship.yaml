@@ -1,0 +1,80 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme E row, 3 requesting books: Matthew, Luke,
+# 1 Chronicles). Adopted as display vocabulary by Jesse's 2026-08-25
+# ruling (CONVENTIONS §11); ENGINE admission only by his merge of this
+# PR. Deferred through batches 1-6: BOTH defining parables absent.
+#
+# THE THREE CARRIED CHECKS, RUN (the deferral's own list):
+# 1. work-and-diligence extension DECLINED — its register is the labor
+#    ethic (six days you shall labor, whatever you do work heartily);
+#    entrusted-resources faithfulness is a different teaching, and the
+#    extension would answer "parable of the talents" with Prov 6 ant
+#    anchors.
+# 2. stewardship-of-days id-closeness RECORDED — that pack is the
+#    numbered-days TIME register (Ps 90:12); ids stay distinct,
+#    cross-related, zero shared phrases.
+# 3. money/debt scope-all-three cross-note HONORED — contentment keeps
+#    wealth/money/finances/debt vocabulary and 1 Tim 6 / Matt 6;
+#    money-and-possessions keeps the danger-of-riches register; this
+#    pack claims neither vocabulary (zero shared phrases with both).
+# 1 Pet 4:10 stays spiritual-gifts' anchor (cross-noted, not claimed).
+#
+# TOKENIZER NOTE (G-4): "stewardship" is a deliberate one-word entry —
+# WEB's own word (1 Cor 9:17, Luke 16:2-4), the subject noun people
+# type, no competing concept speaks the stem. Inventory row recorded.
+# "faithful with little" collapses check: {faith?, littl} — "faithful"
+# stems to faith; shares faith token with faith pack's bare entry —
+# entry kept at two tokens, acceptable share.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor; prosperity guard honored — the
+# gist is faithfulness with what the Master entrusts, never a return
+# formula (DOCTRINAL-BASIS prosperity exclusion).
+id: stewardship
+label: Stewardship
+lexicon:
+  - stewardship
+  - parable of the talents
+  - faithful with little
+  - well done good and faithful servant
+  - faithful steward
+anchors:
+  # "Who then is the faithful and wise steward, whom his lord will set
+  # over his household...? Blessed is that servant whom his lord will
+  # find doing so when he comes." (WEB, in corpus). The steward
+  # parable proper — the keystone.
+  - ref: Luke 12:42-44
+    sources: [editorial]
+    weight: 1.0
+  # "a man going into another country, who called his own servants and
+  # entrusted his goods to them. To one he gave five talents, to
+  # another two, to another one, to each according to his own ability."
+  # (WEB, in corpus). The talents entrusted.
+  - ref: Matthew 25:14-15
+    sources: [editorial]
+    weight: 0.95
+  # "Well done, good and faithful servant. You have been faithful over
+  # a few things, I will set you over many things." (WEB, in corpus).
+  - ref: Matthew 25:20-21
+    sources: [editorial]
+    weight: 0.9
+  # "He who is faithful in a very little is faithful also in much...
+  # If therefore you have not been faithful in the unrighteous mammon,
+  # who will commit to your trust the true riches?" (WEB, in corpus).
+  - ref: Luke 16:10-12
+    sources: [editorial]
+    weight: 0.85
+  # "But who am I, and what is my people, that we should be able to
+  # offer so willingly as this? For all things come from you, and we
+  # have given you of your own." (WEB, in corpus). David — the
+  # steward's theology in one sentence.
+  - ref: 1 Chronicles 29:14
+    sources: [editorial]
+    weight: 0.8
+related:
+  - work-and-diligence
+  - stewardship-of-days
+  - generosity
+  - contentment
+  - spiritual-gifts
+sources: [editorial]

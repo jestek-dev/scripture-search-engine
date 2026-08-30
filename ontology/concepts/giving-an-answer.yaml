@@ -34,6 +34,14 @@ lexicon:
   # The practice's own register ({defend, faith} carries "how to defend my
   # faith" and "how do i defend my faith" by identical-set containment).
   - defend the faith
+  # CORPUS-BLOCKED ROSTER build (2026-08-27): the contending-for-the-faith
+  # roster row (Theme I — Jude's own register) lands as this EXTENSION,
+  # not a mint: this pack already anchors Jude 1:3 AND 1:22, and
+  # "defending the faith" was measured already served — but the verbatim
+  # contend vocabulary was hijacked by the faith concept (Rom 10:17
+  # rank 1, Jude 1:3 nowhere). {contend, faith} routes it here.
+  # Fixture-backed (contending-for-the-faith.json).
+  - contend for the faith
   # Single-token entry, deliberate (§1.6d option-3; the one-token
   # specificity discount keeps the claim humble). The discipline's own
   # name — appears in no WEB verse, so only curation can route it.

@@ -1,0 +1,41 @@
+{
+  "id": "gods-compassion-for-outsiders",
+  "query": "does god love people outside the church",
+  "status": "active",
+  "additionalQueries": [
+    "gods mercy on other nations"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 9 (Theme C, requesting book: Jonah — 'the",
+    "theme's defining book', entirely absent until #64).",
+    "The row's REQUIRED check (gods-love lexicon extension) RUN 2026-08-27:",
+    "an extension would answer the outsiders/enemies/Nineveh register with",
+    "the God-loves-YOU assurance anchors (John 3:16, Rom 5:8) — honest on",
+    "the love question, silent on the asker's actual question (does God",
+    "pity those outside the covenant). DECLINED; minted narrow on Jonah",
+    "(the defining-book design), related edge to gods-love kept.",
+    "Jonah 3:10 deliberately NOT anchored here — it is god-relents'",
+    "anchor (same PR); disjoint split recorded in both packs.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'does god love people outside the church' answered wholesale by",
+    "gods-love anchors (Rom 5:8, 1 John 4:9-10, John 3:16); 'gods mercy",
+    "on other nations' by mercy's inward-register anchors (Ps 103:10-11,",
+    "Matt 5:7) — Jonah 4 nowhere in either top 10."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jonah 4:10-11",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: God's compassion for outsiders"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jonah 4:2",
+    "Jonah 1:14-16"
+  ],
+  "coversConcepts": [
+    "gods-compassion-for-outsiders"
+  ]
+}

@@ -224,6 +224,14 @@ export const JOB_ENV_ALLOWLIST = Object.freeze([
   'TEMP', 'TMP', 'TMPDIR', 'HOME', 'USERPROFILE', 'HOMEDRIVE', 'HOMEPATH',
   'LANG', 'LC_ALL', 'LC_CTYPE', 'TERM', 'NUMBER_OF_PROCESSORS',
   'PROCESSOR_ARCHITECTURE', 'PROCESSOR_IDENTIFIER', 'OS',
+  // Operator resource tuning, at the operator's own trust level (PATH is
+  // already forwarded). The pinned pipeline commands rely on it: tsx does
+  // not forward the parent's --max-old-space-size to the node child it
+  // spawns, so the artifact rebuild inside an admission worktree OOMs at
+  // the ~2GB default heap unless the operator's NODE_OPTIONS travels — the
+  // scrub otherwise makes the workbench's fixed commands FAIL where the
+  // operator's own shell succeeds (found in anger by the D11 shakedown).
+  'NODE_OPTIONS',
 ] as const);
 
 interface OutputAccumulator {

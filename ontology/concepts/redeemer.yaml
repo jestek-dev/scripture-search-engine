@@ -1,0 +1,79 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme F row 23 (requesting book: Job). Deferred because Job 19:25-27
+# and 33:24, 28 were absent (Job's corpus was chs 1 + 31).
+#
+# ONE-TWO-OR-EXTENSION DECIDED at curation (the row's own
+# decide-alongside-kinsman-redeemer note; both rows built this PR,
+# recorded in both packs; reversible): TWO registers —
+# kinsman-redeemer = the goel INSTITUTION (Ruth's canonical text,
+# property/levirate law); THIS pack = the personal my-redeemer-lives
+# CONFESSION and ransom vocabulary. Cross-related both ways; zero
+# shared phrases beyond the stem the queries themselves force
+# (kinsman-redeemer's phrases are all kinsman-qualified).
+#
+# DUAL ANCHOR: Job 19:25-27 is ALSO resurrection-of-the-dead's anchor
+# (pre-existing) — the verse honestly serves both registers (the
+# confession names the Redeemer; the seeing-God-in-my-flesh hope is the
+# resurrection register). Recorded in both files; that pack's active
+# fixture does not pin it.
+#
+# BOUNDARY: Ps 19:14 ("my rock and my redeemer") stays thought-life's
+# anchor — cross-noted, not claimed; exact-phrase retrieval serves the
+# verbatim query.
+#
+# TOKENIZER NOTE (G-4): "my redeemer" collapses to the single token
+# `redeemer` ("my" is a stopword) — deliberate: `redeemer` is
+# distinctive (no other concept's lexicon speaks it; kinsman-redeemer's
+# phrases all carry `kinsman`), and "who is my redeemer" (the fixture's
+# additionalQuery) normalizes to exactly this bare token. Collapse row
+# + inventory admission recorded.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the texts' own confession; it does not adjudicate
+# whom Job's hope names.
+id: redeemer
+label: Redeemer
+lexicon:
+  - my redeemer lives
+  - my redeemer
+  - redeemer of israel
+  - god will redeem my soul
+  - i have found a ransom
+anchors:
+  # "But as for me, I know that my Redeemer lives. In the end, he will
+  # stand upon the earth. After my skin is destroyed, then I will see
+  # God in my flesh" (WEB, in corpus). The confession the queries
+  # quote. DUAL with resurrection-of-the-dead (recorded both files).
+  - ref: Job 19:25-27
+    sources: [editorial]
+    weight: 1.0
+  # "then God is gracious to him, and says, 'Deliver him from going
+  # down to the pit, I have found a ransom.'" (WEB, in corpus). Elihu's
+  # ransom word — the book's own answer-vocabulary to 9:33's longing.
+  - ref: Job 33:24
+    sources: [editorial]
+    weight: 0.85
+  # "He has redeemed my soul from going into the pit. My life will see
+  # the light.'" (WEB, in corpus).
+  - ref: Job 33:28
+    sources: [editorial]
+    weight: 0.8
+  # "But God will redeem my soul from the power of Sheol, for he will
+  # receive me. Selah." (WEB, in corpus). The psalmist's same
+  # confession.
+  - ref: Psalms 49:15
+    sources: [editorial]
+    weight: 0.8
+  # "Israel, hope in the LORD... Abundant redemption is with him. He
+  # will redeem Israel from all their sins." (WEB, in corpus). The
+  # redeemer-of-Israel register.
+  - ref: Psalms 130:7-8
+    sources: [editorial]
+    weight: 0.75
+related:
+  - kinsman-redeemer
+  - resurrection-of-the-dead
+  - forgiveness-of-sins
+  - hope-in-god
+sources: [editorial]

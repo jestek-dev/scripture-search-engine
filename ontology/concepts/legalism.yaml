@@ -1,0 +1,52 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme K row 43 (requesting book: Colossians). Deferred because
+# Col 2:16-23 was absent (Col corpus was chs 1, 3).
+#
+# EXTENSION ROUTE CHECKED before minting (the row's own flag):
+# grace-not-earned is saved-by-works-shaped (Eph 2) — extending its
+# lexicon would land legalism queries on Eph 2:8-9 instead of the
+# don't-handle-don't-taste texts the queries want; disputable-matters
+# covers the judging side (Rom 14 register, untouched). MINTED narrow
+# on Colossians 2's own texts, cross-related to both.
+#
+# BOUNDARY: Col 2:8 stays giving-an-answer's anchor; this pack's
+# spans (2:16-17, 2:20-23) are disjoint from it.
+#
+# TOKENIZER NOTE (G-4): bare `legalism` ADMITTED (inventory row) — a
+# distinctive modern word absent from the WEB text where the word IS
+# the concept (infertility/burnout precedent); no other concept
+# speaks it.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports Paul's own critique of self-imposed religion; it
+# names no modern practice.
+id: legalism
+label: Legalism
+lexicon:
+  - legalism
+  - legalism in the bible
+  - do christians have to follow rules
+  - man made religion
+anchors:
+  # "why, as though living in the world, do you subject yourselves to
+  # ordinances, 'Don't handle, nor taste, nor touch'... according to
+  # the precepts and doctrines of men? These things indeed appear like
+  # wisdom in self-imposed worship... but aren't of any value against
+  # the indulgence of the flesh." (WEB, in corpus). The passage the
+  # queries want.
+  - ref: Colossians 2:20-23
+    sources: [editorial]
+    weight: 1.0
+  # "Let no one therefore judge you in eating or drinking, or with
+  # respect to a feast day... which are a shadow of the things to
+  # come; but the body is Christ's." (WEB, in corpus). The
+  # judge-you-not charge that opens it.
+  - ref: Colossians 2:16-17
+    sources: [editorial]
+    weight: 0.85
+related:
+  - grace-not-earned
+  - disputable-matters
+  - clean-and-unclean
+sources: [editorial]

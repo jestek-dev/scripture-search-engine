@@ -1,0 +1,465 @@
+{
+  "metadata": {
+    "bookTitle": "Growing by Heart: Scripture Memory for Women",
+    "author": "Scharlotte Rich",
+    "year": 2004,
+    "publisher": "NavPress",
+    "isbn13": "9781576836835",
+    "extractionDate": "2026-08-18",
+    "note": "references only; selection/arrangement and text remain the publisher's — use as leads, verify each pairing against scripture before any admission",
+    "structureNote": "52 weekly devotionals, each with a theme title and (usually two) numbered memory verses. Only the memory-verse references are recorded here; the epigraph quotations at each week's opening are not. Heavily OCR-damaged reference lines were repaired by matching the quoted verse text (repairs listed in ocrRepairs).",
+    "ocrRepairs": [
+      "\"PSALM 23, THE SHEPHERD'S SONG\" -> Psalm 23",
+      "'1 CORINTHIANS 1022s' -> 1 Corinthians 10:13",
+      "'2 CORINTHIANS 2:15-16; 3:5' -> 2 Corinthians 2:15-16, 2 Corinthians 3:5",
+      "'2 EMO tenay 027' -> 2 Timothy 1:7",
+      "'AGTS* DLS' -> Acts 3:19",
+      "'Be SVAGIVCUME ky Dee' -> 2 Samuel 22:2-3",
+      "'COLOSSIANS 3223' -> Colossians 3:23",
+      "'COLOSsS TANS 455-6' -> Colossians 4:5-6",
+      "'EGCHESTAS DES 9°00' -> Ecclesiastes 9:10",
+      "'EPHESIANS 5§:8-10' -> Ephesians 5:8-10",
+      "'EPHESIANS G:10-II' -> Ephesians 6:10-11",
+      "'EPHESIANS §:15-17' -> Ephesians 5:15-17",
+      "'FOUIN 32 iiG- 17' -> John 3:16-17",
+      "'GALAT LANG S22= 22' -> Galatians 5:22-23",
+      "'GAVAT TANS. Sili4!' -> Galatians 5:14",
+      "'GOLOSSTANS 276-7' -> Colossians 2:6-7",
+      "'I JOHN 3728' -> 1 John 3:18",
+      "'I THESSALONIANS 5§:16-18' -> 1 Thessalonians 5:16-18",
+      "'IE Wi Kee 2 ee 27' -> Luke 12:22,27",
+      "'LW arenes' -> Luke 12:15",
+      "'PHILIPPIANS 2:3=5' -> Philippians 2:3-5",
+      "'PRL Ce? PANS 4a 2 = 13' -> Philippians 4:12-13",
+      "'PSALM DES 26-20' -> Psalm 118:28-29",
+      "'PSALM O1:2-2' -> Psalm 91:1-2",
+      "'PSAUM. 4.6:0= 2.°7' -> Psalm 46:1-2,7",
+      "'TPE Dae as' -> 1 Peter 4:8",
+      "'[OHN 1.0:352 7-28' -> John 10:3,27-28",
+      "'[ON Torr' -> John 10:11",
+      "'f PEBER Ss 7' -> 1 Peter 5:7",
+      "'tb PEP ERE AGO' -> 1 Peter 4:10",
+      "'» CORINTHIANS TOTS' -> 2 Corinthians 10:5"
+    ],
+    "damaged": []
+  },
+  "weeks": [
+    {
+      "week": 1,
+      "theme": "garden party",
+      "memoryVerseRefs": [
+        "Romans 12:2",
+        "Proverbs 3:5-6"
+      ]
+    },
+    {
+      "week": 2,
+      "theme": "sunflowers",
+      "memoryVerseRefs": [
+        "Matthew 5:16",
+        "Ephesians 5:8-10"
+      ]
+    },
+    {
+      "week": 3,
+      "theme": "living water",
+      "memoryVerseRefs": [
+        "Psalm 34:8",
+        "Isaiah 58:11"
+      ]
+    },
+    {
+      "week": 4,
+      "theme": "lilies",
+      "memoryVerseRefs": [
+        "Luke 12:22,27",
+        "Philippians 1:6"
+      ]
+    },
+    {
+      "week": 5,
+      "theme": "sowing seeds",
+      "memoryVerseRefs": [
+        "John 14:6",
+        "Ephesians 2:4-5"
+      ]
+    },
+    {
+      "week": 6,
+      "theme": "the master gardener",
+      "memoryVerseRefs": [
+        "John 14:27",
+        "2 Samuel 22:2-3"
+      ]
+    },
+    {
+      "week": 7,
+      "theme": "daisies",
+      "memoryVerseRefs": [
+        "John 3:16-17",
+        "Romans 5:8"
+      ]
+    },
+    {
+      "week": 8,
+      "theme": "shepherd's hedge",
+      "memoryVerseRefs": [
+        "Psalm 23",
+        "John 10:11"
+      ]
+    },
+    {
+      "week": 9,
+      "theme": "dusk",
+      "memoryVerseRefs": [
+        "Psalm 46:10",
+        "John 10:3,27-28"
+      ]
+    },
+    {
+      "week": 10,
+      "theme": "love-in-a-mist",
+      "memoryVerseRefs": [
+        "Matthew 7:7-8",
+        "2 Corinthians 9:8"
+      ]
+    },
+    {
+      "week": 11,
+      "theme": "oak trees and deep roots",
+      "memoryVerseRefs": [
+        "Philippians 4:19",
+        "Isaiah 41:10"
+      ]
+    },
+    {
+      "week": 12,
+      "theme": "riding out storms",
+      "memoryVerseRefs": [
+        "Ephesians 6:10-11",
+        "1 John 4:4"
+      ]
+    },
+    {
+      "week": 13,
+      "theme": "reflecting the sower",
+      "memoryVerseRefs": [
+        "Deuteronomy 7:9",
+        "Psalm 139:14"
+      ]
+    },
+    {
+      "week": 14,
+      "theme": "seasons",
+      "memoryVerseRefs": [
+        "Romans 8:28",
+        "Philippians 4:12-13"
+      ]
+    },
+    {
+      "week": 15,
+      "theme": "garden bench time",
+      "memoryVerseRefs": [
+        "Ephesians 5:15-17",
+        "Philippians 4:6-7"
+      ]
+    },
+    {
+      "week": 16,
+      "theme": "clay pots",
+      "memoryVerseRefs": [
+        "Philippians 2:3-5",
+        "Ephesians 2:10"
+      ]
+    },
+    {
+      "week": 17,
+      "theme": "locusts",
+      "memoryVerseRefs": [
+        "Psalm 46:1-2,7",
+        "James 1:2-4"
+      ]
+    },
+    {
+      "week": 18,
+      "theme": "greener grass",
+      "memoryVerseRefs": [
+        "Hebrews 13:5",
+        "Proverbs 11:25"
+      ]
+    },
+    {
+      "week": 19,
+      "theme": "the wellspring",
+      "memoryVerseRefs": [
+        "Proverbs 4:23",
+        "Philippians 4:8"
+      ]
+    },
+    {
+      "week": 20,
+      "theme": "snakes in the garden",
+      "memoryVerseRefs": [
+        "Philippians 1:27",
+        "1 John 1:9"
+      ]
+    },
+    {
+      "week": 21,
+      "theme": "starting over",
+      "memoryVerseRefs": [
+        "1 Corinthians 10:13",
+        "Psalm 51:10"
+      ]
+    },
+    {
+      "week": 22,
+      "theme": "poison ivy",
+      "memoryVerseRefs": [
+        "Acts 3:19",
+        "Psalm 86:5"
+      ]
+    },
+    {
+      "week": 23,
+      "theme": "wild strawberries",
+      "memoryVerseRefs": [
+        "Ecclesiastes 4:12",
+        "1 Corinthians 15:33"
+      ]
+    },
+    {
+      "week": 24,
+      "theme": "wasps",
+      "memoryVerseRefs": [
+        "2 Corinthians 10:5",
+        "Psalm 141:3-4"
+      ]
+    },
+    {
+      "week": 25,
+      "theme": "stop weeds before they start!",
+      "memoryVerseRefs": [
+        "1 Timothy 1:18",
+        "James 4:7"
+      ]
+    },
+    {
+      "week": 26,
+      "theme": "pruning",
+      "memoryVerseRefs": [
+        "1 John 2:6",
+        "John 10:10"
+      ]
+    },
+    {
+      "week": 27,
+      "theme": "love is like zucchini",
+      "memoryVerseRefs": [
+        "Matthew 10:8",
+        "Luke 12:15"
+      ]
+    },
+    {
+      "week": 28,
+      "theme": "winding paths",
+      "memoryVerseRefs": [
+        "Micah 6:8",
+        "Ephesians 4:2"
+      ]
+    },
+    {
+      "week": 29,
+      "theme": "get down to earth",
+      "memoryVerseRefs": [
+        "1 Peter 4:8",
+        "Proverbs 17:17"
+      ]
+    },
+    {
+      "week": 30,
+      "theme": "new varieties",
+      "memoryVerseRefs": [
+        "Ecclesiastes 9:10",
+        "Galatians 6:9-10"
+      ]
+    },
+    {
+      "week": 31,
+      "theme": "marigolds",
+      "memoryVerseRefs": [
+        "1 John 3:18",
+        "Galatians 5:14"
+      ]
+    },
+    {
+      "week": 32,
+      "theme": "miracle grow",
+      "memoryVerseRefs": [
+        "Proverbs 16:24",
+        "Habakkuk 3:17-19"
+      ]
+    },
+    {
+      "week": 33,
+      "theme": "garden angels",
+      "memoryVerseRefs": [
+        "Colossians 4:5-6",
+        "Matthew 22:37-39"
+      ]
+    },
+    {
+      "week": 34,
+      "theme": "sweet fragrance of Christ",
+      "memoryVerseRefs": [
+        "1 John 4:19",
+        "2 Corinthians 2:15-16",
+        "2 Corinthians 3:5"
+      ]
+    },
+    {
+      "week": 35,
+      "theme": "follow the instructions",
+      "memoryVerseRefs": [
+        "Jeremiah 33:3",
+        "James 1:5"
+      ]
+    },
+    {
+      "week": 36,
+      "theme": "boundaries",
+      "memoryVerseRefs": [
+        "Matthew 11:28-30",
+        "Isaiah 40:31"
+      ]
+    },
+    {
+      "week": 37,
+      "theme": "burning bushes",
+      "memoryVerseRefs": [
+        "Ephesians 3:17-18",
+        "Jeremiah 6:16"
+      ]
+    },
+    {
+      "week": 38,
+      "theme": "cold-hardy cacti",
+      "memoryVerseRefs": [
+        "2 Timothy 1:7",
+        "Ephesians 6:14-17"
+      ]
+    },
+    {
+      "week": 39,
+      "theme": "beauty in pansy faces",
+      "memoryVerseRefs": [
+        "Galatians 1:10",
+        "Proverbs 31:30"
+      ]
+    },
+    {
+      "week": 40,
+      "theme": "a deep well",
+      "memoryVerseRefs": [
+        "John 7:37-38",
+        "Revelation 21:6"
+      ]
+    },
+    {
+      "week": 41,
+      "theme": "winter hope",
+      "memoryVerseRefs": [
+        "Isaiah 26:3",
+        "Psalm 59:16"
+      ]
+    },
+    {
+      "week": 42,
+      "theme": "resting in the shadow",
+      "memoryVerseRefs": [
+        "1 Peter 5:7",
+        "Psalm 91:1-2"
+      ]
+    },
+    {
+      "week": 43,
+      "theme": "waiting for spring",
+      "memoryVerseRefs": [
+        "1 Thessalonians 5:16-18",
+        "Psalm 118:28-29"
+      ]
+    },
+    {
+      "week": 44,
+      "theme": "fruit inspection",
+      "memoryVerseRefs": [
+        "Galatians 5:22-23",
+        "Colossians 2:6-7"
+      ]
+    },
+    {
+      "week": 45,
+      "theme": "beautifully unique",
+      "memoryVerseRefs": [
+        "1 Peter 4:10",
+        "Romans 12:5-6"
+      ]
+    },
+    {
+      "week": 46,
+      "theme": "possibilities",
+      "memoryVerseRefs": [
+        "Hebrews 12:1",
+        "Isaiah 1:17"
+      ]
+    },
+    {
+      "week": 47,
+      "theme": "getting dirty",
+      "memoryVerseRefs": [
+        "Colossians 3:23",
+        "Proverbs 16:3"
+      ]
+    },
+    {
+      "week": 48,
+      "theme": "new life",
+      "memoryVerseRefs": [
+        "Romans 10:13",
+        "Zechariah 4:6"
+      ]
+    },
+    {
+      "week": 49,
+      "theme": "rootbound",
+      "memoryVerseRefs": [
+        "Proverbs 14:1",
+        "Deuteronomy 31:8"
+      ]
+    },
+    {
+      "week": 50,
+      "theme": "sundials",
+      "memoryVerseRefs": [
+        "Psalm 90:12",
+        "Luke 6:38"
+      ]
+    },
+    {
+      "week": 51,
+      "theme": "plan to bloom",
+      "memoryVerseRefs": [
+        "Jeremiah 29:11",
+        "Philippians 3:13-14"
+      ]
+    },
+    {
+      "week": 52,
+      "theme": "vista",
+      "memoryVerseRefs": [
+        "Romans 8:35,38-39",
+        "Philippians 1:6"
+      ]
+    }
+  ]
+}

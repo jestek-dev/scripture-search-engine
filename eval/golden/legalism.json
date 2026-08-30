@@ -1,0 +1,41 @@
+{
+  "id": "legalism",
+  "query": "legalism in the bible",
+  "status": "active",
+  "additionalQueries": [
+    "do christians have to follow rules"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 43 (Theme K, requesting book:",
+    "Colossians). Deferred because Col 2:16-23 was absent (Col corpus was",
+    "chs 1, 3).",
+    "EXTENSION ROUTE CHECKED before minting (the row's own flag):",
+    "grace-not-earned is saved-by-works-shaped (Eph 2) \u2014 routing legalism",
+    "queries there would land them on Eph 2:8-9 instead of the",
+    "don't-handle-don't-taste texts the queries want; disputable-matters",
+    "covers the judging side (its Rom 14 register untouched). MINTED",
+    "narrow on Colossians 2's own texts.",
+    "BOUNDARY: Col 2:8 stays giving-an-answer's anchor (this pack's",
+    "spans 2:16-17, 2:20-23 are disjoint from it).",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'legalism in the bible' pure preached-vocabulary noise (Ps 42:6,",
+    "John 11:35 \u2014 'Jesus wept'!); 'do christians have to follow rules'",
+    "translation-variant scatter (Exod 15:25, Lev 5:10) \u2014 Col 2:20-23",
+    "unreachable."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Colossians 2:20-23",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Legalism"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Colossians 2:16-17"
+  ],
+  "coversConcepts": [
+    "legalism"
+  ]
+}

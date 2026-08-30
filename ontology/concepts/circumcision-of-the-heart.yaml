@@ -1,0 +1,58 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme I row 37 (requesting book: Deuteronomy). Deferred because
+# Deut 30:6; 10:16 were absent.
+#
+# The READ-TOGETHER heart-design DECIDED at curation (this row's and
+# new-heart's own cross-flags, decided together; reversible): TWO
+# resolutions, ONE new id — this narrow mint carries the circumcision
+# vocabulary (repentance names the human turning, not God's inward
+# surgery; new-creation is the NT fresh-start register and a
+# read-back here), while the new-heart row lands as a new-creation
+# LEXICON EXTENSION (recorded in that file, same PR) since
+# new-creation already anchors Ezek 36:26 and Ps 51:10. No broader
+# heart-transformation umbrella minted (the review's alternative,
+# declined as a near-duplicate magnet).
+#
+# BOUNDARIES: Jer 4:4 / 9:26 NOT claimed and no uncircumcised-heart
+# lexicon entry — the Jeremiah thread's recorded routing to the
+# hardness-of-heart row stands (adjacent imagery, different theme).
+# Deut 30:1-5 stays restoration-of-israel's anchor; this pack takes
+# the adjacent, disjoint 30:6. Rom 2:28-29 claimed — verified free
+# and in corpus (the roster's own note: the natural NT keystone).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports command (10:16) and promise (30:6) side by side; it
+# resolves no ordo salutis.
+id: circumcision-of-the-heart
+label: Circumcision of the heart
+lexicon:
+  - circumcise your heart
+  - circumcision of the heart
+  - circumcised heart
+anchors:
+  # "The LORD your God will circumcise your heart, and the heart of
+  # your offspring, to love the LORD your God with all your heart and
+  # with all your soul, that you may live." (WEB, in corpus). The
+  # promise — God's own inward surgery.
+  - ref: Deuteronomy 30:6
+    sources: [editorial]
+    weight: 1.0
+  # "Circumcise therefore the foreskin of your heart, and be no more
+  # stiff-necked." (WEB, in corpus). The command form — the same book
+  # holds both.
+  - ref: Deuteronomy 10:16
+    sources: [editorial]
+    weight: 0.9
+  # "he is a Jew who is one inwardly, and circumcision is that of the
+  # heart, in the spirit, not in the letter" (WEB, in corpus). The NT
+  # statement (the roster-verified free keystone).
+  - ref: Romans 2:28-29
+    sources: [editorial]
+    weight: 0.85
+related:
+  - new-creation
+  - repentance
+  - hardness-of-heart
+  - loving-god
+sources: [editorial]

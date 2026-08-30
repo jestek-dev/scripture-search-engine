@@ -139,6 +139,8 @@ export const passages: Record<string, { reference?: string; verses: { verse: num
       { verse: 23, text: 'They are new every morning: great is thy faithfulness.' },
     ],
   },
+  'Jeremiah 4:10': { verses: [{ verse: 10, text: 'Ah, Lord GOD! surely thou hast greatly deceived this people, saying, Ye shall have peace; whereas the sword reacheth unto the soul.' }] },
+  'Exodus 15:11': { verses: [{ verse: 11, text: 'Who is like unto thee, O LORD, among the gods? who is like thee, glorious in holiness, fearful in praises, doing wonders?' }] },
 };
 for (let n = 4; n <= 14; n += 1) {
   passages[`Filler ${n}:${n}`] = { verses: [{ verse: n, text: `Filler verse text number ${n} with quiet words.` }] };
@@ -186,6 +188,29 @@ export interface MockState {
   applyCount: number;
   /** null-review case ids: GET /api/v2/cases/:uuid returns review:null. */
   nullReviewCases: Set<string>;
+  /** GET /api/v2/updates payload (default: the empty derivation). */
+  updatesPayload: Record<string, unknown> | null;
+  /** Whether GET /api/v2/updates 500s. */
+  updatesFails: boolean;
+  /** Custom decide POST responses; return null to fall through. */
+  decideResponder?: (cardId: string, body: Record<string, unknown>, n: number) => JudgmentResponse | null;
+  decideCount: number;
+  /** Extra discovery result sets by query (checked before the built-ins). */
+  extraSearches: Record<string, MockResult[]>;
+  /** GET /api/v2/updates/train/:id payload (`data.train`); null → 404. */
+  trainView: Record<string, unknown> | null;
+  /** Custom seal responder; return null for the default (201 + trainView). */
+  trainSealResponder?: (body: Record<string, unknown> | null, n: number) => JudgmentResponse | null;
+  trainSealCount: number;
+  /** Custom train-state responder; return null for the default. */
+  trainViewResponder?: (trainId: string, n: number) => JudgmentResponse | null;
+  trainViewCount: number;
+  /** GET /api/v2/admissions/:id payload (`data.admission`); null → 404. */
+  admissionDetail: Record<string, unknown> | null;
+  admitResponder?: (reviewId: string, body: Record<string, unknown> | null, n: number) => JudgmentResponse | null;
+  admitCount: number;
+  prepareResponder?: (reviewId: string, body: Record<string, unknown> | null, n: number) => JudgmentResponse | null;
+  prepareCount: number;
 }
 
 export function caseMock(caseId: string, query: string, state = 'reviewing', at = '2026-08-20T00:00:00.000Z'): Record<string, unknown> {
@@ -228,7 +253,130 @@ export function makeMock(options: Partial<MockState> = {}): MockState {
     compilePreviewCount: 0,
     applyCount: 0,
     nullReviewCases: new Set(),
+    updatesPayload: null,
+    updatesFails: false,
+    decideCount: 0,
+    extraSearches: {},
+    trainView: null,
+    trainSealCount: 0,
+    trainViewCount: 0,
+    admissionDetail: null,
+    admitCount: 0,
+    prepareCount: 0,
     ...options,
+  };
+}
+
+/**
+ * A GET /api/v2/updates payload for the given derived cards, with the tally
+ * computed under the deriver's rule (op-bearing, un-routed cards only). The
+ * digest fields are 64-hex like the real server's — the D28 assertion must
+ * prove they never render.
+ */
+export function derivationMock(cards: readonly Record<string, unknown>[], trains: readonly Record<string, unknown>[] = []): Record<string, unknown> {
+  const stateOf = (card: Record<string, unknown>): string => {
+    const state = card.state as Record<string, unknown> | undefined;
+    return state !== undefined && typeof state.decision === 'string' ? state.decision : 'drafted';
+  };
+  const opBearing = cards.filter((card) =>
+    card.kind !== 're-confirmation' && card.kind !== 'conflict' && card.kind !== 'needs-engineering'
+    && (card.routed === undefined || card.routed === null));
+  const shipped = (card: Record<string, unknown>): boolean => {
+    const state = card.state as Record<string, unknown> | undefined;
+    return state !== undefined && state.sealedTrainLive === true;
+  };
+  return {
+    cards,
+    derivationDigest: 'c'.repeat(64),
+    replayIdentity: identity,
+    trains,
+    unverifiablePriorTrains: [],
+    tally: {
+      drafted: opBearing.filter((card) => stateOf(card) === 'drafted').length,
+      approved: opBearing.filter((card) => stateOf(card) === 'approved' && card.parkedByDefault !== true && !shipped(card)).length,
+      declined: opBearing.filter((card) => stateOf(card) === 'declined').length,
+      parked: opBearing.filter((card) => stateOf(card) === 'parked' || card.parkedByDefault === true).length,
+    },
+    readOnly: false,
+  };
+}
+
+/**
+ * §4.6's guard Update Report lead — trainRunner.ts is its single writer;
+ * this constant exists so specs can assert the page renders it VERBATIM
+ * from the payload (the page itself must not mint the sentence).
+ */
+export const GUARD_REPORT_LEAD_TEXT = 'This update only writes lines on the answer sheet — no search result can move, so there is nothing to compare. The checks confirmed every line holds.';
+
+/** A stored sealed-train snapshot as GET /api/v2/updates payloads carry it. */
+export function sealedTrainSnapshot(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    trainId: 'train-0001',
+    flavor: 'guard',
+    openedAt: '2026-08-28T12:00:00.000Z',
+    state: 'sealed',
+    sealed: {
+      schemaVersion: 1,
+      eventId: '0a1b2c3d-6666-4777-8888-999900001111',
+      at: '2026-08-28T12:00:00.000Z',
+      reviewer: 'jesse',
+      kind: 'train-sealed',
+      trainId: 'train-0001',
+      sealDigest: 'a1'.repeat(32),
+      cardIds: ['11'.repeat(32)],
+      judgmentIds: ['0a1b2c3d-1111-4222-8333-944445555666'],
+      replayIdentity: identity,
+    },
+    ...overrides,
+  };
+}
+
+/** An observed TrainView as GET /api/v2/updates/train/:id serves it. */
+export function guardTrainView(state: string, overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    trainId: 'train-0001',
+    flavor: 'guard',
+    state,
+    openedAt: '2026-08-28T12:00:00.000Z',
+    sealDigest: 'a1'.repeat(32),
+    cardIds: ['11'.repeat(32)],
+    stopped: null,
+    report: {
+      schemaVersion: 1,
+      kind: 'guard-update-report',
+      trainId: 'train-0001',
+      lead: GUARD_REPORT_LEAD_TEXT,
+      lines: ['For "it is well with my soul", Jeremiah 4:10 must not rank. Why: matched words, not meaning; judged not a fit for this query'],
+      digest: 'ab'.repeat(32),
+    },
+    draftPrUrl: null,
+    checksDurationMs: null,
+    ...overrides,
+  };
+}
+
+/** A READY AdmissionView detail for `GET /api/v2/admissions/train-0001`. */
+export function readyAdmissionDetail(): Record<string, unknown> {
+  return {
+    reviewId: 'train-0001',
+    proposalId: 'train-0001',
+    state: 'READY',
+    readOnly: false,
+    blockers: [],
+    recovery: [],
+    preview: {
+      digest: 'd1'.repeat(32),
+      proposalDigest: 'd2'.repeat(32),
+      baseCommit: 'f'.repeat(40),
+      candidate: null,
+      diffs: [],
+      decisions: [{ slotId: 'fixture:it-is-well-with-my-soul', kind: 'fixture-decision', prompt: 'Confirm the fixture change.', probes: [] }],
+      measurableEffect: false,
+      effectExemption: { kind: 'fixture-class-effect', lane: 'fixture-lane', operationTypes: ['golden-fixture-upsert'], rationale: 'fixtures are the measuring instrument' },
+      reviewedComparisonQueries: [],
+      gauntlet: null,
+    },
+    admission: null,
   };
 }
 
@@ -263,7 +411,9 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
   const review = (caseId: string, query: string) => {
     mock.tokenCounter += 1;
     mock.lastToken = `token-${mock.tokenCounter}`;
-    const results = mock.snapshotResults !== undefined ? mock.snapshotResults(query) : liveTop10(query);
+    const results = mock.snapshotResults !== undefined
+      ? mock.snapshotResults(query)
+      : mock.extraSearches[query] !== undefined ? mock.extraSearches[query].slice(0, 10) : liveTop10(query);
     return {
       freshness: 'fresh',
       token: mock.lastToken,
@@ -403,6 +553,143 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
       await route.fulfill(ok({ digest: body?.digest ?? '', outcome: { fixturesWritten: [], fixturesRemoved: [] } }));
       return;
     }
+    if (url.pathname === '/api/v2/updates' && request.method() === 'GET') {
+      if (mock.updatesFails) {
+        await route.fulfill(err(500, 'updates_unavailable', 'Updates could not be derived. Reload and retry.'));
+        return;
+      }
+      await route.fulfill(ok(mock.updatesPayload ?? derivationMock([])));
+      return;
+    }
+    const decideMatch = /^\/api\/v2\/updates\/cards\/([^/]+)\/decide$/.exec(url.pathname);
+    if (decideMatch !== null && request.method() === 'POST') {
+      mock.decideCount += 1;
+      if (mock.decideResponder !== undefined && body !== null) {
+        const custom = mock.decideResponder(decideMatch[1]!, body, mock.decideCount);
+        if (custom !== null) {
+          await route.fulfill({ status: custom.status, contentType: 'application/json', body: JSON.stringify(custom.payload) });
+          return;
+        }
+      }
+      // Default: validate the per-card pin and fold the decision onto the
+      // stored payload, so a refetch sees the decided state (the real
+      // store's latest-decide-wins fold).
+      const payload = mock.updatesPayload;
+      const cards = payload !== null && Array.isArray(payload.cards) ? payload.cards as Record<string, unknown>[] : [];
+      const index = cards.findIndex((card) => card.cardId === decideMatch[1]);
+      if (index === -1 || body === null) {
+        await route.fulfill(err(409, 'card_not_derived', 'You changed your call on this since the card was written. Reload your updates for the fresh card.'));
+        return;
+      }
+      const card = cards[index]!;
+      if (card.cardRevision !== body.cardRevision) {
+        await route.fulfill(err(409, 'stale_card_revision', 'The picture changed since you read this — reload your updates and decide against the fresh card.'));
+        return;
+      }
+      const decision = body.decision === 'approve' ? 'approved' : body.decision === 'decline' ? 'declined' : 'parked';
+      const cardState: Record<string, unknown> = { decision, decidedAt: '2026-08-28T00:00:00.000Z' };
+      if (body.answers !== undefined) cardState.answers = body.answers;
+      if (body.reason !== undefined) cardState.declineReason = body.reason;
+      const fresh = { ...card, state: cardState };
+      cards[index] = fresh;
+      await route.fulfill(created({ card: fresh }));
+      return;
+    }
+    if (url.pathname === '/api/v2/updates/train' && request.method() === 'POST') {
+      mock.trainSealCount += 1;
+      if (mock.trainSealResponder !== undefined) {
+        const custom = mock.trainSealResponder(body, mock.trainSealCount);
+        if (custom !== null) {
+          await route.fulfill({ status: custom.status, contentType: 'application/json', body: JSON.stringify(custom.payload) });
+          return;
+        }
+      }
+      if (mock.trainView === null) {
+        await route.fulfill(err(500, 'train_unavailable', 'The update could not be started or read. Reload and retry.'));
+        return;
+      }
+      // Mirror the real seal: the next derivation carries the sealed train
+      // and every approved card rides it (the fold's sealedInTrain freeze).
+      const sealedPayload = mock.updatesPayload;
+      if (sealedPayload !== null) {
+        const trainId = typeof mock.trainView.trainId === 'string' ? mock.trainView.trainId : 'train-0001';
+        const priorTrains = Array.isArray(sealedPayload.trains) ? sealedPayload.trains as Record<string, unknown>[] : [];
+        sealedPayload.trains = [...priorTrains, sealedTrainSnapshot({ trainId })];
+        if (Array.isArray(sealedPayload.cards)) {
+          sealedPayload.cards = (sealedPayload.cards as Record<string, unknown>[]).map((card) => {
+            const cardState = card.state as Record<string, unknown> | undefined;
+            return cardState !== undefined && cardState.decision === 'approved'
+              ? { ...card, state: { ...cardState, sealedInTrain: trainId } }
+              : card;
+          });
+        }
+      }
+      await route.fulfill(created({ train: mock.trainView }));
+      return;
+    }
+    const trainStateMatch = /^\/api\/v2\/updates\/train\/([^/]+)$/.exec(url.pathname);
+    if (trainStateMatch !== null && request.method() === 'GET') {
+      mock.trainViewCount += 1;
+      if (mock.trainViewResponder !== undefined) {
+        const custom = mock.trainViewResponder(trainStateMatch[1]!, mock.trainViewCount);
+        if (custom !== null) {
+          await route.fulfill({ status: custom.status, contentType: 'application/json', body: JSON.stringify(custom.payload) });
+          return;
+        }
+      }
+      if (mock.trainView === null) {
+        await route.fulfill(err(404, 'train_not_found', 'No update with this name exists yet.'));
+        return;
+      }
+      await route.fulfill(ok({ train: mock.trainView, readOnly: false }));
+      return;
+    }
+    const admissionDetailMatch = /^\/api\/v2\/admissions\/([^/]+)$/.exec(url.pathname);
+    if (admissionDetailMatch !== null && request.method() === 'GET') {
+      if (mock.admissionDetail === null) {
+        await route.fulfill(err(404, 'admission_not_found', 'Unknown admission.'));
+        return;
+      }
+      await route.fulfill(ok({ admission: mock.admissionDetail, readOnly: false }));
+      return;
+    }
+    const admitMatch = /^\/api\/v2\/admissions\/([^/]+)\/admit$/.exec(url.pathname);
+    if (admitMatch !== null && request.method() === 'POST') {
+      mock.admitCount += 1;
+      if (mock.admitResponder !== undefined) {
+        const custom = mock.admitResponder(admitMatch[1]!, body, mock.admitCount);
+        if (custom !== null) {
+          await route.fulfill({ status: custom.status, contentType: 'application/json', body: JSON.stringify(custom.payload) });
+          return;
+        }
+      }
+      const detail = mock.admissionDetail ?? { reviewId: admitMatch[1], proposalId: admitMatch[1] };
+      const admittedView = {
+        ...detail,
+        state: 'ADMITTED',
+        admission: { digest: 'ad'.repeat(32), admittedAt: '2026-08-28T13:00:00.000Z', manifestId: 'ad'.repeat(32) },
+      };
+      mock.admissionDetail = admittedView;
+      await route.fulfill(created({ admission: admittedView }));
+      return;
+    }
+    const prepareMatch = /^\/api\/v2\/publish\/([^/]+)\/prepare$/.exec(url.pathname);
+    if (prepareMatch !== null && request.method() === 'POST') {
+      mock.prepareCount += 1;
+      if (mock.prepareResponder !== undefined) {
+        const custom = mock.prepareResponder(prepareMatch[1]!, body, mock.prepareCount);
+        if (custom !== null) {
+          await route.fulfill({ status: custom.status, contentType: 'application/json', body: JSON.stringify(custom.payload) });
+          return;
+        }
+      }
+      // The default draft-PR success flips the served train view to pr-open,
+      // like the real observed-state derivation would.
+      const prUrl = 'https://github.com/example/scripture-search-engine/pull/999';
+      if (mock.trainView !== null) mock.trainView = { ...mock.trainView, state: 'pr-open', draftPrUrl: prUrl };
+      await route.fulfill(created({ publication: { status: 'prepared', branch: 'refinement/2026-08-28-train-0001', draftPrUrl: prUrl } }));
+      return;
+    }
     if (url.pathname === '/api/v2/judgments' && request.method() === 'GET') {
       const caseId = url.searchParams.get('caseId') ?? '';
       await route.fulfill(ok({ caseId, judgments: mock.judgments[caseId] ?? [] }));
@@ -440,6 +727,10 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
     }
     if (url.pathname === '/api/search') {
       const q = url.searchParams.get('q') ?? '';
+      if (mock.extraSearches[q] !== undefined) {
+        await route.fulfill(plain({ kind: 'discovery', query: q, results: mock.extraSearches[q], ...identity }));
+        return;
+      }
       if (q === 'mercy') {
         await route.fulfill(plain({ kind: 'discovery', query: q, results: mercyResults, ...identity }));
         return;

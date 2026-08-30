@@ -4,16 +4,17 @@
   "status": "active",
   "note": [
     "QR-5 (P5.4) cited spelling correction — battery ms3, an audit F: 'rightousness' is a silent-empty discovery today. The -ness misspelling is untouched by the stemmer (ends in -ss), so the whole typed word (length 12 -> edit budget 2) is the correction key: unique in-policy winner 'righteousness' at Damerau distance 1 (missing 'e'), cited on the chip with the typed surface form.",
-    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass."
+    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass.",
+    "CORPUS-EXPANSION EXECUTION (ruling rows 16-17, approved 2026-08-26, also a catch-up-ruling fixture): this fixture pins the correction machinery, not a verse. On the full corpus the machinery is fully intact (unique in-policy winner 'righteousness', Damerau distance 1, cited on the chip), and the verse assertions re-point to the measured top corrected results — Isaiah 1:27 #1 and Genesis 15:6 #2 — with the requiredReasonLabel kept byte-identical. Rom 6:20 and Matt 5:6 were displaced by the full corpus's righteousness verses, which is exactly the honest competition the expansion admits."
   ],
   "expectedTop": [
     {
-      "ref": "Romans 6:20",
+      "ref": "Isaiah 1:27",
       "withinTop": 3,
       "requiredReasonLabel": "Shared word: righteousness (corrected from \"rightousness\")"
     },
     {
-      "ref": "Matthew 5:6",
+      "ref": "Genesis 15:6",
       "withinTop": 10
     }
   ]

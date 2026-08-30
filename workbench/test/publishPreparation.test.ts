@@ -325,6 +325,10 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
     sourceDecisionSubject,
     decisionSlots: [{ kind: 'source-proposal', slotId: 'source-proposal', subjectDigest: sourceDecisionSubject }],
     measurableEffect: true,
+    effectExemption: null,
+    fixtureLane: null,
+    baseIdentity: null,
+    deferredSigningMarker: null,
   };
   const preview: AdmissionPreview = { ...previewBody, digest: digest(previewBody) };
   const decision = signAdmissionDecision({
@@ -370,6 +374,10 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
       },
     },
     gauntlet,
+    effectExemption: null,
+    baseIdentity: null,
+    deferredSigning: null,
+    releaseGauntletClassification: null,
     sourceChanges: [sourceChange],
     probeMovements: [],
     commands: [outcome(process.execPath, [resolveNpmCliPath(), 'run', 'verify'])],
@@ -488,7 +496,7 @@ async function withFixtureAndProbe(repo: TestRepository, variant: ProbeApprovalV
   const fixtureSubject = 'f'.repeat(64);
   const probeSubject = includeBaseline ? digest({ movements: [movement], diff: baseline.digest }) : null;
   const sourceSubject = digest({ proposalDigest: repo.manifest.proposalDigest, diffs: [source.digest] });
-  const { digest: _gauntletDigest, ...oldGauntletBody } = repo.manifest.gauntlet;
+  const { digest: _gauntletDigest, ...oldGauntletBody } = repo.manifest.gauntlet!;
   const gauntletBody = { ...oldGauntletBody, baseCommit };
   const gauntlet = { ...gauntletBody, digest: digest(gauntletBody) };
   const previewBody: Omit<AdmissionPreview, 'digest'> = {
@@ -549,6 +557,103 @@ async function withFixtureAndProbe(repo: TestRepository, variant: ProbeApprovalV
   return { ...repo, baseCommit, manifest, preview, manifestPath };
 }
 
+/**
+ * Rewrites the admitted change set so it also CREATES a golden fixture file —
+ * the guard/fixture lane's primary operation. The created file's before image
+ * is the empty marker and the file is absent at the base commit, so the
+ * publish worktree must treat "missing" as the before state (D11 finding).
+ */
+async function withCreatedFixture(repo: TestRepository): Promise<TestRepository> {
+  const fixtureDocument = {
+    expectedTop: [],
+    generatedBy: 'workbench',
+    id: 'quiet-guard',
+    mustNotRank: [{ ref: 'Psalms 46:1', why: 'matched words, not meaning; judged not a fit for this query' }],
+    query: 'quiet waters',
+    status: 'pending',
+  };
+  const fixtureText = `${JSON.stringify(fixtureDocument, null, 2)}\n`;
+  const image = (text: string) => ({ sha256: sha256(text), base64: Buffer.from(text).toString('base64'), text });
+  const source = repo.manifest.sourceChanges[0]!;
+  // The proposal must own the created path: its precondition is the empty
+  // marker (sha256 of zero bytes), exactly how the workbench derives a
+  // fixture CREATE, and a golden-fixture-upsert operation uses it.
+  const rawProposal = JSON.parse(JSON.stringify(repo.proposal)) as {
+    sourcePreconditions: { path: string; sha256: string }[];
+    operations: unknown[];
+  };
+  rawProposal.sourcePreconditions.push({ path: 'eval/golden/quiet-guard.json', sha256: sha256('') });
+  rawProposal.operations.push({
+    operationId: 'golden-fixture-upsert-quiet-guard',
+    type: 'golden-fixture-upsert',
+    sourcePaths: ['eval/golden/quiet-guard.json'],
+    provenance: {
+      source: 'editorial',
+      confirmed: true,
+      reviewer: 'Publish Reviewer',
+      evidence: 'A separately reviewed guard vote demonstrates the exact must-not-rank gap.',
+    },
+    reason: 'Create the reviewed guard fixture for the quiet waters query.',
+    goldenFixtureId: 'quiet-guard',
+    fixture: fixtureDocument,
+  });
+  const parsedProposal = parseProposalManifest(rawProposal);
+  const proposalDigest = proposalManifestDigest(parsedProposal);
+  const createBody = {
+    path: 'eval/golden/quiet-guard.json', kind: 'fixture' as const, operationIds: [] as readonly string[],
+    before: image(''), after: image(fixtureText), changed: true,
+  };
+  const create = { ...createBody, digest: digest(createBody) };
+  const diffs = [create, source].sort((left, right) => left.path.localeCompare(right.path));
+  const sourceSubject = digest({ proposalDigest, diffs: diffs.map((entry) => entry.digest) });
+  const candidate = { ...repo.manifest.candidate!, proposalDigest };
+  const { digest: _oldGauntletDigest, ...oldGauntletBody } = repo.manifest.gauntlet!;
+  const gauntletBody = { ...oldGauntletBody, proposalDigest };
+  const gauntlet = { ...gauntletBody, digest: digest(gauntletBody) };
+  const previewBody: Omit<AdmissionPreview, 'digest'> = {
+    ...repo.preview,
+    proposal: parsedProposal,
+    proposalDigest,
+    candidate,
+    gauntletDigest: gauntlet.digest,
+    gauntlet,
+    diffs,
+    sourceDecisionSubject: sourceSubject,
+    decisionSlots: [{ kind: 'source-proposal', slotId: 'source-proposal', subjectDigest: sourceSubject }],
+  };
+  const { digest: _oldPreviewDigest, ...canonicalPreviewBody } = previewBody as AdmissionPreview;
+  const preview: AdmissionPreview = { ...canonicalPreviewBody, digest: digest(canonicalPreviewBody) };
+  const decision = signAdmissionDecision({
+    kind: 'source-proposal', subjectDigest: sourceSubject, previewDigest: preview.digest, reviewer: 'Source Reviewer',
+    rationale: 'The reviewed change set including the created guard fixture is approved.', decidedAt: '2026-08-11T10:30:00.000Z',
+  }, SIGNING_KEY);
+  const admissionKey = digest({ previewDigest: preview.digest, decisions: [decision.decisionDigest] });
+  const treeHash = await treeForChanges(repo.remote, diffs.map((entry) => ({ path: entry.path, text: entry.after.text })));
+  const manifestBody: Omit<AdmissionManifest, 'digest'> = {
+    ...repo.manifest,
+    admissionKey,
+    previewDigest: preview.digest,
+    proposalDigest,
+    worktreeTreeHash: treeHash,
+    decisions: [decision],
+    candidate,
+    comparison: {
+      ...repo.manifest.comparison!,
+      binding: { ...repo.manifest.comparison!.binding, proposalDigest },
+    },
+    gauntlet,
+    sourceChanges: diffs,
+    rollback: diffs.map((entry) => ({
+      path: entry.path, restoreSha256: entry.before.sha256, restoreBase64: entry.before.base64, admittedSha256: entry.after.sha256,
+    })),
+  };
+  const { digest: _oldManifestDigest, ...canonicalManifestBody } = manifestBody as AdmissionManifest;
+  const manifest: AdmissionManifest = { ...canonicalManifestBody, digest: digest(canonicalManifestBody) };
+  const manifestPath = `workbench/admissions/${admissionKey}.json`;
+  await writeFile(path.join(repo.root, ...manifestPath.split('/')), `${JSON.stringify(manifest, null, 2)}\n`);
+  return { ...repo, proposal: parsedProposal, manifest, preview, manifestPath };
+}
+
 async function withoutDecision(repo: TestRepository, kind: 'fixture-promotion' | 'probe-baseline'): Promise<TestRepository> {
   const decisions = repo.manifest.decisions.filter((entry) => entry.kind !== kind);
   const admissionKey = digest({ previewDigest: repo.preview.digest, decisions: decisions.map((entry) => entry.decisionDigest) });
@@ -601,6 +706,17 @@ describe('M14 isolated draft publication preparation', () => {
     expect(result.prBody).toContain('### Linked cases');
     expect(result.prBody).toContain('### Rollback');
     expect(result.prBody).toContain(repo.manifest.digest);
+  }, 120_000);
+
+  it('prepares a branch whose admitted change CREATES its golden fixture file (the fixture lane primary operation)', async () => {
+    const repo = await withCreatedFixture(await repository());
+
+    const result = await prepareDraftPublication(input(repo));
+
+    expect(result.status).toBe('LOCAL_READY');
+    expect(await readFile(path.join(result.worktree, 'eval', 'golden', 'quiet-guard.json'), 'utf8'))
+      .toContain('"status": "pending"');
+    expect(await git(result.worktree, ['rev-parse', 'HEAD^{tree}'])).toBe(repo.manifest.worktreeTreeHash);
   }, 120_000);
 
   it('forces rebuild and review when origin/main moves before or during every local preparation phase', async () => {
@@ -677,18 +793,29 @@ describe('M14 isolated draft publication preparation', () => {
     await expect(prepareDraftPublication(input(dirty))).rejects.toMatchObject({ code: 'worktree_conflict' });
   });
 
-  it('rejects unapproved files, artifact databases, state, and telemetry output from verification', async () => {
-    const cases = [
-      ['unapproved_file', 'node -e "require(\'fs\').writeFileSync(\'rogue.txt\',\'x\')"'],
-      ['forbidden_output', 'node -e "require(\'fs\').mkdirSync(\'workbench/.artifact\',{recursive:true});require(\'fs\').writeFileSync(\'workbench/.artifact/content.db\',\'x\')"'],
-      ['forbidden_output', 'node -e "require(\'fs\').mkdirSync(\'workbench/.state\',{recursive:true});require(\'fs\').writeFileSync(\'workbench/.state/foreign.json\',\'{}\')"'],
-      ['forbidden_output', 'node -e "require(\'fs\').mkdirSync(\'telemetry\',{recursive:true});require(\'fs\').writeFileSync(\'telemetry/dump.json\',\'{}\')"'],
-    ] as const;
-    for (const [code, script] of cases) {
-      const repo = await repository(script);
-      await expect(prepareDraftPublication(input(repo))).rejects.toMatchObject({ code });
-    }
+  it('rejects unapproved file output from verification', async () => {
+    const repo = await repository('node -e "require(\'fs\').writeFileSync(\'rogue.txt\',\'x\')"');
+    await expect(prepareDraftPublication(input(repo))).rejects.toMatchObject({ code: 'unapproved_file' });
   }, 60_000);
+
+  it('scrubs the operational state verification recreates instead of refusing it (D11 finding)', async () => {
+    // A real `npm run verify` legitimately recreates workbench operational
+    // state (the server integration tests run real jobs against the checkout
+    // root), so that exhaust is scrubbed after verification; it is ignored
+    // content that can never reach the commit, and anything outside these
+    // directories still refuses (the rogue.txt case above).
+    const cases = [
+      ['workbench/.artifact', 'node -e "require(\'fs\').mkdirSync(\'workbench/.artifact\',{recursive:true});require(\'fs\').writeFileSync(\'workbench/.artifact/content.db\',\'x\')"'],
+      ['workbench/.state', 'node -e "require(\'fs\').mkdirSync(\'workbench/.state\',{recursive:true});require(\'fs\').writeFileSync(\'workbench/.state/foreign.json\',\'{}\')"'],
+      ['telemetry', 'node -e "require(\'fs\').mkdirSync(\'telemetry\',{recursive:true});require(\'fs\').writeFileSync(\'telemetry/dump.json\',\'{}\')"'],
+    ] as const;
+    for (const [scrubbed, script] of cases) {
+      const repo = await repository(script);
+      const result = await prepareDraftPublication(input(repo));
+      expect(result.status).toBe('LOCAL_READY');
+      await expect(readFile(path.join(result.worktree, ...scrubbed.split('/')))).rejects.toThrow();
+    }
+  }, 90_000);
 
   it('rejects failed verification, admission digest drift, signature drift, and tree mismatch', async () => {
     const failed = await repository('node -e "process.exit(7)"');
@@ -810,7 +937,7 @@ describe('M14 isolated draft publication preparation', () => {
     expect(result.prBody).toContain('eval/baselines/probes.json');
     expect(result.prBody).toContain('eval/baselines/probes.approval.json');
     expect(result.prBody).toContain(repo.comparison.referenceIdentity.layerFingerprint);
-    expect(result.prBody).toContain(repo.manifest.gauntlet.digest);
+    expect(result.prBody).toContain(repo.manifest.gauntlet!.digest);
 
     const missingFixture = await withoutDecision(repo, 'fixture-promotion');
     await expect(prepareDraftPublication(input(missingFixture))).rejects.toMatchObject({ code: 'decision_slot_invalid' });

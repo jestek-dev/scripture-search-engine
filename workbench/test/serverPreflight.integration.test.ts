@@ -10,8 +10,17 @@ const children: ChildProcess[] = [];
 const directories: string[] = [];
 
 afterEach(async () => {
-  for (const child of children.splice(0)) child.kill();
-  for (const directory of directories.splice(0)) rmSync(directory, { recursive: true, force: true });
+  // Wait for each child to actually exit before deleting its state directory:
+  // a dying server can still be writing .state/jobs entries, and a recursive
+  // remove racing those writes fails ENOTEMPTY (found by the D11 shakedown).
+  await Promise.all(children.splice(0).map((child) => new Promise<void>((resolve) => {
+    if (child.exitCode !== null || child.signalCode !== null) return resolve();
+    child.once('exit', () => resolve());
+    child.kill();
+  })));
+  for (const directory of directories.splice(0)) {
+    rmSync(directory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+  }
 });
 
 async function unusedPort(): Promise<number> {
@@ -98,6 +107,8 @@ describe('server startup preflight integration', () => {
       ['/api/v2/sessions', { kind: 'weekly-triage' }],
       ['/api/v2/audits/preview', { files: [] }],
       ['/api/v2/admissions/review-admission-one/admit', { decisions: [] }],
+      [`/api/v2/updates/cards/${'a'.repeat(64)}/decide`, { decision: 'approve', cardRevision: 'b'.repeat(64) }],
+      ['/api/v2/updates/train', { derivationDigest: 'c'.repeat(64) }],
       ['/api/v2/publish/review-admission-one/prepare', { push: false }],
     ] as const) {
       const mutation = await fetch(`http://127.0.0.1:${port}${route}`, {
@@ -113,6 +124,45 @@ describe('server startup preflight integration', () => {
     expect(studio).toContain('Workbench');
     expect(studio).toContain('Admission');
   }, 30_000);
+
+  it('lets the signing flow and the gauntlet check through the degraded gate', async () => {
+    const port = await unusedPort();
+    const child = launch(port);
+    await ready(child);
+
+    const snapshot = await health(port);
+    expect(snapshot.data.startup.mode).toBe('degraded-read-only');
+
+    // Signing is artifact-independent (status and digests come from a fresh
+    // fixture build and git, never the release artifact), so its three POSTs
+    // bypass the degraded gate: they must reach their handlers and fail with
+    // signing-domain errors here (this scratch repo has no baselines), never
+    // with startup_degraded_read_only.
+    for (const [route, body] of [
+      ['/api/v2/signing/preview', {}],
+      ['/api/v2/signing/write', {}],
+      ['/api/v2/signing/review-packet', {}],
+    ] as const) {
+      const response = await fetch(`http://127.0.0.1:${port}${route}`, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
+      });
+      const payload = await response.json() as { error?: { code?: string } };
+      expect(response.status, route).not.toBe(503);
+      expect(payload.error?.code, route).not.toBe('startup_degraded_read_only');
+    }
+
+    // The verify step's gauntlet job (fixture bed, artifact-independent) may
+    // start while degraded; every other job id stays 503.
+    const gauntlet = await fetch(`http://127.0.0.1:${port}/api/v2/checks`, {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jobId: 'gauntlet' }),
+    });
+    expect(gauntlet.status).toBe(202);
+    const typecheck = await fetch(`http://127.0.0.1:${port}/api/v2/checks`, {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jobId: 'typecheck' }),
+    });
+    expect(typecheck.status).toBe(503);
+    expect(await typecheck.json()).toMatchObject({ ok: false, error: { code: 'startup_degraded_read_only' } });
+  }, 120_000);
 
   it('reports hash mismatch and stale static snapshots with stable codes', async () => {
     const port = await unusedPort();

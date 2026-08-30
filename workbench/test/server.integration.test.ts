@@ -1,4 +1,4 @@
-import { spawn, type ChildProcess } from 'node:child_process';
+import { spawn, spawnSync, type ChildProcess } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   mkdirSync,
@@ -373,7 +373,11 @@ function scaffoldCompilationRepo(): string {
   ]) mkdirSync(directory, { recursive: true });
   writeFileSync(
     path.join(root, 'artifacts', 'content-artifact.json'),
-    `${JSON.stringify({ layerFingerprint: 'api-layer' }, null, 2)}\n`,
+    `${JSON.stringify({
+      engineVersion: '0.9.0',
+      corpusFingerprint: 'api-corpus',
+      layerFingerprint: 'api-layer',
+    }, null, 2)}\n`,
   );
   writeFileSync(
     path.join(root, 'pipeline', 'fixtures', 'web-subset.json'),
@@ -1175,4 +1179,210 @@ describe('v2 review HTTP contracts', () => {
     expect(() => readFileSync(casesPath)).toThrow();
     expect(() => readFileSync(judgmentsPath)).toThrow();
   }, 15_000);
+});
+
+/**
+ * Scaffolds a git repository a guard train can seal against: a real `main`
+ * branch (the seal pins its commit), the ontology/fixture files the deriver
+ * reads, and one guard vote whose card the flow approves and seals.
+ */
+function scaffoldGuardTrainRepo(): {
+  readonly root: string;
+  readonly judgmentsPath: string;
+  readonly casesPath: string;
+  readonly updatesPath: string;
+} {
+  const root = mkdtempSync(path.join(os.tmpdir(), 'sse-guard-train-api-'));
+  temporaryDirectories.push(root);
+  for (const args of [
+    ['init', '--quiet', '--initial-branch=main'],
+    ['config', 'user.email', 'workbench-test@example.invalid'],
+    ['config', 'user.name', 'Workbench Test'],
+    ['commit', '--quiet', '--allow-empty', '--message', 'scratch base'],
+  ]) {
+    const result = spawnSync('git', args, { cwd: root, encoding: 'utf8' });
+    if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${result.stderr}`);
+  }
+  for (const directory of [
+    path.join(root, 'ontology', 'concepts'),
+    path.join(root, 'eval', 'golden'),
+    path.join(root, 'pipeline', 'fixtures'),
+    path.join(root, 'workbench'),
+  ]) mkdirSync(directory, { recursive: true });
+  writeFileSync(path.join(root, 'ontology', 'concepts', 'obedience-to-the-word.yaml'), [
+    'id: obedience-to-the-word',
+    'label: Obedience to the word',
+    'lexicon:',
+    '  - hearing and doing',
+    'anchors:',
+    '  - ref: James 1:22',
+    '    sources: [editorial]',
+    '',
+  ].join('\n'));
+  writeFileSync(path.join(root, 'pipeline', 'fixtures', 'web-subset.json'), `${JSON.stringify({
+    $schema: 'verse-array-subset/1',
+    selection: [
+      { book: 'James', chapters: [1], why: 'test' },
+      { book: 'Psalms', chapters: [46], why: 'test' },
+    ],
+    verses: [],
+  }, null, 2)}\n`);
+  const caseId = '00000000-0000-4000-8000-00000000c453';
+  const judgmentsPath = path.join(root, 'workbench', 'judgments.jsonl');
+  const casesPath = path.join(root, 'workbench', 'cases.jsonl');
+  const updatesPath = path.join(root, 'workbench', 'updates.jsonl');
+  // The vote's recorded identity differs from the served fixture engine on
+  // purpose: a demotion guard derives regardless (02.5 disposition 3).
+  const identity = { engineVersion: '0.9.0', corpusFingerprint: 'api-corpus', layerFingerprint: 'api-layer' };
+  writeFileSync(judgmentsPath, `${JSON.stringify({
+    schemaVersion: 2,
+    judgmentId: '00000000-0000-4000-8000-00000000d901',
+    caseId,
+    at: '2026-08-10T10:01:00.000Z',
+    reviewer: 'jesse',
+    query: 'hearing and doing',
+    action: 'irrelevant',
+    targetId: 'WEB:19046001',
+    diagnosis: 'lexical-noise',
+    observedWindow: 10,
+    observedRank: 1,
+    resultSetDigest: 'a'.repeat(64),
+    displayedWindowDigest: 'b'.repeat(64),
+    source: 'manual',
+    ...identity,
+  })}\n`);
+  writeFileSync(casesPath, `${JSON.stringify({
+    schemaVersion: 2,
+    eventId: '00000000-0000-4000-8000-00000000e001',
+    caseId,
+    at: '2026-08-10T09:00:00.000Z',
+    reviewer: 'jesse',
+    sequence: 1,
+    kind: 'case-created',
+    query: 'hearing and doing',
+    source: 'manual',
+    artifact: identity,
+  })}\n`);
+  return { root, judgmentsPath, casesPath, updatesPath };
+}
+
+describe('v2 guard train sealing HTTP contracts (D10 AC)', () => {
+  it('seals over HTTP and surfaces the train on the admissions endpoints: the list shows READY and the detail returns the preview', async () => {
+    const port = await unusedPort();
+    const fixture = scaffoldGuardTrainRepo();
+    await startReviewedFixtureServer(port, {
+      WORKBENCH_REPO_ROOT: fixture.root,
+      WORKBENCH_JUDGMENTS_PATH: fixture.judgmentsPath,
+      WORKBENCH_CASES_PATH: fixture.casesPath,
+      WORKBENCH_UPDATES_PATH: fixture.updatesPath,
+    });
+    const origin = `http://127.0.0.1:${port}`;
+
+    const derived = await responseJson(await fetch(`${origin}/api/v2/updates`)) as {
+      data: { cards: { cardId: string; cardRevision: string; kind: string; state: { decision: string } }[] };
+    };
+    const guardCard = derived.data.cards.find((card) => card.kind === 'guard');
+    expect(guardCard, JSON.stringify(derived.data.cards)).toBeDefined();
+
+    const decided = await postJson(`${origin}/api/v2/updates/cards/${guardCard!.cardId}/decide`, {
+      decision: 'approve',
+      cardRevision: guardCard!.cardRevision,
+    });
+    expect(decided.status).toBe(201);
+
+    // Re-derive: the seal pins the digest of the state it was rendered from
+    // (§03.5 step 3) — the decide above moved it.
+    const rederived = await responseJson(await fetch(`${origin}/api/v2/updates`)) as {
+      data: { derivationDigest: string };
+    };
+    const sealed = await postJson(`${origin}/api/v2/updates/train`, {
+      derivationDigest: rederived.data.derivationDigest,
+    });
+    expect(sealed.status, JSON.stringify(await sealed.clone().json())).toBe(201);
+    const train = (await responseJson(sealed) as { data: { train: { trainId: string; state: string } } }).data.train;
+    expect(train.state).toBe('ready');
+    // The minted id IS the admissions-surface REVIEW_ID: the padded scheme
+    // clears its 8-character floor — 'train-1' broke this exact seam live.
+    expect(train.trainId).toBe('train-0001');
+    expect(train.trainId).toMatch(/^[a-z0-9][a-z0-9-]{7,79}$/);
+
+    // The D10 AC as written: the sealed train is discoverable on the shared
+    // admission surface (a 500 here poisoned the WHOLE registry pre-fix).
+    const listing = await responseJson(await fetch(`${origin}/api/v2/admissions`)) as {
+      ok: boolean;
+      data: { admissions: { reviewId: string; state: string }[] };
+    };
+    expect(listing.ok).toBe(true);
+    expect(listing.data.admissions).toEqual(expect.arrayContaining([
+      expect.objectContaining({ reviewId: 'train-0001', state: 'READY' }),
+    ]));
+
+    const detailResponse = await fetch(`${origin}/api/v2/admissions/train-0001`);
+    expect(detailResponse.status).toBe(200);
+    const detail = await responseJson(detailResponse) as {
+      data: { admission: { reviewId: string; state: string; preview: { digest: string; decisions: unknown[] } | null } };
+    };
+    expect(detail.data.admission).toMatchObject({ reviewId: 'train-0001', state: 'READY' });
+    expect(detail.data.admission.preview).not.toBeNull();
+    expect(detail.data.admission.preview!.digest).toMatch(/^[0-9a-f]{64}$/);
+    expect(detail.data.admission.preview!.decisions.length).toBeGreaterThan(0);
+  }, 60_000);
+
+  it('observes live from REAL git history (§5.2): the merged content on main makes the train live, monotonically — a later working-tree rewrite never regresses it', async () => {
+    const port = await unusedPort();
+    const fixture = scaffoldGuardTrainRepo();
+    await startReviewedFixtureServer(port, {
+      WORKBENCH_REPO_ROOT: fixture.root,
+      WORKBENCH_JUDGMENTS_PATH: fixture.judgmentsPath,
+      WORKBENCH_CASES_PATH: fixture.casesPath,
+      WORKBENCH_UPDATES_PATH: fixture.updatesPath,
+    });
+    const origin = `http://127.0.0.1:${port}`;
+
+    const derived = await responseJson(await fetch(`${origin}/api/v2/updates`)) as {
+      data: { cards: { cardId: string; cardRevision: string; kind: string }[] };
+    };
+    const guardCard = derived.data.cards.find((card) => card.kind === 'guard')!;
+    expect((await postJson(`${origin}/api/v2/updates/cards/${guardCard.cardId}/decide`, {
+      decision: 'approve',
+      cardRevision: guardCard.cardRevision,
+    })).status).toBe(201);
+    const rederived = await responseJson(await fetch(`${origin}/api/v2/updates`)) as { data: { derivationDigest: string } };
+    const sealed = await postJson(`${origin}/api/v2/updates/train`, { derivationDigest: rederived.data.derivationDigest });
+    expect(sealed.status).toBe(201);
+
+    // Before any merge the sealed train rides — the fixture is not on main.
+    const riding = await responseJson(await fetch(`${origin}/api/v2/updates/train/train-0001`)) as { data: { train: { state: string } } };
+    expect(riding.data.train.state).toBe('ready');
+
+    // The squash merge lands the sealed fixture content on main — a real
+    // commit, read back by the DEFAULT git-history observation (no seam).
+    const registry = JSON.parse(readFileSync(path.join(fixture.root, 'workbench', 'review-data', 'admission-evidence.json'), 'utf8')) as {
+      admissions: { reviewId: string; proposal: { operations: { type: string; goldenFixtureId?: string; fixture?: unknown }[] } }[];
+    };
+    const operations = registry.admissions.find((entry) => entry.reviewId === 'train-0001')!.proposal.operations;
+    const goldenRelatives: string[] = [];
+    for (const operation of operations) {
+      if (operation.type !== 'golden-fixture-upsert') continue;
+      const relative = `eval/golden/${operation.goldenFixtureId!}.json`;
+      goldenRelatives.push(relative);
+      writeFileSync(path.join(fixture.root, relative), `${JSON.stringify(operation.fixture, null, 2)}\n`);
+    }
+    expect(goldenRelatives.length).toBeGreaterThan(0);
+    for (const args of [
+      ['add', ...goldenRelatives],
+      ['commit', '--quiet', '--message', 'guard train train-0001 (squash merge)'],
+    ]) {
+      const result = spawnSync('git', args, { cwd: fixture.root, encoding: 'utf8' });
+      expect(result.status, result.stderr).toBe(0);
+    }
+    const live = await responseJson(await fetch(`${origin}/api/v2/updates/train/train-0001`)) as { data: { train: { state: string } } };
+    expect(live.data.train.state).toBe('live');
+
+    // Monotonic: a working-tree rewrite (the next same-search merge's file,
+    // a promotion, a hand edit) never regresses the merged train to ready.
+    writeFileSync(path.join(fixture.root, goldenRelatives[0]!), `${JSON.stringify({ id: 'rewritten', query: 'hearing and doing' }, null, 2)}\n`);
+    const after = await responseJson(await fetch(`${origin}/api/v2/updates/train/train-0001`)) as { data: { train: { state: string } } };
+    expect(after.data.train.state).toBe('live');
+  }, 60_000);
 });

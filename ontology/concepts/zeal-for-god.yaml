@@ -1,0 +1,63 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme I row 36 (requesting book: Numbers). Deferred because
+# Num 25:7-13 (Phinehas — the row's whole case) was absent.
+#
+# The VIGILANTE-VIOLENCE gist CAUTION honored (the row's own flag):
+# the pack anchors the LORD's commendation (25:10-13) — what the text
+# itself commends of a unique, priestly act — and does NOT anchor the
+# act verses (25:7-8) as a highlight. It pairs the narrative with
+# Rom 10:2's zeal-without-knowledge caution and the Ps 69:9 /
+# John 2:17 zeal-for-your-house register: the range of what Scripture
+# says about zeal, described, adjudicated by none.
+#
+# WEB WORDING NOTE: Num 25:11-13 renders the zeal word "jealous...
+# for his God"; the lexicon carries the zeal forms people type
+# (hunger-for-god names desire, not zeal — the row's own distinction).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword.
+id: zeal-for-god
+label: Zeal for God
+# STRUCTURAL LIMIT (G-4, recorded at authoring): "zeal for your house"
+# and "zeal in the bible" were REJECTED as entries — their house/bible
+# tokens pushed shared vocabulary with the-house-of-god to 67% (limit
+# 60%), the near-duplicate signature. The verbatim house query still
+# lands: John 2:17 contains "Zeal for your house" and Ps 69:9 "the
+# zeal of your house" for exact-phrase retrieval, and both carry this
+# chip whenever the concept fires by its zeal forms.
+lexicon:
+  - zeal for god
+  - zealous for god
+  - zealous for the lord
+anchors:
+  # "'Phinehas... has turned my wrath away from the children of
+  # Israel, in that he was jealous with my jealousy among them...
+  # Behold, I give to him my covenant of peace... because he was
+  # jealous for his God'" (WEB, in corpus). The LORD's own
+  # commendation — anchored as spoken (see gist caution above).
+  - ref: Numbers 25:10-13
+    sources: [editorial]
+    weight: 1.0
+  # "For the zeal of your house consumes me. The reproaches of those
+  # who reproach you have fallen on me." (WEB, in corpus). The
+  # psalmist's zeal — the line the disciples remember.
+  - ref: Psalms 69:9
+    sources: [editorial]
+    weight: 0.85
+  # "His disciples remembered that it was written, 'Zeal for your
+  # house will eat me up.'" (WEB, in corpus). Ps 69:9 applied at the
+  # temple cleansing.
+  - ref: John 2:17
+    sources: [editorial]
+    weight: 0.8
+  # "they have a zeal for God, but not according to knowledge." (WEB,
+  # in corpus). The caution text — zeal is not self-certifying;
+  # described, not weaponized.
+  - ref: Romans 10:2
+    sources: [editorial]
+    weight: 0.7
+related:
+  - hunger-for-god
+  - loving-god
+  - obedience-to-the-word
+sources: [editorial]

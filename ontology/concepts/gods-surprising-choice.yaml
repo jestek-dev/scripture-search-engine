@@ -1,0 +1,83 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme E row, requesting book: Judges — "the Genesis
+# pilot's deferred extension candidate, and Judges is its densest
+# narrative evidence"). Adopted as display vocabulary by Jesse's
+# 2026-08-25 ruling (CONVENTIONS §11); ENGINE admission only by his
+# merge of this PR.
+#
+# ONE-DESIGN DECIDED at curation (the review flags the call to
+# curation; CONVENTIONS §11.7; reversible, recorded in all three
+# files): THREE registers, three ids, zero shared phrases —
+#   god-looks-at-the-heart = divine scrutiny (same PR);
+#   gods-surprising-choice = God's use of weak/unlikely instruments
+#                            (this pack);
+#   humble-exaltation      = the pride/humility reversal (live,
+#                            untouched — its lexicon keeps every
+#                            humble/exalt phrasing).
+# KEYSTONE: 1 Cor 1:26-29 — verified in corpus and UNCLAIMED (the
+# batch-4 deferral's own NEW note for the re-pin curator, executed).
+#
+# BOUNDARIES: 1 Sam 16:7 stays god-looks-at-the-heart's (and
+# identity-in-christ's dual) — this pack takes 16:11-12, the youngest
+# son fetched from the sheep. Judg 7:2 anchored for the
+# lest-Israel-brag logic; deliverance narratives beyond it stay with
+# their own registers. strength-in-weakness keeps the 2 Cor 12
+# my-weakness register (cross-related) — this pack is God's CHOICE of
+# the unlikely, not grace in felt weakness.
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the texts' own pattern and 1 Cor 1's stated purpose
+# ("that no flesh should boast"); it adjudicates nothing about calling
+# or office.
+id: gods-surprising-choice
+label: God's surprising choice
+lexicon:
+  - god uses unlikely people
+  - god chooses the weak
+  - god uses ordinary people
+  - god chose the foolish things
+  - unlikely heroes in the bible
+anchors:
+  # "God chose the foolish things of the world that he might put to
+  # shame those who are wise. God chose the weak things of the world
+  # ... that no flesh should boast before God." (WEB, in corpus). The
+  # design's NT keystone.
+  - ref: 1 Corinthians 1:26-29
+    sources: [editorial]
+    weight: 1.0
+  # "O Lord, how shall I save Israel? Behold, my family is the poorest
+  # in Manasseh, and I am the least in my father's house." (WEB, in
+  # corpus). Gideon.
+  - ref: Judges 6:15
+    sources: [editorial]
+    weight: 0.9
+  # "The people who are with you are too many for me... lest Israel
+  # brag against me, saying, 'My own hand has saved me.'" (WEB, in
+  # corpus). The three hundred — the logic stated by God himself.
+  - ref: Judges 7:2
+    sources: [editorial]
+    weight: 0.85
+  # "There remains yet the youngest. Behold, he is keeping the
+  # sheep... Arise! Anoint him, for this is he." (WEB, in corpus).
+  # David fetched last. (16:7 stays god-looks-at-the-heart's.)
+  - ref: 1 Samuel 16:11-12
+    sources: [editorial]
+    weight: 0.85
+  # "Am I not a Benjamite, of the smallest of the tribes of Israel?
+  # And my family the least of all the families...?" (WEB, in corpus).
+  - ref: 1 Samuel 9:21
+    sources: [editorial]
+    weight: 0.7
+  # "the journey that you take won't be for your honor; for the LORD
+  # will sell Sisera into a woman's hand." (WEB, in corpus).
+  - ref: Judges 4:9
+    sources: [editorial]
+    weight: 0.7
+related:
+  - god-looks-at-the-heart
+  - humble-exaltation
+  - strength-in-weakness
+sources: [editorial]

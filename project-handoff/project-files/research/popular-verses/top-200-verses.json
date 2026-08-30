@@ -1,0 +1,4270 @@
+{
+  "generated": "2026-08-25",
+  "translation": "World English Bible (WEB)",
+  "text_provenance": "World English Bible, ebible.org 'engwebp' edition, verse-per-line file downloaded 2026-08-25 from https://ebible.org/Scriptures/engwebp_vpl.zip (sha256 b6f55cc787b1201b68dcfde8a1216e1a61ae6b3cc38748456cf58bdb5e95fc1c). The repo manifest pipeline/manifests/web.json pins an earlier snapshot of the same edition (sha256 3458ca34420c0547ec01b3dbda58a10a2d8fc511bdcd2e047ddd17fbe860b7b6, retrieved 2026-07-29); the live upstream has drifted from that pin, but a diff against the committed pinned witness pipeline/fixtures/web-subset.json (5,727 verses) shows the only difference is Acts 20:35, where the current edition has a no-break space (U+00A0) instead of a regular space before a closing quotation mark; no wording differs. All verse text below is current-edition (2026-08-25 download) text extracted verbatim by script; verses also witnessed in web-subset.json were additionally byte-verified against the pinned fixture.",
+  "methodology_summary": "Aggregated 60 usable source lists from 5 research files: YouVersion platform data (21 ranked/verse-of-the-year lists + 3 per-country tables), Bible Gateway most-read/most-searched data (14 lists incl. three top-100s, plus Lifeway/Religion Unplugged coverage and one derivative listicle folded into the same family), other site-analytics and search-volume studies (World Vision UK Ahrefs study, TopVerses, Bible Study Tools, Google Trends), 5 memorization curricula, and 8 independent editorial listicles. Exact duplicates were excluded (see dedupe log). Overlapping citations were merged into non-overlapping canonical entries; whole-chapter and 6+-verse citations were credited to the chapter's most-cited entry. Scoring: per list, weight x ((N-position+1)/N)^1.5 for ranked lists (weight 3.0 platform usage / 2.0 memorization / 1.0 listicle; TopVerses and the Google Trends snapshot scored at 1.0 because they measure web-reference frequency and rising phrase queries, not usage), weight x 0.6 for unranked lists, weight x 0.2 per distinct year for per-country tables (incl. the World Vision UK single-country slice); whole-chapter/6+-verse citations carry a further x0.5 diffuse-evidence discount; each list counts at most once per entry; within each source family a verse's per-list contributions are sorted descending and scaled by 1, 1/2, 1/3, ... to reward recurrence without letting one publisher dominate. Raw search-volume numbers were not used. Top-200 eligibility: at least two contributing lists, or a single ranked platform-usage list. Tiers are rule-assigned from score and source-class counts.",
+  "verses": [
+    {
+      "rank": 1,
+      "tier": 1,
+      "reference": "John 3:16",
+      "book": "John",
+      "chapter": 3,
+      "verses": "16",
+      "text": "For God so loved the world, that he gave his only born Son, that whoever believes in him should not perish, but have eternal life.",
+      "score": 26.7278,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #1",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #1",
+        "biblegateway: Top 10 Bible verses searched 2013 #1",
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #5",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as John 3:16-17)",
+        "memorization: Awana Sparks HangGlider memory verses [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: Top verses 2014 (partial, top 3 only) #1",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #1",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #1",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #1",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #1",
+        "listicles: Christianity.com Top 101 Bible Quotes #1",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #3",
+        "biblegateway: Top 10 Bible verses of 2015 #1",
+        "search-volume: Christian Post — Top 10 Trending Bible Verse Searches on Google #3",
+        "biblegateway: Top 10 most popular Bible verses 2016 #1",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "biblegateway: Top 5 most popular Bible verses 2017 #1",
+        "biblegateway: Top verses 2019 (partial, top 2 only) #1",
+        "biblegateway: Top verses 2022 (partial, #1 only) #1",
+        "biblegateway: All-time top most-searched verses (25th anniversary, 1993-2018, top 5) #1",
+        "youversion: Per-country top verses 2017 [country-table]",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #1",
+        "search-volume: Religion Unplugged — BibleGateway most searched Scriptures of 2020 #1",
+        "biblegateway: Top 100 most-read Bible verses 2024 #8",
+        "biblegateway: Top 10 most popular Bible verses 2018 #2",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #24",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #8"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 2,
+      "tier": 1,
+      "reference": "Jeremiah 29:11",
+      "book": "Jeremiah",
+      "chapter": 29,
+      "verses": "11",
+      "text": "For I know the thoughts that I think toward you,” says the LORD, “thoughts of peace, and not of evil, to give you hope and a future.",
+      "score": 26.4101,
+      "source_lists": [
+        "biblegateway: Top 10 most popular Bible verses 2018 #1",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #2",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #2",
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #3",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #2",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #3",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #2",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #2",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #2",
+        "biblegateway: Top 100 most-read Bible verses 2024 #7",
+        "listicles: Christianity.com Top 101 Bible Quotes #14",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #3",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #7",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #9",
+        "biblegateway: Top 10 Bible verses searched 2013 #2",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #2",
+        "youversion: World's 10 Most Popular Verses 2014 #4",
+        "biblegateway: Top 10 Bible verses of 2015 #2",
+        "biblegateway: Top 10 most popular Bible verses 2016 #2",
+        "youversion: Verse of the Year 2025 #2",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #2",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "search-volume: Religion Unplugged — BibleGateway most searched Scriptures of 2020 #2",
+        "biblegateway: Top 5 most popular Bible verses 2017 #2",
+        "biblegateway: All-time top most-searched verses (25th anniversary, 1993-2018, top 5) #2",
+        "biblegateway: Top verses 2014 (partial, top 3 only) #2",
+        "youversion: Per-country top verses 2015 [country-table]",
+        "youversion: Per-country top verses 2016 (88 nations) [country-table]",
+        "biblegateway: Top verses 2019 (partial, top 2 only) #2",
+        "youversion: Per-country top verses 2017 [country-table]",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #7"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 3,
+      "tier": 1,
+      "reference": "Philippians 4:13",
+      "book": "Philippians",
+      "chapter": 4,
+      "verses": "13",
+      "text": "I can do all things through Christ who strengthens me.",
+      "score": 23.2462,
+      "source_lists": [
+        "youversion: Verse of the Year 2013 #1",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #4",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #2",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #7",
+        "youversion: Most Popular Verses 2013 (top 5) #1",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Philippians 4:11-13)",
+        "biblegateway: Top 10 Bible verses searched 2013 #3",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #3",
+        "biblegateway: Top 10 Bible verses of 2015 #3",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #11",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #6",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #4",
+        "biblegateway: Top 10 most popular Bible verses 2016 #3",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #4",
+        "biblegateway: Top 10 most popular Bible verses 2018 #3",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #5",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #33",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #34",
+        "biblegateway: Top 5 most popular Bible verses 2017 #3",
+        "biblegateway: All-time top most-searched verses (25th anniversary, 1993-2018, top 5) #3",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #7",
+        "youversion: Per-country top verses 2016 (88 nations) [country-table]",
+        "biblegateway: Top verses 2014 (partial, top 3 only) #3",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #9"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 4,
+      "tier": 1,
+      "reference": "Philippians 4:6",
+      "book": "Philippians",
+      "chapter": 4,
+      "verses": "6",
+      "text": "In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God.",
+      "score": 21.1537,
+      "source_lists": [
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #1",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #9",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #1",
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as Philippians 4:6-7)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Philippians 4:4-7)",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #1",
+        "listicles: Christianity.com Top 101 Bible Quotes #4 (as Philippians 4:6-7)",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #4 (as Philippians 4:6-7)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #8",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #3 (as Philippians 4:6-7)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #32",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #9",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #7",
+        "youversion: Verse of the Year 2019 #1",
+        "youversion: Verse of the Year 2024 #1",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked] (as Philippians 4:6-7)",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #32",
+        "youversion: World's 10 Most Popular Verses 2014 #3",
+        "youversion: Most Shared Verses 2015 (top 5) #2 (as Philippians 4:6-7)",
+        "biblegateway: Top 10 Bible verses of 2015 #6",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #15",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #7",
+        "youversion: Per-country top verses 2016 (88 nations) [country-table] (as Philippians 4:6-7)",
+        "biblegateway: Top 10 Bible verses searched 2013 #9",
+        "youversion: Most Popular Verses 2013 (top 5) #5",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #32 (as Philippians 4:6-7)",
+        "biblegateway: Top 10 most popular Bible verses 2016 #10"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 5,
+      "tier": 1,
+      "reference": "Proverbs 3:5-6",
+      "book": "Proverbs",
+      "chapter": 3,
+      "verses": "5-6",
+      "text": "Trust in the LORD with all your heart, and don’t lean on your own understanding. In all your ways acknowledge him, and he will make your paths straight.",
+      "score": 19.394,
+      "source_lists": [
+        "youversion: Most Shared Verses 2015 (top 5) #1",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #6 (as Proverbs 3:5)",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #4 (as Proverbs 3:5)",
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #2 (as Proverbs 3:5)",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #5",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #6 (as Proverbs 3:5)",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #2 (as Proverbs 3:5)",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #7",
+        "biblegateway: Top 100 most-read Bible verses 2024 #38 (as Proverbs 3:5)",
+        "listicles: Christianity.com Top 101 Bible Quotes #23",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #2 (as Proverbs 3:5)",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked] (as Proverbs 3:5)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #38 (as Proverbs 3:6)",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #11 (as Proverbs 3:5)",
+        "biblegateway: Top 10 Bible verses searched 2013 #6",
+        "youversion: World's 10 Most Popular Verses 2014 #7 (as Proverbs 3:5)",
+        "biblegateway: Top 10 Bible verses of 2015 #8 (as Proverbs 3:5)",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #24",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #35"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 6,
+      "tier": 1,
+      "reference": "Isaiah 41:10",
+      "book": "Isaiah",
+      "chapter": 41,
+      "verses": "10",
+      "text": "Don’t you be afraid, for I am with you. Don’t be dismayed, for I am your God. I will strengthen you. Yes, I will help you. Yes, I will uphold you with the right hand of my righteousness.",
+      "score": 19.0521,
+      "source_lists": [
+        "youversion: Verse of the Year 2018 #1",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #4",
+        "biblegateway: Top 100 most-read Bible verses 2024 #26",
+        "youversion: Verse of the Year 2020 #1",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "youversion: Verse of the Year 2022 #1",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #1",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #26",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #12",
+        "listicles: Christianity.com Top 101 Bible Quotes #15",
+        "youversion: Verse of the Year 2023 #1",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #6",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "youversion: Verse of the Year 2025 #1",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #45",
+        "youversion: Most Shared Verses 2013 (top 10) #3",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #38",
+        "youversion: Per-country top verses 2015 [country-table]",
+        "youversion: Per-country top verses 2016 (88 nations) [country-table]",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #26",
+        "youversion: World's 10 Most Popular Verses 2014 #8",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #10"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 7,
+      "tier": 1,
+      "reference": "Romans 12:2",
+      "book": "Romans",
+      "chapter": 12,
+      "verses": "2",
+      "text": "Don’t be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what is the good, well-pleasing, and perfect will of God.",
+      "score": 18.5333,
+      "source_lists": [
+        "youversion: Verse of the Year 2014 #1",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #8",
+        "youversion: World's 10 Most Popular Verses 2014 #1",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Romans 12:1-2)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Romans 12:1-2)",
+        "youversion: All-time most popular verse (as of December 2015) #1",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #27",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #12",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #13",
+        "biblegateway: Top 100 most-read Bible verses 2024 #29",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #4",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #8",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #4",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #5",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #33",
+        "biblegateway: Top 10 most popular Bible verses 2018 #6",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #14",
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #7",
+        "biblegateway: Top 10 Bible verses of 2015 #7",
+        "youversion: Most Shared Verses 2015 (top 5) #4",
+        "youversion: Per-country top verses 2015 [country-table]",
+        "biblegateway: Top 10 Bible verses searched 2013 #8",
+        "youversion: Per-country top verses 2017 [country-table]",
+        "youversion: Verse of the Year 2025 #3",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #29",
+        "listicles: Christianity.com Top 101 Bible Quotes #99"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 8,
+      "tier": 1,
+      "reference": "Romans 8:28",
+      "book": "Romans",
+      "chapter": 8,
+      "verses": "28",
+      "text": "We know that all things work together for good for those who love God, for those who are called according to his purpose.",
+      "score": 16.965,
+      "source_lists": [
+        "youversion: Verse of the Year 2016 #1",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #3",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #6",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #3",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #9",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #6",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #4",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #25",
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #6",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #8",
+        "biblegateway: Top 100 most-read Bible verses 2024 #27",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #3",
+        "biblegateway: Top 10 Bible verses searched 2013 #4",
+        "biblegateway: Top 10 Bible verses of 2015 #4",
+        "biblegateway: Top 10 most popular Bible verses 2018 #4",
+        "youversion: Per-country top verses 2016 (88 nations) [country-table]",
+        "biblegateway: Top 10 most popular Bible verses 2016 #5",
+        "youversion: Per-country top verses 2017 [country-table]",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #8",
+        "biblegateway: Top 10 Scripture passages searched 2018 #5 (as broad citation Romans 8)",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #27",
+        "biblegateway: Top 5 most popular Bible verses 2017 #5",
+        "biblegateway: All-time top most-searched verses (25th anniversary, 1993-2018, top 5) #5",
+        "search-volume: Religion Unplugged — BibleGateway most searched Scriptures of 2020 #10"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 9,
+      "tier": 1,
+      "reference": "Joshua 1:9",
+      "book": "Joshua",
+      "chapter": 1,
+      "verses": "9",
+      "text": "Haven’t I commanded you? Be strong and courageous. Don’t be afraid. Don’t be dismayed, for the LORD your God is with you wherever you go.”",
+      "score": 13.3818,
+      "source_lists": [
+        "youversion: Verse of the Year 2017 #1",
+        "biblegateway: Top 100 most-read Bible verses 2024 #25",
+        "memorization: Awana Sparks HangGlider memory verses [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #26",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #16",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #10",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #5",
+        "youversion: Most Shared Verses 2015 (top 5) #3",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #29",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #41",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #17",
+        "youversion: Most Popular Verses 2013 (top 5) #4",
+        "youversion: Per-country top verses 2016 (88 nations) [country-table]",
+        "youversion: Per-country top verses 2017 [country-table]",
+        "youversion: Most Shared Verses 2013 (top 10) #8",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #25",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #47",
+        "biblegateway: Top 10 Bible verses searched 2013 #10"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 10,
+      "tier": 1,
+      "reference": "Matthew 6:33",
+      "book": "Matthew",
+      "chapter": 6,
+      "verses": "33",
+      "text": "But seek first God’s Kingdom and his righteousness; and all these things will be given to you as well.",
+      "score": 12.6293,
+      "source_lists": [
+        "youversion: Verse of the Year 2021 #1",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #28",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #30",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #15",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #9",
+        "youversion: Most Popular Verses 2013 (top 5) #3",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #34",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #19",
+        "youversion: World's 10 Most Popular Verses 2014 #5",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #13 (as broad citation Matthew 6)",
+        "youversion: Per-country top verses 2016 (88 nations) [country-table]",
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #8",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #8",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #30",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #9",
+        "biblegateway: Top 10 most popular Bible verses 2018 #10",
+        "biblegateway: Top 10 Scripture passages searched 2018 #10 (as broad citation Matthew 6)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 11,
+      "tier": 2,
+      "reference": "Isaiah 40:31",
+      "book": "Isaiah",
+      "chapter": 40,
+      "verses": "31",
+      "text": "but those who wait for the LORD will renew their strength. They will mount up with wings like eagles. They will run, and not be weary. They will walk, and not faint.",
+      "score": 11.5918,
+      "source_lists": [
+        "youversion: Most Popular Verses 2013 (top 5) #2",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #27",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Isaiah 40:30-31)",
+        "listicles: Christianity.com Top 101 Bible Quotes #13",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #5",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #17",
+        "biblegateway: Top 100 most-read Bible verses 2024 #37",
+        "youversion: Most Shared Verses 2013 (top 10) #5",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #12",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #37",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #46",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #34"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 12,
+      "tier": 2,
+      "reference": "Matthew 28:19",
+      "book": "Matthew",
+      "chapter": 28,
+      "verses": "19",
+      "text": "Go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit,",
+      "score": 10.9806,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #10",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #5",
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as Matthew 28:19-20)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Matthew 28:18-20)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #6",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #10",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #44",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked] (as Matthew 28:19-20)",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #4",
+        "biblegateway: Top 100 most-read Bible verses 2024 #53",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #16",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #42 (as Matthew 28:18-20)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 13,
+      "tier": 2,
+      "reference": "Psalm 23:4",
+      "book": "Psalm",
+      "chapter": 23,
+      "verses": "4",
+      "text": "Even though I walk through the valley of the shadow of death, I will fear no evil, for you are with me. Your rod and your staff, they comfort me.",
+      "score": 10.8547,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #1",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #1",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Psalm 23:3-4)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Psalm 23:4-6)",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #5 (as Psalm 23:1-4)",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "biblegateway: Top 10 most popular Bible verses 2016 #4",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #4",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #57",
+        "biblegateway: Top 10 Bible verses of 2015 #5",
+        "biblegateway: Top 10 most popular Bible verses 2018 #5",
+        "biblegateway: Top 10 Scripture passages searched 2018 #2 (as broad citation Psalm 23)",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #1",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #35 (as broad citation Psalm 23)",
+        "biblegateway: Top 5 most popular Bible verses 2017 #4",
+        "biblegateway: All-time top most-searched verses (25th anniversary, 1993-2018, top 5) #4",
+        "biblegateway: Top 10 Bible verses searched 2013 #5 (as broad citation Psalm 23)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 14,
+      "tier": 2,
+      "reference": "Genesis 1:1",
+      "book": "Genesis",
+      "chapter": 1,
+      "verses": "1",
+      "text": "In the beginning, God created the heavens and the earth.",
+      "score": 10.409,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #5",
+        "memorization: Awana Sparks HangGlider memory verses [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #5",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #30",
+        "biblegateway: Top 10 Scripture passages searched 2018 #3 (as broad citation Genesis 1)",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #9",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #7",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #18 (as broad citation Genesis 1)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 15,
+      "tier": 2,
+      "reference": "Psalm 23:1",
+      "book": "Psalm",
+      "chapter": 23,
+      "verses": "1",
+      "text": "A Psalm by David. The LORD is my shepherd; I shall lack nothing.",
+      "score": 10.0435,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #2",
+        "biblegateway: Top 100 most-read Bible verses 2024 #4",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Psalm 23:1-2)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Psalm 23:1-3)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #11",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked] (as Psalm 23:1-3)",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #8",
+        "biblegateway: Top 10 most popular Bible verses 2016 #6",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #4",
+        "biblegateway: Top 10 most popular Bible verses 2018 #8"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 16,
+      "tier": 2,
+      "reference": "Philippians 4:8",
+      "book": "Philippians",
+      "chapter": 4,
+      "verses": "8",
+      "text": "Finally, brothers, whatever things are true, whatever things are honorable, whatever things are just, whatever things are pure, whatever things are lovely, whatever things are of good report: if there is any virtue and if there is anything worthy of praise, think about these things.",
+      "score": 9.1981,
+      "source_lists": [
+        "youversion: World's 10 Most Popular Verses 2014 #2",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #24",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #6",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #7",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #35",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #36",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #20",
+        "youversion: Most Shared Verses 2014 #4"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 17,
+      "tier": 2,
+      "reference": "1 Peter 5:7",
+      "book": "1 Peter",
+      "chapter": 5,
+      "verses": "7",
+      "text": "casting all your worries on him, because he cares for you.",
+      "score": 9.0435,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #36",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as 1 Peter 5:6-8)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #3",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #11",
+        "biblegateway: Top 100 most-read Bible verses 2024 #40",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #40",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #41",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #36 (as 1 Peter 5:6-7)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 18,
+      "tier": 2,
+      "reference": "John 14:6",
+      "book": "John",
+      "chapter": 14,
+      "verses": "6",
+      "text": "Jesus said to him, “I am the way, the truth, and the life. No one comes to the Father, except through me.",
+      "score": 8.8581,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #21",
+        "memorization: Awana Sparks HangGlider memory verses [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #28",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #14",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #3",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #31",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #28"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 19,
+      "tier": 2,
+      "reference": "Romans 3:23",
+      "book": "Romans",
+      "chapter": 3,
+      "verses": "23",
+      "text": "for all have sinned, and fall short of the glory of God;",
+      "score": 8.4776,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #20",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Romans 3:23-24)",
+        "memorization: Awana Sparks HangGlider memory verses [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #5",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #29",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #10",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #93",
+        "biblegateway: Top 100 most-read Bible verses 2024 #98"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 20,
+      "tier": 2,
+      "reference": "Galatians 5:22-23",
+      "book": "Galatians",
+      "chapter": 5,
+      "verses": "22-23",
+      "text": "But the fruit of the Spirit is love, joy, peace, patience, kindness, goodness, faith, gentleness, and self-control. Against such things there is no law.",
+      "score": 8.2319,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #12 (as Galatians 5:22)",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: Top verses 2021 (partial, scattered ranks) #27 (as Galatians 5:22)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #19",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #49 (as Galatians 5:22)",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #29",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #57 (as Galatians 5:22)",
+        "listicles: Christianity.com Top 101 Bible Quotes #71",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #20",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #45"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 21,
+      "tier": 2,
+      "reference": "Psalm 91:1",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "1",
+      "text": "He who dwells in the secret place of the Most High will rest in the shadow of the Almighty.",
+      "score": 8.1538,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #9",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #1 (as broad citation Psalm 91)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #10",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 91:1-2)",
+        "biblegateway: Top 10 Scripture passages searched 2018 #1 (as broad citation Psalm 91)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #46",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked] (as broad citation Psalm 91)",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #10",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #39 (as Psalm 91:1-2)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 22,
+      "tier": 2,
+      "reference": "Philippians 4:7",
+      "book": "Philippians",
+      "chapter": 4,
+      "verses": "7",
+      "text": "And the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus.",
+      "score": 7.0222,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #25",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #5",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #30",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #12",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #34",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #6",
+        "youversion: World's 10 Most Popular Verses 2014 #6"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 23,
+      "tier": 2,
+      "reference": "John 10:10",
+      "book": "John",
+      "chapter": 10,
+      "verses": "10",
+      "text": "The thief only comes to steal, kill, and destroy. I came that they may have life, and may have it abundantly.",
+      "score": 6.7738,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #14",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #3",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #4",
+        "biblegateway: Top 100 most-read Bible verses 2024 #45",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #60",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #49",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #41"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 24,
+      "tier": 2,
+      "reference": "1 Corinthians 13:4",
+      "book": "1 Corinthians",
+      "chapter": 13,
+      "verses": "4",
+      "text": "Love is patient and is kind. Love doesn’t envy. Love doesn’t brag, is not proud,",
+      "score": 6.7152,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #47",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #1 (as 1 Corinthians 13:4-5)",
+        "listicles: Christianity.com Top 101 Bible Quotes #2 (as 1 Corinthians 13:4-5)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #25 (as 1 Corinthians 13:4-7)",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked] (as 1 Corinthians 13:4-5)",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #16 (as 1 Corinthians 13:4-8)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #49",
+        "biblegateway: Top 10 Scripture passages searched 2018 #4 (as broad citation 1 Corinthians 13)",
+        "youversion: All-time Most Bookmarked Verses (as of June 2011) #9",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #36 (as 1 Corinthians 13:4-8)",
+        "biblegateway: Top 10 Bible verses searched 2013 #7 (as 1 Corinthians 13:4-7)",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #9",
+        "youversion: All-time Top 10 Most Bookmarked Verses (as of June 2012) #10",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #43 (as 1 Corinthians 13:4-8)"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 25,
+      "tier": 2,
+      "reference": "Ephesians 2:8",
+      "book": "Ephesians",
+      "chapter": 2,
+      "verses": "8",
+      "text": "for by grace you have been saved through faith, and that not of yourselves; it is the gift of God,",
+      "score": 6.689,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #11",
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as Ephesians 2:8-9)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Ephesians 2:8-10)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #10",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #6",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #9",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #79",
+        "biblegateway: Top 100 most-read Bible verses 2024 #82"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 26,
+      "tier": 2,
+      "reference": "Psalm 23:6",
+      "book": "Psalm",
+      "chapter": 23,
+      "verses": "6",
+      "text": "Surely goodness and loving kindness shall follow me all the days of my life, and I will dwell in the LORD’s house forever.",
+      "score": 6.5308,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #2",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #3",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Psalm 23:5-6)",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #6",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #2",
+        "biblegateway: Top 10 most popular Bible verses 2016 #7",
+        "biblegateway: Top 10 most popular Bible verses 2018 #7",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #88"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 27,
+      "tier": 2,
+      "reference": "Romans 6:23",
+      "book": "Romans",
+      "chapter": 6,
+      "verses": "23",
+      "text": "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord.",
+      "score": 6.3912,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #29",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #21",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #24",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #10"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 28,
+      "tier": 2,
+      "reference": "1 John 1:9",
+      "book": "1 John",
+      "chapter": 1,
+      "verses": "9",
+      "text": "If we confess our sins, he is faithful and righteous to forgive us the sins and to cleanse us from all unrighteousness.",
+      "score": 6.2562,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #19",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as 1 John 1:8-9)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #26",
+        "biblegateway: Top 100 most-read Bible verses 2024 #70",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #62",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #70"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 29,
+      "tier": 2,
+      "reference": "2 Timothy 3:16",
+      "book": "2 Timothy",
+      "chapter": 3,
+      "verses": "16",
+      "text": "Every Scripture is God-breathed and profitable for teaching, for reproof, for correction, and for instruction in righteousness,",
+      "score": 6.2394,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #33",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #14",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #64",
+        "listicles: Christianity.com Top 101 Bible Quotes #58 (as 2 Timothy 3:16-17)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #69",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #9"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 30,
+      "tier": 2,
+      "reference": "2 Corinthians 12:9",
+      "book": "2 Corinthians",
+      "chapter": 12,
+      "verses": "9",
+      "text": "He has said to me, “My grace is sufficient for you, for my power is made perfect in weakness.” Most gladly therefore I will rather glory in my weaknesses, that the power of Christ may rest on me.",
+      "score": 6.2232,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #43",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked]",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #13",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #15",
+        "youversion: Per-country top verses 2017 [country-table]",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #7",
+        "biblegateway: Top 100 most-read Bible verses 2024 #48",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #53",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #56",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #44"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 31,
+      "tier": 3,
+      "reference": "Romans 5:8",
+      "book": "Romans",
+      "chapter": 5,
+      "verses": "8",
+      "text": "But God commends his own love toward us, in that while we were yet sinners, Christ died for us.",
+      "score": 5.9738,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #23",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #18",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #83",
+        "biblegateway: Top 100 most-read Bible verses 2024 #90"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 32,
+      "tier": 3,
+      "reference": "Galatians 2:20",
+      "book": "Galatians",
+      "chapter": 2,
+      "verses": "20",
+      "text": "I have been crucified with Christ, and it is no longer I who live, but Christ lives in me. That life which I now live in the flesh, I live by faith in the Son of God, who loved me and gave himself up for me.",
+      "score": 5.9606,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #18",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #84",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #95"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 33,
+      "tier": 3,
+      "reference": "2 Timothy 1:7",
+      "book": "2 Timothy",
+      "chapter": 1,
+      "verses": "7",
+      "text": "For God didn’t give us a spirit of fear, but of power, love, and self-control.",
+      "score": 5.8524,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #42",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #8",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #22",
+        "youversion: Per-country top verses 2017 [country-table]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #50",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #52",
+        "youversion: Most Shared Verses 2013 (top 10) #9",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #43",
+        "listicles: Christianity.com Top 101 Bible Quotes #89",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #38"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 34,
+      "tier": 3,
+      "reference": "Hebrews 11:6",
+      "book": "Hebrews",
+      "chapter": 11,
+      "verses": "6",
+      "text": "Without faith it is impossible to be well pleasing to him, for he who comes to God must believe that he exists, and that he is a rewarder of those who seek him.",
+      "score": 5.8392,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #55",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #16",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #17"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 35,
+      "tier": 3,
+      "reference": "2 Corinthians 5:17",
+      "book": "2 Corinthians",
+      "chapter": 5,
+      "verses": "17",
+      "text": "Therefore if anyone is in Christ, he is a new creation. The old things have passed away. Behold, all things have become new.",
+      "score": 5.7394,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #41",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #43",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #43",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #44",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #25",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #51",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #39"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 36,
+      "tier": 3,
+      "reference": "Psalm 118:24",
+      "book": "Psalm",
+      "chapter": 118,
+      "verses": "24",
+      "text": "This is the day that the LORD has made. We will rejoice and be glad in it!",
+      "score": 5.525,
+      "source_lists": [
+        "youversion: Most Shared Verses 2013 (top 10) #1",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #76"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 37,
+      "tier": 3,
+      "reference": "Psalm 91:11",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "11",
+      "text": "For he will put his angels in charge of you, to guard you in all your ways.",
+      "score": 5.4627,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #8",
+        "biblegateway: Top 100 most-read Bible verses 2024 #9",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 91:11-13)",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #9"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 38,
+      "tier": 3,
+      "reference": "Matthew 11:28",
+      "book": "Matthew",
+      "chapter": 11,
+      "verses": "28",
+      "text": "“Come to me, all you who labor and are heavily burdened, and I will give you rest.",
+      "score": 5.4131,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #39",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Matthew 11:28-30)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #40",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #24",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #44",
+        "listicles: Christianity.com Top 101 Bible Quotes #62",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #43",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #40",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #54"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 39,
+      "tier": 3,
+      "reference": "Isaiah 53:5",
+      "book": "Isaiah",
+      "chapter": 53,
+      "verses": "5",
+      "text": "But he was pierced for our transgressions. He was crushed for our iniquities. The punishment that brought our peace was on him; and by his wounds we are healed.",
+      "score": 5.3592,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #31",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Isaiah 53:4-5)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Isaiah 53:5-6)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #32",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #26",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #78",
+        "biblegateway: Top 100 most-read Bible verses 2024 #84"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 40,
+      "tier": 3,
+      "reference": "1 Corinthians 10:13",
+      "book": "1 Corinthians",
+      "chapter": 10,
+      "verses": "13",
+      "text": "No temptation has taken you except what is common to man. God is faithful, who will not allow you to be tempted above what you are able, but will with the temptation also make the way of escape, that you may be able to endure it.",
+      "score": 5.097,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #38",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "youversion: Per-country top verses 2015 [country-table]",
+        "youversion: Per-country top verses 2017 [country-table]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #82",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #44",
+        "biblegateway: Top 100 most-read Bible verses 2024 #86",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #93"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 41,
+      "tier": 3,
+      "reference": "Colossians 3:23",
+      "book": "Colossians",
+      "chapter": 3,
+      "verses": "23",
+      "text": "And whatever you do, work heartily, as for the Lord and not for men,",
+      "score": 5.0396,
+      "source_lists": [
+        "youversion: Most Shared Verses 2014 #1 (as Colossians 3:23-24)",
+        "listicles: Christianity.com Top 101 Bible Quotes #22 (as Colossians 3:23-24)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #39",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #77",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #16 (as Colossians 3:23-24)",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #34",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #94",
+        "biblegateway: Top 100 most-read Bible verses 2024 #95"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 42,
+      "tier": 3,
+      "reference": "Psalm 91:7",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "7",
+      "text": "A thousand may fall at your side, and ten thousand at your right hand; but it will not come near you.",
+      "score": 5.0038,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #13",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 91:7-8)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #17",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #17"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 43,
+      "tier": 3,
+      "reference": "John 1:1",
+      "book": "John",
+      "chapter": 1,
+      "verses": "1",
+      "text": "In the beginning was the Word, and the Word was with God, and the Word was God.",
+      "score": 4.9451,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #2",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #29",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #68",
+        "biblegateway: Top 10 Scripture passages searched 2018 #6 (as broad citation John 1)",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #15 (as broad citation John 1)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 44,
+      "tier": 3,
+      "reference": "Psalm 23:5",
+      "book": "Psalm",
+      "chapter": 23,
+      "verses": "5",
+      "text": "You prepare a table before me in the presence of my enemies. You anoint my head with oil. My cup runs over.",
+      "score": 4.9214,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #3",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #4",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #3",
+        "biblegateway: Top 10 most popular Bible verses 2016 #8",
+        "search-volume: Lifeway Research — BibleGateway top Bible verses of 2021 #8",
+        "biblegateway: Top 10 most popular Bible verses 2018 #9"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 45,
+      "tier": 3,
+      "reference": "Psalm 91:14",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "14",
+      "text": "“Because he has set his love on me, therefore I will deliver him. I will set him on high, because he has known my name.",
+      "score": 4.9079,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #16",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 91:14-16)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #16",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #16"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 46,
+      "tier": 3,
+      "reference": "Psalm 91:9",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "9",
+      "text": "Because you have made the LORD your refuge, and the Most High your dwelling place,",
+      "score": 4.7372,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #18",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 91:9-10)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #19",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #19"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 47,
+      "tier": 3,
+      "reference": "1 Thessalonians 5:16-18",
+      "book": "1 Thessalonians",
+      "chapter": 5,
+      "verses": "16-18",
+      "text": "Always rejoice. Pray without ceasing. In everything give thanks, for this is the will of God in Christ Jesus toward you.",
+      "score": 4.7004,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #3",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #2",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #67 (as 1 Thessalonians 5:18)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #71 (as 1 Thessalonians 5:18)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #73"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 48,
+      "tier": 3,
+      "reference": "Psalm 91:5",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "5",
+      "text": "You shall not be afraid of the terror by night, nor of the arrow that flies by day,",
+      "score": 4.639,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #19",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 91:5-6)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #21",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #21"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 49,
+      "tier": 3,
+      "reference": "John 16:33",
+      "book": "John",
+      "chapter": 16,
+      "verses": "33",
+      "text": "I have told you these things, that in me you may have peace. In the world you have trouble; but cheer up! I have overcome the world.”",
+      "score": 4.6093,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #35",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #36",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #45",
+        "listicles: Christianity.com Top 101 Bible Quotes #47",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #48",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #31",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #18",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #33",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #48"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 50,
+      "tier": 3,
+      "reference": "Psalm 23:3",
+      "book": "Psalm",
+      "chapter": 23,
+      "verses": "3",
+      "text": "He restores my soul. He guides me in the paths of righteousness for his name’s sake.",
+      "score": 4.5897,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #5",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #5",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #5",
+        "biblegateway: Top 10 most popular Bible verses 2016 #9"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 51,
+      "tier": 3,
+      "reference": "Acts 1:8",
+      "book": "Acts",
+      "chapter": 1,
+      "verses": "8",
+      "text": "But you will receive power when the Holy Spirit has come upon you. You will be witnesses to me in Jerusalem, in all Judea and Samaria, and to the uttermost parts of the earth.”",
+      "score": 4.544,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #49",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #37",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #8",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #86",
+        "biblegateway: Top 100 most-read Bible verses 2024 #99"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 52,
+      "tier": 3,
+      "reference": "Psalm 91:3",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "3",
+      "text": "For he will deliver you from the snare of the fowler, and from the deadly pestilence.",
+      "score": 4.5017,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #21",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 91:3-4)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #23",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #23"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 53,
+      "tier": 3,
+      "reference": "Psalm 23:2",
+      "book": "Psalm",
+      "chapter": 23,
+      "verses": "2",
+      "text": "He makes me lie down in green pastures. He leads me beside still waters.",
+      "score": 4.4461,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #6",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #6",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #6"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 54,
+      "tier": 3,
+      "reference": "Romans 12:1",
+      "book": "Romans",
+      "chapter": 12,
+      "verses": "1",
+      "text": "Therefore I urge you, brothers, by the mercies of God, to present your bodies a living sacrifice, holy, acceptable to God, which is your spiritual service.",
+      "score": 4.3394,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #13",
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #57",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #64"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 55,
+      "tier": 3,
+      "reference": "2 Corinthians 9:7",
+      "book": "2 Corinthians",
+      "chapter": 9,
+      "verses": "7",
+      "text": "Let each man give according as he has determined in his heart, not grudgingly or under compulsion, for God loves a cheerful giver.",
+      "score": 4.2145,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as 2 Corinthians 9:6-7)",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as 2 Corinthians 9:6-7)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #29"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 56,
+      "tier": 3,
+      "reference": "Hebrews 13:5",
+      "book": "Hebrews",
+      "chapter": 13,
+      "verses": "5",
+      "text": "Be free from the love of money, content with such things as you have, for he has said, “I will in no way leave you, neither will I in any way forsake you.”",
+      "score": 4.1501,
+      "source_lists": [
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #3",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #42",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #23",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #100"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 57,
+      "tier": 3,
+      "reference": "2 Chronicles 7:14",
+      "book": "2 Chronicles",
+      "chapter": 7,
+      "verses": "14",
+      "text": "if my people who are called by my name will humble themselves, pray, seek my face, and turn from their wicked ways, then I will hear from heaven, will forgive their sin, and will heal their land.",
+      "score": 4.1207,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "youversion: Most Shared Verses 2014 #3",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked] (as 2 Chronicles 7:14-16)",
+        "listicles: Christianity.com Top 101 Bible Quotes #33",
+        "biblegateway: Top 100 most-read Bible verses 2024 #74",
+        "search-volume: Religion Unplugged — BibleGateway most searched Scriptures of 2020 #9",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #83",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #85"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 58,
+      "tier": 3,
+      "reference": "Psalm 91:4",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "4",
+      "text": "He will cover you with his feathers. Under his wings you will take refuge. His faithfulness is your shield and rampart.",
+      "score": 4.0826,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #10",
+        "biblegateway: Top 100 most-read Bible verses 2024 #12",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #12"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 59,
+      "tier": 3,
+      "reference": "Psalm 91:2",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "2",
+      "text": "I will say of the LORD, “He is my refuge and my fortress; my God, in whom I trust.”",
+      "score": 4.0708,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #11",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #11",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #11"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 60,
+      "tier": 3,
+      "reference": "Psalm 91:12",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "12",
+      "text": "They will bear you up in their hands, so that you won’t dash your foot against a stone.",
+      "score": 3.9665,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #12",
+        "biblegateway: Top 100 most-read Bible verses 2024 #13",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #13"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 61,
+      "tier": 3,
+      "reference": "Deuteronomy 6:6-7",
+      "book": "Deuteronomy",
+      "chapter": 6,
+      "verses": "6-7",
+      "text": "These words, which I command you today, shall be on your heart; and you shall teach them diligently to your children, and shall talk of them when you sit in your house, and when you walk by the way, and when you lie down, and when you rise up.",
+      "score": 3.9521,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #5",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #8"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 62,
+      "tier": 3,
+      "reference": "Romans 10:9",
+      "book": "Romans",
+      "chapter": 10,
+      "verses": "9",
+      "text": "that if you will confess with your mouth that Jesus is Lord and believe in your heart that God raised him from the dead, you will be saved.",
+      "score": 3.8827,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #44",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Romans 10:9-10)",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #38",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #33",
+        "search-volume: TopVerses.com — every verse ranked by internet references (top 10 shown) #10"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 63,
+      "tier": 3,
+      "reference": "Ephesians 6:12",
+      "book": "Ephesians",
+      "chapter": 6,
+      "verses": "12",
+      "text": "For our wrestling is not against flesh and blood, but against the principalities, against the powers, against the world’s rulers of the darkness of this age, and against the spiritual forces of wickedness in the heavenly places.",
+      "score": 3.8622,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #31",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Ephesians 6:12-13)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #33",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #31"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 64,
+      "tier": 3,
+      "reference": "Psalm 91:15",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "15",
+      "text": "He will call on me, and I will answer him. I will be with him in trouble. I will deliver him, and honor him.",
+      "score": 3.8306,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #14",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #15",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #14"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 65,
+      "tier": 3,
+      "reference": "James 1:3",
+      "book": "James",
+      "chapter": 1,
+      "verses": "3",
+      "text": "knowing that the testing of your faith produces endurance.",
+      "score": 3.8262,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as James 1:2-3)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as James 1:2-5)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #28 (as James 1:2-3)",
+        "search-volume: World Vision UK — Most popular Bible verses in every country (global top 10) #8",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #79"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 66,
+      "tier": 3,
+      "reference": "1 Peter 5:6",
+      "book": "1 Peter",
+      "chapter": 5,
+      "verses": "6",
+      "text": "Humble yourselves therefore under the mighty hand of God, that he may exalt you in due time,",
+      "score": 3.7614,
+      "source_lists": [
+        "youversion: Most Shared Verses 2013 (top 10) #2",
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as 1 Peter 5:5-6)"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 67,
+      "tier": 3,
+      "reference": "Psalm 91:16",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "16",
+      "text": "I will satisfy him with long life, and show him my salvation.”",
+      "score": 3.738,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #15",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #17",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #15"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 68,
+      "tier": 3,
+      "reference": "Psalm 91:10",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "10",
+      "text": "no evil shall happen to you, neither shall any plague come near your dwelling.",
+      "score": 3.7323,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #14",
+        "biblegateway: Top 100 most-read Bible verses 2024 #18",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #18"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 69,
+      "tier": 3,
+      "reference": "Isaiah 53:6",
+      "book": "Isaiah",
+      "chapter": 53,
+      "verses": "6",
+      "text": "All we like sheep have gone astray. Everyone has turned to his own way; and the LORD has laid on him the iniquity of us all.",
+      "score": 3.6193,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #58",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #27"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 70,
+      "tier": 4,
+      "reference": "Romans 1:16",
+      "book": "Romans",
+      "chapter": 1,
+      "verses": "16",
+      "text": "For I am not ashamed of the Good News of Christ, because it is the power of God for salvation for everyone who believes, for the Jew first, and also for the Greek.",
+      "score": 3.6,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Romans 1:16-17)"
+      ],
+      "source_classes": [
+        "memorization"
+      ]
+    },
+    {
+      "rank": 71,
+      "tier": 3,
+      "reference": "Psalm 91:8",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "8",
+      "text": "You will only look with your eyes, and see the recompense of the wicked.",
+      "score": 3.4269,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #20",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #20",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #20"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 72,
+      "tier": 3,
+      "reference": "Psalm 91:13",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "13",
+      "text": "You will tread on the lion and cobra. You will trample the young lion and the serpent underfoot.",
+      "score": 3.2896,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #22",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #22",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #22"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 73,
+      "tier": 3,
+      "reference": "Psalm 91:6",
+      "book": "Psalm",
+      "chapter": 91,
+      "verses": "6",
+      "text": "nor of the pestilence that walks in darkness, nor of the destruction that wastes at noonday.",
+      "score": 3.1941,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #23",
+        "biblegateway: Top 100 most-read Bible verses 2024 #24",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #24"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 74,
+      "tier": 3,
+      "reference": "Psalm 56:3",
+      "book": "Psalm",
+      "chapter": 56,
+      "verses": "3",
+      "text": "When I am afraid, I will put my trust in you.",
+      "score": 3.1745,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Psalm 56:3-4)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #30",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #70"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 75,
+      "tier": 3,
+      "reference": "Matthew 28:20",
+      "book": "Matthew",
+      "chapter": 28,
+      "verses": "20",
+      "text": "teaching them to observe all things that I commanded you. Behold, I am with you always, even to the end of the age.” Amen.",
+      "score": 3.143,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #22",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #45",
+        "biblegateway: Top 100 most-read Bible verses 2024 #46"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 76,
+      "tier": 3,
+      "reference": "Psalm 1:1",
+      "book": "Psalm",
+      "chapter": 1,
+      "verses": "1",
+      "text": "Blessed is the man who doesn’t walk in the counsel of the wicked, nor stand on the path of sinners, nor sit in the seat of scoffers;",
+      "score": 3.135,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Psalm 1:1-2)",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #5 (as broad citation Psalm 1)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #67",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #73",
+        "biblegateway: Top 10 Scripture passages searched 2018 #9 (as broad citation Psalm 1)"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 77,
+      "tier": 3,
+      "reference": "Deuteronomy 31:6",
+      "book": "Deuteronomy",
+      "chapter": 31,
+      "verses": "6",
+      "text": "Be strong and courageous. Don’t be afraid or scared of them, for the LORD your God himself is who goes with you. He will not fail you nor forsake you.”",
+      "score": 3.1335,
+      "source_lists": [
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #3",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #54",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #21"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 78,
+      "tier": 3,
+      "reference": "John 14:27",
+      "book": "John",
+      "chapter": 14,
+      "verses": "27",
+      "text": "Peace I leave with you. My peace I give to you; not as the world gives, I give to you. Don’t let your heart be troubled, neither let it be fearful.",
+      "score": 3.1328,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #50",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #55",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #65",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #72"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 79,
+      "tier": 3,
+      "reference": "Hebrews 11:1",
+      "book": "Hebrews",
+      "chapter": 11,
+      "verses": "1",
+      "text": "Now faith is assurance of things hoped for, proof of things not seen.",
+      "score": 3.0945,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #40",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #20",
+        "listicles: Christianity.com Top 101 Bible Quotes #21",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #42",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #45",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #23",
+        "biblegateway: Top 100 most-read Bible verses 2024 #96"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 80,
+      "tier": 3,
+      "reference": "Psalm 121:7",
+      "book": "Psalm",
+      "chapter": 121,
+      "verses": "7",
+      "text": "The LORD will keep you from all evil. He will keep your soul.",
+      "score": 3.0455,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #46",
+        "listicles: Christianity.com Top 101 Bible Quotes #28 (as Psalm 121:7-8)",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #11 (as broad citation Psalm 121)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #54",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #18 (as Psalm 121:7-8)"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 81,
+      "tier": 3,
+      "reference": "Philippians 4:19",
+      "book": "Philippians",
+      "chapter": 4,
+      "verses": "19",
+      "text": "My God will supply every need of yours according to his riches in glory in Christ Jesus.",
+      "score": 3.0433,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #67",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #92",
+        "biblegateway: Top 100 most-read Bible verses 2024 #97"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 82,
+      "tier": 3,
+      "reference": "Psalm 119:11",
+      "book": "Psalm",
+      "chapter": 119,
+      "verses": "11",
+      "text": "I have hidden your word in my heart, that I might not sin against you.",
+      "score": 3.0,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as Psalm 119:9,11)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 83,
+      "tier": 3,
+      "reference": "Isaiah 26:3",
+      "book": "Isaiah",
+      "chapter": 26,
+      "verses": "3",
+      "text": "You will keep whoever’s mind is steadfast in perfect peace, because he trusts in you.",
+      "score": 2.9063,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #47",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #90"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 84,
+      "tier": 3,
+      "reference": "Hebrews 10:25",
+      "book": "Hebrews",
+      "chapter": 10,
+      "verses": "25",
+      "text": "not forsaking our own assembling together, as the custom of some is, but exhorting one another, and so much the more as you see the Day approaching.",
+      "score": 2.8438,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as Hebrews 10:24-25)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #82",
+        "listicles: Christianity.com Top 101 Bible Quotes #68 (as Hebrews 10:24-25)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 85,
+      "tier": 3,
+      "reference": "John 1:12",
+      "book": "John",
+      "chapter": 1,
+      "verses": "12",
+      "text": "But as many as received him, to them he gave the right to become God’s children, to those who believe in his name:",
+      "score": 2.7527,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as John 1:12-13)",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #77"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 86,
+      "tier": 4,
+      "reference": "1 Corinthians 16:14",
+      "book": "1 Corinthians",
+      "chapter": 16,
+      "verses": "14",
+      "text": "Let all that you do be done in love.",
+      "score": 2.7212,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #8",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #7",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #17"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 87,
+      "tier": 3,
+      "reference": "Romans 15:13",
+      "book": "Romans",
+      "chapter": 15,
+      "verses": "13",
+      "text": "Now may the God of hope fill you with all joy and peace in believing, that you may abound in hope in the power of the Holy Spirit.",
+      "score": 2.6709,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #53",
+        "listicles: Christianity.com Top 101 Bible Quotes #19",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #15",
+        "youversion: Most Shared Verses 2015 (top 5) #5",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #34",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #77",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #49"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 88,
+      "tier": 3,
+      "reference": "Acts 16:31",
+      "book": "Acts",
+      "chapter": 16,
+      "verses": "31",
+      "text": "They said, “Believe in the Lord Jesus Christ, and you will be saved, you and your household.”",
+      "score": 2.6615,
+      "source_lists": [
+        "memorization: Awana Sparks HangGlider memory verses [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #17",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #21"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 89,
+      "tier": 3,
+      "reference": "Matthew 7:7",
+      "book": "Matthew",
+      "chapter": 7,
+      "verses": "7",
+      "text": "“Ask, and it will be given you. Seek, and you will find. Knock, and it will be opened for you.",
+      "score": 2.639,
+      "source_lists": [
+        "youversion: Most Shared Verses 2013 (top 10) #4",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #58"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 90,
+      "tier": 3,
+      "reference": "Isaiah 54:17",
+      "book": "Isaiah",
+      "chapter": 54,
+      "verses": "17",
+      "text": "No weapon that is formed against you will prevail; and you will condemn every tongue that rises against you in judgment. This is the heritage of the LORD’s servants, and their righteousness is of me,” says the LORD.",
+      "score": 2.5502,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #41",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #58",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #40",
+        "listicles: Anchored in Christ 25 Most Popular Bible Verses #37"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 91,
+      "tier": 3,
+      "reference": "Psalm 1:3",
+      "book": "Psalm",
+      "chapter": 1,
+      "verses": "3",
+      "text": "He will be like a tree planted by the streams of water, that produces its fruit in its season, whose leaf also does not wither. Whatever he does shall prosper.",
+      "score": 2.4851,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Psalm 1:3-4)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #56",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #61"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 92,
+      "tier": 3,
+      "reference": "1 John 4:19",
+      "book": "1 John",
+      "chapter": 4,
+      "verses": "19",
+      "text": "We love him, because he first loved us.",
+      "score": 2.4817,
+      "source_lists": [
+        "memorization: Awana Sparks HangGlider memory verses [unranked]",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #50",
+        "listicles: Christianity.com Top 101 Bible Quotes #55"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 93,
+      "tier": 3,
+      "reference": "Joshua 1:8",
+      "book": "Joshua",
+      "chapter": 1,
+      "verses": "8",
+      "text": "This book of the law shall not depart from your mouth, but you shall meditate on it day and night, that you may observe to do according to all that is written in it; for then you shall make your way prosperous, and then you shall have good success.",
+      "score": 2.481,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #92"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 94,
+      "tier": 3,
+      "reference": "Ephesians 2:10",
+      "book": "Ephesians",
+      "chapter": 2,
+      "verses": "10",
+      "text": "For we are his workmanship, created in Christ Jesus for good works, which God prepared before that we would walk in them.",
+      "score": 2.4744,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #37",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #22",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #74",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #39",
+        "biblegateway: Top 100 most-read Bible verses 2024 #76"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 95,
+      "tier": 3,
+      "reference": "John 5:24",
+      "book": "John",
+      "chapter": 5,
+      "verses": "24",
+      "text": "“Most certainly I tell you, he who hears my word and believes him who sent me has eternal life, and doesn’t come into judgment, but has passed out of death into life.",
+      "score": 2.4592,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #56",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #28"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 96,
+      "tier": 3,
+      "reference": "Titus 3:5",
+      "book": "Titus",
+      "chapter": 3,
+      "verses": "5",
+      "text": "not by works of righteousness which we did ourselves, but according to his mercy, he saved us through the washing of regeneration and renewing by the Holy Spirit,",
+      "score": 2.4185,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Titus 3:4-6)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #94"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 97,
+      "tier": 4,
+      "reference": "John 14:2-3",
+      "book": "John",
+      "chapter": 14,
+      "verses": "2-3",
+      "text": "In my Father’s house are many homes. If it weren’t so, I would have told you. I am going to prepare a place for you. If I go and prepare a place for you, I will come again and will receive you to myself; that where I am, you may be there also.",
+      "score": 2.4,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked]",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as John 14:1-3)"
+      ],
+      "source_classes": [
+        "memorization"
+      ]
+    },
+    {
+      "rank": 98,
+      "tier": 4,
+      "reference": "1 Peter 1:3",
+      "book": "1 Peter",
+      "chapter": 1,
+      "verses": "3",
+      "text": "Blessed be the God and Father of our Lord Jesus Christ, who according to his great mercy caused us to be born again to a living hope through the resurrection of Jesus Christ from the dead,",
+      "score": 2.4,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as 1 Peter 1:3-5)",
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]"
+      ],
+      "source_classes": [
+        "memorization"
+      ]
+    },
+    {
+      "rank": 99,
+      "tier": 4,
+      "reference": "1 John 2:15-16",
+      "book": "1 John",
+      "chapter": 2,
+      "verses": "15-16",
+      "text": "Don’t love the world or the things that are in the world. If anyone loves the world, the Father’s love isn’t in him. For all that is in the world—the lust of the flesh, the lust of the eyes, and the pride of life—isn’t the Father’s, but is the world’s.",
+      "score": 2.4,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as 1 John 2:15-17)"
+      ],
+      "source_classes": [
+        "memorization"
+      ]
+    },
+    {
+      "rank": 100,
+      "tier": 4,
+      "reference": "Acts 18:10",
+      "book": "Acts",
+      "chapter": 18,
+      "verses": "10",
+      "text": "for I am with you, and no one will attack you to harm you, for I have many people in this city.”",
+      "score": 2.3926,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #15"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 101,
+      "tier": 3,
+      "reference": "1 Peter 3:15",
+      "book": "1 Peter",
+      "chapter": 3,
+      "verses": "15",
+      "text": "But sanctify the Lord God in your hearts. Always be ready to give an answer to everyone who asks you a reason concerning the hope that is in you, with humility and fear,",
+      "score": 2.357,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #32",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #15"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 102,
+      "tier": 4,
+      "reference": "Acts 18:9",
+      "book": "Acts",
+      "chapter": 18,
+      "verses": "9",
+      "text": "The Lord said to Paul in the night by a vision, “Don’t be afraid, but speak and don’t be silent;",
+      "score": 2.351,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #16"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 103,
+      "tier": 3,
+      "reference": "Ephesians 2:9",
+      "book": "Ephesians",
+      "chapter": 2,
+      "verses": "9",
+      "text": "not of works, that no one would boast.",
+      "score": 2.3489,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #28",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #22"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 104,
+      "tier": 4,
+      "reference": "Acts 18:11",
+      "book": "Acts",
+      "chapter": 18,
+      "verses": "11",
+      "text": "He lived there a year and six months, teaching the word of God among them.",
+      "score": 2.3096,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #17"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 105,
+      "tier": 3,
+      "reference": "Ephesians 6:11",
+      "book": "Ephesians",
+      "chapter": 6,
+      "verses": "11",
+      "text": "Put on the whole armor of God, that you may be able to stand against the wiles of the devil.",
+      "score": 2.3008,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Ephesians 6:10-11)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #33 (as Ephesians 6:10-11)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #83",
+        "listicles: Christianity.com Top 101 Bible Quotes #70",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #38"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 106,
+      "tier": 3,
+      "reference": "Matthew 5:16",
+      "book": "Matthew",
+      "chapter": 5,
+      "verses": "16",
+      "text": "Even so, let your light shine before men, that they may see your good works and glorify your Father who is in heaven.",
+      "score": 2.1932,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #37",
+        "biblegateway: Top 10 Scripture passages searched 2018 #8 (as broad citation Matthew 5)",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #37",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #87",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #97"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 107,
+      "tier": 4,
+      "reference": "Proverbs 16:3",
+      "book": "Proverbs",
+      "chapter": 16,
+      "verses": "3",
+      "text": "Commit your deeds to the LORD, and your plans shall succeed.",
+      "score": 2.1732,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #11",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #13",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #52"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 108,
+      "tier": 3,
+      "reference": "1 Chronicles 16:34",
+      "book": "1 Chronicles",
+      "chapter": 16,
+      "verses": "34",
+      "text": "Oh give thanks to the LORD, for he is good, for his loving kindness endures forever.",
+      "score": 2.1703,
+      "source_lists": [
+        "youversion: Most Shared Verses 2014 #2",
+        "listicles: Christianity.com Top 101 Bible Quotes #65"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 109,
+      "tier": 3,
+      "reference": "Hebrews 4:12",
+      "book": "Hebrews",
+      "chapter": 4,
+      "verses": "12",
+      "text": "For the word of God is living and active, and sharper than any two-edged sword, piercing even to the dividing of soul and spirit, of both joints and marrow, and is able to discern the thoughts and intentions of the heart.",
+      "score": 2.1693,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #73",
+        "listicles: Christianity.com Top 101 Bible Quotes #66",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #75",
+        "biblegateway: Top 100 most-read Bible verses 2024 #78",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #99"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 110,
+      "tier": 3,
+      "reference": "Ephesians 4:32",
+      "book": "Ephesians",
+      "chapter": 4,
+      "verses": "32",
+      "text": "And be kind to one another, tender hearted, forgiving each other, just as God also in Christ forgave you.",
+      "score": 2.1256,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Ephesians 4:31-32)",
+        "listicles: Christianity.com Top 101 Bible Quotes #51",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #27",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #63"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 111,
+      "tier": 3,
+      "reference": "John 11:25-26",
+      "book": "John",
+      "chapter": 11,
+      "verses": "25-26",
+      "text": "Jesus said to her, “I am the resurrection and the life. He who believes in me will still live, even if he dies. Whoever lives and believes in me will never die. Do you believe this?”",
+      "score": 2.1241,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #54 (as John 11:25)",
+        "listicles: Christianity.com Top 101 Bible Quotes #26",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #30 (as John 11:25)",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #19",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #89"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 112,
+      "tier": 3,
+      "reference": "Psalm 100:4",
+      "book": "Psalm",
+      "chapter": 100,
+      "verses": "4",
+      "text": "Enter into his gates with thanksgiving, and into his courts with praise. Give thanks to him, and bless his name.",
+      "score": 2.0168,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Psalm 100:4-5)",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked] (as broad citation Psalm 100)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #59 (as Psalm 100:4-5)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #86",
+        "biblegateway: Top 100 most-read Bible verses 2024 #88"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 113,
+      "tier": 4,
+      "reference": "Mark 11:24",
+      "book": "Mark",
+      "chapter": 11,
+      "verses": "24",
+      "text": "Therefore I tell you, all things whatever you pray and ask for, believe that you have received them, and you shall have them.",
+      "score": 2.0086,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #7",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #11",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #46"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 114,
+      "tier": 4,
+      "reference": "Genesis 1:26",
+      "book": "Genesis",
+      "chapter": 1,
+      "verses": "26",
+      "text": "God said, “Let’s make man in our image, after our likeness. Let them have dominion over the fish of the sea, and over the birds of the sky, and over the livestock, and over all the earth, and over every creeping thing that creeps on the earth.”",
+      "score": 1.9716,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #46",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #40",
+        "biblegateway: Top 100 most-read Bible verses 2024 #100"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 115,
+      "tier": 4,
+      "reference": "Romans 12:12",
+      "book": "Romans",
+      "chapter": 12,
+      "verses": "12",
+      "text": "rejoicing in hope, enduring in troubles, continuing steadfastly in prayer,",
+      "score": 1.958,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Romans 12:11-12)",
+        "listicles: Christianity.com Top 101 Bible Quotes #32",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #69"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 116,
+      "tier": 4,
+      "reference": "Hebrews 12:2",
+      "book": "Hebrews",
+      "chapter": 12,
+      "verses": "2",
+      "text": "looking to Jesus, the author and perfecter of faith, who for the joy that was set before him endured the cross, despising its shame, and has sat down at the right hand of the throne of God.",
+      "score": 1.9567,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #35",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #60 (as Hebrews 12:1-2)",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #48",
+        "biblegateway: Top 100 most-read Bible verses 2024 #94",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #96"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 117,
+      "tier": 4,
+      "reference": "Lamentations 3:22-23",
+      "book": "Lamentations",
+      "chapter": 3,
+      "verses": "22-23",
+      "text": "It is because of the LORD’s loving kindnesses that we are not consumed, because his mercies don’t fail. They are new every morning. Great is your faithfulness.",
+      "score": 1.9537,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #43",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #28"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 118,
+      "tier": 4,
+      "reference": "Psalm 121:8",
+      "book": "Psalm",
+      "chapter": 121,
+      "verses": "8",
+      "text": "The LORD will keep your going out and your coming in, from this time forward, and forever more.",
+      "score": 1.8899,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #42",
+        "biblegateway: Top 100 most-read Bible verses 2024 #51"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 119,
+      "tier": 4,
+      "reference": "1 John 5:14",
+      "book": "1 John",
+      "chapter": 5,
+      "verses": "14",
+      "text": "This is the boldness which we have toward him, that if we ask anything according to his will, he listens to us.",
+      "score": 1.8399,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as 1 John 5:14-15)",
+        "listicles: Christianity.com Top 101 Bible Quotes #27"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 120,
+      "tier": 4,
+      "reference": "Psalm 119:9",
+      "book": "Psalm",
+      "chapter": 119,
+      "verses": "9",
+      "text": "How can a young man keep his way pure? By living according to your word.",
+      "score": 1.8,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as Psalm 119:9,11)",
+        "youversion: Per-country top verses 2017 [country-table]"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 121,
+      "tier": 4,
+      "reference": "Colossians 3:15",
+      "book": "Colossians",
+      "chapter": 3,
+      "verses": "15",
+      "text": "And let the peace of God rule in your hearts, to which also you were called in one body, and be thankful.",
+      "score": 1.8,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Colossians 3:15-17)",
+        "youversion: Per-country top verses 2017 [country-table]"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 122,
+      "tier": 4,
+      "reference": "Deuteronomy 6:4-5",
+      "book": "Deuteronomy",
+      "chapter": 6,
+      "verses": "4-5",
+      "text": "Hear, Israel: The LORD is our God. The LORD is one. You shall love the LORD your God with all your heart, with all your soul, and with all your might.",
+      "score": 1.8,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 123,
+      "tier": 4,
+      "reference": "Psalm 103:8",
+      "book": "Psalm",
+      "chapter": 103,
+      "verses": "8",
+      "text": "The LORD is merciful and gracious, slow to anger, and abundant in loving kindness.",
+      "score": 1.8,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 103:8-10)",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 124,
+      "tier": 4,
+      "reference": "Romans 10:13",
+      "book": "Romans",
+      "chapter": 10,
+      "verses": "13",
+      "text": "For, “Whoever will call on the name of the Lord will be saved.”",
+      "score": 1.8,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Romans 10:13-15)",
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 125,
+      "tier": 4,
+      "reference": "1 Corinthians 13:13",
+      "book": "1 Corinthians",
+      "chapter": 13,
+      "verses": "13",
+      "text": "But now faith, hope, and love remain—these three. The greatest of these is love.",
+      "score": 1.7282,
+      "source_lists": [
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #36"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 126,
+      "tier": 4,
+      "reference": "Proverbs 18:10",
+      "book": "Proverbs",
+      "chapter": 18,
+      "verses": "10",
+      "text": "The LORD’s name is a strong tower: the righteous run to him, and are safe.",
+      "score": 1.724,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #36"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 127,
+      "tier": 4,
+      "reference": "1 Corinthians 15:58",
+      "book": "1 Corinthians",
+      "chapter": 15,
+      "verses": "58",
+      "text": "Therefore, my beloved brothers, be steadfast, immovable, always abounding in the Lord’s work, because you know that your labor is not in vain in the Lord.",
+      "score": 1.7163,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #37"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 128,
+      "tier": 4,
+      "reference": "Numbers 6:24-26",
+      "book": "Numbers",
+      "chapter": 6,
+      "verses": "24-26",
+      "text": "‘The LORD bless you, and keep you. The LORD make his face to shine on you, and be gracious to you. The LORD lift up his face toward you, and give you peace.’",
+      "score": 1.7119,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #9",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #4",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #50"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 129,
+      "tier": 4,
+      "reference": "Matthew 11:29",
+      "book": "Matthew",
+      "chapter": 11,
+      "verses": "29",
+      "text": "Take my yoke upon you and learn from me, for I am gentle and humble in heart; and you will find rest for your souls.",
+      "score": 1.709,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #47",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #32",
+        "biblegateway: Top 100 most-read Bible verses 2024 #80",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #80"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 130,
+      "tier": 4,
+      "reference": "Psalm 121:1",
+      "book": "Psalm",
+      "chapter": 121,
+      "verses": "1",
+      "text": "A Song of Ascents. I will lift up my eyes to the hills. Where does my help come from?",
+      "score": 1.6905,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #50",
+        "biblegateway: Top 100 most-read Bible verses 2024 #59",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #68 (as Psalm 121:1-2)"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 131,
+      "tier": 4,
+      "reference": "Psalm 121:2",
+      "book": "Psalm",
+      "chapter": 121,
+      "verses": "2",
+      "text": "My help comes from the LORD, who made heaven and earth.",
+      "score": 1.6584,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #47",
+        "biblegateway: Top 100 most-read Bible verses 2024 #55"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 132,
+      "tier": 4,
+      "reference": "Genesis 1:27",
+      "book": "Genesis",
+      "chapter": 1,
+      "verses": "27",
+      "text": "God created man in his own image. In God’s image he created him; male and female he created them.",
+      "score": 1.6566,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #62",
+        "search-volume: World Vision UK — Most searched Bible verses (UK top 10) [country-table]",
+        "biblegateway: Top 100 most-read Bible verses 2024 #68",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #89"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 133,
+      "tier": 4,
+      "reference": "Galatians 6:9",
+      "book": "Galatians",
+      "chapter": 6,
+      "verses": "9",
+      "text": "Let’s not be weary in doing good, for we will reap in due season if we don’t give up.",
+      "score": 1.6272,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked] (as Galatians 6:9-10)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #76",
+        "biblegateway: Top 100 most-read Bible verses 2024 #93",
+        "listicles: Christianity.com Top 101 Bible Quotes #95"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 134,
+      "tier": 4,
+      "reference": "1 Corinthians 13:7",
+      "book": "1 Corinthians",
+      "chapter": 13,
+      "verses": "7",
+      "text": "bears all things, believes all things, hopes all things, and endures all things.",
+      "score": 1.6216,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #52",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #59",
+        "youversion: Top 10 Most Bookmarked Verses of 2012 #10",
+        "biblegateway: Top 10 Bible verses of 2015 #9"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 135,
+      "tier": 4,
+      "reference": "2 Corinthians 5:21",
+      "book": "2 Corinthians",
+      "chapter": 5,
+      "verses": "21",
+      "text": "For him who knew no sin he made to be sin on our behalf, so that in him we might become the righteousness of God.",
+      "score": 1.6193,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #52",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #17"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 136,
+      "tier": 4,
+      "reference": "Psalm 121:3",
+      "book": "Psalm",
+      "chapter": 121,
+      "verses": "3",
+      "text": "He will not allow your foot to be moved. He who keeps you will not slumber.",
+      "score": 1.5805,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #48",
+        "biblegateway: Top 100 most-read Bible verses 2024 #58"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 137,
+      "tier": 4,
+      "reference": "James 1:12",
+      "book": "James",
+      "chapter": 1,
+      "verses": "12",
+      "text": "Blessed is a person who endures temptation, for when he has been approved, he will receive the crown of life which the Lord promised to those who love him.",
+      "score": 1.5309,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #78"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 138,
+      "tier": 4,
+      "reference": "Psalm 139:14",
+      "book": "Psalm",
+      "chapter": 139,
+      "verses": "14",
+      "text": "I will give thanks to you, for I am fearfully and wonderfully made. Your works are wonderful. My soul knows that very well.",
+      "score": 1.5245,
+      "source_lists": [
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #21",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #41",
+        "biblegateway: Top 100 most-read Bible verses 2024 #77",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #16 (as broad citation Psalm 139)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #90"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 139,
+      "tier": 4,
+      "reference": "2 Corinthians 5:7",
+      "book": "2 Corinthians",
+      "chapter": 5,
+      "verses": "7",
+      "text": "for we walk by faith, not by sight.",
+      "score": 1.4807,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #20",
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #20",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #19"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 140,
+      "tier": 4,
+      "reference": "Isaiah 53:4",
+      "book": "Isaiah",
+      "chapter": 53,
+      "verses": "4",
+      "text": "Surely he has borne our sickness and carried our suffering; yet we considered him plagued, struck by God, and afflicted.",
+      "score": 1.4747,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #51",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #25"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 141,
+      "tier": 4,
+      "reference": "Psalm 46:10",
+      "book": "Psalm",
+      "chapter": 46,
+      "verses": "10",
+      "text": "“Be still, and know that I am God. I will be exalted among the nations. I will be exalted on the earth.”",
+      "score": 1.4604,
+      "source_lists": [
+        "listicles: What Christians Want To Know 27 Famous Bible Verses [unranked]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #71",
+        "biblegateway: Top 100 most-read Bible verses 2024 #72",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #85",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #44",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #20 (as broad citation Psalm 46)"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 142,
+      "tier": 4,
+      "reference": "Psalm 121:4",
+      "book": "Psalm",
+      "chapter": 121,
+      "verses": "4",
+      "text": "Behold, he who keeps Israel will neither slumber nor sleep.",
+      "score": 1.4545,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #51",
+        "biblegateway: Top 100 most-read Bible verses 2024 #60"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 143,
+      "tier": 4,
+      "reference": "James 1:5",
+      "book": "James",
+      "chapter": 1,
+      "verses": "5",
+      "text": "But if any of you lacks wisdom, let him ask of God, who gives to all liberally and without reproach, and it will be given to him.",
+      "score": 1.453,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as James 1:4-5)",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #31"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 144,
+      "tier": 4,
+      "reference": "Philippians 1:6",
+      "book": "Philippians",
+      "chapter": 1,
+      "verses": "6",
+      "text": "being confident of this very thing, that he who began a good work in you will complete it until the day of Jesus Christ.",
+      "score": 1.4468,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #84",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #90"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 145,
+      "tier": 4,
+      "reference": "Jeremiah 17:7-8",
+      "book": "Jeremiah",
+      "chapter": 17,
+      "verses": "7-8",
+      "text": "“Blessed is the man who trusts in the LORD, and whose confidence is in the LORD. For he will be as a tree planted by the waters, who spreads out its roots by the river, and will not fear when heat comes, but its leaf will be green, and will not be concerned in the year of drought. It won’t cease from yielding fruit.",
+      "score": 1.4387,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #6",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #10"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 146,
+      "tier": 4,
+      "reference": "Psalm 103:12",
+      "book": "Psalm",
+      "chapter": 103,
+      "verses": "12",
+      "text": "As far as the east is from the west, so far has he removed our transgressions from us.",
+      "score": 1.4251,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Psalm 103:11-14)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #64"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 147,
+      "tier": 4,
+      "reference": "Revelation 21:1",
+      "book": "Revelation",
+      "chapter": 21,
+      "verses": "1",
+      "text": "I saw a new heaven and a new earth, for the first heaven and the first earth have passed away, and the sea is no more.",
+      "score": 1.4103,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked] (as Revelation 21:1-2)",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #84"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 148,
+      "tier": 4,
+      "reference": "Psalm 1:6",
+      "book": "Psalm",
+      "chapter": 1,
+      "verses": "6",
+      "text": "For the LORD knows the way of the righteous, but the way of the wicked shall perish.",
+      "score": 1.404,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Psalm 1:5-6)",
+        "biblegateway: Top 100 most-read Bible verses 2024 #85",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #97"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 149,
+      "tier": 4,
+      "reference": "Philippians 2:3-4",
+      "book": "Philippians",
+      "chapter": 2,
+      "verses": "3-4",
+      "text": "doing nothing through rivalry or through conceit, but in humility, each counting others better than himself; each of you not just looking to his own things, but each of you also to the things of others.",
+      "score": 1.3906,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #75 (as Philippians 2:3)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #87"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 150,
+      "tier": 4,
+      "reference": "Hebrews 4:16",
+      "book": "Hebrews",
+      "chapter": 4,
+      "verses": "16",
+      "text": "Let’s therefore draw near with boldness to the throne of grace, that we may receive mercy and may find grace for help in time of need.",
+      "score": 1.3743,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #86"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 151,
+      "tier": 4,
+      "reference": "Psalm 121:5",
+      "book": "Psalm",
+      "chapter": 121,
+      "verses": "5",
+      "text": "The LORD is your keeper. The LORD is your shade on your right hand.",
+      "score": 1.332,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #54",
+        "biblegateway: Top 100 most-read Bible verses 2024 #62"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 152,
+      "tier": 4,
+      "reference": "Acts 4:12",
+      "book": "Acts",
+      "chapter": 4,
+      "verses": "12",
+      "text": "There is salvation in no one else, for there is no other name under heaven that is given among men, by which we must be saved!”",
+      "score": 1.3247,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Acts 4:11-12)",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #89"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 153,
+      "tier": 4,
+      "reference": "Psalm 16:11",
+      "book": "Psalm",
+      "chapter": 16,
+      "verses": "11",
+      "text": "You will show me the path of life. In your presence is fullness of joy. In your right hand there are pleasures forever more.",
+      "score": 1.3032,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #79"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 154,
+      "tier": 4,
+      "reference": "Colossians 3:2",
+      "book": "Colossians",
+      "chapter": 3,
+      "verses": "2",
+      "text": "Set your mind on the things that are above, not on the things that are on the earth.",
+      "score": 1.2962,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Colossians 3:1-3)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #80"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 155,
+      "tier": 4,
+      "reference": "1 Peter 2:24",
+      "book": "1 Peter",
+      "chapter": 2,
+      "verses": "24",
+      "text": "He himself bore our sins in his body on the tree, that we, having died to sins, might live to righteousness. You were healed by his wounds.",
+      "score": 1.2949,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked]",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #91"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 156,
+      "tier": 4,
+      "reference": "Psalm 27:1",
+      "book": "Psalm",
+      "chapter": 27,
+      "verses": "1",
+      "text": "By David. The LORD is my light and my salvation. Whom shall I fear? The LORD is the strength of my life. Of whom shall I be afraid?",
+      "score": 1.2757,
+      "source_lists": [
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #31",
+        "biblegateway: Top 10 Scripture passages searched 2018 #7 (as broad citation Psalm 27)",
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #14 (as broad citation Psalm 27)"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 157,
+      "tier": 4,
+      "reference": "Proverbs 6:20",
+      "book": "Proverbs",
+      "chapter": 6,
+      "verses": "20",
+      "text": "My son, keep your father’s commandment, and don’t forsake your mother’s teaching.",
+      "score": 1.2691,
+      "source_lists": [
+        "memorization: Fighter Verses Set 2 (Truth78) [unranked] (as Proverbs 6:20-21)",
+        "listicles: Christianity.com Top 101 Bible Quotes #85"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 158,
+      "tier": 4,
+      "reference": "Exodus 14:14",
+      "book": "Exodus",
+      "chapter": 14,
+      "verses": "14",
+      "text": "The LORD will fight for you, and you shall be still.”",
+      "score": 1.2626,
+      "source_lists": [
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #13",
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked] (as Exodus 14:13-16)"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 159,
+      "tier": 4,
+      "reference": "Psalm 143:8",
+      "book": "Psalm",
+      "chapter": 143,
+      "verses": "8",
+      "text": "Cause me to hear your loving kindness in the morning, for I trust in you. Cause me to know the way in which I should walk, for I lift up my soul to you.",
+      "score": 1.2602,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #12",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #12"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 160,
+      "tier": 4,
+      "reference": "Psalm 121:6",
+      "book": "Psalm",
+      "chapter": 121,
+      "verses": "6",
+      "text": "The sun will not harm you by day, nor the moon by night.",
+      "score": 1.257,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #56",
+        "biblegateway: Top 100 most-read Bible verses 2024 #63"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 161,
+      "tier": 4,
+      "reference": "Psalm 46:1",
+      "book": "Psalm",
+      "chapter": 46,
+      "verses": "1",
+      "text": "For the Chief Musician. By the sons of Korah. According to Alamoth. God is our refuge and strength, a very present help in trouble.",
+      "score": 1.256,
+      "source_lists": [
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #23",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #18"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 162,
+      "tier": 4,
+      "reference": "Matthew 6:34",
+      "book": "Matthew",
+      "chapter": 6,
+      "verses": "34",
+      "text": "Therefore don’t be anxious for tomorrow, for tomorrow will be anxious for itself. Each day’s own evil is sufficient.",
+      "score": 1.2542,
+      "source_lists": [
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #48",
+        "youversion: World's 10 Most Popular Verses 2014 #9"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 163,
+      "tier": 4,
+      "reference": "Romans 11:36",
+      "book": "Romans",
+      "chapter": 11,
+      "verses": "36",
+      "text": "For of him and through him and to him are all things. To him be the glory for ever! Amen.",
+      "score": 1.2359,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked] (as Romans 11:33-36)",
+        "listicles: Christianity.com Top 101 Bible Quotes #91"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 164,
+      "tier": 4,
+      "reference": "Ephesians 3:20",
+      "book": "Ephesians",
+      "chapter": 3,
+      "verses": "20",
+      "text": "Now to him who is able to do exceedingly abundantly above all that we ask or think, according to the power that works in us,",
+      "score": 1.2148,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #60",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #65",
+        "biblegateway: Top 100 most-read Bible verses 2024 #79"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 165,
+      "tier": 4,
+      "reference": "Isaiah 9:6",
+      "book": "Isaiah",
+      "chapter": 9,
+      "verses": "6",
+      "text": "For a child is born to us. A son is given to us; and the government will be on his shoulders. His name will be called Wonderful Counselor, Mighty God, Everlasting Father, Prince of Peace.",
+      "score": 1.2085,
+      "source_lists": [
+        "memorization: 100 Bible Verses Everyone Should Know by Heart (Robert J. Morgan) [unranked]",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #99"
+      ],
+      "source_classes": [
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 166,
+      "tier": 4,
+      "reference": "John 13:34-35",
+      "book": "John",
+      "chapter": 13,
+      "verses": "34-35",
+      "text": "A new commandment I give to you, that you love one another. Just as I have loved you, you also love one another. By this everyone will know that you are my disciples, if you have love for one another.”",
+      "score": 1.2082,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #98",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #100 (as John 13:35)"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization",
+        "platform"
+      ]
+    },
+    {
+      "rank": 167,
+      "tier": 4,
+      "reference": "Romans 8:1",
+      "book": "Romans",
+      "chapter": 8,
+      "verses": "1",
+      "text": "There is therefore now no condemnation to those who are in Christ Jesus, who don’t walk according to the flesh, but according to the Spirit.",
+      "score": 1.208,
+      "source_lists": [
+        "memorization: Fighter Verses Set 1 (Truth78) [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #97"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 168,
+      "tier": 4,
+      "reference": "John 15:13",
+      "book": "John",
+      "chapter": 15,
+      "verses": "13",
+      "text": "Greater love has no one than this, that someone lay down his life for his friends.",
+      "score": 1.2038,
+      "source_lists": [
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #19",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #74",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #74",
+        "listicles: Christianity.com Top 101 Bible Quotes #76"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 169,
+      "tier": 4,
+      "reference": "Matthew 18:20",
+      "book": "Matthew",
+      "chapter": 18,
+      "verses": "20",
+      "text": "For where two or three are gathered together in my name, there I am in the middle of them.”",
+      "score": 1.2028,
+      "source_lists": [
+        "memorization: Navigators Topical Memory System (TMS) [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #100"
+      ],
+      "source_classes": [
+        "listicle",
+        "memorization"
+      ]
+    },
+    {
+      "rank": 170,
+      "tier": 4,
+      "reference": "Ephesians 3:16-17",
+      "book": "Ephesians",
+      "chapter": 3,
+      "verses": "16-17",
+      "text": "that he would grant you, according to the riches of his glory, that you may be strengthened with power through his Spirit in the inner person, that Christ may dwell in your hearts through faith, to the end that you, being rooted and grounded in love,",
+      "score": 1.2019,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #10",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #14"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 171,
+      "tier": 4,
+      "reference": "1 Corinthians 13:5",
+      "book": "1 Corinthians",
+      "chapter": 13,
+      "verses": "5",
+      "text": "doesn’t behave itself inappropriately, doesn’t seek its own way, is not provoked, takes no account of evil;",
+      "score": 1.1243,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #61",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #62"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 172,
+      "tier": 4,
+      "reference": "Hebrews 4:15",
+      "book": "Hebrews",
+      "chapter": 4,
+      "verses": "15",
+      "text": "For we don’t have a high priest who can’t be touched with the feeling of our infirmities, but one who has been in all points tempted like we are, yet without sin.",
+      "score": 1.0691,
+      "source_lists": [
+        "youversion: Most Shared Verses 2013 (top 10) #6",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #99"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 173,
+      "tier": 4,
+      "reference": "Mark 9:23",
+      "book": "Mark",
+      "chapter": 9,
+      "verses": "23",
+      "text": "Jesus said to him, “If you can believe, all things are possible to him who believes.”",
+      "score": 1.0579,
+      "source_lists": [
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #42"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 174,
+      "tier": 4,
+      "reference": "Micah 6:8",
+      "book": "Micah",
+      "chapter": 6,
+      "verses": "8",
+      "text": "He has shown you, O man, what is good. What does the LORD require of you, but to act justly, to love mercy, and to walk humbly with your God?",
+      "score": 1.0319,
+      "source_lists": [
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #42",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #75",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #35"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 175,
+      "tier": 4,
+      "reference": "Proverbs 22:6",
+      "book": "Proverbs",
+      "chapter": 22,
+      "verses": "6",
+      "text": "Train up a child in the way he should go, and when he is old he will not depart from it.",
+      "score": 1.0137,
+      "source_lists": [
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #27",
+        "listicles: Christianity.com Top 101 Bible Quotes #57",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #45"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 176,
+      "tier": 4,
+      "reference": "Psalm 42:11",
+      "book": "Psalm",
+      "chapter": 42,
+      "verses": "11",
+      "text": "Why are you in despair, my soul? Why are you disturbed within me? Hope in God! For I shall still praise him, the saving help of my countenance, and my God.",
+      "score": 0.9694,
+      "source_lists": [
+        "listicles: Living Christian 25 Most Popular Bible Verses [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #50"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 177,
+      "tier": 4,
+      "reference": "Deuteronomy 31:8",
+      "book": "Deuteronomy",
+      "chapter": 31,
+      "verses": "8",
+      "text": "The LORD himself is who goes before you. He will be with you. He will not fail you nor forsake you. Don’t be afraid. Don’t be discouraged.”",
+      "score": 0.9155,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #43",
+        "listicles: Crosswalk 20 Most Popular Bible Verses #13",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #17"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 178,
+      "tier": 4,
+      "reference": "Psalm 1:2",
+      "book": "Psalm",
+      "chapter": 1,
+      "verses": "2",
+      "text": "but his delight is in the LORD’s law. On his law he meditates day and night.",
+      "score": 0.9055,
+      "source_lists": [
+        "biblegateway: Top 100 most-read Bible verses 2024 #66",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #68"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 179,
+      "tier": 4,
+      "reference": "1 Corinthians 13:6",
+      "book": "1 Corinthians",
+      "chapter": 13,
+      "verses": "6",
+      "text": "doesn’t rejoice in unrighteousness, but rejoices with the truth;",
+      "score": 0.8927,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #66",
+        "biblegateway: Top 100 most-read Bible verses 2024 #69"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 180,
+      "tier": 4,
+      "reference": "1 Peter 2:9",
+      "book": "1 Peter",
+      "chapter": 2,
+      "verses": "9",
+      "text": "But you are a chosen race, a royal priesthood, a holy nation, a people for God’s own possession, that you may proclaim the excellence of him who called you out of darkness into his marvelous light.",
+      "score": 0.8871,
+      "source_lists": [
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #23",
+        "biblegateway: Top 100 most-read Bible verses 2024 #75",
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #88"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 181,
+      "tier": 4,
+      "reference": "Psalm 119:105",
+      "book": "Psalm",
+      "chapter": 119,
+      "verses": "105",
+      "text": "Your word is a lamp to my feet, and a light for my path.",
+      "score": 0.8848,
+      "source_lists": [
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #26",
+        "search-volume: Holy Land Merchandise — The 50 Most Searched Bible Verses of 2025 #32",
+        "listicles: Christianity.com Top 101 Bible Quotes #101"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 182,
+      "tier": 4,
+      "reference": "Jeremiah 29:12",
+      "book": "Jeremiah",
+      "chapter": 29,
+      "verses": "12",
+      "text": "You shall call on me, and you shall go and pray to me, and I will listen to you.",
+      "score": 0.8778,
+      "source_lists": [
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #59"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 183,
+      "tier": 4,
+      "reference": "James 1:2",
+      "book": "James",
+      "chapter": 1,
+      "verses": "2",
+      "text": "Count it all joy, my brothers, when you fall into various temptations,",
+      "score": 0.8756,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #57"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 184,
+      "tier": 4,
+      "reference": "Psalm 51:10",
+      "book": "Psalm",
+      "chapter": 51,
+      "verses": "10",
+      "text": "Create in me a clean heart, O God. Renew a right spirit within me.",
+      "score": 0.8755,
+      "source_lists": [
+        "search-volume: Bible Study Tools — Top 20 most-read Bible verses/passages on BibleStudyTools in 2024 #8 (as broad citation Psalm 51)",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #81"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 185,
+      "tier": 4,
+      "reference": "Acts 2:38",
+      "book": "Acts",
+      "chapter": 2,
+      "verses": "38",
+      "text": "Peter said to them, “Repent and be baptized, every one of you, in the name of Jesus Christ for the forgiveness of sins, and you will receive the gift of the Holy Spirit.",
+      "score": 0.8166,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #59"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 186,
+      "tier": 4,
+      "reference": "Matthew 19:26",
+      "book": "Matthew",
+      "chapter": 19,
+      "verses": "26",
+      "text": "Looking at them, Jesus said, “With men this is impossible, but with God all things are possible.”",
+      "score": 0.7983,
+      "source_lists": [
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #67"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 187,
+      "tier": 4,
+      "reference": "Ephesians 5:25-26",
+      "book": "Ephesians",
+      "chapter": 5,
+      "verses": "25-26",
+      "text": "Husbands, love your wives, even as Christ also loved the assembly and gave himself up for her, that he might sanctify her, having cleansed her by the washing of water with the word,",
+      "score": 0.7901,
+      "source_lists": [
+        "youversion: Most Shared Verses 2013 (top 10) #7",
+        "listicles: Christianity.com Top 101 Bible Quotes #92"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 188,
+      "tier": 4,
+      "reference": "Ephesians 4:2",
+      "book": "Ephesians",
+      "chapter": 4,
+      "verses": "2",
+      "text": "with all lowliness and humility, with patience, bearing with one another in love,",
+      "score": 0.7665,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #18",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #25"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 189,
+      "tier": 4,
+      "reference": "Matthew 11:30",
+      "book": "Matthew",
+      "chapter": 11,
+      "verses": "30",
+      "text": "For my yoke is easy, and my burden is light.”",
+      "score": 0.7589,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #61"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 190,
+      "tier": 4,
+      "reference": "Proverbs 3:3-4",
+      "book": "Proverbs",
+      "chapter": 3,
+      "verses": "3-4",
+      "text": "Don’t let kindness and truth forsake you. Bind them around your neck. Write them on the tablet of your heart. So you will find favor, and good understanding in the sight of God and man.",
+      "score": 0.7427,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #24",
+        "listicles: DailyVerses.net 100 Most Popular Bible Verses (top 25 captured) #22"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 191,
+      "tier": 4,
+      "reference": "Psalm 37:4",
+      "book": "Psalm",
+      "chapter": 37,
+      "verses": "4",
+      "text": "Also delight yourself in the LORD, and he will give you the desires of your heart.",
+      "score": 0.7056,
+      "source_lists": [
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #34",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #87"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 192,
+      "tier": 4,
+      "reference": "Colossians 3:12",
+      "book": "Colossians",
+      "chapter": 3,
+      "verses": "12",
+      "text": "Put on therefore, as God’s chosen ones, holy and beloved, a heart of compassion, kindness, lowliness, humility, and perseverance;",
+      "score": 0.7027,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #63"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 193,
+      "tier": 4,
+      "reference": "2 Corinthians 10:5",
+      "book": "2 Corinthians",
+      "chapter": 10,
+      "verses": "5",
+      "text": "throwing down imaginations and every high thing that is exalted against the knowledge of God and bringing every thought into captivity to the obedience of Christ,",
+      "score": 0.6908,
+      "source_lists": [
+        "biblegateway: Top 100 Bible verses of 2025 (year in review) #72",
+        "biblegateway: Top 100 most-read Bible verses 2024 #73"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 194,
+      "tier": 4,
+      "reference": "James 5:16",
+      "book": "James",
+      "chapter": 5,
+      "verses": "16",
+      "text": "Confess your sins to one another and pray for one another, that you may be healed. The insistent prayer of a righteous person is powerfully effective.",
+      "score": 0.6877,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #65",
+        "listicles: Christianity.com Top 101 Bible Quotes #93",
+        "listicles: Bible Study Tools 50 Most Popular Bible Verses #52"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 195,
+      "tier": 4,
+      "reference": "Psalm 133:1",
+      "book": "Psalm",
+      "chapter": 133,
+      "verses": "1",
+      "text": "A Song of Ascents. By David. See how good and how pleasant it is for brothers to live together in unity!",
+      "score": 0.6797,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #71",
+        "listicles: Christianity.com Top 101 Bible Quotes #69"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 196,
+      "tier": 4,
+      "reference": "Hebrews 12:1",
+      "book": "Hebrews",
+      "chapter": 12,
+      "verses": "1",
+      "text": "Therefore let’s also, seeing we are surrounded by so great a cloud of witnesses, lay aside every weight and the sin which so easily entangles us, and let’s run with perseverance the race that is set before us,",
+      "score": 0.6752,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #64"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 197,
+      "tier": 4,
+      "reference": "Matthew 19:14",
+      "book": "Matthew",
+      "chapter": 19,
+      "verses": "14",
+      "text": "But Jesus said, “Allow the little children, and don’t forbid them to come to me; for the Kingdom of Heaven belongs to ones like these.”",
+      "score": 0.6631,
+      "source_lists": [
+        "listicles: Discover Walks 35 Most Famous Bible Verses [unranked]",
+        "listicles: Christianity.com Top 101 Bible Quotes #86"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    },
+    {
+      "rank": 198,
+      "tier": 4,
+      "reference": "Acts 17:11",
+      "book": "Acts",
+      "chapter": 17,
+      "verses": "11",
+      "text": "Now these were more noble than those in Thessalonica, in that they received the word with all readiness of mind, examining the Scriptures daily to see whether these things were so.",
+      "score": 0.6212,
+      "source_lists": [
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #66"
+      ],
+      "source_classes": [
+        "platform"
+      ]
+    },
+    {
+      "rank": 199,
+      "tier": 4,
+      "reference": "Romans 8:38",
+      "book": "Romans",
+      "chapter": 8,
+      "verses": "38",
+      "text": "For I am persuaded that neither death, nor life, nor angels, nor principalities, nor things present, nor things to come, nor powers,",
+      "score": 0.6007,
+      "source_lists": [
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #55 (as Romans 8:38-39)",
+        "biblegateway: 100 most-read Bible verses (original 2009 list) #80"
+      ],
+      "source_classes": [
+        "listicle",
+        "platform"
+      ]
+    },
+    {
+      "rank": 200,
+      "tier": 4,
+      "reference": "Isaiah 43:2",
+      "book": "Isaiah",
+      "chapter": 43,
+      "verses": "2",
+      "text": "When you pass through the waters, I will be with you, and through the rivers, they will not overflow you. When you walk through the fire, you will not be burned, and flame will not scorch you.",
+      "score": 0.5872,
+      "source_lists": [
+        "listicles: Christianity.com Top 101 Bible Quotes #38",
+        "listicles: Bible Maximum 100 Most Popular Bible Verses #82"
+      ],
+      "source_classes": [
+        "listicle"
+      ]
+    }
+  ]
+}

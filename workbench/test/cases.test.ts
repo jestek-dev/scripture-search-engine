@@ -264,6 +264,33 @@ describe('legacy migration manifest', () => {
     expect(() => validateCanonicalLegacyCaseLog(rawCases.replace('Who is like the Lord?', 'Who compares to the Lord?'), manifest, parseLegacyJudgmentLog(rawJudgments))).toThrow(/not the canonical/);
   });
 
+  it('tolerates live v2 case events appended AFTER the byte-pinned legacy prefix (§5.1 two-writer coexistence)', async () => {
+    // Found in anger by the D11 shakedown: a whole-file canonical pin made
+    // the first live case brick every later derivation. The legacy prefix
+    // stays pinned; appends after it are ordinary case events.
+    const { rawCases, rawJudgments, manifest } = await legacyInputs();
+    const judgments = parseLegacyJudgmentLog(rawJudgments);
+    const appended: CaseEvent = {
+      schemaVersion: 2,
+      eventId: '44444444-4444-4444-8444-444444444444',
+      caseId: '55555555-5555-4555-8555-555555555555',
+      at: '2026-08-28T09:00:00.000Z',
+      reviewer: 'jesse',
+      sequence: 1,
+      kind: 'case-created',
+      query: 'hearing and doing',
+      source: 'manual',
+      artifact: { engineVersion: '0.14.0', corpusFingerprint: 'c'.repeat(64), layerFingerprint: 'l'.repeat(64) },
+    };
+    const grown = `${rawCases}${JSON.stringify(appended)}\n`;
+    const events = validateCanonicalLegacyCaseLog(grown, manifest, judgments);
+    expect(events.at(-1)).toMatchObject({ eventId: appended.eventId, query: 'hearing and doing' });
+    // The pin still holds over the PREFIX: mutating a legacy byte refuses
+    // even when live appends follow it.
+    const tamperedPrefix = grown.replace('Who is like the Lord?', 'Who compares to the Lord?');
+    expect(() => validateCanonicalLegacyCaseLog(tamperedPrefix, manifest, judgments)).toThrow(/not the canonical/);
+  });
+
   it('exposes read-only read, validate, and fold helpers for later integrations', async () => {
     const files = paths();
     const events = await readValidatedCaseEventLog(files.casesPath);

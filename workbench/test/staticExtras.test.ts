@@ -30,7 +30,9 @@ const ROUTE_LITERALS = [
   '/api/v2/quality', '/api/v2/audits/preview', '/api/v2/audits/apply',
   '/api/v2/audits/close', '/complete-item', '/skip-item', '/complete-session',
   '/blind-sessions', '/missing-passages', '/passages', '/promotion/preview',
-  '/promotion/apply', '/cancel',
+  '/promotion/apply', '/cancel', '/api/v2/updates', '/api/v2/updates/cards/',
+  '/decide', '/api/v2/updates/train', '/api/v2/admissions/', '/admit',
+  '/api/v2/publish/', '/prepare',
 ];
 
 function validInlinePage(marker: string): string {

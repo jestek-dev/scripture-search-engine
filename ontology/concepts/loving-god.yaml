@@ -52,6 +52,13 @@ lexicon:
   - love the lord your god
   - love god with all your heart
   - the greatest commandment
+  # CORPUS-BLOCKED ROSTER build (2026-08-27): the wholehearted-devotion
+  # row resolves HERE as this pack's lexicon+anchor extension — exactly
+  # the three-id design above anticipated, its 1 Kgs texts now
+  # assertable. Fixture: wholehearted-devotion.json (covers this pack).
+  - wholehearted devotion
+  - divided heart
+  - undivided heart
 anchors:
   # "'You shall love the Lord your God with all your heart, with all
   # your soul, and with all your mind.' This is the first and great
@@ -91,6 +98,25 @@ anchors:
   - ref: John 21:15-17
     sources: [editorial]
     weight: 0.75
+  # CORPUS-BLOCKED ROSTER build (2026-08-27) — wholehearted-devotion
+  # extension anchors (the kings' measuring rod):
+  # "Let your heart therefore be perfect with the LORD our God, to walk
+  # in his statutes, and to keep his commandments" (WEB, in corpus).
+  - ref: 1 Kings 8:61
+    sources: [editorial]
+    weight: 0.8
+  # "his heart was not perfect with the LORD his God, as the heart of
+  # David his father was." (WEB, in corpus). The divided heart —
+  # Solomon measured by the rod of 8:61.
+  - ref: 1 Kings 11:4
+    sources: [editorial]
+    weight: 0.7
+  # "Teach me your way, LORD... Make my heart undivided to fear your
+  # name. I will praise you, Lord my God, with my whole heart." (WEB,
+  # in corpus). The prayer for the undivided heart.
+  - ref: Psalms 86:11-12
+    sources: [editorial]
+    weight: 0.8
 related:
   - gods-love
   - loving-others

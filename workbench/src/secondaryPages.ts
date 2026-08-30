@@ -19,6 +19,7 @@ export type SecondaryPageEntry = string | { readonly redirect: string };
 export const SECONDARY_PAGES: Readonly<Record<string, SecondaryPageEntry>> = {
   '/study': { redirect: '/' },
   '/advanced': 'static/advanced.html',
+  '/sign': 'static/sign.html',
 };
 
 export type SecondaryResolution =

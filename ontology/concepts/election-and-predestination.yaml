@@ -58,6 +58,9 @@ anchors:
   # "We were also assigned an inheritance in him, having been
   # foreordained according to the purpose of him who does all things
   # after the counsel of his will" (WEB, in corpus).
+  # BOUNDARY (2026-08-27 roster build): this verse stays HERE; the new
+  # inheritance pack claims the adjacent, disjoint Eph 1:13-14
+  # pledge-of-our-inheritance verses (recorded both files).
   - ref: Ephesians 1:11
     sources: [editorial]
     weight: 0.9

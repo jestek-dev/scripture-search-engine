@@ -1,0 +1,40 @@
+{
+  "id": "contending-for-the-faith",
+  "query": "contend for the faith",
+  "status": "active",
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 35 (Theme I, requesting book: Jude).",
+    "Deferred because Jude was absent entirely (the row IS Jude 1:3-4,",
+    "17-23).",
+    "EXTENSION, NOT A MINT (check-first rule): giving-an-answer ALREADY",
+    "anchors Jude 1:3 AND Jude 1:22 — the row's own texts — and",
+    "'defending the faith' measured ALREADY SERVED (1 Pet 3:15 rank 1,",
+    "Jude 1:3 rank 2, honest 'Theme: Giving an answer' chips). The",
+    "remaining measured gap is the verbatim contend-vocabulary only, so",
+    "this fixture covers a LEXICON EXTENSION of giving-an-answer",
+    "('contend for the faith'), not a new id. The pre-existing pending",
+    "fixture apologetics-umbrella-expansion (asserting Jude 1:3) now",
+    "PASSES on the full corpus — reported as a promotion advisory with",
+    "this PR; this fixture is the contend-query record.",
+    "Measured gap before the extension (2026-08-27, pre-extension run):",
+    "'contend for the faith' HIJACKED wholesale by the faith concept",
+    "(Rom 10:17, Heb 11:6, 'Theme: Faith' chips) — Jude 1:3 nowhere in",
+    "the top 10."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jude 1:3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Giving an answer"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Peter 3:15",
+    "Jude 1:22"
+  ],
+  "coversConcepts": [
+    "giving-an-answer"
+  ]
+}

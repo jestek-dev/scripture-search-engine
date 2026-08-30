@@ -1,0 +1,66 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme D row, 3 requesting books: Matthew, Mark,
+# Luke). Adopted as display vocabulary by Jesse's 2026-08-25 ruling
+# (CONVENTIONS §11); ENGINE admission only by his merge of this PR.
+# Deferred through batches 1-6: all three naming passages were
+# corpus-blocked. The pre-existing pending fixture unpardonable-sin
+# (2026-08-18) is the measured-gap record and its ANXIOUS-SEARCHER
+# design note GOVERNS this pack (executed below); it flips active in
+# this PR with a coversConcepts claim.
+#
+# ANXIOUS-SEARCHER GUARD (the fixture's design note, executed): the
+# person typing these queries is usually afraid they have committed
+# it. This pack LOCATES the passages that name the saying and never
+# adjudicates anyone's case; the pastoral hand-off is the related
+# forgiveness-of-sins link — deliberately NOT a reassurance anchor,
+# and deliberately NO related edge to backsliding (whose Heb 6/10
+# warning anchors are the fixture's mustNotRank harm class: served to
+# this searcher they read as a verdict).
+#
+# BOUNDARIES: Heb 10:26-27 stays backsliding's anchor (never claimed
+# here — the fixture's mustNotRank gates it). Mark 3:30's narrator
+# reason ("because they said, 'He has an unclean spirit'") is included
+# in the Mark span; the deliverance narrative itself stays
+# deliverance-from-demons' (cross-related).
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# gist reports what the three passages say, including their own
+# forgiveness clause ("every sin and blasphemy will be forgiven men"),
+# and adjudicates no one's standing.
+id: blasphemy-against-the-spirit
+label: Blasphemy against the Spirit
+lexicon:
+  - unpardonable sin
+  - unforgivable sin
+  - blasphemy against the holy spirit
+  - blasphemy against the spirit
+  - have i committed the unforgivable sin
+anchors:
+  # "every sin and blasphemy will be forgiven men, but the blasphemy
+  # against the Spirit will not be forgiven men... either in this age,
+  # or in that which is to come." (WEB, in corpus). The keystone —
+  # note the passage leads with what IS forgiven.
+  - ref: Matthew 12:31-32
+    sources: [editorial]
+    weight: 1.0
+  # "all sins of the descendants of man will be forgiven... but
+  # whoever may blaspheme against the Holy Spirit never has
+  # forgiveness" — with the narrator's own reason: "because they said,
+  # 'He has an unclean spirit.'" (WEB, in corpus).
+  - ref: Mark 3:28-30
+    sources: [editorial]
+    weight: 0.95
+  # "Everyone who speaks a word against the Son of Man will be
+  # forgiven, but those who blaspheme against the Holy Spirit will not
+  # be forgiven." (WEB, in corpus).
+  - ref: Luke 12:10
+    sources: [editorial]
+    weight: 0.9
+related:
+  - forgiveness-of-sins
+  - holy-spirit
+  - deliverance-from-demons
+sources: [editorial]

@@ -26,21 +26,22 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { BOOKS, findBook } from '../../pipeline/src/books.js';
-import { parseAnchorRef } from '../../pipeline/src/importers/ontologyImporter.js';
 import { parseVerseId } from '../../pipeline/src/verseId.js';
 
 import { repoRoot as realRepoRoot } from './descriptor.js';
 import { applyMutationPlan, createMutationPlan, type ApplyOptions } from './applyJournal.js';
 import {
-  parseLegacyJudgmentLine,
-  readValidatedCaseEventLog,
-  validateCanonicalLegacyCaseLog,
-  validateLegacyMigrationManifest,
-} from './cases.js';
+  anchorRangeOf,
+  canonicalReferenceOf,
+  effectiveJudgments,
+  isV2Judgment,
+  parseJudgmentLog,
+  referenceOfTargetId,
+  slugOf,
+  validateCasesForJudgments,
+} from './effectiveJudgments.js';
 import {
   ANCHOR_AFFECTING_CAUSES,
-  parseJudgmentRecord,
-  type JudgmentRecord,
   type JudgmentRecordV2,
   type ParsedJudgmentRecord,
   type WithinTop,
@@ -123,122 +124,6 @@ interface WebSubsetFile {
   [key: string]: unknown;
 }
 
-/** Slug for `eval/golden/<slug>.json`. Deterministic, filename-safe. */
-export function slugOf(query: string): string {
-  return query
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-/** "WEB:59001022" -> "James 1:22", via the pipeline's own verse-id encoding. */
-export function referenceOfTargetId(targetId: string): string {
-  const numeric = targetId.split(':')[1];
-  const location = parseVerseId(Number(numeric));
-  const book = BOOKS[location.bookId - 1];
-  if (!book) throw new Error(`referenceOfTargetId: no book for id ${location.bookId}`);
-  return `${book.name} ${location.chapter}:${location.verse}`;
-}
-
-function parseLog(raw: string): ParsedJudgmentRecord[] {
-  const records: ParsedJudgmentRecord[] = [];
-  const lines = raw.split('\n');
-  for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index]!.trim();
-    if (line === '') continue;
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(line);
-    } catch {
-      throw new Error(`judgments.jsonl line ${index + 1} is not valid JSON.`);
-    }
-    const result = parseJudgmentRecord(parsed);
-    if (!result.ok) throw new Error(`judgments.jsonl line ${index + 1} is invalid: ${result.reason}`);
-    records.push(result.record);
-  }
-  return records;
-}
-
-/**
- * The supersession rule (§4): a later judgment on the same query + target
- * (targetId for ✓/✗, reference for missing) supersedes an earlier one, by
- * `at` order; the later log line wins a timestamp tie.
- */
-function isV2Judgment(record: ParsedJudgmentRecord): record is JudgmentRecordV2 {
-  return 'schemaVersion' in record && record.schemaVersion === 2;
-}
-
-function legacyEffectiveJudgments(records: readonly JudgmentRecord[]): JudgmentRecord[] {
-  const byTarget = new Map<string, JudgmentRecord>();
-  for (const record of records) {
-    const target = record.targetId ?? record.reference ?? '';
-    const key = `${record.query}\u0000${target}`;
-    const existing = byTarget.get(key);
-    if (existing === undefined || record.at >= existing.at) byTarget.set(key, record);
-  }
-  return [...byTarget.values()];
-}
-
-function supersessionKey(record: JudgmentRecordV2): string {
-  if (record.action === 'missing') return `reference:${record.reference ?? ''}`;
-  if (record.action === 'prefer') {
-    const pair = [record.preferredTargetId ?? '', record.otherTargetId ?? ''].sort();
-    return `pair:${pair[0]}\u0000${pair[1]}`;
-  }
-  return `target:${record.targetId ?? ''}`;
-}
-
-/**
- * v2 corrections are an explicit append-only graph, never a timestamp race.
- * Validate the full graph before selecting its leaves so a malformed history
- * cannot quietly change a generated fixture.
- */
-function activeV2Judgments(records: readonly JudgmentRecordV2[]): JudgmentRecordV2[] {
-  const byId = new Map<string, { record: JudgmentRecordV2; line: number }>();
-  for (const [index, record] of records.entries()) {
-    if (byId.has(record.judgmentId)) {
-      throw new Error(`judgments.jsonl contains duplicate v2 judgmentId "${record.judgmentId}".`);
-    }
-    byId.set(record.judgmentId, { record, line: index });
-  }
-
-  const superseded = new Set<string>();
-  for (const [index, record] of records.entries()) {
-    if (record.supersedes === undefined) continue;
-    const prior = byId.get(record.supersedes);
-    if (prior === undefined) {
-      throw new Error(`v2 judgment "${record.judgmentId}" supersedes unknown judgment "${record.supersedes}".`);
-    }
-    if (prior.line >= index) {
-      throw new Error(`v2 judgment "${record.judgmentId}" must supersede an earlier judgment.`);
-    }
-    if (Date.parse(record.at) <= Date.parse(prior.record.at)) {
-      throw new Error(`v2 judgment "${record.judgmentId}" must be timestamped after the judgment it supersedes.`);
-    }
-    if (
-      prior.record.query !== record.query ||
-      prior.record.caseId !== record.caseId ||
-      supersessionKey(prior.record) !== supersessionKey(record)
-    ) {
-      throw new Error(
-        `v2 judgment "${record.judgmentId}" must supersede the same query, case, and target.`,
-      );
-    }
-    if (superseded.has(record.supersedes)) {
-      throw new Error(`v2 judgment "${record.supersedes}" has multiple active superseding corrections.`);
-    }
-    superseded.add(record.supersedes);
-  }
-  return records.filter((record) => !superseded.has(record.judgmentId));
-}
-
-/** Mixed histories preserve v1's historic timestamp rule and add v2 leaves. */
-export function effectiveJudgments(records: readonly ParsedJudgmentRecord[]): ParsedJudgmentRecord[] {
-  const legacy = records.filter((record): record is JudgmentRecord => !isV2Judgment(record));
-  const v2 = records.filter(isV2Judgment);
-  return [...legacyEffectiveJudgments(legacy), ...activeV2Judgments(v2)];
-}
-
 function assertV2Compilable(record: JudgmentRecordV2): void {
   const requireTarget = (): string => {
     if (typeof record.targetId !== 'string' || record.targetId === '') {
@@ -272,26 +157,6 @@ function assertV2Compilable(record: JudgmentRecordV2): void {
     referenceOfTargetId(record.preferredTargetId);
     referenceOfTargetId(record.otherTargetId);
   }
-}
-
-function anchorRangeOf(reference: string, context: string): { start: number; end: number } {
-  const range = parseAnchorRef(reference);
-  if (!range) {
-    throw new Error(`${context}: reference "${reference}" cannot be parsed by parseAnchorRef.`);
-  }
-  return range;
-}
-
-function canonicalReferenceOf(reference: string, context: string): string {
-  const range = anchorRangeOf(reference, context);
-  const start = parseVerseId(range.start);
-  const end = parseVerseId(range.end);
-  if (start.bookId !== end.bookId || start.chapter !== end.chapter) {
-    throw new Error(`${context}: reference "${reference}" cannot be emitted as a canonical single-chapter range.`);
-  }
-  const book = BOOKS[start.bookId - 1];
-  if (!book) throw new Error(`${context}: reference "${reference}" has an unknown book.`);
-  return `${book.name} ${start.chapter}:${start.verse}${start.verse === end.verse ? '' : `-${end.verse}`}`;
 }
 
 function rangesOverlap(
@@ -347,6 +212,10 @@ function sameGeneratedAssertions(existing: Record<string, unknown>, candidate: C
   return stableJson(existingAssertions) === stableJson(candidateAssertions);
 }
 
+/**
+ * I/O shim over the shared core's pure case cross-validation
+ * (effectiveJudgments.ts, V1/D3): observe the two files, hand the bytes in.
+ */
 async function validateCasesBeforeCompilation(
   repoRoot: string,
   rawLog: string,
@@ -354,54 +223,11 @@ async function validateCasesBeforeCompilation(
 ): Promise<void> {
   const casesPath = path.join(repoRoot, 'workbench', 'cases.jsonl');
   const manifestPath = path.join(repoRoot, 'workbench', 'legacy', 'migration-manifest.json');
-  const v2Records = records.filter(isV2Judgment);
-  const hasCases = existsSync(casesPath);
-  const hasManifest = existsSync(manifestPath);
-
-  if (!hasCases) {
-    if (v2Records.length > 0) throw new Error('v2 judgments require a validated workbench/cases.jsonl case log.');
-    if (hasManifest) throw new Error('workbench/legacy/migration-manifest.json exists without workbench/cases.jsonl.');
-    return;
-  }
-
-  const cases = await readValidatedCaseEventLog(casesPath);
-  const caseQueries = new Map(
-    cases
-      .filter((event) => event.kind === 'case-created')
-      .map((event) => [event.caseId, event.query] as const),
-  );
-  for (const record of v2Records) {
-    const caseQuery = caseQueries.get(record.caseId);
-    if (caseQuery === undefined) {
-      throw new Error(`v2 judgment "${record.judgmentId}" names missing caseId "${record.caseId}".`);
-    }
-    if (caseQuery !== record.query) {
-      throw new Error(
-        `v2 judgment "${record.judgmentId}" query does not match case "${record.caseId}".`,
-      );
-    }
-  }
-
-  if (!hasManifest) return;
-  let manifest: unknown;
-  try {
-    manifest = JSON.parse(await readFile(manifestPath, 'utf8')) as unknown;
-  } catch {
-    throw new Error('workbench legacy migration manifest is not valid JSON.');
-  }
-  // Legacy lines keep their true file line numbers, so a stray v1 append is
-  // reported at the exact line to delete — recoverable, not a permanent brick.
-  const legacyLines = rawLog
-    .split('\n')
-    .map((text, index) => ({ text, lineNumber: index + 1 }))
-    .filter(({ text }) => text.trim() !== '')
-    .filter(({ text }) => !Object.hasOwn(JSON.parse(text) as object, 'schemaVersion'));
-  const canonicalCases = await readFile(casesPath, 'utf8');
-  validateCanonicalLegacyCaseLog(
-    canonicalCases,
-    validateLegacyMigrationManifest(manifest),
-    legacyLines.map(({ text, lineNumber }) => parseLegacyJudgmentLine(text, lineNumber)),
-  );
+  validateCasesForJudgments(records, {
+    rawJudgmentsLog: rawLog,
+    casesJsonl: existsSync(casesPath) ? await readFile(casesPath, 'utf8') : null,
+    migrationManifestJson: existsSync(manifestPath) ? await readFile(manifestPath, 'utf8') : null,
+  });
 }
 
 export async function planJudgmentCompilation(
@@ -414,26 +240,39 @@ export async function planJudgmentCompilation(
   const descriptorPath = path.join(repoRoot, 'artifacts', 'content-artifact.json');
 
   const descriptor = JSON.parse(await readFile(descriptorPath, 'utf8')) as {
+    engineVersion: string;
+    corpusFingerprint: string;
     layerFingerprint: string;
   };
 
   const rawLog = existsSync(judgmentsPath) ? await readFile(judgmentsPath, 'utf8') : '';
-  const records = rawLog === '' ? [] : parseLog(rawLog);
+  const records = rawLog === '' ? [] : parseJudgmentLog(rawLog);
   await validateCasesBeforeCompilation(repoRoot, rawLog, records);
   const effective = effectiveJudgments(records);
   const operations: PlannedCompilationFile[] = [];
 
-  // Fingerprint check (§5): warn, per judgment, when the layers have changed
-  // since the judgment was made — only for judgments that still influence the
-  // output; a superseded verdict influences nothing to re-confirm.
+  // Identity check (§5, extended by the votes-to-engine plan's D1): warn, per
+  // judgment and per moved dimension, when any of the full identity triple —
+  // engineVersion, corpusFingerprint, layerFingerprint — has changed since the
+  // judgment was made. Only judgments that still influence the output warn; a
+  // superseded verdict influences nothing to re-confirm. Interim honesty fix:
+  // superseded by V6's full-triple seal-time replay (Phase 4, D16).
+  const identityDimensions = [
+    { field: 'engineVersion', moved: 'the engine' },
+    { field: 'corpusFingerprint', moved: 'the scripture text' },
+    { field: 'layerFingerprint', moved: 'the layers' },
+  ] as const;
   const warnings: string[] = [];
   for (const record of effective) {
-    if (record.layerFingerprint !== descriptor.layerFingerprint) {
-      warnings.push(
-        `judgment at ${record.at} on "${record.query}" was made under layerFingerprint ` +
-          `${record.layerFingerprint}, current is ${descriptor.layerFingerprint} — the layers ` +
-          'have changed since; re-confirm rather than trust it.',
-      );
+    for (const { field, moved } of identityDimensions) {
+      if (record[field] !== descriptor[field]) {
+        warnings.push(
+          `judgment at ${record.at} on "${record.query}" was made under ${field} ` +
+            `${record[field]}, current is ${descriptor[field]} — ${moved} ` +
+            `${field === 'layerFingerprint' ? 'have' : 'has'} changed since; ` +
+            're-confirm rather than trust it.',
+        );
+      }
     }
   }
 

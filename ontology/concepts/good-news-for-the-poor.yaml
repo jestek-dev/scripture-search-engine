@@ -1,0 +1,68 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme G row 31 (requesting book: Luke). Deferred because the
+# signature texts (Luke 4:18; 1:52-53; 7:22; 12:33) were absent and
+# the lone in-corpus Luke 6:20-25 was too thin to measure.
+#
+# The KEEP-DISTINCT-FROM-JUSTICE reversible call EXECUTED as recorded
+# on both rows: justice-and-oppression keeps the oppression/justice
+# register (its lexicon and anchors untouched); THIS pack is the
+# GOOD-NEWS register — God's favor announced to the poor — on Luke's
+# own texts. The review partitioned Luke's justice-shaped refs to the
+# Micah row precisely so these two rows do not compete.
+#
+# TOKENIZER NOTE (G-4): every entry keeps >= 2 significant tokens;
+# bare `poor` deliberately SKIPPED (inventory row) — the word spans
+# justice-and-oppression's register and dozens of proverbs; the
+# good-news phrase forms carry this register. "good news for the
+# poor" was dropped as a redundant entry at authoring (identical
+# token set to "good news to the poor" — for/to are stopwords).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports Luke's announcement; it does not turn it into an
+# economics.
+id: good-news-for-the-poor
+label: Good news for the poor
+lexicon:
+  - good news to the poor
+  - what does the bible say about the poor
+  - blessed are the poor
+  - gods heart for the poor
+anchors:
+  # "The Spirit of the Lord is on me, because he has anointed me to
+  # preach good news to the poor... to proclaim release to the
+  # captives" (WEB, in corpus). The Nazareth manifesto — the register's
+  # naming text.
+  - ref: Luke 4:18
+    sources: [editorial]
+    weight: 1.0
+  # "He has put down princes from their thrones, and has exalted the
+  # lowly. He has filled the hungry with good things. He has sent the
+  # rich away empty." (WEB, in corpus). The Magnificat's reversal.
+  - ref: Luke 1:52-53
+    sources: [editorial]
+    weight: 0.9
+  # "Blessed are you who are poor, for God's Kingdom is yours. Blessed
+  # are you who hunger now, for you will be filled." (WEB, in corpus).
+  # Luke's own beatitude wording ("you who are poor").
+  - ref: Luke 6:20-21
+    sources: [editorial]
+    weight: 0.85
+  # "the blind receive their sight... and the poor have good news
+  # preached to them." (WEB, in corpus). Jesus's answer to John — the
+  # announcement as credential.
+  - ref: Luke 7:22
+    sources: [editorial]
+    weight: 0.8
+  # "Sell what you have and give gifts to the needy. Make for
+  # yourselves purses which don't grow old, a treasure in the heavens"
+  # (WEB, in corpus). The announcement's demand on the hearers.
+  - ref: Luke 12:33
+    sources: [editorial]
+    weight: 0.7
+related:
+  - justice-and-oppression
+  - generosity
+  - kingdom-of-heaven
+  - gods-provision
+sources: [editorial]

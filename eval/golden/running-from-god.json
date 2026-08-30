@@ -1,0 +1,42 @@
+{
+  "id": "running-from-god",
+  "query": "running from god",
+  "status": "active",
+  "additionalQueries": [
+    "you can't outrun god"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 34 (Theme I, 2 requesting books: Jonah,",
+    "Psalms). Deferred because Jonah was absent entirely (the theme's",
+    "defining book).",
+    "Register per the row: the flight itself — surrender-to-god is the",
+    "consecration register, obedience-to-the-word the hearing-and-doing",
+    "register, the-lords-discipline the corrective response; none touched.",
+    "BOUNDARIES: Ps 139:7-10 stays presence-of-god's anchor (the row's",
+    "kin text — cross-noted, related edge carries it, not claimed);",
+    "Jonah 4:2 stays gods-compassion-for-outsiders' (same-PR sibling",
+    "book-mate; cross-noted). Gen 3:8-10 (the rationale's kin text,",
+    "listed-not-counted) IS claimed — free, and the hiding register is",
+    "this row's own.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'running from god' Gen 3:8 token luck then noise (Ps 23:3",
+    "'runn' vocabulary!); 'you can't outrun god' pure cant+god noise",
+    "(Rom 8:8, Titus 1:2) — Jonah 1:3 nowhere."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Jonah 1:1-3",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Running from God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Jonah 1:10",
+    "Genesis 3:8-10"
+  ],
+  "coversConcepts": [
+    "running-from-god"
+  ]
+}

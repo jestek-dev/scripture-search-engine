@@ -50,6 +50,84 @@ const ADMISSION_LOCK_WAIT_MS = 60_000;
 export type AdmissionDecisionKind = (typeof DECISION_KINDS)[number];
 export type AdmissionStatus = 'ADMITTED' | 'ALREADY_ADMITTED' | 'NO_MEASURABLE_EFFECT';
 
+export type EngineIdentity = ComparisonCandidateBinding['referenceIdentity'];
+
+/**
+ * The plan's three reviewed relaxations (votes-to-engine plan §05 §5.3/§5.5
+ * gaps 2–3; §06.1 rule 2) are all one kind of change: admission-code
+ * amendments to WHICH admission verdict applies, each recorded in the
+ * admission manifest, none a runner-side override. The gates themselves are
+ * untouched and keep reporting red.
+ */
+
+/** The two fixture-class operation types (proposals.ts:11-24; V7/V12). */
+export const FIXTURE_CLASS_OPERATION_TYPES = ['golden-fixture-upsert', 'fixture-corpus-chapter-add'] as const;
+
+/** PR #63's ruling, quoted because it is the ruling this exemption encodes. */
+export const FIXTURE_CLASS_EFFECT_RATIONALE =
+  'fixtures are the measuring instrument, not the data being measured — the merge IS the ruling (PR #63)';
+
+/**
+ * §5.3 item 4: every exempt manifest carries its own justification and which
+ * lane it ran, auditable forever. Derived from operation types, never from a
+ * caller flag.
+ */
+export interface FixtureClassEffectExemption {
+  readonly kind: 'fixture-class-effect';
+  readonly lane: 'fixture-lane' | 'full-lane';
+  readonly operationTypes: readonly string[];
+  readonly rationale: typeof FIXTURE_CLASS_EFFECT_RATIONALE;
+}
+
+/**
+ * §5.5 gap 2: the deferred-signing marker. A moved baseline may travel
+ * without a fresh independent approval ONLY when the admission records this
+ * marker — two named identity fields, the A2 designation, and the
+ * merge-first-sign-once citation — so the deferral is a recorded decision,
+ * never a silent skip. The approvals themselves ride only the hand-authored
+ * post-merge governance PR; the machine never writes one.
+ */
+export interface DeferredSigningMarker {
+  readonly kind: 'deferred-signing';
+  /** The identity the standing schema-v2 approvals bind (pre-regen / base). */
+  readonly preRegenIdentity: EngineIdentity;
+  /** The identity the post-merge signing will settle on. */
+  readonly expectedPostMergeIdentity: EngineIdentity;
+  /** A2: the designated independent reviewer — never the change author. */
+  readonly independentReviewer: string;
+  /** The merge-first-sign-once ruling this deferral rests on (V8). */
+  readonly citation: string;
+}
+
+/** One failing finding, projected to the fields report verification checks. */
+export interface GauntletRedFinding {
+  readonly gateId: string;
+  readonly categoryCode: string;
+  readonly subjects: readonly string[];
+}
+
+/**
+ * §5.5 gap 3: how a REJECT release verdict was classified admissible. Either
+ * every red is INHERITED — reproduced, same (gateId, categoryCode, subjects),
+ * by a verified control run at the train's base commit — or, for a train
+ * admission carrying the deferred-signing marker, every red is exactly the
+ * approval-identity-mismatch finding set the marker predicts. Both finding
+ * sets and the control report's digest are recorded here, in the manifest.
+ */
+export type ReleaseGauntletClassification =
+  | {
+    readonly kind: 'inherited-standing-red';
+    readonly trainFindings: readonly GauntletRedFinding[];
+    readonly controlFindings: readonly GauntletRedFinding[];
+    readonly controlReportPath: string;
+    readonly controlReportDigest: string;
+  }
+  | {
+    readonly kind: 'deferred-signing-predicted-red';
+    readonly findings: readonly GauntletRedFinding[];
+    readonly predictedIdentity: EngineIdentity;
+  };
+
 export interface AdmissionCandidateBinding {
   readonly cacheKey: string;
   readonly proposalDigest: string;
@@ -112,8 +190,16 @@ export interface VerifiedReleaseGauntlet {
   readonly payloadSha256: string;
   readonly startedAt: string;
   readonly finishedAt: string;
-  readonly blocking: false;
-  readonly verdict: 'ADMIT' | 'ADMIT_WITH_WARNINGS';
+  /**
+   * A REJECT release verdict is representable (blocking: true) ONLY under
+   * §5.5 gap 3's tolerate-reject acceptance: it admits nothing by itself —
+   * `runAdmission` refuses unless every red is classified (inherited via a
+   * verified control run, or marker-predicted) and the classification is
+   * recorded in the manifest. The gates keep reporting red; what changes is
+   * that a red becomes a classified or predicted finding.
+   */
+  readonly blocking: boolean;
+  readonly verdict: 'ADMIT' | 'ADMIT_WITH_WARNINGS' | 'REJECT';
   readonly baseCommit: string;
   readonly descriptorPath: 'artifacts/content-artifact.json';
   readonly descriptorSha256: string;
@@ -155,10 +241,27 @@ export interface AdmissionPreviewInput {
   readonly admittedBaseCommit: string;
   readonly expectedMainCommit: string;
   readonly proposal: unknown;
-  readonly candidate: AdmissionCandidateBinding;
-  readonly comparison: ComparisonReport;
-  readonly comparisonBinding: ComparisonCandidateBinding;
-  readonly gauntlet: AdmissionGauntletReference;
+  /**
+   * §5.3 item 2: for FIXTURE-LANE manifests only (every operation
+   * `golden-fixture-upsert`, derived from the manifest itself), the candidate,
+   * comparison, its binding, and the candidate gauntlet may all be null — the
+   * diffs are computed by replaying operations against pinned sources, the
+   * candidate adds nothing on an identity-neutral change, and the worktree
+   * rebuild + release gauntlet remain mandatory. An identity-moving manifest
+   * can never take `candidate: null`: its fixture lane is null by construction.
+   */
+  readonly candidate: AdmissionCandidateBinding | null;
+  readonly comparison: ComparisonReport | null;
+  readonly comparisonBinding: ComparisonCandidateBinding | null;
+  readonly gauntlet: AdmissionGauntletReference | null;
+  /**
+   * Fixture lane only: the base identity the isolated rebuild must reproduce
+   * byte-for-byte — the built-in proof of identity-neutrality. Required
+   * exactly when `candidate` is null.
+   */
+  readonly baseIdentity?: EngineIdentity | null;
+  /** §5.5 gap 2 (data trains, Phase 3): the recorded deferral, or absent. */
+  readonly deferredSigningMarker?: DeferredSigningMarker | null;
   /** Trusted test/integration boundary. Production callers omit this and use the verified disk loader. */
   readonly trustedGauntletLoader?: TrustedGauntletLoader;
   /** Trusted test/integration clock. Production callers omit this so freshness is judged on the real clock. */
@@ -191,12 +294,17 @@ export interface AdmissionPreview {
   readonly proposalDigest: string;
   readonly admittedBaseCommit: string;
   readonly expectedMainCommit: string;
-  readonly candidate: AdmissionCandidateBinding;
-  readonly comparisonDigest: string;
-  readonly comparisonUniverseDigest: string;
-  readonly comparisonReviewDigest: string;
-  readonly gauntletDigest: string;
-  readonly gauntlet: VerifiedAdmissionGauntlet;
+  readonly candidate: AdmissionCandidateBinding | null;
+  readonly comparisonDigest: string | null;
+  readonly comparisonUniverseDigest: string | null;
+  readonly comparisonReviewDigest: string | null;
+  readonly gauntletDigest: string | null;
+  readonly gauntlet: VerifiedAdmissionGauntlet | null;
+  /** §5.3 item 1: derived from the manifest itself, never from a caller flag. */
+  readonly effectExemption: FixtureClassEffectExemption | null;
+  readonly fixtureLane: { readonly operationTypes: readonly string[] } | null;
+  readonly baseIdentity: EngineIdentity | null;
+  readonly deferredSigningMarker: DeferredSigningMarker | null;
   readonly reviewedComparisonQueries: readonly string[];
   readonly diffs: readonly AdmissionFileDiff[];
   readonly fixtureDecisionSubjects: readonly { readonly fixtureId: string; readonly digest: string }[];
@@ -229,7 +337,12 @@ export interface CommandOutcome {
   readonly command: string;
   readonly args: readonly string[];
   readonly cwd: string;
-  readonly exitCode: 0;
+  /**
+   * 0 for every command except the release gauntlet, whose REJECT exit is
+   * recorded honestly and then CLASSIFIED (§5.5 gap 3 — inherited via the
+   * control run or marker-predicted) rather than tolerated silently.
+   */
+  readonly exitCode: number;
   readonly stdoutSha256: string;
   readonly stderrSha256: string;
   readonly stdoutTail: string;
@@ -276,11 +389,16 @@ export interface AdmissionManifest {
   readonly expectedMainCommit: string;
   readonly worktreeTreeHash: string;
   readonly decisions: readonly AdmissionDecision[];
-  readonly candidate: AdmissionCandidateBinding;
+  readonly candidate: AdmissionCandidateBinding | null;
   readonly rebuiltCandidate: RebuildEvidence;
-  readonly comparison: { readonly digest: string; readonly binding: ComparisonCandidateBinding };
-  readonly gauntlet: VerifiedAdmissionGauntlet;
+  readonly comparison: { readonly digest: string; readonly binding: ComparisonCandidateBinding } | null;
+  readonly gauntlet: VerifiedAdmissionGauntlet | null;
   readonly releaseGauntlet?: VerifiedReleaseGauntlet;
+  /** Recorded reviewed relaxations (§06.1 rule 2) — null when none applied. */
+  readonly effectExemption: FixtureClassEffectExemption | null;
+  readonly baseIdentity: EngineIdentity | null;
+  readonly deferredSigning: DeferredSigningMarker | null;
+  readonly releaseGauntletClassification: ReleaseGauntletClassification | null;
   readonly sourceChanges: readonly AdmissionFileDiff[];
   readonly probeMovements: readonly ProbeMovement[];
   readonly commands: readonly CommandOutcome[];
@@ -308,13 +426,42 @@ export interface GitAdapter {
     readonly commands: readonly CommandOutcome[];
   }>;
   treeHash(worktree: string): Promise<{ readonly hash: string; readonly commands: readonly CommandOutcome[] }>;
+  /**
+   * Restores the given repo-relative paths to their committed (HEAD) state
+   * inside the worktree, skipping paths not tracked at HEAD. Used to drop
+   * the rebuild's tracked outputs before the admitted tree is fixed: the
+   * rebuilt descriptor is evidence (rebuiltCandidate), not a reviewed
+   * change, and it is not byte-stable across runs (D11 finding).
+   */
+  restoreTrackedPaths(worktree: string, paths: readonly string[]): Promise<readonly CommandOutcome[]>;
   removeWorktree(repoRoot: string, worktree: string): Promise<CommandOutcome>;
+}
+
+/**
+ * §5.5 gap 3: the base-commit control run the RUNNER performs — a second
+ * detached worktree at the train's base commit with no operations applied,
+ * the same artifact rebuild admission already performs, then the identical
+ * fixed release argv writing `eval/.runs/<trainId>-control.json`. Its report
+ * passes the same confined-path, schema, and freshness verification as every
+ * admission report before `runAdmission` compares findings.
+ */
+export interface ControlRunEvidence {
+  readonly reportPath: string;
+  readonly reportBytes: Uint8Array;
+  readonly descriptorSha256: string;
+  readonly databaseSha256: string;
+  readonly engineIdentity: EngineIdentity;
 }
 
 export interface AdmissionDependencies {
   readonly git?: GitAdapter;
   readonly rebuild?: (worktree: string, preview: AdmissionPreview) => Promise<RebuildEvidence>;
   readonly verify?: (worktree: string, preview: AdmissionPreview, rebuilt: RebuildEvidence) => Promise<VerifyEvidence>;
+  /**
+   * Executes the base-commit control run when a guard-train release verdict
+   * is red. Without it, a red release verdict refuses exactly as today.
+   */
+  readonly controlRun?: (preview: AdmissionPreview) => Promise<ControlRunEvidence>;
   readonly decisionSigningKey?: string;
   readonly now?: () => Date;
   readonly idFactory?: () => string;
@@ -565,6 +712,10 @@ function parseGauntletBytes(
   expectation: AdmissionGauntletExpectation | ReleaseGauntletExpectation,
   targetKind: 'candidate' | 'release' = 'candidate',
   now: Date,
+  // §5.5 gap 3: 'tolerate-reject' keeps every verification above intact and
+  // only defers the verdict refusal to the caller's classification — release
+  // reports only, and admitting still requires a recorded classification.
+  acceptance: 'strict' | 'tolerate-reject' = 'strict',
 ): { readonly parsed: GauntletMachineReport; readonly verified: VerifiedAdmissionGauntlet | VerifiedReleaseGauntlet } {
   let parsedValue: unknown;
   try { parsedValue = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytesValue)); }
@@ -577,16 +728,19 @@ function parseGauntletBytes(
   const identity = parsedValue.identity;
   const payload = parsedValue.payload;
   exactKeys(identity, ['gitCommitSha', 'dirtyTreeSha256', 'descriptor', 'engine', 'target', 'budgetsSha256', 'fixtureInputSha256', 'flags'], 'Gauntlet identity');
-  // `battery`, `rankMetrics`, and `noMeasurableEffect` (schema v2) are the
+  // `battery`, `rankMetrics`, `noMeasurableEffect` (schema v2), and `tiers`
+  // (E6 — rides the report exactly when the battery evidence does) are the
   // G12/E3 evidence sections; admission verdicts read the G12 roster row and
-  // the payload verdict, so the sections themselves are optional here. A
+  // the payload verdict, so the sections themselves are optional here. The
+  // D11 shakedown caught the missing `tiers`: every release-target run emits
+  // it, so the release-gauntlet leg refused its own honest report. A
   // NO_MEASURABLE_EFFECT verdict still fails closed below — this parser
   // admits only ADMIT / ADMIT_WITH_WARNINGS.
   exactKeys(
     payload,
     [
       'verdict', 'headline', 'gates',
-      ...['battery', 'rankMetrics', 'noMeasurableEffect'].filter((key) => isRecord(payload) && key in payload),
+      ...['battery', 'rankMetrics', 'noMeasurableEffect', 'tiers'].filter((key) => isRecord(payload) && key in payload),
     ],
     'Gauntlet payload',
   );
@@ -693,19 +847,23 @@ function parseGauntletBytes(
   });
   const blocking = payload.verdict === 'REJECT' || gates.some((gate, index) =>
     gate.status === 'fail' || (GAUNTLET_GATE_ROSTER[index]!.applicability === 'required' && gate.status !== 'pass'));
-  if (blocking || (payload.verdict !== 'ADMIT' && payload.verdict !== 'ADMIT_WITH_WARNINGS')) {
+  const verdictAcceptable = payload.verdict === 'ADMIT' || payload.verdict === 'ADMIT_WITH_WARNINGS'
+    || (acceptance === 'tolerate-reject' && targetKind === 'release' && payload.verdict === 'REJECT');
+  if (!verdictAcceptable || (blocking && !(acceptance === 'tolerate-reject' && targetKind === 'release'))) {
     fail('blocking_gauntlet', 'The verified gauntlet contains a blocking gate or rejection verdict.');
   }
   const gatesDigest = digest(gates);
   const common = {
     schemaVersion: 1 as const, reportPath, reportSha256: String(parsedValue.reportSha256),
-    payloadSha256: String(parsedValue.payloadSha256), startedAt, finishedAt, blocking: false as const,
-    verdict: payload.verdict as 'ADMIT' | 'ADMIT_WITH_WARNINGS', baseCommit: expectation.baseCommit,
+    payloadSha256: String(parsedValue.payloadSha256), startedAt, finishedAt, blocking,
+    verdict: payload.verdict as 'ADMIT' | 'ADMIT_WITH_WARNINGS' | 'REJECT', baseCommit: expectation.baseCommit,
     gates, gatesDigest,
   };
   const evidenceBody = targetKind === 'candidate'
     ? {
       ...common,
+      // Candidate gauntlets never ride tolerate-reject, so the verdict stays narrow.
+      verdict: payload.verdict as 'ADMIT' | 'ADMIT_WITH_WARNINGS',
       baseIdentity: candidateExpectation!.baseIdentity, candidateIdentity: candidateExpectation!.candidateIdentity,
       proposalDigest: candidateExpectation!.proposalDigest,
       sourceSnapshotDigest: candidateExpectation!.sourceSnapshotDigest,
@@ -739,8 +897,16 @@ async function defaultGauntletLoader(repoRoot: string, reportPath: string): Prom
   return bytesValue!;
 }
 
+/** The full-lane (candidate-bearing) evidence shape, post null checks. */
+type FullLaneEvidenceInput = AdmissionPreviewInput & {
+  readonly candidate: AdmissionCandidateBinding;
+  readonly comparison: ComparisonReport;
+  readonly comparisonBinding: ComparisonCandidateBinding;
+  readonly gauntlet: AdmissionGauntletReference;
+};
+
 async function loadVerifiedGauntlet(
-  input: AdmissionPreviewInput,
+  input: FullLaneEvidenceInput,
   proposalDigest: string,
 ): Promise<VerifiedAdmissionGauntlet> {
   const reportPath = gauntletReportPath(input.gauntlet.reportPath);
@@ -786,7 +952,7 @@ async function validateCandidateEvidence(repoRoot: string, candidate: AdmissionC
   }
 }
 
-function validateEvidence(input: AdmissionPreviewInput, proposalDigest: string): void {
+function validateEvidence(input: FullLaneEvidenceInput, proposalDigest: string): void {
   const candidate = input.candidate;
   requireDigest(candidate.cacheKey, 'candidate.cacheKey');
   requireDigest(candidate.proposalDigest, 'candidate.proposalDigest');
@@ -976,8 +1142,45 @@ export function probeApprovalBindingIssues(baselineAfterText: string, approvalAf
   return issues;
 }
 
-/** A moved baseline and its re-issued approval travel together or not at all. */
-function assertProbeApprovalPairing(diffs: readonly AdmissionFileDiff[]): void {
+function isEngineIdentityValue(value: unknown): value is EngineIdentity {
+  return isRecord(value)
+    && typeof value.engineVersion === 'string' && value.engineVersion.length > 0
+    && typeof value.corpusFingerprint === 'string' && value.corpusFingerprint.length > 0
+    && typeof value.layerFingerprint === 'string' && value.layerFingerprint.length > 0;
+}
+
+function validateDeferredSigningMarker(value: DeferredSigningMarker | null | undefined): DeferredSigningMarker | null {
+  if (value === null || value === undefined) return null;
+  if (!isRecord(value) || value.kind !== 'deferred-signing'
+      || !isEngineIdentityValue(value.preRegenIdentity) || !isEngineIdentityValue(value.expectedPostMergeIdentity)) {
+    fail('invalid_deferred_signing_marker', 'Deferred-signing marker must record both identity fields.');
+  }
+  if (canonical(value.preRegenIdentity) === canonical(value.expectedPostMergeIdentity)) {
+    fail('invalid_deferred_signing_marker', 'Deferred-signing marker identities must actually differ: an identity-neutral change defers nothing.');
+  }
+  requireText(value.independentReviewer, 'deferredSigningMarker.independentReviewer', 2);
+  requireText(value.citation, 'deferredSigningMarker.citation', 8);
+  if (!value.citation.includes('merge-first-sign-once')) {
+    fail('invalid_deferred_signing_marker', 'Deferred-signing marker must cite the merge-first-sign-once ruling.');
+  }
+  return {
+    kind: 'deferred-signing',
+    preRegenIdentity: { ...value.preRegenIdentity },
+    expectedPostMergeIdentity: { ...value.expectedPostMergeIdentity },
+    independentReviewer: value.independentReviewer,
+    citation: value.citation,
+  };
+}
+
+/**
+ * A moved baseline and its re-issued approval travel together or not at all —
+ * unless the admission records the deferred-signing marker (§5.5 gap 2), in
+ * which case the moved baseline travels while the approvals wait for the
+ * hand-authored post-merge signing. A forged or wrong marker buys nothing:
+ * the marker's expected post-merge identity must equal the regenerated
+ * baseline's embedded identity, or the pairing refusal stands in full force.
+ */
+function assertProbeApprovalPairing(diffs: readonly AdmissionFileDiff[], marker: DeferredSigningMarker | null): void {
   const baseline = diffs.find((entry) => entry.kind === 'probe-baseline');
   const approval = diffs.find((entry) => entry.kind === 'probe-approval');
   // Publish rejects an unchanged approval diff, so a preview carrying one
@@ -988,6 +1191,17 @@ function assertProbeApprovalPairing(diffs: readonly AdmissionFileDiff[]): void {
   const baselineChanged = baseline !== undefined && baseline.changed;
   const approvalChanged = approval !== undefined && approval.changed;
   if (baselineChanged && !approvalChanged) {
+    if (marker !== null) {
+      let document: unknown;
+      try { document = JSON.parse(baseline!.after.text); } catch { document = null; }
+      const embedded = isRecord(document)
+        ? { engineVersion: document.engineVersion, corpusFingerprint: document.corpusFingerprint, layerFingerprint: document.layerFingerprint }
+        : null;
+      if (embedded === null || canonical(embedded) !== canonical(marker.expectedPostMergeIdentity)) {
+        fail('probe_approval_missing', 'A moved probe baseline requires its re-issued independent approval in the same batch — the deferred-signing marker does not match the regenerated baseline identity.');
+      }
+      return;
+    }
     fail('probe_approval_missing', 'A moved probe baseline requires its re-issued independent approval in the same batch.');
   }
   if (approvalChanged && !baselineChanged) {
@@ -998,21 +1212,67 @@ function assertProbeApprovalPairing(diffs: readonly AdmissionFileDiff[]): void {
   if (issues.length > 0) fail('probe_approval_mismatch', issues.join(' '));
 }
 
+/** §5.3 item 1: the two derived lane values — unforgeable and deterministic. */
+export function classifyManifestLanes(proposal: ProposalManifest): {
+  readonly effectExemption: FixtureClassEffectExemption | null;
+  readonly fixtureLane: { readonly operationTypes: readonly string[] } | null;
+} {
+  const operationTypes = [...new Set(proposal.operations.map((operation) => operation.type))].sort();
+  const fixtureClass = (['golden-fixture-upsert', 'fixture-corpus-chapter-add'] as readonly string[]);
+  const allFixtureClass = operationTypes.every((type) => fixtureClass.includes(type));
+  const allUpserts = operationTypes.every((type) => type === 'golden-fixture-upsert');
+  return {
+    effectExemption: allFixtureClass
+      ? {
+        kind: 'fixture-class-effect',
+        lane: allUpserts ? 'fixture-lane' : 'full-lane',
+        operationTypes,
+        rationale: FIXTURE_CLASS_EFFECT_RATIONALE,
+      }
+      : null,
+    fixtureLane: allUpserts ? { operationTypes } : null,
+  };
+}
+
 export async function previewAdmission(input: AdmissionPreviewInput): Promise<AdmissionPreview> {
   const repoRoot = await realDirectory(input.repoRoot, 'Repository root');
   const admittedBaseCommit = requireCommit(input.admittedBaseCommit, 'admittedBaseCommit');
   const expectedMainCommit = requireCommit(input.expectedMainCommit, 'expectedMainCommit');
   const proposal = parseProposalManifest(input.proposal);
   const proposalDigest = proposalManifestDigest(proposal);
-  validateEvidence(input, proposalDigest);
-  await validateCandidateEvidence(repoRoot, input.candidate);
-  const gauntlet = await loadVerifiedGauntlet(input, proposalDigest);
-  comparisonBlockers(input.comparison, input.reviewedComparisonQueries);
+  const { effectExemption, fixtureLane } = classifyManifestLanes(proposal);
+  const marker = validateDeferredSigningMarker(input.deferredSigningMarker);
+  let gauntlet: VerifiedAdmissionGauntlet | null = null;
+  let baseIdentity: EngineIdentity | null = null;
+  if (input.candidate === null || input.comparison === null || input.comparisonBinding === null || input.gauntlet === null) {
+    if (input.candidate !== null || input.comparison !== null || input.comparisonBinding !== null || input.gauntlet !== null) {
+      fail('invalid_input', 'Fixture-lane admission evidence omits the candidate, comparison, binding, and candidate gauntlet together or not at all.');
+    }
+    // §5.3 item 2: only a fixture-lane manifest may take `candidate: null` —
+    // derived from operation types, so an identity-moving manifest can never
+    // reach the exempt evidence shape.
+    if (fixtureLane === null) {
+      fail('fixture_lane_required', 'An identity-moving manifest can never take candidate: null — the fixture lane derives only from an all-golden-fixture-upsert manifest.');
+    }
+    if (input.baseIdentity === null || input.baseIdentity === undefined || !isEngineIdentityValue(input.baseIdentity)) {
+      fail('invalid_input', 'Fixture-lane admission requires the base identity the isolated rebuild must reproduce.');
+    }
+    baseIdentity = { ...input.baseIdentity };
+    if (input.reviewedComparisonQueries.length > 0) {
+      fail('invalid_input', 'A fixture-lane admission has no comparison, so no comparison queries can be reviewed.');
+    }
+  } else {
+    const full = input as FullLaneEvidenceInput;
+    validateEvidence(full, proposalDigest);
+    await validateCandidateEvidence(repoRoot, full.candidate);
+    gauntlet = await loadVerifiedGauntlet(full, proposalDigest);
+    comparisonBlockers(full.comparison, full.reviewedComparisonQueries);
+  }
   const diffs = await operationDiffs(repoRoot, proposal);
   await appendPromotionDiffs(repoRoot, diffs, input.fixturePromotions ?? []);
   const movements = await appendProbeDiff(repoRoot, diffs, input.probeBaseline);
   await appendProbeApprovalDiff(repoRoot, diffs, input.probeApproval);
-  assertProbeApprovalPairing(diffs);
+  assertProbeApprovalPairing(diffs, marker);
   diffs.sort((left, right) => left.path.localeCompare(right.path));
   const fixtureDecisionSubjects = (input.fixturePromotions ?? []).map((plan) => ({ fixtureId: plan.fixtureId, digest: plan.digest })).sort((a, b) => a.fixtureId.localeCompare(b.fixtureId));
   const probeDiff = diffs.find((entry) => entry.kind === 'probe-baseline');
@@ -1023,17 +1283,23 @@ export async function previewAdmission(input: AdmissionPreviewInput): Promise<Ad
     ...fixtureDecisionSubjects.map((entry) => ({ kind: 'fixture-promotion' as const, slotId: entry.fixtureId, subjectDigest: entry.digest })),
     ...(probeDecisionSubject === null ? [] : [{ kind: 'probe-baseline' as const, slotId: 'probe-baseline', subjectDigest: probeDecisionSubject }]),
   ];
-  const effect = measurableEffect(input.comparison);
-  const comparisonUniverseDigest = digest(input.comparison.universe);
-  const comparisonReviewDigest = digest({
+  // §5.3's two no-effect predicates: the workbench comparison predicate
+  // governs train admission — with no comparison (fixture lane) nothing can
+  // measure, so the effect is honestly false and only the derived exemption
+  // (never a caller flag) lets runAdmission proceed past the refusal.
+  const effect = input.comparison === null ? false : measurableEffect(input.comparison);
+  const comparisonUniverseDigest = input.comparison === null ? null : digest(input.comparison.universe);
+  const comparisonReviewDigest = input.comparison === null ? null : digest({
     reviewedQueries: [...input.reviewedComparisonQueries].sort(),
     changedQueries: input.comparison.queries.filter((entry) => entry.top10Changed).map((entry) => entry.query).sort(),
     regressionSessionQueryIds: input.comparison.regressionSessionQueryIds,
   });
   const withoutDigest = {
     schemaVersion: 1 as const, proposal, proposalDigest, admittedBaseCommit, expectedMainCommit,
-    candidate: input.candidate, comparisonDigest: input.comparison.digest, comparisonUniverseDigest, comparisonReviewDigest,
-    gauntletDigest: gauntlet.digest, gauntlet,
+    candidate: input.candidate, comparisonDigest: input.comparison === null ? null : input.comparison.digest,
+    comparisonUniverseDigest, comparisonReviewDigest,
+    gauntletDigest: gauntlet === null ? null : gauntlet.digest, gauntlet,
+    effectExemption, fixtureLane, baseIdentity, deferredSigningMarker: marker,
     reviewedComparisonQueries: [...input.reviewedComparisonQueries].sort(), diffs,
     fixtureDecisionSubjects, probeMovements: movements, probeDecisionSubject, sourceDecisionSubject,
     decisionSlots, measurableEffect: effect,
@@ -1181,6 +1447,16 @@ export const DEFAULT_ADMISSION_GIT_ADAPTER: GitAdapter = {
       await rm(`${indexPath}.lock`, { force: true }).catch(() => undefined);
     }
   },
+  async restoreTrackedPaths(worktree, paths) {
+    const outcomes: CommandOutcome[] = [];
+    for (const relative of paths) {
+      const tracked = await fixedCommandCapture('git', ['ls-files', '--', relative], worktree);
+      outcomes.push(tracked.outcome);
+      if (tracked.stdout.trim() === '') continue;
+      outcomes.push(await fixedCommand('git', ['checkout', 'HEAD', '--', relative], worktree));
+    }
+    return outcomes;
+  },
   removeWorktree(repoRoot, worktree) {
     return fixedCommand('git', ['worktree', 'remove', '--force', worktree], repoRoot);
   },
@@ -1219,14 +1495,45 @@ async function defaultRebuild(worktree: string): Promise<RebuildEvidence> {
 
 async function defaultVerify(worktree: string): Promise<VerifyEvidence> {
   const npmCli = resolveNpmCliPath();
-  const command = await fixedCommand(process.execPath, [npmCli, 'run', 'verify'], worktree);
+  let command: CommandOutcome;
+  try {
+    command = await fixedCommand(process.execPath, [npmCli, 'run', 'verify'], worktree);
+  } catch (error) {
+    // §06.2: a failed verify is the 'verify-failed' stop, so the failure
+    // must carry the verify_failed code — the generic command_failed maps
+    // to NO stop reason and left the train sealed with no recorded stop
+    // (found in anger by the D11 shakedown).
+    fail('verify_failed', `Verification failed in the admission worktree: ${error instanceof Error ? error.message : String(error)}`);
+  }
   const reportPath = 'eval/.runs/admission-release-report.json' as const;
-  const gauntletCommand = await fixedCommand(
-    process.execPath,
-    [npmCli, 'run', 'gauntlet', '--workspace', 'eval', '--', '--require-admit', '--json', reportPath,
-      '--release-database', 'workbench/.artifact/content.db'],
-    worktree,
-  );
+  // §5.5 gap 3 (the reviewed verdict-acceptance amendment, D8/D9): a REJECT
+  // release gauntlet exits non-zero but still writes its verified report.
+  // The red is then CLASSIFIED — inherited via the base-commit control run
+  // (guard trains) or exactly marker-predicted (data trains) — by
+  // classifyReleaseRed, which refuses everything unclassified. So the fixed
+  // command tolerates a non-zero exit exactly when the report file was
+  // produced; a run that produced no report fails exactly as before. The
+  // real exit code is recorded honestly in the command outcome.
+  const gauntletArgs = [npmCli, 'run', 'gauntlet', '--workspace', 'eval', '--', '--require-admit', '--json', reportPath,
+    '--release-database', 'workbench/.artifact/content.db'] as const;
+  let gauntletCommand: CommandOutcome;
+  try {
+    gauntletCommand = await fixedCommand(process.execPath, gauntletArgs, worktree);
+  } catch (error) {
+    const produced = await readConfinedRegularFile(worktree, reportPath, true);
+    if (produced === null) throw error;
+    const failure = error instanceof Error ? error : new Error(String(error));
+    gauntletCommand = {
+      command: process.execPath,
+      args: [...gauntletArgs],
+      cwd: worktree,
+      exitCode: 1,
+      stdoutSha256: sha256(''),
+      stderrSha256: sha256(failure.message),
+      stdoutTail: '',
+      stderrTail: tail(failure.message),
+    };
+  }
   const reportBytes = await readConfinedRegularFile(worktree, reportPath, false);
   let parsed: unknown;
   try { parsed = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(reportBytes!)); }
@@ -1241,7 +1548,18 @@ async function defaultVerify(worktree: string): Promise<VerifyEvidence> {
 
 function sourceMutations(preview: AdmissionPreview): MutationInput[] {
   return preview.diffs.filter((entry) => entry.changed).map((entry) => ({
-    path: entry.path, beforeSha256: entry.before.sha256, after: Buffer.from(entry.after.base64, 'base64'),
+    path: entry.path,
+    // The preview reads a missing source as empty text (readConfinedSource),
+    // but the worktree mutation plan distinguishes 'must match this digest'
+    // from 'must not exist' (beforeSha256 null). A CREATED file — the
+    // fixture lane's primary operation (its golden-fixture upsert writes a
+    // new eval/golden file; found in anger by the D11 shakedown) — must map
+    // to the null precondition or every create refuses stale_plan against
+    // the freshly materialized worktree. A tracked-but-zero-byte source is
+    // refused by the same mapping ('expected missing') — fail-closed, and
+    // no reviewed source owner permits an empty file.
+    beforeSha256: entry.before.text === '' ? null : entry.before.sha256,
+    after: Buffer.from(entry.after.base64, 'base64'),
   }));
 }
 
@@ -1289,6 +1607,13 @@ async function auditAppliedWorktree(
   preview: AdmissionPreview,
   rebuilt: RebuildEvidence | null,
   git: GitAdapter,
+  // After the pre-treeHash restore of tracked rebuild outputs (evidence,
+  // not change — D11), a tracked output is expected BACK at its committed
+  // bytes: it then no longer appears in status, and the measured-sha check
+  // is waived exactly for outputs that are clean in status. An output that
+  // is still dirty (e.g. the untracked database) must still match its
+  // measured bytes.
+  outputsRestored = false,
 ): Promise<readonly CommandOutcome[]> {
   const inspection = await assertWorktreeIdentity(repoRoot, worktree, preview.admittedBaseCommit, git);
   const changedDiffs = preview.diffs.filter((entry) => entry.changed);
@@ -1298,18 +1623,19 @@ async function auditAppliedWorktree(
       fail('post_verify_source_mismatch', `Admission source ${entry.path} does not match the exact reviewed after bytes.`);
     }
   }
+  const status = parsePorcelainStatus(inspection.statusPorcelainZ);
   const outputFiles = [...(rebuilt?.outputFiles ?? [])];
   const allowedOutputPaths = new Set(['artifacts/content-artifact.json', 'workbench/.artifact/content.db']);
   for (const output of outputFiles) {
     if (!allowedOutputPaths.has(output.path)) fail('worktree_mutation', `Rebuild output ${output.path} is not allowlisted.`);
     requireDigest(output.sha256, `rebuild output ${output.path}`);
+    if (outputsRestored && !status.some((entry) => entry.path === output.path)) continue;
     const actual = await readConfinedRegularFile(worktree, output.path, false);
     if (actual === null || sha256(actual) !== output.sha256) fail('worktree_mutation', `Rebuild output ${output.path} changed after it was measured.`);
   }
   const approved = new Map<string, 'existing' | 'new' | 'output'>();
   for (const entry of changedDiffs) approved.set(entry.path, entry.before.text === '' ? 'new' : 'existing');
   for (const output of outputFiles) approved.set(output.path, 'output');
-  const status = parsePorcelainStatus(inspection.statusPorcelainZ);
   for (const entry of status) {
     const kind = approved.get(entry.path);
     if (kind === undefined || entry.status.includes('D') || entry.status.includes('R') || entry.status.includes('C')
@@ -1354,9 +1680,14 @@ function validateRebuild(preview: AdmissionPreview, rebuilt: RebuildEvidence): v
     fail('rebuild_identity_mismatch', 'Rebuild output hashes do not match its descriptor/database evidence.');
   }
   const descriptor = rebuilt.descriptor;
-  if (descriptor.engineVersion !== preview.candidate.engineVersion
-      || descriptor.corpusFingerprint !== preview.candidate.corpusFingerprint
-      || descriptor.layerFingerprint !== preview.candidate.layerFingerprint
+  // Full lane: the rebuild must reproduce the admitted candidate identities.
+  // Fixture lane: it must reproduce the BASE identity byte-for-byte — the
+  // built-in proof of identity-neutrality (§5.2 guard-train step 3).
+  const expected = preview.candidate ?? preview.baseIdentity;
+  if (expected === null) fail('invalid_input', 'Admission preview carries no identity for the rebuild to reproduce.');
+  if (descriptor.engineVersion !== expected.engineVersion
+      || descriptor.corpusFingerprint !== expected.corpusFingerprint
+      || descriptor.layerFingerprint !== expected.layerFingerprint
       || descriptor.databaseSha256 !== rebuilt.databaseSha256) {
     fail('rebuild_identity_mismatch', 'The isolated rebuild does not reproduce the admitted candidate identities.');
   }
@@ -1421,6 +1752,160 @@ async function assertCleanAdmissionWorktree(
   return inspection.commands;
 }
 
+/** Projects a report's failing gates to the fields verification checks. */
+function failingRedFindings(gates: readonly MachineGate[]): GauntletRedFinding[] {
+  const findings: GauntletRedFinding[] = [];
+  gates.forEach((gate, index) => {
+    const roster = GAUNTLET_GATE_ROSTER[index]!;
+    const failing = gate.status === 'fail' || (roster.applicability === 'required' && gate.status !== 'pass');
+    if (!failing) return;
+    if (gate.findings.length === 0) {
+      // A failing gate with no findings still counts as one red, so a
+      // finding-free failure can never vacuously pass the inheritance check.
+      findings.push({ gateId: gate.gate, categoryCode: `gate-${gate.status}`, subjects: [] });
+      return;
+    }
+    for (const finding of gate.findings) {
+      findings.push({
+        gateId: gate.gate,
+        categoryCode: String(finding.categoryCode),
+        subjects: finding.subjects.map(String).sort(),
+      });
+    }
+  });
+  return findings.sort((left, right) =>
+    left.gateId.localeCompare(right.gateId)
+    || left.categoryCode.localeCompare(right.categoryCode)
+    || canonical(left.subjects).localeCompare(canonical(right.subjects)));
+}
+
+const DEFERRED_SIGNING_GATES: ReadonlySet<string> = new Set(['G2-determinism', 'G8-noise-probes']);
+const DEFERRED_APPROVAL_CATEGORY = /approval[a-z0-9-]*-(mismatch|stale-identity)$/;
+
+function identityObjectsIn(value: unknown, found: EngineIdentity[]): void {
+  if (Array.isArray(value)) {
+    for (const entry of value) identityObjectsIn(entry, found);
+    return;
+  }
+  if (!isRecord(value)) return;
+  if (isEngineIdentityValue(value)) {
+    found.push({ engineVersion: value.engineVersion, corpusFingerprint: value.corpusFingerprint, layerFingerprint: value.layerFingerprint });
+  }
+  for (const entry of Object.values(value)) identityObjectsIn(entry, found);
+}
+
+/**
+ * §5.5 gap 3, data half: for a marker-carrying admission the release
+ * expectation on G2/G8 is not "green" but "red with exactly the
+ * approval-identity-mismatch finding set the marker predicts" — every
+ * identity a red finding quotes must be one of the marker's two recorded
+ * identities, with the pre-regen (base) identity present, so the historic
+ * v1 @ 0.9.0 debt can never be smuggled past the hard block.
+ */
+function markerPredictionIssues(gates: readonly MachineGate[], marker: DeferredSigningMarker): string[] {
+  const issues: string[] = [];
+  gates.forEach((gate, index) => {
+    const roster = GAUNTLET_GATE_ROSTER[index]!;
+    const failing = gate.status === 'fail' || (roster.applicability === 'required' && gate.status !== 'pass');
+    if (!failing) return;
+    if (!DEFERRED_SIGNING_GATES.has(gate.gate)) {
+      issues.push(`${gate.gate} is red outside the marker's G2/G8 prediction.`);
+      return;
+    }
+    if (gate.findings.length === 0) {
+      issues.push(`${gate.gate} is red without a verifiable finding.`);
+      return;
+    }
+    for (const finding of gate.findings) {
+      const category = String(finding.categoryCode);
+      if (!DEFERRED_APPROVAL_CATEGORY.test(category)) {
+        issues.push(`${gate.gate} finding ${category} is not the predicted approval-identity class.`);
+        continue;
+      }
+      const identities: EngineIdentity[] = [];
+      identityObjectsIn(finding.params, identities);
+      if (identities.length === 0) {
+        issues.push(`${gate.gate} finding ${category} quotes no identity to verify against the marker.`);
+        continue;
+      }
+      const allowed = new Set([canonical(marker.preRegenIdentity), canonical(marker.expectedPostMergeIdentity)]);
+      if (identities.some((identity) => !allowed.has(canonical(identity)))) {
+        issues.push(`${gate.gate} finding ${category} quotes an identity outside the marker's recorded fields.`);
+        continue;
+      }
+      if (!identities.some((identity) => canonical(identity) === canonical(marker.preRegenIdentity))) {
+        issues.push(`${gate.gate} finding ${category} does not bind the marker's pre-regen identity.`);
+      }
+    }
+  });
+  return issues;
+}
+
+const CONTROL_REPORT_PATH = /^eval\/\.runs\/[a-zA-Z0-9._-]+-control\.json$/;
+
+/**
+ * §5.5 gap 3: classify a red release verdict, or refuse. Guard trains: every
+ * red must be inherited — reproduced, same (gateId, categoryCode, subjects),
+ * by a verified control run at the train's base commit with no operations
+ * applied. Data trains carrying the deferred-signing marker: every red must
+ * be exactly the marker-predicted approval class. Anything else refuses
+ * exactly as today, before any manifest is written.
+ */
+async function classifyReleaseRed(
+  preview: AdmissionPreview,
+  releaseGauntlet: VerifiedReleaseGauntlet,
+  dependencies: AdmissionDependencies,
+): Promise<ReleaseGauntletClassification> {
+  const reds = failingRedFindings(releaseGauntlet.gates);
+  if (preview.fixtureLane !== null) {
+    const runControl = dependencies.controlRun;
+    if (runControl === undefined) {
+      fail('blocking_gauntlet', 'The verified gauntlet contains a blocking gate or rejection verdict, and no base-commit control run is available to classify it.');
+    }
+    const control = await runControl(preview);
+    if (!CONTROL_REPORT_PATH.test(control.reportPath)) {
+      fail('invalid_gauntlet', 'Control report must be a confined *-control.json path inside eval/.runs.');
+    }
+    // The control report passes the same schema, argv, identity, and
+    // freshness verification as every admission report before comparison.
+    const controlVerified = parseGauntletBytes(
+      control.reportBytes,
+      control.reportPath,
+      {
+        baseCommit: preview.admittedBaseCommit,
+        descriptorSha256: control.descriptorSha256,
+        databaseSha256: control.databaseSha256,
+        engineIdentity: control.engineIdentity,
+      },
+      'release',
+      dependencies.now?.() ?? new Date(),
+      'tolerate-reject',
+    ).verified as VerifiedReleaseGauntlet;
+    const controlReds = failingRedFindings(controlVerified.gates);
+    const controlKeys = new Set(controlReds.map((finding) => canonical(finding)));
+    const notInherited = reds.filter((finding) => !controlKeys.has(canonical(finding)));
+    if (notInherited.length > 0) {
+      fail('blocking_gauntlet', `Release gauntlet reds are not inherited from the clean base commit: ${notInherited.map((finding) => `${finding.gateId}/${finding.categoryCode}`).join(', ')}.`);
+    }
+    return {
+      kind: 'inherited-standing-red',
+      trainFindings: reds,
+      controlFindings: controlReds,
+      controlReportPath: control.reportPath,
+      controlReportDigest: sha256(control.reportBytes),
+    };
+  }
+  const marker = preview.deferredSigningMarker;
+  if (marker === null) {
+    fail('blocking_gauntlet', 'The verified gauntlet contains a blocking gate or rejection verdict.');
+  }
+  const issues = markerPredictionIssues(releaseGauntlet.gates, marker);
+  if (issues.length > 0) {
+    fail('blocking_gauntlet', `Release gauntlet reds are outside the deferred-signing marker prediction: ${issues.join(' ')}`);
+  }
+  return { kind: 'deferred-signing-predicted-red', findings: reds, predictedIdentity: marker.preRegenIdentity };
+}
+
 export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionResult> {
   const dependencies = input.dependencies ?? {};
   const git = dependencies.git ?? defaultGit;
@@ -1430,6 +1915,7 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
     repoRoot: input.repoRoot, admittedBaseCommit: input.admittedBaseCommit, expectedMainCommit: input.expectedMainCommit,
     proposal: input.proposal, candidate: input.candidate, comparison: input.comparison,
     comparisonBinding: input.comparisonBinding, gauntlet: input.gauntlet,
+    baseIdentity: input.baseIdentity, deferredSigningMarker: input.deferredSigningMarker,
     trustedGauntletLoader: input.trustedGauntletLoader,
     now: dependencies.now ?? input.now,
     reviewedComparisonQueries: input.reviewedComparisonQueries, fixturePromotions: input.fixturePromotions,
@@ -1438,7 +1924,13 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
   const preview = await previewAdmission(previewInput);
   if (preview.digest !== requireDigest(input.expectedPreviewDigest, 'expectedPreviewDigest')) fail('stale_preview', 'Admission preview digest changed.');
   await assertAdmissionState(previewInput, preview, git);
-  if (!preview.measurableEffect) return { status: 'NO_MEASURABLE_EFFECT', preview, manifestPath: null, manifest: null };
+  // §5.3 item 3 (the reviewed amendment): the refusal stands for every
+  // manifest without the DERIVED fixture-class exemption. NO MEASURABLE
+  // EFFECT is always a stop, never a merge — the exemption is computed from
+  // operation types, never asserted by a caller.
+  if (!preview.measurableEffect && preview.effectExemption === null) {
+    return { status: 'NO_MEASURABLE_EFFECT', preview, manifestPath: null, manifest: null };
+  }
   const decisions = validateDecisions(preview, input.decisions, signingKey);
   const linkedCaseIds = [...new Set(input.linkedCaseIds.map((entry) => requireText(entry, 'linkedCaseId')))].sort();
   if (linkedCaseIds.length === 0 || canonical(linkedCaseIds) !== canonical(preview.proposal.caseIds)) fail('invalid_input', 'Linked cases must exactly match the reviewed proposal cases.');
@@ -1488,6 +1980,20 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
     if (verified.status !== 'PASSED') fail('verify_failed', 'The fixed full verification did not pass.');
     commands.push(verified.command);
     commands.push(verified.releaseGauntlet.command);
+    const releaseIdentity: EngineIdentity = preview.candidate !== null
+      ? {
+        engineVersion: preview.candidate.engineVersion,
+        corpusFingerprint: preview.candidate.corpusFingerprint,
+        layerFingerprint: preview.candidate.layerFingerprint,
+      }
+      : preview.baseIdentity!;
+    // §5.5 gap 3: the accepted release-gauntlet outcome is ADMIT /
+    // ADMIT_WITH_WARNINGS — or a REJECT whose every red is CLASSIFIED:
+    // inherited (guard trains, verified control run at the base commit) or
+    // exactly the marker-predicted approval finding set (data trains). Any
+    // other red refuses exactly as today. Tolerating the parse is safe only
+    // because classifyReleaseRed below refuses everything unclassified.
+    const tolerateReject = preview.fixtureLane !== null || preview.deferredSigningMarker !== null;
     const releaseGauntlet = parseGauntletBytes(
       verified.releaseGauntlet.reportBytes,
       verified.releaseGauntlet.reportPath,
@@ -1495,23 +2001,32 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
         baseCommit: preview.admittedBaseCommit,
         descriptorSha256: rebuilt.descriptorSha256,
         databaseSha256: rebuilt.databaseSha256,
-        engineIdentity: {
-          engineVersion: preview.candidate.engineVersion,
-          corpusFingerprint: preview.candidate.corpusFingerprint,
-          layerFingerprint: preview.candidate.layerFingerprint,
-        },
+        engineIdentity: releaseIdentity,
       },
       'release',
       dependencies.now?.() ?? new Date(),
+      tolerateReject ? 'tolerate-reject' : 'strict',
     ).verified as VerifiedReleaseGauntlet;
+    const releaseGauntletClassification = releaseGauntlet.blocking
+      ? await classifyReleaseRed(preview, releaseGauntlet, dependencies)
+      : null;
     await dependencies.onPhase?.('verified', { worktree });
     commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git));
+    // The rebuild's tracked outputs are recorded EVIDENCE
+    // (rebuiltCandidate.outputFiles), not part of the reviewed change set —
+    // and the rebuilt descriptor is not byte-stable across runs (its builtAt
+    // stamp and the raw SQLite database bytes differ on every rebuild), so
+    // leaving it in place would bake an unreproducible hash into the
+    // manifest and the publish leg could never reproduce the admitted tree
+    // (D11 finding: every prepare refused tree_mismatch). Restore them to
+    // their committed state before the admitted tree is fixed.
+    commands.push(...await git.restoreTrackedPaths(worktree, (rebuilt.outputFiles ?? []).map((entry) => entry.path)));
     const tree = await git.treeHash(worktree);
     commands.push(...tree.commands);
-    commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git));
+    commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git, true));
     await assertAdmissionState(previewInput, preview, git);
     await dependencies.onPhase?.('before-manifest', { worktree, manifestPath });
-    commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git));
+    commands.push(...await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git, true));
 
     const admittedAt = (dependencies.now?.() ?? new Date()).toISOString();
     const body = manifestWithoutDigest({
@@ -1519,8 +2034,17 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
       previewDigest: preview.digest, proposalDigest: preview.proposalDigest, linkedCaseIds, provenance,
       baseCommit: preview.admittedBaseCommit, expectedMainCommit: preview.expectedMainCommit,
       worktreeTreeHash: tree.hash, decisions, candidate: preview.candidate, rebuiltCandidate: rebuilt,
-      comparison: { digest: input.comparison.digest, binding: input.comparisonBinding }, gauntlet: preview.gauntlet,
+      comparison: input.comparison === null || input.comparisonBinding === null
+        ? null
+        : { digest: input.comparison.digest, binding: input.comparisonBinding },
+      gauntlet: preview.gauntlet,
       releaseGauntlet,
+      // §5.3 item 4 / §5.5 gaps 2–3: every applied relaxation is recorded in
+      // the manifest — its own justification, auditable forever.
+      effectExemption: preview.effectExemption,
+      baseIdentity: preview.baseIdentity,
+      deferredSigning: preview.deferredSigningMarker,
+      releaseGauntletClassification,
       sourceChanges: preview.diffs, probeMovements: preview.probeMovements, commands,
       rollback: preview.diffs.filter((entry) => entry.changed).map((entry) => ({
         path: entry.path, restoreSha256: entry.before.sha256, restoreBase64: entry.before.base64, admittedSha256: entry.after.sha256,
@@ -1549,7 +2073,7 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
       : manifest;
     admitted = true;
     await dependencies.onPhase?.('manifest-published', { worktree, manifestPath });
-    await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git);
+    await auditAppliedWorktree(input.repoRoot, worktree, preview, rebuilt, git, true);
     return { status: publication.status === 'SKIPPED' && !published ? 'ALREADY_ADMITTED' : 'ADMITTED', preview, manifestPath, manifest: finalManifest };
   } finally {
     if (created) await quarantineFailedWorktree(input.repoRoot, parent, worktree, git);

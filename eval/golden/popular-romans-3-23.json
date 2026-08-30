@@ -1,0 +1,17 @@
+{
+  "id": "popular-romans-3-23",
+  "query": "all have sinned and fall short of the glory of god",
+  "status": "active",
+  "note": [
+    "POPULAR-VERSES PROMOTION (2026-08-26, whole-Bible coverage plan §4.2): rank 19 (Tier 2) of the verified top-200 popular-verses ranking (/mnt/project-files/research/popular-verses/top-200-verses.md; per-entry source traceability in top-200-verses.json — 60 source lists: platform usage data, memorization curricula, editorial listicles).",
+    "Guard fixture: regression armor over the verses users search most. The query is the famous phrasing in public-domain wording (WEB text or KJV-derived); no modern-translation wording is used. No reason-family requirement on purpose — this fixture guards lexical reachability and position, not concept attribution; concept fixtures own attribution.",
+    "Held out of the original 93-fixture promotion (target verse outside the 5,727-verse fixture corpus @ main e762d1c); admitted on this branch after the full-Bible corpus expansion (#64) merged to main and made the target measurable.",
+    "Observed 2026-08-27 on the post-expansion merged tree (main @ bd883db merged in), engine 0.14.0, corpusFingerprint 6450b7d7…, layerFingerprint fd27c55c…: this query ranks Romans 3:23 at #1 (reason families: exact_phrase). withinTop pinned at 3 per the observed-pin convention (assert the observed, admitted ordering with headroom; a tighter or different desired ordering is a ranking/data change, not a fixture edit)."
+  ],
+  "expectedTop": [
+    {
+      "ref": "Romans 3:23",
+      "withinTop": 3
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "id": "romantic-love-and-intimacy",
+  "query": "what does the bible say about romantic love",
+  "status": "active",
+  "additionalQueries": [
+    "do not awaken love",
+    "waiting for the right person"
+  ],
+  "note": [
+    "CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27),",
+    "fixtures-first: roster row 48 (Theme M, requesting book: Song of",
+    "Solomon). Deferred because the Song's corpus presence was 2:1 ALONE.",
+    "RIDER FOLDED: waiting-and-timing-in-love rides here per Jesse's",
+    "adopted §11.1 fold — ONE pack; Song 2:7's thrice-repeated charge is",
+    "anchored and its query family ('do not awaken love', 'waiting for",
+    "the right person') carried in this lexicon.",
+    "The NON-GRAPHIC CELEBRATION-REGISTER design note honored: anchors",
+    "are the Song's own celebration texts (8:6-7 the keystone; 2:16;",
+    "2:3-4; 4:7; 2:7), wording routes to the text's celebration, never",
+    "to advice-literature framing; no advice is given.",
+    "Measured gap before the pack (2026-08-27, pre-pack run):",
+    "'what does the bible say about romantic love' pure love+say token",
+    "noise (Judg 16:15 — Delilah!); 'do not awaken love' HIJACKED",
+    "wholesale by the-love-of-god anchors (Rom 5:8, John 3:16) — the",
+    "Song's entire register unreachable."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Song of Solomon 8:6-7",
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Romantic love and intimacy"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Song of Solomon 2:7",
+    "Song of Solomon 2:16",
+    "Song of Solomon 2:3-4",
+    "Song of Solomon 4:7"
+  ],
+  "coversConcepts": [
+    "romantic-love-and-intimacy"
+  ]
+}

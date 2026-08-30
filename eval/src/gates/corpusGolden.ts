@@ -119,6 +119,16 @@ export interface CorpusFixture {
   readonly mustNotLead?: readonly MustNotLead[];
   readonly coversConcepts?: readonly string[];
   /**
+   * Corpus-expansion ruling 2026-08-26, row 19 (spelling-archaic-guard):
+   * a tripwire over EXPLANATIONS rather than a single verse's chip. Every
+   * reason label on every returned result, for every query of the fixture,
+   * must avoid these substrings. The archaic-forms guard uses it to pin the
+   * real invariant — archaic forms fold in the tokenizer, so no chip may
+   * ever claim a spelling correction happened — without tying the guard to
+   * whichever evidence rung happens to serve the asserted verse today.
+   */
+  readonly forbiddenReasonLabelSubstrings?: readonly string[];
+  /**
    * Reference-intent form: mutually exclusive with every discovery-measuring
    * field above. A fixture measures either reference resolution or discovery
    * ranking, never both, so no combination is ever half-defined.
@@ -164,6 +174,7 @@ interface NormalizedCorpusFixture {
     range: { start: number; end: number };
   }[];
   readonly coversConcepts?: readonly string[];
+  readonly forbiddenReasonLabelSubstrings: readonly string[];
   readonly referenceExpectations: readonly ReferenceExpectation[];
 }
 
@@ -186,6 +197,7 @@ const FIXTURE_FIELDS = new Set([
   'note',
   'alsoAcceptable',
   'generatedBy',
+  'forbiddenReasonLabelSubstrings',
   'referenceExpectations',
 ]);
 /** The discovery-measuring fields a reference-intent fixture may not carry. */
@@ -198,6 +210,7 @@ const DISCOVERY_ONLY_FIELDS = [
   'mustNotRank',
   'mustNotLead',
   'coversConcepts',
+  'forbiddenReasonLabelSubstrings',
 ] as const;
 const REFERENCE_EXPECTATION_FIELDS = new Set([
   'query',
@@ -310,6 +323,7 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
     'mustNotRank' in input ||
     'mustNotLead' in input ||
     'additionalQueries' in input ||
+    'forbiddenReasonLabelSubstrings' in input ||
     'referenceExpectations' in input;
   if (!isCorpusFixture) return { findings: [] };
 
@@ -557,6 +571,29 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
     }
   }
 
+  const forbiddenReasonLabelSubstrings: string[] = [];
+  if (input.forbiddenReasonLabelSubstrings !== undefined) {
+    if (
+      !Array.isArray(input.forbiddenReasonLabelSubstrings) ||
+      input.forbiddenReasonLabelSubstrings.length === 0 ||
+      input.forbiddenReasonLabelSubstrings.some(
+        (substring) => typeof substring !== 'string' || substring.trim().length === 0,
+      )
+    ) {
+      // An empty list would be an assertion field that asserts nothing —
+      // the vacuous decoration the gate-discipline covenant forbids.
+      findings.push(
+        fixtureFinding(
+          fixtureId,
+          'G3_FIXTURE_MALFORMED',
+          'forbiddenReasonLabelSubstrings must be a non-empty array of non-empty strings',
+        ),
+      );
+    } else {
+      forbiddenReasonLabelSubstrings.push(...(input.forbiddenReasonLabelSubstrings as string[]));
+    }
+  }
+
   const referenceExpectations: ReferenceExpectation[] = [];
   if (input.referenceExpectations !== undefined) {
     const mixed = DISCOVERY_ONLY_FIELDS.filter((field) => field in input);
@@ -680,6 +717,7 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
       mustNotRank,
       mustNotLead,
       ...(Array.isArray(input.coversConcepts) ? { coversConcepts: input.coversConcepts as readonly string[] } : {}),
+      forbiddenReasonLabelSubstrings,
       referenceExpectations,
     },
   };
@@ -1075,6 +1113,27 @@ async function runOneQuery(
           { query, ref: guard.ref, withinTop: guard.withinTop },
         ),
       );
+    }
+  }
+
+  // Explanation tripwire (ruling row 19): scans EVERY returned result, not a
+  // window — a forbidden claim is a contract breach wherever it appears.
+  for (const substring of fixture.forbiddenReasonLabelSubstrings) {
+    for (const entry of results) {
+      const offending = entry.reasons.find((reason) => reason.label.includes(substring));
+      if (offending) {
+        findings.push(
+          fixtureFinding(
+            fixture.id,
+            'G3_FORBIDDEN_REASON_LABEL',
+            `a result for "${query}" carries the reason '${offending.label}', which contains ` +
+              `the forbidden fragment '${substring}'. The explanation is part of the contract: ` +
+              'this fixture forbids any chip from making that claim for its queries.',
+            { query, substring, label: offending.label },
+          ),
+        );
+        break;
+      }
     }
   }
 

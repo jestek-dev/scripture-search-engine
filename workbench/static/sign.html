@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="workbench-static-protocol" content="1">
+<title>Sign the baselines</title>
+<!-- Theme stamp, same key and behavior as The Study's (§theme-stamp). -->
+<script>
+(function () {
+  'use strict';
+  var mode = 'auto';
+  try {
+    var stored = localStorage.getItem('study.theme');
+    if (stored === 'light' || stored === 'dark' || stored === 'auto') mode = stored;
+  } catch (error) { /* storage unavailable: stay on auto */ }
+  var dark = mode === 'dark';
+  if (mode === 'auto') {
+    try { dark = window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (error) { dark = false; }
+  }
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+})();
+</script>
+<style>
+/* §tokens — copied from The Study (static/index.html); reviewed values in
+   workbench/DESIGN.md. */
+:root{
+  --ground:#F6F4EF; --surface:#FCFBF8; --panel:#FFFDF7;
+  --hairline:#E5E1D8; --hairline-strong:#D6D1C6;
+  --ink:#1D1C18; --text-2:#57534A; --text-3:#6E695E; --text-faint:#A9A398;
+  --accent:#0D5C58; --accent-hover:#094744; --on-accent:#F1FAF9; --accent-wash:rgba(13,92,88,.08);
+  --v-affirm:#2C734D; --v-notrel:#A6493D; --v-missing:#80621B;
+  --v-affirm-wash:rgba(44,115,77,.10); --v-notrel-wash:rgba(166,73,61,.09); --v-missing-wash:rgba(128,98,27,.10);
+  --highlight:rgba(228,176,58,.30);
+  --kbd-bg:#EFECE4; --kbd-border:#D8D3C8;
+  --sel-bg:rgba(13,92,88,.16); --caret:#0D5C58;
+  --shadow:0 1px 2px rgba(29,28,24,.06),0 6px 20px rgba(29,28,24,.07);
+  --r-ctl:6px; --r-panel:10px;
+  --control-border:#8F897C;
+  color-scheme: light;
+}
+[data-theme="dark"]{
+  --ground:#131311; --surface:#1A1A17; --panel:#211E18;
+  --hairline:#2E2B25; --hairline-strong:#3B372F;
+  --ink:#EBE7DE; --text-2:#B4AEA1; --text-3:#948E81; --text-faint:#67635A;
+  --accent:#43A8A0; --accent-hover:#5CBEB5; --on-accent:#0A2422; --accent-wash:rgba(67,168,160,.12);
+  --v-affirm:#6FBE8C; --v-notrel:#DE8B7C; --v-missing:#D2A94F;
+  --v-affirm-wash:rgba(111,190,140,.12); --v-notrel-wash:rgba(222,139,124,.10); --v-missing-wash:rgba(210,169,79,.12);
+  --highlight:rgba(212,163,62,.20);
+  --kbd-bg:#24231F; --kbd-border:#3B372F;
+  --sel-bg:rgba(67,168,160,.28); --caret:#43A8A0;
+  --shadow:none;
+  --control-border:#6B6558;
+  color-scheme: dark;
+}
+
+/* §fonts — same self-hosted files The Study serves at /fonts. */
+@font-face{font-family:'Literata';font-style:normal;font-weight:200 900;font-display:swap;src:url('/fonts/literata/Literata-Variable.woff2') format('woff2');}
+@font-face{font-family:'Literata';font-style:italic;font-weight:200 900;font-display:swap;src:url('/fonts/literata/Literata-Italic-Variable.woff2') format('woff2');}
+@font-face{font-family:'Source Sans 3';font-style:normal;font-weight:200 900;font-display:swap;src:url('/fonts/source-sans-3/SourceSans3VF-Upright.ttf.woff2') format('woff2');}
+@font-face{font-family:'Source Sans 3';font-style:italic;font-weight:200 900;font-display:swap;src:url('/fonts/source-sans-3/SourceSans3VF-Italic.ttf.woff2') format('woff2');}
+
+html,body{margin:0;padding:0;background:var(--ground);}
+body{color:var(--ink);font-family:'Source Sans 3',-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.5;}
+a{color:var(--accent);} a:hover{color:var(--accent-hover);}
+::selection{background:var(--sel-bg);}
+input,textarea{caret-color:var(--caret);}
+*{scrollbar-width:thin;scrollbar-color:var(--hairline-strong) transparent;box-sizing:border-box;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+button{font:inherit;}
+.serif{font-family:'Literata',Georgia,serif;}
+
+.app-header{height:48px;display:flex;align-items:center;gap:16px;padding:0 16px;border-bottom:1px solid var(--hairline);background:var(--surface);position:sticky;top:0;z-index:30;}
+.wordmark{font-family:'Literata',Georgia,serif;font-size:15px;}
+.header-spacer{flex:1;}
+.back-link{padding:5px 10px;font-size:12px;color:var(--text-3);text-decoration:none;}
+.back-link:hover{color:var(--text-2);}
+
+main{max-width:860px;margin:0 auto;padding:28px 20px 80px;}
+h1{font-family:'Literata',Georgia,serif;font-size:24px;font-weight:600;margin:0 0 6px;}
+.lede{color:var(--text-2);margin:0 0 26px;max-width:640px;}
+
+.step{background:var(--panel);border:1px solid var(--hairline);border-radius:var(--r-panel);box-shadow:var(--shadow);padding:20px 22px;margin:0 0 20px;}
+.step[data-disabled="true"]{opacity:.55;}
+.step h2{font-family:'Literata',Georgia,serif;font-size:17px;font-weight:600;margin:0 0 4px;display:flex;align-items:baseline;gap:10px;}
+.step .step-number{color:var(--text-faint);font-size:13px;font-family:'Source Sans 3',sans-serif;}
+.step .step-sub{color:var(--text-3);margin:0 0 14px;font-size:13px;}
+
+.btn{display:inline-block;padding:7px 14px;border:1px solid var(--accent);border-radius:var(--r-ctl);background:var(--accent);color:var(--on-accent);cursor:pointer;font-weight:600;}
+.btn:hover{background:var(--accent-hover);border-color:var(--accent-hover);}
+.btn[disabled]{background:var(--surface);border-color:var(--hairline-strong);color:var(--text-faint);cursor:default;}
+.btn-quiet{display:inline-block;padding:7px 14px;border:1px solid var(--hairline-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--text-2);cursor:pointer;}
+.btn-quiet:hover{border-color:var(--text-3);}
+.btn-quiet[disabled]{color:var(--text-faint);cursor:default;}
+
+.status-table{border-collapse:collapse;width:100%;margin:8px 0;}
+.status-table th{text-align:left;font-weight:600;color:var(--text-3);padding:3px 14px 3px 0;font-size:12px;white-space:nowrap;vertical-align:top;}
+.status-table td{padding:3px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;word-break:break-all;color:var(--text-2);}
+.verdict-line{padding:10px 12px;border-radius:var(--r-ctl);margin:10px 0 0;font-weight:600;}
+.verdict-line.stale{background:var(--v-missing-wash);color:var(--v-missing);}
+.verdict-line.current{background:var(--v-affirm-wash);color:var(--v-affirm);}
+.verdict-line.bad{background:var(--v-notrel-wash);color:var(--v-notrel);}
+
+.error-line{margin:10px 0 0;padding:10px 12px;border-radius:var(--r-ctl);background:var(--v-notrel-wash);color:var(--v-notrel);}
+.ok-line{margin:10px 0 0;padding:10px 12px;border-radius:var(--r-ctl);background:var(--v-affirm-wash);color:var(--v-affirm);}
+.note-line{margin:10px 0 0;color:var(--text-3);font-size:13px;}
+
+.packet{border:1px solid var(--hairline);border-radius:var(--r-ctl);background:var(--surface);padding:14px 16px;margin:12px 0 0;max-height:480px;overflow:auto;}
+.packet h1{font-size:18px;margin:8px 0 6px;}
+.packet h2{font-size:16px;font-family:'Literata',Georgia,serif;margin:14px 0 6px;}
+.packet h3{font-size:14px;font-family:'Literata',Georgia,serif;margin:12px 0 4px;}
+.packet table{border-collapse:collapse;margin:6px 0;font-size:12px;}
+.packet th,.packet td{border:1px solid var(--hairline);padding:3px 8px;text-align:left;color:var(--text-2);}
+.packet th{background:var(--accent-wash);color:var(--ink);}
+.packet code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;background:var(--kbd-bg);border-radius:3px;padding:0 3px;word-break:break-all;}
+.packet blockquote{margin:6px 0;padding:2px 10px;border-left:3px solid var(--hairline-strong);color:var(--text-3);}
+.packet p,.packet li{margin:4px 0;color:var(--text-2);}
+
+.field{margin:0 0 14px;}
+.field label{display:block;font-weight:600;margin:0 0 3px;}
+.field .hint{color:var(--text-3);font-size:12px;margin:0 0 5px;}
+.field input,.field textarea{width:100%;padding:7px 9px;border:1px solid var(--control-border);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);font:inherit;}
+.field textarea{min-height:80px;resize:vertical;}
+.field textarea.tall{min-height:180px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;}
+.check-row{display:flex;align-items:center;gap:8px;margin:0 0 14px;color:var(--text-2);}
+
+.file-preview{margin:12px 0 0;}
+.file-preview h3{font-size:13px;margin:12px 0 4px;font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--ink);word-break:break-all;}
+pre.file-body{border:1px solid var(--hairline);border-radius:var(--r-ctl);background:var(--surface);color:var(--text-2);padding:10px 12px;margin:0;font-size:11px;max-height:260px;overflow:auto;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,Consolas,monospace;}
+pre.job-output{border:1px solid var(--hairline);border-radius:var(--r-ctl);background:var(--surface);color:var(--text-2);padding:10px 12px;margin:12px 0 0;font-size:11px;max-height:320px;overflow:auto;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,Consolas,monospace;}
+pre.commands{border:1px solid var(--hairline);border-radius:var(--r-ctl);background:var(--kbd-bg);color:var(--ink);padding:12px 14px;margin:12px 0 0;font-size:12px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;}
+.digest-list{margin:10px 0 0;padding:0;list-style:none;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--text-3);}
+.digest-list li{margin:2px 0;word-break:break-all;}
+.diff-probe{margin:8px 0;font-size:12px;}
+.diff-probe .diff-id{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600;color:var(--ink);}
+.diff-probe .diff-flag{margin-left:8px;}
+.diff-probe .diff-flag.changed{color:var(--v-missing);}
+.diff-probe .diff-flag.held{color:var(--v-affirm);}
+.diff-lists{margin:2px 0 0 14px;color:var(--text-3);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;word-break:break-all;}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <span class="wordmark">The Study</span>
+  <span style="color:var(--text-faint)">/</span>
+  <span>Sign the baselines</span>
+  <div class="header-spacer"></div>
+  <a class="back-link" href="/">← Back to Review</a>
+</header>
+<main>
+  <h1 class="serif">Sign the baselines</h1>
+  <p class="lede">When the engine's identity moves, a human reviewer reads what changed and signs
+  two small records saying "I looked, and this is acceptable." This page walks that review:
+  the workbench computes every digest with the gauntlet's own code, and you write every word.
+  Nothing is committed for you — your commit and Jesse's merge stay the final human gates.</p>
+
+  <section class="step" id="step-status" aria-label="What you are signing">
+    <h2 class="serif"><span class="step-number">1</span>What you're signing</h2>
+    <p class="step-sub">The engine identity this checkout produces, and the identity the committed approvals still point at.</p>
+    <div id="status-body"><p class="note-line">Reading the current identity (this builds the small fixture database once — about half a minute on first load)…</p></div>
+  </section>
+
+  <section class="step" id="step-review" data-disabled="true" aria-label="What changed">
+    <h2 class="serif"><span class="step-number">2</span>What changed</h2>
+    <p class="step-sub">Generate the review evidence: the probe review packet (before/after result lists with every movement marked) and the ordering diff. Read it before signing — that reading <em>is</em> the review.</p>
+    <button type="button" class="btn" id="review-generate" disabled>Generate the review evidence</button>
+    <div id="review-body"></div>
+  </section>
+
+  <section class="step" id="step-form" data-disabled="true" aria-label="Who reviewed it">
+    <h2 class="serif"><span class="step-number">3</span>Who reviewed it</h2>
+    <p class="step-sub">Every field below is yours to write — the workbench never suggests or fills in reviewer words.
+    The independence policy lives in <code>docs/governance/probe-baseline-review.md</code>, unchanged by this page. Who can sign, quoted from it:
+    the reviewer <em>"did not author the change that moved the baseline — not the data, not the code, not the proposal"</em>,
+    <em>"is a distinct identity from the repository owner acting alone on his own machine"</em>, and
+    <em>"is designated by Jesse, per review"</em>. "A reviewer who cannot truthfully write down what they did not author must not sign."</p>
+    <form id="signing-form">
+      <div class="field">
+        <label for="f-name">Reviewer name</label>
+        <p class="hint">A stable, accountable handle — who is signing.</p>
+        <input id="f-name" name="reviewerName" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-contact">Reviewer contact</label>
+        <p class="hint">How to reach the signer later (email or equivalent).</p>
+        <input id="f-contact" name="reviewerContact" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="f-independence">Independence attestation</label>
+        <p class="hint">In your own words: what change is under review, and what part of it you did <strong>not</strong> author. If you cannot truthfully write this, do not sign.</p>
+        <textarea id="f-independence" name="independence"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-rationale-probes">Rationale — probe baseline</label>
+        <p class="hint">Why the probe-list movement you just read is acceptable.</p>
+        <textarea id="f-rationale-probes" name="rationaleProbes"></textarea>
+      </div>
+      <div class="check-row">
+        <input type="checkbox" id="f-shared-rationale">
+        <label for="f-shared-rationale">Use the same rationale for the ordering snapshot</label>
+      </div>
+      <div class="field" id="ordering-rationale-field">
+        <label for="f-rationale-ordering">Rationale — ordering snapshot</label>
+        <p class="hint">Why the full-page ordering movement is acceptable.</p>
+        <textarea id="f-rationale-ordering" name="rationaleOrdering"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-notes">Review record (markdown)</label>
+        <p class="hint">This becomes the committed record under docs/reviews/ — your notes, exactly as typed. Quote repository-relative paths only; absolute local paths are refused (the docs-governance guard would fail them later anyway).</p>
+        <textarea id="f-notes" name="reviewNotes" class="tall"></textarea>
+      </div>
+      <div class="field">
+        <label for="f-date">Review date</label>
+        <input id="f-date" name="reviewedAt" autocomplete="off" style="max-width:180px">
+      </div>
+    </form>
+  </section>
+
+  <section class="step" id="step-write" data-disabled="true" aria-label="Make it official">
+    <h2 class="serif"><span class="step-number">4</span>Make it official</h2>
+    <p class="step-sub">First preview the exact three files a write would produce — the review record and the two approval files — then confirm. The approvals are validated with the gauntlet's own validators before anything touches disk.</p>
+    <button type="button" class="btn-quiet" id="write-preview" disabled>Preview the three files</button>
+    <div id="write-body"></div>
+  </section>
+
+  <section class="step" id="step-verify" data-disabled="true" aria-label="Prove it">
+    <h2 class="serif"><span class="step-number">5</span>Prove it</h2>
+    <p class="step-sub">Run the full gauntlet against what was just written. Expected here: <strong>ADMIT WITH WARNINGS</strong> with G2 (determinism) and G8 (noise probes) passing.</p>
+    <button type="button" class="btn-quiet" id="verify-run" disabled>Run the gauntlet</button>
+    <div id="verify-body"></div>
+  </section>
+
+  <section class="step" id="step-commit" data-disabled="true" aria-label="Commit it yourself">
+    <h2 class="serif"><span class="step-number">6</span>Commit it yourself</h2>
+    <p class="step-sub">The workbench never commits. These are the exact files that changed — branch, commit, push, and open a PR. Your merge is the final human gate.</p>
+    <div id="commit-body"></div>
+  </section>
+</main>
+<script>
+(function () {
+  'use strict';
+
+  // §routes — copied verbatim from workbench/src/staticSnapshot.ts
+  // REQUIRED_INLINE_ROUTES (the single-inline snapshot contract requires
+  // every one of these literals present in the inline JS).
+  const ROUTES = [
+    '/api/v2/health',
+    '/api/v2/cases',
+    '/api/v2/inbox',
+    '/api/v2/judgments',
+    '/api/v2/compile/preview',
+    '/api/v2/compile/apply',
+    '/api/v2/checks',
+    '/api/v2/context',
+    '/api/v2/jobs/',
+    '/api/v2/candidates',
+    '/api/v2/sessions',
+    '/api/v2/quality',
+    '/api/v2/audits/preview',
+    '/api/v2/audits/apply',
+    '/api/v2/audits/close',
+    '/complete-item',
+    '/skip-item',
+    '/complete-session',
+    '/blind-sessions',
+    '/missing-passages',
+    '/passages',
+    '/promotion/preview',
+    '/promotion/apply',
+    '/cancel',
+    '/api/v2/updates',
+    '/api/v2/updates/cards/',
+    '/decide',
+    '/api/v2/updates/train',
+    '/api/v2/admissions/',
+    '/admit',
+    '/api/v2/publish/',
+    '/prepare',
+  ];
+  void ROUTES;
+
+  const state = {
+    status: null,
+    packetGenerated: false,
+    preview: null,
+    written: null,
+  };
+
+  function node(tag, className, text) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (text !== undefined) element.textContent = text;
+    return element;
+  }
+  function clear(element) { while (element.firstChild) element.removeChild(element.firstChild); }
+  function showError(container, message) {
+    clear(container);
+    container.appendChild(node('p', 'error-line', message));
+  }
+
+  async function api(pathname, options) {
+    let response;
+    try {
+      response = await fetch(pathname, options);
+    } catch (error) {
+      throw new Error('The workbench server did not answer. Is it still running?');
+    }
+    let body = null;
+    try { body = await response.json(); } catch (error) { /* handled below */ }
+    if (body === null) throw new Error('The workbench server sent an unreadable answer (HTTP ' + response.status + ').');
+    if (body.ok !== true) {
+      const detail = body.error && body.error.message ? body.error.message : 'HTTP ' + response.status;
+      const code = body.error && body.error.code ? body.error.code : 'error';
+      const failure = new Error(detail);
+      failure.code = code;
+      throw failure;
+    }
+    return body.data;
+  }
+  function postJson(pathname, payload) {
+    return api(pathname, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  function setStepEnabled(id, enabled) {
+    document.getElementById(id).dataset.disabled = enabled ? 'false' : 'true';
+  }
+
+  // §markdown — a tiny, safe renderer for the review packet: headings,
+  // tables, blockquotes, lists, paragraphs, and `code` / **bold** spans.
+  // Everything goes through textContent, never innerHTML.
+  function renderInline(target, text) {
+    const pattern = /(`[^`]*`|\*\*[^*]+\*\*)/g;
+    let last = 0;
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+      if (match.index > last) target.appendChild(document.createTextNode(text.slice(last, match.index)));
+      const token = match[0];
+      if (token.startsWith('`')) target.appendChild(node('code', '', token.slice(1, -1)));
+      else target.appendChild(node('strong', '', token.slice(2, -2)));
+      last = match.index + token.length;
+    }
+    if (last < text.length) target.appendChild(document.createTextNode(text.slice(last)));
+  }
+  function renderMarkdown(markdown) {
+    const root = node('div', 'packet');
+    const lines = markdown.split('\n');
+    let index = 0;
+    while (index < lines.length) {
+      const line = lines[index];
+      if (line.trim() === '') { index += 1; continue; }
+      const heading = /^(#{1,3})\s+(.*)$/.exec(line);
+      if (heading) {
+        const h = node('h' + heading[1].length, '');
+        renderInline(h, heading[2]);
+        root.appendChild(h);
+        index += 1;
+        continue;
+      }
+      if (line.startsWith('|')) {
+        const table = node('table', '');
+        let headerDone = false;
+        while (index < lines.length && lines[index].startsWith('|')) {
+          const cells = lines[index].split('|').slice(1, -1).map((cell) => cell.trim());
+          index += 1;
+          if (cells.every((cell) => /^:?-+:?$/.test(cell))) { headerDone = true; continue; }
+          const row = node('tr', '');
+          for (const cell of cells) {
+            const cellNode = node(headerDone ? 'td' : 'th', '');
+            renderInline(cellNode, cell);
+            row.appendChild(cellNode);
+          }
+          table.appendChild(row);
+        }
+        root.appendChild(table);
+        continue;
+      }
+      if (line.startsWith('>')) {
+        const quote = node('blockquote', '');
+        renderInline(quote, line.replace(/^>\s?/, ''));
+        root.appendChild(quote);
+        index += 1;
+        continue;
+      }
+      if (/^[-*]\s+/.test(line)) {
+        const list = node('ul', '');
+        while (index < lines.length && /^[-*]\s+/.test(lines[index])) {
+          const item = node('li', '');
+          renderInline(item, lines[index].replace(/^[-*]\s+/, ''));
+          list.appendChild(item);
+          index += 1;
+        }
+        root.appendChild(list);
+        continue;
+      }
+      const paragraph = node('p', '');
+      const buffer = [];
+      while (index < lines.length && lines[index].trim() !== '' && !/^(#|\||>|[-*]\s)/.test(lines[index])) {
+        buffer.push(lines[index]);
+        index += 1;
+      }
+      renderInline(paragraph, buffer.join(' '));
+      root.appendChild(paragraph);
+    }
+    return root;
+  }
+
+  // §status
+  function identityRows(table, label, identity) {
+    const row = node('tr', '');
+    row.appendChild(node('th', '', label));
+    const cell = node('td', '');
+    if (identity === null) cell.textContent = 'unavailable';
+    else cell.textContent = identity.engineVersion + ' / ' + identity.corpusFingerprint.slice(0, 12) + '… / ' + identity.layerFingerprint.slice(0, 12) + '…';
+    row.appendChild(cell);
+    table.appendChild(row);
+  }
+  function renderStatus(status) {
+    const container = document.getElementById('status-body');
+    clear(container);
+    const table = node('table', 'status-table');
+    identityRows(table, 'This checkout produces', status.derived);
+    identityRows(table, 'Committed baselines describe', status.baselineIdentity);
+    identityRows(table, 'Approvals currently bind', status.approvalIdentity);
+    if (status.git !== null) {
+      const row = node('tr', '');
+      row.appendChild(node('th', '', 'Git'));
+      const dirtyText = status.git.dirty
+        ? 'uncommitted changes in ' + status.git.dirtyPaths.length + ' file(s): ' + status.git.dirtyPaths.slice(0, 6).join(', ') + (status.git.dirtyPaths.length > 6 ? ', …' : '')
+        : 'clean';
+      row.appendChild(node('td', '', (status.git.branch || 'detached') + ' @ ' + status.git.head + ' — ' + dirtyText));
+      table.appendChild(row);
+    }
+    container.appendChild(table);
+    if (status.derivationError !== null) container.appendChild(node('p', 'error-line', status.derivationError));
+    const verdictClass = status.verdict === 'stale' ? 'stale' : status.verdict === 'current' ? 'current' : 'bad';
+    container.appendChild(node('p', 'verdict-line ' + verdictClass, status.verdictLine));
+    if (status.git !== null && status.git.dirty) {
+      container.appendChild(node('p', 'note-line', 'You are signing the working tree as it stands — make sure the uncommitted changes above are ones you mean to sign over.'));
+    }
+    if (status.readOnlyNote) container.appendChild(node('p', 'note-line', status.readOnlyNote));
+
+    const signable = status.verdict === 'stale';
+    setStepEnabled('step-review', signable);
+    setStepEnabled('step-form', signable);
+    setStepEnabled('step-write', signable);
+    setStepEnabled('step-verify', true);
+    document.getElementById('review-generate').disabled = !signable;
+    document.getElementById('write-preview').disabled = !signable;
+    document.getElementById('verify-run').disabled = false;
+    if (status.verdict === 'current') {
+      container.appendChild(node('p', 'note-line', 'Signing is disabled while the approvals are current. If you expected to sign, the baselines may not have been regenerated yet.'));
+    }
+  }
+  async function loadStatus() {
+    const container = document.getElementById('status-body');
+    try {
+      const data = await api('/api/v2/signing/status');
+      state.status = data.status;
+      if (data.readOnly === true) {
+        state.status = Object.assign({}, data.status, {
+          readOnlyNote: 'The workbench started read-only (release artifact out of date) — signing still works; it does not use the release artifact.',
+        });
+      }
+      renderStatus(state.status);
+    } catch (error) {
+      showError(container, error.message);
+    }
+  }
+
+  // §review
+  document.getElementById('review-generate').addEventListener('click', async () => {
+    const button = document.getElementById('review-generate');
+    const container = document.getElementById('review-body');
+    button.disabled = true;
+    clear(container);
+    container.appendChild(node('p', 'note-line', 'Deriving the prior baseline from git history and rendering the packet…'));
+    try {
+      const data = await postJson('/api/v2/signing/review-packet', {});
+      const packet = data.packet;
+      clear(container);
+      container.appendChild(node('p', 'ok-line',
+        'Packet generated. Its SHA-256 (which the probe approval will quote as reviewPacketSha256): ' + packet.packetSha256));
+      container.appendChild(node('p', 'note-line',
+        'Saved for reference at ' + packet.packetPath + ' (prior baseline at ' + packet.beforePath + '); both live in the gitignored eval/.runs/.'));
+      container.appendChild(renderMarkdown(packet.packetMarkdown));
+
+      const diffTitle = node('h3', 'serif', 'Ordering snapshot movement');
+      diffTitle.style.marginTop = '18px';
+      container.appendChild(diffTitle);
+      container.appendChild(node('p', 'note-line',
+        'Full-page ordering, before ' + packet.orderingDiff.identityBefore.engineVersion + ' → after ' + packet.orderingDiff.identityAfter.engineVersion + '. Top 5 of each changed list:'));
+      const changedCount = packet.orderingDiff.probes.filter((probe) => probe.changed).length;
+      container.appendChild(node('p', 'note-line', changedCount + ' of ' + packet.orderingDiff.probes.length + ' probe orderings changed.'));
+      for (const probe of packet.orderingDiff.probes) {
+        const row = node('div', 'diff-probe');
+        row.appendChild(node('span', 'diff-id', probe.id));
+        row.appendChild(node('span', 'diff-flag ' + (probe.changed ? 'changed' : 'held'), probe.changed ? 'changed' : 'unchanged'));
+        if (probe.changed) {
+          row.appendChild(node('div', 'diff-lists', 'before: ' + (probe.beforeTop.join(', ') || '(no results)')));
+          row.appendChild(node('div', 'diff-lists', 'after:  ' + (probe.afterTop.join(', ') || '(no results)')));
+        }
+        container.appendChild(row);
+      }
+      state.packetGenerated = true;
+    } catch (error) {
+      showError(container, error.message);
+    } finally {
+      button.disabled = state.status === null || state.status.verdict !== 'stale';
+    }
+  });
+
+  // §form
+  const sharedRationale = document.getElementById('f-shared-rationale');
+  sharedRationale.addEventListener('change', () => {
+    document.getElementById('ordering-rationale-field').style.display = sharedRationale.checked ? 'none' : '';
+  });
+  // The date is a fact, not prose: default it to today. Every prose field
+  // starts empty and stays empty until the reviewer types.
+  (function () {
+    const today = new Date();
+    const pad = (value) => String(value).padStart(2, '0');
+    document.getElementById('f-date').value = today.getFullYear() + '-' + pad(today.getMonth() + 1) + '-' + pad(today.getDate());
+  })();
+
+  function collectForm() {
+    const value = (id) => document.getElementById(id).value;
+    const probesRationale = value('f-rationale-probes');
+    return {
+      reviewerName: value('f-name'),
+      reviewerContact: value('f-contact'),
+      independence: value('f-independence'),
+      rationaleProbes: probesRationale,
+      rationaleOrdering: sharedRationale.checked ? probesRationale : value('f-rationale-ordering'),
+      reviewNotes: value('f-notes'),
+      reviewedAt: value('f-date'),
+    };
+  }
+  function formProblems(form) {
+    const problems = [];
+    if (form.reviewerName.trim() === '') problems.push('reviewer name');
+    if (form.reviewerContact.trim() === '') problems.push('reviewer contact');
+    if (form.independence.trim() === '') problems.push('independence attestation');
+    if (form.rationaleProbes.trim() === '') problems.push('probe rationale');
+    if (form.rationaleOrdering.trim() === '') problems.push('ordering rationale');
+    if (form.reviewNotes.trim() === '') problems.push('review record');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(form.reviewedAt)) problems.push('review date (YYYY-MM-DD)');
+    return problems;
+  }
+
+  // §write
+  document.getElementById('write-preview').addEventListener('click', async () => {
+    const container = document.getElementById('write-body');
+    clear(container);
+    if (!state.packetGenerated) {
+      showError(container, 'Generate and read the review evidence (step 2) before previewing the write — signing unread evidence is the failure this flow exists to prevent.');
+      return;
+    }
+    const form = collectForm();
+    const problems = formProblems(form);
+    if (problems.length > 0) {
+      showError(container, 'Still empty: ' + problems.join(', ') + '. Every field is required, in your own words.');
+      return;
+    }
+    container.appendChild(node('p', 'note-line', 'Building the three files and checking them against the gauntlet’s validators…'));
+    try {
+      const data = await postJson('/api/v2/signing/preview', form);
+      state.preview = { form, confirmDigest: data.preview.confirmDigest };
+      clear(container);
+      container.appendChild(node('p', 'ok-line', 'These three files — and nothing else — will be written. Read them.'));
+      for (const file of data.preview.files) {
+        const wrap = node('div', 'file-preview');
+        wrap.appendChild(node('h3', '', file.path));
+        wrap.appendChild(node('pre', 'file-body', file.contents));
+        container.appendChild(wrap);
+      }
+      const digests = node('ul', 'digest-list');
+      for (const entry of Object.entries(data.preview.digests)) {
+        digests.appendChild(node('li', '', entry[0] + ': ' + entry[1]));
+      }
+      container.appendChild(digests);
+      const confirm = node('button', 'btn', 'Write these three files');
+      confirm.type = 'button';
+      confirm.addEventListener('click', async () => {
+        confirm.disabled = true;
+        try {
+          const written = await postJson('/api/v2/signing/write',
+            Object.assign({}, state.preview.form, { confirmDigest: state.preview.confirmDigest }));
+          container.appendChild(node('p', 'ok-line', 'Written: ' + written.result.written.join(', ') + '. Now prove it (step 5), then commit it yourself (step 6).'));
+          state.written = written.result;
+          renderCommit();
+          setStepEnabled('step-commit', true);
+        } catch (error) {
+          confirm.disabled = false;
+          container.appendChild(node('p', 'error-line', error.message));
+        }
+      });
+      const confirmRow = node('div', '');
+      confirmRow.style.marginTop = '14px';
+      confirmRow.appendChild(confirm);
+      container.appendChild(confirmRow);
+    } catch (error) {
+      showError(container, error.message);
+    }
+  });
+
+  // §verify — reuses the existing allowlisted gauntlet job and its event
+  // stream; this page adds no new way to run repository commands.
+  document.getElementById('verify-run').addEventListener('click', async () => {
+    const button = document.getElementById('verify-run');
+    const container = document.getElementById('verify-body');
+    button.disabled = true;
+    clear(container);
+    container.appendChild(node('p', 'note-line', 'Running the full gauntlet — expect a few minutes.'));
+    const output = node('pre', 'job-output', '');
+    container.appendChild(output);
+    try {
+      const started = await postJson('/api/v2/checks', { jobId: 'gauntlet' });
+      const runId = started.job.runId;
+      const source = new EventSource('/api/v2/jobs/' + encodeURIComponent(runId) + '/events');
+      source.addEventListener('status', (event) => {
+        let record;
+        try { record = JSON.parse(event.data); } catch (error) { return; }
+        output.textContent = record.output.stdout + (record.output.stderr ? '\n--- stderr ---\n' + record.output.stderr : '');
+        if (record.state === 'queued' || record.state === 'running') return;
+        source.close();
+        button.disabled = false;
+        const verdictMatch = /\*\*Verdict: ([A-Z_ ]+)\*\*/.exec(record.output.stdout);
+        const verdict = verdictMatch ? verdictMatch[1].trim() : null;
+        if (record.state === 'passed' && verdict !== null && verdict !== 'REJECT') {
+          container.appendChild(node('p', 'ok-line', 'Gauntlet verdict: ' + verdict + '. If G2 and G8 show pass above, the signing is sound — go to step 6.'));
+        } else if (verdict === 'REJECT') {
+          const gates = [...record.output.stdout.matchAll(/### (G[0-9]+[A-Za-z-]*) - /g)].map((match) => match[1]);
+          container.appendChild(node('p', 'error-line',
+            'Gauntlet verdict: REJECT' + (gates.length > 0 ? ' — failing gate(s): ' + gates.join(', ') : '') +
+            '. Stop — nothing was signed correctly; ask Claude.'));
+        } else {
+          container.appendChild(node('p', 'error-line',
+            'The gauntlet run finished as "' + record.state + '"' + (record.failureReason ? ' (' + record.failureReason + ')' : '') +
+            '. Stop — nothing was signed correctly; ask Claude.'));
+        }
+      });
+      source.addEventListener('error', () => {
+        // The stream closes when the job ends; a closed stream after a
+        // terminal state is normal. A dead stream mid-run falls back to the
+        // note below.
+        if (button.disabled) {
+          button.disabled = false;
+          container.appendChild(node('p', 'note-line', 'The live stream dropped. The run may still be going — reload the page and check again, or run npm run gauntlet in a terminal.'));
+        }
+        source.close();
+      });
+    } catch (error) {
+      button.disabled = false;
+      showError(container, error.message);
+    }
+  });
+
+  // §commit
+  function renderCommit() {
+    const container = document.getElementById('commit-body');
+    clear(container);
+    if (state.written === null) {
+      container.appendChild(node('p', 'note-line', 'Nothing has been written yet.'));
+      return;
+    }
+    const list = node('ul', 'digest-list');
+    for (const file of state.written.written) list.appendChild(node('li', '', file));
+    container.appendChild(node('p', 'note-line', 'Exactly these files changed:'));
+    container.appendChild(list);
+    const commands = state.written.nextSteps.join('\n');
+    container.appendChild(node('pre', 'commands', commands));
+    const copy = node('button', 'btn-quiet', 'Copy commands');
+    copy.type = 'button';
+    copy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(commands);
+        copy.textContent = 'Copied';
+      } catch (error) {
+        copy.textContent = 'Select and copy the block above';
+      }
+    });
+    container.appendChild(copy);
+    container.appendChild(node('p', 'note-line', 'Then open a PR from that branch. Your merge is the final human gate — no automation merges to main.'));
+  }
+  renderCommit();
+
+  void loadStatus();
+})();
+</script>
+</body>
+</html>

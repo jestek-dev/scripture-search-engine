@@ -173,8 +173,20 @@ describe('health source semantics', () => {
     // extensions ride spiritual-gifts, walking-in-the-light, conscience,
     // and salvation, so they add no ids here).
     // This mirror moves whenever a concept wave is admitted.
-    expect(coverage).toHaveLength(239);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(239);
+    // 2026-08-26 alias-mining batch 1: 239 -> 243 (remembered-cast-your-care,
+    // remembered-no-weapon-shall-prosper, remembered-wait-for-the-lord,
+    // remembered-mind-stayed-on-thee — each with an active demonstrating
+    // fixture in the same change; the batch's the-cross lexicon extension
+    // rides an existing id).
+    // 2026-08-27 batch-1 held row admitted post corpus expansion (#64):
+    // 243 -> 244 (remembered-calls-things-that-are-not, with its active
+    // demonstrating fixture in the same change).
+    // 2026-08-27 corpus-blocked roster build (post-#64 full corpus):
+    // 244 -> 288 — 44 new ids across five waves (Themes A-M); the
+    // roster's three extensions ride loving-god, giving-an-answer, and
+    // new-creation, so they add no ids here.
+    expect(coverage).toHaveLength(288);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(288);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

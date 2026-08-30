@@ -1,0 +1,67 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# ADOPTED-TAG id (Theme D row, requesting book: Judges). Adopted as
+# display vocabulary by Jesse's 2026-08-25 ruling (CONVENTIONS §11);
+# ENGINE admission only by his merge of this PR. Deferred through
+# batches 1-6: every Spirit-of-the-LORD-came refrain (Judg 3:10-15:14)
+# was absent — only the departure (16:20) was in corpus.
+#
+# REGISTER: the OT empowerment-FOR-A-TASK refrain — "The LORD's Spirit
+# came on him" — which no NT pack can honestly carry (the read-back
+# bar). holy-spirit keeps the NT person-and-gift register (its
+# filled-with vocabulary untouched); Nehemiah's recorded decline
+# honored: Neh 9:20, 30 stay routed to holy-spirit, not claimed here.
+# Judg 16:20 (the Spirit's departure from Samson) deliberately NOT
+# anchored — the refrain register is empowerment, and the departure
+# verse already lives in the corpus's Samson narrative without a claim.
+#
+# TOKENIZER NOTE (G-4): no single-token entries; no stopword collapses
+# ("empowered by the spirit" -> {empower, spirit}).
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the refrain; it adjudicates nothing about the Spirit's
+# OT/NT modes of working.
+id: empowered-by-the-spirit
+label: Empowered by the Spirit
+lexicon:
+  - the spirit of the lord came on him
+  - empowered by the spirit
+  - the spirit of the lord came mightily
+  - spirit of the lord in the old testament
+anchors:
+  # "But the LORD's Spirit came on Gideon, and he blew a trumpet"
+  # (WEB, in corpus). The keystone — empowerment answering fear.
+  - ref: Judges 6:34
+    sources: [editorial]
+    weight: 1.0
+  # "The LORD's Spirit came on him, and he judged Israel; and he went
+  # out to war" (WEB, in corpus). The refrain's first instance
+  # (Othniel).
+  - ref: Judges 3:10
+    sources: [editorial]
+    weight: 0.9
+  # "The LORD's Spirit came mightily on him, and he tore him as he
+  # would have torn a young goat" (WEB, in corpus). Samson.
+  - ref: Judges 14:6
+    sources: [editorial]
+    weight: 0.85
+  # "Then the LORD's Spirit came mightily on him, and the ropes that
+  # were on his arms became as flax that was burned with fire" (WEB,
+  # in corpus).
+  - ref: Judges 15:14
+    sources: [editorial]
+    weight: 0.8
+  # "Then the LORD's Spirit came on Jephthah" (WEB, in corpus).
+  - ref: Judges 11:29
+    sources: [editorial]
+    weight: 0.7
+  # "The LORD's Spirit began to move him in Mahaneh Dan" (WEB, in
+  # corpus). The refrain's onset in Samson's youth.
+  - ref: Judges 13:25
+    sources: [editorial]
+    weight: 0.65
+related:
+  - holy-spirit
+  - gods-surprising-choice
+  - spiritual-gifts
+sources: [editorial]

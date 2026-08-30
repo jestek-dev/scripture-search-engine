@@ -1,0 +1,70 @@
+# CORPUS-BLOCKED ROSTER build (post-#64 full-Bible corpus, 2026-08-27) —
+# Theme G row 30 (requesting book: Deuteronomy). Deferred because
+# Deut 20; 21:10-14; 23:9-14; 24:5; 25:17-19 were ALL absent.
+#
+# The THREE-WAY bare-"warfare" collision warning HONORED: neither this
+# pack nor spiritual-warfare (same PR) admits bare warfare/war —
+# multi-word phrases only; the boundary is recorded in both packs and
+# the inventory. (spiritual-warfare owns the armor-of-God register;
+# peace-among-nations the peace register; this pack the war-LAW
+# register.)
+#
+# QUERY PARTITION with peace-among-nations (same PR, both files): this
+# pack takes "what does the bible say about war" and the rules-of-war
+# register; that pack takes swords-into-plowshares / world peace.
+#
+# GIST CARE (the row's own flag): the pack DESCRIBES the text's own
+# terms — including Deut 20:16-18's herem command, which is neither
+# softened nor endorsed; it is not anchored as a highlight, and the
+# anchored spans are the procedure texts the lookup queries ask for.
+# The label says where the texts live: War in the Old Testament.
+#
+# Attribution: ALL anchors [editorial].
+# DOCTRINAL SCAN: no watchlist anchor, no materialFrameKeyword. The
+# pack reports the war-law; it adjudicates no ethic and no modern
+# application.
+id: warfare
+label: War in the Old Testament
+lexicon:
+  - rules of war in the bible
+  - war in the old testament
+  - what does the bible say about war
+  - laws of warfare
+anchors:
+  # "When you draw near to a city to fight against it, then proclaim
+  # peace to it... If it will make no peace with you... then you shall
+  # besiege it." (WEB, in corpus). The procedure's opening rule:
+  # peace offered first.
+  - ref: Deuteronomy 20:10-12
+    sources: [editorial]
+    weight: 1.0
+  # "When you go out to battle against your enemies, and see horses,
+  # chariots, and a people more numerous than you, you shall not be
+  # afraid of them; for the LORD your God... is with you." (WEB, in
+  # corpus). The chapter's opening frame.
+  - ref: Deuteronomy 20:1-4
+    sources: [editorial]
+    weight: 0.85
+  # "you shall not destroy its trees by wielding an ax against them...
+  # for is the tree of the field man, that it should be besieged by
+  # you?" (WEB, in corpus). The siege-limit law.
+  - ref: Deuteronomy 20:19-20
+    sources: [editorial]
+    weight: 0.8
+  # "When a man takes a new wife, he shall not go out in the army...
+  # He shall be free at home one year" (WEB, in corpus). The
+  # exemption law.
+  - ref: Deuteronomy 24:5
+    sources: [editorial]
+    weight: 0.75
+  # "Remember what Amalek did to you by the way as you came out of
+  # Egypt... you shall blot out the memory of Amalek from under the
+  # sky." (WEB, in corpus). The Amalek command — reported in the
+  # text's own terms (see gist care above).
+  - ref: Deuteronomy 25:17-19
+    sources: [editorial]
+    weight: 0.7
+related:
+  - peace-among-nations
+  - courage
+sources: [editorial]
