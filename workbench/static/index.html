@@ -621,14 +621,14 @@ button{font:inherit;}
     updatesLoading: 'Gathering your calls…',
     updatesFetchFailed: 'Couldn’t load your updates just now — reload the page to try again.',
     updatesEmpty: 'Nothing to review — your calls in Review will show up here as suggested changes.',
-    updatesSameFacts: 'These lines describe the same old suggestions as the card above — the card is the way to act on them.',
+    // RETIRED (Phase 4, D18): the read-only backlog lines (updatesSameFacts,
+    // updatesLineMissing, updatesLineDiagnosis, updatesLineFallback) rendered
+    // the compile preview's printed checklist here; the cards above carry the
+    // same facts, so the checklist — and these strings — retired together.
     updatesLegacyTitle: (q) => 'Take a fresh look: “' + q + '”',
     updatesLegacyBecause: (countPhrase, when, refs) => 'Because you suggested ' + countPhrase + ' for this search on ' + when + ' — ' + refs + ' — back before the engine covered the whole Bible.',
     updatesLegacyBody: 'Nothing changes yet. The search has changed a lot since then, so your old suggestions need a fresh look before they can count. Approving opens this search with today’s results so you can make your calls again; passages that already show up well may not need anything. Your new calls then follow the normal path into the next reviewed update.',
     updatesApprove: 'Approve',
-    updatesLineMissing: (ref, q, why) => ref + ' should show up for “' + q + '”' + (why !== '' ? ' — ' + why : ''),
-    updatesLineDiagnosis: (ref, phrase, label, q, note) => ref + ' — ' + phrase + ' (“' + label + '”) for “' + q + '”' + (note !== '' ? ' — ' + note : ''),
-    updatesLineFallback: 'One earlier suggestion still needs hand work.',
     // §copy — P7 (the Updates screen, Phase 1 interactive — votes-to-engine
     // plan §04 §4.3/§4.4/§4.8, §08 D7; strings §04 fixes ship verbatim).
     updatesStatWaiting: (n) => n + ' waiting for your call',
@@ -921,16 +921,14 @@ button{font:inherit;}
     },
     // §state — P6/P7 (the Updates screen, Phase 1 interactive). Cards come
     // from GET /api/v2/updates (the deriver); decisions post to the decide
-    // endpoint with the per-card cardRevision pin (§4.4). The compile plan's
-    // checklist still renders as the read-only backlog until the checklist
-    // retires (Phase 4).
+    // endpoint with the per-card cardRevision pin (§4.4). (The compile
+    // plan's checklist rendered here as a read-only backlog until Phase 4
+    // D18 retired the checklist — the cards carry those facts.)
     updates: {
       status: 'idle',    // 'idle' | 'loading' | 'done'
       seq: 0,            // drops stale open-screen fetches
       derivation: null,  // GET /api/v2/updates payload, or null
       deriveFailed: false,
-      plan: null,        // the compile preview's plan, or null
-      planFailed: false,
       reloading: false,  // a 409-triggered re-derive is in flight
       focusCardId: null, // roving focus over the card list (§4.7)
       answers: Object.create(null),     // cardId -> picked theme answer
@@ -4271,18 +4269,16 @@ button{font:inherit;}
   // digest, so a decide on one card never invalidates another). Decisions
   // are pure staging: no file in eval/ or ontology/ changes, no build runs,
   // no result moves — the honest-timing sentence (COPY.contract) stays
-  // exactly true. The compile plan's checklist still renders as the
-  // read-only backlog (it retires with Phase 4's D18), and every string maps
-  // through the reviewed COPY block — raw diagnosis tokens, concept ids,
-  // digests and UUIDs never render (D28).
+  // exactly true. (The compile plan's checklist rendered here as a
+  // read-only backlog until Phase 4's D18 retired the checklist.) Every
+  // string maps through the reviewed COPY block — raw diagnosis tokens,
+  // concept ids, digests and UUIDs never render (D28).
   async function openUpdates() {
     const updates = state.updates;
     const seq = ++updates.seq;
     updates.status = 'loading';
     updates.derivation = null;
     updates.deriveFailed = false;
-    updates.plan = null;
-    updates.planFailed = false;
     updates.reloading = false;
     updates.answers = Object.create(null);
     updates.declineOpen = Object.create(null);
@@ -4292,17 +4288,16 @@ button{font:inherit;}
     updates.fm13 = null;
     resetTrainPanel();
     renderUpdates();
-    const [deriveOutcome, planOutcome] = await Promise.allSettled([apiUpdates(), apiCompilePreview()]);
+    // D18: the deriver is this screen's only data source — the compile
+    // preview (once fetched here for the checklist backlog) belongs to
+    // Finish up alone now.
+    let derivation = null;
+    try { derivation = await apiUpdates(); } catch (error) { derivation = null; }
     if (seq !== updates.seq) return;
-    if (deriveOutcome.status === 'fulfilled' && deriveOutcome.value !== null && Array.isArray(deriveOutcome.value.cards)) {
-      updates.derivation = deriveOutcome.value;
+    if (derivation !== null && Array.isArray(derivation.cards)) {
+      updates.derivation = derivation;
     } else {
       updates.deriveFailed = true;
-    }
-    if (planOutcome.status === 'fulfilled' && planOutcome.value !== null && planOutcome.value.plan) {
-      updates.plan = planOutcome.value.plan;
-    } else {
-      updates.planFailed = true;
     }
     updates.status = 'done';
     renderUpdates();
@@ -4361,51 +4356,16 @@ button{font:inherit;}
     if (typeof iso !== 'string' || Number.isNaN(then.getTime())) return 'an earlier visit';
     return months[then.getUTCMonth()] + ' ' + then.getUTCDate();
   }
-  function updatesChecklist() {
-    const plan = state.updates.plan;
-    return plan !== null && Array.isArray(plan.checklist) ? plan.checklist : [];
-  }
-  // The compiler's two checklist line shapes (compileJudgments.ts, the
-  // manual-edit checklist), parsed for display only — the raw line never
-  // renders. Reference text never contains " — ", so the first em-dash after
-  // it is the boundary; notes may carry their own em-dashes.
-  function parseChecklistLine(line) {
-    if (typeof line !== 'string') return null;
-    const missing = /^\[ \] missing: "([\s\S]+?)" should surface ([\s\S]+?) — ([\s\S]*)$/.exec(line);
-    if (missing !== null) {
-      return { kind: 'missing', query: missing[1], reference: missing[2], why: missing[3] };
-    }
-    const diagnosis = /^\[ \] ([a-z-]+): concept (\S+) produced bad evidence on ([\s\S]+?) for "([\s\S]+?)" — ([\s\S]*)$/.exec(line);
-    if (diagnosis !== null) {
-      return {
-        kind: 'diagnosis', diagnosis: diagnosis[1], conceptId: diagnosis[2],
-        reference: diagnosis[3], query: diagnosis[4], note: diagnosis[5],
-      };
-    }
-    return null;
-  }
+  // RETIRED (Phase 4, D18): updatesChecklist/parseChecklistLine/
+  // missingWhyText/updatesLineText parsed the compile preview's printed
+  // checklist into the read-only backlog below the cards. The checklist is
+  // retired — the cards carry the same facts — so the parsers went with it.
   function conceptLabelOf(conceptId) {
     for (const concept of state.concepts) {
       if (concept && concept.id === conceptId && typeof concept.label === 'string') return concept.label;
     }
     // Fallback humanization — never the raw hyphenated id.
     return String(conceptId).replace(/-/g, ' ');
-  }
-  // A missing line's why is the voter's note, or `text: "…"` when the
-  // server-attached passage text is the defense — render the quoted text
-  // itself then, never the `text:` token.
-  function missingWhyText(why) {
-    const excerpt = /^text: "([\s\S]*)"$/.exec(why);
-    return excerpt !== null ? '“' + excerpt[1] + '”' : why;
-  }
-  function updatesLineText(parsed) {
-    if (parsed === null) return COPY.updatesLineFallback;
-    if (parsed.kind === 'missing') {
-      return COPY.updatesLineMissing(parsed.reference, parsed.query, missingWhyText(parsed.why));
-    }
-    const phrase = COPY.plainWhy[parsed.diagnosis];
-    if (phrase === undefined) return COPY.updatesLineFallback;
-    return COPY.updatesLineDiagnosis(parsed.reference, phrase, conceptLabelOf(parsed.conceptId), parsed.query, parsed.note);
   }
   function joinRefList(parts) {
     if (parts.length <= 1) return parts.join('');
@@ -5780,37 +5740,15 @@ button{font:inherit;}
     }
     // Zone 3 — the update panel (Phase 2's trains, §4.5/§4.6).
     renderTrainPanel(inner, groups);
-    // The backlog: the compile checklist as read-only lines, headed by the
-    // same-facts note when the legacy card stands above it (§4.2; the lines
-    // retire with the checklist, Phase 4).
-    const lines = updatesChecklist();
-    const legacyRenders = groups.main.some((card) => isLegacyCard(card));
-    if (lines.length > 0) {
-      if (legacyRenders) {
-        const note = node('p', 'updates-note', COPY.updatesSameFacts);
-        note.id = 'updates-same-facts';
-        inner.appendChild(note);
-      }
-      const list = node('div', 'write-group');
-      list.id = 'updates-backlog';
-      for (const line of lines) {
-        list.appendChild(node('div', 'write-line', updatesLineText(parseChecklistLine(line))));
-      }
-      inner.appendChild(list);
-    } else if (updates.planFailed) {
-      // The backlog rides POST /api/v2/compile/preview, so its failure line
-      // is that endpoint's own D39 sentence (the same one Finish up renders)
-      // — never the §4.9 updates sentence, which would falsely claim the
-      // cards above failed to load (e.g. when conflicting votes 422 the
-      // compile while the derived cards render fine).
-      const failed = node('p', 'screen-sub', COPY.bootFetchFailed);
-      failed.id = 'updates-backlog-failed';
-      inner.appendChild(failed);
-    }
+    // RETIRED (Phase 4, D18): the read-only backlog (#updates-backlog /
+    // #updates-same-facts / #updates-backlog-failed) rendered the compile
+    // preview's printed checklist here. The checklist is retired — the cards
+    // above carry the same facts — so this screen no longer touches the
+    // compile preview at all; Finish up owns it.
     // The steady empty state (§4.8 owns the string).
     const anyCard = groups.main.length > 0 || groups.approved.length > 0
       || groups.sealed.length > 0 || groups.engineering.length > 0 || groups.parked.length > 0;
-    if (!anyCard && lines.length === 0 && !updates.deriveFailed && !updates.planFailed) {
+    if (!anyCard && !updates.deriveFailed) {
       const empty = node('p', 'screen-sub', COPY.updatesEmpty);
       empty.id = 'updates-empty';
       inner.appendChild(empty);

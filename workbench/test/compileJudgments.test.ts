@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import os from 'node:os';
@@ -12,10 +13,19 @@ import type { CorpusFixture } from '../../eval/src/gates/corpusGolden.js';
 
 import {
   applyJudgmentCompilationPlan,
-  compileJudgments,
+  COMPILE_JUDGMENTS_RETIRED,
   planJudgmentCompilation,
+  type CompileOutcome,
 } from '../src/compileJudgments.js';
 import type { JudgmentRecord, JudgmentRecordV2 } from '../src/judgments.js';
+
+// The one-breath `compileJudgments()` write path is retired (Phase 4, D18);
+// these tests exercise the surviving supported path — a plan previewed and
+// applied under its own digest, exactly what the Finish up screen drives.
+async function compile(repoRoot: string): Promise<CompileOutcome> {
+  const plan = await planJudgmentCompilation(repoRoot);
+  return applyJudgmentCompilationPlan(repoRoot, plan, plan.digest);
+}
 
 // The compiler is a pure function of the log with an injectable repo root, so
 // every test runs against a temp copy of the tree and the real working tree
@@ -225,7 +235,7 @@ afterEach(async () => {
 
 describe('compile-judgments — routing (§5)', () => {
   it('routes every judgment kind into the CorpusFixture shape, pending-first', async () => {
-    const outcome = await compileJudgments(root);
+    const outcome = await compile(root);
     // Plan paths are spelled with '/' on every platform (determinism is the
     // product) — literal strings here, never a platform-native join.
     expect(outcome.fixturesWritten.map((written) => written.path).sort()).toEqual([
@@ -263,7 +273,7 @@ describe('compile-judgments — routing (§5)', () => {
   });
 
   it('proposes chapter-granular subset additions for passages CI never sampled', async () => {
-    const outcome = await compileJudgments(root);
+    const outcome = await compile(root);
     expect(outcome.proposedSelections).toEqual([
       { book: 'Genesis', chapters: [5], why: 'workbench judgment: hearing and doing (2026-08-01)' },
       { book: 'Psalms', chapters: [46], why: 'workbench judgment: hearing and doing (2026-08-01)' },
@@ -306,7 +316,7 @@ describe('compile-judgments — routing (§5)', () => {
       `${JSON.stringify(subset, null, 2)}\n`,
     );
 
-    const outcome = await compileJudgments(root);
+    const outcome = await compile(root);
     expect(outcome.proposedSelections).toEqual([
       { book: 'Genesis', chapters: [5], why: 'workbench judgment: hearing and doing (2026-08-01)' },
       { book: 'Psalms', chapters: [46], why: 'workbench judgment: hearing and doing (2026-08-01)' },
@@ -341,34 +351,47 @@ describe('compile-judgments — routing (§5)', () => {
         layerFingerprint: 'layer-old',
       }),
     ]);
-    const outcome = await compileJudgments(root);
+    const outcome = await compile(root);
     expect(outcome.warnings).toEqual([]);
     expect(outcome.report).not.toContain('re-confirm rather than trust it.');
   });
 
-  it('prints the manual ontology checklist for missing and anchor-affecting ✗', async () => {
-    const outcome = await compileJudgments(root);
-    expect(outcome.checklist).toEqual([
-      '[ ] wrong-anchor: concept obedience-to-the-word produced bad evidence on Genesis 5:1 ' +
-        'for "hearing and doing" — Genealogy; no thematic relation to hearing or doing.',
-      '[ ] missing: "hearing and doing" should surface James 2:14-26 — Faith without works ' +
-        'is dead — the doing of the word.',
-      '[ ] concept-misfire: concept refuge-in-trouble produced bad evidence on John 3:16 ' +
-        'for "shelter in the storm" — Not about refuge; the concept lexicon over-matches here.',
-      // A note-less missing judgment defends itself with the attached text.
-      '[ ] missing: "shelter in the storm" should surface Psalms 46:1 — ' +
-        'text: "God is our refuge and strength, a very present help in trouble."',
-    ]);
-    expect(outcome.report).toContain('concept-curation');
-    // The standing closer: the compiler's job ends at the working tree.
+  // D18 (Phase 4, gated on J72): the printed manual ontology checklist is
+  // retired — this LOG once produced four checklist lines (missing ×2 and
+  // anchor-affecting ✗ ×2), and those facts now ride the deriver's cards on
+  // the Updates screen (missing-passage / guard-and-anchor; see
+  // deriveUpdates.test.ts and the study-p7 spec). The guard keeps the
+  // retirement honest, oneClickPlanGuard-style: the field stays permanently
+  // empty and the printing never returns.
+  it('emits no manual ontology checklist — the Updates cards subsumed it (D18)', async () => {
+    const outcome = await compile(root);
+    expect(outcome.checklist).toEqual([]);
+    expect(outcome.report).not.toContain('Manual ontology checklist');
+    expect(outcome.report).not.toContain('concept-curation');
+    expect(outcome.report).not.toContain('[ ]');
+    // The standing closer survives: the compiler's job ends at the working tree.
     expect(outcome.report).toContain('review with `git diff`');
     expect(outcome.report).toContain('npm run verify');
+  });
+
+  it('the checklist cannot quietly return: no source line refills the field (D18 guard)', async () => {
+    const source = await readFile(
+      path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'src', 'compileJudgments.ts'),
+      'utf8',
+    );
+    // The tombstone comment is present, the field-filling code is not.
+    expect(source).toContain('RETIRED (Phase 4, D18');
+    expect(source).not.toContain('checklist.push(');
+    expect(source).not.toContain('Manual ontology checklist');
+    // The one-breath direct write path stayed dead too: nothing in the
+    // module calls plan-and-apply in a single exported breath any more.
+    expect(source).not.toContain('export async function compileJudgments');
   });
 });
 
 describe('compile-judgments — determinism and ownership', () => {
   it('keeps the legacy v1 fixture bytes exactly compatible', async () => {
-    await compileJudgments(root);
+    await compile(root);
     for (const slug of ['hearing-and-doing', 'shelter-in-the-storm']) {
       const [actual, expected] = await Promise.all([
         readFile(goldenPath(slug)),
@@ -395,7 +418,7 @@ describe('compile-judgments — determinism and ownership', () => {
       v2Judgment({ judgmentId: 'prefer', query: 'v2 ranking', action: 'prefer', preferredTargetId: 'WEB:59001022', otherTargetId: 'WEB:45003016' }),
     ];
     await writeV2History(v2, LOG);
-    await compileJudgments(root);
+    await compile(root);
     const fixture = await readGolden('v2-ranking') as CorpusFixture & {
       expectedTop: { ref?: string; reference?: string; withinTop?: number }[];
       preferredOrder?: { above: string; below: string; withinTop: number }[];
@@ -408,7 +431,7 @@ describe('compile-judgments — determinism and ownership', () => {
     expect(fixture.mustNotRank).toEqual([{ ref: 'Genesis 5:1', why: 'matched words, not meaning; judged not a fit for this query' }]);
     expect(fixture.preferredOrder).toEqual([{ above: 'James 1:22', below: 'Romans 3:16', withinTop: 10 }]);
     const before = await readFile(goldenPath('v2-ranking'), 'utf8');
-    await compileJudgments(root);
+    await compile(root);
     expect(await readFile(goldenPath('v2-ranking'), 'utf8')).toBe(before);
   });
 
@@ -416,11 +439,11 @@ describe('compile-judgments — determinism and ownership', () => {
     const base = v2Judgment({ judgmentId: 'one', query: 'conflict', action: 'essential', targetId: 'WEB:59001022', withinTop: 1 });
     const opposite = v2Judgment({ judgmentId: 'two', query: 'conflict', action: 'irrelevant', targetId: 'WEB:59001022', diagnosis: 'lexical-noise' });
     await writeV2History([base, opposite]);
-    await expect(compileJudgments(root)).rejects.toThrow(/both expects and forbids/);
+    await expect(compile(root)).rejects.toThrow(/both expects and forbids/);
     await writeV2History([
       { ...base, judgmentId: stableUuid('bad'), supersedes: stableUuid('absent') },
     ]);
-    await expect(compileJudgments(root)).rejects.toThrow(/unknown judgment/);
+    await expect(compile(root)).rejects.toThrow(/unknown judgment/);
 
     const prior = v2Judgment({ judgmentId: 'time-prior', query: 'backdated correction', action: 'helpful', targetId: 'WEB:59001022' });
     const correction = v2Judgment({ judgmentId: 'time-correction', query: 'backdated correction', action: 'helpful', targetId: 'WEB:59001022', supersedes: 'time-prior' });
@@ -429,30 +452,30 @@ describe('compile-judgments — determinism and ownership', () => {
     const rows = (await readFile(judgmentsPath, 'utf8')).trim().split('\n').map((line) => JSON.parse(line) as Record<string, unknown>);
     rows[1]!.at = '2026-08-03T09:59:59.000Z';
     await writeFile(judgmentsPath, `${rows.map((row) => JSON.stringify(row)).join('\n')}\n`);
-    await expect(compileJudgments(root)).rejects.toThrow(/timestamped after/);
+    await expect(compile(root)).rejects.toThrow(/timestamped after/);
   });
 
   it('re-runs byte-identically on the same log', async () => {
-    await compileJudgments(root);
+    await compile(root);
     const files = [
       goldenPath('hearing-and-doing'),
       goldenPath('shelter-in-the-storm'),
       path.join(root, 'pipeline', 'fixtures', 'web-subset.json'),
     ];
     const before = await Promise.all(files.map((file) => readFile(file, 'utf8')));
-    await compileJudgments(root);
+    await compile(root);
     const after = await Promise.all(files.map((file) => readFile(file, 'utf8')));
     expect(after).toEqual(before);
   });
 
   it('preserves a human promotion to active on marked fixtures', async () => {
-    await compileJudgments(root);
+    await compile(root);
     const fixture = await readGolden('hearing-and-doing');
     await writeFile(
       goldenPath('hearing-and-doing'),
       `${JSON.stringify({ ...fixture, status: 'active' }, null, 2)}\n`,
     );
-    await compileJudgments(root);
+    await compile(root);
     expect((await readGolden('hearing-and-doing')).status).toBe('active');
   });
 
@@ -465,7 +488,7 @@ describe('compile-judgments — determinism and ownership', () => {
       withinTop: 1,
     });
     await writeV2History([original]);
-    await compileJudgments(root);
+    await compile(root);
     const active = { ...(await readGolden('changing-assertion')), status: 'active' };
     await writeFile(goldenPath('changing-assertion'), `${JSON.stringify(active, null, 2)}\n`);
 
@@ -478,7 +501,7 @@ describe('compile-judgments — determinism and ownership', () => {
       supersedes: 'original-window',
     });
     await writeV2History([original, correction]);
-    await compileJudgments(root);
+    await compile(root);
     expect((await readGolden('changing-assertion')).status).toBe('pending');
   });
 
@@ -491,7 +514,7 @@ describe('compile-judgments — determinism and ownership', () => {
       diagnosis: 'lexical-noise',
     });
     await writeV2History([irrelevant]);
-    await compileJudgments(root);
+    await compile(root);
     const helpful = v2Judgment({
       judgmentId: 'remove-new',
       query: 'remove obsolete fixture',
@@ -500,7 +523,7 @@ describe('compile-judgments — determinism and ownership', () => {
       supersedes: 'remove-old',
     });
     await writeV2History([irrelevant, helpful]);
-    const outcome = await compileJudgments(root);
+    const outcome = await compile(root);
     // Plan paths are '/' on every platform; expect the literal spelling.
     expect(outcome.fixturesRemoved).toEqual(['eval/golden/remove-obsolete-fixture.json']);
     await expect(readFile(goldenPath('remove-obsolete-fixture'))).rejects.toThrow();
@@ -523,7 +546,7 @@ describe('compile-judgments — determinism and ownership', () => {
       supersedes: 'pair-first',
     });
     await writeV2History([first, reverse]);
-    await compileJudgments(root);
+    await compile(root);
     expect((await readGolden('reverse-pair')).preferredOrder).toEqual([
       { above: 'Romans 3:16', below: 'James 1:22', withinTop: 10 },
     ]);
@@ -533,12 +556,12 @@ describe('compile-judgments — determinism and ownership', () => {
     const tight = v2Judgment({ judgmentId: 'tight', query: 'window conflict', action: 'missing', reference: 'James 2:14-26', withinTop: 1, note: 'Expected.' });
     const broad = v2Judgment({ judgmentId: 'broad', query: 'window conflict', action: 'missing', reference: 'James 2:14-26', withinTop: 3, note: 'Expected.' });
     await writeV2History([tight, broad]);
-    await expect(compileJudgments(root)).rejects.toThrow(/conflicting rank windows/);
+    await expect(compile(root)).rejects.toThrow(/conflicting rank windows/);
 
     const expected = v2Judgment({ judgmentId: 'range', query: 'range conflict', action: 'missing', reference: 'James 2:14-26', withinTop: 10, note: 'Expected.' });
     const forbidden = v2Judgment({ judgmentId: 'verse', query: 'range conflict', action: 'irrelevant', targetId: 'WEB:59002020', diagnosis: 'lexical-noise' });
     await writeV2History([expected, forbidden]);
-    await expect(compileJudgments(root)).rejects.toThrow(/both expects and forbids overlapping/);
+    await expect(compile(root)).rejects.toThrow(/both expects and forbids overlapping/);
 
     const mismatch = v2Judgment({ judgmentId: 'mismatch', query: 'judgment query', action: 'helpful', targetId: 'WEB:59001022' });
     await writeV2History([mismatch]);
@@ -546,7 +569,7 @@ describe('compile-judgments — determinism and ownership', () => {
     const event = JSON.parse(await readFile(casesPath, 'utf8')) as Record<string, unknown>;
     event.query = 'different case query';
     await writeFile(casesPath, `${JSON.stringify(event)}\n`);
-    await expect(compileJudgments(root)).rejects.toThrow(/query does not match case/);
+    await expect(compile(root)).rejects.toThrow(/query does not match case/);
   });
 
   it('refuses to touch a fixture without the workbench marker, naming the file', async () => {
@@ -554,15 +577,15 @@ describe('compile-judgments — determinism and ownership', () => {
       goldenPath('hearing-and-doing'),
       `${JSON.stringify({ id: 'hearing-and-doing', status: 'active', query: 'hearing and doing' }, null, 2)}\n`,
     );
-    await expect(compileJudgments(root)).rejects.toThrow(/hearing-and-doing\.json/);
-    await expect(compileJudgments(root)).rejects.toThrow(/hand-written/);
+    await expect(compile(root)).rejects.toThrow(/hearing-and-doing\.json/);
+    await expect(compile(root)).rejects.toThrow(/hand-written/);
     // Validate-before-write: nothing else was written either.
     await expect(readFile(goldenPath('shelter-in-the-storm'), 'utf8')).rejects.toThrow();
   });
 
   it('compiles an empty log to nothing, with the closer still printed', async () => {
     await writeFile(path.join(root, 'workbench', 'judgments.jsonl'), '');
-    const outcome = await compileJudgments(root);
+    const outcome = await compile(root);
     expect(outcome.fixturesWritten).toEqual([]);
     expect(outcome.proposedSelections).toEqual([]);
     expect(outcome.report).toContain('No fixture files to write');
@@ -571,7 +594,7 @@ describe('compile-judgments — determinism and ownership', () => {
 
   it('fails loudly on a log line that is not valid JSON', async () => {
     await writeFile(path.join(root, 'workbench', 'judgments.jsonl'), '{"broken\n');
-    await expect(compileJudgments(root)).rejects.toThrow(/line 1/);
+    await expect(compile(root)).rejects.toThrow(/line 1/);
   });
 });
 
@@ -679,5 +702,31 @@ describe('compile-judgments preview/apply', () => {
 
     await expect(applyJudgmentCompilationPlan(root, tampered, plan.digest)).rejects.toThrow(/digest/);
     await expect(readFile(goldenPath('hearing-and-doing'), 'utf8')).rejects.toThrow();
+  });
+});
+
+// D18 (Phase 4, gated on J72): the direct CLI write path is tombstoned the
+// house way — the way the v1 POST /api/judgment endpoint answers 410 for
+// every method, `npm run compile-judgments` fails loud for every invocation
+// and points at the supervised path. The spawn precedent is
+// serverPreflight.integration.test.ts.
+describe('compile-judgments CLI tombstone (D18)', () => {
+  const workbenchDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+  it('refuses every invocation, names the Updates screen, and writes nothing', () => {
+    const result = spawnSync(
+      process.execPath,
+      ['--import', 'tsx', path.join(workbenchDir, 'src', 'compileJudgments.ts')],
+      { cwd: workbenchDir, encoding: 'utf8', timeout: 60_000 },
+    );
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(COMPILE_JUDGMENTS_RETIRED);
+    expect(result.stdout).toBe('');
+  });
+
+  it('the refusal names the surviving path in plain words', () => {
+    expect(COMPILE_JUDGMENTS_RETIRED).toContain('Updates screen');
+    expect(COMPILE_JUDGMENTS_RETIRED).toContain('Finish up');
+    expect(COMPILE_JUDGMENTS_RETIRED).toContain('closed');
   });
 });
