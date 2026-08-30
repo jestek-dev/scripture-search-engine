@@ -762,6 +762,25 @@ button{font:inherit;}
       'required-check-failed': ['The final checks on the draft did not pass. The update waits as a draft — nothing merges until they do.'],
       'github-unavailable': ['GitHub could not be reached. Everything is saved locally, and the exact next step is written on the update’s card — nothing was lost.'],
     },
+    // D17 (§06.2's recovery column): the ONE next action for each stop, in
+    // plain words — every stopped train names what recovers it. Copy minted
+    // for the Phase-4 review (D20's inventory); D28-clean by construction.
+    trainStopNextActions: {
+      'conflicting-judgments': 'Next step: open the conflict card and pick which call stands. Your pick is recorded, and the next update carries it.',
+      'stale-artifact-identity': 'Next step: look again at the calls back in your inbox — a fresh call rides the next update.',
+      'protected-expectation-regressed': 'Next step: open the report to see which answer, then decline or set aside the card that would break it.',
+      'unreviewed-top10-movement': 'Next step: open the Update Report and look at each changed search, then continue.',
+      'outside-allowlist': 'Next step: nothing for you here — the set-aside part comes back as a job for engineering on its own card; the rest can ride the next update.',
+      'provenance-ambiguity': 'Next step: start the update again — if this comes back, it needs an engineer to look.',
+      'engineering-required': 'Next step: nothing for you here — the write-up comes back as a job for engineering on its own card, with your calls attached.',
+      'g8-baseline-moved-needs-independent-approval': 'Next step: nothing for you here — the update waits as a draft until the independent sign-off lands.',
+      'no-measurable-effect': 'Next step: leave the cards set aside, or bring one back with a fresh approval when you still want it tried.',
+      'main-moved': 'Next step: start the update again — it rebuilds against the newest version with your approvals intact.',
+      'source-drift': 'Next step: start the update again — it rebuilds from the current files with your approvals intact.',
+      'verify-failed': 'Next step: read the report, then decline or set aside the card the failing check names.',
+      'required-check-failed': 'Next step: the draft stays open on GitHub — merging waits until its checks pass.',
+      'github-unavailable': 'Next step: try again once the connection is back — everything is saved.',
+    },
     // §05 §5.4's pruned-card outcome (renders on parked-by-default cards)
     // and 06 FM-5's tried-on line.
     trainParkedOutcome: 'The checks found this change wouldn’t alter any search result yet, so it wasn’t included in this update. Your call is now written on the answer sheet as a goal — when a future update reaches it, the checks will announce it and hold it there. You can leave it parked, or decline it.',
@@ -5578,6 +5597,14 @@ button{font:inherit;}
       const stopCard = node('div', '');
       stopCard.id = 'train-stop-card';
       for (const sentence of sentences) stopCard.appendChild(node('p', 'train-status', sentence));
+      // D17: every stop names its ONE next action (§06.2's recovery column)
+      // — a stopped train never leaves the reviewer guessing what recovers it.
+      const nextAction = COPY.trainStopNextActions[reason];
+      if (nextAction !== undefined) {
+        const nextLine = node('p', 'train-status stop-next-action', nextAction);
+        nextLine.id = 'train-stop-next-action';
+        stopCard.appendChild(nextLine);
+      }
       panel.appendChild(stopCard);
       hasContent = true;
     }

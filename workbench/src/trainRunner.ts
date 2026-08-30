@@ -486,11 +486,32 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     }
   }
 
+  /**
+   * D17/FM-14: append a `main-moved` stop from an observation, exactly once
+   * — a train already stopped (or unknown) appends nothing. The same event
+   * `recordStop` writes; factored so the read path can record the honest
+   * stop it just observed without going through the public surface.
+   */
+  async function appendStopIfStoppable(trainId: string, reason: TrainStopReason): Promise<void> {
+    const fold = await store.read();
+    const current = fold.trains.find((candidate) => candidate.trainId === trainId);
+    if (current === undefined || current.state === 'stopped') return;
+    await store.append([{
+      schemaVersion: 1,
+      eventId: randomUUID(),
+      at: now().toISOString(),
+      reviewer: options.reviewer,
+      kind: 'train-stopped',
+      trainId,
+      reason,
+    }]);
+  }
+
   // Observed liveness (§03.6/§5.2): the deriver's ONE implementation —
   // `derivation.liveTrainIds`, anchored to main's git history so the
   // observation is monotonic (a later same-search merge rewriting the golden
   // file never regresses an earlier merged train). Derived, never stored (V5).
-  async function observedState(snapshot: TrainSnapshot, derivation: UpdatesDerivation): Promise<{ state: TrainState; entry: AdmissionEvidenceEntry | null; manifest: ProposalManifest | null; draftPrUrl: string | null; checksDurationMs: number | null }> {
+  async function observedState(snapshot: TrainSnapshot, derivation: UpdatesDerivation): Promise<{ state: TrainState; entry: AdmissionEvidenceEntry | null; manifest: ProposalManifest | null; draftPrUrl: string | null; checksDurationMs: number | null; stoppedNow?: { reason: TrainStopReason } }> {
     if (snapshot.state === 'open') return { state: 'open', entry: null, manifest: null, draftPrUrl: null, checksDurationMs: null };
     const entry = await entryFromRegistry(snapshot.trainId);
     const manifest = entry === null ? null : (entry.proposal as ProposalManifest);
@@ -512,6 +533,24 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
     }
     const journal = await publishJournal(snapshot.trainId);
     if (journal?.phase === 'draft-pr-opened') {
+      // D17/FM-14 (the C3 case): a train stalled at pr-open does not rot
+      // silently. Every observation revalidates its base — when main has
+      // moved past the train's expected base commit (and the train's own
+      // content is NOT what moved it: liveness was checked above), the train
+      // stops `main-moved` rather than pretending freshness or merging
+      // stale — the frozen-queue behavior A1 depends on. The same base-vs-
+      // main comparison admission and publish already refuse on
+      // (`expectedMainCommit`; admission.ts 'main moved after admission
+      // review.'), applied here at observation time. Fail-open on an
+      // unreadable ref: an unverifiable base marks nothing.
+      const expectedMain = typeof entry?.expectedMainCommit === 'string' ? entry.expectedMainCommit : null;
+      if (expectedMain !== null) {
+        const currentMain = await readMain(paths.repoRoot).catch(() => null);
+        if (currentMain !== null && currentMain !== expectedMain) {
+          await appendStopIfStoppable(snapshot.trainId, 'main-moved');
+          return { state: 'stopped', entry, manifest, draftPrUrl: journal.draftPrUrl ?? null, checksDurationMs, stoppedNow: { reason: 'main-moved' } };
+        }
+      }
       return { state: 'pr-open', entry, manifest, draftPrUrl: journal.draftPrUrl ?? null, checksDurationMs };
     }
     if (admissionRecord !== null) {
@@ -571,7 +610,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
   }
 
   async function view(snapshot: TrainSnapshot, derivation: UpdatesDerivation): Promise<TrainView> {
-    const { state, entry, manifest, draftPrUrl, checksDurationMs } = await observedState(snapshot, derivation);
+    const { state, entry, manifest, draftPrUrl, checksDurationMs, stoppedNow } = await observedState(snapshot, derivation);
     const signingHold = await signingHoldOf(snapshot, state, entry);
     return {
       trainId: snapshot.trainId,
@@ -581,7 +620,10 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
       sealDigest: snapshot.sealed?.sealDigest ?? null,
       cardIds: snapshot.sealed?.cardIds ?? [],
       stopped: snapshot.stopped === undefined
-        ? null
+        // D17/FM-14: a stop this very observation recorded (the stalled
+        // pr-open revalidation) reaches the view at once — the derivation's
+        // snapshot predates the append.
+        ? (stoppedNow === undefined ? null : { reason: stoppedNow.reason })
         : {
           reason: snapshot.stopped.reason,
           ...(snapshot.stopped.reportDigest === undefined ? {} : { reportDigest: snapshot.stopped.reportDigest }),

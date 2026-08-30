@@ -413,9 +413,11 @@ test('D8: a stopped train renders its plain-language reason; the enum token neve
   await openUpdates(page);
 
   await expect(page.locator('.train-step.current')).toHaveText('Stopped');
-  await expect(page.locator('#train-stop-card')).toHaveText(
+  await expect(page.locator('#train-stop-card')).toContainText(
     'The checks failed. Nothing was written. The report names which check and shows why in plain words.',
   );
+  // D17: the stop also names its one next action (study-p10 covers all 14).
+  await expect(page.locator('#train-stop-next-action')).toContainText('Next step:');
   const text = await page.locator('#screen-updates').innerText();
   expect(text).not.toContain('verify-failed');
   // The cards came back to the inbox (approved again) — the §4.5 position
