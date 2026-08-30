@@ -1,7 +1,7 @@
-# v0.9.0 descriptor PR — template
+# v0.14.0 descriptor PR — template
 
 Template for the RH-1/P2.4 descriptor PR (the PR that replaces
-`artifacts/content-artifact.json` verbatim with the minted v0.9.0
+`artifacts/content-artifact.json` verbatim with the minted v0.14.0
 descriptor). Copy it into the PR body and answer every line before
 requesting merge.
 
@@ -17,7 +17,7 @@ Companion decision record: `docs/reviews/2026-08-21-ship-forward-v090.md`
 ## 0. Counsel go/no-go — BLOCKING, answer before anything else (J48)
 
 > **This PR must not merge while this line is unanswered. Silence is not a
-> go.** Schema 6 ships the ESV/NIV/NLT-derived `verse_translation_tokens`
+> go.** Schema 9 ships the ESV/NIV/NLT-derived `verse_translation_tokens`
 > table (~14 MB of derived stem index; see the "Cross-translation vocabulary"
 > entry in `docs/ATTRIBUTIONS.md` for exactly what is and is not stored)
 > publicly for the first time, consumed by commercial apps.
@@ -35,7 +35,7 @@ Re-mint with the table **empty**. This is a **pipeline data change**, never an
 engine change:
 
 1. The pipeline build excludes the cross-translation input, so
-   `verse_translation_tokens` ships with zero rows. **Schema stays 6** — the
+   `verse_translation_tokens` ships with zero rows. **Schema stays 9** — the
    table remains in the schema; only its rows are gone.
 2. No engine change is needed: the engine tolerates a schema-6 database with
    the table present but empty — proven by
@@ -81,11 +81,11 @@ build produces the sha a release verifies against.
 
 These four are knowable in advance; anything else in the descriptor is not.
 
-- [ ] `engineVersion: "0.9.0"` — lockstep with `engine/package.json` and
+- [ ] `engineVersion: "0.14.0"` — lockstep with `engine/package.json` and
       `ENGINE_VERSION` (`engine/src/config/engineVersion.ts`), enforced by
       `eval/test/release-contract.test.ts`.
-- [ ] `schemaVersion: "6"`.
-- [ ] `release: { tag: "v0.9.0" }` — with this present, the workbench's
+- [ ] `schemaVersion: "9"`.
+- [ ] `release: { tag: "v0.14.0" }` — with this present, the workbench's
       `releaseTagFor` fallback (`v<engineVersion>`) stops being exercised;
       `release.yml`'s "Assert the descriptor names this tag" step requires it
       to equal the pushed tag.
@@ -150,9 +150,9 @@ tag. Record the merge commit SHA — it is the commit being tagged.
 - [ ] Contract tests green on the merge commit:
       `eval/test/release-contract.test.ts`, `eval/test/consumer-api.test.ts`,
       `workbench/test/descriptor.test.ts`.
-- [ ] **Jesse pushes tag `v0.9.0` on the merge commit.** Nothing before this
+- [ ] **Jesse pushes tag `v0.14.0` on the merge commit.** Nothing before this
       line publishes anything; after it, npm publish is effectively
-      irreversible — roll forward only (v0.9.1), never mutate
+      irreversible — roll forward only (v0.14.1), never mutate
       (`docs/reviews/2026-08-21-ship-forward-v090.md`).
 
 ## 4. Post-tag verification (RH-1 definition of done)
@@ -162,12 +162,12 @@ tag. Record the merge commit SHA — it is the commit being tagged.
       (`SMOKE_COMMITTED_DESCRIPTOR_PATH`) makes it non-self-referential.
 - [ ] The published release's `content.db` API per-asset sha256 `digest`
       equals the committed descriptor's `databaseSha256`.
-- [ ] npm `dist-tags.latest` is `0.9.0`.
+- [ ] npm `dist-tags.latest` is `0.14.0`.
 - [ ] On a **clean checkout of the merge commit**:
       `npm run fetch-artifact --workspace workbench` prints
       `sha256 verified` — the exact command the audit found broken (F31).
 - [ ] **Negative check:** `@jestek-dev/scripture-engine@0.7.1` against the
-      v0.9.0 `content.db` still refuses with the schema-version message
+      v0.14.0 `content.db` still refuses with the schema-version message
       (the v0.7.1 tag's `createEngine.ts` supports schemas 1–5 only) —
       proving the pinned-0.7.1 consumer story is "keep your pinned pair",
       never "silently absorb new bytes".
