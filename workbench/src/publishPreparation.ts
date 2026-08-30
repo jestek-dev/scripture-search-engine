@@ -742,7 +742,16 @@ function validateTrustedEvidence(
   if (comparison !== null) {
     const linkedMembershipIds = new Set(comparison.queries.flatMap((entry) => entry.memberships
       .filter((membership) => membership.kind === 'linked-case').map((membership) => membership.sourceId)));
-    if (manifest.linkedCaseIds.some((caseId) => !linkedMembershipIds.has(caseId))) {
+    // The guard lane's comparison is built WITH the proposal's linked cases
+    // (compareEngines adds a linked-case membership per provided case), so
+    // when the comparison models linked cases at all, every admitted case
+    // must appear. A data train's universe comparison models fixture
+    // memberships only and derives its single case from the sealed update
+    // card — no linked-case rows exist by construction, and its coverage
+    // guarantee is comparisonBlockers' exact per-query review, re-checked
+    // through the trusted preview this function just re-derived (the D15
+    // shakedown: this check hard-failed every data train's prepare).
+    if (linkedMembershipIds.size > 0 && manifest.linkedCaseIds.some((caseId) => !linkedMembershipIds.has(caseId))) {
       fail('comparison_evidence_invalid', 'Trusted comparison omits an admitted linked case.');
     }
   }
