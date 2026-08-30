@@ -40,7 +40,7 @@ import {
   UNPAID_MARKER_SEAL_REFUSAL,
   type TrainOperations,
 } from '../src/trainRunner.js';
-import { createUpdatesOperations, type TrainGoldenHistoryWindow, type UpdatesOperations } from '../src/updatesOperations.js';
+import { createUpdatesOperations, type ReplayRunner, type TrainGoldenHistoryWindow, type UpdatesOperations } from '../src/updatesOperations.js';
 
 const temporary: string[] = [];
 const BASE_COMMIT = 'a'.repeat(40);
@@ -220,12 +220,13 @@ async function readTestMainHistory(root: string, windows: readonly TrainGoldenHi
   return entries;
 }
 
-function operationsFor(root: string): { updates: UpdatesOperations; trains: TrainOperations } {
+function operationsFor(root: string, replay?: ReplayRunner): { updates: UpdatesOperations; trains: TrainOperations } {
   const shared = {
     repoRoot: root,
     reviewer: 'jesse',
     now: testNow,
     readGoldenMainHistory: (repoRoot: string, windows: readonly TrainGoldenHistoryWindow[]) => readTestMainHistory(repoRoot, windows),
+    ...(replay === undefined ? {} : { replay }),
   };
   return {
     updates: createUpdatesOperations(shared),
@@ -456,6 +457,57 @@ describe('train seal (D8) and the evidence writer (D10)', () => {
       ],
     });
     expect(unmeasuredLayerAffectingOperations(paired)).toEqual([]);
+  });
+});
+
+describe('D16 disposition 1: an auto-resolved card seals through the real runner and store', () => {
+  it('appends the lazy card-drafted line before train-sealed in one batch — no decide event ever exists', async () => {
+    // A missing-passage vote cast at an OLD layer identity whose target the
+    // served engine now ranks: the replay answers already-achieved, the card
+    // auto-resolves, and it boards the seal with no decide of any kind.
+    const moved = v2({
+      judgmentId: 'ar1', query: 'who is like the lord', action: 'missing', at: nextAt(),
+      reference: 'Deuteronomy 3:24', withinTop: 10, note: 'uses that exact wording',
+      layerFingerprint: 'layer-old',
+    });
+    const root = await makeRepo([moved]);
+    // The stubbed served engine: every replayed query ranks its judged refs.
+    const replay: ReplayRunner = async (requests) =>
+      requests.map((request) => ({ query: request.query, rankedRefs: [...request.refs], unresolvedRefs: [] }));
+    const { updates, trains } = operationsFor(root, replay);
+
+    const derivation = await updates.derive(CURRENT);
+    const card = derivation.cards[0]!;
+    expect(card.autoResolved).toBe(true);
+    // Derived, never stored: no decide was cast and none will be.
+    expect(card.state.decision).toBe('drafted');
+    expect(derivation.tally).toEqual({ drafted: 0, approved: 0, declined: 0, parked: 0 });
+
+    const view = await trains.seal(CURRENT, derivation.derivationDigest);
+    expect(view.trainId).toBe('train-0001');
+    // Only the fixture pin travels — the derived flavor is guard, so the
+    // assembled report IS ready with no measured run.
+    expect(view.flavor).toBe('guard');
+    expect(view.state).toBe('ready');
+    expect(view.cardIds).toEqual([card.cardId]);
+
+    // The REAL store validated and holds exactly the lazy batch: the
+    // card-drafted line the seal appended (no decide ever ran), then
+    // train-opened, then train-sealed — and nothing decision-shaped.
+    const events = (await readFile(path.join(root, 'workbench', 'updates.jsonl'), 'utf8'))
+      .trim().split('\n')
+      .map((line) => JSON.parse(line) as { kind: string; cardId?: string; judgmentIds?: string[] });
+    expect(events.map((event) => event.kind)).toEqual(['card-drafted', 'train-opened', 'train-sealed']);
+    expect(events[0]!.cardId).toBe(card.cardId);
+    expect(events[0]!.judgmentIds).toEqual([...card.judgmentIds]);
+
+    // Re-deriving over the appended log: frozen aboard train-0001, still
+    // auto-resolved, and a second seal finds nothing left to carry.
+    const after = await updates.derive(CURRENT);
+    const frozen = after.cards.find((candidate) => candidate.cardId === card.cardId)!;
+    expect(frozen.state.sealedInTrain).toBe('train-0001');
+    expect(frozen.autoResolved).toBe(true);
+    await expect(trains.seal(CURRENT, after.derivationDigest)).rejects.toMatchObject({ code: 'train_running', status: 409 });
   });
 });
 
