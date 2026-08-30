@@ -404,7 +404,7 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: re
   const observationByWindowKey = new Map<string, WindowObservation>();
   const digestByCommitPath = new Map<string, string | null>();
   const readWindowObservation = async (baseCommits: readonly string[], goldenPath: string): Promise<WindowObservation> => {
-    const windowKey = `${baseCommits.join(' ')} ${goldenPath}`;
+    const windowKey = `${baseCommits.join('\u0000')}\u0000${goldenPath}`;
     const memoized = observationByWindowKey.get(windowKey);
     if (memoized !== undefined) return memoized;
     const versionDigests = new Set<string>();
@@ -421,7 +421,7 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: re
         const [commit = '', committedAtRaw = ''] = line.trim().split(' ');
         if (!COMMIT_HEX.test(commit) || seenCommits.has(commit)) continue;
         seenCommits.add(commit);
-        const contentKey = `${commit} ${goldenPath}`;
+        const contentKey = `${commit}\u0000${goldenPath}`;
         let versionDigest = digestByCommitPath.get(contentKey);
         if (versionDigest === undefined) {
           const contents = await capture(['show', `${commit}:${goldenPath}`]);
