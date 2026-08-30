@@ -839,7 +839,19 @@ async function runProbeGates(
       });
 
       const corpusFixtures = loadFixtures() as unknown as CorpusFixture[];
-      const corpusGolden = await corpusGoldenGate(engine, corpusFixtures);
+      // presenceOnly assertions (ruling supplement §3) measure a limit-50
+      // window, so G3 gets a dedicated read-only instance — the same
+      // discipline as the rank-metrics recall@50 instance below. Without it
+      // the gate fails those assertions rather than skipping them.
+      const presenceEngine = await createEngine(openCorpus(databasePath), {
+        rankOptions: { limit: 50 },
+      });
+      let corpusGolden: GateResult;
+      try {
+        corpusGolden = await corpusGoldenGate(engine, corpusFixtures, { presenceEngine });
+      } finally {
+        await presenceEngine.close();
+      }
 
       // Battery execution is explicit-target only, and only over a battery
       // that validated structurally — a malformed battery already fails G12

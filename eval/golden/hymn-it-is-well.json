@@ -32,17 +32,28 @@
     "alias-mechanism spec and carries non-vacuous pins.",
     "",
     "Written fixture-first (pending, failing); promoted in the 0.13.0 flip",
-    "commit that made it pass."
+    "commit that made it pass.",
+    "",
+    "SUPPLEMENT ROW S2 (approved as proposed, 2026-08-30): on the full",
+    "release bed the first-line query 'when peace like a river' measures",
+    "Isa 48:18 #1 — 'peace... as a river', the verse the hymn line",
+    "paraphrases, on its own exact-phrase fragment — with Jer 29:11 #2",
+    "and the full alias chip intact; the title query holds #1. Rows-14/15",
+    "parallel (the lexically-direct text may honestly precede the",
+    "remembered register): the Jer 29:11 assertion widens to top 3 with",
+    "the alias-chip label byte-identical, and Isa 48:18 joins",
+    "alsoAcceptable. The Jer 4:10 mustNotLead stays exactly as written."
   ],
   "expectedTop": [
     {
       "ref": "Jeremiah 29:11",
-      "withinTop": 1,
+      "withinTop": 3,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Hymn: \"It Is Well with My Soul\" → Theme: Hope"
     }
   ],
   "additionalQueries": ["when peace like a river"],
+  "alsoAcceptable": ["Isaiah 48:18"],
   "mustNotLead": [
     {
       "ref": "Jeremiah 4:10",

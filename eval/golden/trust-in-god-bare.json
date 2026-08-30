@@ -1,0 +1,43 @@
+{
+  "id": "trust-in-god-bare",
+  "query": "trust",
+  "status": "active",
+  "coversConcepts": [
+    "trust-in-god"
+  ],
+  "note": [
+    "RELEASE-BED DRIFT EXECUTION (drift packet D4, approved 2026-08-30):",
+    "split out of trust-in-god.json per the ruling's own fixture-split",
+    "precedent. The bare query 'trust' was asserted there since the",
+    "2026-08-08 single-token audit; on the full-layer release bed it",
+    "measured Ps 37:5 #1 @25.9 and Prov 3:5-6 #2 @25.8 — a 0.1-point flip",
+    "between the pack's own two top anchors (1.0 and 0.95), both rows",
+    "carrying the pack's own chip 'Theme: Trusting God' byte-identical.",
+    "Rows-29-31's approved principle: honest in-family displacement by the",
+    "fuller layers is accepted; every concept_anchor reason requirement",
+    "stays intact. Prov 3:5-6 stays the asserted answer — 'Trust in the",
+    "LORD with all your heart, and don't lean on your own understanding' —",
+    "within top 3 with the identical requiredReasonFamily/Label; Ps 37:5",
+    "and the phrase fixture's alsoAcceptable list carry over. NO order",
+    "pair: a 0.1-point coin-flip between the pack's own #1.0 and #0.95",
+    "anchors is not an ordering worth pinning, and the 2026-08-17 note",
+    "forbids smuggling ranking preferences. The phrase fixture",
+    "trust-in-god.json keeps its top-1 pin, chip, preferredOrder pair, and",
+    "alsoAcceptable byte-identical — all measured holding on both beds."
+  ],
+  "expectedTop": [
+    {
+      "reference": "Proverbs 3:5-6",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Trusting God"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "Psalms 37:5",
+    "Isaiah 40:31",
+    "Psalms 27:14",
+    "Psalms 62:5"
+  ]
+}

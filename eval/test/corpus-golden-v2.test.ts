@@ -627,3 +627,169 @@ describe('G3 requiredGroupingSourceId (P5.6 PR 1 capability — fail-closed unti
     expect(codes(result)).toContain('G3_FIXTURE_MALFORMED');
   });
 });
+
+describe('G3 presenceOnly (ruling supplement §3 — fail-closed presence-with-provenance)', () => {
+  /** Psalm 136:1 as a grouped row citing the given source, placed at any rank. */
+  function groupedPsalm(sourceId: string): DiscoveryResult {
+    return {
+      targetId: 'WEB:19136001',
+      reference: 'Psalms 136:1-26',
+      excerpt: 'Psalms 136:1-26',
+      score: 60,
+      reasons: [{ family: 'exact_phrase', label: 'Exact phrase', points: 60 }],
+      grouping: {
+        section: { reference: 'Psalms 136:1-26', startVerseId: 19_136_001, endVerseId: 19_136_026 },
+        provenance: { sourceId, label: sourceId },
+      },
+    } as DiscoveryResult;
+  }
+
+  /** `count` filler rows that overlap none of the asserted references. */
+  function filler(count: number): DiscoveryResult[] {
+    return Array.from({ length: count }, (_, index) => johnVerse(index + 1));
+  }
+
+  const presenceFixture = (overrides: Record<string, unknown> = {}) =>
+    fixture({
+      query: 'q',
+      expectedTop: [
+        { ref: 'Psalms 136:1-26', presenceOnly: true, requiredGroupingSourceId: 'openbible-sections' },
+      ],
+      ...overrides,
+    });
+
+  it('REJECTS presenceOnly combined with withinTop — mutually exclusive by construction', async () => {
+    const result = await corpusGoldenGate(mockEngine({ q: [] }), [
+      presenceFixture({
+        expectedTop: [
+          {
+            ref: 'Psalms 136:1-26',
+            presenceOnly: true,
+            withinTop: 10,
+            requiredGroupingSourceId: 'openbible-sections',
+          },
+        ],
+      }),
+    ]);
+    expect(codes(result)).toContain('G3_FIXTURE_MALFORMED');
+    expect(
+      result.findings?.some((finding) => finding.message.includes('cannot combine presenceOnly with withinTop')),
+    ).toBe(true);
+  });
+
+  it('REJECTS presenceOnly without requiredGroupingSourceId or a required reason — no vacuous decoration', async () => {
+    const result = await corpusGoldenGate(mockEngine({ q: [] }), [
+      presenceFixture({
+        expectedTop: [{ ref: 'Psalms 136:1-26', presenceOnly: true }],
+      }),
+    ]);
+    expect(codes(result)).toContain('G3_FIXTURE_MALFORMED');
+    expect(
+      result.findings?.some((finding) => finding.message.includes('requires requiredGroupingSourceId or a required reason')),
+    ).toBe(true);
+  });
+
+  it('REJECTS presenceOnly: false — a field that asserts nothing', async () => {
+    const result = await corpusGoldenGate(mockEngine({ q: [] }), [
+      presenceFixture({
+        expectedTop: [
+          { ref: 'Psalms 136:1-26', presenceOnly: false, requiredGroupingSourceId: 'openbible-sections' },
+        ],
+      }),
+    ]);
+    expect(codes(result)).toContain('G3_FIXTURE_MALFORMED');
+    expect(result.findings?.some((finding) => finding.message.includes('must be literally true'))).toBe(true);
+  });
+
+  it('passes on a grouped row citing the named source anywhere in the limit-50 results — no rank asserted', async () => {
+    const presenceEngine = mockEngine({ q: [...filler(12), groupedPsalm('openbible-sections'), ...filler(30)] });
+    const result = await corpusGoldenGate(
+      // The default (limit-10) engine never surfaces the row; presence is
+      // measured against the dedicated limit-50 instance alone.
+      mockEngine({ q: filler(10) }),
+      [presenceFixture()],
+      { presenceEngine },
+    );
+    expect(result.status).toBe('pass');
+    expect(result.findings ?? []).toEqual([]);
+  });
+
+  it('fails when the reference is absent from the limit-50 results', async () => {
+    const result = await corpusGoldenGate(
+      mockEngine({ q: filler(10) }),
+      [presenceFixture()],
+      { presenceEngine: mockEngine({ q: filler(50) }) },
+    );
+    expect(result.status).toBe('fail');
+    expect(codes(result)).toEqual(['G3_EXPECTED_PRESENCE_ABSENT']);
+    expect(result.findings?.[0]?.message).toContain('top 50');
+  });
+
+  it('fails when the row is present but cites the wrong grouping source — provenance is the contract', async () => {
+    const result = await corpusGoldenGate(
+      mockEngine({ q: filler(10) }),
+      [presenceFixture()],
+      { presenceEngine: mockEngine({ q: [...filler(12), groupedPsalm('editorial')] }) },
+    );
+    expect(result.status).toBe('fail');
+    expect(codes(result)).toEqual(['G3_EXPECTED_TOP_GROUPING_SOURCE']);
+  });
+
+  it('FAILS CLOSED when the runner provides no limit-50 instance — unmeasured is never a pass', async () => {
+    const result = await corpusGoldenGate(
+      mockEngine({ q: [...filler(12), groupedPsalm('openbible-sections')] }),
+      [presenceFixture()],
+    );
+    expect(result.status).toBe('fail');
+    expect(codes(result)).toEqual(['G3_PRESENCE_NOT_MEASURED']);
+  });
+
+  it('accepts a required reason family as the provenance pin and enforces it over the presence hits', async () => {
+    const family = presenceFixture({
+      expectedTop: [{ ref: 'Psalms 136:1-26', presenceOnly: true, requiredReasonFamily: 'exact_phrase' }],
+    });
+    const good = await corpusGoldenGate(
+      mockEngine({ q: filler(10) }),
+      [family],
+      { presenceEngine: mockEngine({ q: [...filler(40), groupedPsalm('openbible-sections')] }) },
+    );
+    const wrongEvidence = await corpusGoldenGate(
+      mockEngine({ q: filler(10) }),
+      [family],
+      {
+        presenceEngine: mockEngine({
+          q: [
+            ...filler(40),
+            {
+              ...groupedPsalm('openbible-sections'),
+              reasons: [{ family: 'token_overlap', label: 'Shared word: kindness', points: 5 }],
+            } as DiscoveryResult,
+          ],
+        }),
+      },
+    );
+    expect(good.status).toBe('pass');
+    expect(wrongEvidence.status).toBe('fail');
+    expect(codes(wrongEvidence)).toEqual(['G3_EXPECTED_TOP_REASON_FAMILY']);
+  });
+
+  it('never widens the guard window: a presenceOnly entry leaves mustNotRank at the fixture default', async () => {
+    // The guarded ref sits at rank 2; the fixture's only rank window is
+    // expectedWithinTop 1, so the guard must NOT fire — a presenceOnly
+    // entry asserts no rank and must not widen what the guards measure.
+    const result = await corpusGoldenGate(
+      mockEngine({ q: [johnVerse(1), johnVerse(18)] }),
+      [
+        presenceFixture({
+          expectedWithinTop: 1,
+          mustNotRank: [{ ref: 'John 3:18', why: 'accidental trigger' }],
+        }),
+      ],
+      { presenceEngine: mockEngine({ q: [...filler(12), groupedPsalm('openbible-sections')] }) },
+    );
+    // mockEngine's passage() knows no refs, so the guard also reports
+    // vacuity (warn) — the assertion here is only that it never FIRES.
+    expect(result.status).not.toBe('fail');
+    expect(codes(result)).not.toContain('G3_MUST_NOT_RANK');
+  });
+});

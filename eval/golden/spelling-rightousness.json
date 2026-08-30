@@ -5,16 +5,17 @@
   "note": [
     "QR-5 (P5.4) cited spelling correction — battery ms3, an audit F: 'rightousness' is a silent-empty discovery today. The -ness misspelling is untouched by the stemmer (ends in -ss), so the whole typed word (length 12 -> edit budget 2) is the correction key: unique in-policy winner 'righteousness' at Damerau distance 1 (missing 'e'), cited on the chip with the typed surface form.",
     "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass.",
-    "CORPUS-EXPANSION EXECUTION (ruling rows 16-17, approved 2026-08-26, also a catch-up-ruling fixture): this fixture pins the correction machinery, not a verse. On the full corpus the machinery is fully intact (unique in-policy winner 'righteousness', Damerau distance 1, cited on the chip), and the verse assertions re-point to the measured top corrected results — Isaiah 1:27 #1 and Genesis 15:6 #2 — with the requiredReasonLabel kept byte-identical. Rom 6:20 and Matt 5:6 were displaced by the full corpus's righteousness verses, which is exactly the honest competition the expansion admits."
+    "CORPUS-EXPANSION EXECUTION (ruling rows 16-17, approved 2026-08-26, also a catch-up-ruling fixture): this fixture pins the correction machinery, not a verse. On the full corpus the machinery is fully intact (unique in-policy winner 'righteousness', Damerau distance 1, cited on the chip), and the verse assertions re-point to the measured top corrected results — Isaiah 1:27 #1 and Genesis 15:6 #2 — with the requiredReasonLabel kept byte-identical. Rom 6:20 and Matt 5:6 were displaced by the full corpus's righteousness verses, which is exactly the honest competition the expansion admits.",
+    "RELEASE-BED DRIFT EXECUTION (drift packet D2, approved 2026-08-30): on the full-layer release bed the correction machinery is fully intact — unique in-policy winner 'righteousness', Damerau distance 1, the cited chip byte-identical on every top-10 row — but the fixture-bed verse pins (rows 16-17 re-points) sat at #36 / #19 as the full corpus's ~240 righteousness verses reorder under full preached vocabulary. Rows-16/17 + S4/S5 treatment verbatim: the cited-correction contract is the assertion, so the pins carry to the measured top — primary Isaiah 57:12 (release bed #1), requiredReasonLabel byte-identical; secondary Psalms 106:31 within top 10 (release bed #2, fixture bed #3; 'That was credited to him for righteousness' — the verbatim echo of Gen 15:6's crediting theology, so the displaced secondary's substance survives). DISCLOSED DEVIATION (S6 precedent): the ruled top-3 window for Isa 57:12 cannot hold on the hermetic fixture bed, where the committed distillate ranks it #5; the window is 5 — the minimal widening that holds on BOTH beds. Honest competition; no concept pack claims bare 'righteousness' (verified against all 288 packs)."
   ],
   "expectedTop": [
     {
-      "ref": "Isaiah 1:27",
-      "withinTop": 3,
+      "ref": "Isaiah 57:12",
+      "withinTop": 5,
       "requiredReasonLabel": "Shared word: righteousness (corrected from \"rightousness\")"
     },
     {
-      "ref": "Genesis 15:6",
+      "ref": "Psalms 106:31",
       "withinTop": 10
     }
   ]

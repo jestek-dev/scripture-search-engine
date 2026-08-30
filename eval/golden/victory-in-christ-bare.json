@@ -1,0 +1,50 @@
+{
+  "id": "victory-in-christ-bare",
+  "query": "victory",
+  "status": "active",
+  "coversConcepts": [
+    "victory-in-christ"
+  ],
+  "note": [
+    "RELEASE-BED DRIFT EXECUTION (drift packet D5, approved 2026-08-30):",
+    "split out of victory-in-christ.json per the ruling's own fixture-split",
+    "precedent. The bare query 'victory' was asserted there since the",
+    "2026-08-08 single-token audit; on the full-layer release bed both",
+    "expectedTop rows PASS — 1 Cor 15:57 #1 @25.9 with 'Theme: Victory in",
+    "Christ' byte-intact (exactly the 2026-08-17 note's 'led by",
+    "1 Corinthians 15:57 — correctly'), Rom 8:37 #3 @22.0 — and only the",
+    "preferredOrder pair failed: 1 Jn 5:4 #2 @24.4 above Rom 8:37 #3. The",
+    "precedence is honestly lexical: 1 Jn 5:4's own text contains the",
+    "query word ('This is the victory that has overcome the world: your",
+    "faith') plus release-only preached vocabulary, while Rom 8:37 carries",
+    "no 'victory' token at all ('more than conquerors'); 1 Jn 5:4 is the",
+    "pack's own 0.9 anchor and this fixture family's own alsoAcceptable.",
+    "Row-32's approved principle + S2's: the lexically-direct text may",
+    "honestly precede the remembered register. Both expectedTop rows carry",
+    "over byte-identical; alsoAcceptable carries over; NO order pair on",
+    "the bare word. The phrase fixture victory-in-christ.json keeps",
+    "'more than conquerors' with everything byte-identical — including the",
+    "pair, which is meaningful protection there (Rom 8:37 leads at #1)."
+  ],
+  "expectedTop": [
+    {
+      "reference": "1 Corinthians 15:57",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Victory in Christ"
+    },
+    {
+      "reference": "Romans 8:37",
+      "withinTop": 3,
+      "requiredReasonFamily": "concept_anchor",
+      "requiredReasonLabel": "Theme: Victory in Christ"
+    }
+  ],
+  "expectedWithinTop": 10,
+  "alsoAcceptable": [
+    "1 Corinthians 15:57",
+    "1 John 5:4",
+    "Exodus 14:13-14",
+    "1 John 4:4"
+  ]
+}

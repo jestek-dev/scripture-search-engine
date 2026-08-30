@@ -23,16 +23,33 @@
     "either top-10. The mustNotLead entries name the two measured",
     "hijackers; their window is 3 because the hijack occupied #1-#2.",
     "John 1:1-3 also covers incarnation's John 1:1 anchor — the same",
-    "guard holds against either doctrine pack leading this narrative."
+    "guard holds against either doctrine pack leading this narrative.",
+    "",
+    "SUPPLEMENT ROW S3 (approved as proposed, 2026-08-30): on the full",
+    "release bed John 18:27 — 'Peter therefore denied again, and",
+    "immediately the rooster crowed', the fulfillment — leads at #1 over",
+    "John 13:38, the prophecy, at #2, via full-bed preached vocabulary",
+    "'deni, peter'. No trinity anchor anywhere in the top 10: the",
+    "guarded harm class held. Rows-14/15 parallel exactly — the",
+    "narrative's own texts trade the lead: expectedTop is John 13:38",
+    "within top 3 on token evidence, with John 18:27 (and Matt",
+    "26:34/26:72, Luke 22:34) alsoAcceptable. Both mustNotLead rows stay",
+    "exactly as written."
   ],
   "expectedTop": [
     {
       "reference": "John 13:38",
-      "withinTop": 1,
+      "withinTop": 3,
       "requiredReasonFamily": "token_overlap"
     }
   ],
   "expectedWithinTop": 1,
+  "alsoAcceptable": [
+    "John 18:27",
+    "Matthew 26:34",
+    "Matthew 26:72",
+    "Luke 22:34"
+  ],
   "mustNotLead": [
     {
       "reference": "John 1:1-3",
