@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import {
   collectErrors, derivationMock, GUARD_REPORT_LEAD_TEXT, guardTrainView, installRoutes, makeMock,
-  readyAdmissionDetail, sealedTrainSnapshot, startStudyServer,
+  sealedTrainSnapshot, startStudyServer,
   type Call, type MockState, type StudyServer,
 } from './study-shared';
 
@@ -143,11 +143,8 @@ async function assertNoJargon(page: Page): Promise<void> {
 function sealPosts(mock: MockState): Call[] {
   return mock.calls.filter((call) => call.method === 'POST' && call.path === '/api/v2/updates/train');
 }
-function admitPosts(mock: MockState): Call[] {
-  return mock.calls.filter((call) => call.method === 'POST' && /\/api\/v2\/admissions\/[^/]+\/admit$/.test(call.path));
-}
-function preparePosts(mock: MockState): Call[] {
-  return mock.calls.filter((call) => call.method === 'POST' && /\/api\/v2\/publish\/[^/]+\/prepare$/.test(call.path));
+function signPosts(mock: MockState): Call[] {
+  return mock.calls.filter((call) => call.method === 'POST' && /\/api\/v2\/updates\/train\/[^/]+\/sign$/.test(call.path));
 }
 
 // ---------------------------------------------------------------------------
@@ -241,12 +238,11 @@ test('D8: Start opens the one-confirm layer and confirming posts exactly the sea
   // panel rendered from — and nothing else mutates.
   await page.click('#train-start');
   await page.click('#train-confirm-commit');
-  await expect(page.locator('#train-status')).toHaveText('The report is ready — read it and approve below.');
+  await expect(page.locator('#train-status')).toHaveText('The report is ready — read it and sign below.');
   const posts = sealPosts(mock);
   expect(posts).toHaveLength(1);
   expect(posts[0]!.body).toEqual({ derivationDigest: 'c'.repeat(64) });
-  expect(admitPosts(mock)).toEqual([]);
-  expect(preparePosts(mock)).toEqual([]);
+  expect(signPosts(mock)).toEqual([]);
   // The strip reaches "Ready for your review"; the sealed cards left the
   // summary position (no second Start renders).
   await expect(page.locator('.train-step.current')).toHaveText('Ready for your review');
@@ -330,51 +326,47 @@ test('D8: the guard Update Report renders the verbatim lead and plain-language l
   expect(errors).toEqual([]);
 });
 
-test('D8: Approve this update round-trips — confirm, admit with exact body, draft PR prepared', async ({ page }) => {
+test('D14: signing round-trips — the typed code enables the button, one POST carries the FULL digest, the draft opens', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
   mock.trainView = guardTrainView('ready');
-  mock.admissionDetail = readyAdmissionDetail();
   await installRoutes(page, mock);
   await page.goto(origin);
   await expect(page.locator('#search-input')).toBeVisible();
   await openUpdates(page);
 
-  // The §4.6 confirm copy, verbatim; initial focus on Cancel; Esc backs out
-  // with nothing recorded.
-  await page.click('#train-approve');
-  const dialog = page.locator('#train-confirm-dialog');
-  await expect(dialog.locator('.layer-title')).toHaveText('You’re approving this update.');
-  await expect(dialog).toContainText(
-    'This records your review of the answer-sheet lines above and opens the change as a draft on '
-    + 'GitHub. Nothing goes live until a human merges it — that final click is the approval that counts.',
+  // The sign panel (§4.6): the Finish-up mechanics reused — the shared
+  // explanation sentence, the 12-hex chip grouped 4-4-4, and the covenant
+  // line that the merge remains the approval that counts.
+  const panel = page.locator('#train-sign-panel');
+  await expect(panel).toContainText(
+    'This step changes reviewed files, so it asks for a signature: type the code below exactly. '
+    + 'That is deliberate friction — it means nothing is written by a stray click.',
   );
-  await expect(dialog.locator('#train-confirm-cancel')).toBeFocused();
-  await page.keyboard.press('Escape');
-  expect(admitPosts(mock)).toEqual([]);
+  await expect(panel).toContainText(
+    'After you sign, this becomes a draft change on GitHub. It goes live only when a human merges it '
+    + '— that final click is the approval that counts.',
+  );
+  await expect(page.locator('#train-sign-code')).toHaveText('abab abab abab');
+  // The button stays disabled until the code matches (case-insensitive,
+  // spaces ignored); a wrong code posts nothing.
+  await expect(page.locator('#train-sign')).toBeDisabled();
+  await page.fill('#train-sign-input', 'ffff ffff ffff');
+  await expect(page.locator('#train-sign')).toBeDisabled();
+  expect(signPosts(mock)).toEqual([]);
+  await page.fill('#train-sign-input', 'ABAB abab ab ab');
+  await expect(page.locator('#train-sign')).toBeEnabled();
+  await page.click('#train-sign');
 
-  // Confirming records the act: the EXISTING admit surface with the exact
-  // pinned body, then the draft-PR preparation — the ceiling; nothing here
-  // merges or marks ready.
-  await page.click('#train-approve');
-  await page.click('#train-confirm-commit');
+  // One POST, carrying the FULL report digest; the server runs the admit +
+  // publish tail behind the same act and returns the pr-open view.
   await expect(page.locator('#train-status')).toHaveText(
     'Waiting for the final merge. One click on GitHub makes it live.',
   );
-  const admits = admitPosts(mock);
-  expect(admits).toHaveLength(1);
-  expect(admits[0]!.path).toBe('/api/v2/admissions/train-0001/admit');
-  expect(admits[0]!.body).toEqual({
-    previewDigest: 'd1'.repeat(32),
-    decisions: [{
-      slotId: 'fixture:it-is-well-with-my-soul',
-      rationale: 'Approved from the Update Report — the answer-sheet lines in this update were reviewed and hold.',
-    }],
-  });
-  const prepares = preparePosts(mock);
-  expect(prepares).toHaveLength(1);
-  expect(prepares[0]!.path).toBe('/api/v2/publish/train-0001/prepare');
-  expect(prepares[0]!.body).toEqual({ admissionDigest: 'ad'.repeat(32), push: true, openDraftPr: true });
+  const signs = signPosts(mock);
+  expect(signs).toHaveLength(1);
+  expect(signs[0]!.path).toBe('/api/v2/updates/train/train-0001/sign');
+  expect(signs[0]!.body).toEqual({ digest: 'ab'.repeat(32) });
   // The draft-PR hand-off: the one act left is the merge, on GitHub.
   await expect(page.locator('#train-pr-link')).toHaveText('Open the draft on GitHub');
   await assertNoJargon(page);
@@ -382,12 +374,11 @@ test('D8: Approve this update round-trips — confirm, admit with exact body, dr
   expect(errors).toEqual([]);
 });
 
-test('D8: a refused approve act renders the verbatim §4.9 sentence and records nothing further', async ({ page }) => {
+test('D14: a refused sign act renders the verbatim §4.9 sentence and the panel stays', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = makeMock({ updatesPayload: derivationMock([], [sealedTrainSnapshot()]) });
   mock.trainView = guardTrainView('ready');
-  mock.admissionDetail = readyAdmissionDetail();
-  mock.admitResponder = () => ({
+  mock.trainSignResponder = () => ({
     status: 500,
     payload: { ok: false, error: { code: 'admission_failed', message: 'boom' } },
   });
@@ -396,15 +387,14 @@ test('D8: a refused approve act renders the verbatim §4.9 sentence and records 
   await expect(page.locator('#search-input')).toBeVisible();
   await openUpdates(page);
 
-  await page.click('#train-approve');
-  await page.click('#train-confirm-commit');
+  await page.fill('#train-sign-input', 'abab abab abab');
+  await page.click('#train-sign');
   await expect(page.locator('#updates-train-error')).toHaveText(
-    'The approval didn’t go through — reload the report and try again. Nothing was merged.',
+    'The signature didn’t go through — the code may have changed. Reloading the report now.',
   );
-  expect(admitPosts(mock)).toHaveLength(1);
-  expect(preparePosts(mock)).toEqual([]);
+  expect(signPosts(mock)).toHaveLength(1);
   // The act stays available — the train is still ready.
-  await expect(page.locator('#train-approve')).toBeVisible();
+  await expect(page.locator('#train-sign')).toBeVisible();
   await assertNoJargon(page);
 
   expect(errors).toEqual([]);
@@ -423,9 +413,11 @@ test('D8: a stopped train renders its plain-language reason; the enum token neve
   await openUpdates(page);
 
   await expect(page.locator('.train-step.current')).toHaveText('Stopped');
-  await expect(page.locator('#train-stop-card')).toHaveText(
+  await expect(page.locator('#train-stop-card')).toContainText(
     'The checks failed. Nothing was written. The report names which check and shows why in plain words.',
   );
+  // D17: the stop also names its one next action (study-p10 covers all 14).
+  await expect(page.locator('#train-stop-next-action')).toContainText('Next step:');
   const text = await page.locator('#screen-updates').innerText();
   expect(text).not.toContain('verify-failed');
   // The cards came back to the inbox (approved again) — the §4.5 position
@@ -544,7 +536,7 @@ test('D8: with a train on its way, the Start position is replaced by the one-at-
   await openUpdates(page);
 
   // The running train's status renders; the button is replaced by the line.
-  await expect(page.locator('#train-status')).toHaveText('The report is ready — read it and approve below.');
+  await expect(page.locator('#train-status')).toHaveText('The report is ready — read it and sign below.');
   await expect(page.locator('#updates-train-one-at-a-time')).toHaveText(
     'One update at a time — approve cards now and they’ll ride the next one.',
   );
@@ -583,14 +575,17 @@ test('D8: a second Start refused by the server renders the same verbatim line', 
   expect(errors).toEqual([]);
 });
 
-test('D8: a data-flavored seal refusal renders the server’s plain-language sentence; approvals stay', async ({ page }) => {
+test('D8/FM-8 case g: a data seal refused for an unpaid sign-off renders the server’s plain-language sentence; approvals stay', async ({ page }) => {
   const errors = collectErrors(page);
-  const dataWaiting = 'This update would change the data the engine searches, not just the answer sheet. '
-    + 'That kind of update waits for the full update machinery — your approvals are saved and will ride it.';
+  // §06 FM-8 (case g): the previous data train merged but its independent
+  // sign-off has not landed — the next data seal refuses with this verbatim
+  // sentence (Phase 3: the 'data trains wait for the machinery' refusal is
+  // gone; the unpaid-marker rule is the one remaining data-seal 409).
+  const dataWaiting = "The last update's independent sign-off hasn't happened yet. New data updates wait until it does.";
   const mock = makeMock({ updatesPayload: derivationMock([approvedDataCard()]) });
   mock.trainSealResponder = () => ({
     status: 409,
-    payload: { ok: false, error: { code: 'data_train_waiting', message: dataWaiting } },
+    payload: { ok: false, error: { code: 'signing_debt', message: dataWaiting } },
   });
   await installRoutes(page, mock);
   await page.goto(origin);
@@ -736,7 +731,7 @@ test('D8: a live train renders the receipt with query chips, and Dismiss clears 
 // §4.8 — degraded mode disables initiation
 // ---------------------------------------------------------------------------
 
-test('D8: degraded mode disables Start and the approve act', async ({ page }) => {
+test('D8/D14: degraded mode disables the sign act', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = makeMock({ updatesPayload: derivationMock([approvedGuardCard()], [sealedTrainSnapshot()]) });
   mock.trainView = guardTrainView('ready');
@@ -745,8 +740,10 @@ test('D8: degraded mode disables Start and the approve act', async ({ page }) =>
   await page.goto(origin);
   await openUpdates(page);
 
-  // The read-only banner stands; the train's one write-act is disabled.
-  await expect(page.locator('#train-approve')).toBeDisabled();
+  // The read-only banner stands; the train's one write-act is disabled —
+  // both the input and the button, like every POST-issuing control.
+  await expect(page.locator('#train-sign-input')).toBeDisabled();
+  await expect(page.locator('#train-sign')).toBeDisabled();
   expect(errors).toEqual([]);
 });
 

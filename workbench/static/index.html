@@ -456,10 +456,7 @@ button{font:inherit;}
     '/api/v2/updates/cards/',
     '/decide',
     '/api/v2/updates/train',
-    '/api/v2/admissions/',
-    '/admit',
-    '/api/v2/publish/',
-    '/prepare',
+    '/sign',
   ];
   void ROUTES;
 
@@ -624,14 +621,14 @@ button{font:inherit;}
     updatesLoading: 'Gathering your calls…',
     updatesFetchFailed: 'Couldn’t load your updates just now — reload the page to try again.',
     updatesEmpty: 'Nothing to review — your calls in Review will show up here as suggested changes.',
-    updatesSameFacts: 'These lines describe the same old suggestions as the card above — the card is the way to act on them.',
+    // RETIRED (Phase 4, D18): the read-only backlog lines (updatesSameFacts,
+    // updatesLineMissing, updatesLineDiagnosis, updatesLineFallback) rendered
+    // the compile preview's printed checklist here; the cards above carry the
+    // same facts, so the checklist — and these strings — retired together.
     updatesLegacyTitle: (q) => 'Take a fresh look: “' + q + '”',
     updatesLegacyBecause: (countPhrase, when, refs) => 'Because you suggested ' + countPhrase + ' for this search on ' + when + ' — ' + refs + ' — back before the engine covered the whole Bible.',
     updatesLegacyBody: 'Nothing changes yet. The search has changed a lot since then, so your old suggestions need a fresh look before they can count. Approving opens this search with today’s results so you can make your calls again; passages that already show up well may not need anything. Your new calls then follow the normal path into the next reviewed update.',
     updatesApprove: 'Approve',
-    updatesLineMissing: (ref, q, why) => ref + ' should show up for “' + q + '”' + (why !== '' ? ' — ' + why : ''),
-    updatesLineDiagnosis: (ref, phrase, label, q, note) => ref + ' — ' + phrase + ' (“' + label + '”) for “' + q + '”' + (note !== '' ? ' — ' + note : ''),
-    updatesLineFallback: 'One earlier suggestion still needs hand work.',
     // §copy — P7 (the Updates screen, Phase 1 interactive — votes-to-engine
     // plan §04 §4.3/§4.4/§4.8, §08 D7; strings §04 fixes ship verbatim).
     updatesStatWaiting: (n) => n + ' waiting for your call',
@@ -714,32 +711,36 @@ button{font:inherit;}
     // §4.9 failure-copy parity (one sentence per api function, D39-style).
     trainSealFailed: 'The update couldn’t start — reload and try again. Your approvals are all still here.',
     trainProgressFailed: 'Couldn’t load the update’s progress — reload to try again. The update itself keeps running.',
-    trainAdmitFailed: 'The approval didn’t go through — reload the report and try again. Nothing was merged.',
-    trainDetailFailed: 'Couldn’t load the approval step — reload and try again. Nothing was approved.',
-    trainPrepareFailed: 'The draft change couldn’t be opened on GitHub — reload the update to see where it stands. Nothing was merged.',
+    trainSignFailed: 'The signature didn’t go through — the code may have changed. Reloading the report now.',
     // §05 §5.1's reviewer-visible step labels and status sentences (§4.6's
     // table is the single writer; guard trains never show built/measured).
     trainStepSealed: 'Update started',
+    trainStepBuilt: 'Building the trial run',
+    trainStepMeasured: 'Measuring what changes',
     trainStepReady: 'Ready for your review',
     trainStepAdmitted: 'Approved',
     trainStepPrOpen: 'Waiting for merge',
     trainStepLive: 'Live',
     trainStepStopped: 'Stopped',
     trainSealedLine: 'Your approved changes are locked in — the checks are starting.',
+    trainBuiltLine: 'Building a test copy of the search with your changes…',
+    trainMeasuredLine: 'Comparing results before and after…',
     trainGuardChecking: 'Checking your answer-sheet lines — no trial build needed, nothing can move in search.',
-    trainReadyLine: 'The report is ready — read it and approve below.',
+    trainReadyLine: 'The report is ready — read it and sign below.',
     trainAdmittedLine: 'Approved. Preparing the change for review on GitHub…',
     trainPrOpenLine: 'Waiting for the final merge. One click on GitHub makes it live.',
     trainPrLink: 'Open the draft on GitHub',
     trainLiveLine: 'Live. These searches now answer the way you called them.',
     trainLiveDismiss: 'Dismiss',
     trainReportTitle: 'Update Report',
-    // Phase 2's approve control (§4.6; retires with the typed-digest sign
-    // panel, Phase 3 D14) and the recorded per-slot review rationale.
-    trainApprove: 'Approve this update',
-    trainApproveTitle: 'You’re approving this update.',
-    trainApproveBody: 'This records your review of the answer-sheet lines above and opens the change as a draft on GitHub. Nothing goes live until a human merges it — that final click is the approval that counts.',
-    trainDecisionRationale: 'Approved from the Update Report — the answer-sheet lines in this update were reviewed and hold.',
+    // D14's typed-digest sign panel (§4.6): the Finish-up mechanics reused
+    // exactly — COPY.signBody is the shared explanation sentence; the merge
+    // line ships verbatim; the sign act runs the final checks server-side.
+    trainSignTitle: 'Sign this update',
+    trainSignMergeLine: 'After you sign, this becomes a draft change on GitHub. It goes live only when a human merges it — that final click is the approval that counts.',
+    trainSignButton: 'Sign this update',
+    trainSignRunning: 'Signature received — the final checks are running now. This can take a while; the screen updates when the draft opens on GitHub.',
+    trainCompareBlind: 'Compare blind',
     // §06 §06.2's per-stop-reason sentences (the single owner of this copy;
     // the enum token itself never renders — D28).
     trainStopReasons: {
@@ -761,6 +762,38 @@ button{font:inherit;}
       'required-check-failed': ['The final checks on the draft did not pass. The update waits as a draft — nothing merges until they do.'],
       'github-unavailable': ['GitHub could not be reached. Everything is saved locally, and the exact next step is written on the update’s card — nothing was lost.'],
     },
+    // D17 (§06.2's recovery column): the ONE next action for each stop, in
+    // plain words — every stopped train names what recovers it. Copy minted
+    // for the Phase-4 review (D20's inventory); D28-clean by construction.
+    trainStopNextActions: {
+      'conflicting-judgments': 'Next step: open the conflict card and pick which call stands. Your pick is recorded, and the next update carries it.',
+      'stale-artifact-identity': 'Next step: look again at the calls back in your inbox — a fresh call rides the next update.',
+      'protected-expectation-regressed': 'Next step: open the report to see which answer, then decline or set aside the card that would break it.',
+      'unreviewed-top10-movement': 'Next step: open the Update Report and look at each changed search, then continue.',
+      'outside-allowlist': 'Next step: nothing for you here — the set-aside part comes back as a job for engineering on its own card; the rest can ride the next update.',
+      'provenance-ambiguity': 'Next step: start the update again — if this comes back, it needs an engineer to look.',
+      'engineering-required': 'Next step: nothing for you here — the write-up comes back as a job for engineering on its own card, with your calls attached.',
+      'g8-baseline-moved-needs-independent-approval': 'Next step: nothing for you here — the update waits as a draft until the independent sign-off lands.',
+      'no-measurable-effect': 'Next step: leave the cards set aside, or bring one back with a fresh approval when you still want it tried.',
+      'main-moved': 'Next step: start the update again — it rebuilds against the newest version with your approvals intact.',
+      'source-drift': 'Next step: start the update again — it rebuilds from the current files with your approvals intact.',
+      'verify-failed': 'Next step: read the report, then decline or set aside the card the failing check names.',
+      'required-check-failed': 'Next step: the draft stays open on GitHub — merging waits until its checks pass.',
+      'github-unavailable': 'Next step: try again once the connection is back — everything is saved.',
+    },
+    // D20 (Phase 4): the steady-state metrics strip on the Updates screen —
+    // counts derived from the served derivation (updates.jsonl decisions +
+    // observed train states + git commit times), no new telemetry. Honest
+    // timing: the vote→live figure is the median over real timestamps of
+    // this reviewer's own landed calls; when no landed call carries a
+    // timestamp, the line simply does not render. Minted for the D20 review.
+    updatesMetricCycles: (n) => n === 1
+      ? 'One reviewed update has gone live.'
+      : n + ' reviewed updates have gone live.',
+    updatesMetricAwaiting: (n) => n === 1
+      ? 'One of your calls is still waiting on a card above.'
+      : n + ' of your calls are still waiting on cards above.',
+    updatesMetricMedian: (phrase) => 'From a call to live: typically about ' + phrase + '.',
     // §05 §5.4's pruned-card outcome (renders on parked-by-default cards)
     // and 06 FM-5's tried-on line.
     trainParkedOutcome: 'The checks found this change wouldn’t alter any search result yet, so it wasn’t included in this update. Your call is now written on the answer sheet as a goal — when a future update reaches it, the checks will announce it and hold it there. You can leave it parked, or decline it.',
@@ -901,16 +934,14 @@ button{font:inherit;}
     },
     // §state — P6/P7 (the Updates screen, Phase 1 interactive). Cards come
     // from GET /api/v2/updates (the deriver); decisions post to the decide
-    // endpoint with the per-card cardRevision pin (§4.4). The compile plan's
-    // checklist still renders as the read-only backlog until the checklist
-    // retires (Phase 4).
+    // endpoint with the per-card cardRevision pin (§4.4). (The compile
+    // plan's checklist rendered here as a read-only backlog until Phase 4
+    // D18 retired the checklist — the cards carry those facts.)
     updates: {
       status: 'idle',    // 'idle' | 'loading' | 'done'
       seq: 0,            // drops stale open-screen fetches
       derivation: null,  // GET /api/v2/updates payload, or null
       deriveFailed: false,
-      plan: null,        // the compile preview's plan, or null
-      planFailed: false,
       reloading: false,  // a 409-triggered re-derive is in flight
       focusCardId: null, // roving focus over the card list (§4.7)
       answers: Object.create(null),     // cardId -> picked theme answer
@@ -929,9 +960,10 @@ button{font:inherit;}
         viewFailed: false, // GET train/:id failed → §4.9 progress sentence
         loading: false,    // first view fetch in flight
         sealing: false,    // seal POST in flight
-        approving: false,  // the admit→prepare act in flight
+        signing: false,    // the sign act (server runs the admit→publish tail)
+        signInput: '',     // the typed sign code (D14; mirrors Finish up)
         panelError: null,  // one inline sentence for the panel (§4.9 parity)
-        confirm: null,     // {kind:'seal'|'approve', opener} one-confirm slot
+        confirm: null,     // {kind:'seal', opener} one-confirm slot (the seal)
         pollTimer: null,
         elapsedTimer: null, // re-render tick while an elapsed line shows
         dismissedLive: null, // trainId — the dismissed live receipt
@@ -1022,9 +1054,11 @@ button{font:inherit;}
   function apiUpdatesDecide(cardId, body) { return postJson('/api/v2/updates/cards/' + encodeURIComponent(cardId) + '/decide', body); }
   function apiTrainSeal(body) { return postJson('/api/v2/updates/train', body); }
   function apiTrain(trainId) { return requestJson('/api/v2/updates/train/' + encodeURIComponent(trainId)); }
-  function apiAdmission(reviewId) { return requestJson('/api/v2/admissions/' + encodeURIComponent(reviewId)); }
-  function apiAdmissionAdmit(reviewId, body) { return postJson('/api/v2/admissions/' + encodeURIComponent(reviewId) + '/admit', body); }
-  function apiPublishPrepare(reviewId, body) { return postJson('/api/v2/publish/' + encodeURIComponent(reviewId) + '/prepare', body); }
+  // D14: the typed-digest sign act — one POST carrying the FULL report
+  // digest; the server verifies it, records the per-query review, and runs
+  // the admit + publish tail itself (the Phase-2 admit/prepare calls retired
+  // with the "Approve this update" button — §4.9).
+  function apiTrainSign(trainId, digest) { return postJson('/api/v2/updates/train/' + encodeURIComponent(trainId) + '/sign', { digest }); }
 
   // §stores
   // §3.6 client sort (binding): a case's touch time is the `at` of its LAST
@@ -4248,18 +4282,16 @@ button{font:inherit;}
   // digest, so a decide on one card never invalidates another). Decisions
   // are pure staging: no file in eval/ or ontology/ changes, no build runs,
   // no result moves — the honest-timing sentence (COPY.contract) stays
-  // exactly true. The compile plan's checklist still renders as the
-  // read-only backlog (it retires with Phase 4's D18), and every string maps
-  // through the reviewed COPY block — raw diagnosis tokens, concept ids,
-  // digests and UUIDs never render (D28).
+  // exactly true. (The compile plan's checklist rendered here as a
+  // read-only backlog until Phase 4's D18 retired the checklist.) Every
+  // string maps through the reviewed COPY block — raw diagnosis tokens,
+  // concept ids, digests and UUIDs never render (D28).
   async function openUpdates() {
     const updates = state.updates;
     const seq = ++updates.seq;
     updates.status = 'loading';
     updates.derivation = null;
     updates.deriveFailed = false;
-    updates.plan = null;
-    updates.planFailed = false;
     updates.reloading = false;
     updates.answers = Object.create(null);
     updates.declineOpen = Object.create(null);
@@ -4269,17 +4301,16 @@ button{font:inherit;}
     updates.fm13 = null;
     resetTrainPanel();
     renderUpdates();
-    const [deriveOutcome, planOutcome] = await Promise.allSettled([apiUpdates(), apiCompilePreview()]);
+    // D18: the deriver is this screen's only data source — the compile
+    // preview (once fetched here for the checklist backlog) belongs to
+    // Finish up alone now.
+    let derivation = null;
+    try { derivation = await apiUpdates(); } catch (error) { derivation = null; }
     if (seq !== updates.seq) return;
-    if (deriveOutcome.status === 'fulfilled' && deriveOutcome.value !== null && Array.isArray(deriveOutcome.value.cards)) {
-      updates.derivation = deriveOutcome.value;
+    if (derivation !== null && Array.isArray(derivation.cards)) {
+      updates.derivation = derivation;
     } else {
       updates.deriveFailed = true;
-    }
-    if (planOutcome.status === 'fulfilled' && planOutcome.value !== null && planOutcome.value.plan) {
-      updates.plan = planOutcome.value.plan;
-    } else {
-      updates.planFailed = true;
     }
     updates.status = 'done';
     renderUpdates();
@@ -4338,28 +4369,63 @@ button{font:inherit;}
     if (typeof iso !== 'string' || Number.isNaN(then.getTime())) return 'an earlier visit';
     return months[then.getUTCMonth()] + ' ' + then.getUTCDate();
   }
-  function updatesChecklist() {
-    const plan = state.updates.plan;
-    return plan !== null && Array.isArray(plan.checklist) ? plan.checklist : [];
+  // RETIRED (Phase 4, D18): updatesChecklist/parseChecklistLine/
+  // missingWhyText/updatesLineText parsed the compile preview's printed
+  // checklist into the read-only backlog below the cards. The checklist is
+  // retired — the cards carry the same facts — so the parsers went with it.
+  // D20: plain-words duration for the metrics strip — days, hours or
+  // minutes, never raw milliseconds (D28).
+  function plainDuration(ms) {
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+    if (ms >= 2 * day) return Math.round(ms / day) + ' days';
+    if (ms >= day) return 'a day';
+    if (ms >= 2 * hour) return Math.round(ms / hour) + ' hours';
+    if (ms >= hour) return 'an hour';
+    if (ms >= 2 * minute) return Math.round(ms / minute) + ' minutes';
+    return 'a minute';
   }
-  // The compiler's two checklist line shapes (compileJudgments.ts, the
-  // manual-edit checklist), parsed for display only — the raw line never
-  // renders. Reference text never contains " — ", so the first em-dash after
-  // it is the boundary; notes may carry their own em-dashes.
-  function parseChecklistLine(line) {
-    if (typeof line !== 'string') return null;
-    const missing = /^\[ \] missing: "([\s\S]+?)" should surface ([\s\S]+?) — ([\s\S]*)$/.exec(line);
-    if (missing !== null) {
-      return { kind: 'missing', query: missing[1], reference: missing[2], why: missing[3] };
+  // D20: the steady-state metrics, computed from the served derivation
+  // alone — decisions folded from updates.jsonl (card states), the observed
+  // live trains, and the git commit times riding liveTrainLandings. No
+  // extra request, no new telemetry. Vote→live samples pair each vote's
+  // own timestamp with the landing time of the train its card sealed into;
+  // trains without a landing time contribute no sample.
+  function updatesMetrics() {
+    const derivation = state.updates.derivation;
+    if (derivation === null || !Array.isArray(derivation.cards)) return null;
+    const live = Array.isArray(derivation.liveTrainIds) ? derivation.liveTrainIds : [];
+    const landedAtByTrain = Object.create(null);
+    for (const landing of derivation.liveTrainLandings || []) {
+      if (landing && typeof landing.trainId === 'string' && typeof landing.landedAt === 'string') {
+        landedAtByTrain[landing.trainId] = Date.parse(landing.landedAt);
+      }
     }
-    const diagnosis = /^\[ \] ([a-z-]+): concept (\S+) produced bad evidence on ([\s\S]+?) for "([\s\S]+?)" — ([\s\S]*)$/.exec(line);
-    if (diagnosis !== null) {
-      return {
-        kind: 'diagnosis', diagnosis: diagnosis[1], conceptId: diagnosis[2],
-        reference: diagnosis[3], query: diagnosis[4], note: diagnosis[5],
-      };
+    const awaiting = new Set();
+    const samples = [];
+    for (const card of derivation.cards) {
+      const cardState = card.state || {};
+      // An auto-resolved card (D16 disposition 1) awaits no decision even
+      // while its fold state reads drafted — it boards without one.
+      if (cardState.decision === 'drafted' && card.autoResolved !== true) {
+        for (const id of card.judgmentIds || []) awaiting.add(id);
+        continue;
+      }
+      const landedAt = cardState.sealedInTrain !== undefined ? landedAtByTrain[cardState.sealedInTrain] : undefined;
+      if (landedAt === undefined || Number.isNaN(landedAt)) continue;
+      for (const vote of card.votes || []) {
+        const votedAt = typeof vote.at === 'string' ? Date.parse(vote.at) : Number.NaN;
+        if (!Number.isNaN(votedAt) && landedAt >= votedAt) samples.push(landedAt - votedAt);
+      }
     }
-    return null;
+    samples.sort((a, b) => a - b);
+    const median = samples.length === 0
+      ? null
+      : samples.length % 2 === 1
+        ? samples[(samples.length - 1) / 2]
+        : (samples[samples.length / 2 - 1] + samples[samples.length / 2]) / 2;
+    return { cyclesCompleted: live.length, votesAwaiting: awaiting.size, medianVoteToLiveMs: median };
   }
   function conceptLabelOf(conceptId) {
     for (const concept of state.concepts) {
@@ -4367,22 +4433,6 @@ button{font:inherit;}
     }
     // Fallback humanization — never the raw hyphenated id.
     return String(conceptId).replace(/-/g, ' ');
-  }
-  // A missing line's why is the voter's note, or `text: "…"` when the
-  // server-attached passage text is the defense — render the quoted text
-  // itself then, never the `text:` token.
-  function missingWhyText(why) {
-    const excerpt = /^text: "([\s\S]*)"$/.exec(why);
-    return excerpt !== null ? '“' + excerpt[1] + '”' : why;
-  }
-  function updatesLineText(parsed) {
-    if (parsed === null) return COPY.updatesLineFallback;
-    if (parsed.kind === 'missing') {
-      return COPY.updatesLineMissing(parsed.reference, parsed.query, missingWhyText(parsed.why));
-    }
-    const phrase = COPY.plainWhy[parsed.diagnosis];
-    if (phrase === undefined) return COPY.updatesLineFallback;
-    return COPY.updatesLineDiagnosis(parsed.reference, phrase, conceptLabelOf(parsed.conceptId), parsed.query, parsed.note);
   }
   function joinRefList(parts) {
     if (parts.length <= 1) return parts.join('');
@@ -4525,13 +4575,17 @@ button{font:inherit;}
   function updatesTallyOf(cards) {
     const opBearing = cards.filter((card) => isOpBearing(card) && (card.routed === undefined || card.routed === null));
     return {
-      drafted: opBearing.filter((card) => cardDecision(card) === 'drafted').length,
+      // An auto-resolved card (D16 disposition 1) waits for no call — it
+      // counts nowhere; its receipt renders in the update panel instead.
+      drafted: opBearing.filter((card) => cardDecision(card) === 'drafted' && card.autoResolved !== true).length,
       // A shipped card (its sealing update went live) is achieved, never
       // "approved for the next update" — mirror the deriver's exclusion.
-      approved: opBearing.filter((card) => cardDecision(card) === 'approved' && card.parkedByDefault !== true
+      approved: opBearing.filter((card) => cardDecision(card) === 'approved' && card.autoResolved !== true
+        && card.parkedByDefault !== true
         && !(card.state && card.state.sealedTrainLive === true)).length,
       declined: opBearing.filter((card) => cardDecision(card) === 'declined').length,
-      parked: opBearing.filter((card) => cardDecision(card) === 'parked' || card.parkedByDefault === true).length,
+      parked: opBearing.filter((card) => (cardDecision(card) === 'parked' || card.parkedByDefault === true)
+        && card.autoResolved !== true).length,
     };
   }
   function replaceUpdatesCard(fresh) {
@@ -4541,9 +4595,13 @@ button{font:inherit;}
     derivation.tally = updatesTallyOf(derivation.cards);
   }
   function updatesGroups() {
-    const groups = { main: [], approved: [], sealed: [], shipped: [], engineering: [], parked: [] };
+    const groups = { main: [], approved: [], sealed: [], shipped: [], engineering: [], parked: [], receipts: [] };
     for (const card of updatesCards()) {
       const decision = cardDecision(card);
+      // D16 disposition 1 (§4.3): the auto-resolved happy case never renders
+      // as a to-do at all — no decision doors, no group row; it appears as a
+      // one-line receipt in the update panel instead.
+      if (card.autoResolved === true) { groups.receipts.push(card); continue; }
       if (decision === 'parked' || card.parkedByDefault === true) { groups.parked.push(card); continue; }
       if (decision === 'declined') continue; // on record in the log; renders nowhere (§4.2)
       if (decision === 'approved') {
@@ -4795,6 +4853,12 @@ button{font:inherit;}
       const vote = (card.votes || [])[0] || {};
       article.appendChild(node('p', 'card-because',
         firstLetterUp(COPY.updatesLookAgainBody(voteFragment(vote, null, true), identityNames(card)))));
+      // D16 (V6): the replay's own sentence — the deriver is its single
+      // writer; rendered verbatim (an unresolved reference names FM-2's
+      // sentence, a materially changed picture names the fresh-look one).
+      if (card.replay !== undefined && card.replay !== null) {
+        article.appendChild(node('p', 'updates-note replay-note', card.replay.note));
+      }
     } else if (conflict) {
       const sides = card.conflict && Array.isArray(card.conflict.sides) ? card.conflict.sides : [];
       const sideText = sides.map((side) => {
@@ -4808,6 +4872,12 @@ button{font:inherit;}
       for (const line of cardChangeLines(card)) article.appendChild(node('p', 'card-because', line));
       if ((card.identityNotes || []).length > 0) {
         article.appendChild(node('p', 'updates-note', COPY.updatesIdentityCarry(identityNames(card))));
+      }
+      // D16 (V6): the replay outcome in the deriver's own words, verbatim —
+      // "already achieved — guarded" (disposition 1), the machine-supported
+      // reconfirmation (disposition 2), or the offender-gone guard note.
+      if (card.replay !== undefined && card.replay !== null) {
+        article.appendChild(node('p', 'updates-note replay-note', card.replay.note));
       }
     }
     // At most one question (V3): deterministic candidate chips the deriver
@@ -4978,7 +5048,8 @@ button{font:inherit;}
     train.viewFailed = false;
     train.loading = false;
     train.sealing = false;
-    train.approving = false;
+    train.signing = false;
+    train.signInput = '';
     train.panelError = null;
     train.confirm = null;
     train.pollTimer = null;
@@ -5029,7 +5100,7 @@ button{font:inherit;}
     const train = updates.train;
     if (train.pollTimer !== null) { clearTimeout(train.pollTimer); train.pollTimer = null; }
     if (state.screen !== 'updates' || train.viewFailed) return;
-    if (train.sealing || train.approving) return;
+    if (train.sealing || train.signing) return;
     const view = train.view;
     if (view === null) return;
     // `ready` waits on the human; live/stopped are terminal — no machine run
@@ -5118,26 +5189,24 @@ button{font:inherit;}
     closeLayerDialog(confirm.opener);
   }
   function renderTrainConfirm() {
+    // D14 retired the approve confirm: only the seal keeps its one-confirm
+    // layer ("sealing is recoverable and needs friction, not a signature").
     const confirm = state.updates.train.confirm;
     if (confirm === null) return;
-    const seal = confirm.kind === 'seal';
-    const dialog = openLayerDialog(seal ? COPY.trainConfirmTitle : COPY.trainApproveTitle, 'train-confirm-title');
+    const dialog = openLayerDialog(COPY.trainConfirmTitle, 'train-confirm-title');
     dialog.id = 'train-confirm-dialog';
-    dialog.appendChild(node('p', 'layer-prompt', seal ? COPY.trainConfirmBody : COPY.trainApproveBody));
+    dialog.appendChild(node('p', 'layer-prompt', COPY.trainConfirmBody));
     const actions = node('div', 'layer-actions');
     const cancel = node('button', 'btn-quiet', 'Cancel');
     cancel.type = 'button';
     cancel.id = 'train-confirm-cancel';
     cancel.addEventListener('click', closeTrainConfirm);
     actions.appendChild(cancel);
-    const commit = node('button', 'btn-primary', seal ? COPY.trainStart : COPY.trainApprove);
+    const commit = node('button', 'btn-primary', COPY.trainStart);
     commit.type = 'button';
     commit.id = 'train-confirm-commit';
-    if (updatesReadOnly() || state.updates.train.sealing || state.updates.train.approving) commit.disabled = true;
-    commit.addEventListener('click', () => {
-      if (seal) void sealTrain();
-      else void approveTrain();
-    });
+    if (updatesReadOnly() || state.updates.train.sealing || state.updates.train.signing) commit.disabled = true;
+    commit.addEventListener('click', () => { void sealTrain(); });
     actions.appendChild(commit);
     dialog.appendChild(actions);
     // Initial focus is Cancel, never the commit (§4.7, the Compare rule).
@@ -5197,93 +5266,98 @@ button{font:inherit;}
     void reloadUpdates();
     scheduleTrainPoll();
   }
-  // Phase 2's approve act (§4.6): one human confirm records the per-slot
-  // review through the EXISTING admit surface, then opens the draft on
-  // GitHub through the existing publish preparation — the draft PR is the
-  // ceiling; nothing here merges or marks ready. Retires with D14's
-  // typed-digest sign panel.
-  async function approveTrain() {
+  // D14's typed-digest sign act (§4.6): the Finish-up mechanics reused. The
+  // chip shows the report digest's first 12 hex grouped 4-4-4; matching is
+  // exact, case-insensitive, spaces ignored; the POST carries the FULL
+  // digest. The server verifies the digest, records the per-query review,
+  // and runs the admit + publish tail itself — the draft PR stays the
+  // ceiling; the merge on GitHub remains the approval that counts.
+  function trainSignCode() {
+    const view = state.updates.train.view;
+    if (view === null || view.report === null || view.report === undefined || typeof view.report.digest !== 'string') return null;
+    return view.report.digest.slice(0, 12);
+  }
+  function trainSignMatches() {
+    const code = trainSignCode();
+    if (code === null) return false;
+    return state.updates.train.signInput.replace(/\s+/g, '').toLowerCase() === code.toLowerCase();
+  }
+  async function signTrain() {
     const updates = state.updates;
     const train = updates.train;
     if (updatesReadOnly()) { showToast(COPY.readOnlyToast); return; }
     const view = train.view;
-    if (view === null || view.state !== 'ready' || train.approving) return;
-    train.approving = true;
+    if (view === null || view.state !== 'ready' || train.signing) return;
+    if (typeof view.signingHold === 'string' && view.signingHold !== '') return; // frozen awaiting signer
+    if (view.report === null || typeof view.report.digest !== 'string' || !trainSignMatches()) return;
+    train.signing = true;
     train.panelError = null;
-    closeTrainConfirm();
     renderUpdates();
     const seq = updates.seq;
     const failWith = (text) => {
       if (seq !== updates.seq || state.screen !== 'updates') return;
-      train.approving = false;
+      train.signing = false;
       train.panelError = { id: 'updates-train-error', text };
       renderUpdates();
       // A terminal failure may have stopped the train — observe it.
       void refreshTrainView(view.trainId, seq);
     };
-    let detail = null;
-    try { detail = await apiAdmission(view.trainId); } catch (error) { failWith(COPY.trainDetailFailed); return; }
-    const admissionView = detail !== null && typeof detail === 'object' ? detail.admission : null;
-    const preview = admissionView && admissionView.preview ? admissionView.preview : null;
-    if (preview === null || typeof preview.digest !== 'string' || !Array.isArray(preview.decisions)) {
-      failWith(COPY.trainDetailFailed);
-      return;
-    }
-    // The one confirm IS the recorded review of the listed lines (§4.6):
-    // every decision slot carries the same reviewed rationale sentence.
-    const decisions = preview.decisions.map((slot) => {
-      const decision = { slotId: slot.slotId, rationale: COPY.trainDecisionRationale };
-      if (slot.kind === 'probe-baseline') {
-        decision.probeRationales = (slot.probes || []).map((probe) => ({ probeId: probe.probeId, rationale: COPY.trainDecisionRationale }));
-      }
-      return decision;
-    });
-    let admitted = null;
+    let data = null;
     try {
-      admitted = await apiAdmissionAdmit(view.trainId, { previewDigest: preview.digest, decisions });
+      data = await apiTrainSign(view.trainId, view.report.digest);
     } catch (error) {
       const code = error && typeof error.code === 'string' ? error.code : '';
-      if (code === 'stale_preview') { failWith(COPY.staleLine); return; }
-      if (code === 'mutation_running') { failWith(COPY.busyLine); return; }
-      failWith(COPY.trainAdmitFailed);
-      return;
-    }
-    const admittedView = admitted !== null && typeof admitted === 'object' ? admitted.admission : null;
-    const admissionDigest = admittedView && admittedView.admission && typeof admittedView.admission.digest === 'string'
-      ? admittedView.admission.digest
-      : null;
-    if (admissionDigest === null) { failWith(COPY.trainAdmitFailed); return; }
-    if (seq === updates.seq && state.screen === 'updates') {
-      // "Approved. Preparing the change for review on GitHub…" (§5.1) — the
-      // draft opens next from this same single confirm.
-      if (train.view !== null && train.view.state === 'ready') {
-        train.view = Object.assign({}, train.view, { state: 'admitted' });
+      if (error && (error.status === 503 || code === 'startup_degraded_read_only' || code === 'artifact_unavailable')) {
+        if (seq === updates.seq && state.screen === 'updates') {
+          train.signing = false;
+          showToast(COPY.readOnlyToast);
+          renderUpdates();
+        }
+        return;
       }
-      renderUpdates();
-    }
-    try {
-      await apiPublishPrepare(view.trainId, { admissionDigest, push: true, openDraftPr: true });
-    } catch (error) {
-      failWith(COPY.trainPrepareFailed);
+      // 409 semantics mirror Finish up (§4.6): a changed report reloads with
+      // a fresh code; a concurrent mutation asks for a moment; the frozen
+      // awaiting-signer refusal renders the server's own hold sentence.
+      if (code === 'stale_preview') { train.signInput = ''; failWith(COPY.staleLine); return; }
+      if (code === 'mutation_running') { failWith(COPY.busyLine); return; }
+      if (error && error.status === 409 && typeof error.message === 'string' && error.message !== '') {
+        failWith(error.message);
+        return;
+      }
+      failWith(COPY.trainSignFailed);
       return;
     }
     if (seq !== updates.seq || state.screen !== 'updates') return;
-    train.approving = false;
+    train.signing = false;
+    train.signInput = '';
+    if (data !== null && data.train && typeof data.train.state === 'string') {
+      train.view = data.train;
+      train.viewFailed = false;
+      renderUpdates();
+      scheduleTrainPoll();
+      return;
+    }
     void refreshTrainView(view.trainId, seq);
   }
   // The progress strip: §05 §5.1's reviewer-visible labels only. A guard
   // train renders its three machine steps plus the two human-wait states —
-  // never the trial-build or comparison waypoints (§4.6's fixture-lane rule).
-  function trainStrip(stateKey) {
+  // never the trial-build or comparison waypoints (§4.6's fixture-lane
+  // rule). A data train's strip carries the full lane, built and measured
+  // included (Phase 3 D12).
+  function trainStrip(stateKey, flavor) {
     const strip = node('div', 'train-strip');
     strip.setAttribute('aria-label', 'Update progress');
     if (stateKey === 'stopped') {
       strip.appendChild(node('span', 'train-step current', COPY.trainStepStopped));
       return strip;
     }
-    const order = ['sealed', 'ready', 'admitted', 'pr-open', 'live'];
+    const order = flavor === 'data'
+      ? ['sealed', 'built', 'measured', 'ready', 'admitted', 'pr-open', 'live']
+      : ['sealed', 'ready', 'admitted', 'pr-open', 'live'];
     const labels = {
       sealed: COPY.trainStepSealed,
+      built: COPY.trainStepBuilt,
+      measured: COPY.trainStepMeasured,
       ready: COPY.trainStepReady,
       admitted: COPY.trainStepAdmitted,
       'pr-open': COPY.trainStepPrOpen,
@@ -5296,6 +5370,8 @@ button{font:inherit;}
     return strip;
   }
   function trainStatusSentence(stateKey) {
+    if (stateKey === 'built') return COPY.trainBuiltLine;
+    if (stateKey === 'measured') return COPY.trainMeasuredLine;
     if (stateKey === 'ready') return COPY.trainReadyLine;
     if (stateKey === 'admitted') return COPY.trainAdmittedLine;
     if (stateKey === 'pr-open') return COPY.trainPrOpenLine;
@@ -5348,15 +5424,15 @@ button{font:inherit;}
   }
   function renderTrainView(panel, view) {
     const train = state.updates.train;
-    panel.appendChild(trainStrip(view.state));
+    panel.appendChild(trainStrip(view.state, view.flavor));
     const status = node('p', 'train-status');
     status.id = 'train-status';
     status.setAttribute('role', 'status');
-    // While the approve act runs, the checks are actually running (the
-    // Phase-2 server runs them inside the admit act) — say so honestly.
-    status.textContent = train.approving ? COPY.trainGuardChecking : trainStatusSentence(view.state);
+    // While the sign act runs, the final checks are actually running (the
+    // server runs them inside the same act) — say so honestly.
+    status.textContent = train.signing ? COPY.trainSignRunning : trainStatusSentence(view.state);
     panel.appendChild(status);
-    if (!train.approving && view.state === 'sealed' && view.flavor === 'guard') {
+    if (!train.signing && view.state === 'sealed' && view.flavor === 'guard') {
       // §4.6's fixture-lane interim sentence, between "Update started" and
       // "Ready for your review".
       const checking = node('p', 'train-status', COPY.trainGuardChecking);
@@ -5390,25 +5466,67 @@ button{font:inherit;}
       link.rel = 'noreferrer';
       panel.appendChild(link);
     }
-    // The Update Report (§4.6's one-block guard variant). The lead sentence
-    // is rendered verbatim from the payload — the server's report module is
-    // its single writer (E4); this page mints no rival.
-    if (view.report !== null && view.report !== undefined && view.state !== 'sealed') {
+    // The Update Report (§4.6). Every sentence renders verbatim from the
+    // payload — the server's report modules are the single writers (E4);
+    // this page mints no rival. The guard variant is one block (lead +
+    // answer-sheet lines); the data variant carries the full anatomy: one
+    // block per changed query (before → after in plain language, its
+    // attribution, and blind Compare one click away), then the checks line,
+    // the regen line, and the merge-first-sign-once signing note. No digest
+    // appears anywhere in the body — the sign chip below is the single
+    // sanctioned hex surface (D28).
+    if (view.report !== null && view.report !== undefined && view.state !== 'sealed' && view.state !== 'built') {
       const report = node('section', '');
       report.id = 'updates-report';
       report.appendChild(node('h3', '', COPY.trainReportTitle));
       report.appendChild(node('p', 'train-status', view.report.lead));
+      if (view.report.kind === 'data-update-report') {
+        const blocks = Array.isArray(view.report.blocks) ? view.report.blocks : [];
+        for (const block of blocks) {
+          const item = node('div', 'train-report-query');
+          item.appendChild(node('h4', '', '“' + block.query + '”'));
+          const movements = node('ul', 'train-report-lines');
+          for (const line of block.movementLines || []) movements.appendChild(node('li', '', line));
+          item.appendChild(movements);
+          item.appendChild(node('p', 'screen-sub', block.attributionLine));
+          if (block.compareAvailable) {
+            // §4.6 anatomy item 4: the spot check, one click away — the
+            // train's comparison publication is a Compare review through
+            // the existing blind machinery.
+            const compare = node('button', 'btn-quiet train-compare-blind', COPY.trainCompareBlind);
+            compare.type = 'button';
+            compare.addEventListener('click', () => { setScreen('compare'); });
+            item.appendChild(compare);
+          }
+          report.appendChild(item);
+        }
+        report.appendChild(node('p', 'train-status', view.report.checksLine));
+        if (typeof view.report.regenLine === 'string' && view.report.regenLine !== '') {
+          report.appendChild(node('p', 'screen-sub', view.report.regenLine));
+        }
+        report.appendChild(node('p', 'screen-sub', view.report.signingLine));
+        if (typeof view.report.standingRedLine === 'string' && view.report.standingRedLine !== '') {
+          const standing = node('p', 'screen-sub', view.report.standingRedLine);
+          standing.id = 'train-standing-red';
+          report.appendChild(standing);
+        }
+      }
       const lines = node('ul', 'train-report-lines');
       for (const line of view.report.lines || []) lines.appendChild(node('li', '', line));
       report.appendChild(lines);
       panel.appendChild(report);
     }
-    if (view.state === 'ready') {
-      const approve = updatesButton(null, COPY.trainApprove, 'btn-primary');
-      approve.id = 'train-approve';
-      approve.disabled = updatesReadOnly() || train.approving;
-      approve.addEventListener('click', (event) => { openTrainConfirm('approve', event.currentTarget); });
-      panel.appendChild(approve);
+    if (view.state === 'ready' && typeof view.signingHold === 'string' && view.signingHold !== '') {
+      // The frozen-awaiting-signer state (A1 frozen queue, open call 4):
+      // the server's hold sentence renders in place of the sign panel —
+      // honest, plain, no fake progress. Nothing here is clickable.
+      const hold = node('p', 'train-status');
+      hold.id = 'train-signing-hold';
+      hold.setAttribute('role', 'status');
+      hold.textContent = view.signingHold;
+      panel.appendChild(hold);
+    } else if (view.state === 'ready' && !train.signing) {
+      panel.appendChild(renderTrainSignPanel(view));
     }
     if (view.state === 'live') {
       const queries = trainReportQueries(view);
@@ -5428,6 +5546,55 @@ button{font:inherit;}
       links.appendChild(updatesQuietLink(COPY.trainLiveDismiss, () => { dismissLiveReceipt(view.trainId); }));
       panel.appendChild(links);
     }
+  }
+  // D14's sign panel (§4.6): the Finish-up typed-digest mechanics reused
+  // exactly — the shared explanation sentence (COPY.signBody), the 12-hex
+  // chip grouped 4-4-4, exact case-insensitive spaces-ignored matching, and
+  // deliberately a plain div, never a native <form>, so no raw browser
+  // submit can fire. The button posts the FULL digest.
+  function renderTrainSignPanel(view) {
+    const train = state.updates.train;
+    const sign = node('div', 'sign-panel');
+    sign.id = 'train-sign-panel';
+    sign.appendChild(node('h3', '', COPY.trainSignTitle));
+    sign.appendChild(node('p', 'screen-sub', COPY.signBody));
+    const code = trainSignCode();
+    const codeText = code === null ? '' : code.slice(0, 4) + ' ' + code.slice(4, 8) + ' ' + code.slice(8, 12);
+    const chip = node('div', 'sign-chip', codeText);
+    chip.id = 'train-sign-code';
+    sign.appendChild(chip);
+    // The covenant, said on the panel: the merge remains the admission event.
+    sign.appendChild(node('p', 'screen-sub', COPY.trainSignMergeLine));
+    const row = node('div', 'sign-row');
+    const input = node('input', 'sign-input');
+    input.id = 'train-sign-input';
+    input.type = 'text';
+    input.autocomplete = 'off';
+    input.setAttribute('aria-label', COPY.signInputLabel);
+    input.placeholder = COPY.signInputLabel;
+    input.value = train.signInput;
+    const controlsEnabled = !updatesReadOnly() && !train.signing;
+    if (!controlsEnabled) input.disabled = true;
+    const button = node('button', 'btn-primary', COPY.trainSignButton);
+    button.type = 'button';
+    button.id = 'train-sign';
+    button.disabled = !trainSignMatches() || !controlsEnabled;
+    button.addEventListener('click', () => { void signTrain(); });
+    input.addEventListener('input', () => {
+      train.signInput = input.value;
+      button.disabled = !trainSignMatches() || !controlsEnabled;
+    });
+    input.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      // Enter activates the sign button only while it is enabled (§4.7's
+      // rule: Enter never doubles as an uncorrectable commit).
+      if (!button.disabled) void signTrain();
+    });
+    row.appendChild(input);
+    row.appendChild(button);
+    sign.appendChild(row);
+    return sign;
   }
   // The pruned/parked outcome's stop date (06 FM-5): the no-effect stop
   // whose sealed set carried this card.
@@ -5465,6 +5632,14 @@ button{font:inherit;}
       const stopCard = node('div', '');
       stopCard.id = 'train-stop-card';
       for (const sentence of sentences) stopCard.appendChild(node('p', 'train-status', sentence));
+      // D17: every stop names its ONE next action (§06.2's recovery column)
+      // — a stopped train never leaves the reviewer guessing what recovers it.
+      const nextAction = COPY.trainStopNextActions[reason];
+      if (nextAction !== undefined) {
+        const nextLine = node('p', 'train-status stop-next-action', nextAction);
+        nextLine.id = 'train-stop-next-action';
+        stopCard.appendChild(nextLine);
+      }
       panel.appendChild(stopCard);
       hasContent = true;
     }
@@ -5480,7 +5655,7 @@ button{font:inherit;}
         hasContent = true;
       } else if (view === null) {
         // First observation still loading — the honest position is the seal.
-        panel.appendChild(trainStrip('sealed'));
+        panel.appendChild(trainStrip('sealed', snapshot.flavor));
         const status = node('p', 'train-status', COPY.trainSealedLine);
         status.setAttribute('role', 'status');
         panel.appendChild(status);
@@ -5499,11 +5674,23 @@ button{font:inherit;}
       hasContent = true;
     }
 
+    // D16 disposition 1 (§4.3): the auto-resolved happy case appears as a
+    // one-line receipt HERE — never as a to-do card. The sentence is the
+    // server's plan-fixed copy (replay.note), rendered verbatim; the kept
+    // fixture pin boards the next seal without a decide event, so the
+    // receipt cards join the sealable set below.
+    const receipts = (groups.receipts || []).filter((card) => !(card.state && typeof card.state.sealedInTrain === 'string'));
+    for (const card of receipts) {
+      const receipt = node('p', 'train-status train-receipt', card.replay && typeof card.replay.note === 'string' ? card.replay.note : '');
+      receipt.setAttribute('data-card-id', card.cardId);
+      panel.appendChild(receipt);
+      hasContent = true;
+    }
     // §4.5: the train summary — counts of approved intents in Jesse's own
     // words, the lane-aware machine-time sentence, one Start behind the
     // one-confirm layer. A running train replaces the button with the
     // one-at-a-time line.
-    const approvable = trainApprovableCards(groups);
+    const approvable = trainApprovableCards(groups).concat(receipts);
     if (approvable.length > 0) {
       if (trainNonTerminal()) {
         if (train.panelError === null || train.panelError.id !== 'updates-train-one-at-a-time') {
@@ -5580,6 +5767,19 @@ button{font:inherit;}
         inner.appendChild(stats);
       }
     }
+    // D20: the steady-state metrics strip — appears once at least one
+    // reviewed update has gone live. The vote→live line renders only when
+    // a landed call carries a real timestamp (honest timing: measured, or
+    // nothing).
+    const metrics = updatesMetrics();
+    if (metrics !== null && metrics.cyclesCompleted > 0) {
+      const metricBits = [COPY.updatesMetricCycles(metrics.cyclesCompleted)];
+      if (metrics.votesAwaiting > 0) metricBits.push(COPY.updatesMetricAwaiting(metrics.votesAwaiting));
+      if (metrics.medianVoteToLiveMs !== null) metricBits.push(COPY.updatesMetricMedian(plainDuration(metrics.medianVoteToLiveMs)));
+      const strip = node('p', 'screen-sub', metricBits.join(' '));
+      strip.id = 'updates-metrics';
+      inner.appendChild(strip);
+    }
     if (updates.reloading) {
       const line = node('p', 'updates-note', COPY.updatesStaleCard);
       line.id = 'updates-reloading';
@@ -5640,37 +5840,16 @@ button{font:inherit;}
     }
     // Zone 3 — the update panel (Phase 2's trains, §4.5/§4.6).
     renderTrainPanel(inner, groups);
-    // The backlog: the compile checklist as read-only lines, headed by the
-    // same-facts note when the legacy card stands above it (§4.2; the lines
-    // retire with the checklist, Phase 4).
-    const lines = updatesChecklist();
-    const legacyRenders = groups.main.some((card) => isLegacyCard(card));
-    if (lines.length > 0) {
-      if (legacyRenders) {
-        const note = node('p', 'updates-note', COPY.updatesSameFacts);
-        note.id = 'updates-same-facts';
-        inner.appendChild(note);
-      }
-      const list = node('div', 'write-group');
-      list.id = 'updates-backlog';
-      for (const line of lines) {
-        list.appendChild(node('div', 'write-line', updatesLineText(parseChecklistLine(line))));
-      }
-      inner.appendChild(list);
-    } else if (updates.planFailed) {
-      // The backlog rides POST /api/v2/compile/preview, so its failure line
-      // is that endpoint's own D39 sentence (the same one Finish up renders)
-      // — never the §4.9 updates sentence, which would falsely claim the
-      // cards above failed to load (e.g. when conflicting votes 422 the
-      // compile while the derived cards render fine).
-      const failed = node('p', 'screen-sub', COPY.bootFetchFailed);
-      failed.id = 'updates-backlog-failed';
-      inner.appendChild(failed);
-    }
+    // RETIRED (Phase 4, D18): the read-only backlog (#updates-backlog /
+    // #updates-same-facts / #updates-backlog-failed) rendered the compile
+    // preview's printed checklist here. The checklist is retired — the cards
+    // above carry the same facts — so this screen no longer touches the
+    // compile preview at all; Finish up owns it.
     // The steady empty state (§4.8 owns the string).
     const anyCard = groups.main.length > 0 || groups.approved.length > 0
-      || groups.sealed.length > 0 || groups.engineering.length > 0 || groups.parked.length > 0;
-    if (!anyCard && lines.length === 0 && !updates.deriveFailed && !updates.planFailed) {
+      || groups.sealed.length > 0 || groups.engineering.length > 0 || groups.parked.length > 0
+      || groups.receipts.length > 0;
+    if (!anyCard && !updates.deriveFailed) {
       const empty = node('p', 'screen-sub', COPY.updatesEmpty);
       empty.id = 'updates-empty';
       inner.appendChild(empty);

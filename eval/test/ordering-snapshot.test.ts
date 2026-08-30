@@ -175,6 +175,30 @@ describe('ordering snapshot approval validator', () => {
       'ordering-approval-snapshot-mismatch',
     ]);
   });
+
+  it('quotes the approved engine identity on every mismatch finding', () => {
+    // The admission classifier's deferred-signing marker check verifies the
+    // identity a mismatch finding quotes against the marker's recorded
+    // pre-regen identity — a mismatch finding with no quoted identity can
+    // never be classified, hard-failing every data train's sign act (found
+    // in anger by the D15 sandbox ride).
+    const identityParams = {
+      engineVersion: ENGINE.engineVersion,
+      corpusFingerprint: ENGINE.corpusFingerprint,
+      layerFingerprint: ENGINE.layerFingerprint,
+    };
+    for (const findings of [
+      validate(approval({ snapshotSha256: '0'.repeat(64) })),
+      validate(approval({ probeListsSha256: '0'.repeat(64) })),
+      validate(approval(), null),
+      validate(approval(), '0'.repeat(64)),
+    ]) {
+      expect(findings).toHaveLength(1);
+      expect(findings[0]!.params).toEqual(identityParams);
+    }
+    const engineMismatch = validate(approval({ engine: { ...ENGINE, layerFingerprint: '0'.repeat(64) } }));
+    expect(engineMismatch[0]!.params).toEqual({ ...identityParams, layerFingerprint: '0'.repeat(64) });
+  });
 });
 
 describe('ordering approval v1 grandfather and sunset', () => {

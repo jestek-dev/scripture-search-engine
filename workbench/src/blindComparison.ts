@@ -340,6 +340,15 @@ async function loadDiskFixtures(root: string): Promise<readonly BlindPublication
     const directoryStats = await lstat(directory);
     if (!directoryStats.isDirectory() || directoryStats.isSymbolicLink() || path.dirname(await realpath(directory)) !== rootReal) continue;
     const comparisonPath = path.join(directory, 'comparison', 'comparison.json');
+    // D12: a candidate that has been BUILT but not yet MEASURED carries no
+    // comparison publication yet — a server restart between the two train
+    // stages (or a measure leg killed before its machine report landed)
+    // must not fail-close startup over it. No comparison.json means no
+    // publication was ever made, so there is nothing to protect; a
+    // comparison.json that EXISTS but is invalid or no longer matches its
+    // bound files still refuses below (fail-closed on real corruption).
+    const comparisonStats = await lstat(comparisonPath).catch(() => null);
+    if (comparisonStats === null) continue;
     const descriptorPath = path.join(directory, 'candidate-artifact.json');
     const databasePath = path.join(directory, 'content.db');
     const files = await Promise.all([comparisonPath, descriptorPath, databasePath].map(async (file) => {

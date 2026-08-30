@@ -799,9 +799,16 @@ export function validateCanonicalLegacyCaseLog(
 ): readonly CaseEvent[] {
   const actual = validateCaseEvents(parseCaseEventLog(casesJsonl));
   const expected = deriveLegacyCaseEvents(manifest, judgments);
+  // The byte pin is positional (the FILE starts with the canonical
+  // serialization); the identity pin is keyed by eventId, NOT positional —
+  // validateCaseEvents returns deterministic causal order, so a live case
+  // whose caseId sorts before a legacy case's would shift a positional
+  // slice and brick derivation the moment that case lands (found in anger
+  // by the D15 shakedown: a fresh case-created landed at index 0).
+  const actualById = new Map(actual.map((event) => [event.eventId, event] as const));
   if (
     !casesJsonl.startsWith(serializeCaseEventLog(expected))
-    || !sameJsonIdentity(actual.slice(0, expected.length), expected)
+    || !expected.every((event) => sameJsonIdentity(actualById.get(event.eventId), event))
   ) {
     throw new CaseValidationError('cases.jsonl is not the canonical deterministic legacy migration output.');
   }

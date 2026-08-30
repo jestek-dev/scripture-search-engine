@@ -27,6 +27,8 @@ import {
   type MainGoldenHistoryEntry,
   type PriorTrainArtifacts,
   type ReplayIdentity,
+  type ReplayProbeRequest,
+  type ReplayProbeResult,
   type UpdateCard,
   type UpdatesDerivation,
 } from './deriveUpdates.js';
@@ -60,6 +62,11 @@ export interface UpdatesOperationsOptions {
    * Defaults to `readGoldenMainHistoryFromGit` (real git history).
    */
   readonly readGoldenMainHistory?: GoldenMainHistoryReader;
+  /**
+   * D16 (V6): the staleness-replay runner over the SERVED engine. Absent,
+   * every derivation keeps the Phase 2–3 substitute (FM-2's triad).
+   */
+  readonly replay?: ReplayRunner;
 }
 
 export type DecideDecision = 'approve' | 'decline' | 'park';
@@ -221,12 +228,29 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
   if (trainIds.length === 0) return [];
   const registryText = await readOptional(paths.evidencePath);
   const manifestsByTrain = new Map<string, string>();
+  const baseCommitsByTrain = new Map<string, string>();
+  const originBaseCommitsByTrain = new Map<string, string | null>();
   if (registryText !== null) {
     try {
-      const registry = JSON.parse(registryText) as { admissions?: readonly { reviewId?: unknown; proposal?: unknown }[] };
+      const registry = JSON.parse(registryText) as { admissions?: readonly { reviewId?: unknown; proposal?: unknown; admittedBaseCommit?: unknown; admittedOriginBaseCommit?: unknown }[] };
       for (const entry of registry.admissions ?? []) {
         if (typeof entry.reviewId === 'string' && entry.proposal !== undefined) {
           manifestsByTrain.set(entry.reviewId, JSON.stringify(entry.proposal));
+          // The train's base at seal — it scopes the §03.6 live window to
+          // history the train could actually have produced. A missing or
+          // malformed base yields no window (fail-closed to riding).
+          if (typeof entry.admittedBaseCommit === 'string' && COMMIT_HEX.test(entry.admittedBaseCommit)) {
+            baseCommitsByTrain.set(entry.reviewId, entry.admittedBaseCommit);
+          }
+          // The seal-time origin/main tip (null: the ref did not exist at
+          // seal). A malformed value carries forward as ABSENT — the same
+          // unknown-seal-state footing as a legacy entry, which the reader
+          // observes only while origin/main cannot hold history the local
+          // base misses.
+          if (entry.admittedOriginBaseCommit === null
+            || (typeof entry.admittedOriginBaseCommit === 'string' && COMMIT_HEX.test(entry.admittedOriginBaseCommit))) {
+            originBaseCommitsByTrain.set(entry.reviewId, entry.admittedOriginBaseCommit);
+          }
         }
       }
     } catch {
@@ -235,31 +259,61 @@ async function loadPriorTrainArtifacts(paths: UpdatesInputPaths, updatesLog: str
   }
   return Promise.all(trainIds.sort().map(async (trainId) => {
     const sealedManifestJson = manifestsByTrain.get(trainId);
+    const admittedBaseCommit = baseCommitsByTrain.get(trainId);
+    const hasOriginBase = originBaseCommitsByTrain.has(trainId);
     const reportPath = path.join(paths.repoRoot, 'eval', '.runs', `${trainId}.json`);
     const verifiedReportJson = /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(trainId) ? await readOptional(reportPath) : null;
     return {
       trainId,
       ...(sealedManifestJson === undefined ? {} : { sealedManifestJson }),
       ...(verifiedReportJson === null ? {} : { verifiedReportJson }),
+      ...(admittedBaseCommit === undefined ? {} : { admittedBaseCommit }),
+      ...(hasOriginBase ? { admittedOriginBaseCommit: originBaseCommitsByTrain.get(trainId) ?? null } : {}),
     };
   }));
 }
 
-/** The §03.6 live-observation source: main's history for named golden paths. */
-export type GoldenMainHistoryReader = (repoRoot: string, goldenPaths: readonly string[]) => Promise<readonly MainGoldenHistoryEntry[]>;
+/**
+ * One sealed train's §03.6 history window request: the golden paths its
+ * manifest upserts, and the base its window starts AFTER (`admittedBaseCommit`
+ * from the D10 registry entry, recorded at seal). `baseCommit` null means the
+ * registry records no usable base — the reader must observe nothing for that
+ * train (fail-closed to riding), never fall back to unscoped history.
+ */
+export interface TrainGoldenHistoryWindow {
+  readonly trainId: string;
+  readonly baseCommit: string | null;
+  /**
+   * The seal-time tip of `refs/remotes/origin/main` (`admittedOriginBaseCommit`
+   * from the same D10 entry): a string excludes that ref's seal-time history
+   * from the window alongside `baseCommit`; `null` records that the ref did
+   * not exist at seal (the local base bounds everything observable then);
+   * ABSENT marks a legacy entry with no recorded seal-time origin state —
+   * the reader observes it only while origin/main is absent or an ancestor
+   * of `baseCommit` or of the local main tip (nothing beyond local main to
+   * see), and otherwise observes NOTHING (fail-closed to riding).
+   */
+  readonly originBaseCommit?: string | null;
+  readonly goldenPaths: readonly string[];
+}
+
+/** The §03.6 live-observation source: per-train post-base golden history. */
+export type GoldenMainHistoryReader = (repoRoot: string, windows: readonly TrainGoldenHistoryWindow[]) => Promise<readonly MainGoldenHistoryEntry[]>;
 
 const GOLDEN_FIXTURE_ID = /^[a-z0-9][a-z0-9-]{0,127}$/;
 const COMMIT_HEX = /^[0-9a-f]{40}$/;
 
 /**
- * The golden paths whose main-history the live observation needs: exactly
- * the files sealed manifests upsert. Parsed loosely — a manifest that does
- * not parse contributes no paths and the §03.2 join reports it unverifiable.
+ * The per-train history windows the live observation needs: for each sealed
+ * train, exactly the files its manifest upserts, bounded below by its own
+ * `admittedBaseCommit`. Parsed loosely — a manifest that does not parse
+ * contributes no window and the §03.2 join reports it unverifiable.
  */
-function sealedGoldenPathsOf(priorTrainArtifacts: readonly PriorTrainArtifacts[]): string[] {
-  const goldenPaths = new Set<string>();
-  for (const artifact of priorTrainArtifacts) {
+function sealedGoldenWindowsOf(priorTrainArtifacts: readonly PriorTrainArtifacts[]): TrainGoldenHistoryWindow[] {
+  const windows: TrainGoldenHistoryWindow[] = [];
+  for (const artifact of [...priorTrainArtifacts].sort((a, b) => a.trainId.localeCompare(b.trainId))) {
     if (artifact.sealedManifestJson === undefined) continue;
+    const goldenPaths = new Set<string>();
     try {
       const manifest = JSON.parse(artifact.sealedManifestJson) as { operations?: readonly { type?: unknown; goldenFixtureId?: unknown }[] };
       for (const operation of Array.isArray(manifest.operations) ? manifest.operations : []) {
@@ -268,25 +322,59 @@ function sealedGoldenPathsOf(priorTrainArtifacts: readonly PriorTrainArtifacts[]
         }
       }
     } catch {
-      // The join reports the unparseable manifest; no path to observe.
+      // The join reports the unparseable manifest; no window to observe.
     }
+    if (goldenPaths.size === 0) continue;
+    const originBase = artifact.admittedOriginBaseCommit;
+    windows.push({
+      trainId: artifact.trainId,
+      baseCommit: artifact.admittedBaseCommit !== undefined && COMMIT_HEX.test(artifact.admittedBaseCommit)
+        ? artifact.admittedBaseCommit
+        : null,
+      // A malformed recorded value degrades to ABSENT — the legacy footing,
+      // which the reader only observes while origin/main cannot hold
+      // history the local base misses.
+      ...(originBase === null || (typeof originBase === 'string' && COMMIT_HEX.test(originBase))
+        ? { originBaseCommit: originBase }
+        : {}),
+      goldenPaths: [...goldenPaths].sort(),
+    });
   }
-  return [...goldenPaths].sort();
+  return windows;
 }
 
 /**
- * The default `GoldenMainHistoryReader`: every content version of each named
- * golden path reachable from main — local `refs/heads/main` and, when
- * present, `refs/remotes/origin/main` (a squash merge lands on origin/main
- * first; the primary checkout's main may lag). §03.6/§5.2 anchor the `live`
- * observation here because git history only grows: a train whose sealed
- * fixtures all appear in it stays live no matter how the working tree moves
- * later. Not a git repository, no main ref, an unreadable or unparseable
- * version: observed as absent, never an error — the observation fails closed
- * to "riding".
+ * The default `GoldenMainHistoryReader`: for each train's window, every
+ * content version of each named golden path at commits reachable from main
+ * but NOT from the train's own bases
+ * (`git log --format='%H %cI' <main> ^<base> ^<originBase> -- <path>` — the
+ * same commit walk `rev-list` performed, now also carrying each commit's
+ * committer time for the D20 display metrics) — history the
+ * train could actually have produced. Main is the local `refs/heads/main`
+ * and, when present, `refs/remotes/origin/main` (a squash merge lands on
+ * origin/main first; the primary checkout's main may lag). Because the tips
+ * include the fetched origin ref, the window must be bounded by BOTH bases
+ * recorded at seal: the local `admittedBaseCommit` alone leaves every commit
+ * already fetched onto origin/main during exactly that lag INSIDE a newly
+ * sealed train's window, and a reversal chain re-deriving byte-identical
+ * ancestor content would observe a never-merged train live at seal.
+ * §03.6/§5.2 anchor the `live` observation here because both bases are fixed
+ * at seal and git history only grows: each window is monotonic, so a train
+ * whose sealed fixtures all appear in its window stays live no matter how
+ * the working tree moves later — while a version merged BEFORE the train's
+ * bases never marks it live. A legacy window with NO recorded seal-time
+ * origin state is observed only while origin/main is absent or an ancestor
+ * of the window's base or of the local main tip (the tips then see nothing
+ * beyond local main, and the local base bounds the window exactly as it
+ * did before origin bases were recorded); origin/main ahead of or
+ * divergent from local main leaves that window unboundable and it
+ * observes NOTHING. Not a git repository, no main ref, no usable base for a
+ * train, an unresolvable recorded origin base, an unreadable or unparseable
+ * version: observed as absent, never an error — the observation fails
+ * closed to "riding".
  */
-export async function readGoldenMainHistoryFromGit(repoRoot: string, goldenPaths: readonly string[]): Promise<MainGoldenHistoryEntry[]> {
-  if (goldenPaths.length === 0) return [];
+export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: readonly TrainGoldenHistoryWindow[]): Promise<MainGoldenHistoryEntry[]> {
+  if (windows.length === 0) return [];
   const { execFile } = await import('node:child_process');
   const { promisify } = await import('node:util');
   const execFileAsync = promisify(execFile);
@@ -298,36 +386,143 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, goldenPaths
       return null;
     }
   };
-  const tips: string[] = [];
-  for (const ref of ['refs/heads/main', 'refs/remotes/origin/main']) {
-    const resolved = (await capture(['rev-parse', '--verify', '--quiet', `${ref}^{commit}`]))?.trim();
-    if (resolved !== undefined && COMMIT_HEX.test(resolved) && !tips.includes(resolved)) tips.push(resolved);
-  }
+  const resolveCommit = async (revision: string): Promise<string | undefined> => {
+    const resolved = (await capture(['rev-parse', '--verify', '--quiet', `${revision}^{commit}`]))?.trim();
+    return resolved !== undefined && COMMIT_HEX.test(resolved) ? resolved : undefined;
+  };
+  const localTip = await resolveCommit('refs/heads/main');
+  const originTip = await resolveCommit('refs/remotes/origin/main');
+  const tips = [...new Set([localTip, originTip].filter((tip): tip is string => tip !== undefined))];
   if (tips.length === 0) return [];
-  const entries: MainGoldenHistoryEntry[] = [];
-  for (const goldenPath of [...goldenPaths].sort()) {
-    if (!goldenPath.startsWith('eval/golden/')) continue;
+  // Shared across trains: sealed windows overlap ((bases, path) tuples
+  // repeat when same-search trains chain), and version contents repeat
+  // across commits; read each only once.
+  interface WindowObservation {
+    readonly digests: readonly string[];
+    readonly versions: readonly { readonly digest: string; readonly committedAt: string }[];
+  }
+  const observationByWindowKey = new Map<string, WindowObservation>();
+  const digestByCommitPath = new Map<string, string | null>();
+  const readWindowObservation = async (baseCommits: readonly string[], goldenPath: string): Promise<WindowObservation> => {
+    const windowKey = `${baseCommits.join('\u0000')}\u0000${goldenPath}`;
+    const memoized = observationByWindowKey.get(windowKey);
+    if (memoized !== undefined) return memoized;
     const versionDigests = new Set<string>();
+    // D20 display metrics: each digest's EARLIEST committer time in the
+    // window. Liveness reads only the digest set, exactly as before.
+    const earliestByDigest = new Map<string, string>();
     const seenCommits = new Set<string>();
     for (const tip of tips) {
-      const listed = await capture(['rev-list', tip, '--', goldenPath]);
+      // `git log` walks the same commit set `rev-list` walked, with the
+      // committer time riding each line ("<40-hex> <ISO-8601>").
+      const listed = await capture(['log', '--format=%H %cI', tip, ...baseCommits.map((baseCommit) => `^${baseCommit}`), '--', goldenPath]);
       if (listed === null) continue;
       for (const line of listed.split('\n')) {
-        const commit = line.trim();
+        const [commit = '', committedAtRaw = ''] = line.trim().split(' ');
         if (!COMMIT_HEX.test(commit) || seenCommits.has(commit)) continue;
         seenCommits.add(commit);
-        const contents = await capture(['show', `${commit}:${goldenPath}`]);
-        if (contents === null) continue;
-        try {
-          versionDigests.add(fixtureContentDigest(JSON.parse(contents)));
-        } catch {
-          // An unparseable historical version proves nothing.
+        const contentKey = `${commit}\u0000${goldenPath}`;
+        let versionDigest = digestByCommitPath.get(contentKey);
+        if (versionDigest === undefined) {
+          const contents = await capture(['show', `${commit}:${goldenPath}`]);
+          versionDigest = null;
+          if (contents !== null) {
+            try {
+              versionDigest = fixtureContentDigest(JSON.parse(contents));
+            } catch {
+              // An unparseable historical version proves nothing.
+            }
+          }
+          digestByCommitPath.set(contentKey, versionDigest);
+        }
+        if (versionDigest !== null) {
+          versionDigests.add(versionDigest);
+          const parsed = Date.parse(committedAtRaw);
+          if (!Number.isNaN(parsed)) {
+            const committedAt = new Date(parsed).toISOString();
+            const existing = earliestByDigest.get(versionDigest);
+            if (existing === undefined || committedAt < existing) earliestByDigest.set(versionDigest, committedAt);
+          }
         }
       }
     }
-    entries.push({ path: goldenPath, fixtureDigests: [...versionDigests].sort() });
+    const observation: WindowObservation = {
+      digests: [...versionDigests].sort(),
+      versions: [...earliestByDigest.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([digest, committedAt]) => ({ digest, committedAt })),
+    };
+    observationByWindowKey.set(windowKey, observation);
+    return observation;
+  };
+  const entries: MainGoldenHistoryEntry[] = [];
+  for (const window of [...windows].sort((a, b) => a.trainId.localeCompare(b.trainId))) {
+    // No usable base = no window: fall back to NOTHING, never to unscoped
+    // history — unscoped history is exactly the reversal-chain false 'live'.
+    if (window.baseCommit === null || !COMMIT_HEX.test(window.baseCommit)) continue;
+    const base = await resolveCommit(window.baseCommit);
+    if (base !== window.baseCommit) continue;
+    const baseCommits = [window.baseCommit];
+    if (typeof window.originBaseCommit === 'string') {
+      // Recorded at seal: exclude everything origin/main could already
+      // serve then. A malformed or unresolvable recorded base leaves the
+      // window unboundable — observe NOTHING (fail-closed to riding).
+      if (!COMMIT_HEX.test(window.originBaseCommit)) continue;
+      if (await resolveCommit(window.originBaseCommit) !== window.originBaseCommit) continue;
+      if (!baseCommits.includes(window.originBaseCommit)) baseCommits.push(window.originBaseCommit);
+    } else if (window.originBaseCommit === undefined && originTip !== undefined) {
+      // A legacy window records no seal-time origin state. It stays
+      // observable only while origin/main holds nothing beyond what the
+      // tips already see through local main — the ref is an ancestor of
+      // (or equal to) the window's base or of the local main tip, so the
+      // window reduces to `rev-list <localTip> ^<base>` exactly as before
+      // origin bases were recorded (the D11 sandbox's geometry: the
+      // sandbox pushes main AFTER merging, so origin/main trails local
+      // main). Origin/main AHEAD of or divergent from local main is the
+      // lag geometry this bound exists for, and a legacy window cannot
+      // say what the seal could already see: unboundable, observe
+      // NOTHING (fail-closed to riding).
+      const withinBase = await capture(['merge-base', '--is-ancestor', originTip, window.baseCommit]);
+      const withinLocalTip = localTip === undefined
+        ? null
+        : await capture(['merge-base', '--is-ancestor', originTip, localTip]);
+      if (withinBase === null && withinLocalTip === null) continue;
+    }
+    // window.originBaseCommit === null: the seal recorded that origin/main
+    // did not exist — the local base bounds everything observable then.
+    for (const goldenPath of [...window.goldenPaths].sort()) {
+      if (!goldenPath.startsWith('eval/golden/')) continue;
+      const observation = await readWindowObservation(baseCommits, goldenPath);
+      entries.push({
+        trainId: window.trainId,
+        path: goldenPath,
+        fixtureDigests: observation.digests,
+        versions: observation.versions,
+      });
+    }
   }
   return entries;
+}
+
+/**
+ * The seal-time recorder's reader for the OTHER half of a train's base: the
+ * commit at `refs/remotes/origin/main`, or null when the ref does not exist
+ * (or the directory is not a git repository). The train runner records this
+ * beside `admittedBaseCommit` at seal so the §03.6 window can exclude
+ * everything origin/main could already serve — during exactly the lag the
+ * fetched ref exists for, origin/main is AHEAD of the local main the seal
+ * records. Never throws.
+ */
+export async function readOriginMainTipFromGit(repoRoot: string): Promise<string | null> {
+  const { execFile } = await import('node:child_process');
+  const { promisify } = await import('node:util');
+  try {
+    const result = await promisify(execFile)('git', ['rev-parse', '--verify', '--quiet', 'refs/remotes/origin/main^{commit}'], { cwd: repoRoot, windowsHide: true });
+    const commit = result.stdout.trim();
+    return COMMIT_HEX.test(commit) ? commit : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Reads one complete observed-input snapshot for the deriver (§03.2's table). */
@@ -347,8 +542,8 @@ export async function assembleUpdatesInputs(
     readFile(path.join(paths.repoRoot, 'pipeline', 'fixtures', 'web-subset.json'), 'utf8'),
   ]);
   const priorTrainArtifacts = await loadPriorTrainArtifacts(paths, updatesLog);
-  const sealedGoldenPaths = sealedGoldenPathsOf(priorTrainArtifacts);
-  const mainGoldenHistory = sealedGoldenPaths.length === 0 ? [] : await readGoldenMainHistory(paths.repoRoot, sealedGoldenPaths);
+  const sealedGoldenWindows = sealedGoldenWindowsOf(priorTrainArtifacts);
+  const mainGoldenHistory = sealedGoldenWindows.length === 0 ? [] : await readGoldenMainHistory(paths.repoRoot, sealedGoldenWindows);
   return {
     judgmentsLog,
     casesLog,
@@ -361,6 +556,38 @@ export async function assembleUpdatesInputs(
     ...(priorTrainArtifacts.length === 0 ? {} : { priorTrainArtifacts }),
     ...(mainGoldenHistory.length === 0 ? {} : { mainGoldenHistory }),
   };
+}
+
+/**
+ * D16 (V6): the caller-side half of the seal-time staleness replay — runs the
+ * derivation's named queries against the SERVED engine (in-process,
+ * statistics and lookups only; the deriver covenant bans anything else) and
+ * answers with what each query returned plus which judged references no
+ * longer resolve. The server wires this from its live engine; tests wire
+ * synthetic observations. Absent, derivation keeps the Phase 2–3 substitute
+ * (FM-2's triad) unchanged.
+ */
+export type ReplayRunner = (requests: readonly ReplayProbeRequest[]) => Promise<readonly ReplayProbeResult[]>;
+
+/**
+ * D16's two-pass derive: pass 1 names the identity-moved queries to replay
+ * (`replayRequests`); the runner observes them against the served artifact;
+ * pass 2 derives with the observations pinned as input — so the derivation
+ * digest the panel renders and the digest the seal re-derives cover the SAME
+ * observed picture, and a picture that moved between the two refuses 409
+ * exactly like any other stale preview.
+ */
+export async function deriveWithReplay(
+  baseInputs: DeriveUpdatesInputs,
+  replay: ReplayRunner | undefined,
+): Promise<{ inputs: DeriveUpdatesInputs; derivation: UpdatesDerivation }> {
+  const first = deriveUpdates(baseInputs);
+  if (replay === undefined || first.replayRequests.length === 0) {
+    return { inputs: baseInputs, derivation: first };
+  }
+  const observations = await replay(first.replayRequests);
+  const inputs: DeriveUpdatesInputs = { ...baseInputs, replayObservations: observations };
+  return { inputs, derivation: deriveUpdates(inputs) };
 }
 
 export function createUpdatesOperations(options: UpdatesOperationsOptions): UpdatesOperations {
@@ -384,6 +611,21 @@ export function createUpdatesOperations(options: UpdatesOperationsOptions): Upda
     }
   }
 
+  /** D16: pass 1 names the replay; pass 2 derives with its observations. */
+  async function deriveReplayed(replayIdentity: ReplayIdentity): Promise<{ inputs: DeriveUpdatesInputs; derivation: UpdatesDerivation }> {
+    const baseInputs = await assembleInputs(replayIdentity);
+    try {
+      return await deriveWithReplay(baseInputs, options.replay);
+    } catch (error) {
+      if (error instanceof UpdatesOperationsError) throw error;
+      throw new UpdatesOperationsError(
+        'updates_underivable',
+        error instanceof Error ? error.message : 'Updates could not be derived from the current logs.',
+        500,
+      );
+    }
+  }
+
   // Decides serialize through one in-process chain so two keystrokes cannot
   // interleave their read-validate-append cycles (the store already
   // serializes appends; this extends the discipline to the derive+append
@@ -392,14 +634,13 @@ export function createUpdatesOperations(options: UpdatesOperationsOptions): Upda
 
   return {
     async derive(replayIdentity: ReplayIdentity): Promise<UpdatesDerivation> {
-      return deriveFrom(await assembleInputs(replayIdentity));
+      return (await deriveReplayed(replayIdentity)).derivation;
     },
 
     async decide(cardId: string, input: unknown, replayIdentity: ReplayIdentity): Promise<UpdateCard> {
       const run = decideChain.then(async () => {
         const request = parseDecideRequest(input);
-        const inputs = await assembleInputs(replayIdentity);
-        const derivation = deriveFrom(inputs);
+        const { inputs, derivation } = await deriveReplayed(replayIdentity);
         const card = derivation.cards.find((candidate) => candidate.cardId === cardId);
         if (card === undefined) {
           // FM-13's arm: the id no longer derives — a contributing judgment

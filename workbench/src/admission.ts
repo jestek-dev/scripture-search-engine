@@ -236,6 +236,27 @@ export interface ProbeApprovalInput {
   readonly after: JsonValue;
 }
 
+/**
+ * §5.5 gap 1 (Phase 3, D12b): the ordering snapshot and its approval enter
+ * admission as their own diff kinds beside the probes pair — a data train's
+ * sanctioned `--update-ordering-snapshot` regen travels the same reviewed
+ * machinery, and the approval path is written only by the one legitimate
+ * publisher of an approval: a hand-authored document traveling as admission
+ * INPUT (a train admission carries the deferred-signing marker instead; the
+ * machine never writes an approval).
+ */
+export interface OrderingSnapshotInput {
+  readonly path: 'eval/baselines/ordering.snapshot.json';
+  readonly beforeSha256: string;
+  readonly after: JsonValue;
+}
+
+export interface OrderingSnapshotApprovalInput {
+  readonly path: 'eval/baselines/ordering.snapshot.approval.json';
+  readonly beforeSha256: string;
+  readonly after: JsonValue;
+}
+
 export interface AdmissionPreviewInput {
   readonly repoRoot: string;
   readonly admittedBaseCommit: string;
@@ -270,11 +291,13 @@ export interface AdmissionPreviewInput {
   readonly fixturePromotions?: readonly FixturePromotionPlan[];
   readonly probeBaseline?: ProbeBaselineInput;
   readonly probeApproval?: ProbeApprovalInput;
+  readonly orderingSnapshot?: OrderingSnapshotInput;
+  readonly orderingSnapshotApproval?: OrderingSnapshotApprovalInput;
 }
 
 export interface AdmissionFileDiff {
   readonly path: string;
-  readonly kind: 'yaml' | 'fixture' | 'selection' | 'fixture-promotion' | 'probe-baseline' | 'probe-approval';
+  readonly kind: 'yaml' | 'fixture' | 'selection' | 'fixture-promotion' | 'probe-baseline' | 'probe-approval' | 'ordering-snapshot' | 'ordering-snapshot-approval';
   readonly operationIds: readonly string[];
   readonly before: { readonly sha256: string; readonly base64: string; readonly text: string };
   readonly after: { readonly sha256: string; readonly base64: string; readonly text: string };
@@ -845,8 +868,13 @@ function parseGauntletBytes(
     }
     return gateValue as unknown as MachineGate;
   });
+  // A required gate's `warn` is the ADMIT_WITH_WARNINGS shape — worth
+  // reading, never a block (the CLI's own --require-admit accepts it). A
+  // required gate that did NOT run (`not-applicable`) still blocks: an unrun
+  // guardrail must never read as protection (gate discipline, CLAUDE.md).
   const blocking = payload.verdict === 'REJECT' || gates.some((gate, index) =>
-    gate.status === 'fail' || (GAUNTLET_GATE_ROSTER[index]!.applicability === 'required' && gate.status !== 'pass'));
+    gate.status === 'fail'
+    || (GAUNTLET_GATE_ROSTER[index]!.applicability === 'required' && gate.status !== 'pass' && gate.status !== 'warn'));
   const verdictAcceptable = payload.verdict === 'ADMIT' || payload.verdict === 'ADMIT_WITH_WARNINGS'
     || (acceptance === 'tolerate-reject' && targetKind === 'release' && payload.verdict === 'REJECT');
   if (!verdictAcceptable || (blocking && !(acceptance === 'tolerate-reject' && targetKind === 'release'))) {
@@ -1005,6 +1033,17 @@ function expectationImproved(query: ComparisonQueryReport): boolean {
   return query.expectedReferenceOutcomes.reference.some((reference, index) => !reference.passes && query.expectedReferenceOutcomes.candidate[index]?.passes === true);
 }
 
+/**
+ * The per-operation reviewed diffs — the exact after-bytes an admission
+ * would apply. Exported for the D13 regen bed (trainStages.ts), which
+ * applies the train's reviewed changes into a scratch worktree before the
+ * sanctioned baseline regeneration; the admission path itself calls this
+ * through previewAdmission as before.
+ */
+export async function computeOperationDiffs(repoRoot: string, proposal: ProposalManifest): Promise<AdmissionFileDiff[]> {
+  return operationDiffs(repoRoot, proposal);
+}
+
 async function operationDiffs(repoRoot: string, proposal: ProposalManifest): Promise<AdmissionFileDiff[]> {
   const operationsByPath = new Map<string, ProposalOperation[]>();
   for (const operation of proposal.operations) {
@@ -1114,6 +1153,69 @@ async function appendProbeApprovalDiff(repoRoot: string, diffs: AdmissionFileDif
 }
 
 /**
+ * §5.5 gap 1: the ordering pair's diff kinds, mirroring the probes pair
+ * exactly — `ordering-snapshot` beside `probe-baseline` and
+ * `ordering-snapshot-approval` beside `probe-approval`, each path-locked to
+ * its single owned file.
+ */
+async function appendOrderingSnapshotDiff(repoRoot: string, diffs: AdmissionFileDiff[], input: OrderingSnapshotInput | undefined): Promise<void> {
+  if (input === undefined) return;
+  if (input.path !== 'eval/baselines/ordering.snapshot.json') fail('unsafe_path', 'Ordering snapshot must use the single owned baseline path.');
+  if (diffs.some((entry) => entry.path === input.path)) fail('operation_collision', 'Ordering snapshot collides with another source edit.');
+  requireDigest(input.beforeSha256, 'orderingSnapshot.beforeSha256');
+  const beforeText = await readConfinedSource(repoRoot, input.path);
+  if (sha256(beforeText) !== input.beforeSha256) fail('source_drift', 'Ordering snapshot changed after review.');
+  const afterText = canonicalPrettyJson(input.after);
+  const withoutDigest = {
+    path: input.path, kind: 'ordering-snapshot' as const, operationIds: [] as readonly string[],
+    before: bytes(beforeText), after: bytes(afterText), changed: beforeText !== afterText,
+  };
+  diffs.push({ ...withoutDigest, digest: diffDigest(withoutDigest) });
+}
+
+async function appendOrderingSnapshotApprovalDiff(repoRoot: string, diffs: AdmissionFileDiff[], input: OrderingSnapshotApprovalInput | undefined): Promise<void> {
+  if (input === undefined) return;
+  if (input.path !== 'eval/baselines/ordering.snapshot.approval.json') fail('unsafe_path', 'Ordering approval must use the single owned approval path.');
+  if (diffs.some((entry) => entry.path === input.path)) fail('operation_collision', 'Ordering approval collides with another source edit.');
+  requireDigest(input.beforeSha256, 'orderingSnapshotApproval.beforeSha256');
+  const beforeText = await readConfinedSource(repoRoot, input.path);
+  if (sha256(beforeText) !== input.beforeSha256) fail('source_drift', 'Ordering approval changed after review.');
+  const afterText = canonicalPrettyJson(input.after);
+  const withoutDigest = {
+    path: input.path, kind: 'ordering-snapshot-approval' as const, operationIds: [] as readonly string[],
+    before: bytes(beforeText), after: bytes(afterText), changed: beforeText !== afterText,
+  };
+  diffs.push({ ...withoutDigest, digest: diffDigest(withoutDigest) });
+}
+
+/**
+ * Schema-version-agnostic binding between the ordering snapshot document and
+ * its independent approval — the same discipline as the probes pair below:
+ * only fields present in every approval schema version are consulted
+ * (`snapshotSha256` and the embedded engine identity). Full schema
+ * validation belongs to G2's companion gate.
+ */
+export function orderingApprovalBindingIssues(snapshotAfterText: string, approvalAfterText: string): readonly string[] {
+  let snapshot: unknown;
+  let approval: unknown;
+  try { snapshot = JSON.parse(snapshotAfterText); } catch { return ['Ordering snapshot after-bytes are not valid JSON.']; }
+  try { approval = JSON.parse(approvalAfterText); } catch { return ['Ordering approval after-bytes are not valid JSON.']; }
+  if (!isRecord(snapshot)) return ['Ordering snapshot document must be an object.'];
+  if (!isRecord(approval)) return ['Ordering approval document must be an object.'];
+  const issues: string[] = [];
+  if (!SHA256.test(String(approval.snapshotSha256)) || approval.snapshotSha256 !== digest(snapshot)) {
+    issues.push('Approval snapshotSha256 does not bind the admitted snapshot document.');
+  }
+  const engine = approval.engine;
+  if (!isRecord(engine) || engine.engineVersion !== snapshot.engineVersion
+      || engine.corpusFingerprint !== snapshot.corpusFingerprint
+      || engine.layerFingerprint !== snapshot.layerFingerprint) {
+    issues.push('Approval engine identity does not match the admitted snapshot identity.');
+  }
+  return issues;
+}
+
+/**
  * Schema-version-agnostic binding between a probe baseline document and its
  * independent approval: only fields present in BOTH approval schema versions
  * are consulted, so an approval-schema cutover cannot break admission or
@@ -1212,6 +1314,44 @@ function assertProbeApprovalPairing(diffs: readonly AdmissionFileDiff[], marker:
   if (issues.length > 0) fail('probe_approval_mismatch', issues.join(' '));
 }
 
+/**
+ * §5.5 gap 1: the ordering pair travels together or not at all — the
+ * probes pairing rule mirrored exactly, including the deferred-signing
+ * marker escape (gap 2): a regenerated snapshot may travel without a fresh
+ * approval only when the marker's expected post-merge identity equals the
+ * regenerated snapshot's embedded identity. A forged or wrong marker buys
+ * nothing (§06 FM-8 case f).
+ */
+function assertOrderingApprovalPairing(diffs: readonly AdmissionFileDiff[], marker: DeferredSigningMarker | null): void {
+  const snapshot = diffs.find((entry) => entry.kind === 'ordering-snapshot');
+  const approval = diffs.find((entry) => entry.kind === 'ordering-snapshot-approval');
+  if (approval !== undefined && !approval.changed) {
+    fail('ordering_approval_orphaned', 'An unchanged ordering approval diff is not publishable evidence.');
+  }
+  const snapshotChanged = snapshot !== undefined && snapshot.changed;
+  const approvalChanged = approval !== undefined && approval.changed;
+  if (snapshotChanged && !approvalChanged) {
+    if (marker !== null) {
+      let document: unknown;
+      try { document = JSON.parse(snapshot!.after.text); } catch { document = null; }
+      const embedded = isRecord(document)
+        ? { engineVersion: document.engineVersion, corpusFingerprint: document.corpusFingerprint, layerFingerprint: document.layerFingerprint }
+        : null;
+      if (embedded === null || canonical(embedded) !== canonical(marker.expectedPostMergeIdentity)) {
+        fail('ordering_approval_missing', 'A moved ordering snapshot requires its re-issued independent approval in the same batch — the deferred-signing marker does not match the regenerated snapshot identity.');
+      }
+      return;
+    }
+    fail('ordering_approval_missing', 'A moved ordering snapshot requires its re-issued independent approval in the same batch.');
+  }
+  if (approvalChanged && !snapshotChanged) {
+    fail('ordering_approval_orphaned', 'An updated ordering approval without a moved snapshot has nothing it can attest to.');
+  }
+  if (!snapshotChanged || !approvalChanged) return;
+  const issues = orderingApprovalBindingIssues(snapshot!.after.text, approval!.after.text);
+  if (issues.length > 0) fail('ordering_approval_mismatch', issues.join(' '));
+}
+
 /** §5.3 item 1: the two derived lane values — unforgeable and deterministic. */
 export function classifyManifestLanes(proposal: ProposalManifest): {
   readonly effectExemption: FixtureClassEffectExemption | null;
@@ -1273,11 +1413,28 @@ export async function previewAdmission(input: AdmissionPreviewInput): Promise<Ad
   const movements = await appendProbeDiff(repoRoot, diffs, input.probeBaseline);
   await appendProbeApprovalDiff(repoRoot, diffs, input.probeApproval);
   assertProbeApprovalPairing(diffs, marker);
+  await appendOrderingSnapshotDiff(repoRoot, diffs, input.orderingSnapshot);
+  await appendOrderingSnapshotApprovalDiff(repoRoot, diffs, input.orderingSnapshotApproval);
+  assertOrderingApprovalPairing(diffs, marker);
   diffs.sort((left, right) => left.path.localeCompare(right.path));
   const fixtureDecisionSubjects = (input.fixturePromotions ?? []).map((plan) => ({ fixtureId: plan.fixtureId, digest: plan.digest })).sort((a, b) => a.fixtureId.localeCompare(b.fixtureId));
   const probeDiff = diffs.find((entry) => entry.kind === 'probe-baseline');
-  const probeDecisionSubject = probeDiff === undefined || !probeDiff.changed ? null : digest({ movements, diff: probeDiff.digest });
-  const sourceDecisionSubject = digest({ proposalDigest, diffs: diffs.filter((entry) => entry.kind !== 'fixture-promotion' && entry.kind !== 'probe-baseline' && entry.kind !== 'probe-approval').map((entry) => entry.digest) });
+  const orderingDiff = diffs.find((entry) => entry.kind === 'ordering-snapshot');
+  // The baseline decision slot covers BOTH regenerated baselines: the probe
+  // movements plus, when the ordering snapshot moved, its diff digest — the
+  // digest formula is unchanged whenever no ordering diff exists, so
+  // pre-Phase-3 subjects stay byte-stable.
+  const probeChanged = probeDiff !== undefined && probeDiff.changed;
+  const orderingChanged = orderingDiff !== undefined && orderingDiff.changed;
+  const probeDecisionSubject = !probeChanged && !orderingChanged
+    ? null
+    : digest({
+      movements,
+      diff: probeChanged ? probeDiff!.digest : null,
+      ...(orderingChanged ? { orderingDiff: orderingDiff!.digest } : {}),
+    });
+  const NON_SOURCE_KINDS: readonly AdmissionFileDiff['kind'][] = ['fixture-promotion', 'probe-baseline', 'probe-approval', 'ordering-snapshot', 'ordering-snapshot-approval'];
+  const sourceDecisionSubject = digest({ proposalDigest, diffs: diffs.filter((entry) => !NON_SOURCE_KINDS.includes(entry.kind)).map((entry) => entry.digest) });
   const decisionSlots = [
     { kind: 'source-proposal' as const, slotId: 'source-proposal', subjectDigest: sourceDecisionSubject },
     ...fixtureDecisionSubjects.map((entry) => ({ kind: 'fixture-promotion' as const, slotId: entry.fixtureId, subjectDigest: entry.digest })),
@@ -1493,11 +1650,32 @@ async function defaultRebuild(worktree: string): Promise<RebuildEvidence> {
   };
 }
 
+/**
+ * The fixed verification command run inside admission and publish worktrees:
+ * the verify script's suite half (`build:engine && typecheck && test`),
+ * WITHOUT the default-gauntlet tail the repo-root `verify` script appends.
+ * The gauntlet is not skipped at these sites — it runs immediately after as
+ * the strictly stronger RELEASE run (explicit target, so G12 executes), whose
+ * non-zero exit is tolerated only when the verified report was produced and
+ * whose reds are then CLASSIFIED — inherited via the base-commit control run
+ * (guard trains) or exactly marker-predicted (data trains) — with everything
+ * unclassified still refusing. The embedded default gauntlet had no report
+ * and no classification, so it hard-failed `npm run verify` on exactly the
+ * reds the ratified amendments exist to classify: the standing pre-D12a
+ * G2/G8 approvals red (guard trains, inherited), and the DESIGNED post-regen
+ * approval staleness of a baseline-moving data train (merge-first-sign-once:
+ * the regenerated baselines land unsigned by construction, so the worktree's
+ * default gauntlet can never be green) — found in anger by the D15 sandbox
+ * ride, where every data train's sign act died verify_failed on the two
+ * designed probe-baseline-approval findings.
+ */
+export const WORKTREE_VERIFY_ARGS = ['run', 'verify:suites'] as const;
+
 async function defaultVerify(worktree: string): Promise<VerifyEvidence> {
   const npmCli = resolveNpmCliPath();
   let command: CommandOutcome;
   try {
-    command = await fixedCommand(process.execPath, [npmCli, 'run', 'verify'], worktree);
+    command = await fixedCommand(process.execPath, [npmCli, ...WORKTREE_VERIFY_ARGS], worktree);
   } catch (error) {
     // §06.2: a failed verify is the 'verify-failed' stop, so the failure
     // must carry the verify_failed code — the generic command_failed maps
@@ -1752,13 +1930,26 @@ async function assertCleanAdmissionWorktree(
   return inspection.commands;
 }
 
+/**
+ * The one red predicate classification uses — the SAME shape as the blocking
+ * predicate in `parseGauntletBytes`: `fail` is red, and a required gate that
+ * did not run (`not-applicable`) is red, but a required gate's `warn` is the
+ * ADMIT_WITH_WARNINGS shape — worth reading, never a block, so never a red
+ * to classify. (The D15 shakedown caught the drift: G3-golden's standing
+ * advisory warn — pending fixtures — read as an unpredicted red here while
+ * the blocking predicate correctly tolerated it.)
+ */
+function isRedGate(gate: MachineGate, roster: (typeof GAUNTLET_GATE_ROSTER)[number]): boolean {
+  return gate.status === 'fail'
+    || (roster.applicability === 'required' && gate.status !== 'pass' && gate.status !== 'warn');
+}
+
 /** Projects a report's failing gates to the fields verification checks. */
 function failingRedFindings(gates: readonly MachineGate[]): GauntletRedFinding[] {
   const findings: GauntletRedFinding[] = [];
   gates.forEach((gate, index) => {
     const roster = GAUNTLET_GATE_ROSTER[index]!;
-    const failing = gate.status === 'fail' || (roster.applicability === 'required' && gate.status !== 'pass');
-    if (!failing) return;
+    if (!isRedGate(gate, roster)) return;
     if (gate.findings.length === 0) {
       // A failing gate with no findings still counts as one red, so a
       // finding-free failure can never vacuously pass the inheritance check.
@@ -1806,8 +1997,7 @@ function markerPredictionIssues(gates: readonly MachineGate[], marker: DeferredS
   const issues: string[] = [];
   gates.forEach((gate, index) => {
     const roster = GAUNTLET_GATE_ROSTER[index]!;
-    const failing = gate.status === 'fail' || (roster.applicability === 'required' && gate.status !== 'pass');
-    if (!failing) return;
+    if (!isRedGate(gate, roster)) return;
     if (!DEFERRED_SIGNING_GATES.has(gate.gate)) {
       issues.push(`${gate.gate} is red outside the marker's G2/G8 prediction.`);
       return;
@@ -1920,6 +2110,7 @@ export async function runAdmission(input: RunAdmissionInput): Promise<AdmissionR
     now: dependencies.now ?? input.now,
     reviewedComparisonQueries: input.reviewedComparisonQueries, fixturePromotions: input.fixturePromotions,
     probeBaseline: input.probeBaseline, probeApproval: input.probeApproval,
+    orderingSnapshot: input.orderingSnapshot, orderingSnapshotApproval: input.orderingSnapshotApproval,
   };
   const preview = await previewAdmission(previewInput);
   if (preview.digest !== requireDigest(input.expectedPreviewDigest, 'expectedPreviewDigest')) fail('stale_preview', 'Admission preview digest changed.');

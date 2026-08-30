@@ -89,7 +89,7 @@ import {
   parseSigningForm,
 } from './signingOperations.js';
 import { createUpdatesOperations, UpdatesOperationsError } from './updatesOperations.js';
-import { createControlRunExecutor, createTrainOperations, TrainOperationsError } from './trainRunner.js';
+import { createControlRunExecutor, createTrainOperations, TRAIN_SIGN_RATIONALE, TrainOperationsError } from './trainRunner.js';
 import { REVIEW_PRIORITY_FORMULA, type ReviewSessionCase } from './reviewSessions.js';
 import type { QualityDashboardReport } from './qualityDashboard.js';
 import type { SensitiveCategories, TelemetryBudgets } from '../../pipeline/src/telemetry/index.js';
@@ -103,6 +103,10 @@ const UPDATES_PATH = process.env.WORKBENCH_UPDATES_PATH ?? path.join(repoRoot, '
 const GAUNTLET_REPORT_PATH = process.env.WORKBENCH_GAUNTLET_REPORT_PATH ?? path.join(repoRoot, 'eval', '.runs', 'gauntlet-report.json');
 const MUTATION_REPO_ROOT = process.env.WORKBENCH_REPO_ROOT ?? repoRoot;
 const REVIEWER = process.env.WORKBENCH_REVIEWER ?? 'jesse';
+// The A2 independent signer, when governance has named one (Call 4). Absent,
+// every ready data train freezes honestly behind its signingHold — the sign
+// endpoint refuses and the panel renders the hold sentence instead.
+const INDEPENDENT_SIGNER = process.env.WORKBENCH_INDEPENDENT_SIGNER ?? null;
 const CANDIDATES_ROOT = process.env.WORKBENCH_CANDIDATES_ROOT ?? path.join(MUTATION_REPO_ROOT, 'workbench', '.state', 'candidates');
 const BLIND_EVENTS_PATH = process.env.WORKBENCH_BLIND_EVENTS_PATH ?? path.join(MUTATION_REPO_ROOT, 'workbench', 'review-data', 'blind-comparison.jsonl');
 const BLIND_LOCK_ROOT = process.env.WORKBENCH_BLIND_LOCK_ROOT ?? MUTATION_REPO_ROOT;
@@ -231,6 +235,7 @@ function requiresTrustedJson(pathname: string): boolean {
     /^\/api\/v2\/admissions\/[^/]+\/admit$/.test(pathname) ||
     /^\/api\/v2\/updates\/cards\/[^/]+\/decide$/.test(pathname) ||
     pathname === '/api/v2/updates/train' ||
+    /^\/api\/v2\/updates\/train\/[^/]+\/sign$/.test(pathname) ||
     /^\/api\/v2\/publish\/[^/]+\/prepare$/.test(pathname) ||
     pathname === '/api/v2/signing/review-packet' ||
     pathname === '/api/v2/signing/preview' ||
@@ -598,6 +603,26 @@ async function main(): Promise<void> {
     // runner performs. Any non-inherited red refuses exactly as today.
     controlRun: createControlRunExecutor(MUTATION_REPO_ROOT),
   });
+  // D16 (V6): the staleness-replay runner — pure engine queries against the
+  // artifact this server SERVES (never the committed descriptor), in-process,
+  // statistics and lookups only. The deriver names what to replay; this
+  // observes it. Every updates endpoint already refuses before this runs when
+  // no engine is up, so the null check is unreachable defense.
+  const replayRunner = async (requests: readonly { query: string; refs: readonly string[] }[]) => {
+    if (engine === null) throw new Error('The served artifact is unavailable, so the replay cannot run.');
+    const results = [];
+    for (const request of requests) {
+      const outcome = await engine.research(request.query);
+      const rankedRefs = outcome.kind === 'discovery' ? outcome.results.map((result) => result.reference) : [];
+      const unresolvedRefs: string[] = [];
+      for (const ref of request.refs) {
+        const resolved = await engine.passage(ref);
+        if (resolved.kind !== 'passage' || resolved.passage.verses.length === 0) unresolvedRefs.push(ref);
+      }
+      results.push({ query: request.query, rankedRefs, unresolvedRefs });
+    }
+    return results;
+  };
   // D6: votes → cards. Deriving is read-only; a decide appends one line to
   // workbench/updates.jsonl through the fail-closed store. The deriver reads
   // the same repository the compiler mutates, so it follows MUTATION_REPO_ROOT
@@ -609,6 +634,7 @@ async function main(): Promise<void> {
     judgmentsLogPath: JUDGMENTS_PATH,
     casesLogPath: CASES_PATH,
     evidencePath: ADMISSION_EVIDENCE_PATH,
+    replay: replayRunner,
   });
   // D8: the train runner — seal + observed state over the same snapshot the
   // deriver reads. The admit/publish tail stays on the existing endpoints.
@@ -619,6 +645,8 @@ async function main(): Promise<void> {
     judgmentsLogPath: JUDGMENTS_PATH,
     casesLogPath: CASES_PATH,
     evidencePath: ADMISSION_EVIDENCE_PATH,
+    independentSigner: INDEPENDENT_SIGNER,
+    replay: replayRunner,
   });
   if (engine !== null && caseLog !== null) {
     try {
@@ -678,6 +706,52 @@ async function main(): Promise<void> {
   const jobRunner = createJobRunner({ mutationRepoRoot: MUTATION_REPO_ROOT });
   await jobRunner.ready();
   let activeRepositoryMutation: { readonly kind: string; readonly id: string } | null = null;
+
+  // D12 §5.2: a sealed DATA train moves unattended — the three fixed stages
+  // run in order as the same allowlisted jobs the checks door exposes, under
+  // the same single-flight discipline (never two at once, never while any
+  // other mutation runs). Stages are idempotent and self-locate the one
+  // sealed data train, so re-triggering is safe: after a mid-run server
+  // restart the chain resumes from whichever stage is incomplete the next
+  // time the train is sealed or read (ALREADY_DONE legs no-op), and it
+  // halts the moment a stage does not pass — a STOPPED stage has already
+  // appended the honest stop event, and a crashed one leaves the train
+  // retryable by restart rather than silently spinning rebuilds.
+  const TRAIN_STAGE_JOBS: readonly JobId[] = ['train-build', 'train-measure', 'train-gauntlet'];
+  let trainStagesAdvancing = false;
+  let trainStageChainHalted = false;
+  function advanceDataTrainStages(): void {
+    if (trainStagesAdvancing || trainStageChainHalted || shuttingDown || degradedReadOnly) return;
+    trainStagesAdvancing = true;
+    void (async () => {
+      try {
+        for (const jobId of TRAIN_STAGE_JOBS) {
+          if (shuttingDown) return;
+          if (activeRepositoryMutation !== null || jobRunner.getActive() !== null) return;
+          const mutationId = randomUUID();
+          activeRepositoryMutation = { kind: `check:${jobId}`, id: mutationId };
+          let record: JobRecord;
+          try {
+            const handle = jobRunner.enqueue({
+              jobId,
+              origin: { source: 'workbench-train', requestId: randomUUID(), requestedBy: REVIEWER },
+            });
+            record = await handle.result;
+          } finally {
+            if (activeRepositoryMutation?.id === mutationId) activeRepositoryMutation = null;
+          }
+          if (record.state !== 'passed') {
+            trainStageChainHalted = true;
+            return;
+          }
+        }
+      } catch {
+        trainStageChainHalted = true;
+      } finally {
+        trainStagesAdvancing = false;
+      }
+    })();
+  }
   const inboxResultCountByQuery = new Map<string, number>();
   let v2JudgmentTail: Promise<void> = Promise.resolve();
 
@@ -1243,6 +1317,13 @@ async function main(): Promise<void> {
             layerFingerprint: engine.layerFingerprint,
           }, derivationDigest);
           sendV2Success(response, 201, { train });
+          // §5.2: a fresh data seal starts the unattended stage chain (the
+          // seal mutation slot is released in the finally below; the chain
+          // re-checks single-flight before each stage).
+          if (train.flavor === 'data' && train.state === 'sealed') {
+            trainStageChainHalted = false;
+            setImmediate(() => advanceDataTrainStages());
+          }
         } catch (error) { sendTrainError(response, error); }
         finally {
           if (activeRepositoryMutation?.id === sealMutationId) activeRepositoryMutation = null;
@@ -1273,7 +1354,94 @@ async function main(): Promise<void> {
             layerFingerprint: engine.layerFingerprint,
           });
           sendV2Success(response, 200, { train, readOnly: degradedReadOnly });
+          // Restart-resume (D12): a data train observed mid-flight resumes
+          // its unattended chain — idempotent stages make this a no-op when
+          // everything already ran, and a halted chain stays halted until a
+          // fresh seal or a server restart clears it.
+          if (train.flavor === 'data' && (train.state === 'sealed' || train.state === 'built' || train.state === 'measured')) {
+            setImmediate(() => advanceDataTrainStages());
+          }
         } catch (error) { sendTrainError(response, error); }
+        return;
+      }
+
+      // D14: the typed-digest sign act — the last of the five fixed
+      // endpoints. One POST fronts `ready → admitted` for BOTH train
+      // flavors: trainOperations verifies the digest, refuses the
+      // frozen-awaiting-signer hold, and records the per-query review; then
+      // the SAME act runs the admit + publish tail the Phase-2 approve
+      // button used to drive from the page (the server constructs the
+      // decision slots from its own preview — the typed digest was the
+      // human act). The merge on GitHub remains the admission event.
+      const trainSignMatch = /^\/api\/v2\/updates\/train\/([^/]+)\/sign$/.exec(url.pathname);
+      if (trainSignMatch !== null) {
+        if (request.method !== 'POST') {
+          sendV2Error(response, 405, 'method_not_allowed', 'Only POST is allowed to sign an update.');
+          return;
+        }
+        if (activeRepositoryMutation !== null || jobRunner.getActive() !== null) {
+          sendV2Error(response, 409, 'mutation_running', 'Another repository operation is already running.');
+          return;
+        }
+        const trainId = decodeSegment(trainSignMatch[1]!);
+        if (trainId === null || [...url.searchParams].length > 0) {
+          sendV2Error(response, 400, 'invalid_route', 'Train sign route is invalid.');
+          return;
+        }
+        if (engine === null) {
+          sendV2Error(response, 503, 'artifact_unavailable', artifactFailure);
+          return;
+        }
+        const signMutationId = randomUUID();
+        activeRepositoryMutation = { kind: 'train-sign', id: signMutationId };
+        try {
+          response.setHeader('cache-control', 'no-store');
+          const signBody = await readJsonBody(request);
+          if (!isPlainObject(signBody) || Object.keys(signBody).length !== 1 || typeof signBody['digest'] !== 'string') {
+            sendV2Error(response, 400, 'invalid_request', 'The sign act carries exactly the report digest it approves.');
+            return;
+          }
+          const replayIdentity = {
+            engineVersion: engine.engineVersion,
+            corpusFingerprint: engine.corpusFingerprint,
+            layerFingerprint: engine.layerFingerprint,
+          };
+          await trainOperations.sign(trainId, signBody['digest'], replayIdentity);
+          const admissionView = await admissionPublishOperations.admission(trainId, false);
+          const preview = admissionView.preview;
+          if (preview === null) {
+            sendV2Error(response, 409, 'not_signable', 'This update is not at the signing step — reload to see where it stands.');
+            return;
+          }
+          const decisions = preview.decisions.map((slot) => ({
+            slotId: slot.slotId,
+            rationale: TRAIN_SIGN_RATIONALE,
+            ...(slot.kind === 'probe-baseline'
+              ? { probeRationales: slot.probes.map((probe) => ({ probeId: probe.probeId, rationale: TRAIN_SIGN_RATIONALE })) }
+              : {}),
+          }));
+          const admitted = await admissionPublishOperations.admit(trainId, { previewDigest: preview.digest, decisions });
+          const admissionDigest = admitted.admission?.digest ?? null;
+          if (admissionDigest === null) {
+            sendV2Error(response, 500, 'admission_failed', 'The approval did not record — reload the report and try again. Nothing was merged.');
+            return;
+          }
+          await admissionPublishOperations.prepare(trainId, { admissionDigest, push: true, openDraftPr: true });
+          const train = await trainOperations.train(trainId, replayIdentity);
+          sendV2Success(response, 201, { train });
+        } catch (error) {
+          if (error instanceof TrainOperationsError) sendTrainError(response, error);
+          else sendAdmissionPublishError(response, error);
+          // §03.8: a terminal failure in the admit/publish tail stops the
+          // sealed train from the closed enum; transient refusals leave it
+          // retryable. Best-effort — the stop never masks the response.
+          const code = failureCodeOf(error);
+          if (code !== null) {
+            void trainOperations.stopFromFailure(trainId, code).catch(() => undefined);
+          }
+        } finally {
+          if (activeRepositoryMutation?.id === signMutationId) activeRepositoryMutation = null;
+        }
         return;
       }
 

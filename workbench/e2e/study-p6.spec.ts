@@ -11,11 +11,18 @@ import {
 // inbox-suggestion rendering with the DERIVED card from GET /api/v2/updates
 // (§07.2: the card is now the sole surface for the three v1 votes, and
 // Decline/Not now activate with the decide endpoint), so this spec covers:
-// the §07.2 card copy verbatim, the two read calls and nothing else before a
-// press, Approve = decide POST (cardRevision-pinned) + the fresh-look
+// the §07.2 card copy verbatim, the single read call and nothing else before
+// a press, Approve = decide POST (cardRevision-pinned) + the fresh-look
 // hand-off into Review, Decline's required one-line reason actually
 // silencing the ask, the steady empty state, the degraded read-only state,
 // and the D28 jargon quarantine over the rendered screen.
+//
+// Phase 4 D18 retired the checklist backlog this spec once covered: the
+// Updates screen no longer calls POST /api/v2/compile/preview at all, and
+// #updates-backlog / #updates-same-facts / #updates-backlog-failed never
+// render. The compile-plan mock below still serves checklist LINES — as an
+// adversarial fixture: if the screen ever refetched the preview and rendered
+// them again, the retirement assertions here would fail.
 
 let server: StudyServer;
 let origin: string;
@@ -34,8 +41,10 @@ const LEGACY_AT = '2026-08-06T16:35:14.936Z';
 const LEGACY_CARD_ID = 'a1'.repeat(32);
 const LEGACY_REVISION = 'b2'.repeat(32);
 
-// The real 3-vote checklist (workbench/judgments.jsonl:1-3), as the compile
-// preview still serves it — the read-only backlog until Phase 4 retires it.
+// The real 3-vote checklist shape (workbench/judgments.jsonl:1-3) as the
+// compile preview ONCE served it. The live compiler now always emits
+// `checklist: []` (D18); these lines survive only as the adversarial fixture
+// described above — the screen must never render them.
 const REAL_CHECKLIST = [
   '[ ] missing: "Who is like the Lord?" should surface Exodus 15:11 — uses that exact wording.',
   '[ ] missing: "Who is like the Lord?" should surface Deuteronomy 3:24 — Fits the theme',
@@ -107,7 +116,7 @@ function decidePosts(mock: MockState): Call[] {
   return mock.calls.filter((call) => call.method === 'POST' && /\/api\/v2\/updates\/cards\/[^/]+\/decide$/.test(call.path));
 }
 
-test('P1: the real 3-vote log renders the derived legacy card + the checklist backlog', async ({ page }) => {
+test('P1/P4: the real 3-vote log renders the derived legacy card; the checklist backlog is retired (D18)', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = realVoteMock();
   await installRoutes(page, mock);
@@ -141,26 +150,12 @@ test('P1: the real 3-vote log renders the derived legacy card + the checklist ba
   // The re-confirmation card keeps its dashed idiom — never the op border.
   await expect(card).not.toHaveClass(/\bop\b/);
 
-  // The §4.2 same-facts note, verbatim, rendered directly above the
-  // checklist lines.
-  const note = page.locator('#updates-same-facts');
-  await expect(note).toHaveText(
-    'These lines describe the same old suggestions as the card above — the card is the way to act on them.',
-  );
-  const noteIsAboveBacklog = await page.evaluate(() => {
-    const noteElement = document.getElementById('updates-same-facts');
-    return noteElement !== null && noteElement.nextElementSibling !== null
-      && noteElement.nextElementSibling.id === 'updates-backlog';
-  });
-  expect(noteIsAboveBacklog).toBe(true);
-
-  // The checklist preview renders in plain language — the raw "[ ] missing:"
-  // token shapes never reach the screen.
-  const lines = page.locator('#updates-backlog .write-line');
-  await expect(lines).toHaveCount(3);
-  await expect(lines.nth(0)).toHaveText('Exodus 15:11 should show up for “Who is like the Lord?” — uses that exact wording.');
-  await expect(lines.nth(1)).toHaveText('Deuteronomy 3:24 should show up for “Who is like the Lord?” — Fits the theme');
-  await expect(lines.nth(2)).toHaveText('Deuteronomy 33:26 should show up for “Who is like the Lord?” — fits the theme');
+  // D18: the checklist backlog is retired — the card above is the only
+  // rendering of those three votes. Neither the backlog, the same-facts
+  // note, nor the raw "[ ] missing:" token shapes ever reach the screen,
+  // even though the mock's compile plan still serves checklist lines.
+  await expect(page.locator('#updates-same-facts')).toHaveCount(0);
+  await expect(page.locator('#updates-backlog')).toHaveCount(0);
   await expect(page.locator('#screen-updates')).not.toContainText('missing:');
   await expect(page.locator('#screen-updates')).not.toContainText('[ ]');
 
@@ -169,13 +164,12 @@ test('P1: the real 3-vote log renders the derived legacy card + the checklist ba
 
   await assertNoJargon(page);
 
-  // Before any press the screen has issued exactly its two read calls —
-  // GET /api/v2/updates and POST /api/v2/compile/preview — and appended
-  // nothing (no decide, judgment, case, or apply POST anywhere).
+  // Before any press the screen has issued exactly its one read call —
+  // GET /api/v2/updates. The compile preview belongs to Finish up alone now
+  // (D18), and nothing appended (no decide, judgment, case, or apply POST).
   const screenCalls = mock.calls.slice(callsBefore);
   expect(screenCalls.map((call) => `${call.method} ${call.path}`).sort()).toEqual([
     'GET /api/v2/updates',
-    'POST /api/v2/compile/preview',
   ]);
   expect(decidePosts(mock)).toEqual([]);
 
@@ -239,8 +233,8 @@ test('P1: Decline requires its one-line why and actually silences the ask', asyn
   await expect(page.locator('.decline-input')).toHaveCount(0);
   expect(decidePosts(mock)).toEqual([]);
 
-  // The reason rides the decide body; the card leaves the inbox while the
-  // backlog lines stay (the checklist retires in Phase 4, not here).
+  // The reason rides the decide body; the card leaves the inbox. (No
+  // backlog lines linger behind it — the checklist is retired, D18.)
   await page.click('.updates-decline');
   await page.fill('.decline-input', 'These were re-checked by hand already.');
   await page.keyboard.press('Enter');
@@ -256,7 +250,7 @@ test('P1: Decline requires its one-line why and actually silences the ask', asyn
   });
   await expect(page.locator('.updates-card')).toHaveCount(0);
   await expect(page.locator('#updates-same-facts')).toHaveCount(0);
-  await expect(page.locator('#updates-backlog .write-line')).toHaveCount(3);
+  await expect(page.locator('#updates-backlog')).toHaveCount(0);
   await assertNoJargon(page);
 
   expect(errors).toEqual([]);
@@ -287,13 +281,14 @@ test('P1: an empty log renders the steady empty state', async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test('P1: a compile-preview failure never claims the loaded cards failed — failure copy scopes per endpoint', async ({ page }) => {
+test('P4: the Updates screen never touches the compile preview — even its failure cannot reach the screen (D18)', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = realVoteMock();
   await installRoutes(page, mock);
-  // The conflict-vote path: conflicting judgments 422 the compile preview
-  // while GET /api/v2/updates still derives and serves the cards (the
-  // deriver renders the conflict as a card; the compiler refuses).
+  // Adversarial route: were the retired preview fetch ever restored, this
+  // 422 (the conflict-vote shape that once drove #updates-backlog-failed)
+  // would surface. With the checklist retired the screen must not call the
+  // endpoint at all, so the cards render with no failure line of any kind.
   await page.route('**/api/v2/compile/preview', async (route) => {
     await route.fulfill({
       status: 422,
@@ -301,19 +296,19 @@ test('P1: a compile-preview failure never claims the loaded cards failed — fai
       body: JSON.stringify({ ok: false, error: { code: 'conflicting_judgments', message: 'Conflicting judgments block the compile.' } }),
     });
   });
+  const callsBefore = mock.calls.length;
   await page.goto(origin);
   await expect(page.locator('#search-input')).toBeVisible();
   await openUpdates(page);
 
-  // The cards loaded, so the §4.9 GET-updates sentence never renders — a
-  // loaded card list never sits under a load-failure banner.
   await expect(page.locator('.updates-card')).toHaveCount(1);
   await expect(page.locator('#updates-cards-failed')).toHaveCount(0);
   await expect(page.locator('#screen-updates')).not.toContainText(UPDATES_LOAD_FAILED);
-  // The backlog section reports its own data source's failure with
-  // apiCompilePreview's D39 sentence (the one Finish up renders).
-  await expect(page.locator('#updates-backlog-failed')).toHaveText(FALLBACK_LOAD);
+  // No backlog, no backlog-failure line, no D39 sentence — and no call.
+  await expect(page.locator('#updates-backlog-failed')).toHaveCount(0);
   await expect(page.locator('#updates-backlog')).toHaveCount(0);
+  await expect(page.locator('#screen-updates')).not.toContainText(FALLBACK_LOAD);
+  expect(mock.calls.slice(callsBefore).some((call) => call.path === '/api/v2/compile/preview')).toBe(false);
   await assertNoJargon(page);
 
   expect(errors).toEqual([]);
@@ -340,7 +335,7 @@ test('P1: degraded mode renders the read-only banner and disables every decide c
   await page.locator('.updates-card').first().focus();
   await page.keyboard.press('n');
   expect(decidePosts(mock)).toEqual([]);
-  await expect(page.locator('#updates-backlog .write-line')).toHaveCount(3);
+  await expect(page.locator('#updates-backlog')).toHaveCount(0);
   await assertNoJargon(page);
 
   expect(errors).toEqual([]);

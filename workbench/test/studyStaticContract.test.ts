@@ -77,31 +77,43 @@ describe('study.html static snapshot contract', () => {
     expect(trustedBlock![0]).toContain(String.raw`\/api\/v2\/updates\/cards\/[^/]+\/decide`);
   });
 
-  it('wires the Phase-2 train routes through all three lists (votes-to-engine D8, §4.9 F4)', () => {
-    // The page-side halves landed with the train panel: the seal/state
-    // routes plus the borrowed admit and publish-preparation routes (§4.9's
-    // prefix/suffix style for parameterized routes). All three lists must
-    // carry them in the same commit — the serving layer fail-closes on
-    // list 1.
-    const phase2Literals = ['/api/v2/updates/train', '/api/v2/admissions/', '/admit', '/api/v2/publish/', '/prepare'];
+  it('wires the train seal and sign routes through all three lists, with the Phase-2 borrows retired (D8/D14, §4.9 F4)', () => {
+    // Phase 2 landed the train seal/state route plus borrowed admit and
+    // publish-preparation literals for the one-confirm "Approve this
+    // update" act. D14's typed-digest sign endpoint replaced that act and
+    // runs the admit + publish tail server-side, so the borrowed page-side
+    // literals retired with the button (§4.9: "the entry retires with it").
+    // All three lists must move in the same commit — the serving layer
+    // fail-closes on list 1.
+    const trainLiterals = ['/api/v2/updates/train', '/sign'];
+    const retiredLiterals = ['/api/v2/admissions/', '/admit', '/api/v2/publish/', '/prepare'];
     const snapshotSource = readFileSync(new URL('../src/staticSnapshot.ts', import.meta.url), 'utf8');
     const requiredBlock = /const REQUIRED_INLINE_ROUTES = \[([\s\S]*?)\] as const;/.exec(snapshotSource);
     const required = [...requiredBlock![1]!.matchAll(/'([^']+)'/g)].map((match) => match[1]!);
-    for (const literal of phase2Literals) {
+    for (const literal of trainLiterals) {
       expect(required, `REQUIRED_INLINE_ROUTES carries ${literal}`).toContain(literal);
+    }
+    for (const literal of retiredLiterals) {
+      expect(required, `REQUIRED_INLINE_ROUTES retired ${literal}`).not.toContain(literal);
     }
     const studySource = readFileSync(studyUrl, 'utf8');
     const routesBlock = /const ROUTES = \[([\s\S]*?)\];/.exec(studySource);
     const routes = [...routesBlock![1]!.matchAll(/'([^']+)'/g)].map((match) => match[1]!);
-    for (const literal of phase2Literals) {
+    for (const literal of trainLiterals) {
       expect(routes, `ROUTES mirrors ${literal}`).toContain(literal);
     }
+    for (const literal of retiredLiterals) {
+      expect(routes, `ROUTES retired ${literal}`).not.toContain(literal);
+    }
+    // List 3: the seal POST and the sign POST both demand trusted JSON. The
+    // admit/prepare server routes survive (the sign orchestration calls
+    // them in-process, and they remain API surface) — only the page-side
+    // wiring retired.
     const serverSource = readFileSync(new URL('../src/server.ts', import.meta.url), 'utf8');
     const trustedBlock = /function requiresTrustedJson\(pathname: string\): boolean \{[\s\S]*?\n\}/.exec(serverSource);
     expect(trustedBlock, 'server.ts declares requiresTrustedJson').not.toBeNull();
     expect(trustedBlock![0]).toContain(`'/api/v2/updates/train'`);
-    expect(trustedBlock![0]).toContain(String.raw`\/api\/v2\/admissions\/[^/]+\/admit`);
-    expect(trustedBlock![0]).toContain(String.raw`\/api\/v2\/publish\/[^/]+\/prepare`);
+    expect(trustedBlock![0]).toContain(String.raw`\/api\/v2\/updates\/train\/[^/]+\/sign`);
   });
 
   it('carries the workbench-static-protocol marker in the head', () => {

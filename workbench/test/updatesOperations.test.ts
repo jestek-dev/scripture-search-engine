@@ -18,7 +18,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { fixtureContentDigest, THEME_ANSWER_NONE, type MainGoldenHistoryEntry } from '../src/deriveUpdates.js';
 import type { JudgmentRecordV2 } from '../src/judgments.js';
 import { createTrainOperations } from '../src/trainRunner.js';
-import { createUpdatesOperations, readGoldenMainHistoryFromGit, UpdatesOperationsError } from '../src/updatesOperations.js';
+import { createUpdatesOperations, readGoldenMainHistoryFromGit, UpdatesOperationsError, type TrainGoldenHistoryWindow } from '../src/updatesOperations.js';
 
 const CURRENT = {
   engineVersion: '0.14.0-test',
@@ -98,11 +98,16 @@ describe('updates operations (derive + decide)', () => {
   let repo: string;
   let clock: number;
   // The §03.6 live anchor's test double: main's append-only golden history.
+  // Every digest here lands AFTER the single test train's seal, so it sits in
+  // that train's post-base window; the double answers each train's window
+  // with the same appended history (base-epoch modelling lives in the
+  // trainRunner reversal-chain tests, where bases actually differ).
   let mainHistory: Record<string, string[]>;
-  const readTestMainHistory = async (_repoRoot: string, goldenPaths: readonly string[]): Promise<MainGoldenHistoryEntry[]> =>
-    goldenPaths
-      .filter((goldenPath) => mainHistory[goldenPath] !== undefined)
-      .map((goldenPath) => ({ path: goldenPath, fixtureDigests: mainHistory[goldenPath]! }));
+  const readTestMainHistory = async (_repoRoot: string, windows: readonly TrainGoldenHistoryWindow[]): Promise<MainGoldenHistoryEntry[]> =>
+    windows.flatMap((window) =>
+      window.goldenPaths
+        .filter((goldenPath) => mainHistory[goldenPath] !== undefined)
+        .map((goldenPath) => ({ trainId: window.trainId, path: goldenPath, fixtureDigests: mainHistory[goldenPath]! })));
 
   const records = (): JudgmentRecordV2[] => [
     v2({ judgmentId: 'op-guard', query: 'who is like the lord', action: 'irrelevant', at: '2026-08-12T10:00:00.000Z', diagnosis: 'lexical-noise', targetId: 'WEB:19046001' }),
@@ -350,7 +355,7 @@ describe('updates operations (derive + decide)', () => {
   });
 });
 
-describe('readGoldenMainHistoryFromGit (§03.6/§5.2 live anchor)', () => {
+describe('readGoldenMainHistoryFromGit (§03.6/§5.2 live anchor, per-train post-base windows)', () => {
   let repo: string;
 
   beforeEach(async () => {
@@ -361,43 +366,220 @@ describe('readGoldenMainHistoryFromGit (§03.6/§5.2 live anchor)', () => {
     await rm(repo, { recursive: true, force: true });
   });
 
-  function git(args: readonly string[]): void {
+  function git(args: readonly string[]): string {
     const result = spawnSync('git', [...args], { cwd: repo, encoding: 'utf8' });
     if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${result.stderr}`);
+    return result.stdout.trim();
   }
 
-  it('returns every content version reachable from main — history, so a later rewrite keeps earlier versions', async () => {
+  const goldenPath = 'eval/golden/hope.json';
+  const v1 = { id: 'hope', query: 'hope', mustNotRank: [{ ref: 'Psalms 46:1', why: 'test' }] };
+  const v2Content = { ...v1, mustNotRank: [...v1.mustNotRank, { ref: 'James 1:22', why: 'merged later' }] };
+
+  /** C0 (no golden file) → C1 (v1) → C2 (v2). Returns the three commits. */
+  async function seedMainHistory(): Promise<{ c0: string; c1: string; c2: string }> {
     git(['init', '--quiet', '--initial-branch=main']);
     git(['config', 'user.email', 'workbench-test@example.invalid']);
     git(['config', 'user.name', 'Workbench Test']);
     await mkdir(path.join(repo, 'eval', 'golden'), { recursive: true });
-    const goldenPath = 'eval/golden/hope.json';
-    const v1 = { id: 'hope', query: 'hope', mustNotRank: [{ ref: 'Psalms 46:1', why: 'test' }] };
-    const v2Content = { ...v1, mustNotRank: [...v1.mustNotRank, { ref: 'James 1:22', why: 'merged later' }] };
+    await writeFile(path.join(repo, 'README.md'), 'seed\n');
+    git(['add', '.']);
+    git(['commit', '--quiet', '--message', 'seed (train base)']);
+    const c0 = git(['rev-parse', 'HEAD']);
     await writeFile(path.join(repo, goldenPath), `${JSON.stringify(v1, null, 2)}\n`);
     git(['add', '.']);
     git(['commit', '--quiet', '--message', 'first merge']);
+    const c1 = git(['rev-parse', 'HEAD']);
     await writeFile(path.join(repo, goldenPath), `${JSON.stringify(v2Content, null, 2)}\n`);
     git(['add', '.']);
     git(['commit', '--quiet', '--message', 'second merge rewrites the file']);
+    const c2 = git(['rev-parse', 'HEAD']);
+    return { c0, c1, c2 };
+  }
 
-    const entries = await readGoldenMainHistoryFromGit(repo, [goldenPath, 'eval/golden/never-merged.json']);
-    expect(entries.map((entry) => entry.path)).toEqual(['eval/golden/hope.json', 'eval/golden/never-merged.json']);
+  it('returns every post-base content version — history, so a later rewrite keeps earlier versions', async () => {
+    const { c0 } = await seedMainHistory();
+    const entries = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c0, goldenPaths: [goldenPath, 'eval/golden/never-merged.json'] },
+    ]);
+    expect(entries.map((entry) => [entry.trainId, entry.path])).toEqual([
+      ['train-0001', 'eval/golden/hope.json'],
+      ['train-0001', 'eval/golden/never-merged.json'],
+    ]);
     const hope = entries.find((entry) => entry.path === goldenPath)!;
-    // BOTH versions are in main's history — the first train's content
-    // remains observed merged after the second train rewrote the file.
+    // BOTH versions landed after this train's base — the first train's
+    // content remains observed merged after the second train rewrote the
+    // file (monotonic within the window).
     expect(hope.fixtureDigests).toContain(fixtureContentDigest(v1));
     expect(hope.fixtureDigests).toContain(fixtureContentDigest(v2Content));
     // A working-tree-only edit is NOT history: it changes nothing observed.
     await writeFile(path.join(repo, goldenPath), `${JSON.stringify({ id: 'hope' }, null, 2)}\n`);
-    const after = await readGoldenMainHistoryFromGit(repo, [goldenPath]);
+    const after = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c0, goldenPaths: [goldenPath] },
+    ]);
     expect(after[0]!.fixtureDigests).toEqual(hope.fixtureDigests);
     // A path never merged observes no versions (fail-closed to riding).
     expect(entries.find((entry) => entry.path === 'eval/golden/never-merged.json')!.fixtureDigests).toEqual([]);
   });
 
+  it('excludes versions merged at or before the train\'s own base — a re-land after the base counts, ancestor content never does', async () => {
+    const { c1, c2 } = await seedMainHistory();
+    // A train based at C1 sees only what landed after C1: v2, never v1.
+    const afterC1 = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0002', baseCommit: c1, goldenPaths: [goldenPath] },
+    ]);
+    expect(afterC1[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+    // A train based at C2 (main's tip) sees NOTHING — v1 sitting in
+    // ancestor history is exactly the reversal-chain content collision the
+    // window exists to exclude: a sealed train re-deriving v1's bytes stays
+    // riding until its own merge lands.
+    const beforeReland = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0003', baseCommit: c2, goldenPaths: [goldenPath] },
+    ]);
+    expect(beforeReland[0]!.fixtureDigests).toEqual([]);
+    // The reversal train's own merge re-lands v1's exact content post-base:
+    // NOW its window holds the digest and the train goes live.
+    await writeFile(path.join(repo, goldenPath), `${JSON.stringify(v1, null, 2)}\n`);
+    git(['add', '.']);
+    git(['commit', '--quiet', '--message', 'reversal merge re-lands the first content']);
+    const afterReland = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0003', baseCommit: c2, goldenPaths: [goldenPath] },
+    ]);
+    expect(afterReland[0]!.fixtureDigests).toEqual([fixtureContentDigest(v1)]);
+  });
+
+  it('a train with no usable base observes NOTHING — never unscoped history', async () => {
+    const { c0 } = await seedMainHistory();
+    const entries = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: null, goldenPaths: [goldenPath] },
+      { trainId: 'train-0002', baseCommit: 'f'.repeat(40), goldenPaths: [goldenPath] },
+      { trainId: 'train-0003', baseCommit: c0, goldenPaths: [goldenPath] },
+    ]);
+    // The null base and the unresolvable base contribute no entries at all
+    // (fail-closed to riding); the valid window still reads.
+    expect(entries.map((entry) => entry.trainId)).toEqual(['train-0003']);
+  });
+
   it('observes nothing outside a git repository or with no main ref — never an error', async () => {
-    await expect(readGoldenMainHistoryFromGit(repo, ['eval/golden/hope.json'])).resolves.toEqual([]);
+    await expect(readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: 'a'.repeat(40), goldenPaths: ['eval/golden/hope.json'] },
+    ])).resolves.toEqual([]);
     await expect(readGoldenMainHistoryFromGit(repo, [])).resolves.toEqual([]);
+  });
+
+  /**
+   * A squash merge lands on `refs/remotes/origin/main` first — pure plumbing
+   * (a fetch): a new commit chain grows under the remote-tracking ref while
+   * the working tree and local main never move.
+   */
+  async function commitOnOrigin(content: unknown, message: string): Promise<string> {
+    const probe = spawnSync('git', ['rev-parse', '--verify', '--quiet', 'refs/remotes/origin/main'], { cwd: repo, encoding: 'utf8' });
+    const parent = probe.status === 0 && probe.stdout.trim() !== '' ? probe.stdout.trim() : git(['rev-parse', 'HEAD']);
+    const blobPath = path.join(repo, '.origin-blob.json');
+    await writeFile(blobPath, `${JSON.stringify(content, null, 2)}\n`);
+    const blob = git(['hash-object', '-w', blobPath]);
+    const env = { ...process.env, GIT_INDEX_FILE: path.join(repo, '.origin-index') };
+    const gitIdx = (args: readonly string[]): string => {
+      const result = spawnSync('git', [...args], { cwd: repo, encoding: 'utf8', env });
+      if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${result.stderr}`);
+      return result.stdout.trim();
+    };
+    gitIdx(['read-tree', `${parent}^{tree}`]);
+    gitIdx(['update-index', '--add', '--cacheinfo', `100644,${blob},${goldenPath}`]);
+    const tree = gitIdx(['write-tree']);
+    const commit = git(['commit-tree', tree, '-p', parent, '-m', message]);
+    git(['update-ref', 'refs/remotes/origin/main', commit]);
+    return commit;
+  }
+
+  it('the recorded seal-time origin base bounds the window: already-fetched origin history is outside, a post-seal origin merge is inside', async () => {
+    // Local main lags at C0 forever (the checkout only fetches); merges are
+    // reachable only from refs/remotes/origin/main.
+    git(['init', '--quiet', '--initial-branch=main']);
+    git(['config', 'user.email', 'workbench-test@example.invalid']);
+    git(['config', 'user.name', 'Workbench Test']);
+    await writeFile(path.join(repo, 'README.md'), 'seed\n');
+    git(['add', '.']);
+    git(['commit', '--quiet', '--message', 'seed (lagging local main)']);
+    const c0 = git(['rev-parse', 'HEAD']);
+    const o1 = await commitOnOrigin(v1, 'first merge, fetched before this train sealed');
+
+    // Sealed with base C0 AND the seal-time origin tip O1: O1's version is
+    // history this train could not have produced — outside its window.
+    const preSeal = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0002', baseCommit: c0, originBaseCommit: o1, goldenPaths: [goldenPath] },
+    ]);
+    expect(preSeal).toEqual([{ trainId: 'train-0002', path: goldenPath, fixtureDigests: [], versions: [] }]);
+
+    // The train's OWN merge lands on origin/main after seal: inside.
+    await commitOnOrigin(v2Content, 'second merge, after this train sealed');
+    const postSeal = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0002', baseCommit: c0, originBaseCommit: o1, goldenPaths: [goldenPath] },
+    ]);
+    expect(postSeal[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+    // D20: each in-window version carries the committer time of the commit
+    // that landed it (display metrics; liveness reads only the digests).
+    expect(postSeal[0]!.versions).toHaveLength(1);
+    expect(postSeal[0]!.versions![0]!.digest).toBe(fixtureContentDigest(v2Content));
+    expect(Number.isNaN(Date.parse(postSeal[0]!.versions![0]!.committedAt))).toBe(false);
+
+    // originBaseCommit null records that NO origin ref existed at seal —
+    // every origin commit is then post-seal history, inside the window.
+    const nullRecorded = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c0, originBaseCommit: null, goldenPaths: [goldenPath] },
+    ]);
+    expect(nullRecorded[0]!.fixtureDigests).toContain(fixtureContentDigest(v1));
+    expect(nullRecorded[0]!.fixtureDigests).toContain(fixtureContentDigest(v2Content));
+
+    // An unresolvable recorded origin base leaves the window unboundable:
+    // observe NOTHING (fail-closed to riding), never a fall-back to the
+    // local base alone.
+    const unresolvable = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0003', baseCommit: c0, originBaseCommit: 'f'.repeat(40), goldenPaths: [goldenPath] },
+    ]);
+    expect(unresolvable).toEqual([]);
+  });
+
+  it('a legacy window (no recorded seal-time origin state) observes only while origin/main trails local main — an ahead or divergent origin/main observes NOTHING', async () => {
+    const { c1, c2 } = await seedMainHistory();
+    // No origin ref at all (a D11-sandbox-shaped repo): the local base
+    // bounds everything the tips can see — the legacy window keeps
+    // observing.
+    const noOrigin = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c1, goldenPaths: [goldenPath] },
+    ]);
+    expect(noOrigin[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+
+    // origin/main as an ANCESTOR of the base holds no history the base
+    // misses: still observing.
+    git(['update-ref', 'refs/remotes/origin/main', c1]);
+    const ancestorOfBase = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c1, goldenPaths: [goldenPath] },
+    ]);
+    expect(ancestorOfBase[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+
+    // origin/main BETWEEN the base and the local tip (the D11 sandbox's
+    // geometry — the sandbox pushes main after merging, so origin trails):
+    // the tips see nothing beyond local main, the window reduces to
+    // `rev-list <localTip> ^<base>` — still observing.
+    git(['update-ref', 'refs/remotes/origin/main', c2]);
+    const trailingOrigin = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c1, goldenPaths: [goldenPath] },
+    ]);
+    expect(trailingOrigin[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+
+    // An origin/main AHEAD of (or divergent from) local main could have
+    // been ahead at seal too, and the legacy entry cannot say what the
+    // seal could already see — the window is unboundable, so the train
+    // observes nothing (fail-closed to riding) while a window that
+    // RECORDED its seal-time origin base still reads.
+    git(['update-ref', 'refs/remotes/origin/main', c1]);
+    const aheadOrigin = await commitOnOrigin(v1, 'merge fetched at an unknown time');
+    const withDivergence = await readGoldenMainHistoryFromGit(repo, [
+      { trainId: 'train-0001', baseCommit: c1, goldenPaths: [goldenPath] },
+      { trainId: 'train-0002', baseCommit: c1, originBaseCommit: aheadOrigin, goldenPaths: [goldenPath] },
+    ]);
+    expect(withDivergence.map((entry) => entry.trainId)).toEqual(['train-0002']);
+    expect(withDivergence[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
   });
 });
