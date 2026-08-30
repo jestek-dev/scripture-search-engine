@@ -49,8 +49,18 @@
     ]
   },
   "size": {
-    "totalArtifactBytes": 167772160,
-    "$comment_total": "160 MiB. Base scripture corpus is ~122 MiB; Layers A+B are budgeted ~30 MiB with headroom.",
+    "totalArtifactBytes": 184549376,
+    "$comment_total": [
+      "176 MiB. Raised from 160 MiB on 2026-08-30 (Jesse's approval, project",
+      "chat ~15:59Z: raise the budget rather than cut data) against the",
+      "measured post-expansion full artifact: 167.84 MiB at main e762d1c",
+      "(battery-regrade 2026-08-26 + PR #61 battery CI log). The 160 MiB",
+      "figure dated from 2026-07-29 against the 117.60 MiB first artifact",
+      "(~122 corpus + ~30 layers) and was never re-derived after the reviewed",
+      "schema v7 spelling tables (~16.8 MiB) and schema v9",
+      "cross_reference_phrases (~21 MiB) landed. 176 MiB = measured 167.84",
+      "+ ~4.9% headroom."
+    ],
     "perTableBytes": {
       "concept_anchors": 4194304,
       "concept_lexicon": 4194304,
@@ -60,8 +70,8 @@
       "cross_references": 25165824,
       "curated_aliases": 1048576,
       "pericopes": 1048576,
-      "spelling_deletes": 12582912,
-      "spelling_terms": 1048576,
+      "spelling_deletes": 16777216,
+      "spelling_terms": 1310720,
       "token_stats": 2097152,
       "verse_terms": 104857600,
       "verse_tokens": 20971520,
@@ -89,7 +99,15 @@
       "ED-2 delete table busts its budget on the full corpus, the REVIEWED",
       "mitigation ladder applies in order (each step a reviewed data change,",
       "never a silent tweak): (1) df >= 2 floor on corpus-origin vocabulary;",
-      "(2) ED-2 depth only at term length >= 10; (3) ED 1 everywhere."
+      "(2) ED-2 depth only at term length >= 10; (3) ED 1 everywhere.",
+      "",
+      "2026-08-30: the deferred full-corpus check ran (battery-regrade",
+      "2026-08-26): spelling_deletes measured 15.7 MiB, spelling_terms",
+      "1.1 MiB. Jesse ruled to keep the data at full ED-2 depth rather than",
+      "apply the ladder, so the budgets rise to the measured values plus",
+      "modest headroom: spelling_deletes 16 MiB (~1.9%), spelling_terms",
+      "1.25 MiB (~13.6%). The ladder remains the reviewed mitigation if a",
+      "future corpus change busts these."
     ],
     "$comment_perTable": [
       "Per-table byte budgets, INCLUDING each table's indexes \u2014 an index ships with",
