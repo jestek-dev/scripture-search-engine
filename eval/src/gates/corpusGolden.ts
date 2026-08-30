@@ -52,6 +52,21 @@ export interface CorpusExpectation {
    * capability field must never be decoration (CLAUDE.md gate discipline).
    */
   readonly requiredGroupingSourceId?: string;
+  /**
+   * Presence-with-provenance assertion (corpus-expansion ruling supplement
+   * §3, approved 2026-08-30). Mutually exclusive with `withinTop`: the
+   * expectation asserts no rank — rank contests between many verbatim
+   * quoters of one refrain are exactly what this shape declines to fight.
+   * Measurement runs the fixture's query once against a dedicated limit-50
+   * engine instance (the same discipline as the rank-metrics recall@50
+   * instance) and passes iff the reference appears anywhere in those 50
+   * results with every required* pin satisfied. Fail-closed like
+   * `requiredGroupingSourceId` was: rejected structurally unless the entry
+   * also carries `requiredGroupingSourceId` or a required reason — a
+   * windowless presence assertion without a provenance pin would be the
+   * vacuous decoration the gate covenant forbids.
+   */
+  readonly presenceOnly?: boolean;
 }
 
 export interface PreferredOrder {
@@ -143,7 +158,9 @@ export interface CorpusFixture {
 
 interface NormalizedExpectation {
   readonly ref: string;
+  /** Meaningless (and never consulted) when `presenceOnly` is set. */
   readonly withinTop: WithinTop;
+  readonly presenceOnly: boolean;
   readonly range: { start: number; end: number };
   readonly requiredReasonFamily?: string;
   readonly requiredReasonLabel?: string;
@@ -225,7 +242,10 @@ const EXPECTATION_FIELDS = new Set([
   'requiredReasonFamily',
   'requiredReasonLabel',
   'requiredGroupingSourceId',
+  'presenceOnly',
 ]);
+/** How many results a presenceOnly assertion scans (supplement §3). */
+export const PRESENCE_WINDOW = 50;
 const PREFERRED_ORDER_FIELDS = new Set(['above', 'below', 'withinTop']);
 const MUST_NOT_RANK_FIELDS = new Set(['ref', 'reference', 'why']);
 const MUST_NOT_LEAD_FIELDS = new Set(['ref', 'reference', 'why', 'withinTop']);
@@ -385,6 +405,43 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
         );
         continue;
       }
+      if (expectation.presenceOnly !== undefined) {
+        // Supplement §3, fail-closed at the schema like requiredGroupingSourceId
+        // was at the runner: `presenceOnly: false` would be a field that asserts
+        // nothing, a rank window contradicts "no rank is asserted", and a
+        // presence assertion without a provenance pin is vacuous decoration.
+        if (expectation.presenceOnly !== true) {
+          findings.push(
+            fixtureFinding(fixtureId, 'G3_FIXTURE_MALFORMED', `${location}.presenceOnly must be literally true — omit the field to assert a rank window`),
+          );
+          continue;
+        }
+        if (expectation.withinTop !== undefined) {
+          findings.push(
+            fixtureFinding(
+              fixtureId,
+              'G3_FIXTURE_MALFORMED',
+              `${location} cannot combine presenceOnly with withinTop — a presence assertion deliberately asserts no rank`,
+            ),
+          );
+          continue;
+        }
+        if (
+          expectation.requiredGroupingSourceId === undefined &&
+          expectation.requiredReasonFamily === undefined &&
+          expectation.requiredReasonLabel === undefined
+        ) {
+          findings.push(
+            fixtureFinding(
+              fixtureId,
+              'G3_FIXTURE_MALFORMED',
+              `${location}.presenceOnly requires requiredGroupingSourceId or a required reason — ` +
+                'a windowless presence assertion without a provenance pin is vacuous decoration',
+            ),
+          );
+          continue;
+        }
+      }
       for (const field of [
         'requiredReasonFamily',
         'requiredReasonLabel',
@@ -417,6 +474,7 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
       expectedTop.push({
         ref: parsed.ref,
         range: parsed.range,
+        presenceOnly: expectation.presenceOnly === true,
         withinTop: isWithinTop(expectation.withinTop) ? expectation.withinTop : expectedWithinTop,
         ...(typeof expectation.requiredReasonFamily === 'string'
           ? { requiredReasonFamily: expectation.requiredReasonFamily }
@@ -433,8 +491,10 @@ function normaliseCorpusFixture(input: unknown): FixtureValidation {
 
   const preferredOrder: NormalizedPreferredOrder[] = [];
   const pairKeys = new Set<string>();
+  // presenceOnly entries assert no rank, so they must never widen a window.
   const defaultPairWindow = expectedTop.reduce(
-    (largest, expectation) => Math.max(largest, expectation.withinTop) as WithinTop,
+    (largest, expectation) =>
+      expectation.presenceOnly ? largest : (Math.max(largest, expectation.withinTop) as WithinTop),
     expectedWithinTop,
   );
   if (input.preferredOrder !== undefined && !Array.isArray(input.preferredOrder)) {
@@ -729,8 +789,11 @@ export function validateCorpusFixture(input: unknown): readonly GateFinding[] {
 }
 
 function measuredWindow(fixture: NormalizedCorpusFixture): WithinTop {
+  // presenceOnly entries assert no rank, so they must never widen the
+  // window the guards are measured in.
   return fixture.expectedTop.reduce(
-    (largest, expectation) => Math.max(largest, expectation.withinTop) as WithinTop,
+    (largest, expectation) =>
+      expectation.presenceOnly ? largest : (Math.max(largest, expectation.withinTop) as WithinTop),
     fixture.expectedWithinTop,
   );
 }
@@ -858,14 +921,26 @@ function verseIdOf(targetId: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+/**
+ * Runner-provided measurement instruments. `presenceEngine` is a dedicated
+ * read-only engine instance at limit PRESENCE_WINDOW (the gauntlet already
+ * instantiates one of this shape for rank-metrics recall@50); presenceOnly
+ * assertions are measured against it and FAIL when it is absent — an
+ * assertion nobody could measure must never read as a pass.
+ */
+export interface CorpusGoldenRunOptions {
+  readonly presenceEngine?: ScriptureEngine;
+}
+
 export async function runCorpusFixture(
   engine: ScriptureEngine,
   fixture: CorpusFixture,
+  options: CorpusGoldenRunOptions = {},
 ): Promise<string[]> {
   const validated = normaliseCorpusFixture(fixture);
   if (!validated.fixture) return validated.findings.map((finding) => finding.message);
   if (!isRunnable(validated.fixture)) return [];
-  return (await runNormalisedFixture(engine, validated.fixture)).map((finding) => finding.message);
+  return (await runNormalisedFixture(engine, validated.fixture, options)).map((finding) => finding.message);
 }
 
 function isRunnable(fixture: NormalizedCorpusFixture): boolean {
@@ -875,6 +950,7 @@ function isRunnable(fixture: NormalizedCorpusFixture): boolean {
 async function runNormalisedFixture(
   engine: ScriptureEngine,
   fixture: NormalizedCorpusFixture,
+  options: CorpusGoldenRunOptions,
 ): Promise<GateFinding[]> {
   const findings: GateFinding[] = [];
   // The two fixture forms are structurally exclusive, so exactly one loop runs.
@@ -883,7 +959,7 @@ async function runNormalisedFixture(
   }
   if (fixture.query) {
     for (const query of [fixture.query, ...fixture.additionalQueries]) {
-      findings.push(...(await runOneQuery(engine, fixture, query)));
+      findings.push(...(await runOneQuery(engine, fixture, query, options)));
     }
     findings.push(...(await guardVacuityFindings(engine, fixture, findings)));
   }
@@ -988,16 +1064,103 @@ async function runOneReferenceQuery(
   return findings;
 }
 
+/**
+ * The required* evidence pins, shared by the rank-window and presenceOnly
+ * measurement paths: an expectation that surfaced its reference still fails
+ * when the hit carries the wrong evidence — the explanation is part of the
+ * contract on both paths.
+ */
+function requiredEvidenceFindings(
+  fixtureId: string,
+  query: string,
+  expectation: NormalizedExpectation,
+  hits: readonly { readonly reasons: readonly { readonly family: string; readonly label: string }[] }[],
+  params: Readonly<Record<string, string | number>>,
+): GateFinding[] {
+  const findings: GateFinding[] = [];
+  if (
+    expectation.requiredReasonLabel &&
+    !hits.some((hit) =>
+      hit.reasons.some((reason) => reason.label === expectation.requiredReasonLabel),
+    )
+  ) {
+    // Two concepts may legitimately anchor one verse; without this the
+    // fixture measures whichever of them happens to survive.
+    findings.push(
+      fixtureFinding(
+        fixtureId,
+        'G3_EXPECTED_TOP_REASON_LABEL',
+        `${expectation.ref} ranks for "${query}" but carries no reason labelled ` +
+          `'${expectation.requiredReasonLabel}' (has: ` +
+          `${[...new Set(hits.flatMap((hit) => hit.reasons.map((reason) => reason.label)))].join(' | ')}). ` +
+          'The fixture is measuring a different concept than the one it covers.',
+        params,
+      ),
+    );
+  }
+
+  if (
+    expectation.requiredReasonFamily &&
+    !hits.some((hit) =>
+      hit.reasons.some((reason) => reason.family === expectation.requiredReasonFamily),
+    )
+  ) {
+    // The Phase 1 trap, made explicit: right verse, wrong evidence.
+    findings.push(
+      fixtureFinding(
+        fixtureId,
+        'G3_EXPECTED_TOP_REASON_FAMILY',
+        `${expectation.ref} ranks for "${query}" but carries no ` +
+          `'${expectation.requiredReasonFamily}' reason (has: ` +
+          `${[...new Set(hits.flatMap((hit) => hit.reasons.map((reason) => reason.family)))].join(', ')}). ` +
+          'The right passage for the wrong reason is still a failure.',
+        params,
+      ),
+    );
+  }
+
+  if (expectation.requiredGroupingSourceId !== undefined) {
+    // P5.6 PR 1 capability, fail-closed by construction: the engine did not
+    // emit result grouping until the PR 2 behavior landed, so this read is
+    // structural (it predates the typed §5 `grouping` field) and could not
+    // pass before that. That was the point — an active fixture demanding
+    // grouping provenance must fail until the mechanism it names exists and
+    // cites the named source; now that PR 2 shipped the typed field this
+    // code enforces it unchanged.
+    const satisfied = hits.some((hit) => {
+      const grouping = (
+        hit as { grouping?: { provenance?: { sourceId?: unknown } } }
+      ).grouping;
+      return grouping?.provenance?.sourceId === expectation.requiredGroupingSourceId;
+    });
+    if (!satisfied) {
+      findings.push(
+        fixtureFinding(
+          fixtureId,
+          'G3_EXPECTED_TOP_GROUPING_SOURCE',
+          `${expectation.ref} ranks for "${query}" but is not a grouped result ` +
+            `citing '${expectation.requiredGroupingSourceId}' grouping provenance. ` +
+            'A passage grouped by the wrong mechanism — or not grouped at all — ' +
+            'is a failure: the grouping explanation is part of the contract.',
+          params,
+        ),
+      );
+    }
+  }
+  return findings;
+}
+
 async function runOneQuery(
   engine: ScriptureEngine,
   fixture: NormalizedCorpusFixture,
   query: string,
+  options: CorpusGoldenRunOptions,
 ): Promise<GateFinding[]> {
   const findings: GateFinding[] = [];
   const result = await engine.research(query);
   const results = result.kind === 'discovery' ? result.results : [];
 
-  for (const expectation of fixture.expectedTop) {
+  for (const expectation of fixture.expectedTop.filter((entry) => !entry.presenceOnly)) {
     const top = results.slice(0, expectation.withinTop);
     const hits = top.filter((entry) => hitInRange(entry, expectation.range));
     if (hits.length === 0) {
@@ -1011,72 +1174,60 @@ async function runOneQuery(
       );
       continue;
     }
-    if (
-      expectation.requiredReasonLabel &&
-      !hits.some((hit) =>
-        hit.reasons.some((reason) => reason.label === expectation.requiredReasonLabel),
-      )
-    ) {
-      // Two concepts may legitimately anchor one verse; without this the
-      // fixture measures whichever of them happens to survive.
-      findings.push(
-        fixtureFinding(
-          fixture.id,
-          'G3_EXPECTED_TOP_REASON_LABEL',
-          `${expectation.ref} ranks for "${query}" but carries no reason labelled ` +
-            `'${expectation.requiredReasonLabel}' (has: ` +
-            `${[...new Set(hits.flatMap((hit) => hit.reasons.map((reason) => reason.label)))].join(' | ')}). ` +
-            'The fixture is measuring a different concept than the one it covers.',
-          { query, ref: expectation.ref, withinTop: expectation.withinTop },
-        ),
-      );
-    }
+    findings.push(
+      ...requiredEvidenceFindings(fixture.id, query, expectation, hits, {
+        query,
+        ref: expectation.ref,
+        withinTop: expectation.withinTop,
+      }),
+    );
+  }
 
-    if (
-      expectation.requiredReasonFamily &&
-      !hits.some((hit) =>
-        hit.reasons.some((reason) => reason.family === expectation.requiredReasonFamily),
-      )
-    ) {
-      // The Phase 1 trap, made explicit: right verse, wrong evidence.
-      findings.push(
-        fixtureFinding(
-          fixture.id,
-          'G3_EXPECTED_TOP_REASON_FAMILY',
-          `${expectation.ref} ranks for "${query}" but carries no ` +
-            `'${expectation.requiredReasonFamily}' reason (has: ` +
-            `${[...new Set(hits.flatMap((hit) => hit.reasons.map((reason) => reason.family)))].join(', ')}). ` +
-            'The right passage for the wrong reason is still a failure.',
-          { query, ref: expectation.ref, withinTop: expectation.withinTop },
-        ),
-      );
-    }
-
-    if (expectation.requiredGroupingSourceId !== undefined) {
-      // P5.6 PR 1 capability, fail-closed by construction: the engine does
-      // not emit result grouping until the PR 2 behavior lands, so this read
-      // is structural (the §5 `grouping` field does not exist on
-      // DiscoveryResult yet) and the check CANNOT pass today. That is the
-      // point — an active fixture demanding grouping provenance must fail
-      // until the mechanism it names exists and cites the named source, and
-      // when PR 2 adds the typed field this code enforces it unchanged.
-      const satisfied = hits.some((hit) => {
-        const grouping = (
-          hit as { grouping?: { provenance?: { sourceId?: unknown } } }
-        ).grouping;
-        return grouping?.provenance?.sourceId === expectation.requiredGroupingSourceId;
-      });
-      if (!satisfied) {
+  // presenceOnly path (supplement §3): one limit-50 run per query, presence
+  // anywhere in those results with every required* pin satisfied, no rank
+  // asserted. Fail-closed: a runner that cannot provide the limit-50
+  // instance must fail the assertion, never skip it.
+  const presenceExpectations = fixture.expectedTop.filter((entry) => entry.presenceOnly);
+  if (presenceExpectations.length > 0) {
+    const presenceEngine = options.presenceEngine;
+    if (presenceEngine === undefined) {
+      for (const expectation of presenceExpectations) {
         findings.push(
           fixtureFinding(
             fixture.id,
-            'G3_EXPECTED_TOP_GROUPING_SOURCE',
-            `${expectation.ref} ranks for "${query}" but is not a grouped result ` +
-              `citing '${expectation.requiredGroupingSourceId}' grouping provenance. ` +
-              'A passage grouped by the wrong mechanism — or not grouped at all — ' +
-              'is a failure: the grouping explanation is part of the contract.',
-            { query, ref: expectation.ref, withinTop: expectation.withinTop },
+            'G3_PRESENCE_NOT_MEASURED',
+            `${expectation.ref} carries a presenceOnly assertion for "${query}" but this runner ` +
+              `provided no limit-${PRESENCE_WINDOW} engine instance to measure it against. ` +
+              'Fail-closed: an unmeasured assertion must never read as a pass.',
+            { query, ref: expectation.ref, presenceWindow: PRESENCE_WINDOW },
           ),
+        );
+      }
+    } else {
+      const presenceResult = await presenceEngine.research(query);
+      const presenceTop =
+        presenceResult.kind === 'discovery'
+          ? presenceResult.results.slice(0, PRESENCE_WINDOW)
+          : [];
+      for (const expectation of presenceExpectations) {
+        const hits = presenceTop.filter((entry) => hitInRange(entry, expectation.range));
+        if (hits.length === 0) {
+          findings.push(
+            fixtureFinding(
+              fixture.id,
+              'G3_EXPECTED_PRESENCE_ABSENT',
+              `expected ${expectation.ref} anywhere in the top ${PRESENCE_WINDOW} for "${query}", but it is absent`,
+              { query, ref: expectation.ref, presenceWindow: PRESENCE_WINDOW },
+            ),
+          );
+          continue;
+        }
+        findings.push(
+          ...requiredEvidenceFindings(fixture.id, query, expectation, hits, {
+            query,
+            ref: expectation.ref,
+            presenceWindow: PRESENCE_WINDOW,
+          }),
         );
       }
     }
@@ -1167,6 +1318,7 @@ async function runOneQuery(
 export async function corpusGoldenGate(
   engine: ScriptureEngine,
   fixtures: readonly CorpusFixture[],
+  options: CorpusGoldenRunOptions = {},
 ): Promise<GateResult> {
   const validated = fixtures.map(normaliseCorpusFixture);
   const runnable = validated.flatMap((result) => result.fixture ? [result.fixture] : []);
@@ -1177,7 +1329,7 @@ export async function corpusGoldenGate(
 
   const activeRun: GateFinding[] = [];
   for (const fixture of active) {
-    activeRun.push(...(await runNormalisedFixture(engine, fixture)));
+    activeRun.push(...(await runNormalisedFixture(engine, fixture, options)));
   }
   const findings: GateFinding[] = [
     ...validated.flatMap((result) => result.findings),
@@ -1221,7 +1373,7 @@ export async function corpusGoldenGate(
   const stillFailing: GateFinding[] = [];
   let vacuousOnlyPending = 0;
   for (const fixture of pending) {
-    const allPendingFindings = await runNormalisedFixture(engine, fixture);
+    const allPendingFindings = await runNormalisedFixture(engine, fixture, options);
     const pendingFindings = allPendingFindings.filter((finding) => !isVacuous(finding));
     const pendingVacuous = allPendingFindings.filter(isVacuous);
     vacuousFindings.push(...pendingVacuous);
