@@ -1,27 +1,35 @@
 {
   "formatVersion": 1,
+  "release": {
+    "tag": "v0.14.0"
+  },
   "distributionTier": "public_distribution",
-  "schemaVersion": "6",
+  "schemaVersion": "9",
   "tokenizerVersion": "1.0.0",
-  "engineVersion": "0.7.1",
-  "corpusFingerprint": "a757e7a01a82a589bd72a7311af9f6e1ea26477441dec1ee76d35b6167187de3",
-  "layerFingerprint": "8ae179a644a1ec48db118936c102ddaec9794a7b6543d7376be35bb6e744bb6f",
-  "manifestFingerprint": "0a801f843c20ea2ac61dc7ca415c7a76ad61bedcac08d275353401b21834ac55",
-  "databaseSha256": "35b7a6f3f81126b909dd3a5bf5f9bf65812e832a18a0fab6bf102f1428edf186",
-  "databaseBytes": 137412608,
+  "engineVersion": "0.14.0",
+  "corpusFingerprint": "6450b7d79c8c7e6254384c628efd63b3baed91fe49f351049f336ac2e782db33",
+  "layerFingerprint": "21fb9767f0aab406be5c8806356999bee50e58c503e122988444d2739e64da1f",
+  "manifestFingerprint": "9388bd631f19a6c2470378c2d28838acf911943de09fac9fae643cd876e292e0",
+  "databaseSha256": "dc89740b30d2909778ae9dcdfb94d0cd93a28d73dc7700284a87efe2f7060f02",
+  "databaseBytes": 176074752,
   "perTableBytes": {
     "book_aliases": 12288,
     "books": 4096,
-    "concept_anchors": 36864,
-    "concept_lexicon": 32768,
-    "concept_related": 8192,
-    "concepts": 8192,
+    "concept_anchors": 221184,
+    "concept_lexicon": 147456,
+    "concept_related": 73728,
+    "concepts": 28672,
+    "cross_reference_phrases": 20504576,
     "cross_references": 18636800,
+    "curated_aliases": 8192,
     "meta": 8192,
-    "sqlite_schema": 12288,
+    "pericopes": 135168,
+    "spelling_deletes": 16441344,
+    "spelling_terms": 1187840,
+    "sqlite_schema": 16384,
     "token_stats": 319488,
     "translations": 8192,
-    "verse_terms": 80736256,
+    "verse_terms": 80691200,
     "verse_tokens": 14766080,
     "verse_translation_tokens": 14102528,
     "verses": 6152192,
@@ -30,18 +38,18 @@
     "verses_fts_docsize": 303104,
     "verses_fts_idx": 12288
   },
-  "builtAt": "2026-07-31T14:00:43.785Z",
+  "builtAt": "2026-08-30T21:57:37.611Z",
   "translations": [
     {
       "code": "WEB",
       "name": "World English Bible",
-      "sourceSha256": "335445efdbbda8e4e0e9740c088f1f915c7940ea05914212631c693643554a1c",
+      "sourceSha256": "944e3883ca8120cdd6c62c0524ce45f156c9b48bd19d98bc0b7cce8524cf475b",
       "verseCount": 31098
     }
   ],
   "rowCounts": {
     "books": 66,
-    "bookAliases": 195,
+    "bookAliases": 270,
     "translations": 1,
     "verses": 31098,
     "indexedVerses": 31098
@@ -49,13 +57,18 @@
   "counts": {
     "verses": 31098,
     "distinctTokens": 9570,
-    "concepts": 33,
-    "lexiconEntries": 205,
-    "editorialAnchors": 129,
-    "topicAnchors": 63,
-    "crossReferences": 341096,
-    "verseTerms": 877300,
-    "translationTokens": 307923
+    "concepts": 288,
+    "lexiconEntries": 1651,
+    "editorialAnchors": 1815,
+    "topicAnchors": 105,
+    "crossReferences": 341095,
+    "pericopes": 2325,
+    "crossReferencePhrases": 381261,
+    "verseTerms": 876763,
+    "translationTokens": 307923,
+    "spellingTerms": 22771,
+    "spellingDeletes": 400336,
+    "curatedAliases": 15
   },
   "sources": [
     {
@@ -95,15 +108,33 @@
       "maxTier": "public_distribution"
     },
     {
+      "id": "openbible-sections",
+      "sha256": "5e9e838d0226c6106ff8c578aa5c1cb8fa8b206f0fb83f784aa1613cc50e26e8",
+      "rightsClass": "cc_by",
+      "maxTier": "public_distribution"
+    },
+    {
       "id": "openbible-topics",
-      "sha256": "2239700d48151fa8a8166cfa31513c197700dd9a752d762f82cf27f27e72fd60",
+      "sha256": "fee5234ebbc4db49cda493e55222d2e95665d17216c2f47fb38f8c0bbcd316d5",
       "rightsClass": "cc_by",
       "maxTier": "public_distribution"
     },
     {
       "id": "openbible-xrefs",
-      "sha256": "36d1b1986d554c6e1be343b59d91c1e930144d531bee0fdef9f431ebb708f829",
+      "sha256": "2006d1af4af558dc39b4dca77023bc1dc77dabf67d8ad9c98e0af1f86fe05644",
       "rightsClass": "cc_by",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "stepbible-tvtms",
+      "sha256": "63058e0f20201af4bdaa7d830da5be8f493455d947c5f147d84840b33db9ddf8",
+      "rightsClass": "cc_by",
+      "maxTier": "public_distribution"
+    },
+    {
+      "id": "torrey",
+      "sha256": "9c2b6177b24f6fc9df5aeca2985ee8ff8fb941c27d9032347af6f9da53dd4692",
+      "rightsClass": "pd_text_claimed_transcription",
       "maxTier": "public_distribution"
     },
     {
@@ -137,15 +168,16 @@
       "maxTier": "public_distribution"
     },
     {
+      "id": "tsk-text",
+      "sha256": "6784c7099465995a8e66f02ead82b0bca66603c1bdeaf8332949774b7bfd4293",
+      "rightsClass": "public_domain",
+      "maxTier": "public_distribution"
+    },
+    {
       "id": "web",
-      "sha256": "3458ca34420c0547ec01b3dbda58a10a2d8fc511bdcd2e047ddd17fbe860b7b6",
+      "sha256": "b6f55cc787b1201b68dcfde8a1216e1a61ae6b3cc38748456cf58bdb5e95fc1c",
       "rightsClass": "public_domain",
       "maxTier": "public_distribution"
     }
-  ],
-  "stale": {
-    "since": "2026-08-08",
-    "reason": "Built 2026-07-30 against an 8-concept ontology at ENGINE_VERSION 0.7.1. The ontology and engine have advanced through 0.9.0, so this historical descriptor no longer describes what the current tree builds. Regenerate with `npm run fetch:sources && npm run build:artifact` on a machine that can reach the reviewed source bytes, then remove this block. See NEEDS-JESSE.md 1.9.",
-    "blocksRelease": true
-  }
+  ]
 }
