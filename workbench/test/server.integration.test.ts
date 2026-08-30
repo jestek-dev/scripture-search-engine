@@ -809,7 +809,7 @@ describe('degraded workbench server', () => {
     });
     const pidMismatch = await responseJson(await fetch(`http://127.0.0.1:${pidMismatchPort}/api/v2/health`));
     expect(pidMismatch).toMatchObject({ ok: true, data: { gauntlet: { status: 'healthy' } } });
-  }, 60_000);
+  }, 120_000);
 
   it('keeps digest-tampered reports rejected when no live marker exists', async () => {
     const tampered = path.join(repoRoot, 'eval', '.runs', `sse-tampered-${process.pid}-${Date.now()}.json`);

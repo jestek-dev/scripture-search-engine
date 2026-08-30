@@ -114,6 +114,12 @@ interface RouteOptions {
 }
 
 async function installRoutes(page: Page, options: RouteOptions = {}): Promise<void> {
+  // D32 onboarding shows on first visit (no `study.onboarded` flag) and its
+  // overlay blocks the flows under test, so seed the flag before every boot —
+  // matching study-shared.ts's default. Onboarding itself is covered by P5.
+  await page.addInitScript(() => {
+    localStorage.setItem('study.onboarded', '1');
+  });
   const ok = (data: unknown) => ({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, data }) });
   const plain = (data: unknown) => ({ status: 200, contentType: 'application/json', body: JSON.stringify(data) });
   await page.route('**/fonts/**', async (route) => { await route.fulfill({ status: 404, body: '' }); });
