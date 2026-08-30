@@ -34,6 +34,14 @@ export type MustNotLeadWindow = (typeof MUST_NOT_LEAD_WINDOWS)[number];
  */
 export const GUARD_VACUOUS_CATEGORY = 'sse.gauntlet.v1.finding.g3-golden.guard-vacuous';
 
+/**
+ * Machine-report category for a pending fixture that is still failing.
+ * Exported as the stable id the exit-code policy (`--pending-debt-ok`)
+ * uses to recognize this exact debt class — never by matching wording.
+ */
+export const PENDING_STILL_FAILING_CATEGORY =
+  'sse.gauntlet.v1.finding.g3-golden.pending-still-failing';
+
 export interface CorpusExpectation {
   /** Canonical Milestone 2 spelling. */
   readonly ref?: string;
@@ -1402,7 +1410,7 @@ export async function corpusGoldenGate(
       // Semantic (machine-report) form, unlike the G3_* codes above: this
       // finding rides a warn gate through report generation on every honest
       // run, so it must satisfy the machine report's category pattern.
-      categoryCode: 'sse.gauntlet.v1.finding.g3-golden.pending-still-failing',
+      categoryCode: PENDING_STILL_FAILING_CATEGORY,
       params: { failedExpectationMessages: pendingFindings.map((finding) => finding.message) },
       metrics: { failedExpectations: pendingFindings.length },
     });

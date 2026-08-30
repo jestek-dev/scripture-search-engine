@@ -16,6 +16,7 @@ import { execFileSync } from 'node:child_process';
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 
 import { headlineFor, type AdmissionReport, type Verdict } from './report.js';
+import { PENDING_STILL_FAILING_CATEGORY } from './gates/corpusGolden.js';
 import { DOCTRINAL_REVIEWS_PATH, FLAGGED_PAIRINGS_PATH } from './gates/doctrinalGuardrail.js';
 import {
   NO_EFFECT_ANCHORS,
@@ -108,6 +109,15 @@ export interface GauntletOptions {
    */
   readonly expectNoEffect?: string;
   readonly requireAdmit: boolean;
+  /**
+   * Explicit opt-in that lets --require-admit exit 0 on
+   * ADMIT_WITH_WARNINGS when the ONLY warn-carrying evidence is G3
+   * pending-fixture debt (see `pendingDebtOnly`). Never a default: it must
+   * be passed alongside --require-admit, changes no verdict and hides no
+   * warning — only the exit code. Present only when true so recorded flag
+   * identities from before the flag existed stay valid.
+   */
+  readonly pendingDebtOk?: boolean;
   readonly jsonPath?: string;
   readonly candidateDescriptorPath?: string;
   readonly candidateDatabasePath?: string;
@@ -230,7 +240,7 @@ export interface GauntletMachineReport {
 const USAGE =
   'Usage: npm run gauntlet -- [--check-sources] [--update-baseline] [--update-ordering-snapshot] ' +
   '[--update-rank-baseline] [--expect-no-effect <reason-token>] ' +
-  '[--require-admit] [--json <path>] ' +
+  '[--require-admit [--pending-debt-ok]] [--json <path>] ' +
   '[--candidate-descriptor <path> --candidate-database <path> | --release-database <path>]';
 
 export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
@@ -240,6 +250,7 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
   let updateRankBaseline = false;
   let expectNoEffect: string | undefined;
   let requireAdmit = false;
+  let pendingDebtOk = false;
   let jsonPath: string | undefined;
   let candidateDescriptorPath: string | undefined;
   let candidateDatabasePath: string | undefined;
@@ -288,6 +299,10 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
         if (requireAdmit) throw new Error(`Duplicate --require-admit.\n${USAGE}`);
         requireAdmit = true;
         break;
+      case '--pending-debt-ok':
+        if (pendingDebtOk) throw new Error(`Duplicate --pending-debt-ok.\n${USAGE}`);
+        pendingDebtOk = true;
+        break;
       case '--json': {
         if (jsonPath !== undefined) throw new Error(`Duplicate --json.\n${USAGE}`);
         const path = argv[index + 1];
@@ -319,6 +334,11 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
     }
   }
 
+  // A relaxation with nothing to relax is decoration, and decoration is how
+  // a guardrail stops being one — refuse the flag where it can do nothing.
+  if (pendingDebtOk && !requireAdmit) {
+    throw new Error(`--pending-debt-ok requires --require-admit; it only relaxes that exit mapping.\n${USAGE}`);
+  }
   if (updateBaseline && (requireAdmit || jsonPath !== undefined)) {
     throw new Error('--update-baseline cannot be combined with --require-admit or --json; review the new baseline separately.');
   }
@@ -354,6 +374,7 @@ export function parseGauntletOptions(argv: readonly string[]): GauntletOptions {
     ...(updateOrderingSnapshot ? { updateOrderingSnapshot } : {}),
     ...(updateRankBaseline ? { updateRankBaseline } : {}),
     ...(expectNoEffect !== undefined ? { expectNoEffect } : {}),
+    ...(pendingDebtOk ? { pendingDebtOk } : {}),
     ...(jsonPath ? { jsonPath } : {}),
     ...(candidateDescriptorPath ? { candidateDescriptorPath } : {}),
     ...(candidateDatabasePath ? { candidateDatabasePath } : {}),
@@ -1234,6 +1255,7 @@ function reportShapeMismatches(parsed: Record<string, unknown>, nowMs: number, m
     && typeof flags['jsonPath'] === 'string' && flags['jsonPath'].length > 0
     && (!Object.hasOwn(flags, 'expectNoEffect')
       || (typeof flags['expectNoEffect'] === 'string' && /^\S+$/.test(flags['expectNoEffect'])))
+    && (!Object.hasOwn(flags, 'pendingDebtOk') || flags['pendingDebtOk'] === true)
     && Array.isArray(flags['argv']) && flags['argv'].every((value) => typeof value === 'string'), 'identity.flags');
   const hasBattery = Object.hasOwn(payload, 'battery');
   const hasRankMetrics = Object.hasOwn(payload, 'rankMetrics');
@@ -1602,14 +1624,47 @@ export function inspectGauntletRunMarkers(
 }
 
 /**
+ * Eligibility test for `--pending-debt-ok`: true iff the run carries at
+ * least one non-pass row and EVERY non-pass, non-not-applicable row is a
+ * warn-level G3 row whose every finding is the pending-fixture-status debt
+ * (`PENDING_STILL_FAILING_CATEGORY` — the stable id, never wording). A
+ * pending fixture specifies unlanded work, so its failing state is outside
+ * the change under review (see gates/corpusGolden.ts); anything else riding
+ * a warn row — guard vacuity, reachability, an unidentifiable finding —
+ * keeps the strict exit. Verdicts and reported warnings are untouched.
+ */
+export function pendingDebtOnly(gates: readonly GateResult[]): boolean {
+  const nonPass = gates.filter(
+    (gate) => gate.status !== 'pass' && gate.status !== 'not-applicable',
+  );
+  return nonPass.length > 0 && nonPass.every(
+    (gate) =>
+      gate.status === 'warn'
+      && gate.gate === 'G3-golden'
+      && (gate.findings?.length ?? 0) > 0
+      && (gate.findings ?? []).every(
+        (finding) => finding.categoryCode === PENDING_STILL_FAILING_CATEGORY,
+      ),
+  );
+}
+
+/**
  * NO_MEASURABLE_EFFECT is non-admit under --require-admit — the covenant's
  * "means don't merge" — unless the run explicitly claimed no effect
  * (`--expect-no-effect`, a re-pin), which downgrades it to the expected
  * outcome. The verdict itself is never changed by the flag; only the exit
  * code is, so the measurement stays honest in every report.
+ *
+ * `admitPendingDebt` is the --pending-debt-ok opt-in AND-ed with
+ * `pendingDebtOnly(report.gates)` by the caller: under --require-admit it
+ * extends exit 0 to an ADMIT_WITH_WARNINGS whose only warnings are
+ * pending-fixture debt. It never touches any other verdict.
  */
-export function gauntletExitCode(verdict: Verdict, requireAdmit: boolean, expectNoEffect = false): number {
+export function gauntletExitCode(verdict: Verdict, requireAdmit: boolean, expectNoEffect = false, admitPendingDebt = false): number {
   if (verdict === 'NO_MEASURABLE_EFFECT') return requireAdmit && !expectNoEffect ? 1 : 0;
-  if (requireAdmit) return verdict === 'ADMIT' ? 0 : 1;
+  if (requireAdmit) {
+    if (verdict === 'ADMIT') return 0;
+    return verdict === 'ADMIT_WITH_WARNINGS' && admitPendingDebt ? 0 : 1;
+  }
   return verdict === 'REJECT' ? 1 : 0;
 }

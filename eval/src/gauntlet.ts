@@ -125,6 +125,7 @@ import {
   captureRunIdentity,
   gauntletExitCode,
   parseGauntletOptions,
+  pendingDebtOnly,
   repositoryIdentitiesMatch,
   resolveGauntletTarget,
   resolveMachineReportPath,
@@ -1261,6 +1262,9 @@ async function main(): Promise<void> {
       report.verdict,
       options.requireAdmit,
       options.expectNoEffect !== undefined,
+      // --pending-debt-ok relaxes --require-admit only when the report's
+      // sole warnings are the G3 pending-fixture debt; see pendingDebtOnly.
+      options.pendingDebtOk === true && pendingDebtOnly(report.gates),
     );
   } finally {
     removeGauntletRunMarker(markerPath);
@@ -1270,7 +1274,7 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  if (error instanceof Error && /(?:Unknown gauntlet argument|Duplicate --|requires (?:a path|both|a reason)|mutually exclusive|space-free token|--update-(?:baseline|ordering-snapshot|rank-baseline) (?:cannot|requires))/.test(error.message)) {
+  if (error instanceof Error && /(?:Unknown gauntlet argument|Duplicate --|requires (?:a path|both|a reason)|mutually exclusive|space-free token|--pending-debt-ok requires|--update-(?:baseline|ordering-snapshot|rank-baseline) (?:cannot|requires))/.test(error.message)) {
     process.stderr.write(`${error.message}\n`);
     process.exitCode = 2;
   } else {
