@@ -3733,6 +3733,25 @@ concepts:
     # review candidate, flagged for Jesse.
     admitted: [victory, conqueror, overcomes, greater]
 
+  - id: virgin-birth
+    # 2026-08-30 supplement §2 execution (distinct concept per Jesse's
+    # Decision 11 ruling): row authored with the pack (fixture-first,
+    # virgin-birth.json). Every entry keeps >= 2 significant tokens
+    # ({virgin, birth}; {born, virgin}; {conceiv, holy, spirit}); no
+    # bare word fires.
+    skipped:
+      - token: virgin
+        reason: >-
+          Matt 25's ten virgins and Isa 62's marriage imagery are
+          different senses; the doctrine's registers all carry a second
+          token ("virgin birth", "born of a virgin"), so the bare word
+          stays undecided territory rather than a doctrinal trigger.
+      - token: born
+        reason: >-
+          salvation owns the born-again register (its "you must be born
+          again" collapse admits bare "born" there); this pack's claim
+          needs the virgin token alongside it.
+
   - id: waiting-for-a-child
     # PR #41 (2026-08-22 Genesis pilot): all deliberate per the in-file
     # comment (§1.6d option-3 precedent): "infertility" is a distinctive

@@ -1,0 +1,150 @@
+# VIRGIN BIRTH — doctrinal locator pack (supplement §2 execution,
+# 2026-08-30). Authored fixture-first: eval/golden/virgin-birth.json has
+# been the committed measured-gap record since the apologetics wave
+# (2026-08-25, pending), corpus-blocked until PR #64 landed Matthew 1 /
+# Luke 1 / Isaiah 7. Measured gap on the full corpus (2026-08-30,
+# pre-pack gauntlet run): the pending fixture fails 7 expectation(s) —
+# "virgin birth" and "born of a virgin" surface neither Matt 1:18 nor
+# Luke 1:34-35 in the top 10; "conceived by the holy spirit" reaches
+# Matt 1:18 but CHIPLESS for this doctrine (exact_phrase / proximity /
+# token_overlap only — the right passage for the wrong reason, a
+# covenant-5 failure) and misses Luke 1:34-35 entirely.
+#
+# DECISION 11 CLOSED (Jesse, "approved as proposed", 2026-08-30
+# 15:55:39Z, corpus-expansion-ruling-supplement.md §2): a DISTINCT
+# `virgin-birth` concept, NOT an incarnation extension — the fixture's
+# recorded chip is already `Theme: The virgin birth`, and incarnation's
+# Word-became-flesh register shares no lexicon with "virgin birth" /
+# "conceived by the holy spirit" / "born of a virgin" (verified below:
+# zero shared tokens with incarnation's lexicon), so G4 distinctness is
+# clean and no reason label needs rewriting.
+#
+# Design: locates where Scripture states that Jesus was conceived by
+# the Holy Spirit and born of the virgin Mary — shared-core point 3
+# (docs/DOCTRINAL-BASIS.md §2: "Christ — incarnation, virgin birth,
+# sinless life, atoning death, bodily resurrection"). The pack locates
+# and attributes; it never adjudicates. The claim rests on Matthew and
+# Luke's explicit narratives, not on Isaiah 7:14 standing alone (see
+# the Isa 7:14 anchor's locator discipline below).
+#
+# BOUNDARIES: Matt 1:20 is dreams-and-visions' anchor (that pack's
+# claim is the dream medium; this pack's is what the angel SAYS about
+# the conception — deliberate cross-concept anchoring, Rom 8:1
+# precedent). Isa 7:14 is DUAL with messianic-prophecy (recorded both
+# files): that pack's claim is the attributed-citation fact (Matt
+# 1:22-23 quotes it); this pack's is the conception-sign register the
+# citation names. Gal 4:4 was checked and DECLINED: "born to a woman"
+# names only a mother — the apologetics map's own note reads it as
+# corroborating, not independently demonstrative — and the verse's
+# engine home is adoption-as-gods-children's Gal 4:4-7 argument.
+# Luke 2's nativity narrative is deliberately NOT anchored: the birth
+# announcement to the shepherds states no virginal conception.
+#
+# Attribution: ALL anchors [editorial] — Torrey has NO virgin-birth
+# outline in the verified set (docs/research/torrey-topical/
+# torrey-miller-topics.json, checked 2026-08-30). Nearest
+# corroborations, recorded per the exact-ref-in-the-topic's-own-outline
+# rule (incarnation precedent, claiming [torrey] would overstate them):
+# HUMAN NATURE OF CHRIST, "Conception in the Virgin's womb" (Matt 1:18;
+# Luke 1:31 — a human-nature topic); PROPHECIES RESPECTING CHRIST,
+# "His being born a virgin" (Isa 7:14 — a prophecies topic).
+#
+# TOKENIZER DISCIPLINE (G-4, verified with the shared tokenizer):
+# "virgin birth" -> {virgin, birth}; "born of a virgin" -> {born,
+# virgin}; "conceived by the holy spirit" -> {conceiv, holy, spirit}.
+# Every entry keeps >= 2 significant tokens — ZERO single-token
+# collapses; bare "virgin" and bare "born" are deliberately NOT entries
+# (Matt 25's ten virgins and salvation's born-again register are
+# different senses; skipped rows recorded in the inventory). {conceiv,
+# holy, spirit} is a strict superset of holy-spirit's {holy, spirit} —
+# containment means the conception query honestly fires both concepts;
+# disjoint phrases, no G4 collision. Zero tokens shared with
+# incarnation's lexicon ({incarnation}, {word, became, flesh}, {god,
+# became, man}, {god, became, flesh}) — the ruling's distinctness
+# premise, verified.
+#
+# SENSE-INVERSION SWEEP (2026-08-30): no anchor below denies or argues
+# against what it is anchored for; each states the doctrine
+# affirmatively in its own WEB words (texts quoted per anchor).
+#
+# DOCTRINAL SCAN: no anchor below is on the flagged-pairings watchlist;
+# no materialFrameKeyword appears in this id, label, or lexicon.
+id: virgin-birth
+label: The virgin birth
+lexicon:
+  # The doctrine's name as people type it — the fixture's primary query.
+  - virgin birth
+  # The creedal register ("born of the Virgin Mary"), stopword-stripped
+  # to {born, virgin}.
+  - born of a virgin
+  # The conception register — Matt 1:18/1:20's own vocabulary and the
+  # Apostles' Creed's first clause. Contains holy-spirit's {holy,
+  # spirit}; the shared firing is honest (see tokenizer note).
+  - conceived by the holy spirit
+anchors:
+  # "Now the birth of Jesus Christ was like this: After his mother,
+  # Mary, was engaged to Joseph, before they came together, she was
+  # found pregnant by the Holy Spirit." (WEB, in corpus). Both halves
+  # of the doctrine in one verse: conception "before they came
+  # together", and its cause — by the Holy Spirit. The fixture's
+  # expectedTop and chip-label pin. Torrey corroboration (no
+  # virgin-birth outline — see attribution note): HUMAN NATURE OF
+  # CHRIST, "Conception in the Virgin's womb".
+  - ref: Matthew 1:18
+    sources: [editorial]
+    weight: 1.0
+  # "Mary said to the angel, 'How can this be, seeing I am a virgin?'
+  # The angel answered her, 'The Holy Spirit will come on you, and the
+  # power of the Most High will overshadow you. Therefore also the holy
+  # one who is born from you will be called the Son of God." (WEB, in
+  # corpus). Luke's independent account: Mary's own objection
+  # establishes her virginity, and the angel grounds "Son of God" in
+  # the Spirit's overshadowing — the stated means is the Spirit's
+  # power, no physical begetting in the text.
+  - ref: Luke 1:34-35
+    sources: [editorial]
+    weight: 0.95
+  # "Joseph, son of David, don't be afraid to take to yourself Mary as
+  # your wife, for that which is conceived in her is of the Holy
+  # Spirit." (WEB, in corpus). The angel's word to Joseph independently
+  # attributes the conception to the Holy Spirit — doubly attested
+  # within the chapter. Cross-concept: dreams-and-visions anchors the
+  # same verse for the dream medium (deliberate, recorded above).
+  - ref: Matthew 1:20
+    sources: [editorial]
+    weight: 0.85
+  # "Now all this has happened that it might be fulfilled which was
+  # spoken by the Lord through the prophet, saying, 'Behold, the virgin
+  # shall be with child...'" (WEB, in corpus). ATTRIBUTED FACT: Matthew
+  # himself cites Isaiah 7:14 of this birth and supplies the
+  # translation "God with us" — the fulfillment claim is Matthew's own
+  # citation, quoted as such, with no adjudication added.
+  - ref: Matthew 1:22-23
+    sources: [editorial]
+    weight: 0.85
+  # "and didn't know her sexually until she had given birth to her
+  # firstborn son." (WEB, in corpus). The narrator states plainly that
+  # Mary's virginity continued until after the birth — closing the
+  # natural-conception alternative on the narrative's own terms.
+  - ref: Matthew 1:25
+    sources: [editorial]
+    weight: 0.7
+  # "Therefore the Lord himself will give you a sign. Behold, the
+  # virgin will conceive, and bear a son, and shall call his name
+  # Immanuel." (WEB, in corpus). DISPUTED TEXT — editorial-attributed
+  # ONLY, under the messianic-prophecy locator rule (the ruling's own
+  # discipline, per the fixture's note): in its own chapter this is a
+  # sign to Ahaz with a near horizon (7:15-16); the identification with
+  # Jesus' birth is Matthew's attributed citation (Matt 1:22-23), never
+  # adjudicated fulfillment. The almah/parthenos question is attributed
+  # commentary, never gist; the WEB reads "the virgin", and this
+  # concept's claim rests on Matthew and Luke's narratives, not on this
+  # verse standing alone. DUAL with messianic-prophecy (recorded both
+  # files). Lowest weight in the pack by design.
+  - ref: Isaiah 7:14
+    sources: [editorial]
+    weight: 0.6
+related:
+  - incarnation
+  - messianic-prophecy
+sources: [editorial]
