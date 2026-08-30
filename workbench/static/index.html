@@ -4799,6 +4799,12 @@ button{font:inherit;}
       const vote = (card.votes || [])[0] || {};
       article.appendChild(node('p', 'card-because',
         firstLetterUp(COPY.updatesLookAgainBody(voteFragment(vote, null, true), identityNames(card)))));
+      // D16 (V6): the replay's own sentence — the deriver is its single
+      // writer; rendered verbatim (an unresolved reference names FM-2's
+      // sentence, a materially changed picture names the fresh-look one).
+      if (card.replay !== undefined && card.replay !== null) {
+        article.appendChild(node('p', 'updates-note replay-note', card.replay.note));
+      }
     } else if (conflict) {
       const sides = card.conflict && Array.isArray(card.conflict.sides) ? card.conflict.sides : [];
       const sideText = sides.map((side) => {
@@ -4812,6 +4818,12 @@ button{font:inherit;}
       for (const line of cardChangeLines(card)) article.appendChild(node('p', 'card-because', line));
       if ((card.identityNotes || []).length > 0) {
         article.appendChild(node('p', 'updates-note', COPY.updatesIdentityCarry(identityNames(card))));
+      }
+      // D16 (V6): the replay outcome in the deriver's own words, verbatim —
+      // "already achieved — guarded" (disposition 1), the machine-supported
+      // reconfirmation (disposition 2), or the offender-gone guard note.
+      if (card.replay !== undefined && card.replay !== null) {
+        article.appendChild(node('p', 'updates-note replay-note', card.replay.note));
       }
     }
     // At most one question (V3): deterministic candidate chips the deriver

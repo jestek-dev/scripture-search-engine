@@ -76,6 +76,56 @@ export interface ReplayIdentity {
   readonly layerFingerprint: string;
 }
 
+/**
+ * D16 (V6, §02.5): one query the seal-time staleness replay must re-run
+ * against the artifact the workbench currently serves, with the judged
+ * references whose resolution the replay must re-check. Derivation output —
+ * the deriver names what it needs; the caller runs the engine (in-process,
+ * statistics and lookups only — the deriver covenant) and hands the
+ * observations back as input. Requests derive only from identity-moved
+ * contributing votes: at an unmoved identity the recorded observation IS the
+ * replay, because the same engine over the same data returns the same
+ * ordering (determinism covenant #2) — re-running it could not differ.
+ */
+export interface ReplayProbeRequest {
+  readonly query: string;
+  /** Canonical judged references whose re-resolution the replay checks. */
+  readonly refs: readonly string[];
+}
+
+/** D16: what one replayed query observed, in engine order. */
+export interface ReplayProbeResult {
+  readonly query: string;
+  /** Result references exactly as the served engine returned them, in order. */
+  readonly rankedRefs: readonly string[];
+  /** Requested refs that no longer resolve in the served corpus (§02.5). */
+  readonly unresolvedRefs: readonly string[];
+}
+
+/** The three V6 dispositions plus the §02.5 corpus-row resolution failure. */
+export type ReplayDisposition =
+  | 'already-achieved'
+  | 'materially-equivalent'
+  | 'materially-changed'
+  | 'unresolved-reference';
+
+/**
+ * D16's card copy — single writer (D28: plain words, no fingerprints; the
+ * page renders these verbatim). Disposition 1's phrase is §02.5's own:
+ * "already achieved — guarded".
+ */
+export const REPLAY_ALREADY_ACHIEVED_NOTE =
+  'Already achieved — guarded. This passage now appears where you asked, so this update only pins that answer on the answer sheet.';
+export const REPLAY_RECONFIRMED_NOTE =
+  'Re-checked against the current search data: the picture still looks the way it did when you made this call.';
+export const REPLAY_OFFENDER_GONE_NOTE =
+  'That result no longer appears for this search. The line still goes on the answer sheet so it can never come back.';
+/** §06 FM-2's unresolvable-reference sentence — ships verbatim. */
+export const REPLAY_UNRESOLVED_REFERENCE_NOTE =
+  "The scripture text behind this call changed, and the passage couldn't be found again in the new text. Nothing was changed — your call is kept on record, and this is back in your inbox to check against the current text.";
+export const REPLAY_CHANGED_NOTE =
+  'The picture changed since this call — it needs a fresh look before anything derives from it.';
+
 export interface DeriveSourceFile {
   /** Repo-root-relative POSIX path. */
   readonly path: string;
@@ -159,6 +209,15 @@ export interface DeriveUpdatesInputs {
    * train merely rides).
    */
   readonly mainGoldenHistory?: readonly MainGoldenHistoryEntry[];
+  /**
+   * D16 (V6): the staleness-replay observations, taken by the caller against
+   * the SAME served artifact `replayIdentity` names, answering this
+   * derivation's `replayRequests` (assembled by the two-pass helper,
+   * `deriveWithReplay`). Absent, the derivation falls back to the Phase 2–3
+   * substitute — FM-2's triad: the derive-time identity pre-check plus human
+   * review — exactly as those phases sealed.
+   */
+  readonly replayObservations?: readonly ReplayProbeResult[];
 }
 
 export interface IdentityNote {
@@ -276,6 +335,19 @@ export interface UpdateCard {
   readonly engineering?: CardEngineeringEvidence;
   /** True when everything the card would do is already true in the world. */
   readonly alreadyInPlace?: boolean;
+  /**
+   * D16 (V6/§02.5): the staleness-replay outcome for this card, present
+   * exactly when the card's votes were cast under a moved identity AND the
+   * replay observations covered its query. The note is single-writer copy
+   * the page renders verbatim.
+   */
+  readonly replay?: { readonly disposition: ReplayDisposition; readonly note: string };
+  /**
+   * V6's derived `stale` flag (§02.5 disposition 3) — computed at the
+   * replay, never stored: the observed picture materially changed, so the
+   * card routes to a re-confirmation instead of deriving its data arm.
+   */
+  readonly stale?: true;
   /** FM-5 derived default after a no-measurable-effect stop — never stored. */
   readonly parkedByDefault?: boolean;
   readonly state: CardState;
@@ -300,6 +372,13 @@ export interface UpdatesDerivation {
   readonly liveTrainIds: readonly string[];
   /** Prior-train artifacts that failed the §03.2 join — fail-closed notes. */
   readonly unverifiablePriorTrains: readonly UnverifiablePriorTrain[];
+  /**
+   * D16: the queries (with judged refs) the V6 staleness replay must re-run —
+   * derived from identity-moved contributing votes. The caller runs these
+   * against the served engine and re-derives with `replayObservations`
+   * (`deriveWithReplay`); empty when every contributing vote is current.
+   */
+  readonly replayRequests: readonly ReplayProbeRequest[];
   readonly tally: {
     readonly drafted: number;
     readonly approved: number;
@@ -603,6 +682,15 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       path: entry.path,
       fixtureDigests: [...entry.fixtureDigests].sort(),
     })),
+    // D16: the replay observations are observed input like any other — two
+    // panels that saw different pictures must carry different digests.
+    replayObservations: [...(inputs.replayObservations ?? [])]
+      .sort((a, b) => a.query.localeCompare(b.query))
+      .map((observation) => ({
+        query: observation.query,
+        rankedRefs: [...observation.rankedRefs],
+        unresolvedRefs: [...observation.unresolvedRefs].sort(),
+      })),
   }));
 
   const records = inputs.judgmentsLog === '' ? [] : parseJudgmentLog(inputs.judgmentsLog);
@@ -632,6 +720,43 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     record.engineVersion === inputs.replayIdentity.engineVersion &&
     record.corpusFingerprint === inputs.replayIdentity.corpusFingerprint &&
     record.layerFingerprint === inputs.replayIdentity.layerFingerprint;
+
+  // ---- D16 (V6/§02.5): the seal-time staleness replay, applied wherever the
+  // caller supplied observations. The deriver stays pure: it names what to
+  // replay (`replayRequests`, from identity-moved contributing votes) and
+  // sorts each covered card into a disposition when the observation is here.
+  const replayByQuery = new Map((inputs.replayObservations ?? []).map((observation) => [observation.query, observation]));
+  const replayRequestRefs = new Map<string, Set<string>>();
+  const requestReplay = (query: string, refs: readonly string[]): void => {
+    const set = replayRequestRefs.get(query) ?? new Set<string>();
+    for (const ref of refs) set.add(ref);
+    replayRequestRefs.set(query, set);
+  };
+  /** Ranked ranges of one observation, precomputed once per query. */
+  const observedRangesCache = new Map<string, { start: number; end: number }[]>();
+  const observedRangesOf = (observation: ReplayProbeResult): { start: number; end: number }[] => {
+    const cached = observedRangesCache.get(observation.query);
+    if (cached !== undefined) return cached;
+    const ranges = observation.rankedRefs.map((ref) => {
+      try {
+        return anchorRangeOf(ref, `replay observation for "${observation.query}"`);
+      } catch {
+        // A result reference the anchor grammar cannot read matches nothing;
+        // it still occupies its rank (the window math stays honest).
+        return { start: -1, end: -1 };
+      }
+    });
+    observedRangesCache.set(observation.query, ranges);
+    return ranges;
+  };
+  /** Does the judged range appear within the first `window` results? */
+  const ranksWithin = (observation: ReplayProbeResult, range: { start: number; end: number }, window: number): boolean =>
+    observedRangesOf(observation).slice(0, Math.max(0, window)).some((observed) =>
+      observed.start >= 0 && observed.start <= range.end && range.start <= observed.end);
+  const unresolvedIn = (observation: ReplayProbeResult, ref: string): boolean =>
+    observation.unresolvedRefs.includes(ref);
+  const corpusMoved = (record: JudgmentRecordV2): boolean =>
+    record.corpusFingerprint !== inputs.replayIdentity.corpusFingerprint;
 
   const cards: Omit<UpdateCard, 'cardRevision' | 'state' | 'parkedByDefault'>[] = [];
 
@@ -821,6 +946,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       question?: CardQuestion;
       routedReason?: string;
       alreadyInPlace?: boolean;
+      replay?: { disposition: ReplayDisposition; note: string };
     }
     const seeds = new Map<string, CardSeed>();
     const addSeed = (seed: CardSeed): void => {
@@ -878,7 +1004,34 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
         // card derives normally at derive time — whether the expectation is
         // already achieved is a ranking question only the seal replay can
         // answer (02.5 disposition 1). The per-dimension notes attach below.
-        void identityMoved;
+        // D16: with observations in hand the replay answers it here.
+        const observation = identityMoved && !handWritten ? replayByQuery.get(query) : undefined;
+        if (identityMoved && !handWritten) requestReplay(query, [assertion.ref!]);
+        // §02.5's corpus row: a judged reference that no longer resolves in
+        // the served text derives NOTHING — evidence-only; the card routes to
+        // re-confirmation naming the failure (FM-2's verbatim sentence).
+        if (observation !== undefined && corpusMoved(leaf) && unresolvedIn(observation, assertion.ref!)) {
+          cards.push({
+            cardId: computeCardId('re-confirmation', query, targetKey, [leaf.judgmentId]),
+            kind: 're-confirmation',
+            query,
+            targetKey,
+            judgmentIds: [leaf.judgmentId],
+            contextJudgmentIds: helpfulFor([targetKey]),
+            votes: [voteOf(leaf)],
+            derived: {},
+            preCheck: 'identity-moved',
+            identityNotes: identityNotesFor(leaf, inputs.replayIdentity),
+            replay: { disposition: 'unresolved-reference', note: REPLAY_UNRESOLVED_REFERENCE_NOTE },
+            stale: true,
+          });
+          continue;
+        }
+        // Disposition 1 (already achieved): the target now ranks within its
+        // window — drop the data arms (theme question, anchor, chapter add),
+        // keep the fixture guard pinning the win, auto-resolve the copy.
+        const alreadyAchieved = observation !== undefined
+          && ranksWithin(observation, assertion.range!, assertion.withinTop!);
         // The canonical reference is single-chapter by construction, so the
         // membership lookup is one (book, chapter) pair (compile parity).
         const start = parseVerseId(assertion.range!.start);
@@ -891,21 +1044,56 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
           leaves: [leaf],
           derived: {
             expectation: { ref: assertion.ref!, withinTop: assertion.withinTop! },
-            ...(chapterOutsideSubset && book !== undefined
+            ...(!alreadyAchieved && chapterOutsideSubset && book !== undefined
               ? { chapterAdd: { book: book.name, chapter: start.chapter } }
               : {}),
-            ...(isMissing && !handWritten ? { anchorAddOnAnswer: { weight: 1 as const } } : {}),
+            ...(!alreadyAchieved && isMissing && !handWritten ? { anchorAddOnAnswer: { weight: 1 as const } } : {}),
           },
-          ...(isMissing && !handWritten
+          ...(!alreadyAchieved && isMissing && !handWritten
             ? { question: { id: 'theme' as const, prompt: 'Which theme should carry this passage?' as const, chips: themeChipsFor(query, assertion.ref!, concepts) } }
             : {}),
           ...(handWritten ? { routedReason: 'hand-written fixture' } : {}),
           ...(fixtureHasExpectation(assertion.rangeKey!, assertion.withinTop!) ? { alreadyInPlace: true } : {}),
+          ...(observation === undefined
+            ? {}
+            : alreadyAchieved
+              // Disposition 2 (materially equivalent): the target still fails
+              // its window the way the vote observed — derive fresh, record
+              // the machine-supported reconfirmation on the card.
+              ? { replay: { disposition: 'already-achieved' as const, note: REPLAY_ALREADY_ACHIEVED_NOTE } }
+              : { replay: { disposition: 'materially-equivalent' as const, note: REPLAY_RECONFIRMED_NOTE } }),
         });
       } else if (assertion.kind === 'guard') {
         // Row 3/4: the mustNotRank guard ALWAYS derives — a demotion guard is
         // regression protection whether or not the offender still ranks
         // (02.5 disposition 3; the pre-check never withholds it, §03.5).
+        const observation = identityMoved && !handWritten ? replayByQuery.get(query) : undefined;
+        if (identityMoved && !handWritten) requestReplay(query, [assertion.ref!]);
+        // §02.5's corpus row (FM-2): a judged reference that no longer
+        // resolves derives NOTHING — evidence-only. (Distinct from merely
+        // falling out of the RANKING, where the guard below still derives.)
+        if (observation !== undefined && corpusMoved(leaf) && unresolvedIn(observation, assertion.ref!)) {
+          cards.push({
+            cardId: computeCardId('re-confirmation', query, targetKey, [leaf.judgmentId]),
+            kind: 're-confirmation',
+            query,
+            targetKey,
+            judgmentIds: [leaf.judgmentId],
+            contextJudgmentIds: helpfulFor([targetKey]),
+            votes: [voteOf(leaf)],
+            derived: {},
+            preCheck: 'identity-moved',
+            identityNotes: identityNotesFor(leaf, inputs.replayIdentity),
+            replay: { disposition: 'unresolved-reference', note: REPLAY_UNRESOLVED_REFERENCE_NOTE },
+            stale: true,
+          });
+          continue;
+        }
+        // D16: does the judged offender still appear in the window the vote
+        // was made against? Decides which V6 disposition governs the arms.
+        const stillRanks = observation === undefined
+          ? undefined
+          : ranksWithin(observation, assertion.range!, leaf.observedWindow);
         const diagnosis = leaf.diagnosis!;
         const anchorAffecting = ANCHOR_AFFECTING_CAUSES.includes(diagnosis);
         let derived: DerivedCardConsequences = { guard: { ref: assertion.ref!, why: assertion.why! } };
@@ -923,13 +1111,18 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
           });
           if (namedAnchor !== undefined) {
             const editorialOnly = namedAnchor.sources.length === 1 && namedAnchor.sources[0] === 'editorial';
-            if (editorialOnly && !identityMoved) {
-              // The vote itself names the data row; ownership permits the edit.
+            if (editorialOnly && (!identityMoved || stillRanks === true)) {
+              // The vote itself names the data row; ownership permits the
+              // edit. D16 disposition 2: the replay re-checked the picture
+              // and the offender still ranks as observed — the anchor arm
+              // proceeds with the machine-supported reconfirmation recorded.
               kind = 'guard-and-anchor';
               derived = { ...derived, anchorRemove: { conceptId: concept!.id, locator: namedAnchor.locator } };
             } else if (editorialOnly && identityMoved) {
-              // §03.5: the anchor arm rests on a current observation — it
-              // routes to a separate re-confirmation card; the guard stays.
+              // §03.5 (and D16 disposition 3 when the replay observed the
+              // offender gone): the anchor arm rests on an observation that
+              // is no longer current — it routes to a separate
+              // re-confirmation card; the guard stays.
               cards.push({
                 cardId: computeCardId('re-confirmation', query, targetKey, [leaf.judgmentId]),
                 kind: 're-confirmation',
@@ -941,6 +1134,9 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
                 derived: {},
                 preCheck: 'identity-moved',
                 identityNotes: identityNotesFor(leaf, inputs.replayIdentity),
+                ...(stillRanks === false
+                  ? { replay: { disposition: 'materially-changed' as const, note: REPLAY_CHANGED_NOTE }, stale: true as const }
+                  : {}),
               });
             } else {
               // Source-owned: the fixture guard does the demotion; the row
@@ -959,12 +1155,37 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
           derived,
           ...(handWritten ? { routedReason: 'hand-written fixture' } : {}),
           ...(fixtureHasGuard(assertion.rangeKey!) ? { alreadyInPlace: true } : {}),
+          ...(stillRanks === undefined
+            ? {}
+            : stillRanks
+              ? { replay: { disposition: 'materially-equivalent' as const, note: REPLAY_RECONFIRMED_NOTE } }
+              // AC (V6): the irrelevant guard is STILL derived when the
+              // offender fell away — regression protection; G3 reports its
+              // vacuity honestly if the ref later leaves the corpus.
+              : { replay: { disposition: 'materially-changed' as const, note: REPLAY_OFFENDER_GONE_NOTE } }),
         });
       } else {
         // prefer: bound to a displayed pair — an identity move routes the
         // whole ordering entry to re-confirmation (§03.5); otherwise it is a
-        // pure expectation.
-        if (identityMoved) {
+        // pure expectation. D16: with the replay observed, the pair that
+        // still both rank is materially equivalent and derives fresh with
+        // the reconfirmation recorded (§02.5 disposition 2); a pair no
+        // longer both ranking is materially changed (disposition 3).
+        const observation = identityMoved && !handWritten ? replayByQuery.get(query) : undefined;
+        if (identityMoved && !handWritten) requestReplay(query, [assertion.pair!.above, assertion.pair!.below]);
+        const pairUnresolved = observation !== undefined && corpusMoved(leaf)
+          && (unresolvedIn(observation, assertion.pair!.above) || unresolvedIn(observation, assertion.pair!.below));
+        const bothStillRank = observation === undefined || pairUnresolved
+          ? undefined
+          : (['above', 'below'] as const).every((side) => {
+            try {
+              const range = anchorRangeOf(assertion.pair![side], `judgment ${leaf.judgmentId}`);
+              return ranksWithin(observation, range, assertion.pair!.withinTop);
+            } catch {
+              return false;
+            }
+          });
+        if (identityMoved && bothStillRank !== true) {
           cards.push({
             cardId: computeCardId('re-confirmation', query, targetKey, [leaf.judgmentId]),
             kind: 're-confirmation',
@@ -976,6 +1197,11 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
             derived: {},
             preCheck: 'identity-moved',
             identityNotes: identityNotesFor(leaf, inputs.replayIdentity),
+            ...(pairUnresolved
+              ? { replay: { disposition: 'unresolved-reference' as const, note: REPLAY_UNRESOLVED_REFERENCE_NOTE }, stale: true as const }
+              : bothStillRank === false
+                ? { replay: { disposition: 'materially-changed' as const, note: REPLAY_CHANGED_NOTE }, stale: true as const }
+                : {}),
           });
         } else {
           addSeed({
@@ -986,6 +1212,9 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
               preferredOrder: { above: assertion.pair!.above, below: assertion.pair!.below, withinTop: assertion.pair!.withinTop },
             },
             ...(handWritten ? { routedReason: 'hand-written fixture' } : {}),
+            ...(identityMoved && bothStillRank === true
+              ? { replay: { disposition: 'materially-equivalent' as const, note: REPLAY_RECONFIRMED_NOTE } }
+              : {}),
           });
         }
       }
@@ -1037,6 +1266,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
               },
             }),
         ...(seed.alreadyInPlace === true ? { alreadyInPlace: true } : {}),
+        ...(seed.replay === undefined ? {} : { replay: seed.replay }),
       });
     }
   }
@@ -1261,6 +1491,8 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       legacy: card.legacy ?? null,
       engineering: card.engineering ?? null,
       alreadyInPlace: card.alreadyInPlace ?? false,
+      replay: card.replay ?? null,
+      stale: card.stale ?? false,
     };
     return {
       ...card,
@@ -1299,6 +1531,9 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     trains: fold.trains,
     liveTrainIds: [...landedTrains].sort(),
     unverifiablePriorTrains: unverifiable.sort((a, b) => a.trainId.localeCompare(b.trainId)),
+    replayRequests: [...replayRequestRefs.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([query, refs]) => ({ query, refs: [...refs].sort() })),
     tally,
   };
 }
@@ -1371,6 +1606,10 @@ export function buildUpdatesManifest(
     card.state.sealedInTrain === undefined &&
     card.parkedByDefault !== true &&
     card.routed === undefined &&
+    // §5.1: sealing pulls exactly the approved, NON-STALE cards at seal time
+    // (V6 disposition 3 — a stale card is a re-confirmation and never
+    // op-bearing, so this is defense-in-depth, kept explicit).
+    card.stale !== true &&
     (card.kind === 'expectation' || card.kind === 'guard' || card.kind === 'guard-and-anchor' || card.kind === 'missing-passage'));
   if (boarding.length === 0) {
     throw new UpdatesManifestError('No approved cards carry a change to seal.');

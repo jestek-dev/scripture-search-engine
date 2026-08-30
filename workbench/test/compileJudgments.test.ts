@@ -321,74 +321,14 @@ describe('compile-judgments — routing (§5)', () => {
     expect(written.selection.slice(subset.selection.length)).toEqual(outcome.proposedSelections);
   });
 
-  it('warns per judgment made under a layerFingerprint that is no longer current', async () => {
-    const outcome = await compileJudgments(root);
-    expect(outcome.warnings).toHaveLength(1);
-    expect(outcome.warnings[0]).toContain('shelter in the storm');
-    expect(outcome.warnings[0]).toContain('layerFingerprint');
-    expect(outcome.warnings[0]).toContain('layer-old');
-    expect(outcome.warnings[0]).toContain(CURRENT_LAYER);
-  });
-
-  // Votes-to-engine plan D1: staleness warnings cover the full identity
-  // triple, each warning naming the exact dimension that moved — a judgment
-  // made under an older engineVersion or corpusFingerprint must not compile
-  // silently just because the layers happen to match.
-  it('warns per moved identity dimension — engine, corpus, and layer each pin a warning', async () => {
-    await scaffold([
-      judgment({
-        at: '2026-08-01T10:00:00.000Z',
-        query: 'hearing and doing',
-        verdict: 'missing',
-        reference: 'James 2:14-26',
-        note: 'Faith without works is dead.',
-        engineVersion: 'engine-old',
-      }),
-      judgment({
-        at: '2026-08-01T10:01:00.000Z',
-        query: 'shelter in the storm',
-        verdict: 'missing',
-        reference: 'Psalms 46:1',
-        excerpt: 'God is our refuge and strength, a very present help in trouble.',
-        corpusFingerprint: 'corpus-old',
-      }),
-      judgment({
-        at: '2026-08-01T10:02:00.000Z',
-        query: 'strength renewed',
-        verdict: 'missing',
-        reference: 'Isaiah 40:31',
-        excerpt: 'But those who wait for Yahweh will renew their strength.',
-        layerFingerprint: 'layer-old',
-      }),
-    ]);
-    const outcome = await compileJudgments(root);
-    expect(outcome.warnings).toHaveLength(3);
-    const [engineWarning, corpusWarning, layerWarning] = outcome.warnings;
-
-    expect(engineWarning).toContain('"hearing and doing"');
-    expect(engineWarning).toContain('engineVersion');
-    expect(engineWarning).toContain('engine-old');
-    expect(engineWarning).toContain(CURRENT_ENGINE);
-    expect(engineWarning).toContain('the engine has changed since');
-
-    expect(corpusWarning).toContain('"shelter in the storm"');
-    expect(corpusWarning).toContain('corpusFingerprint');
-    expect(corpusWarning).toContain('corpus-old');
-    expect(corpusWarning).toContain(CURRENT_CORPUS);
-    expect(corpusWarning).toContain('the scripture text has changed since');
-
-    expect(layerWarning).toContain('"strength renewed"');
-    expect(layerWarning).toContain('layerFingerprint');
-    expect(layerWarning).toContain('layer-old');
-    expect(layerWarning).toContain(CURRENT_LAYER);
-    expect(layerWarning).toContain('the layers have changed since');
-
-    for (const warning of outcome.warnings) {
-      expect(warning).toContain('re-confirm rather than trust it.');
-    }
-  });
-
-  it('warns once per moved dimension when a single judgment is stale on all three', async () => {
+  // Phase 4 (D16): the interim identity staleness warning is RETIRED — the
+  // seal-time replay (deriveUpdates.ts, V6/§02.5) owns staleness end to end
+  // now, sorting each identity-moved card into a mechanical disposition
+  // instead of printing a warning a human was supposed to remember. This
+  // guard keeps the retirement honest: a stale-identity judgment compiles
+  // with ZERO warnings here, and any reappearance of the warning is a
+  // regression against D16.
+  it('emits no identity staleness warnings — the seal-time replay owns staleness (D16)', async () => {
     await scaffold([
       judgment({
         at: '2026-08-01T10:00:00.000Z',
@@ -402,10 +342,8 @@ describe('compile-judgments — routing (§5)', () => {
       }),
     ]);
     const outcome = await compileJudgments(root);
-    expect(outcome.warnings).toHaveLength(3);
-    expect(outcome.warnings.filter((warning) => warning.includes('engineVersion'))).toHaveLength(1);
-    expect(outcome.warnings.filter((warning) => warning.includes('corpusFingerprint'))).toHaveLength(1);
-    expect(outcome.warnings.filter((warning) => warning.includes('layerFingerprint'))).toHaveLength(1);
+    expect(outcome.warnings).toEqual([]);
+    expect(outcome.report).not.toContain('re-confirm rather than trust it.');
   });
 
   it('prints the manual ontology checklist for missing and anchor-affecting ✗', async () => {

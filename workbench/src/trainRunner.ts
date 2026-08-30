@@ -32,7 +32,6 @@ import {
   buildUpdatesManifest,
   computeSealDigest,
   deriveTrainFlavor,
-  deriveUpdates,
   unmeasuredLayerAffectingOperations,
   UpdatesManifestError,
   type ReplayIdentity,
@@ -43,7 +42,7 @@ import type { AdmissionEvidenceEntry } from './admissionPublishOperations.js';
 import type { ComparisonReport } from './comparison.js';
 import { buildDataUpdateReport, type DataUpdateReport } from './dataUpdateReport.js';
 import { proposalManifestDigest, type ProposalManifest } from './proposals.js';
-import { assembleUpdatesInputs, readOriginMainTipFromGit, resolveUpdatesInputPaths, type GoldenMainHistoryReader, type UpdatesInputPaths } from './updatesOperations.js';
+import { assembleUpdatesInputs, deriveWithReplay, readOriginMainTipFromGit, resolveUpdatesInputPaths, type GoldenMainHistoryReader, type ReplayRunner, type UpdatesInputPaths } from './updatesOperations.js';
 import {
   createUpdatesStore,
   TRAIN_STOP_REASONS,
@@ -178,6 +177,13 @@ export interface TrainOperationsOptions {
    * `WORKBENCH_INDEPENDENT_SIGNER`; never invented by the machine.
    */
   readonly independentSigner?: string | null;
+  /**
+   * D16 (V6): the staleness-replay runner over the SERVED engine, shared
+   * with the updates operations so the panel's derivation digest and the
+   * seal's re-derivation cover the same observed picture. Absent, seals keep
+   * the Phase 2–3 substitute (FM-2's triad) unchanged.
+   */
+  readonly replay?: ReplayRunner;
 }
 
 export interface TrainOperations {
@@ -320,13 +326,16 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
   const readMain = options.readMain ?? ((repoRoot: string): Promise<string> => DEFAULT_ADMISSION_GIT_ADAPTER.readMain(repoRoot));
   const readOriginMain = options.readOriginMain ?? readOriginMainTipFromGit;
 
-  async function assemble(replayIdentity: ReplayIdentity): Promise<DeriveUpdatesInputs> {
-    return assembleUpdatesInputs(paths, replayIdentity, options.readGoldenMainHistory);
-  }
-
-  function derive(inputs: DeriveUpdatesInputs): UpdatesDerivation {
+  /**
+   * D16: assemble the snapshot and derive with the staleness replay — the
+   * SAME two-pass path the updates operations use, so the digest the panel
+   * rendered and the digest the seal re-derives cover the same observed
+   * picture. The returned inputs are the pass-2 inputs (observations pinned).
+   */
+  async function assembleAndDerive(replayIdentity: ReplayIdentity): Promise<{ inputs: DeriveUpdatesInputs; derivation: UpdatesDerivation }> {
+    const baseInputs = await assembleUpdatesInputs(paths, replayIdentity, options.readGoldenMainHistory);
     try {
-      return deriveUpdates(inputs);
+      return await deriveWithReplay(baseInputs, options.replay);
     } catch (error) {
       fail('updates_underivable', error instanceof Error ? error.message : 'Updates could not be derived from the current logs.', 500);
     }
@@ -596,8 +605,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
   return {
     async seal(replayIdentity: ReplayIdentity, derivationDigest: string): Promise<TrainView> {
       const run = sealChain.then(async () => {
-        const inputs = await assemble(replayIdentity);
-        const derivation = derive(inputs);
+        const { inputs, derivation } = await assembleAndDerive(replayIdentity);
 
         // §03.5 step 3: the seal carries the derivation digest the update
         // panel rendered from, re-derives from scratch, and refuses on
@@ -772,8 +780,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
 
     async train(trainId: string, replayIdentity: ReplayIdentity): Promise<TrainView> {
       if (!TRAIN_ID.test(trainId)) fail('invalid_route', 'Train identifier is invalid.', 400);
-      const inputs = await assemble(replayIdentity);
-      const derivation = derive(inputs);
+      const { derivation } = await assembleAndDerive(replayIdentity);
       const snapshot = derivation.trains.find((candidate) => candidate.trainId === trainId);
       if (snapshot === undefined) fail('train_not_found', 'No update with this name exists yet.', 404);
       return view(snapshot, derivation);
@@ -781,8 +788,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
 
     async sign(trainId, digest, replayIdentity): Promise<TrainView> {
       if (!TRAIN_ID.test(trainId)) fail('invalid_route', 'Train identifier is invalid.', 400);
-      const inputs = await assemble(replayIdentity);
-      const derivation = derive(inputs);
+      const { derivation } = await assembleAndDerive(replayIdentity);
       const snapshot = derivation.trains.find((candidate) => candidate.trainId === trainId);
       if (snapshot === undefined) fail('train_not_found', 'No update with this name exists yet.', 404);
       const current = await view(snapshot, derivation);

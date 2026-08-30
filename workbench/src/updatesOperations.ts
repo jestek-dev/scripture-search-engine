@@ -27,6 +27,8 @@ import {
   type MainGoldenHistoryEntry,
   type PriorTrainArtifacts,
   type ReplayIdentity,
+  type ReplayProbeRequest,
+  type ReplayProbeResult,
   type UpdateCard,
   type UpdatesDerivation,
 } from './deriveUpdates.js';
@@ -60,6 +62,11 @@ export interface UpdatesOperationsOptions {
    * Defaults to `readGoldenMainHistoryFromGit` (real git history).
    */
   readonly readGoldenMainHistory?: GoldenMainHistoryReader;
+  /**
+   * D16 (V6): the staleness-replay runner over the SERVED engine. Absent,
+   * every derivation keeps the Phase 2–3 substitute (FM-2's triad).
+   */
+  readonly replay?: ReplayRunner;
 }
 
 export type DecideDecision = 'approve' | 'decline' | 'park';
@@ -525,6 +532,38 @@ export async function assembleUpdatesInputs(
   };
 }
 
+/**
+ * D16 (V6): the caller-side half of the seal-time staleness replay — runs the
+ * derivation's named queries against the SERVED engine (in-process,
+ * statistics and lookups only; the deriver covenant bans anything else) and
+ * answers with what each query returned plus which judged references no
+ * longer resolve. The server wires this from its live engine; tests wire
+ * synthetic observations. Absent, derivation keeps the Phase 2–3 substitute
+ * (FM-2's triad) unchanged.
+ */
+export type ReplayRunner = (requests: readonly ReplayProbeRequest[]) => Promise<readonly ReplayProbeResult[]>;
+
+/**
+ * D16's two-pass derive: pass 1 names the identity-moved queries to replay
+ * (`replayRequests`); the runner observes them against the served artifact;
+ * pass 2 derives with the observations pinned as input — so the derivation
+ * digest the panel renders and the digest the seal re-derives cover the SAME
+ * observed picture, and a picture that moved between the two refuses 409
+ * exactly like any other stale preview.
+ */
+export async function deriveWithReplay(
+  baseInputs: DeriveUpdatesInputs,
+  replay: ReplayRunner | undefined,
+): Promise<{ inputs: DeriveUpdatesInputs; derivation: UpdatesDerivation }> {
+  const first = deriveUpdates(baseInputs);
+  if (replay === undefined || first.replayRequests.length === 0) {
+    return { inputs: baseInputs, derivation: first };
+  }
+  const observations = await replay(first.replayRequests);
+  const inputs: DeriveUpdatesInputs = { ...baseInputs, replayObservations: observations };
+  return { inputs, derivation: deriveUpdates(inputs) };
+}
+
 export function createUpdatesOperations(options: UpdatesOperationsOptions): UpdatesOperations {
   const paths = resolveUpdatesInputPaths(options);
   const store: UpdatesStore = createUpdatesStore({ logPath: paths.updatesLogPath });
@@ -546,6 +585,21 @@ export function createUpdatesOperations(options: UpdatesOperationsOptions): Upda
     }
   }
 
+  /** D16: pass 1 names the replay; pass 2 derives with its observations. */
+  async function deriveReplayed(replayIdentity: ReplayIdentity): Promise<{ inputs: DeriveUpdatesInputs; derivation: UpdatesDerivation }> {
+    const baseInputs = await assembleInputs(replayIdentity);
+    try {
+      return await deriveWithReplay(baseInputs, options.replay);
+    } catch (error) {
+      if (error instanceof UpdatesOperationsError) throw error;
+      throw new UpdatesOperationsError(
+        'updates_underivable',
+        error instanceof Error ? error.message : 'Updates could not be derived from the current logs.',
+        500,
+      );
+    }
+  }
+
   // Decides serialize through one in-process chain so two keystrokes cannot
   // interleave their read-validate-append cycles (the store already
   // serializes appends; this extends the discipline to the derive+append
@@ -554,14 +608,13 @@ export function createUpdatesOperations(options: UpdatesOperationsOptions): Upda
 
   return {
     async derive(replayIdentity: ReplayIdentity): Promise<UpdatesDerivation> {
-      return deriveFrom(await assembleInputs(replayIdentity));
+      return (await deriveReplayed(replayIdentity)).derivation;
     },
 
     async decide(cardId: string, input: unknown, replayIdentity: ReplayIdentity): Promise<UpdateCard> {
       const run = decideChain.then(async () => {
         const request = parseDecideRequest(input);
-        const inputs = await assembleInputs(replayIdentity);
-        const derivation = deriveFrom(inputs);
+        const { inputs, derivation } = await deriveReplayed(replayIdentity);
         const card = derivation.cards.find((candidate) => candidate.cardId === cardId);
         if (card === undefined) {
           // FM-13's arm: the id no longer derives — a contributing judgment

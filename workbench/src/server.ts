@@ -603,6 +603,26 @@ async function main(): Promise<void> {
     // runner performs. Any non-inherited red refuses exactly as today.
     controlRun: createControlRunExecutor(MUTATION_REPO_ROOT),
   });
+  // D16 (V6): the staleness-replay runner — pure engine queries against the
+  // artifact this server SERVES (never the committed descriptor), in-process,
+  // statistics and lookups only. The deriver names what to replay; this
+  // observes it. Every updates endpoint already refuses before this runs when
+  // no engine is up, so the null check is unreachable defense.
+  const replayRunner = async (requests: readonly { query: string; refs: readonly string[] }[]) => {
+    if (engine === null) throw new Error('The served artifact is unavailable, so the replay cannot run.');
+    const results = [];
+    for (const request of requests) {
+      const outcome = await engine.research(request.query);
+      const rankedRefs = outcome.kind === 'discovery' ? outcome.results.map((result) => result.reference) : [];
+      const unresolvedRefs: string[] = [];
+      for (const ref of request.refs) {
+        const resolved = await engine.passage(ref);
+        if (resolved.kind !== 'passage' || resolved.passage.verses.length === 0) unresolvedRefs.push(ref);
+      }
+      results.push({ query: request.query, rankedRefs, unresolvedRefs });
+    }
+    return results;
+  };
   // D6: votes → cards. Deriving is read-only; a decide appends one line to
   // workbench/updates.jsonl through the fail-closed store. The deriver reads
   // the same repository the compiler mutates, so it follows MUTATION_REPO_ROOT
@@ -614,6 +634,7 @@ async function main(): Promise<void> {
     judgmentsLogPath: JUDGMENTS_PATH,
     casesLogPath: CASES_PATH,
     evidencePath: ADMISSION_EVIDENCE_PATH,
+    replay: replayRunner,
   });
   // D8: the train runner — seal + observed state over the same snapshot the
   // deriver reads. The admit/publish tail stays on the existing endpoints.
@@ -625,6 +646,7 @@ async function main(): Promise<void> {
     casesLogPath: CASES_PATH,
     evidencePath: ADMISSION_EVIDENCE_PATH,
     independentSigner: INDEPENDENT_SIGNER,
+    replay: replayRunner,
   });
   if (engine !== null && caseLog !== null) {
     try {
