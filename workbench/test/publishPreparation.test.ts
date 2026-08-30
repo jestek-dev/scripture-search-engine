@@ -7,7 +7,7 @@ import { promisify } from 'node:util';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { signAdmissionDecision, type AdmissionManifest, type AdmissionPreview, type CommandOutcome } from '../src/admission.js';
+import { signAdmissionDecision, WORKTREE_VERIFY_ARGS, type AdmissionManifest, type AdmissionPreview, type CommandOutcome } from '../src/admission.js';
 import { calculateComparisonReportDigest, type ComparisonReport } from '../src/comparison.js';
 import { resolveNpmCliPath } from '../src/jobRunner.js';
 import {
@@ -289,6 +289,24 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
       metrics: {},
       promotionCandidates: [],
     },
+    {
+      // A required gate's advisory `warn` (G3-golden's standing
+      // pending-fixture shape) is the ADMIT_WITH_WARNINGS verdict — never a
+      // blocking gate at prepare. Baked into the shared fake so every
+      // prepare test regresses if the predicate drifts back to
+      // warn-is-blocking (the D15 shakedown found it blocking real data
+      // trains after admission had accepted them).
+      gate: 'G3-golden' as const,
+      code: 'synthetic-g3',
+      title: 'Synthetic G3',
+      status: 'warn' as const,
+      applicability: 'required' as const,
+      verdict: 'advisory' as const,
+      summary: 'A pending fixture still fails; advisory only.',
+      findings: [],
+      metrics: {},
+      promotionCandidates: [],
+    },
   ];
   const gauntletBody = {
     schemaVersion: 1 as const,
@@ -388,7 +406,10 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
     releaseGauntletClassification: null,
     sourceChanges: [sourceChange],
     probeMovements: [],
-    commands: [outcome(process.execPath, [resolveNpmCliPath(), 'run', 'verify'])],
+    // The current admission worktree argv (the verify:suites split); the
+    // legacy 'run verify' tail from pre-split manifests stays accepted and
+    // is covered by validateManifest's alternative branch.
+    commands: [outcome(process.execPath, [resolveNpmCliPath(), ...WORKTREE_VERIFY_ARGS])],
     rollback: [{
       path: sourceChange.path,
       restoreSha256: before.sha256,

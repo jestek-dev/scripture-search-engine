@@ -460,10 +460,16 @@ function validateManifest(value: unknown, expectedDigest: string, proposal: Prop
   validateCommandOutcome(manifest.rebuiltCandidate.command, 'rebuiltCandidate.command');
   if (manifest.candidate !== null && manifest.comparison !== null && manifest.gauntlet !== null) {
     const { digest: gauntletDigest, ...gauntletBody } = manifest.gauntlet;
+    // Same red shape as admission's blocking predicate: `fail` blocks, a
+    // required gate that did not run blocks, and a required gate's `warn`
+    // is the ADMIT_WITH_WARNINGS verdict this check already accepts one
+    // line up — never a block (the D15 shakedown caught the drift here
+    // too: G3-golden's standing advisory warn — pending fixtures — read
+    // as a blocking gate at prepare after admission had accepted it).
     if (gauntletDigest !== digest(gauntletBody) || manifest.gauntlet.gatesDigest !== digest(manifest.gauntlet.gates)
         || manifest.gauntlet.blocking || !['ADMIT', 'ADMIT_WITH_WARNINGS'].includes(manifest.gauntlet.verdict)
         || manifest.gauntlet.gates.some((entry) => entry.status === 'fail'
-          || (entry.applicability === 'required' && entry.status !== 'pass'))) {
+          || (entry.applicability === 'required' && entry.status !== 'pass' && entry.status !== 'warn'))) {
       fail('blocked_admission', 'Admission contains a blocking or non-passing gate.');
     }
     if (manifest.gauntlet.baseCommit !== manifest.baseCommit
@@ -506,11 +512,15 @@ function validateManifest(value: unknown, expectedDigest: string, proposal: Prop
   }
   if (!manifest.commands.some((command) => {
     validateCommandOutcome(command, 'commands[]');
+    // The admission worktree records WORKTREE_VERIFY_ARGS ('run verify:suites'
+    // since the split — the gauntlet gates through the classified release run
+    // instead); manifests admitted before the split recorded 'run verify' and
+    // stay valid.
     return path.resolve(command.command) === path.resolve(process.execPath)
       && command.args.length >= 3
       && /npm-cli\.js$/i.test(command.args.at(-3)!)
       && command.args.at(-2) === 'run'
-      && command.args.at(-1) === 'verify';
+      && (command.args.at(-1) === WORKTREE_VERIFY_ARGS.at(-1) || command.args.at(-1) === 'verify');
   })) fail('verify_missing', 'Admission manifest lacks successful fixed full verification evidence.');
   const changes = manifest.sourceChanges.map(validateDiff);
   if (changes.length === 0 || changes.every((entry) => !entry.changed)) fail('invalid_manifest', 'Admission contains no publishable source change.');
