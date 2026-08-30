@@ -509,7 +509,7 @@ describe('readGoldenMainHistoryFromGit (§03.6/§5.2 live anchor, per-train post
     const preSeal = await readGoldenMainHistoryFromGit(repo, [
       { trainId: 'train-0002', baseCommit: c0, originBaseCommit: o1, goldenPaths: [goldenPath] },
     ]);
-    expect(preSeal).toEqual([{ trainId: 'train-0002', path: goldenPath, fixtureDigests: [] }]);
+    expect(preSeal).toEqual([{ trainId: 'train-0002', path: goldenPath, fixtureDigests: [], versions: [] }]);
 
     // The train's OWN merge lands on origin/main after seal: inside.
     await commitOnOrigin(v2Content, 'second merge, after this train sealed');
@@ -517,6 +517,11 @@ describe('readGoldenMainHistoryFromGit (§03.6/§5.2 live anchor, per-train post
       { trainId: 'train-0002', baseCommit: c0, originBaseCommit: o1, goldenPaths: [goldenPath] },
     ]);
     expect(postSeal[0]!.fixtureDigests).toEqual([fixtureContentDigest(v2Content)]);
+    // D20: each in-window version carries the committer time of the commit
+    // that landed it (display metrics; liveness reads only the digests).
+    expect(postSeal[0]!.versions).toHaveLength(1);
+    expect(postSeal[0]!.versions![0]!.digest).toBe(fixtureContentDigest(v2Content));
+    expect(Number.isNaN(Date.parse(postSeal[0]!.versions![0]!.committedAt))).toBe(false);
 
     // originBaseCommit null records that NO origin ref existed at seal —
     // every origin commit is then post-seal history, inside the window.

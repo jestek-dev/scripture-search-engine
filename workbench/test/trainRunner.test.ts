@@ -763,7 +763,20 @@ describe('§03.6 consumed cards: a live (merged) train never re-boards', () => {
 
     await mergeTrain('train-0003');
     expect((await trains.train('train-0003', CURRENT)).state).toBe('live');
-    expect((await updates.derive(CURRENT)).liveTrainIds).toEqual(['train-0001', 'train-0002', 'train-0003']);
+    const derived = await updates.derive(CURRENT);
+    expect(derived.liveTrainIds).toEqual(['train-0001', 'train-0002', 'train-0003']);
+    // D20 display metric: every live train's landing time is the real git
+    // committer time of the commit that landed its content — the newest
+    // merge's %cI matches train-0003's landedAt exactly, and every landing
+    // carries a time under the real git reader.
+    const landings = new Map(derived.liveTrainLandings.map((landing) => [landing.trainId, landing.landedAt]));
+    expect([...landings.keys()].sort()).toEqual(['train-0001', 'train-0002', 'train-0003']);
+    for (const landedAt of landings.values()) {
+      expect(typeof landedAt).toBe('string');
+      expect(Number.isNaN(Date.parse(landedAt!))).toBe(false);
+    }
+    const lastMergeAt = new Date(Date.parse(git(['log', '-1', '--format=%cI']))).toISOString();
+    expect(landings.get('train-0003')).toBe(lastMergeAt);
   });
 
   it('origin-lag variant: merges reachable only from fetched origin/main — the reversal chain\'s third train stays ready until its OWN post-seal origin merge', async () => {

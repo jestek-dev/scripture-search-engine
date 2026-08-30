@@ -347,7 +347,9 @@ function sealedGoldenWindowsOf(priorTrainArtifacts: readonly PriorTrainArtifacts
  * The default `GoldenMainHistoryReader`: for each train's window, every
  * content version of each named golden path at commits reachable from main
  * but NOT from the train's own bases
- * (`git rev-list <main> ^<base> ^<originBase> -- <path>`) — history the
+ * (`git log --format='%H %cI' <main> ^<base> ^<originBase> -- <path>` — the
+ * same commit walk `rev-list` performed, now also carrying each commit's
+ * committer time for the D20 display metrics) — history the
  * train could actually have produced. Main is the local `refs/heads/main`
  * and, when present, `refs/remotes/origin/main` (a squash merge lands on
  * origin/main first; the primary checkout's main may lag). Because the tips
@@ -395,19 +397,28 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: re
   // Shared across trains: sealed windows overlap ((bases, path) tuples
   // repeat when same-search trains chain), and version contents repeat
   // across commits; read each only once.
-  const digestsByWindowKey = new Map<string, readonly string[]>();
+  interface WindowObservation {
+    readonly digests: readonly string[];
+    readonly versions: readonly { readonly digest: string; readonly committedAt: string }[];
+  }
+  const observationByWindowKey = new Map<string, WindowObservation>();
   const digestByCommitPath = new Map<string, string | null>();
-  const readWindowDigests = async (baseCommits: readonly string[], goldenPath: string): Promise<readonly string[]> => {
+  const readWindowObservation = async (baseCommits: readonly string[], goldenPath: string): Promise<WindowObservation> => {
     const windowKey = `${baseCommits.join(' ')} ${goldenPath}`;
-    const memoized = digestsByWindowKey.get(windowKey);
+    const memoized = observationByWindowKey.get(windowKey);
     if (memoized !== undefined) return memoized;
     const versionDigests = new Set<string>();
+    // D20 display metrics: each digest's EARLIEST committer time in the
+    // window. Liveness reads only the digest set, exactly as before.
+    const earliestByDigest = new Map<string, string>();
     const seenCommits = new Set<string>();
     for (const tip of tips) {
-      const listed = await capture(['rev-list', tip, ...baseCommits.map((baseCommit) => `^${baseCommit}`), '--', goldenPath]);
+      // `git log` walks the same commit set `rev-list` walked, with the
+      // committer time riding each line ("<40-hex> <ISO-8601>").
+      const listed = await capture(['log', '--format=%H %cI', tip, ...baseCommits.map((baseCommit) => `^${baseCommit}`), '--', goldenPath]);
       if (listed === null) continue;
       for (const line of listed.split('\n')) {
-        const commit = line.trim();
+        const [commit = '', committedAtRaw = ''] = line.trim().split(' ');
         if (!COMMIT_HEX.test(commit) || seenCommits.has(commit)) continue;
         seenCommits.add(commit);
         const contentKey = `${commit} ${goldenPath}`;
@@ -424,12 +435,25 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: re
           }
           digestByCommitPath.set(contentKey, versionDigest);
         }
-        if (versionDigest !== null) versionDigests.add(versionDigest);
+        if (versionDigest !== null) {
+          versionDigests.add(versionDigest);
+          const parsed = Date.parse(committedAtRaw);
+          if (!Number.isNaN(parsed)) {
+            const committedAt = new Date(parsed).toISOString();
+            const existing = earliestByDigest.get(versionDigest);
+            if (existing === undefined || committedAt < existing) earliestByDigest.set(versionDigest, committedAt);
+          }
+        }
       }
     }
-    const digests = [...versionDigests].sort();
-    digestsByWindowKey.set(windowKey, digests);
-    return digests;
+    const observation: WindowObservation = {
+      digests: [...versionDigests].sort(),
+      versions: [...earliestByDigest.entries()]
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([digest, committedAt]) => ({ digest, committedAt })),
+    };
+    observationByWindowKey.set(windowKey, observation);
+    return observation;
   };
   const entries: MainGoldenHistoryEntry[] = [];
   for (const window of [...windows].sort((a, b) => a.trainId.localeCompare(b.trainId))) {
@@ -468,10 +492,12 @@ export async function readGoldenMainHistoryFromGit(repoRoot: string, windows: re
     // did not exist — the local base bounds everything observable then.
     for (const goldenPath of [...window.goldenPaths].sort()) {
       if (!goldenPath.startsWith('eval/golden/')) continue;
+      const observation = await readWindowObservation(baseCommits, goldenPath);
       entries.push({
         trainId: window.trainId,
         path: goldenPath,
-        fixtureDigests: await readWindowDigests(baseCommits, goldenPath),
+        fixtureDigests: observation.digests,
+        versions: observation.versions,
       });
     }
   }

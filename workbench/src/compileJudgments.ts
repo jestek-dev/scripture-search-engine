@@ -811,7 +811,7 @@ export const COMPILE_JUDGMENTS_RETIRED =
   'compile-judgments is gone; the direct compile-and-write path is closed. ' +
   'Review derived updates on the workbench Updates screen, and apply the ' +
   'fixture plan through the Finish up screen (its digest-confirmed ' +
-  'preview-then-apply). Start the workbench with `npm start --workspace workbench`.';
+  'preview-then-apply). Start the workbench with `npm run serve --workspace workbench`.';
 
 const invokedDirectly =
   process.argv[1] !== undefined &&

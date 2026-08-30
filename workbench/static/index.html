@@ -781,6 +781,19 @@ button{font:inherit;}
       'required-check-failed': 'Next step: the draft stays open on GitHub — merging waits until its checks pass.',
       'github-unavailable': 'Next step: try again once the connection is back — everything is saved.',
     },
+    // D20 (Phase 4): the steady-state metrics strip on the Updates screen —
+    // counts derived from the served derivation (updates.jsonl decisions +
+    // observed train states + git commit times), no new telemetry. Honest
+    // timing: the vote→live figure is the median over real timestamps of
+    // this reviewer's own landed calls; when no landed call carries a
+    // timestamp, the line simply does not render. Minted for the D20 review.
+    updatesMetricCycles: (n) => n === 1
+      ? 'One reviewed update has gone live.'
+      : n + ' reviewed updates have gone live.',
+    updatesMetricAwaiting: (n) => n === 1
+      ? 'One of your calls is still waiting on a card above.'
+      : n + ' of your calls are still waiting on cards above.',
+    updatesMetricMedian: (phrase) => 'From a call to live: typically about ' + phrase + '.',
     // §05 §5.4's pruned-card outcome (renders on parked-by-default cards)
     // and 06 FM-5's tried-on line.
     trainParkedOutcome: 'The checks found this change wouldn’t alter any search result yet, so it wasn’t included in this update. Your call is now written on the answer sheet as a goal — when a future update reaches it, the checks will announce it and hold it there. You can leave it parked, or decline it.',
@@ -4360,6 +4373,58 @@ button{font:inherit;}
   // missingWhyText/updatesLineText parsed the compile preview's printed
   // checklist into the read-only backlog below the cards. The checklist is
   // retired — the cards carry the same facts — so the parsers went with it.
+  // D20: plain-words duration for the metrics strip — days, hours or
+  // minutes, never raw milliseconds (D28).
+  function plainDuration(ms) {
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+    if (ms >= 2 * day) return Math.round(ms / day) + ' days';
+    if (ms >= day) return 'a day';
+    if (ms >= 2 * hour) return Math.round(ms / hour) + ' hours';
+    if (ms >= hour) return 'an hour';
+    if (ms >= 2 * minute) return Math.round(ms / minute) + ' minutes';
+    return 'a minute';
+  }
+  // D20: the steady-state metrics, computed from the served derivation
+  // alone — decisions folded from updates.jsonl (card states), the observed
+  // live trains, and the git commit times riding liveTrainLandings. No
+  // extra request, no new telemetry. Vote→live samples pair each vote's
+  // own timestamp with the landing time of the train its card sealed into;
+  // trains without a landing time contribute no sample.
+  function updatesMetrics() {
+    const derivation = state.updates.derivation;
+    if (derivation === null || !Array.isArray(derivation.cards)) return null;
+    const live = Array.isArray(derivation.liveTrainIds) ? derivation.liveTrainIds : [];
+    const landedAtByTrain = Object.create(null);
+    for (const landing of derivation.liveTrainLandings || []) {
+      if (landing && typeof landing.trainId === 'string' && typeof landing.landedAt === 'string') {
+        landedAtByTrain[landing.trainId] = Date.parse(landing.landedAt);
+      }
+    }
+    const awaiting = new Set();
+    const samples = [];
+    for (const card of derivation.cards) {
+      const cardState = card.state || {};
+      if (cardState.decision === 'drafted') {
+        for (const id of card.judgmentIds || []) awaiting.add(id);
+        continue;
+      }
+      const landedAt = cardState.sealedInTrain !== undefined ? landedAtByTrain[cardState.sealedInTrain] : undefined;
+      if (landedAt === undefined || Number.isNaN(landedAt)) continue;
+      for (const vote of card.votes || []) {
+        const votedAt = typeof vote.at === 'string' ? Date.parse(vote.at) : Number.NaN;
+        if (!Number.isNaN(votedAt) && landedAt >= votedAt) samples.push(landedAt - votedAt);
+      }
+    }
+    samples.sort((a, b) => a - b);
+    const median = samples.length === 0
+      ? null
+      : samples.length % 2 === 1
+        ? samples[(samples.length - 1) / 2]
+        : (samples[samples.length / 2 - 1] + samples[samples.length / 2]) / 2;
+    return { cyclesCompleted: live.length, votesAwaiting: awaiting.size, medianVoteToLiveMs: median };
+  }
   function conceptLabelOf(conceptId) {
     for (const concept of state.concepts) {
       if (concept && concept.id === conceptId && typeof concept.label === 'string') return concept.label;
@@ -5679,6 +5744,19 @@ button{font:inherit;}
         stats.id = 'updates-stats';
         inner.appendChild(stats);
       }
+    }
+    // D20: the steady-state metrics strip — appears once at least one
+    // reviewed update has gone live. The vote→live line renders only when
+    // a landed call carries a real timestamp (honest timing: measured, or
+    // nothing).
+    const metrics = updatesMetrics();
+    if (metrics !== null && metrics.cyclesCompleted > 0) {
+      const metricBits = [COPY.updatesMetricCycles(metrics.cyclesCompleted)];
+      if (metrics.votesAwaiting > 0) metricBits.push(COPY.updatesMetricAwaiting(metrics.votesAwaiting));
+      if (metrics.medianVoteToLiveMs !== null) metricBits.push(COPY.updatesMetricMedian(plainDuration(metrics.medianVoteToLiveMs)));
+      const strip = node('p', 'screen-sub', metricBits.join(' '));
+      strip.id = 'updates-metrics';
+      inner.appendChild(strip);
     }
     if (updates.reloading) {
       const line = node('p', 'updates-note', COPY.updatesStaleCard);

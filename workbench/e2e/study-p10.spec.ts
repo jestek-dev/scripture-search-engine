@@ -13,7 +13,9 @@ import {
 // staleness-replay card copy renders verbatim — the auto-resolved
 // "already achieved — guarded" note (disposition 1), the machine-supported
 // reconfirmation (disposition 2), and FM-2's unresolvable-reference
-// sentence on a stale look-again card.
+// sentence on a stale look-again card. D20's steady-state metrics strip
+// (cycles completed, calls awaiting a card, median vote→live) rides at the
+// end — computed from the served derivation, honest-timing or absent.
 
 let server: StudyServer;
 let origin: string;
@@ -310,6 +312,92 @@ test('D16/FM-2: a stale look-again card names the unresolvable reference in the 
   await openUpdates(page);
 
   await expect(page.locator('.updates-card .replay-note')).toHaveText(UNRESOLVED_NOTE);
+  await assertNoJargon(page);
+  expect(errors).toEqual([]);
+});
+
+// ---------------------------------------------------------------------------
+// D20 — the steady-state metrics strip: cycles completed, votes awaiting a
+// card decision, and the median vote→live time, all computed from the served
+// derivation (updates.jsonl decisions + observed live trains + git commit
+// times) — no extra request, no new telemetry, and the D28 regexes stay at
+// zero matches over the rendered strip.
+// ---------------------------------------------------------------------------
+
+function shippedGuardCard(): Record<string, unknown> {
+  return {
+    ...draftedGuardCard(),
+    cardId: '33'.repeat(32),
+    cardRevision: '44'.repeat(32),
+    query: 'a very present help',
+    targetKey: 'web:19046001',
+    judgmentIds: ['0a1b2c3d-9999-4aaa-8bbb-9ccccdddd111'],
+    votes: [{
+      judgmentId: '0a1b2c3d-9999-4aaa-8bbb-9ccccdddd111',
+      at: '2026-08-25T12:00:00.000Z',
+      reviewer: 'jesse',
+      action: 'irrelevant',
+      reference: 'Genesis 5:1',
+      diagnosis: 'lexical-noise',
+      observedRank: 5,
+      observedWindow: 10,
+      ...DIGESTS,
+    }],
+    derived: { guard: { ref: 'Genesis 5:1', why: 'matched words, not meaning; judged not a fit for this query' } },
+    state: {
+      decision: 'approved',
+      decidedAt: '2026-08-26T09:00:00.000Z',
+      sealedInTrain: 'train-0001',
+      sealedTrainLive: true,
+    },
+  };
+}
+
+test('D20: the metrics strip renders cycles, waiting calls, and the measured vote→live median', async ({ page }) => {
+  const errors = collectErrors(page);
+  // One landed cycle (vote 2026-08-25T12:00Z → landed 2026-08-27T12:00Z =
+  // exactly 2 days — the strip's single median sample) plus one drafted card
+  // still waiting on its call.
+  const mock = makeMock({
+    updatesPayload: {
+      ...derivationMock([shippedGuardCard(), draftedGuardCard()]),
+      liveTrainIds: ['train-0001'],
+      liveTrainLandings: [{ trainId: 'train-0001', landedAt: '2026-08-27T12:00:00.000Z' }],
+    },
+  });
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  const strip = page.locator('#updates-metrics');
+  await expect(strip).toHaveText(
+    'One reviewed update has gone live. '
+    + 'One of your calls is still waiting on a card above. '
+    + 'From a call to live: typically about 2 days.',
+  );
+  await assertNoJargon(page);
+  expect(errors).toEqual([]);
+});
+
+test('D20: without a landing timestamp the strip stays honest — no vote→live figure is invented', async ({ page }) => {
+  const errors = collectErrors(page);
+  // The landing time is unknown (e.g. an epoch-double history with no
+  // commit times): the cycles line still renders, the timing line does not.
+  const mock = makeMock({
+    updatesPayload: {
+      ...derivationMock([shippedGuardCard()]),
+      liveTrainIds: ['train-0001'],
+      liveTrainLandings: [{ trainId: 'train-0001', landedAt: null }],
+    },
+  });
+  await installRoutes(page, mock);
+  await page.goto(origin);
+  await expect(page.locator('#search-input')).toBeVisible();
+  await openUpdates(page);
+
+  await expect(page.locator('#updates-metrics')).toHaveText('One reviewed update has gone live.');
+  await expect(page.locator('#screen-updates')).not.toContainText('typically about');
   await assertNoJargon(page);
   expect(errors).toEqual([]);
 });

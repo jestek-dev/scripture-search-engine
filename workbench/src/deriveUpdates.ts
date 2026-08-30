@@ -180,6 +180,14 @@ export interface MainGoldenHistoryEntry {
   readonly path: string;
   /** `fixtureContentDigest` of each version in the train's post-base window. */
   readonly fixtureDigests: readonly string[];
+  /**
+   * D20 (display metrics only): each window version with the committer time
+   * of the commit that carried it. Optional — liveness never reads it, and
+   * the derivationDigest projection excludes it (same observed history, same
+   * digest, with or without times). Absent times just leave a live train's
+   * `landedAt` null; nothing else changes.
+   */
+  readonly versions?: readonly { readonly digest: string; readonly committedAt: string }[];
 }
 
 /** The observed-input snapshot (§03.2's table, assembled by the caller). */
@@ -370,6 +378,15 @@ export interface UpdatesDerivation {
    * monotonic: history only grows, so a train observed live stays live.
    */
   readonly liveTrainIds: readonly string[];
+  /**
+   * D20 (display metrics only): when each live train's content finished
+   * landing on main — the latest first-appearance committer time across its
+   * fixture upserts, from `mainGoldenHistory` versions (git history, no new
+   * telemetry). `landedAt` is null when the observed history carries no
+   * times (e.g. a test double); the Updates screen then simply omits the
+   * vote→live figure. One entry per live train, sorted by trainId.
+   */
+  readonly liveTrainLandings: readonly { readonly trainId: string; readonly landedAt: string | null }[];
   /** Prior-train artifacts that failed the §03.2 join — fail-closed notes. */
   readonly unverifiablePriorTrains: readonly UnverifiablePriorTrain[];
   /**
@@ -1393,14 +1410,29 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   // merely riding. Pure over the snapshot — the history is an assembled
   // input.
   const historyDigestsByTrain = new Map<string, Map<string, Set<string>>>();
+  // D20 display metrics: per train/path, each version digest's EARLIEST
+  // committer time in the window (normalized ISO). Liveness never reads it.
+  const historyTimesByTrain = new Map<string, Map<string, Map<string, string>>>();
   for (const entry of mainHistory) {
     const byPath = historyDigestsByTrain.get(entry.trainId) ?? new Map<string, Set<string>>();
     const set = byPath.get(entry.path) ?? new Set<string>();
     for (const versionDigest of entry.fixtureDigests) set.add(versionDigest);
     byPath.set(entry.path, set);
     historyDigestsByTrain.set(entry.trainId, byPath);
+    for (const version of entry.versions ?? []) {
+      const parsed = Date.parse(version.committedAt);
+      if (Number.isNaN(parsed)) continue;
+      const normalized = new Date(parsed).toISOString();
+      const timesByPath = historyTimesByTrain.get(entry.trainId) ?? new Map<string, Map<string, string>>();
+      const timeByDigest = timesByPath.get(entry.path) ?? new Map<string, string>();
+      const existing = timeByDigest.get(version.digest);
+      if (existing === undefined || normalized < existing) timeByDigest.set(version.digest, normalized);
+      timesByPath.set(entry.path, timeByDigest);
+      historyTimesByTrain.set(entry.trainId, timesByPath);
+    }
   }
   const landedTrains = new Set<string>();
+  const liveTrainLandings: { trainId: string; landedAt: string | null }[] = [];
   for (const train of fold.trains) {
     // Both flavors observe live through their fixtures: a data train's
     // fixture upserts merge in the same PR as its layer/corpus operations
@@ -1437,8 +1469,29 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
         .get(`eval/golden/${operation.goldenFixtureId}.json`)
         ?.has(fixtureContentDigest(operation.fixture)) === true;
     });
-    if (landed) landedTrains.add(train.trainId);
+    if (landed) {
+      landedTrains.add(train.trainId);
+      // D20: when the train finished landing — the LATEST first-appearance
+      // time across its upserts (the moment the whole train was on main).
+      // Any op without a timed matching version leaves landedAt null.
+      const timesByPath = historyTimesByTrain.get(train.trainId);
+      let complete = true;
+      let latest: string | null = null;
+      for (const operation of fixtureUpserts) {
+        if (operation.type !== 'golden-fixture-upsert') continue;
+        const at = timesByPath
+          ?.get(`eval/golden/${operation.goldenFixtureId}.json`)
+          ?.get(fixtureContentDigest(operation.fixture));
+        if (at === undefined) {
+          complete = false;
+          break;
+        }
+        if (latest === null || at > latest) latest = at;
+      }
+      liveTrainLandings.push({ trainId: train.trainId, landedAt: complete ? latest : null });
+    }
   }
+  liveTrainLandings.sort((a, b) => a.trainId.localeCompare(b.trainId));
 
   // ---- 4. Fold decisions and derived defaults onto the cards.
   const finished: UpdateCard[] = cards.map((card) => {
@@ -1530,6 +1583,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     replayIdentity: inputs.replayIdentity,
     trains: fold.trains,
     liveTrainIds: [...landedTrains].sort(),
+    liveTrainLandings,
     unverifiablePriorTrains: unverifiable.sort((a, b) => a.trainId.localeCompare(b.trainId)),
     replayRequests: [...replayRequestRefs.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
