@@ -300,6 +300,8 @@ could not: `a.openbible.info` is unreachable from this environment (the agent
 proxy returns 403), so a full build is impossible here and fabricating the
 numbers would be worse than reporting the gap.
 
+> 2026-08-30: RESOLVED — v0.14.0 minted by CI (mint-artifact run 33337071952 on main@77d8f11); the descriptor PR committing the minted `content-artifact.json` verbatim is open, and merging it removes the stale block.
+
 ### 1.10 Bare-word queries now reach the concept layer — one word left undecided
 
 The biggest product gap the audit found: concept matching requires every token
