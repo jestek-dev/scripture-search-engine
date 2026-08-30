@@ -137,7 +137,13 @@ async function fixtureLaneRepository(): Promise<{
   await mkdir(path.join(root, 'eval', 'golden'), { recursive: true });
   await writeFile(path.join(root, 'eval', 'golden', 'hope-gap.json'), beforeText);
   await writeFile(path.join(root, '.gitignore'), 'workbench/.state/\n');
-  await writeFile(path.join(root, 'package.json'), `${JSON.stringify({ private: true, scripts: { verify: 'node -e "process.exit(0)"' } }, null, 2)}\n`);
+  // The publish leg runs the suite half only (verify:suites); the full
+  // `verify` deliberately fails here so a regression back to the
+  // gauntlet-tailed script cannot pass silently (see WORKTREE_VERIFY_ARGS).
+  await writeFile(path.join(root, 'package.json'), `${JSON.stringify({
+    private: true,
+    scripts: { 'verify:suites': 'node -e "process.exit(0)"', verify: 'node -e "process.exit(1)"' },
+  }, null, 2)}\n`);
   await git(root, ['add', '--all']);
   await git(root, ['commit', '-m', 'base']);
   await git(root, ['remote', 'add', 'origin', remote]);

@@ -40,6 +40,15 @@ export interface AdmissionEvidenceEntry {
   readonly reviewId: string;
   readonly admittedBaseCommit: string;
   readonly expectedMainCommit: string;
+  /**
+   * The seal-time tip of `refs/remotes/origin/main` (`null` records that the
+   * ref did not exist at seal). Together with `admittedBaseCommit` it bounds
+   * the train's §03.6 live window: a squash merge lands on origin/main first,
+   * so at seal the fetched origin tip can be AHEAD of the lagging local main
+   * — history the train could not have produced, which the live observation
+   * must exclude. Absent only on entries sealed before it was recorded.
+   */
+  readonly admittedOriginBaseCommit?: string | null;
   readonly proposal: unknown;
   /**
    * Fixture-lane (all-golden-fixture-upsert) entries record no candidate
@@ -56,6 +65,23 @@ export interface AdmissionEvidenceEntry {
   readonly fixturePromotions?: AdmissionPreviewInput['fixturePromotions'];
   readonly probeBaseline?: AdmissionPreviewInput['probeBaseline'];
   readonly probeApproval?: AdmissionPreviewInput['probeApproval'];
+  readonly orderingSnapshot?: AdmissionPreviewInput['orderingSnapshot'];
+  readonly orderingSnapshotApproval?: AdmissionPreviewInput['orderingSnapshotApproval'];
+  /**
+   * D13: the sanctioned regen's double-run evidence — two separate update
+   * runs, each executed twice and byte-compared. Recorded by the
+   * train-gauntlet stage; surfaced in the Update Report. Never contains an
+   * approval document: the machine refuses to write one.
+   */
+  readonly regenEvidence?: {
+    readonly probeBaselineRuns: 2;
+    readonly orderingSnapshotRuns: 2;
+    readonly probeBaselineByteIdentical: true;
+    readonly orderingSnapshotByteIdentical: true;
+    readonly probeBaselineSha256: string;
+    readonly orderingSnapshotSha256: string;
+    readonly regeneratedAt: string;
+  } | null;
   readonly provenance: readonly string[];
 }
 
@@ -209,13 +235,17 @@ async function readTrustedRegistry(repoRoot: string, evidencePath: string): Prom
   }
   const entries = raw['admissions'].map((entry, index) => {
     if (!isRecord(entry)) fail('invalid_evidence', `Admission evidence ${index + 1} is invalid.`, 500);
-    const keys = ['reviewId', 'admittedBaseCommit', 'expectedMainCommit', 'proposal', 'candidate', 'comparison', 'comparisonBinding', 'gauntlet', 'baseIdentity', 'deferredSigningMarker', 'reviewedComparisonQueries', 'provenance', 'fixturePromotions', 'probeBaseline', 'probeApproval'];
+    const keys = ['reviewId', 'admittedBaseCommit', 'admittedOriginBaseCommit', 'expectedMainCommit', 'proposal', 'candidate', 'comparison', 'comparisonBinding', 'gauntlet', 'baseIdentity', 'deferredSigningMarker', 'reviewedComparisonQueries', 'provenance', 'fixturePromotions', 'probeBaseline', 'probeApproval', 'orderingSnapshot', 'orderingSnapshotApproval', 'regenEvidence'];
     const actual = Object.keys(entry);
     if (actual.some((key) => !keys.includes(key))) fail('invalid_evidence', `Admission evidence ${index + 1} has unsupported fields.`, 500);
     if (typeof entry['reviewId'] !== 'string' || !REVIEW_ID.test(entry['reviewId'])) fail('invalid_evidence', `Admission evidence ${index + 1} has an invalid review id.`, 500);
     if (typeof entry['admittedBaseCommit'] !== 'string' || !COMMIT.test(entry['admittedBaseCommit'])
       || typeof entry['expectedMainCommit'] !== 'string' || !COMMIT.test(entry['expectedMainCommit'])
       || !Array.isArray(entry['reviewedComparisonQueries']) || !Array.isArray(entry['provenance'])) {
+      fail('invalid_evidence', `Admission evidence ${index + 1} has invalid immutable bindings.`, 500);
+    }
+    if (entry['admittedOriginBaseCommit'] !== undefined && entry['admittedOriginBaseCommit'] !== null
+      && (typeof entry['admittedOriginBaseCommit'] !== 'string' || !COMMIT.test(entry['admittedOriginBaseCommit']))) {
       fail('invalid_evidence', `Admission evidence ${index + 1} has invalid immutable bindings.`, 500);
     }
     return entry as unknown as AdmissionEvidenceEntry;
@@ -536,6 +566,8 @@ export class AdmissionPublishOperations {
       ...(entry.fixturePromotions === undefined ? {} : { fixturePromotions: entry.fixturePromotions }),
       ...(entry.probeBaseline === undefined ? {} : { probeBaseline: entry.probeBaseline }),
       ...(entry.probeApproval === undefined ? {} : { probeApproval: entry.probeApproval }),
+      ...(entry.orderingSnapshot === undefined ? {} : { orderingSnapshot: entry.orderingSnapshot }),
+      ...(entry.orderingSnapshotApproval === undefined ? {} : { orderingSnapshotApproval: entry.orderingSnapshotApproval }),
     };
   }
 

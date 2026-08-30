@@ -9,8 +9,9 @@
  * is always safe.
  *
  * The compiler's job ends at the working tree: it never commits, never
- * touches `eval/budgets.json`, and writes no YAML — ontology work is printed
- * as a manual checklist instead.
+ * touches `eval/budgets.json`, and writes no YAML. (Ontology work was once
+ * printed as a manual checklist here; Phase 4 D18 retired it — the deriver's
+ * cards on the Updates screen carry those facts now.)
  *
  * The pipeline imports below are relative-path reaches into another
  * workspace, following the repo's one existing precedent
@@ -41,7 +42,6 @@ import {
   validateCasesForJudgments,
 } from './effectiveJudgments.js';
 import {
-  ANCHOR_AFFECTING_CAUSES,
   type JudgmentRecordV2,
   type ParsedJudgmentRecord,
   type WithinTop,
@@ -85,6 +85,11 @@ export interface CompileOutcome {
   /** Workbench-owned generated fixtures removed because no assertion survives. */
   readonly fixturesRemoved: readonly string[];
   readonly proposedSelections: readonly ProposedSelectionEntry[];
+  /**
+   * RETIRED (Phase 4, D18): permanently empty. The deriver's Updates cards
+   * subsumed the printed manual ontology checklist; the field survives only
+   * so a revert restores it (the tombstone is code, not data).
+   */
   readonly checklist: readonly string[];
   readonly warnings: readonly string[];
   /** The full exit report, exactly as the CLI prints it. */
@@ -264,30 +269,16 @@ export async function planJudgmentCompilation(
   const effective = effectiveJudgments(records);
   const operations: PlannedCompilationFile[] = [];
 
-  // Identity check (§5, extended by the votes-to-engine plan's D1): warn, per
-  // judgment and per moved dimension, when any of the full identity triple —
-  // engineVersion, corpusFingerprint, layerFingerprint — has changed since the
-  // judgment was made. Only judgments that still influence the output warn; a
-  // superseded verdict influences nothing to re-confirm. Interim honesty fix:
-  // superseded by V6's full-triple seal-time replay (Phase 4, D16).
-  const identityDimensions = [
-    { field: 'engineVersion', moved: 'the engine' },
-    { field: 'corpusFingerprint', moved: 'the scripture text' },
-    { field: 'layerFingerprint', moved: 'the layers' },
-  ] as const;
+  // RETIRED (Phase 4, D16): the identity staleness warning that lived here —
+  // first the layer-only compare, then D1's interim full-triple warning per
+  // judgment and per moved dimension — is superseded by V6's full-triple
+  // SEAL-TIME REPLAY (deriveUpdates.ts, `replayObservations`/`replay`): at
+  // seal every contributing query is re-run against the artifact the
+  // workbench serves and each identity-moved card is sorted into §02.5's
+  // three dispositions mechanically, instead of a warning a human was
+  // supposed to remember. The compiler no longer second-guesses identity —
+  // the deriver owns staleness end to end.
   const warnings: string[] = [];
-  for (const record of effective) {
-    for (const { field, moved } of identityDimensions) {
-      if (record[field] !== descriptor[field]) {
-        warnings.push(
-          `judgment at ${record.at} on "${record.query}" was made under ${field} ` +
-            `${record[field]}, current is ${descriptor[field]} — ${moved} ` +
-            `${field === 'layerFingerprint' ? 'have' : 'has'} changed since; ` +
-            're-confirm rather than trust it.',
-        );
-      }
-    }
-  }
 
   // Group by query; drop queries whose surviving judgments compile to nothing
   // (plain ✓ is log-only: evidence for the human, not a regression pin).
@@ -671,47 +662,21 @@ export async function planJudgmentCompilation(
     });
   }
 
-  // The manual-edit checklist (§5, decision 2): v1 writes no YAML. Every
-  // judgment that implies ontology work is printed for the human to carry out
-  // by hand with the concept-curation skill.
+  // RETIRED (Phase 4, D18, gated on J72): the printed manual ontology
+  // checklist that was built here is gone — tombstoned the way the v1
+  // POST /api/judgment endpoint became a method-agnostic 410 (server.ts):
+  // the field stays, permanently empty, so a revert restores the checklist
+  // and nothing half-works meanwhile. The deriver's cards subsumed every
+  // fact a checklist line carried (V1): a `missing` line is a
+  // missing-passage/expectation card (query + reference in the card
+  // identity, the note/excerpt defense in card.evidence, the drafted
+  // operations carrying the work); an anchor-affecting `irrelevant` line is
+  // a guard-and-anchor card (diagnosis + conceptId in card.evidence and
+  // derived.anchorRemove/sourceOwnedAnchor). The Updates screen renders
+  // them and decisions persist in workbench/updates.jsonl — the printout
+  // recorded nothing. compileJudgments.test.ts guards this field never
+  // refills.
   const checklist: string[] = [];
-  for (const entry of planned) {
-    for (const judgment of entry.judgments) {
-      if (isV2Judgment(judgment)) {
-        if (judgment.action === 'missing') {
-          const why = judgment.note ?? `text: "${judgment.excerpt}"`;
-          checklist.push(
-            `[ ] missing: "${entry.query}" should surface ${judgment.reference} — ${why}`,
-          );
-        } else if (
-          judgment.action === 'irrelevant' &&
-          ANCHOR_AFFECTING_CAUSES.includes(judgment.diagnosis!)
-        ) {
-          checklist.push(
-            `[ ] ${judgment.diagnosis}: concept ${judgment.conceptId} produced bad evidence on ` +
-              `${referenceOfTargetId(judgment.targetId!)} for "${entry.query}" — ${judgment.note}`,
-          );
-        }
-        continue;
-      }
-      if (judgment.verdict === 'missing') {
-        // The note is optional when the server attached the passage excerpt
-        // (§4, v1.1): the text itself is the defense, so it stands in here.
-        const why = judgment.note ?? `text: "${judgment.excerpt}"`;
-        checklist.push(
-          `[ ] missing: "${entry.query}" should surface ${judgment.reference} — ${why}`,
-        );
-      } else if (
-        judgment.verdict === 'doesnt-fit' &&
-        ANCHOR_AFFECTING_CAUSES.includes(judgment.cause!)
-      ) {
-        checklist.push(
-          `[ ] ${judgment.cause}: concept ${judgment.conceptId} produced bad evidence on ` +
-            `${referenceOfTargetId(judgment.targetId!)} for "${entry.query}" — ${judgment.note}`,
-        );
-      }
-    }
-  }
 
   const lines: string[] = [];
   lines.push('Workbench judgment compiler');
@@ -745,11 +710,6 @@ export async function planJudgmentCompilation(
     lines.push('');
     lines.push('Warnings:');
     for (const warning of warnings) lines.push(`  - ${warning}`);
-  }
-  if (checklist.length > 0) {
-    lines.push('');
-    lines.push('Manual ontology checklist (carry out by hand with the concept-curation skill):');
-    for (const item of checklist) lines.push(`  ${item}`);
   }
   lines.push('');
   lines.push(
@@ -838,22 +798,26 @@ export async function applyJudgmentCompilationPlan(
   return outcome;
 }
 
-export async function compileJudgments(repoRoot: string = realRepoRoot): Promise<CompileOutcome> {
-  const plan = await planJudgmentCompilation(repoRoot);
-  return applyJudgmentCompilationPlan(repoRoot, plan, plan.digest);
-}
+// RETIRED (Phase 4, D18, gated on J72): `compileJudgments()` — the one-breath
+// plan-and-apply that wrote the working tree with no digest confirmation and
+// no human review of the preview — is gone, tombstoned the way the v1
+// POST /api/judgment endpoint became a method-agnostic 410 (server.ts): the
+// CLI entry below fails loud for every invocation instead of half-working.
+// The supervised halves both survive: `planJudgmentCompilation` +
+// digest-confirmed `applyJudgmentCompilationPlan` remain the only write path,
+// driven by the workbench Finish up screen (POST /api/v2/compile/preview +
+// POST /api/v2/compile/apply).
+export const COMPILE_JUDGMENTS_RETIRED =
+  'compile-judgments is gone; the direct compile-and-write path is closed. ' +
+  'Review derived updates on the workbench Updates screen, and apply the ' +
+  'fixture plan through the Finish up screen (its digest-confirmed ' +
+  'preview-then-apply). Start the workbench with `npm run serve --workspace workbench`.';
 
 const invokedDirectly =
   process.argv[1] !== undefined &&
   import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
 
 if (invokedDirectly) {
-  compileJudgments()
-    .then((outcome) => {
-      console.log(outcome.report);
-    })
-    .catch((error: unknown) => {
-      console.error(error instanceof Error ? error.message : error);
-      process.exit(1);
-    });
+  console.error(COMPILE_JUDGMENTS_RETIRED);
+  process.exit(1);
 }

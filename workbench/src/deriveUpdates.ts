@@ -76,6 +76,58 @@ export interface ReplayIdentity {
   readonly layerFingerprint: string;
 }
 
+/**
+ * D16 (V6, §02.5): one query the seal-time staleness replay must re-run
+ * against the artifact the workbench currently serves, with the judged
+ * references whose resolution the replay must re-check. Derivation output —
+ * the deriver names what it needs; the caller runs the engine (in-process,
+ * statistics and lookups only — the deriver covenant) and hands the
+ * observations back as input. Requests derive only from identity-moved
+ * contributing votes: at an unmoved identity the recorded observation IS the
+ * replay, because the same engine over the same data returns the same
+ * ordering (determinism covenant #2) — re-running it could not differ.
+ */
+export interface ReplayProbeRequest {
+  readonly query: string;
+  /** Canonical judged references whose re-resolution the replay checks. */
+  readonly refs: readonly string[];
+}
+
+/** D16: what one replayed query observed, in engine order. */
+export interface ReplayProbeResult {
+  readonly query: string;
+  /** Result references exactly as the served engine returned them, in order. */
+  readonly rankedRefs: readonly string[];
+  /** Requested refs that no longer resolve in the served corpus (§02.5). */
+  readonly unresolvedRefs: readonly string[];
+}
+
+/** The three V6 dispositions plus the §02.5 corpus-row resolution failure. */
+export type ReplayDisposition =
+  | 'already-achieved'
+  | 'materially-equivalent'
+  | 'materially-changed'
+  | 'unresolved-reference';
+
+/**
+ * D16's card copy — single writer (D28: plain words, no fingerprints; the
+ * page renders these verbatim). Disposition 1's receipt is §4.3's PLAN-FIXED
+ * sentence, shipped verbatim with the '{query}' substitution — the
+ * auto-resolved happy case never renders as a to-do; the update panel
+ * renders this one-line receipt instead.
+ */
+export const replayAlreadyAchievedReceipt = (query: string): string =>
+  `Already achieved — your call for '${query}' is now true in search, so this update just pins it in the answer sheet.`;
+export const REPLAY_RECONFIRMED_NOTE =
+  'Re-checked against the current search data: the picture still looks the way it did when you made this call.';
+export const REPLAY_OFFENDER_GONE_NOTE =
+  'That result no longer appears for this search. The line still goes on the answer sheet so it can never come back.';
+/** §06 FM-2's unresolvable-reference sentence — ships verbatim. */
+export const REPLAY_UNRESOLVED_REFERENCE_NOTE =
+  "The scripture text behind this call changed, and the passage couldn't be found again in the new text. Nothing was changed — your call is kept on record, and this is back in your inbox to check against the current text.";
+export const REPLAY_CHANGED_NOTE =
+  'The picture changed since this call — it needs a fresh look before anything derives from it.';
+
 export interface DeriveSourceFile {
   /** Repo-root-relative POSIX path. */
   readonly path: string;
@@ -88,19 +140,56 @@ export interface PriorTrainArtifacts {
   readonly sealedManifestJson?: string;
   /** UTF-8 text of the verified report (eval/.runs/<trainId>.json). */
   readonly verifiedReportJson?: string;
+  /**
+   * The train's base at seal — `admittedBaseCommit` from its D10 registry
+   * entry. The ASSEMBLY uses it to scope the train's §03.6 history window
+   * (commits reachable from main but not from this base); the deriver itself
+   * reads only the per-train `mainGoldenHistory` built from it.
+   */
+  readonly admittedBaseCommit?: string;
+  /**
+   * The seal-time tip of `refs/remotes/origin/main` from the same D10 entry.
+   * `null` records that the ref did not exist at seal; ABSENT means the entry
+   * predates origin-base recording (legacy). The ASSEMBLY uses it to bound
+   * the window from BOTH refs main is read through — origin/main can be
+   * ahead of the lagging local main at seal, and that already-fetched
+   * history is history the train could not have produced. A legacy entry is
+   * observed only while origin/main is absent or an ancestor of
+   * `admittedBaseCommit` or of the local main tip; otherwise the window
+   * cannot be bounded and the train observes nothing (fail-closed to
+   * riding).
+   */
+  readonly admittedOriginBaseCommit?: string | null;
 }
 
 /**
- * The §03.6 live observation's anchor: for one golden fixture path, the
- * content address (`fixtureContentDigest`) of every version of that file ever
- * reachable from `main` — git HISTORY, never the mutable working tree, so the
- * observation only grows. Assembled by the caller (the deriver does no I/O).
+ * The §03.6 live observation's anchor, scoped to ONE sealed train: for one
+ * golden fixture path, the content address (`fixtureContentDigest`) of every
+ * version of that file at commits reachable from `main` but NOT from the
+ * train's own base (`admittedBaseCommit`, recorded at seal) — history the
+ * train could actually have produced. Git HISTORY, never the mutable working
+ * tree, and the base is fixed at seal, so each window only grows. Scoping
+ * matters: fixture derivation is deterministic, so a reversal chain re-derives
+ * content byte-identical to an ANCESTOR version merged before this train
+ * existed; an unscoped history would observe the never-merged train live at
+ * seal and silently skip the human merge. Assembled by the caller (the
+ * deriver does no I/O).
  */
 export interface MainGoldenHistoryEntry {
+  /** The sealed train whose post-base window this entry observes. */
+  readonly trainId: string;
   /** Repo-root-relative POSIX path (eval/golden/<id>.json). */
   readonly path: string;
-  /** `fixtureContentDigest` of each version ever reachable from main. */
+  /** `fixtureContentDigest` of each version in the train's post-base window. */
   readonly fixtureDigests: readonly string[];
+  /**
+   * D20 (display metrics only): each window version with the committer time
+   * of the commit that carried it. Optional — liveness never reads it, and
+   * the derivationDigest projection excludes it (same observed history, same
+   * digest, with or without times). Absent times just leave a live train's
+   * `landedAt` null; nothing else changes.
+   */
+  readonly versions?: readonly { readonly digest: string; readonly committedAt: string }[];
 }
 
 /** The observed-input snapshot (§03.2's table, assembled by the caller). */
@@ -124,11 +213,21 @@ export interface DeriveUpdatesInputs {
   /** Outcome artifacts for trains the updates log references, when located. */
   readonly priorTrainArtifacts?: readonly PriorTrainArtifacts[];
   /**
-   * Main's golden-fixture history for the paths sealed manifests touch —
-   * the §03.6/§5.2 live anchor. Absent or empty observes nothing as merged
-   * (fail-closed: every sealed train merely rides).
+   * Main's golden-fixture history for the paths sealed manifests touch,
+   * scoped per train to its post-base window — the §03.6/§5.2 live anchor.
+   * Absent or empty observes nothing as merged (fail-closed: every sealed
+   * train merely rides).
    */
   readonly mainGoldenHistory?: readonly MainGoldenHistoryEntry[];
+  /**
+   * D16 (V6): the staleness-replay observations, taken by the caller against
+   * the SAME served artifact `replayIdentity` names, answering this
+   * derivation's `replayRequests` (assembled by the two-pass helper,
+   * `deriveWithReplay`). Absent, the derivation falls back to the Phase 2–3
+   * substitute — FM-2's triad: the derive-time identity pre-check plus human
+   * review — exactly as those phases sealed.
+   */
+  readonly replayObservations?: readonly ReplayProbeResult[];
 }
 
 export interface IdentityNote {
@@ -246,8 +345,31 @@ export interface UpdateCard {
   readonly engineering?: CardEngineeringEvidence;
   /** True when everything the card would do is already true in the world. */
   readonly alreadyInPlace?: boolean;
+  /**
+   * D16 (V6/§02.5): the staleness-replay outcome for this card, present
+   * exactly when the card's votes were cast under a moved identity AND the
+   * replay observations covered its query. The note is single-writer copy
+   * the page renders verbatim.
+   */
+  readonly replay?: { readonly disposition: ReplayDisposition; readonly note: string };
+  /**
+   * V6's derived `stale` flag (§02.5 disposition 3) — computed at the
+   * replay, never stored: the observed picture materially changed, so the
+   * card routes to a re-confirmation instead of deriving its data arm.
+   */
+  readonly stale?: true;
   /** FM-5 derived default after a no-measurable-effect stop — never stored. */
   readonly parkedByDefault?: boolean;
+  /**
+   * D16 disposition 1 (§02.5/§4.3) — derived the parkedByDefault way, never
+   * stored: the replay proved the expectation ALREADY ACHIEVED, so the card
+   * auto-resolves. It never renders as a to-do (no decision doors, out of
+   * the waiting tally); its kept fixture-pin op boards the sealing update
+   * WITHOUT a decide event, and the update panel renders the §4.3 receipt
+   * (`replay.note`) instead. A recorded human decline still wins — a
+   * derived default never overrides an explicit "no".
+   */
+  readonly autoResolved?: true;
   readonly state: CardState;
 }
 
@@ -268,8 +390,24 @@ export interface UpdatesDerivation {
    * monotonic: history only grows, so a train observed live stays live.
    */
   readonly liveTrainIds: readonly string[];
+  /**
+   * D20 (display metrics only): when each live train's content finished
+   * landing on main — the latest first-appearance committer time across its
+   * fixture upserts, from `mainGoldenHistory` versions (git history, no new
+   * telemetry). `landedAt` is null when the observed history carries no
+   * times (e.g. a test double); the Updates screen then simply omits the
+   * vote→live figure. One entry per live train, sorted by trainId.
+   */
+  readonly liveTrainLandings: readonly { readonly trainId: string; readonly landedAt: string | null }[];
   /** Prior-train artifacts that failed the §03.2 join — fail-closed notes. */
   readonly unverifiablePriorTrains: readonly UnverifiablePriorTrain[];
+  /**
+   * D16: the queries (with judged refs) the V6 staleness replay must re-run —
+   * derived from identity-moved contributing votes. The caller runs these
+   * against the served engine and re-derives with `replayObservations`
+   * (`deriveWithReplay`); empty when every contributing vote is current.
+   */
+  readonly replayRequests: readonly ReplayProbeRequest[];
   readonly tally: {
     readonly drafted: number;
     readonly approved: number;
@@ -551,7 +689,8 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   const ontologyFiles = [...inputs.ontologyFiles].sort((a, b) => a.path.localeCompare(b.path));
   const goldenFiles = [...inputs.goldenFixtureFiles].sort((a, b) => a.path.localeCompare(b.path));
   const priorArtifacts = [...(inputs.priorTrainArtifacts ?? [])].sort((a, b) => a.trainId.localeCompare(b.trainId));
-  const mainHistory = [...(inputs.mainGoldenHistory ?? [])].sort((a, b) => a.path.localeCompare(b.path));
+  const mainHistory = [...(inputs.mainGoldenHistory ?? [])]
+    .sort((a, b) => a.trainId.localeCompare(b.trainId) || a.path.localeCompare(b.path));
 
   const derivationDigest = sha256(canonicalJson({
     judgmentsLog: sha256(inputs.judgmentsLog),
@@ -568,9 +707,19 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       report: entry.verifiedReportJson === undefined ? null : sha256(entry.verifiedReportJson),
     })),
     mainGoldenHistory: mainHistory.map((entry) => ({
+      trainId: entry.trainId,
       path: entry.path,
       fixtureDigests: [...entry.fixtureDigests].sort(),
     })),
+    // D16: the replay observations are observed input like any other — two
+    // panels that saw different pictures must carry different digests.
+    replayObservations: [...(inputs.replayObservations ?? [])]
+      .sort((a, b) => a.query.localeCompare(b.query))
+      .map((observation) => ({
+        query: observation.query,
+        rankedRefs: [...observation.rankedRefs],
+        unresolvedRefs: [...observation.unresolvedRefs].sort(),
+      })),
   }));
 
   const records = inputs.judgmentsLog === '' ? [] : parseJudgmentLog(inputs.judgmentsLog);
@@ -600,6 +749,43 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     record.engineVersion === inputs.replayIdentity.engineVersion &&
     record.corpusFingerprint === inputs.replayIdentity.corpusFingerprint &&
     record.layerFingerprint === inputs.replayIdentity.layerFingerprint;
+
+  // ---- D16 (V6/§02.5): the seal-time staleness replay, applied wherever the
+  // caller supplied observations. The deriver stays pure: it names what to
+  // replay (`replayRequests`, from identity-moved contributing votes) and
+  // sorts each covered card into a disposition when the observation is here.
+  const replayByQuery = new Map((inputs.replayObservations ?? []).map((observation) => [observation.query, observation]));
+  const replayRequestRefs = new Map<string, Set<string>>();
+  const requestReplay = (query: string, refs: readonly string[]): void => {
+    const set = replayRequestRefs.get(query) ?? new Set<string>();
+    for (const ref of refs) set.add(ref);
+    replayRequestRefs.set(query, set);
+  };
+  /** Ranked ranges of one observation, precomputed once per query. */
+  const observedRangesCache = new Map<string, { start: number; end: number }[]>();
+  const observedRangesOf = (observation: ReplayProbeResult): { start: number; end: number }[] => {
+    const cached = observedRangesCache.get(observation.query);
+    if (cached !== undefined) return cached;
+    const ranges = observation.rankedRefs.map((ref) => {
+      try {
+        return anchorRangeOf(ref, `replay observation for "${observation.query}"`);
+      } catch {
+        // A result reference the anchor grammar cannot read matches nothing;
+        // it still occupies its rank (the window math stays honest).
+        return { start: -1, end: -1 };
+      }
+    });
+    observedRangesCache.set(observation.query, ranges);
+    return ranges;
+  };
+  /** Does the judged range appear within the first `window` results? */
+  const ranksWithin = (observation: ReplayProbeResult, range: { start: number; end: number }, window: number): boolean =>
+    observedRangesOf(observation).slice(0, Math.max(0, window)).some((observed) =>
+      observed.start >= 0 && observed.start <= range.end && range.start <= observed.end);
+  const unresolvedIn = (observation: ReplayProbeResult, ref: string): boolean =>
+    observation.unresolvedRefs.includes(ref);
+  const corpusMoved = (record: JudgmentRecordV2): boolean =>
+    record.corpusFingerprint !== inputs.replayIdentity.corpusFingerprint;
 
   const cards: Omit<UpdateCard, 'cardRevision' | 'state' | 'parkedByDefault'>[] = [];
 
@@ -789,6 +975,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       question?: CardQuestion;
       routedReason?: string;
       alreadyInPlace?: boolean;
+      replay?: { disposition: ReplayDisposition; note: string };
     }
     const seeds = new Map<string, CardSeed>();
     const addSeed = (seed: CardSeed): void => {
@@ -846,7 +1033,34 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
         // card derives normally at derive time — whether the expectation is
         // already achieved is a ranking question only the seal replay can
         // answer (02.5 disposition 1). The per-dimension notes attach below.
-        void identityMoved;
+        // D16: with observations in hand the replay answers it here.
+        const observation = identityMoved && !handWritten ? replayByQuery.get(query) : undefined;
+        if (identityMoved && !handWritten) requestReplay(query, [assertion.ref!]);
+        // §02.5's corpus row: a judged reference that no longer resolves in
+        // the served text derives NOTHING — evidence-only; the card routes to
+        // re-confirmation naming the failure (FM-2's verbatim sentence).
+        if (observation !== undefined && corpusMoved(leaf) && unresolvedIn(observation, assertion.ref!)) {
+          cards.push({
+            cardId: computeCardId('re-confirmation', query, targetKey, [leaf.judgmentId]),
+            kind: 're-confirmation',
+            query,
+            targetKey,
+            judgmentIds: [leaf.judgmentId],
+            contextJudgmentIds: helpfulFor([targetKey]),
+            votes: [voteOf(leaf)],
+            derived: {},
+            preCheck: 'identity-moved',
+            identityNotes: identityNotesFor(leaf, inputs.replayIdentity),
+            replay: { disposition: 'unresolved-reference', note: REPLAY_UNRESOLVED_REFERENCE_NOTE },
+            stale: true,
+          });
+          continue;
+        }
+        // Disposition 1 (already achieved): the target now ranks within its
+        // window — drop the data arms (theme question, anchor, chapter add),
+        // keep the fixture guard pinning the win, auto-resolve the copy.
+        const alreadyAchieved = observation !== undefined
+          && ranksWithin(observation, assertion.range!, assertion.withinTop!);
         // The canonical reference is single-chapter by construction, so the
         // membership lookup is one (book, chapter) pair (compile parity).
         const start = parseVerseId(assertion.range!.start);
@@ -859,21 +1073,56 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
           leaves: [leaf],
           derived: {
             expectation: { ref: assertion.ref!, withinTop: assertion.withinTop! },
-            ...(chapterOutsideSubset && book !== undefined
+            ...(!alreadyAchieved && chapterOutsideSubset && book !== undefined
               ? { chapterAdd: { book: book.name, chapter: start.chapter } }
               : {}),
-            ...(isMissing && !handWritten ? { anchorAddOnAnswer: { weight: 1 as const } } : {}),
+            ...(!alreadyAchieved && isMissing && !handWritten ? { anchorAddOnAnswer: { weight: 1 as const } } : {}),
           },
-          ...(isMissing && !handWritten
+          ...(!alreadyAchieved && isMissing && !handWritten
             ? { question: { id: 'theme' as const, prompt: 'Which theme should carry this passage?' as const, chips: themeChipsFor(query, assertion.ref!, concepts) } }
             : {}),
           ...(handWritten ? { routedReason: 'hand-written fixture' } : {}),
           ...(fixtureHasExpectation(assertion.rangeKey!, assertion.withinTop!) ? { alreadyInPlace: true } : {}),
+          ...(observation === undefined
+            ? {}
+            : alreadyAchieved
+              // Disposition 2 (materially equivalent): the target still fails
+              // its window the way the vote observed — derive fresh, record
+              // the machine-supported reconfirmation on the card.
+              ? { replay: { disposition: 'already-achieved' as const, note: replayAlreadyAchievedReceipt(query) } }
+              : { replay: { disposition: 'materially-equivalent' as const, note: REPLAY_RECONFIRMED_NOTE } }),
         });
       } else if (assertion.kind === 'guard') {
         // Row 3/4: the mustNotRank guard ALWAYS derives — a demotion guard is
         // regression protection whether or not the offender still ranks
         // (02.5 disposition 3; the pre-check never withholds it, §03.5).
+        const observation = identityMoved && !handWritten ? replayByQuery.get(query) : undefined;
+        if (identityMoved && !handWritten) requestReplay(query, [assertion.ref!]);
+        // §02.5's corpus row (FM-2): a judged reference that no longer
+        // resolves derives NOTHING — evidence-only. (Distinct from merely
+        // falling out of the RANKING, where the guard below still derives.)
+        if (observation !== undefined && corpusMoved(leaf) && unresolvedIn(observation, assertion.ref!)) {
+          cards.push({
+            cardId: computeCardId('re-confirmation', query, targetKey, [leaf.judgmentId]),
+            kind: 're-confirmation',
+            query,
+            targetKey,
+            judgmentIds: [leaf.judgmentId],
+            contextJudgmentIds: helpfulFor([targetKey]),
+            votes: [voteOf(leaf)],
+            derived: {},
+            preCheck: 'identity-moved',
+            identityNotes: identityNotesFor(leaf, inputs.replayIdentity),
+            replay: { disposition: 'unresolved-reference', note: REPLAY_UNRESOLVED_REFERENCE_NOTE },
+            stale: true,
+          });
+          continue;
+        }
+        // D16: does the judged offender still appear in the window the vote
+        // was made against? Decides which V6 disposition governs the arms.
+        const stillRanks = observation === undefined
+          ? undefined
+          : ranksWithin(observation, assertion.range!, leaf.observedWindow);
         const diagnosis = leaf.diagnosis!;
         const anchorAffecting = ANCHOR_AFFECTING_CAUSES.includes(diagnosis);
         let derived: DerivedCardConsequences = { guard: { ref: assertion.ref!, why: assertion.why! } };
@@ -891,13 +1140,18 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
           });
           if (namedAnchor !== undefined) {
             const editorialOnly = namedAnchor.sources.length === 1 && namedAnchor.sources[0] === 'editorial';
-            if (editorialOnly && !identityMoved) {
-              // The vote itself names the data row; ownership permits the edit.
+            if (editorialOnly && (!identityMoved || stillRanks === true)) {
+              // The vote itself names the data row; ownership permits the
+              // edit. D16 disposition 2: the replay re-checked the picture
+              // and the offender still ranks as observed — the anchor arm
+              // proceeds with the machine-supported reconfirmation recorded.
               kind = 'guard-and-anchor';
               derived = { ...derived, anchorRemove: { conceptId: concept!.id, locator: namedAnchor.locator } };
             } else if (editorialOnly && identityMoved) {
-              // §03.5: the anchor arm rests on a current observation — it
-              // routes to a separate re-confirmation card; the guard stays.
+              // §03.5 (and D16 disposition 3 when the replay observed the
+              // offender gone): the anchor arm rests on an observation that
+              // is no longer current — it routes to a separate
+              // re-confirmation card; the guard stays.
               cards.push({
                 cardId: computeCardId('re-confirmation', query, targetKey, [leaf.judgmentId]),
                 kind: 're-confirmation',
@@ -909,6 +1163,9 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
                 derived: {},
                 preCheck: 'identity-moved',
                 identityNotes: identityNotesFor(leaf, inputs.replayIdentity),
+                ...(stillRanks === false
+                  ? { replay: { disposition: 'materially-changed' as const, note: REPLAY_CHANGED_NOTE }, stale: true as const }
+                  : {}),
               });
             } else {
               // Source-owned: the fixture guard does the demotion; the row
@@ -927,12 +1184,37 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
           derived,
           ...(handWritten ? { routedReason: 'hand-written fixture' } : {}),
           ...(fixtureHasGuard(assertion.rangeKey!) ? { alreadyInPlace: true } : {}),
+          ...(stillRanks === undefined
+            ? {}
+            : stillRanks
+              ? { replay: { disposition: 'materially-equivalent' as const, note: REPLAY_RECONFIRMED_NOTE } }
+              // AC (V6): the irrelevant guard is STILL derived when the
+              // offender fell away — regression protection; G3 reports its
+              // vacuity honestly if the ref later leaves the corpus.
+              : { replay: { disposition: 'materially-changed' as const, note: REPLAY_OFFENDER_GONE_NOTE } }),
         });
       } else {
         // prefer: bound to a displayed pair — an identity move routes the
         // whole ordering entry to re-confirmation (§03.5); otherwise it is a
-        // pure expectation.
-        if (identityMoved) {
+        // pure expectation. D16: with the replay observed, the pair that
+        // still both rank is materially equivalent and derives fresh with
+        // the reconfirmation recorded (§02.5 disposition 2); a pair no
+        // longer both ranking is materially changed (disposition 3).
+        const observation = identityMoved && !handWritten ? replayByQuery.get(query) : undefined;
+        if (identityMoved && !handWritten) requestReplay(query, [assertion.pair!.above, assertion.pair!.below]);
+        const pairUnresolved = observation !== undefined && corpusMoved(leaf)
+          && (unresolvedIn(observation, assertion.pair!.above) || unresolvedIn(observation, assertion.pair!.below));
+        const bothStillRank = observation === undefined || pairUnresolved
+          ? undefined
+          : (['above', 'below'] as const).every((side) => {
+            try {
+              const range = anchorRangeOf(assertion.pair![side], `judgment ${leaf.judgmentId}`);
+              return ranksWithin(observation, range, assertion.pair!.withinTop);
+            } catch {
+              return false;
+            }
+          });
+        if (identityMoved && bothStillRank !== true) {
           cards.push({
             cardId: computeCardId('re-confirmation', query, targetKey, [leaf.judgmentId]),
             kind: 're-confirmation',
@@ -944,6 +1226,11 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
             derived: {},
             preCheck: 'identity-moved',
             identityNotes: identityNotesFor(leaf, inputs.replayIdentity),
+            ...(pairUnresolved
+              ? { replay: { disposition: 'unresolved-reference' as const, note: REPLAY_UNRESOLVED_REFERENCE_NOTE }, stale: true as const }
+              : bothStillRank === false
+                ? { replay: { disposition: 'materially-changed' as const, note: REPLAY_CHANGED_NOTE }, stale: true as const }
+                : {}),
           });
         } else {
           addSeed({
@@ -954,6 +1241,9 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
               preferredOrder: { above: assertion.pair!.above, below: assertion.pair!.below, withinTop: assertion.pair!.withinTop },
             },
             ...(handWritten ? { routedReason: 'hand-written fixture' } : {}),
+            ...(identityMoved && bothStillRank === true
+              ? { replay: { disposition: 'materially-equivalent' as const, note: REPLAY_RECONFIRMED_NOTE } }
+              : {}),
           });
         }
       }
@@ -1005,6 +1295,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
               },
             }),
         ...(seed.alreadyInPlace === true ? { alreadyInPlace: true } : {}),
+        ...(seed.replay === undefined ? {} : { replay: seed.replay }),
       });
     }
   }
@@ -1109,28 +1400,57 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   cards.push(...converted);
 
   // ---- 3c. Live observation (§03.6/§5.2): a sealed (unstopped) guard train
-  // whose manifest MERGED ON MAIN — every fixture the seal wrote has, at some
-  // commit reachable from main, been the exact content of its golden file
-  // (`mainGoldenHistory`, assembled from git history) — finished; its cards
-  // are consumed and rest as achieved. Anchored to history, never to the
-  // mutable working tree: a later same-search train rewriting the file (the
-  // §03.6 row merge), a promotion, or a hand edit can never regress a merged
-  // train back to riding — the observation is MONOTONIC because history only
-  // grows. Squash merges make the prepared commit itself unreachable from
-  // main, so reachability is tested by content, the quantity a guard train's
-  // merge actually lands. Same §03.2 join discipline as the stop conversion
-  // (locate, recompute the seal digest, compare), fail-closed: anything that
-  // does not verify — including an absent history — leaves the train merely
-  // riding. Pure over the snapshot — the history is an assembled input.
-  const historyDigestsByPath = new Map<string, Set<string>>();
+  // whose OWN commit MERGED ON MAIN — every fixture the seal wrote has, at
+  // some commit reachable from main but NOT from the train's own base
+  // (`mainGoldenHistory`, assembled per train from `admittedBaseCommit`
+  // forward), been the exact content of its golden file — finished; its
+  // cards are consumed and rest as achieved. Anchored to history, never to
+  // the mutable working tree: a later same-search train rewriting the file
+  // (the §03.6 row merge), a promotion, or a hand edit can never regress a
+  // merged train back to riding — the base is fixed at seal, so each window
+  // is MONOTONIC (it only grows as main grows). Squash merges make the
+  // prepared commit itself unreachable from main, so reachability is tested
+  // by content, the quantity a guard train's merge actually lands — but only
+  // within the train's post-base window: fixture derivation is deterministic,
+  // so a reversal chain (guard merged, superseding removal merged, guard
+  // re-derived) re-produces content byte-identical to an ANCESTOR version;
+  // an unscoped history would mark that third, never-merged train live at
+  // seal and the approved change would silently never land. Same §03.2 join
+  // discipline as the stop conversion (locate, recompute the seal digest,
+  // compare), fail-closed: anything that does not verify — an absent
+  // history, a train with no window (no recorded base) — leaves the train
+  // merely riding. Pure over the snapshot — the history is an assembled
+  // input.
+  const historyDigestsByTrain = new Map<string, Map<string, Set<string>>>();
+  // D20 display metrics: per train/path, each version digest's EARLIEST
+  // committer time in the window (normalized ISO). Liveness never reads it.
+  const historyTimesByTrain = new Map<string, Map<string, Map<string, string>>>();
   for (const entry of mainHistory) {
-    const set = historyDigestsByPath.get(entry.path) ?? new Set<string>();
+    const byPath = historyDigestsByTrain.get(entry.trainId) ?? new Map<string, Set<string>>();
+    const set = byPath.get(entry.path) ?? new Set<string>();
     for (const versionDigest of entry.fixtureDigests) set.add(versionDigest);
-    historyDigestsByPath.set(entry.path, set);
+    byPath.set(entry.path, set);
+    historyDigestsByTrain.set(entry.trainId, byPath);
+    for (const version of entry.versions ?? []) {
+      const parsed = Date.parse(version.committedAt);
+      if (Number.isNaN(parsed)) continue;
+      const normalized = new Date(parsed).toISOString();
+      const timesByPath = historyTimesByTrain.get(entry.trainId) ?? new Map<string, Map<string, string>>();
+      const timeByDigest = timesByPath.get(entry.path) ?? new Map<string, string>();
+      const existing = timeByDigest.get(version.digest);
+      if (existing === undefined || normalized < existing) timeByDigest.set(version.digest, normalized);
+      timesByPath.set(entry.path, timeByDigest);
+      historyTimesByTrain.set(entry.trainId, timesByPath);
+    }
   }
   const landedTrains = new Set<string>();
+  const liveTrainLandings: { trainId: string; landedAt: string | null }[] = [];
   for (const train of fold.trains) {
-    if (train.state !== 'sealed' || train.flavor !== 'guard' || train.sealed === undefined) continue;
+    // Both flavors observe live through their fixtures: a data train's
+    // fixture upserts merge in the same PR as its layer/corpus operations
+    // (§5.2), so the fixture content landing on main observes the whole
+    // train landed — flavor-agnostic (V4 guarantees at least one fixture).
+    if (train.state !== 'sealed' || train.sealed === undefined) continue;
     const artifacts = artifactsByTrain.get(train.trainId);
     if (artifacts?.sealedManifestJson === undefined) continue;
     let manifest: ProposalManifest;
@@ -1147,20 +1467,63 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     });
     if (recomputedSeal !== train.sealed.sealDigest) continue;
     if (manifest.operations.length === 0) continue;
-    const landed = manifest.operations.every((operation) => {
+    const windowDigestsByPath = historyDigestsByTrain.get(train.trainId);
+    if (windowDigestsByPath === undefined) continue;
+    // The observation reads the manifest's golden-fixture upserts — every
+    // train carries at least one (V4: a layer-affecting operation travels
+    // with the fixture measuring it), and a data train's fixtures merge in
+    // the same PR as its layer operations, so fixture content landing on
+    // main observes the WHOLE train landed for both flavors (§03.6/§5.2).
+    const fixtureUpserts = manifest.operations.filter((operation) => operation.type === 'golden-fixture-upsert');
+    const landed = fixtureUpserts.length > 0 && fixtureUpserts.every((operation) => {
       if (operation.type !== 'golden-fixture-upsert') return false;
-      return historyDigestsByPath
+      return windowDigestsByPath
         .get(`eval/golden/${operation.goldenFixtureId}.json`)
         ?.has(fixtureContentDigest(operation.fixture)) === true;
     });
-    if (landed) landedTrains.add(train.trainId);
+    if (landed) {
+      landedTrains.add(train.trainId);
+      // D20: when the train finished landing — the LATEST first-appearance
+      // time across its upserts (the moment the whole train was on main).
+      // Any op without a timed matching version leaves landedAt null.
+      const timesByPath = historyTimesByTrain.get(train.trainId);
+      let complete = true;
+      let latest: string | null = null;
+      for (const operation of fixtureUpserts) {
+        if (operation.type !== 'golden-fixture-upsert') continue;
+        const at = timesByPath
+          ?.get(`eval/golden/${operation.goldenFixtureId}.json`)
+          ?.get(fixtureContentDigest(operation.fixture));
+        if (at === undefined) {
+          complete = false;
+          break;
+        }
+        if (latest === null || at > latest) latest = at;
+      }
+      liveTrainLandings.push({ trainId: train.trainId, landedAt: complete ? latest : null });
+    }
   }
+  liveTrainLandings.sort((a, b) => a.trainId.localeCompare(b.trainId));
 
   // ---- 4. Fold decisions and derived defaults onto the cards.
+  // D16 disposition 1: an auto-resolved card boards a seal WITHOUT a decide
+  // event, so its seal freeze cannot ride the decisions map (which only
+  // covers decided cards). Mirror the fold's live-seal rule here: the latest
+  // live (sealed, not stopped) seal binding the cardId freezes it.
+  const liveSealTrainByCard = new Map<string, string>();
+  for (const train of fold.trains) {
+    if (train.state !== 'sealed' || train.sealed === undefined) continue;
+    for (const sealedCardId of train.sealed.cardIds) liveSealTrainByCard.set(sealedCardId, train.trainId);
+  }
   const finished: UpdateCard[] = cards.map((card) => {
     const decision = fold.decisions.get(card.cardId);
+    const undecidedSealTrain = decision === undefined ? liveSealTrainByCard.get(card.cardId) : undefined;
     const state: CardState = decision === undefined
-      ? { decision: 'drafted' }
+      ? {
+          decision: 'drafted',
+          ...(undecidedSealTrain === undefined ? {} : { sealedInTrain: undecidedSealTrain }),
+          ...(undecidedSealTrain !== undefined && landedTrains.has(undecidedSealTrain) ? { sealedTrainLive: true as const } : {}),
+        }
       : {
           decision: decision.decision,
           decidedAt: decision.decidedAt,
@@ -1207,11 +1570,22 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       legacy: card.legacy ?? null,
       engineering: card.engineering ?? null,
       alreadyInPlace: card.alreadyInPlace ?? false,
+      replay: card.replay ?? null,
+      stale: card.stale ?? false,
     };
+    // D16 disposition 1 — derived, never stored (the parkedByDefault
+    // pattern): the replay's already-achieved verdict auto-resolves the
+    // card. An explicit human decline on record still wins; everything
+    // else (drafted, approved, parked, the FM-5 default) yields to the
+    // machine-proven fact that the expectation is already true.
+    const autoResolved = card.replay !== undefined
+      && card.replay.disposition === 'already-achieved'
+      && state.decision !== 'declined';
     return {
       ...card,
       cardRevision: sha256(canonicalJson(revisionSource)),
-      ...(parkedByDefault ? { parkedByDefault: true } : {}),
+      ...(parkedByDefault && !autoResolved ? { parkedByDefault: true } : {}),
+      ...(autoResolved ? { autoResolved: true as const } : {}),
       state,
     };
   });
@@ -1229,13 +1603,15 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   // waiting" (§04 §4.2 owns the rendering).
   const opBearing = finished.filter((card) =>
     card.kind !== 're-confirmation' && card.kind !== 'conflict' && card.kind !== 'needs-engineering' && card.routed === undefined);
+  // D16 disposition 1: an auto-resolved card waits for NO call — it counts
+  // nowhere in the tally (its receipt renders in the update panel instead).
   const tally = {
-    drafted: opBearing.filter((card) => card.state.decision === 'drafted').length,
+    drafted: opBearing.filter((card) => card.state.decision === 'drafted' && card.autoResolved !== true).length,
     // A card whose sealing train landed is achieved, not "approved and
     // waiting" — it never re-counts (§03.6's consumed rule).
-    approved: opBearing.filter((card) => card.state.decision === 'approved' && card.parkedByDefault !== true && card.state.sealedTrainLive !== true).length,
+    approved: opBearing.filter((card) => card.state.decision === 'approved' && card.autoResolved !== true && card.parkedByDefault !== true && card.state.sealedTrainLive !== true).length,
     declined: opBearing.filter((card) => card.state.decision === 'declined').length,
-    parked: opBearing.filter((card) => card.state.decision === 'parked' || card.parkedByDefault === true).length,
+    parked: opBearing.filter((card) => (card.state.decision === 'parked' || card.parkedByDefault === true) && card.autoResolved !== true).length,
   };
 
   return {
@@ -1244,7 +1620,11 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
     replayIdentity: inputs.replayIdentity,
     trains: fold.trains,
     liveTrainIds: [...landedTrains].sort(),
+    liveTrainLandings,
     unverifiablePriorTrains: unverifiable.sort((a, b) => a.trainId.localeCompare(b.trainId)),
+    replayRequests: [...replayRequestRefs.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([query, refs]) => ({ query, refs: [...refs].sort() })),
     tally,
   };
 }
@@ -1307,7 +1687,11 @@ export function buildUpdatesManifest(
   options: BuildManifestOptions,
 ): UpdatesManifestResult {
   const boarding = derivation.cards.filter((card) =>
-    card.state.decision === 'approved' &&
+    // D16 disposition 1 (§02.5/§4.3): an auto-resolved card boards WITHOUT a
+    // decide event — "this update just pins it in the answer sheet". Its
+    // data arms were already dropped at derivation; only the fixture pin
+    // rides. Everything else still requires the human approve.
+    (card.state.decision === 'approved' || card.autoResolved === true) &&
     // §03.6's consumed rule: a judgment is consumed exactly when it appears
     // in a sealed train's seal event. A card frozen by a live seal —
     // whether that train is still running or already merged — NEVER
@@ -1317,6 +1701,10 @@ export function buildUpdatesManifest(
     card.state.sealedInTrain === undefined &&
     card.parkedByDefault !== true &&
     card.routed === undefined &&
+    // §5.1: sealing pulls exactly the approved, NON-STALE cards at seal time
+    // (V6 disposition 3 — a stale card is a re-confirmation and never
+    // op-bearing, so this is defense-in-depth, kept explicit).
+    card.stale !== true &&
     (card.kind === 'expectation' || card.kind === 'guard' || card.kind === 'guard-and-anchor' || card.kind === 'missing-passage'));
   if (boarding.length === 0) {
     throw new UpdatesManifestError('No approved cards carry a change to seal.');

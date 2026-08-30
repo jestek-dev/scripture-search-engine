@@ -12,7 +12,7 @@ import {
   withMutationJournalLock,
   type ApplyOptions,
 } from './applyJournal.js';
-import { probeApprovalBindingIssues, type AdmissionDecision, type AdmissionFileDiff, type AdmissionManifest, type AdmissionPreview, type CommandOutcome } from './admission.js';
+import { orderingApprovalBindingIssues, probeApprovalBindingIssues, WORKTREE_VERIFY_ARGS, type AdmissionDecision, type AdmissionFileDiff, type AdmissionManifest, type AdmissionPreview, type CommandOutcome } from './admission.js';
 import { assertComparisonReportIntegrity, type ComparisonQueryReport, type ComparisonReport } from './comparison.js';
 import { resolveNpmCliPath } from './jobRunner.js';
 import { parseProposalManifest, proposalManifestDigest, type ProposalManifest } from './proposals.js';
@@ -30,6 +30,15 @@ const ALLOWED_SOURCE_PATHS = [
   /^eval\/golden\/[a-z0-9][a-z0-9-]*\.json$/,
   /^eval\/baselines\/probes\.json$/,
   /^eval\/baselines\/probes\.approval\.json$/,
+  // §5.5 gap 1 (D12b): the ordering pair enters ONLY as a pair, mirroring
+  // the probes pair above — a data train's sanctioned regen publishes the
+  // snapshot (never the approval: a train admission carries the
+  // deferred-signing marker; approvals ride only the hand-authored
+  // post-merge governance PR), and the approval path exists for the one
+  // legitimate approval publisher — a hand-authored approval traveling as
+  // admission input, exactly like probes.approval.json.
+  /^eval\/baselines\/ordering\.snapshot\.json$/,
+  /^eval\/baselines\/ordering\.snapshot\.approval\.json$/,
   /^pipeline\/fixtures\/web-subset\.json$/,
 ] as const;
 const FORBIDDEN_PATH = /(^|\/)(?:\.git|\.github\/workflows|workbench\/(?:\.state|\.artifact)|artifacts|telemetry(?:\/|$)|[^/]*\.db(?:$|[.-]))/i;
@@ -375,7 +384,7 @@ function validateDiff(value: AdmissionFileDiff): AdmissionFileDiff {
       || !Array.isArray(value.operationIds) || typeof value.changed !== 'boolean' || !isRecord(value.before) || !isRecord(value.after)) {
     fail('invalid_manifest', 'Admission source change is malformed.');
   }
-  if (!['yaml', 'fixture', 'selection', 'fixture-promotion', 'probe-baseline', 'probe-approval'].includes(value.kind)) {
+  if (!['yaml', 'fixture', 'selection', 'fixture-promotion', 'probe-baseline', 'probe-approval', 'ordering-snapshot', 'ordering-snapshot-approval'].includes(value.kind)) {
     fail('unapproved_path', 'Admission source change kind is not publishable.');
   }
   if (value.operationIds.some((entry) => typeof entry !== 'string' || entry.length === 0)) {
@@ -451,10 +460,16 @@ function validateManifest(value: unknown, expectedDigest: string, proposal: Prop
   validateCommandOutcome(manifest.rebuiltCandidate.command, 'rebuiltCandidate.command');
   if (manifest.candidate !== null && manifest.comparison !== null && manifest.gauntlet !== null) {
     const { digest: gauntletDigest, ...gauntletBody } = manifest.gauntlet;
+    // Same red shape as admission's blocking predicate: `fail` blocks, a
+    // required gate that did not run blocks, and a required gate's `warn`
+    // is the ADMIT_WITH_WARNINGS verdict this check already accepts one
+    // line up — never a block (the D15 shakedown caught the drift here
+    // too: G3-golden's standing advisory warn — pending fixtures — read
+    // as a blocking gate at prepare after admission had accepted it).
     if (gauntletDigest !== digest(gauntletBody) || manifest.gauntlet.gatesDigest !== digest(manifest.gauntlet.gates)
         || manifest.gauntlet.blocking || !['ADMIT', 'ADMIT_WITH_WARNINGS'].includes(manifest.gauntlet.verdict)
         || manifest.gauntlet.gates.some((entry) => entry.status === 'fail'
-          || (entry.applicability === 'required' && entry.status !== 'pass'))) {
+          || (entry.applicability === 'required' && entry.status !== 'pass' && entry.status !== 'warn'))) {
       fail('blocked_admission', 'Admission contains a blocking or non-passing gate.');
     }
     if (manifest.gauntlet.baseCommit !== manifest.baseCommit
@@ -497,11 +512,15 @@ function validateManifest(value: unknown, expectedDigest: string, proposal: Prop
   }
   if (!manifest.commands.some((command) => {
     validateCommandOutcome(command, 'commands[]');
+    // The admission worktree records WORKTREE_VERIFY_ARGS ('run verify:suites'
+    // since the split — the gauntlet gates through the classified release run
+    // instead); manifests admitted before the split recorded 'run verify' and
+    // stay valid.
     return path.resolve(command.command) === path.resolve(process.execPath)
       && command.args.length >= 3
       && /npm-cli\.js$/i.test(command.args.at(-3)!)
       && command.args.at(-2) === 'run'
-      && command.args.at(-1) === 'verify';
+      && (command.args.at(-1) === WORKTREE_VERIFY_ARGS.at(-1) || command.args.at(-1) === 'verify');
   })) fail('verify_missing', 'Admission manifest lacks successful fixed full verification evidence.');
   const changes = manifest.sourceChanges.map(validateDiff);
   if (changes.length === 0 || changes.every((entry) => !entry.changed)) fail('invalid_manifest', 'Admission contains no publishable source change.');
@@ -511,14 +530,15 @@ function validateManifest(value: unknown, expectedDigest: string, proposal: Prop
   for (const proposalPath of proposalPaths) {
     if (!unique.has(proposalPath)) fail('proposal_mismatch', `Admitted source changes omit ${proposalPath}.`);
   }
+  const EVIDENCE_KINDS = ['fixture-promotion', 'probe-baseline', 'probe-approval', 'ordering-snapshot', 'ordering-snapshot-approval'];
   for (const change of changes) {
-    if (!proposalPaths.has(change.path) && change.kind !== 'fixture-promotion' && change.kind !== 'probe-baseline' && change.kind !== 'probe-approval') {
+    if (!proposalPaths.has(change.path) && !EVIDENCE_KINDS.includes(change.kind)) {
       fail('unapproved_path', `${change.path} is not owned by the admitted proposal.`);
     }
   }
   const expectedSourceSubject = digest({
     proposalDigest: manifest.proposalDigest,
-    diffs: changes.filter((entry) => entry.kind !== 'fixture-promotion' && entry.kind !== 'probe-baseline' && entry.kind !== 'probe-approval').map((entry) => entry.digest),
+    diffs: changes.filter((entry) => !EVIDENCE_KINDS.includes(entry.kind)).map((entry) => entry.digest),
   });
   if (sourceDecisions[0]!.subjectDigest !== expectedSourceSubject) {
     fail('invalid_signature', 'Signed source decision is not bound to the admitted source diffs.');
@@ -594,9 +614,10 @@ function validateTrustedEvidence(
   }
 
   const changedDiffs = preview.diffs.filter((entry) => entry.changed);
+  const PREVIEW_EVIDENCE_KINDS = ['fixture-promotion', 'probe-baseline', 'probe-approval', 'ordering-snapshot', 'ordering-snapshot-approval'];
   const sourceSubject = digest({
     proposalDigest: manifest.proposalDigest,
-    diffs: preview.diffs.filter((entry) => entry.kind !== 'fixture-promotion' && entry.kind !== 'probe-baseline' && entry.kind !== 'probe-approval').map((entry) => entry.digest),
+    diffs: preview.diffs.filter((entry) => !PREVIEW_EVIDENCE_KINDS.includes(entry.kind)).map((entry) => entry.digest),
   });
   if (preview.sourceDecisionSubject !== sourceSubject) fail('decision_slot_invalid', 'Source decision slot does not bind the complete source diff set.');
   const allFixtureDiffs = preview.diffs.filter((entry) => entry.kind === 'fixture-promotion');
@@ -626,9 +647,19 @@ function validateTrustedEvidence(
   if (probeDiffs.length > 1 || (probeDiffs[0] !== undefined && probeDiffs[0].path !== 'eval/baselines/probes.json')) {
     fail('decision_slot_invalid', 'Probe baseline evidence must use the single owned baseline path.');
   }
-  const expectedProbeSubject = probeDiffs.length === 0
+  const orderingSnapshotDiffs = changedDiffs.filter((entry) => entry.kind === 'ordering-snapshot');
+  if (orderingSnapshotDiffs.length > 1 || (orderingSnapshotDiffs[0] !== undefined && orderingSnapshotDiffs[0].path !== 'eval/baselines/ordering.snapshot.json')) {
+    fail('decision_slot_invalid', 'Ordering snapshot evidence must use the single owned baseline path.');
+  }
+  // Mirrors admission's baseline slot digest: unchanged when no ordering
+  // snapshot moved; extended with the ordering diff digest when one did.
+  const expectedProbeSubject = probeDiffs.length === 0 && orderingSnapshotDiffs.length === 0
     ? null
-    : digest({ movements: preview.probeMovements, diff: probeDiffs[0]!.digest });
+    : digest({
+      movements: preview.probeMovements,
+      diff: probeDiffs.length === 0 ? null : probeDiffs[0]!.digest,
+      ...(orderingSnapshotDiffs.length === 0 ? {} : { orderingDiff: orderingSnapshotDiffs[0]!.digest }),
+    });
   if (preview.probeDecisionSubject !== expectedProbeSubject) fail('decision_slot_invalid', 'Probe baseline slot is not bound to every admitted movement.');
   const allApprovalDiffs = preview.diffs.filter((entry) => entry.kind === 'probe-approval');
   if (allApprovalDiffs.some((entry) => !entry.changed)) {
@@ -638,15 +669,52 @@ function validateTrustedEvidence(
   if (approvalDiffs.length > 1 || (approvalDiffs[0] !== undefined && approvalDiffs[0].path !== 'eval/baselines/probes.approval.json')) {
     fail('probe_approval_mismatch', 'Probe approval evidence must use the single owned approval path.');
   }
-  if (probeDiffs.length > 0 && approvalDiffs.length === 0) {
+  // §5.5 gap 2 at the publish seam: a moved baseline may publish without its
+  // approval ONLY under a recorded deferred-signing marker whose expected
+  // post-merge identity equals the regenerated document's embedded identity —
+  // the same escape admission applied, re-verified here so a forged manifest
+  // cannot smuggle an unapproved baseline through publish alone.
+  const marker = preview.deferredSigningMarker ?? null;
+  const markerCovers = (documentText: string): boolean => {
+    if (marker === null) return false;
+    let parsed: unknown;
+    try { parsed = JSON.parse(documentText); } catch { return false; }
+    if (!isRecord(parsed)) return false;
+    const embedded = {
+      engineVersion: parsed['engineVersion'],
+      corpusFingerprint: parsed['corpusFingerprint'],
+      layerFingerprint: parsed['layerFingerprint'],
+    };
+    return canonical(embedded) === canonical(marker.expectedPostMergeIdentity);
+  };
+  if (probeDiffs.length > 0 && approvalDiffs.length === 0 && !markerCovers(probeDiffs[0]!.after.text)) {
     fail('probe_approval_missing', 'A moved probe baseline is publishable only with its re-issued independent approval in the same batch.');
   }
   if (approvalDiffs.length > 0 && probeDiffs.length === 0) {
     fail('probe_approval_orphaned', 'An updated probe approval without a moved baseline has nothing it can attest to.');
   }
-  if (approvalDiffs.length === 1) {
+  if (approvalDiffs.length === 1 && probeDiffs.length === 1) {
     const issues = probeApprovalBindingIssues(probeDiffs[0]!.after.text, approvalDiffs[0]!.after.text);
     if (issues.length > 0) fail('probe_approval_mismatch', issues.join(' '));
+  }
+  // The ordering pair, mirrored exactly (§5.5 gap 1).
+  const allOrderingApprovalDiffs = preview.diffs.filter((entry) => entry.kind === 'ordering-snapshot-approval');
+  if (allOrderingApprovalDiffs.some((entry) => !entry.changed)) {
+    fail('ordering_approval_orphaned', 'An unchanged ordering approval diff is not publishable evidence.');
+  }
+  const orderingApprovalDiffs = changedDiffs.filter((entry) => entry.kind === 'ordering-snapshot-approval');
+  if (orderingApprovalDiffs.length > 1 || (orderingApprovalDiffs[0] !== undefined && orderingApprovalDiffs[0].path !== 'eval/baselines/ordering.snapshot.approval.json')) {
+    fail('ordering_approval_mismatch', 'Ordering approval evidence must use the single owned approval path.');
+  }
+  if (orderingSnapshotDiffs.length > 0 && orderingApprovalDiffs.length === 0 && !markerCovers(orderingSnapshotDiffs[0]!.after.text)) {
+    fail('ordering_approval_missing', 'A moved ordering snapshot is publishable only with its re-issued independent approval in the same batch.');
+  }
+  if (orderingApprovalDiffs.length > 0 && orderingSnapshotDiffs.length === 0) {
+    fail('ordering_approval_orphaned', 'An updated ordering approval without a moved snapshot has nothing it can attest to.');
+  }
+  if (orderingApprovalDiffs.length === 1 && orderingSnapshotDiffs.length === 1) {
+    const issues = orderingApprovalBindingIssues(orderingSnapshotDiffs[0]!.after.text, orderingApprovalDiffs[0]!.after.text);
+    if (issues.length > 0) fail('ordering_approval_mismatch', issues.join(' '));
   }
   const expectedSlots = [
     { kind: 'source-proposal' as const, slotId: 'source-proposal', subjectDigest: sourceSubject },
@@ -674,7 +742,16 @@ function validateTrustedEvidence(
   if (comparison !== null) {
     const linkedMembershipIds = new Set(comparison.queries.flatMap((entry) => entry.memberships
       .filter((membership) => membership.kind === 'linked-case').map((membership) => membership.sourceId)));
-    if (manifest.linkedCaseIds.some((caseId) => !linkedMembershipIds.has(caseId))) {
+    // The guard lane's comparison is built WITH the proposal's linked cases
+    // (compareEngines adds a linked-case membership per provided case), so
+    // when the comparison models linked cases at all, every admitted case
+    // must appear. A data train's universe comparison models fixture
+    // memberships only and derives its single case from the sealed update
+    // card — no linked-case rows exist by construction, and its coverage
+    // guarantee is comparisonBlockers' exact per-query review, re-checked
+    // through the trusted preview this function just re-derived (the D15
+    // shakedown: this check hard-failed every data train's prepare).
+    if (linkedMembershipIds.size > 0 && manifest.linkedCaseIds.some((caseId) => !linkedMembershipIds.has(caseId))) {
       fail('comparison_evidence_invalid', 'Trusted comparison omits an admitted linked case.');
     }
   }
@@ -886,7 +963,13 @@ async function runFixedVerify(
   manifest: AdmissionManifest,
   treeHash: string,
 ): Promise<PublishVerificationRun> {
-  const args = [resolveNpmCliPath(), 'run', 'verify'] as const;
+  // The suite half of verify only — the gauntlet's roster is covered by the
+  // admission manifest's classified release run over the SAME bytes (the
+  // tree hash is pinned), and the publish worktree, like the admission
+  // worktree, deliberately carries regenerated-but-unsigned baselines on a
+  // data train (merge-first-sign-once), so the default-gauntlet tail of
+  // `npm run verify` can never be green there. See WORKTREE_VERIFY_ARGS.
+  const args = [resolveNpmCliPath(), ...WORKTREE_VERIFY_ARGS] as const;
   const result = await commands.raw(process.execPath, args, worktree);
   if (result.exitCode !== 0) fail('verify_failed', `Fixed full verification failed: ${tail(result.stderr || result.stdout)}`);
   const body = {
@@ -941,7 +1024,11 @@ function validVerificationRun(verification: PublishVerificationRun, manifest: Ad
     && verification.manifestDigest === manifest.digest
     && verification.treeHash === manifest.worktreeTreeHash
     && path.resolve(verification.command) === path.resolve(process.execPath)
-    && canonical(verification.args) === canonical([resolveNpmCliPath(), 'run', 'verify']);
+    // The current fixed argv, or the pre-verify:suites legacy argv — stored
+    // verification evidence from journals written before the split stays
+    // valid (its run really did include the suites, plus the gauntlet tail).
+    && (canonical(verification.args) === canonical([resolveNpmCliPath(), ...WORKTREE_VERIFY_ARGS])
+      || canonical(verification.args) === canonical([resolveNpmCliPath(), 'run', 'verify']));
 }
 
 function validVerificationEvidence(
@@ -1188,6 +1275,35 @@ function triageLines(manifest: AdmissionManifest): string[] {
   ];
 }
 
+/**
+ * §5.7 (Phase 3): the ordering-baseline movement lines beside the probes —
+ * the sanctioned regen's snapshot travels in the PR; the approval never does
+ * (a train admission records the deferred-signing marker instead).
+ */
+function orderingLines(manifest: AdmissionManifest): string[] {
+  const snapshot = manifest.sourceChanges.find((entry) => entry.kind === 'ordering-snapshot' && entry.changed);
+  if (snapshot === undefined) return [];
+  const approval = manifest.sourceChanges.find((entry) => entry.kind === 'ordering-snapshot-approval' && entry.changed);
+  return [
+    `- Ordering snapshot \`${snapshot.path}\`: \`${snapshot.before.sha256}\` -> \`${snapshot.after.sha256}\``,
+    ...(approval === undefined
+      ? ['- Ordering approval: deliberately NOT written by the machine — writing it is the human approval act (merge-first-sign-once).']
+      : [`- Ordering approval file \`${approval.path}\`: \`${approval.before.sha256}\` -> \`${approval.after.sha256}\``]),
+  ];
+}
+
+/**
+ * §5.7 / V11 (Phase 3): the provenance table mapping each operation to its
+ * judgments and quoted evidence — the merging human reads one PR and sees
+ * which recorded call asked for every operation.
+ */
+function operationProvenanceLines(proposal: ProposalManifest): string[] {
+  return proposal.operations.flatMap((operation) => [
+    `- \`${operation.operationId}\` (${operation.type}) — reviewer: ${operation.provenance.reviewer}`,
+    `  - Evidence: ${operation.provenance.evidence}`,
+  ]);
+}
+
 function buildPrBody(
   manifest: AdmissionManifest,
   proposal: ProposalManifest,
@@ -1211,6 +1327,10 @@ function buildPrBody(
     ...outcomeLines(manifest, comparison),
     '### Probe and baseline movement',
     ...probeLines(manifest),
+    ...orderingLines(manifest),
+    '',
+    '### Operation provenance (V11)',
+    ...operationProvenanceLines(proposal),
     '',
     '### Provenance',
     ...manifest.provenance.map((entry) => `- ${entry}`),

@@ -9,12 +9,13 @@ import type { ResearchResult, ScriptureEngine } from '@jestek-dev/scripture-engi
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { GAUNTLET_GATE_ROSTER, buildMachineReport, canonicalJson, type GauntletMachineReport } from '../../eval/src/gauntletMachineReport.js';
-import { fail, pass } from '../../eval/src/gates/types.js';
+import { fail, pass, warn } from '../../eval/src/gates/types.js';
 import { buildReport } from '../../eval/src/report.js';
 
 import {
   AdmissionError,
   DEFAULT_ADMISSION_GIT_ADAPTER,
+  WORKTREE_VERIFY_ARGS,
   classifyManifestLanes,
   previewAdmission,
   runAdmission,
@@ -488,6 +489,29 @@ describe('M10 controlled source admission', () => {
         mutate(report) { return { ...report, reportSha256: '0'.repeat(64), payload: { ...report.payload, verdict: 'ADMIT' } }; },
       }),
     })).rejects.toMatchObject({ code: 'invalid_gauntlet' });
+  });
+
+  it('accepts a required gate at WARN — the ADMIT_WITH_WARNINGS shape is admissible, never a blocking red (D15 ride finding)', async () => {
+    const repo = await repository();
+    const input = await previewInput(repo.root, repo.commit, repo.sourceText);
+    const requiredIndex = GAUNTLET_GATE_ROSTER.findIndex((gate) => gate.applicability === 'required');
+    expect(requiredIndex).toBeGreaterThanOrEqual(0);
+    await expect(previewAdmission({
+      ...input,
+      trustedGauntletLoader: trustedGauntletLoader({
+        mutate(report) {
+          const gates = (report.payload.gates as unknown as Record<string, unknown>[]).map((gate, index) => index === requiredIndex
+            ? { ...gate, status: 'warn', verdict: 'warn', summary: 'Pending fixtures still failing — worth reading before merge.' }
+            : gate);
+          const payload = { ...report.payload, verdict: 'ADMIT_WITH_WARNINGS', gates } as never;
+          return redigestMachineReport({
+            ...report,
+            payload,
+            payloadSha256: sha256(canonicalJson(payload)),
+          });
+        },
+      }),
+    })).resolves.toBeDefined();
   });
 
   it('rejects candidate reports with the wrong target kind, descriptor, database, or identity', async () => {
@@ -1163,6 +1187,60 @@ describe('deferred-signing marker (votes-to-engine §5.5 gap 2, ratified call 2)
     expect(result.manifest?.deferredSigning).toEqual(marker);
   });
 
+  it('classifies the real gate emission: flat identity params plus a standing advisory warn', async () => {
+    // The D15 sandbox ride, in anger: the REAL G2/G8 approval findings quote
+    // the approved identity as FLAT params keys (a machine-report params
+    // value is a scalar or string list — an identity object can never nest
+    // there), and G3-golden rides every run as a required gate whose
+    // advisory `warn` (pending fixtures) is the ADMIT_WITH_WARNINGS shape —
+    // tolerated by the blocking predicate, so never a red for the marker to
+    // predict. Both halves must classify, or every real data train's sign
+    // act hard-fails while the fabricated nested-params fixtures stay green.
+    const repo = await repository();
+    const input = { ...(await previewInput(repo.root, repo.commit, repo.sourceText)), deferredSigningMarker: marker };
+    const gates = GAUNTLET_GATE_ROSTER.map((gate) => {
+      if (gate.id === 'G2-determinism') {
+        return fail(gate.id, gate.title, 'Ordering approval identity is stale.', [{
+          message: 'Ordering snapshot bytes differ from the approved snapshot digest.',
+          subjects: ['ordering-snapshot-approval'],
+          categoryCode: 'sse.gauntlet.v1.finding.g2-determinism.ordering-approval-snapshot-mismatch',
+          params: {
+            engineVersion: REFERENCE.engineVersion,
+            corpusFingerprint: REFERENCE.corpusFingerprint,
+            layerFingerprint: REFERENCE.layerFingerprint,
+          },
+        }], undefined, { explicitTarget: true });
+      }
+      if (gate.id === 'G3-golden') {
+        return warn(gate.id, gate.title, 'Pending fixtures still failing.', [{
+          message: 'pending fixture example: currently fails 1 expectation(s).',
+          subjects: ['example'],
+          categoryCode: 'sse.gauntlet.v1.finding.g3-golden.pending-still-failing',
+        }], undefined, { explicitTarget: true });
+      }
+      return pass(gate.id, gate.title, 'Release gate passed.', undefined, { explicitTarget: true });
+    });
+    const result = await execute(input, dependencies({
+      async verify(_worktree, preview, rebuilt) {
+        return {
+          status: 'PASSED', command: outcome('verify'),
+          releaseGauntlet: {
+            reportPath: 'eval/.runs/admission-release-report.json',
+            reportBytes: releaseMachineReport(preview, rebuilt, { gates }),
+            command: outcome('release-gauntlet'),
+          },
+        };
+      },
+    }));
+    expect(result.status).toBe('ADMITTED');
+    const classification = result.manifest?.releaseGauntletClassification;
+    expect(classification?.kind).toBe('deferred-signing-predicted-red');
+    if (classification?.kind === 'deferred-signing-predicted-red') {
+      // The advisory warn is not a red: only the predicted G2 finding lands.
+      expect(classification.findings.map((finding) => finding.gateId)).toEqual(['G2-determinism']);
+    }
+  });
+
   it('refuses marker-predicted reds that quote a foreign identity or fail outside G2/G8', async () => {
     const repo = await repository();
     const input = { ...(await previewInput(repo.root, repo.commit, repo.sourceText)), deferredSigningMarker: marker };
@@ -1194,5 +1272,28 @@ describe('deferred-signing marker (votes-to-engine §5.5 gap 2, ratified call 2)
       }], undefined, { explicitTarget: true })
       : pass(gate.id, gate.title, 'Release gate passed.', undefined, { explicitTarget: true }));
     await expect(execute(input, verifyWith(outside))).rejects.toMatchObject({ code: 'blocking_gauntlet' });
+  });
+});
+
+describe('worktree verification command (the verify:suites split)', () => {
+  // A baseline-moving data train's worktree deliberately carries regenerated
+  // baselines with NO approval change (merge-first-sign-once, D13), so the
+  // default-gauntlet tail of the repo-root `verify` script REJECTS there on
+  // exactly the designed G2/G8 approval-staleness findings — with no report
+  // and no classification, hard-failing every data train's sign act (found
+  // in anger by the D15 sandbox ride). The admission and publish worktrees
+  // therefore run the suite half only; the gauntlet still gates via the
+  // strictly stronger RELEASE run whose reds classifyReleaseRed verifies
+  // finding-for-finding (inherited or marker-predicted, never waived).
+  it('pins the fixed worktree verification argv to the suite half of verify', () => {
+    expect([...WORKTREE_VERIFY_ARGS]).toEqual(['run', 'verify:suites']);
+  });
+
+  it('the root scripts keep the contract: verify = verify:suites + the default gauntlet, and the suite half carries no gauntlet', async () => {
+    const rootPackage = JSON.parse(
+      await readFile(path.join(process.cwd(), '..', 'package.json'), 'utf8'),
+    ) as { scripts: Record<string, string> };
+    expect(rootPackage.scripts['verify:suites']).toBe('npm run build:engine && npm run typecheck && npm run test');
+    expect(rootPackage.scripts.verify).toBe('npm run verify:suites && npm run gauntlet --');
   });
 });

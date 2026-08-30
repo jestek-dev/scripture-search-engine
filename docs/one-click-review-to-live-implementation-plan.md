@@ -5,6 +5,22 @@
 **Status:** Proposed for independent review
 **Target:** A reviewer records Scripture-search judgments, selects **Update Engine**, and receives either a draft PR ready for Jesse's hand-merge or a precise, actionable blocker report.
 
+> **Superseded (2026-08-30).** The votes-to-engine plan —
+> `docs/plans/2026-08-27-votes-to-engine-plan.md`, dated 2026-08-27 — now
+> governs the whole review-to-live loop and supersedes this document's
+> pipeline design end to end: the single **Update Engine** action and its
+> durable coordinator (§5–§7, §5a), the batch/refinement/comparison policies
+> (§8–§10), the GitHub, release-verification, and consumer-registry stages
+> (§11–§13), the UI and API surfaces (§14–§15), and the phased rollout
+> (§18–§22). What shipped instead is that plan's Updates screen (derived
+> cards, one decision each), refinement trains sealed from approved cards,
+> and the draft-PR-only publish leg. Do not implement anything from this
+> document — in particular, the pre-amendment stages still quoted in the
+> changelog below were withdrawn on 2026-08-15 and remain withdrawn: nothing
+> here or there grants authority past a draft PR. The covenant sentence in
+> §1 ("No automation merges to `main`.") stays binding and is guarded by
+> `workbench/test/oneClickPlanGuard.test.ts`.
+
 ## Amendment changelog (2026-08-15)
 
 This is the only section permitted to quote the removed automation language;

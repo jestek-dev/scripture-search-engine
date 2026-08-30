@@ -7,7 +7,7 @@ import { promisify } from 'node:util';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { signAdmissionDecision, type AdmissionManifest, type AdmissionPreview, type CommandOutcome } from '../src/admission.js';
+import { signAdmissionDecision, WORKTREE_VERIFY_ARGS, type AdmissionManifest, type AdmissionPreview, type CommandOutcome } from '../src/admission.js';
 import { calculateComparisonReportDigest, type ComparisonReport } from '../src/comparison.js';
 import { resolveNpmCliPath } from '../src/jobRunner.js';
 import {
@@ -146,7 +146,15 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
   await writeFile(path.join(root, 'ontology', 'concepts', 'hope.yaml'), beforeText);
   await writeFile(path.join(root, '.gitignore'), 'workbench/.state/\n');
   await writeFile(path.join(root, 'README.md'), 'base\n');
-  await writeFile(path.join(root, 'package.json'), `${JSON.stringify({ private: true, scripts: { verify: verifyScript } }, null, 2)}\n`);
+  // The publish leg invokes verify:suites (the suite half; WORKTREE_VERIFY_ARGS)
+  // and must NOT invoke the full `verify` — whose default-gauntlet tail can
+  // never be green in a worktree carrying a data train's regenerated-but-
+  // unsigned baselines (merge-first-sign-once). The fake `verify` script
+  // therefore always fails: a regression to the full script fails these tests.
+  await writeFile(path.join(root, 'package.json'), `${JSON.stringify({
+    private: true,
+    scripts: { 'verify:suites': verifyScript, verify: `${verifyScript} && node -e "process.exit(1)"` },
+  }, null, 2)}\n`);
   await git(root, ['add', '--all']);
   await git(root, ['commit', '-m', 'base']);
   await git(root, ['remote', 'add', 'origin', remote]);
@@ -281,6 +289,24 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
       metrics: {},
       promotionCandidates: [],
     },
+    {
+      // A required gate's advisory `warn` (G3-golden's standing
+      // pending-fixture shape) is the ADMIT_WITH_WARNINGS verdict — never a
+      // blocking gate at prepare. Baked into the shared fake so every
+      // prepare test regresses if the predicate drifts back to
+      // warn-is-blocking (the D15 shakedown found it blocking real data
+      // trains after admission had accepted them).
+      gate: 'G3-golden' as const,
+      code: 'synthetic-g3',
+      title: 'Synthetic G3',
+      status: 'warn' as const,
+      applicability: 'required' as const,
+      verdict: 'advisory' as const,
+      summary: 'A pending fixture still fails; advisory only.',
+      findings: [],
+      metrics: {},
+      promotionCandidates: [],
+    },
   ];
   const gauntletBody = {
     schemaVersion: 1 as const,
@@ -380,7 +406,10 @@ async function repository(verifyScript = 'node -e "process.exit(0)"'): Promise<T
     releaseGauntletClassification: null,
     sourceChanges: [sourceChange],
     probeMovements: [],
-    commands: [outcome(process.execPath, [resolveNpmCliPath(), 'run', 'verify'])],
+    // The current admission worktree argv (the verify:suites split); the
+    // legacy 'run verify' tail from pre-split manifests stays accepted and
+    // is covered by validateManifest's alternative branch.
+    commands: [outcome(process.execPath, [resolveNpmCliPath(), ...WORKTREE_VERIFY_ARGS])],
     rollback: [{
       path: sourceChange.path,
       restoreSha256: before.sha256,
@@ -863,7 +892,7 @@ describe('M14 isolated draft publication preparation', () => {
     let verifyRuns = 0;
     let crashed = false;
     const runner = new RecordingRunner(async (commandName, args) => {
-      if (path.resolve(commandName) === path.resolve(process.execPath) && args.at(-2) === 'run' && args.at(-1) === 'verify') verifyRuns += 1;
+      if (path.resolve(commandName) === path.resolve(process.execPath) && args.at(-2) === 'run' && args.at(-1) === 'verify:suites') verifyRuns += 1;
       return null;
     });
     await expect(prepareDraftPublication(input(repo, {

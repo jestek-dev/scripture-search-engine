@@ -186,11 +186,26 @@ function isReviewDate(value: unknown): value is string {
   return new Date(`${value}T00:00:00.000Z`).toISOString().slice(0, 10) === value;
 }
 
-function approvalFinding(category: string, message: string): GateFinding {
+/**
+ * When the approval parsed far enough to name the engine identity it bound,
+ * every *-mismatch finding quotes that identity in `params` (flat, additive:
+ * the machine report's params policy) so the admission classifier's deferred-
+ * signing marker check can verify it against the marker's recorded pre-regen
+ * identity. A mismatch finding that quotes no identity cannot be classified
+ * and blocks — see orderingSnapshot.ts for the full rationale.
+ */
+function approvalFinding(category: string, message: string, approvedEngine?: ProbeEngineIdentity): GateFinding {
   return {
     categoryCode: `sse.gauntlet.v1.finding.g8-noise-probes.${category}`,
     message,
     subjects: ['probe-baseline-approval'],
+    ...(approvedEngine === undefined ? {} : {
+      params: {
+        engineVersion: approvedEngine.engineVersion,
+        corpusFingerprint: approvedEngine.corpusFingerprint,
+        layerFingerprint: approvedEngine.layerFingerprint,
+      },
+    }),
   };
 }
 
@@ -352,21 +367,21 @@ export function validateProbeBaselineApproval(input: {
     }
     const evidence = approval['evidence'] as { readonly path: string; readonly sha256: string };
     if (input.evidenceSha256 === null) {
-      findings.push(approvalFinding('baseline-approval-evidence-mismatch', `Probe baseline approval evidence ${evidence.path} is missing or unreadable.`));
+      findings.push(approvalFinding('baseline-approval-evidence-mismatch', `Probe baseline approval evidence ${evidence.path} is missing or unreadable.`, approval['engine'] as ProbeEngineIdentity));
     } else if (input.evidenceSha256 !== evidence.sha256) {
-      findings.push(approvalFinding('baseline-approval-evidence-mismatch', `Probe baseline approval evidence ${evidence.path} does not match the approved review-record digest.`));
+      findings.push(approvalFinding('baseline-approval-evidence-mismatch', `Probe baseline approval evidence ${evidence.path} does not match the approved review-record digest.`, approval['engine'] as ProbeEngineIdentity));
     }
   } else {
     return [approvalFinding('baseline-approval-malformed', 'Probe baseline approval does not declare a supported approval schema.')];
   }
 
+  const approvalEngine = approval['engine'] as ProbeEngineIdentity;
   if (approval['baselineSha256'] !== input.baselineSha256) {
-    findings.push(approvalFinding('baseline-approval-baseline-mismatch', 'Probe baseline bytes differ from the independently approved baseline digest.'));
+    findings.push(approvalFinding('baseline-approval-baseline-mismatch', 'Probe baseline bytes differ from the independently approved baseline digest.', approvalEngine));
   }
   if (approval['probesSha256'] !== input.probesSha256) {
-    findings.push(approvalFinding('baseline-approval-probes-mismatch', 'Probe definitions differ from the independently approved probe digest.'));
+    findings.push(approvalFinding('baseline-approval-probes-mismatch', 'Probe definitions differ from the independently approved probe digest.', approvalEngine));
   }
-  const approvalEngine = approval['engine'] as ProbeEngineIdentity;
   const triples: readonly [keyof ProbeEngineIdentity, string, string][] = [
     ['engineVersion', approvalEngine.engineVersion, input.engine.engineVersion],
     ['corpusFingerprint', approvalEngine.corpusFingerprint, input.engine.corpusFingerprint],
@@ -374,7 +389,7 @@ export function validateProbeBaselineApproval(input: {
   ];
   for (const [field, approved, observed] of triples) {
     if (approved !== observed || (input.baseline as ProbeEngineIdentity)[field] !== observed) {
-      findings.push(approvalFinding('baseline-approval-engine-mismatch', `Probe baseline ${field} does not match the independently approved engine identity.`));
+      findings.push(approvalFinding('baseline-approval-engine-mismatch', `Probe baseline ${field} does not match the independently approved engine identity.`, approvalEngine));
     }
   }
   return findings;

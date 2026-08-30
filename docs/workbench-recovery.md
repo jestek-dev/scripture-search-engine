@@ -198,8 +198,10 @@ judgment records; they do not rewrite prior records.
 
 The Changes view is the authoritative compile/check/promote sequence:
 
-1. **Preview fixture changes**, review the exact file diff, checklist, and
-   digest, then **Apply fixture changes** with that full digest.
+1. **Preview fixture changes**, review the exact file diff and digest,
+   then **Apply fixture changes** with that full digest. (The preview's
+   printed checklist is retired — Phase 4 D18; its `checklist` field is
+   permanently empty. The Updates cards carry those facts now.)
 2. Run **Gauntlet** or **Full verify** from Changes. The fixed job ids are
    `typecheck`, `test`, `gauntlet`, and `verify`.
 3. For a pending fixture named by a fresh passing report, **Preview
@@ -209,15 +211,18 @@ The Changes view is the authoritative compile/check/promote sequence:
 The CLI equivalents are:
 
 ```powershell
-npm run compile-judgments --workspace workbench
 npm run typecheck
 npm test
 npm run gauntlet:report
 npm run verify -- --require-admit
 ```
 
-The CLI compiler uses the same planning/apply functions as the UI and writes
-fixture changes only after its plan has been validated. `gauntlet:report`
+Retired (Phase 4 D18, the J72 tombstone): `npm run compile-judgments
+--workspace workbench` no longer writes anything — it refuses every
+invocation with a message naming the supervised path and exits 1, the same
+pattern as the v1 endpoint's 410. The compile write path is the Finish up
+screen's digest-confirmed preview-then-apply (or the API pair below); see
+`docs/votes-to-engine-runbook.md` §2.7. `gauntlet:report`
 writes `eval/.runs/gauntlet-report.json`; `--require-admit` rejects every
 verdict other than exact `ADMIT`.
 

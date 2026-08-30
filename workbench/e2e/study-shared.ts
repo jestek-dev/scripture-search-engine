@@ -211,6 +211,9 @@ export interface MockState {
   admitCount: number;
   prepareResponder?: (reviewId: string, body: Record<string, unknown> | null, n: number) => JudgmentResponse | null;
   prepareCount: number;
+  /** Custom D14 sign responder; return null for the default (201 + pr-open view). */
+  trainSignResponder?: (trainId: string, body: Record<string, unknown> | null, n: number) => JudgmentResponse | null;
+  trainSignCount: number;
 }
 
 export function caseMock(caseId: string, query: string, state = 'reviewing', at = '2026-08-20T00:00:00.000Z'): Record<string, unknown> {
@@ -263,6 +266,7 @@ export function makeMock(options: Partial<MockState> = {}): MockState {
     admissionDetail: null,
     admitCount: 0,
     prepareCount: 0,
+    trainSignCount: 0,
     ...options,
   };
 }
@@ -292,10 +296,12 @@ export function derivationMock(cards: readonly Record<string, unknown>[], trains
     trains,
     unverifiablePriorTrains: [],
     tally: {
-      drafted: opBearing.filter((card) => stateOf(card) === 'drafted').length,
-      approved: opBearing.filter((card) => stateOf(card) === 'approved' && card.parkedByDefault !== true && !shipped(card)).length,
+      // An auto-resolved card (D16 disposition 1) counts nowhere — mirror
+      // the deriver's exclusion.
+      drafted: opBearing.filter((card) => stateOf(card) === 'drafted' && card.autoResolved !== true).length,
+      approved: opBearing.filter((card) => stateOf(card) === 'approved' && card.autoResolved !== true && card.parkedByDefault !== true && !shipped(card)).length,
       declined: opBearing.filter((card) => stateOf(card) === 'declined').length,
-      parked: opBearing.filter((card) => stateOf(card) === 'parked' || card.parkedByDefault === true).length,
+      parked: opBearing.filter((card) => (stateOf(card) === 'parked' || card.parkedByDefault === true) && card.autoResolved !== true).length,
     },
     readOnly: false,
   };
@@ -351,6 +357,7 @@ export function guardTrainView(state: string, overrides: Record<string, unknown>
     },
     draftPrUrl: null,
     checksDurationMs: null,
+    signingHold: null,
     ...overrides,
   };
 }
@@ -625,6 +632,24 @@ export async function installRoutes(page: Page, mock: MockState, options: Instal
         }
       }
       await route.fulfill(created({ train: mock.trainView }));
+      return;
+    }
+    // D14: the typed-digest sign act. The default success mirrors the real
+    // server: the act runs the admit + publish tail behind the same POST and
+    // returns the fresh (pr-open) train view.
+    const trainSignMatch = /^\/api\/v2\/updates\/train\/([^/]+)\/sign$/.exec(url.pathname);
+    if (trainSignMatch !== null && request.method() === 'POST') {
+      mock.trainSignCount += 1;
+      if (mock.trainSignResponder !== undefined) {
+        const custom = mock.trainSignResponder(trainSignMatch[1]!, body, mock.trainSignCount);
+        if (custom !== null) {
+          await route.fulfill({ status: custom.status, contentType: 'application/json', body: JSON.stringify(custom.payload) });
+          return;
+        }
+      }
+      const prUrl = 'https://github.com/example/scripture-search-engine/pull/999';
+      if (mock.trainView !== null) mock.trainView = { ...mock.trainView, state: 'pr-open', draftPrUrl: prUrl };
+      await route.fulfill(created({ train: mock.trainView ?? guardTrainView('pr-open', { draftPrUrl: prUrl }) }));
       return;
     }
     const trainStateMatch = /^\/api\/v2\/updates\/train\/([^/]+)$/.exec(url.pathname);

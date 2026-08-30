@@ -41,10 +41,7 @@ const routes = [
   '/api/v2/updates/cards/',
   '/decide',
   '/api/v2/updates/train',
-  '/api/v2/admissions/',
-  '/admit',
-  '/api/v2/publish/',
-  '/prepare',
+  '/sign',
 ];
 
 afterEach(async () => {

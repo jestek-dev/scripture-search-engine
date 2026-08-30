@@ -462,8 +462,21 @@ function parseCandidateDescriptor(value: unknown, request: CandidateBuildRequest
       throw new CandidateBuilderError(`Candidate ${field} is invalid or differs from its base identity.`);
     }
   }
-  if (record.corpusFingerprint !== base.corpusFingerprint
-      || record.manifestFingerprint !== base.manifestFingerprint) {
+  // §5.5 gap 4 (D12b, narrowly scoped like §5.3's exemption): a data
+  // proposal may move ONLY the layerFingerprint — except that a
+  // `fixture-corpus-chapter-add` proposal moves the corpus fingerprint by
+  // definition (PR #64). The permission is derived from the proposal's own
+  // operations, never a caller flag, requires the subset file hash-pinned as
+  // a verified sourcePrecondition, and leaves every other identity dimension
+  // (schema/engine/tokenizer/manifest) base-equal as before.
+  const chapterAdd = request.proposal.operations.some((operation) => operation.type === 'fixture-corpus-chapter-add');
+  const subsetPinned = request.proposal.sourcePreconditions.some((entry) => entry.path === 'pipeline/fixtures/web-subset.json');
+  if (record.corpusFingerprint !== base.corpusFingerprint && !(chapterAdd && subsetPinned)) {
+    throw new CandidateBuilderError(chapterAdd
+      ? 'Candidate corpus identity moved on a chapter-add proposal whose subset file is not hash-pinned as a sourcePrecondition.'
+      : 'Candidate corpus or manifest identity differs from its base identity.');
+  }
+  if (record.manifestFingerprint !== base.manifestFingerprint) {
     throw new CandidateBuilderError('Candidate corpus or manifest identity differs from its base identity.');
   }
   if (!Number.isSafeInteger(record.databaseBytes) || (record.databaseBytes as number) <= 0) {

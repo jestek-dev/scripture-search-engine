@@ -36,10 +36,14 @@ const REQUIRED_INLINE_ROUTES = [
   '/api/v2/updates/cards/',
   '/decide',
   '/api/v2/updates/train',
-  '/api/v2/admissions/',
-  '/admit',
-  '/api/v2/publish/',
-  '/prepare',
+  // D14: the typed-digest sign suffix (`/api/v2/updates/train/:id/sign`) —
+  // the split prefix+suffix style, like the jobs prefix above pairs with its
+  // cancel suffix. The Phase-2 borrow literals (the admissions prefix with
+  // its admit suffix, and the publish prefix with its prepare suffix)
+  // retired with the "Approve this update" button they served (§4.9): the
+  // sign act now runs the admit + publish tail server-side, so no page
+  // calls those routes any more.
+  '/sign',
 ] as const;
 
 export type StaticSnapshotIssueCode =

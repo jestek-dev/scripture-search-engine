@@ -424,6 +424,30 @@ describe('M9 blind comparison domain', () => {
     await expect(tampered.ready()).rejects.toMatchObject({ code: 'publication_invalid' });
   });
 
+  it('skips a built-not-yet-measured candidate (no comparison.json) instead of failing startup closed (D12)', async () => {
+    // A data train's candidate exists between the build and measure stages
+    // with NO comparison publication — a server restart there must come up
+    // clean (the mid-chain restart of the D15 ride found startup degraded).
+    const root = await mkdtemp(path.join(tmpdir(), 'blind-comparison-unmeasured-'));
+    roots.push(root);
+    const candidatesRoot = path.join(root, 'candidates');
+    const directory = path.join(candidatesRoot, hash('unmeasured-cache'));
+    await mkdir(directory, { recursive: true });
+    await writeFile(path.join(directory, 'candidate-artifact.json'), '{"kind":"fixture-descriptor"}\n');
+    await writeFile(path.join(directory, 'content.db'), 'candidate database bytes');
+    const eventLogPath = path.join(root, 'events.jsonl');
+    const store = new BlindComparisonStore({ candidatesRoot, eventLogPath, reviewer: 'reviewer-one', lockRoot: root });
+    await store.ready();
+    expect(store.list()).toEqual([]);
+    // The same holds when the comparison directory exists but the machine
+    // report never landed (a measure leg killed mid-run): never a
+    // publication, never a startup failure.
+    await mkdir(path.join(directory, 'comparison'), { recursive: true });
+    const partial = new BlindComparisonStore({ candidatesRoot, eventLogPath, reviewer: 'reviewer-one', lockRoot: root });
+    await partial.ready();
+    expect(partial.list()).toEqual([]);
+  });
+
   it('refuses a linked event log without modifying its target', async () => {
     const publication = await fixture();
     const root = await mkdtemp(path.join(tmpdir(), 'blind-comparison-linked-log-'));
