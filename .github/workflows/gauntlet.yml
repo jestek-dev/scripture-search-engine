@@ -431,10 +431,22 @@ jobs:
         # determinism over identical bytes is what G2 protects; cross-OS
         # bit-reproducibility of the sqlite build is a separate requirement
         # this design deliberately avoids taking on.
+        # The committed descriptor's release.tag (present once a mint lands)
+        # is fed back in the same way as builtAt: buildArtifact.ts emits the
+        # descriptor's release:{tag} field only when --release-tag is passed,
+        # so omitting it would make the gate below fail deterministically
+        # against any minted descriptor. Reading the committed field keeps the
+        # gate self-contained — the rebuild reproduces exactly what the
+        # descriptor claims, with no new inputs.
         run: |
           mkdir -p workbench/.artifact
           BUILT_AT=$(node -p "JSON.parse(require('fs').readFileSync('artifacts/content-artifact.json','utf8')).builtAt")
-          npm run build:artifact --workspace pipeline -- --out ../workbench/.artifact/content.db --built-at "$BUILT_AT"
+          RELEASE_TAG=$(node -p "JSON.parse(require('fs').readFileSync('artifacts/content-artifact.json','utf8')).release?.tag ?? ''")
+          BUILD_ARGS=(--out ../workbench/.artifact/content.db --built-at "$BUILT_AT")
+          if [ -n "$RELEASE_TAG" ]; then
+            BUILD_ARGS+=(--release-tag "$RELEASE_TAG")
+          fi
+          npm run build:artifact --workspace pipeline -- "${BUILD_ARGS[@]}"
 
       - name: Committed descriptor matches the rebuilt artifact
         # The build regenerates artifacts/content-artifact.json in the
