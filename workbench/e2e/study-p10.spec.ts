@@ -210,8 +210,11 @@ for (const row of STOP_TABLE) {
 // D16 — the staleness-replay card copy renders verbatim
 // ---------------------------------------------------------------------------
 
-const ALREADY_ACHIEVED_NOTE =
-  'Already achieved — guarded. This passage now appears where you asked, so this update only pins that answer on the answer sheet.';
+// §4.3's PLAN-FIXED receipt sentence, verbatim with the '{query}'
+// substitution — the auto-resolved happy case never renders as a to-do;
+// the update panel renders this one-line receipt instead.
+const ALREADY_ACHIEVED_RECEIPT =
+  "Already achieved — your call for 'Who is like the Lord?' is now true in search, so this update just pins it in the answer sheet.";
 const RECONFIRMED_NOTE =
   'Re-checked against the current search data: the picture still looks the way it did when you made this call.';
 const UNRESOLVED_NOTE =
@@ -241,7 +244,8 @@ function autoResolvedCard(): Record<string, unknown> {
     derived: { expectation: { ref: 'Exodus 15:11', withinTop: 10 } },
     preCheck: 'identity-moved',
     identityNotes: [{ dimension: 'layerFingerprint', recorded: 'layer-old', current: 'layer-current' }],
-    replay: { disposition: 'already-achieved', note: ALREADY_ACHIEVED_NOTE },
+    replay: { disposition: 'already-achieved', note: ALREADY_ACHIEVED_RECEIPT },
+    autoResolved: true,
     state: { decision: 'drafted' },
   };
 }
@@ -275,7 +279,7 @@ function staleLookAgainCard(): Record<string, unknown> {
   };
 }
 
-test('D16: the auto-resolved card renders "already achieved — guarded" verbatim', async ({ page }) => {
+test('D16 disposition 1: the auto-resolved case never renders as a to-do — the §4.3 receipt renders in the update panel instead', async ({ page }) => {
   const errors = collectErrors(page);
   const mock = makeMock({ updatesPayload: derivationMock([autoResolvedCard()]) });
   await installRoutes(page, mock);
@@ -283,8 +287,19 @@ test('D16: the auto-resolved card renders "already achieved — guarded" verbati
   await expect(page.locator('#search-input')).toBeVisible();
   await openUpdates(page);
 
-  const note = page.locator('.updates-card .replay-note');
-  await expect(note).toHaveText(ALREADY_ACHIEVED_NOTE);
+  // The one-line receipt, verbatim (§4.3's plan-fixed sentence), in the
+  // update panel — not on a card.
+  const receipt = page.locator('#updates-train-panel .train-receipt');
+  await expect(receipt).toHaveText(ALREADY_ACHIEVED_RECEIPT);
+  // No to-do: no card renders for it, no decision doors anywhere.
+  await expect(page.locator('.updates-card')).toHaveCount(0);
+  await expect(page.locator('#screen-updates button', { hasText: 'Approve' })).toHaveCount(0);
+  // Not counted as "waiting for your call" — the tally row does not render.
+  await expect(page.locator('#updates-stats')).toHaveCount(0);
+  await expect(page.locator('#screen-updates')).not.toContainText('waiting for your call');
+  // The kept fixture pin still rides: the §4.5 summary and Start are offered.
+  await expect(page.locator('#updates-train-summary')).toBeVisible();
+  await expect(page.locator('#train-start')).toBeVisible();
   await assertNoJargon(page);
   expect(errors).toEqual([]);
 });

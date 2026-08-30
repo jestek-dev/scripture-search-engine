@@ -4406,7 +4406,9 @@ button{font:inherit;}
     const samples = [];
     for (const card of derivation.cards) {
       const cardState = card.state || {};
-      if (cardState.decision === 'drafted') {
+      // An auto-resolved card (D16 disposition 1) awaits no decision even
+      // while its fold state reads drafted — it boards without one.
+      if (cardState.decision === 'drafted' && card.autoResolved !== true) {
         for (const id of card.judgmentIds || []) awaiting.add(id);
         continue;
       }
@@ -4573,13 +4575,17 @@ button{font:inherit;}
   function updatesTallyOf(cards) {
     const opBearing = cards.filter((card) => isOpBearing(card) && (card.routed === undefined || card.routed === null));
     return {
-      drafted: opBearing.filter((card) => cardDecision(card) === 'drafted').length,
+      // An auto-resolved card (D16 disposition 1) waits for no call — it
+      // counts nowhere; its receipt renders in the update panel instead.
+      drafted: opBearing.filter((card) => cardDecision(card) === 'drafted' && card.autoResolved !== true).length,
       // A shipped card (its sealing update went live) is achieved, never
       // "approved for the next update" — mirror the deriver's exclusion.
-      approved: opBearing.filter((card) => cardDecision(card) === 'approved' && card.parkedByDefault !== true
+      approved: opBearing.filter((card) => cardDecision(card) === 'approved' && card.autoResolved !== true
+        && card.parkedByDefault !== true
         && !(card.state && card.state.sealedTrainLive === true)).length,
       declined: opBearing.filter((card) => cardDecision(card) === 'declined').length,
-      parked: opBearing.filter((card) => cardDecision(card) === 'parked' || card.parkedByDefault === true).length,
+      parked: opBearing.filter((card) => (cardDecision(card) === 'parked' || card.parkedByDefault === true)
+        && card.autoResolved !== true).length,
     };
   }
   function replaceUpdatesCard(fresh) {
@@ -4589,9 +4595,13 @@ button{font:inherit;}
     derivation.tally = updatesTallyOf(derivation.cards);
   }
   function updatesGroups() {
-    const groups = { main: [], approved: [], sealed: [], shipped: [], engineering: [], parked: [] };
+    const groups = { main: [], approved: [], sealed: [], shipped: [], engineering: [], parked: [], receipts: [] };
     for (const card of updatesCards()) {
       const decision = cardDecision(card);
+      // D16 disposition 1 (§4.3): the auto-resolved happy case never renders
+      // as a to-do at all — no decision doors, no group row; it appears as a
+      // one-line receipt in the update panel instead.
+      if (card.autoResolved === true) { groups.receipts.push(card); continue; }
       if (decision === 'parked' || card.parkedByDefault === true) { groups.parked.push(card); continue; }
       if (decision === 'declined') continue; // on record in the log; renders nowhere (§4.2)
       if (decision === 'approved') {
@@ -5664,11 +5674,23 @@ button{font:inherit;}
       hasContent = true;
     }
 
+    // D16 disposition 1 (§4.3): the auto-resolved happy case appears as a
+    // one-line receipt HERE — never as a to-do card. The sentence is the
+    // server's plan-fixed copy (replay.note), rendered verbatim; the kept
+    // fixture pin boards the next seal without a decide event, so the
+    // receipt cards join the sealable set below.
+    const receipts = (groups.receipts || []).filter((card) => !(card.state && typeof card.state.sealedInTrain === 'string'));
+    for (const card of receipts) {
+      const receipt = node('p', 'train-status train-receipt', card.replay && typeof card.replay.note === 'string' ? card.replay.note : '');
+      receipt.setAttribute('data-card-id', card.cardId);
+      panel.appendChild(receipt);
+      hasContent = true;
+    }
     // §4.5: the train summary — counts of approved intents in Jesse's own
     // words, the lane-aware machine-time sentence, one Start behind the
     // one-confirm layer. A running train replaces the button with the
     // one-at-a-time line.
-    const approvable = trainApprovableCards(groups);
+    const approvable = trainApprovableCards(groups).concat(receipts);
     if (approvable.length > 0) {
       if (trainNonTerminal()) {
         if (train.panelError === null || train.panelError.id !== 'updates-train-one-at-a-time') {
@@ -5825,7 +5847,8 @@ button{font:inherit;}
     // compile preview at all; Finish up owns it.
     // The steady empty state (§4.8 owns the string).
     const anyCard = groups.main.length > 0 || groups.approved.length > 0
-      || groups.sealed.length > 0 || groups.engineering.length > 0 || groups.parked.length > 0;
+      || groups.sealed.length > 0 || groups.engineering.length > 0 || groups.parked.length > 0
+      || groups.receipts.length > 0;
     if (!anyCard && !updates.deriveFailed) {
       const empty = node('p', 'screen-sub', COPY.updatesEmpty);
       empty.id = 'updates-empty';

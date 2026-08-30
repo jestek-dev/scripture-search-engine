@@ -296,10 +296,12 @@ export function derivationMock(cards: readonly Record<string, unknown>[], trains
     trains,
     unverifiablePriorTrains: [],
     tally: {
-      drafted: opBearing.filter((card) => stateOf(card) === 'drafted').length,
-      approved: opBearing.filter((card) => stateOf(card) === 'approved' && card.parkedByDefault !== true && !shipped(card)).length,
+      // An auto-resolved card (D16 disposition 1) counts nowhere — mirror
+      // the deriver's exclusion.
+      drafted: opBearing.filter((card) => stateOf(card) === 'drafted' && card.autoResolved !== true).length,
+      approved: opBearing.filter((card) => stateOf(card) === 'approved' && card.autoResolved !== true && card.parkedByDefault !== true && !shipped(card)).length,
       declined: opBearing.filter((card) => stateOf(card) === 'declined').length,
-      parked: opBearing.filter((card) => stateOf(card) === 'parked' || card.parkedByDefault === true).length,
+      parked: opBearing.filter((card) => (stateOf(card) === 'parked' || card.parkedByDefault === true) && card.autoResolved !== true).length,
     },
     readOnly: false,
   };

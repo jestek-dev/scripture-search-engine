@@ -193,7 +193,12 @@ Plan-fixed (verbatim, already reviewed with the plan): the §04 Updates-card
 copy, §4.6's sign/merge covenant sentence, §06.2's fourteen stop sentences
 (`COPY.trainStopReasons`), FM-2's unresolvable-reference sentence
 (`REPLAY_UNRESOLVED_REFERENCE_NOTE`, deriveUpdates.ts), FM-8's
-unpaid-marker seal refusal (`UNPAID_MARKER_SEAL_REFUSAL`, trainRunner.ts).
+unpaid-marker seal refusal (`UNPAID_MARKER_SEAL_REFUSAL`, trainRunner.ts),
+and §4.3's auto-resolve receipt — "Already achieved — your call for
+'{query}' is now true in search, so this update just pins it in the answer
+sheet." (`replayAlreadyAchievedReceipt`, deriveUpdates.ts; the update panel
+renders it verbatim as the one-line receipt for a disposition-1 card, which
+never renders as a to-do).
 
 Minted — Phase 2/3 (recorded at the time in the build log's P3-4 entry):
 
@@ -209,7 +214,7 @@ Minted — Phase 4:
 | String(s) | Writer |
 | --- | --- |
 | The fourteen `Next step:` lines (`COPY.trainStopNextActions`) | `COPY`, index.html |
-| Replay notes: `REPLAY_ALREADY_ACHIEVED_NOTE`, `REPLAY_RECONFIRMED_NOTE`, `REPLAY_OFFENDER_GONE_NOTE`, `REPLAY_CHANGED_NOTE` | deriveUpdates.ts |
+| Replay notes: `REPLAY_RECONFIRMED_NOTE`, `REPLAY_OFFENDER_GONE_NOTE`, `REPLAY_CHANGED_NOTE` (the disposition-1 receipt is plan-fixed §4.3 copy, listed above — not minted) | deriveUpdates.ts |
 | Metrics strip: `updatesMetricCycles`, `updatesMetricAwaiting`, `updatesMetricMedian` + the plain-duration words (`plainDuration`) | `COPY` / index.html |
 | The compile tombstone refusal (`COMPILE_JUDGMENTS_RETIRED`) | compileJudgments.ts |
 

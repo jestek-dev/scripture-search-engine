@@ -787,7 +787,27 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
         );
 
         const at = now().toISOString();
-        const events: UpdatesEvent[] = [
+        const events: UpdatesEvent[] = [];
+        // D16 disposition 1: an auto-resolved card boards WITHOUT any decide
+        // event, so its lazy card-drafted line (normally appended at first
+        // decide) is appended at seal instead — the append-only store
+        // refuses sealing a never-drafted card, the same discipline decides
+        // follow. Approved cards always carry theirs already.
+        const priorFold = await store.read();
+        for (const boardingCardId of cardIds) {
+          if (priorFold.drafted.has(boardingCardId)) continue;
+          const boardingCard = derivation.cards.find((candidate) => candidate.cardId === boardingCardId)!;
+          events.push({
+            schemaVersion: 1,
+            eventId: randomUUID(),
+            at,
+            reviewer: options.reviewer,
+            kind: 'card-drafted',
+            cardId: boardingCardId,
+            judgmentIds: boardingCard.judgmentIds,
+          });
+        }
+        events.push(
           {
             schemaVersion: 1,
             eventId: randomUUID(),
@@ -809,7 +829,7 @@ export function createTrainOperations(options: TrainOperationsOptions): TrainOpe
             judgmentIds: [...judgmentIds],
             replayIdentity,
           },
-        ];
+        );
         const fold = await store.append(events);
         const snapshot = fold.trains.find((candidate) => candidate.trainId === trainId)!;
         // The pre-append derivation carries the live observation; the train

@@ -21,7 +21,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildUpdatesManifest,
   deriveUpdates,
-  REPLAY_ALREADY_ACHIEVED_NOTE,
+  replayAlreadyAchievedReceipt,
   REPLAY_CHANGED_NOTE,
   REPLAY_OFFENDER_GONE_NOTE,
   REPLAY_RECONFIRMED_NOTE,
@@ -166,14 +166,6 @@ function observation(query: string, rankedRefs: readonly string[], unresolvedRef
   return { query, rankedRefs: [...rankedRefs], unresolvedRefs: [...unresolvedRefs] };
 }
 
-function approveEvent(card: Pick<UpdateCard, 'cardId' | 'judgmentIds'>): string {
-  const at = '2026-08-11T09:01:00.000Z';
-  return [
-    { schemaVersion: 1, eventId: stableUuid(`draft:${card.cardId}`), at, reviewer: 'jesse', kind: 'card-drafted', cardId: card.cardId, judgmentIds: card.judgmentIds },
-    { schemaVersion: 1, eventId: stableUuid(`approve:${card.cardId}`), at, reviewer: 'jesse', kind: 'card-approved', cardId: card.cardId },
-  ].map((event) => `${JSON.stringify(event)}\n`).join('');
-}
-
 describe('replay requests: the deriver names what to re-run', () => {
   it('requests exactly the identity-moved contributing queries with their judged refs', () => {
     const moved = v2({ judgmentId: 'rq1', query: 'who is like the lord', action: 'missing', at: nextAt(), reference: 'Deuteronomy 3:24', withinTop: 10, note: 'wording', ...OLD_LAYER });
@@ -196,15 +188,23 @@ describe('disposition 1 — expectation already achieved (drop the data op, keep
     reference: 'Deuteronomy 3:24', withinTop: 10, note: 'uses that exact wording', ...OLD_LAYER,
   });
 
-  it('the target now ranks in its window: data arms drop, the fixture line stays, the copy auto-resolves', () => {
+  it('the card AUTO-RESOLVES: data arms drop, the fixture line stays, no decision is demanded', () => {
     const derivation = deriveUpdates(inputs({
       records: [vote()],
       replayObservations: [observation('who is like the lord', ['Exodus 15:11', 'Deuteronomy 3:24'])],
     }));
     const card = derivation.cards[0]!;
     expect(card.kind).toBe('missing-passage');
-    expect(card.replay).toEqual({ disposition: 'already-achieved', note: REPLAY_ALREADY_ACHIEVED_NOTE });
-    expect(card.replay!.note).toContain('Already achieved — guarded');
+    // §4.3's plan-fixed receipt, verbatim with the '{query}' substitution.
+    expect(card.replay).toEqual({ disposition: 'already-achieved', note: replayAlreadyAchievedReceipt('who is like the lord') });
+    expect(card.replay!.note).toBe(
+      "Already achieved — your call for 'who is like the lord' is now true in search, so this update just pins it in the answer sheet.",
+    );
+    // Derived the parkedByDefault way — never stored, no decide event.
+    expect(card.autoResolved).toBe(true);
+    expect(card.state.decision).toBe('drafted');
+    // It never renders as a to-do: it counts in NO tally bucket.
+    expect(derivation.tally).toEqual({ drafted: 0, approved: 0, declined: 0, parked: 0 });
     // The fixture guard pinning the win survives; every data arm is dropped.
     expect(card.derived.expectation).toEqual({ ref: 'Deuteronomy 3:24', withinTop: 10 });
     expect(card.derived.chapterAdd).toBeUndefined();
@@ -213,16 +213,65 @@ describe('disposition 1 — expectation already achieved (drop the data op, keep
     expect(card.stale).toBeUndefined();
   });
 
-  it('the sealed manifest carries only the answer-sheet line — no anchor, no chapter add', () => {
+  it('the kept fixture pin boards the sealing update WITHOUT a decide event — only the answer-sheet line', () => {
     const base = inputs({
       records: [vote()],
       replayObservations: [observation('who is like the lord', ['Deuteronomy 3:24'])],
     });
     const derivation = deriveUpdates(base);
-    const withApproval = { ...base, updatesLog: approveEvent(derivation.cards[0]!) };
-    const sealed = deriveUpdates(withApproval);
-    const { manifest } = buildUpdatesManifest(sealed, withApproval, { trainId: 'train-0001' });
+    expect(derivation.cards[0]!.autoResolved).toBe(true);
+    // No approve event, no decide of any kind: the auto-resolved card still
+    // rides — "this update just pins it in the answer sheet" (§02.5/§4.3).
+    const { manifest, cardIds } = buildUpdatesManifest(derivation, base, { trainId: 'train-0001' });
+    expect(cardIds).toEqual([derivation.cards[0]!.cardId]);
     expect(manifest.operations.map((operation) => operation.type)).toEqual(['golden-fixture-upsert']);
+  });
+
+  it('once sealed aboard, the auto-resolved card is frozen (sealedInTrain) and never re-boards', () => {
+    const base = inputs({
+      records: [vote()],
+      replayObservations: [observation('who is like the lord', ['Deuteronomy 3:24'])],
+    });
+    const first = deriveUpdates(base);
+    const cardId = first.cards[0]!.cardId;
+    const at = '2026-08-11T09:05:00.000Z';
+    const sealedLog = [
+      // The seal appends the lazy card-drafted line itself (no decide ever
+      // ran) — mirrored from trainRunner's seal, which the store requires.
+      { schemaVersion: 1, eventId: stableUuid(`draft:${cardId}`), at, reviewer: 'jesse', kind: 'card-drafted', cardId, judgmentIds: first.cards[0]!.judgmentIds },
+      { schemaVersion: 1, eventId: stableUuid('open:train-0001'), at, reviewer: 'jesse', kind: 'train-opened', trainId: 'train-0001', flavor: 'guard' },
+      { schemaVersion: 1, eventId: stableUuid('seal:train-0001'), at, reviewer: 'jesse', kind: 'train-sealed', trainId: 'train-0001', sealDigest: 'c'.repeat(64), cardIds: [cardId], judgmentIds: first.cards[0]!.judgmentIds, replayIdentity: CURRENT },
+    ].map((event) => `${JSON.stringify(event)}\n`).join('');
+    const withSeal = { ...base, updatesLog: sealedLog };
+    const sealed = deriveUpdates(withSeal);
+    const card = sealed.cards.find((candidate) => candidate.cardId === cardId)!;
+    // The seal freeze rides the derived card even though NO decide event
+    // exists (the fold's decisions map never saw this card).
+    expect(card.state.sealedInTrain).toBe('train-0001');
+    expect(card.autoResolved).toBe(true);
+    expect(() => buildUpdatesManifest(sealed, withSeal, { trainId: 'train-0002' }))
+      .toThrowError('No approved cards carry a change to seal.');
+  });
+
+  it('a recorded human decline still wins — the derived default never overrides an explicit no', () => {
+    const base = inputs({
+      records: [vote()],
+      replayObservations: [observation('who is like the lord', ['Deuteronomy 3:24'])],
+    });
+    const first = deriveUpdates(base);
+    const cardId = first.cards[0]!.cardId;
+    const at = '2026-08-11T09:01:00.000Z';
+    const declineLog = [
+      { schemaVersion: 1, eventId: stableUuid(`draft:${cardId}`), at, reviewer: 'jesse', kind: 'card-drafted', cardId, judgmentIds: first.cards[0]!.judgmentIds },
+      { schemaVersion: 1, eventId: stableUuid(`decline:${cardId}`), at, reviewer: 'jesse', kind: 'card-declined', cardId, reason: 'not this one' },
+    ].map((event) => `${JSON.stringify(event)}\n`).join('');
+    const withDecline = { ...base, updatesLog: declineLog };
+    const declined = deriveUpdates(withDecline);
+    const card = declined.cards.find((candidate) => candidate.cardId === cardId)!;
+    expect(card.autoResolved).toBeUndefined();
+    expect(card.state.decision).toBe('declined');
+    expect(() => buildUpdatesManifest(declined, withDecline, { trainId: 'train-0001' }))
+      .toThrowError('No approved cards carry a change to seal.');
   });
 
   it('without the observation the same vote keeps its data arms (the Phase 2–3 substitute)', () => {

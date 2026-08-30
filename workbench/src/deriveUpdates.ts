@@ -111,11 +111,13 @@ export type ReplayDisposition =
 
 /**
  * D16's card copy — single writer (D28: plain words, no fingerprints; the
- * page renders these verbatim). Disposition 1's phrase is §02.5's own:
- * "already achieved — guarded".
+ * page renders these verbatim). Disposition 1's receipt is §4.3's PLAN-FIXED
+ * sentence, shipped verbatim with the '{query}' substitution — the
+ * auto-resolved happy case never renders as a to-do; the update panel
+ * renders this one-line receipt instead.
  */
-export const REPLAY_ALREADY_ACHIEVED_NOTE =
-  'Already achieved — guarded. This passage now appears where you asked, so this update only pins that answer on the answer sheet.';
+export const replayAlreadyAchievedReceipt = (query: string): string =>
+  `Already achieved — your call for '${query}' is now true in search, so this update just pins it in the answer sheet.`;
 export const REPLAY_RECONFIRMED_NOTE =
   'Re-checked against the current search data: the picture still looks the way it did when you made this call.';
 export const REPLAY_OFFENDER_GONE_NOTE =
@@ -358,6 +360,16 @@ export interface UpdateCard {
   readonly stale?: true;
   /** FM-5 derived default after a no-measurable-effect stop — never stored. */
   readonly parkedByDefault?: boolean;
+  /**
+   * D16 disposition 1 (§02.5/§4.3) — derived the parkedByDefault way, never
+   * stored: the replay proved the expectation ALREADY ACHIEVED, so the card
+   * auto-resolves. It never renders as a to-do (no decision doors, out of
+   * the waiting tally); its kept fixture-pin op boards the sealing update
+   * WITHOUT a decide event, and the update panel renders the §4.3 receipt
+   * (`replay.note`) instead. A recorded human decline still wins — a
+   * derived default never overrides an explicit "no".
+   */
+  readonly autoResolved?: true;
   readonly state: CardState;
 }
 
@@ -1077,7 +1089,7 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
               // Disposition 2 (materially equivalent): the target still fails
               // its window the way the vote observed — derive fresh, record
               // the machine-supported reconfirmation on the card.
-              ? { replay: { disposition: 'already-achieved' as const, note: REPLAY_ALREADY_ACHIEVED_NOTE } }
+              ? { replay: { disposition: 'already-achieved' as const, note: replayAlreadyAchievedReceipt(query) } }
               : { replay: { disposition: 'materially-equivalent' as const, note: REPLAY_RECONFIRMED_NOTE } }),
         });
       } else if (assertion.kind === 'guard') {
@@ -1494,10 +1506,24 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   liveTrainLandings.sort((a, b) => a.trainId.localeCompare(b.trainId));
 
   // ---- 4. Fold decisions and derived defaults onto the cards.
+  // D16 disposition 1: an auto-resolved card boards a seal WITHOUT a decide
+  // event, so its seal freeze cannot ride the decisions map (which only
+  // covers decided cards). Mirror the fold's live-seal rule here: the latest
+  // live (sealed, not stopped) seal binding the cardId freezes it.
+  const liveSealTrainByCard = new Map<string, string>();
+  for (const train of fold.trains) {
+    if (train.state !== 'sealed' || train.sealed === undefined) continue;
+    for (const sealedCardId of train.sealed.cardIds) liveSealTrainByCard.set(sealedCardId, train.trainId);
+  }
   const finished: UpdateCard[] = cards.map((card) => {
     const decision = fold.decisions.get(card.cardId);
+    const undecidedSealTrain = decision === undefined ? liveSealTrainByCard.get(card.cardId) : undefined;
     const state: CardState = decision === undefined
-      ? { decision: 'drafted' }
+      ? {
+          decision: 'drafted',
+          ...(undecidedSealTrain === undefined ? {} : { sealedInTrain: undecidedSealTrain }),
+          ...(undecidedSealTrain !== undefined && landedTrains.has(undecidedSealTrain) ? { sealedTrainLive: true as const } : {}),
+        }
       : {
           decision: decision.decision,
           decidedAt: decision.decidedAt,
@@ -1547,10 +1573,19 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
       replay: card.replay ?? null,
       stale: card.stale ?? false,
     };
+    // D16 disposition 1 — derived, never stored (the parkedByDefault
+    // pattern): the replay's already-achieved verdict auto-resolves the
+    // card. An explicit human decline on record still wins; everything
+    // else (drafted, approved, parked, the FM-5 default) yields to the
+    // machine-proven fact that the expectation is already true.
+    const autoResolved = card.replay !== undefined
+      && card.replay.disposition === 'already-achieved'
+      && state.decision !== 'declined';
     return {
       ...card,
       cardRevision: sha256(canonicalJson(revisionSource)),
-      ...(parkedByDefault ? { parkedByDefault: true } : {}),
+      ...(parkedByDefault && !autoResolved ? { parkedByDefault: true } : {}),
+      ...(autoResolved ? { autoResolved: true as const } : {}),
       state,
     };
   });
@@ -1568,13 +1603,15 @@ export function deriveUpdates(inputs: DeriveUpdatesInputs): UpdatesDerivation {
   // waiting" (§04 §4.2 owns the rendering).
   const opBearing = finished.filter((card) =>
     card.kind !== 're-confirmation' && card.kind !== 'conflict' && card.kind !== 'needs-engineering' && card.routed === undefined);
+  // D16 disposition 1: an auto-resolved card waits for NO call — it counts
+  // nowhere in the tally (its receipt renders in the update panel instead).
   const tally = {
-    drafted: opBearing.filter((card) => card.state.decision === 'drafted').length,
+    drafted: opBearing.filter((card) => card.state.decision === 'drafted' && card.autoResolved !== true).length,
     // A card whose sealing train landed is achieved, not "approved and
     // waiting" — it never re-counts (§03.6's consumed rule).
-    approved: opBearing.filter((card) => card.state.decision === 'approved' && card.parkedByDefault !== true && card.state.sealedTrainLive !== true).length,
+    approved: opBearing.filter((card) => card.state.decision === 'approved' && card.autoResolved !== true && card.parkedByDefault !== true && card.state.sealedTrainLive !== true).length,
     declined: opBearing.filter((card) => card.state.decision === 'declined').length,
-    parked: opBearing.filter((card) => card.state.decision === 'parked' || card.parkedByDefault === true).length,
+    parked: opBearing.filter((card) => (card.state.decision === 'parked' || card.parkedByDefault === true) && card.autoResolved !== true).length,
   };
 
   return {
@@ -1650,7 +1687,11 @@ export function buildUpdatesManifest(
   options: BuildManifestOptions,
 ): UpdatesManifestResult {
   const boarding = derivation.cards.filter((card) =>
-    card.state.decision === 'approved' &&
+    // D16 disposition 1 (§02.5/§4.3): an auto-resolved card boards WITHOUT a
+    // decide event — "this update just pins it in the answer sheet". Its
+    // data arms were already dropped at derivation; only the fixture pin
+    // rides. Everything else still requires the human approve.
+    (card.state.decision === 'approved' || card.autoResolved === true) &&
     // §03.6's consumed rule: a judgment is consumed exactly when it appears
     // in a sealed train's seal event. A card frozen by a live seal —
     // whether that train is still running or already merged — NEVER
