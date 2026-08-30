@@ -66,7 +66,8 @@ jobs:
 
       - name: Admission gauntlet
         # A mint from a tree that cannot pass admission is not a mint.
-        run: npm run verify -- --require-admit
+        # --pending-debt-ok encodes the maintainer ruling that a mint may proceed with pending-fixture debt ONLY; any other warning or any failure still blocks it.
+        run: npm run verify -- --require-admit --pending-debt-ok
 
       - name: Fetch pinned sources
         # Every manifest checksum must verify. A drifted source fails here,

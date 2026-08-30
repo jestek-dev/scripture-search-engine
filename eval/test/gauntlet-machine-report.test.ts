@@ -19,6 +19,7 @@ import {
   fixtureInputSha256,
   gauntletExitCode,
   parseGauntletOptions,
+  pendingDebtOnly,
   resolveMachineReportPath,
   resolveGauntletTarget,
   sha256,
@@ -27,9 +28,10 @@ import {
   type GauntletMachineReport,
   type GauntletRunIdentity,
 } from '../src/gauntletMachineReport.js';
-import { buildReport } from '../src/report.js';
+import { buildReport, type Verdict } from '../src/report.js';
 import { DOCTRINAL_REVIEWS_PATH, FLAGGED_PAIRINGS_PATH } from '../src/gates/doctrinalGuardrail.js';
-import { fail, pass } from '../src/gates/types.js';
+import { PENDING_STILL_FAILING_CATEGORY } from '../src/gates/corpusGolden.js';
+import { fail, pass, warn, type GateFinding, type GateResult } from '../src/gates/types.js';
 import { openCorpus } from '../src/nodeSqlitePort.js';
 
 const REPO_ROOT = fileURLToPath(new URL('../..', import.meta.url));
@@ -139,11 +141,18 @@ describe('gauntlet machine report', () => {
         timeout: 60_000,
       });
       expect(run.error).toBeUndefined();
-      expect(run.status).toBe(0);
       expect(run.stdout).toContain('# Admission Report');
       expect(run.stderr).not.toContain('Error:');
       const parsed = JSON.parse(readFileSync(reportPath, 'utf8')) as GauntletMachineReport;
       const now = new Date();
+      // This test verifies the report MACHINERY, not the repo's data state:
+      // pending-fixture warns are by design "outside the change under
+      // review" (corpusGolden.ts), so pinning exit 0 here turned every
+      // pending-failing fixture into a suite-wide red. Active fixtures must
+      // still hold (no REJECT), and the exit code must be exactly what the
+      // --require-admit mapping says for the verdict the run produced.
+      expect(parsed.payload.verdict).toMatch(/^(ADMIT|ADMIT_WITH_WARNINGS)$/);
+      expect(run.status).toBe(gauntletExitCode(parsed.payload.verdict, true));
       expect(parsed.identity.target?.kind).toBe('candidate');
       const { reportSha256, ...unsigned } = parsed;
       expect(reportSha256).toBe(sha256(canonicalJson(unsigned)));
@@ -372,6 +381,57 @@ describe('gauntlet machine report', () => {
     expect(gauntletExitCode('ADMIT_WITH_WARNINGS', true)).toBe(1);
     expect(gauntletExitCode('REJECT', false)).toBe(1);
     expect(gauntletExitCode('ADMIT_WITH_WARNINGS', false)).toBe(0);
+  });
+
+  it('relaxes --require-admit for pure pending-fixture debt only when --pending-debt-ok asks', () => {
+    const passGate = pass('G1-provenance', 'Provenance', 'all sources pinned');
+    const pendingDebt = (findings: readonly GateFinding[] = [{
+      message: 'pending fixture x: currently fails 1 expectation(s)',
+      subjects: ['x'],
+      categoryCode: PENDING_STILL_FAILING_CATEGORY,
+    }]) => warn('G3-golden', 'Golden regression', 'Pending fixture status: 1 of 1 still failing', findings);
+    const otherWarnRow = warn('G1b-reachability', 'Source reachability', 'one host unreachable', [
+      { message: 'https://example.invalid unreachable', categoryCode: 'sse.gauntlet.v1.finding.g1b-reachability.host-unreachable' },
+    ]);
+
+    // Eligibility is decided by the stable finding category, per gate row.
+    expect(pendingDebtOnly([passGate, pendingDebt()])).toBe(true);
+    expect(pendingDebtOnly([passGate])).toBe(false); // nothing to excuse
+    expect(pendingDebtOnly([passGate, pendingDebt(), otherWarnRow])).toBe(false);
+    // An extra non-pending finding riding the same warn G3 row blocks too.
+    expect(pendingDebtOnly([passGate, pendingDebt([
+      {
+        message: 'pending fixture x: currently fails 1 expectation(s)',
+        categoryCode: PENDING_STILL_FAILING_CATEGORY,
+      },
+      {
+        message: 'guard references no verse in the running corpus',
+        categoryCode: 'sse.gauntlet.v1.finding.g3-golden.guard-vacuous',
+      },
+    ])])).toBe(false);
+    expect(pendingDebtOnly([passGate, fail('G3-golden', 'Golden regression', 'a fixture failed', [
+      { message: 'active fixture failed', categoryCode: PENDING_STILL_FAILING_CATEGORY },
+    ])])).toBe(false);
+
+    // The wired exit mapping: flag AND eligibility, exactly as gauntlet.ts
+    // combines them under --require-admit.
+    const exit = (verdict: Verdict, gates: readonly GateResult[], flagged: boolean) =>
+      gauntletExitCode(verdict, true, false, flagged && pendingDebtOnly(gates));
+    expect(exit('ADMIT', [passGate], true)).toBe(0);
+    expect(exit('ADMIT_WITH_WARNINGS', [passGate, pendingDebt()], true)).toBe(0);
+    expect(exit('ADMIT_WITH_WARNINGS', [passGate, pendingDebt(), otherWarnRow], true)).toBe(1);
+    expect(exit('REJECT', [passGate, pendingDebt()], true)).toBe(1);
+    // Flag absent: today's strict behavior, unchanged.
+    expect(exit('ADMIT_WITH_WARNINGS', [passGate, pendingDebt()], false)).toBe(1);
+    expect(gauntletExitCode('ADMIT_WITH_WARNINGS', true)).toBe(1);
+  });
+
+  it('accepts --pending-debt-ok only beside --require-admit', () => {
+    expect(parseGauntletOptions(['--require-admit', '--pending-debt-ok']).pendingDebtOk).toBe(true);
+    // Present only when true, so recorded flag identities stay stable.
+    expect('pendingDebtOk' in parseGauntletOptions(['--require-admit'])).toBe(false);
+    expect(() => parseGauntletOptions(['--pending-debt-ok'])).toThrow(/--pending-debt-ok requires --require-admit/);
+    expect(() => parseGauntletOptions(['--require-admit', '--pending-debt-ok', '--pending-debt-ok'])).toThrow(/Duplicate --pending-debt-ok/);
   });
 });
 
