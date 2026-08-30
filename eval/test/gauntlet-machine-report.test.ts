@@ -349,6 +349,24 @@ describe('gauntlet machine report', () => {
     }
   });
 
+  it('keeps the admission manifest directory out of the dirty-tree identity', () => {
+    // The admit act writes workbench/admissions/<digest>.json between the
+    // candidate report and its post-admit re-verification; hashing it in
+    // would make every completed admission stale by construction.
+    const directory = join(REPO_ROOT, 'workbench', 'admissions');
+    const created = !existsSync(directory);
+    const manifestPath = join(directory, `dirty-tree-test-${process.pid}.json`);
+    const before = dirtyTreeSha256(REPO_ROOT);
+    mkdirSync(directory, { recursive: true });
+    writeFileSync(manifestPath, '{"admitted":true}\n', 'utf8');
+    try {
+      expect(dirtyTreeSha256(REPO_ROOT)).toBe(before);
+    } finally {
+      rmSync(manifestPath, { force: true });
+      if (created) rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
   it('requires the exact ADMIT verdict only when requested', () => {
     expect(gauntletExitCode('ADMIT', true)).toBe(0);
     expect(gauntletExitCode('ADMIT_WITH_WARNINGS', true)).toBe(1);

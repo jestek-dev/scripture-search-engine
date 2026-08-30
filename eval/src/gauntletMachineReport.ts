@@ -637,6 +637,19 @@ const WORKBENCH_ACT_LOG_PATHS = [
   'workbench/review-data/admission-evidence.json',
 ] as const;
 
+/**
+ * Same rationale, directory-shaped: the admit act writes the signed admission
+ * manifest into `workbench/admissions/` (untracked in the primary root until
+ * the refinement branch merges it), and the post-admit view re-verifies the
+ * SAME candidate report — hashing the manifest into the dirty-tree identity
+ * would make every completed admission stale by construction (found in anger
+ * by the D15 sandbox ride: the sign act's own manifest write broke the
+ * report's freshness one step later).
+ */
+const WORKBENCH_ACT_RECORD_DIRECTORIES = [
+  'workbench/admissions',
+] as const;
+
 function workbenchActLogAbsolutePaths(repoRoot: string): string[] {
   return WORKBENCH_ACT_LOG_PATHS.map((path) => resolve(repoRoot, path));
 }
@@ -649,6 +662,7 @@ export function dirtyTreeSha256(
     ...excludedAbsolutePaths.map((path) => resolve(path)),
     ...workbenchActLogAbsolutePaths(repoRoot),
   ]);
+  const excludedDirectories = WORKBENCH_ACT_RECORD_DIRECTORIES.map((directory) => resolve(repoRoot, directory));
   const raw = execFileSync(
     'git',
     ['status', '--porcelain=v1', '-z', '--untracked-files=all', '--ignored=no'],
@@ -666,6 +680,7 @@ export function dirtyTreeSha256(
     if (status.includes('R') || status.includes('C')) index += 1;
     const absolutePath = resolve(repoRoot, path);
     if (excluded.has(absolutePath)) continue;
+    if (excludedDirectories.some((directory) => absolutePath === directory || absolutePath.startsWith(`${directory}${sep}`))) continue;
     const insideRepo = absolutePath === repoRoot || absolutePath.startsWith(`${repoRoot}${sep}`);
     paths.push({
       status,
