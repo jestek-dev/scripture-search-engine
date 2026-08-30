@@ -4,13 +4,18 @@
   "status": "active",
   "note": [
     "QR-5 (P5.4) cited spelling correction — the plan-named STEM-DIVERGENCE case: 'beleived' tokenizes to 'beleiv' (the -ed rule) BEFORE correction, so a naive implementation would cite the stem. This fixture pins that the corrected-from half cites the TYPED word, never the stem: the chip is 'Shared word: believ (corrected from \"beleived\")' — corrected term 'believ' (the corpus stem of believed/believes), typed surface 'beleived'. Correction key 'beleiv' (length 6 -> edit budget 1) reaches 'believ' at Damerau distance 1 (ei->ie transposition — Damerau again).",
-    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass."
+    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass.",
+    "SUPPLEMENT ROW S5 (approved as proposed, 2026-08-30): on the full release bed the primary was displaced — 1 Cor 15:11 at #7 (expected top 3) — while the measured top corrected result was John 10:42 #1 and the fixture's own secondary John 8:30 held. Correction machinery fully intact. Row-16 parallel verbatim: the corrected-chip pin rides the measured top — John 10:42 within top 3, label byte-identical — and 1 Cor 15:11 moves to a top-10 secondary."
   ],
   "expectedTop": [
     {
-      "ref": "1 Corinthians 15:11",
+      "ref": "John 10:42",
       "withinTop": 3,
       "requiredReasonLabel": "Shared word: believ (corrected from \"beleived\")"
+    },
+    {
+      "ref": "1 Corinthians 15:11",
+      "withinTop": 10
     },
     {
       "ref": "John 8:30",

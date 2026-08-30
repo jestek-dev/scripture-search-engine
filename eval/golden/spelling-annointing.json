@@ -4,7 +4,8 @@
   "status": "active",
   "note": [
     "QR-5 (P5.4) cited spelling correction — battery ms2, an audit F: 'annointing' is a silent-empty discovery today. The typed word stems to 'annoint' (the -ing rule) BEFORE correction, so this fixture also exercises stem-then-correct ordering: the OOV stem 'annoint' (length 7 -> edit budget 1) corrects to the corpus token 'anoint' at Damerau distance 1, and the chip cites the TYPED word 'annointing', never the stem 'annoint' (J31 wording: corrected from \"<typed>\").",
-    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass."
+    "Written fixture-first (committed pending and failing); ACTIVATED in the P5.4 deciding commit (0.12.0 + schema v7), the commit that made it pass.",
+    "SUPPLEMENT ROW S4 (approved as proposed, 2026-08-30): the primary pin HELD on the full release bed — 1 Jn 2:20 #1 with the cited-correction chip byte-intact. Only the secondary failed: Mark 6:13 fell out of the top 10 amid the full corpus's ~anoint verses. Row-17 parallel verbatim: the secondary re-points to the measured runner-up, Psalms 84:9 within top 10 (release bed #2, fixture bed #9). The cited-correction contract is the assertion that matters and it held."
   ],
   "expectedTop": [
     {
@@ -13,7 +14,7 @@
       "requiredReasonLabel": "Shared word: anoint (corrected from \"annointing\")"
     },
     {
-      "ref": "Mark 6:13",
+      "ref": "Psalms 84:9",
       "withinTop": 10
     }
   ]

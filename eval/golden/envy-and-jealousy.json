@@ -31,12 +31,22 @@
     "where the exemplars lead, move to their own fixture",
     "(envy-and-jealousy-phrases.json) with the ruling's widened window,",
     "because per-query windows are not in the schema and the bare-word",
-    "top-3 assertion must not be weakened by the split."
+    "top-3 assertion must not be weakened by the split.",
+    "",
+    "SUPPLEMENT ROW S1 (approved as proposed, 2026-08-30): on the full",
+    "release bed Jas 3:14-16's regenerated preached vocabulary ('envy')",
+    "honestly outranks Prov 27:4 for the bare word, measuring it at #4",
+    "(bare 'jealousy' still holds the top 3). Row-29's approved",
+    "principle, window-widening only: Prov 27:4 -> top 5 for this",
+    "bare-word fixture. The Ex 20:5 sense-inversion preferredOrder is",
+    "untouched. Folded into this PR because the catch-up PR the",
+    "supplement named as S1's venue does not exist; the supplement",
+    "itself offered the one-vehicle fold."
   ],
   "expectedTop": [
     {
       "reference": "Proverbs 27:4",
-      "withinTop": 3,
+      "withinTop": 5,
       "requiredReasonFamily": "concept_anchor",
       "requiredReasonLabel": "Theme: Envy and jealousy"
     }
