@@ -2,6 +2,16 @@
 
 **Date:** 2026-08-06
 **Status:** Approved plan; supersedes the workbench proposal's open questions.
+
+> **Historical (2026-08-30).** This is the shipped v1 plan, kept as a dated
+> record. One prescription no longer holds: Stage 3's compile CLI
+> (`npm run compile-judgments --workspace workbench`, §5) was retired by the
+> votes-to-engine build (Phase 4 D18, the J72 tombstone) — it refuses every
+> invocation and exits 1. Compiled fixture changes travel only through the
+> supervised digest-confirmed preview-then-apply; see
+> `docs/votes-to-engine-runbook.md` §2.7. §5's compiler *semantics*
+> (grouping, precedence, ownership, determinism) live on in the shared core
+> the Updates cards derive from.
 **Scope (the five locked decisions):**
 1. The full artifact is **downloaded** from the GitHub Release asset and
    verified against the committed descriptor `artifacts/content-artifact.json`
@@ -248,6 +258,10 @@ same three causes land in the log, and the compiler's routing is unchanged.
   The defend-it-from-the-text rule is satisfied by the text.
 
 ## 5. Stage 3 — fixture compiler (`npm run compile-judgments --workspace workbench`)
+
+> **Retired (Phase 4 D18, the J72 tombstone).** The CLI named in this
+> heading no longer writes anything — it refuses every invocation and exits
+> 1, naming the supervised path. See the note at the head of this document.
 
 A pure function of the entire log. It reads `workbench/judgments.jsonl`,
 groups judgments by query, and emits one fixture file per query at
