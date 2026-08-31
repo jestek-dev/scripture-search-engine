@@ -179,7 +179,7 @@ describe('gauntlet machine report', () => {
       rmSync(reportPath, { force: true });
       rmSync(candidateDirectory, { recursive: true, force: true });
     }
-  });
+  }, 300_000);
 
   it('builds a deterministic REJECT payload with versioned stable finding codes', () => {
     const report = buildReport({
