@@ -102,8 +102,10 @@ jobs:
         # single-token reason) identically on Linux and Windows, and it
         # expands to nothing on every non-re-pin run, leaving today's
         # behavior unchanged.
+        #
+        # --pending-debt-ok encodes the maintainer ruling (PR #76) that the run may proceed with pending-fixture debt ONLY; any other warning or any failure still blocks it.
         shell: bash
-        run: npm run gauntlet -- --require-admit --json eval/.runs/gauntlet-report.json $GAUNTLET_EXTRA_ARGS
+        run: npm run gauntlet -- --require-admit --pending-debt-ok --json eval/.runs/gauntlet-report.json $GAUNTLET_EXTRA_ARGS
 
       - name: Upload machine report
         uses: actions/upload-artifact@v4
