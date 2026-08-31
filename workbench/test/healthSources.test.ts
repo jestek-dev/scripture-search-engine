@@ -185,8 +185,12 @@ describe('health source semantics', () => {
     // 244 -> 288 — 44 new ids across five waves (Themes A-M); the
     // roster's three extensions ride loving-god, giving-an-answer, and
     // new-creation, so they add no ids here.
-    expect(coverage).toHaveLength(288);
-    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(288);
+    // 2026-08-30 supplement §2 execution (post-v0.14.0-mint follow-up):
+    // 288 -> 289 (virgin-birth — the ruled DISTINCT concept, Decision 11
+    // closed; its previously pending fixture flips active in the same
+    // change).
+    expect(coverage).toHaveLength(289);
+    expect(coverage.filter((entry) => entry.status === 'active')).toHaveLength(289);
     expect(coverage.filter((entry) => entry.status === 'uncovered')).toEqual([]);
     expect(coverage).toContainEqual({ id: 'creation', status: 'active' });
   });

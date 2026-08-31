@@ -67,9 +67,10 @@ anchors:
     sources: [editorial]
     weight: 0.85
   # "The virgin will conceive, and bear a son, and shall call his name
-  # Immanuel" — ATTRIBUTED FACT: Matt 1:22-23 cites it. (Isaiah 7 NOT
-  # in web-subset; re-check at re-pin. The virgin-birth pending fixture
-  # from the apologetics wave rides the same corpus dependency.)
+  # Immanuel" — ATTRIBUTED FACT: Matt 1:22-23 cites it. (Isaiah 7 landed
+  # with PR #64; re-checked 2026-08-30. DUAL with virgin-birth, recorded
+  # both files — that pack's claim is the conception-sign register, this
+  # pack's the attributed-citation fact; the locator rule governs both.)
   - ref: Isaiah 7:14
     sources: [editorial]
     weight: 0.9
