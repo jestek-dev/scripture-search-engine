@@ -26,6 +26,52 @@ The release workflow refuses to publish a version that has no entry under
 this format (`.github/scripts/changelog-guard.mjs`) — an unchangelogged
 version cannot ship.
 
+## 0.14.1 — 2026-10-20 — unreleased — performance only, no ordering change
+
+Statement-shape and round-trip fixes measured against the v0.14.0 release
+artifact (`dc89740b…`). Every result set, order, score and reason is
+byte-identical to 0.14.0 (35 research()/related()/themes() outputs compared,
+666 fragment-selection cases, 2,445 cross-reference seed sets, 361 anchor
+sets — zero differences), so `ENGINE_VERSION` is deliberately NOT bumped in
+this entry's commits: the reproducibility contract names ordering, and
+nothing here can alter it. When this version is cut, bumping `ENGINE_VERSION`
+and `engine/package.json` to 0.14.1 regenerates the G2 ordering snapshot
+under the new identity with identical rows (reviewed data; needs its
+approval re-signed).
+
+- **Cross-reference expansion drives from the ranked edges.** The
+  `expandCrossReferences` statement now pins its join order (`CROSS JOIN`,
+  SQLite's documented join-order hint) so `verses` is probed by
+  `idx_verses_verse_id` range per destination interval instead of being
+  placed first and scanning the ranked set once per verse row. Production
+  (Cloudflare D1, 2026-10-20) ran the unpinned shape as that cross product:
+  one ten-seed call, 15,773 ms, ~35.5M rows examined. Reproduced locally by
+  forcing D1's plan on the release artifact: 17,103,900 fullscan steps and
+  56.8M VM steps (~0.55 s on a workstation) versus 0 fullscan steps and
+  39,792 VM steps (~1 ms) for the pinned plan — the same rows, in the same
+  order. `anchorVerses` has the same interval-join shape and gets the same
+  pin.
+- **Fragment search round trips are bounded by fragment length.**
+  `searchLongestFragment` asks "does any fragment of this length match?" in
+  one batched FTS existence statement per length (`phrasesPresent`) and then
+  fetches the winner once, instead of one statement per fragment; it also no
+  longer repeats the whole-query lookup discover() had just made. An
+  unmatched 14-word query goes from 78 FTS statements to 11. Selection is
+  unchanged: longest length first, leftmost within a length.
+- **Capability probes no longer swallow infrastructure errors.** The seven
+  optional-table probes (`spelling_terms`, `pericopes`,
+  `cross_reference_phrases`, `verse_translation_tokens`, `verse_terms`,
+  `curated_aliases`, `concepts`) share one helper: table absent, or empty
+  where rows are required, is `false` (the rollback story, unchanged); any
+  other failure propagates, so `createEngine()` fails and is retried rather
+  than a transport blip quietly caching an engine with layers disabled. Also
+  binds the table name as a parameter.
+- **Per-instance reads of immutable facts.** `maxCrossReferenceVotes()` and
+  the `concept_lexicon` read behind `matchConcepts()` are fetched once per
+  `ConceptRepository` (the artifact is immutable per engine instance; same
+  covenant as the book-alias cache). Two fewer statements per discovery call
+  and one fewer per `related()`; a rejected read is not remembered.
+
 ## 0.14.0 — 2026-08-22 — unreleased
 
 - **Ordering + result shape: passage-level pericope grouping.** Consecutive
