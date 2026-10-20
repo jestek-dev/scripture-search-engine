@@ -14,6 +14,7 @@
 import {
   ConceptRepository,
   CorpusRepository,
+  MAX_CANDIDATES,
   searchLongestFragment,
   type PericopeRow,
 } from './corpus/repository.js';
@@ -262,7 +263,9 @@ export async function createEngine(
           contributions.push({ verse: match, evidence: [evidence] });
         }
       } else {
-        const fragment = await searchLongestFragment(repository, query);
+        // The whole query was just tried above and missed, so the fragment
+        // search starts one word shorter instead of repeating that statement.
+        const fragment = await searchLongestFragment(repository, query, MAX_CANDIDATES, false);
         if (fragment) {
           // Fragment authority is measured in SIGNIFICANT words (0.8.0).
           // "is close to" is three raw words but one unit of meaning, and

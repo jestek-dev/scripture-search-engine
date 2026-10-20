@@ -138,6 +138,93 @@ export interface CorpusMeta {
   readonly layerFingerprint: string;
 }
 
+/**
+ * Presence probe for an optional artifact table, shared by every capability
+ * probe so they all draw the same line:
+ *
+ *  - table absent in sqlite_master            → false (a legitimately older
+ *    artifact; the feature stays off and behavior reverts — the rollback story)
+ *  - `requireRows` and the table is empty     → false (same story: an emptied
+ *    table IS the rollback for presence-and-rows layers)
+ *  - any other failure (transport, I/O, a port that cannot run the statement)
+ *    → the error propagates.
+ *
+ * The last line is the point. These probes used to catch everything and
+ * return false, so one infrastructure blip during createEngine() produced a
+ * healthy-looking engine with its optional layers silently disabled, and a
+ * caller that caches the engine instance kept it that way. A failed probe
+ * must fail init, so the caller retries instead of serving degraded results
+ * as if they were the artifact's truth.
+ */
+/**
+ * Every probe statement, written out in full as a literal. Deliberately
+ * PARAMETERLESS (the catalog statements are byte-identical to 0.14.0's): a
+ * consumer that builds an engine per request over an immutable artifact may
+ * serve parameterless reads from a fingerprint-keyed cache (Maskil's content
+ * service does), and binding the table name would turn every probe into a
+ * fresh round trip on every request. No table name is ever assembled at
+ * runtime, so nothing here can carry caller input.
+ */
+const OPTIONAL_TABLE_PROBES = {
+  spelling_terms: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'spelling_terms'",
+    rows: 'SELECT 1 AS present FROM spelling_terms LIMIT 1',
+  },
+  pericopes: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'pericopes'",
+    rows: 'SELECT 1 AS present FROM pericopes LIMIT 1',
+  },
+  cross_reference_phrases: {
+    catalog:
+      "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'cross_reference_phrases'",
+    rows: 'SELECT 1 AS present FROM cross_reference_phrases LIMIT 1',
+  },
+  verse_translation_tokens: {
+    catalog:
+      "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'verse_translation_tokens'",
+    rows: 'SELECT 1 AS present FROM verse_translation_tokens LIMIT 1',
+  },
+  verse_terms: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'verse_terms'",
+    rows: 'SELECT 1 AS present FROM verse_terms LIMIT 1',
+  },
+  curated_aliases: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'curated_aliases'",
+    rows: 'SELECT 1 AS present FROM curated_aliases LIMIT 1',
+  },
+  concepts: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'concepts'",
+    rows: 'SELECT 1 AS present FROM concepts LIMIT 1',
+  },
+} as const;
+
+type OptionalTable = keyof typeof OPTIONAL_TABLE_PROBES;
+
+async function probeOptionalTable(
+  database: ContentQueryPort,
+  table: OptionalTable,
+  requireRows: boolean,
+): Promise<boolean> {
+  const statements = OPTIONAL_TABLE_PROBES[table];
+  const present = await database.execute(statements.catalog);
+  if (present.rows.length === 0) return false;
+  if (!requireRows) return true;
+  try {
+    const rows = await database.execute(statements.rows);
+    return rows.rows.length > 0;
+  } catch (error) {
+    // Only "the table is not there" is a legitimate false. A rowless probe
+    // that fails for any other reason is an infrastructure fault.
+    if (isMissingTableError(error, table)) return false;
+    throw error;
+  }
+}
+
+function isMissingTableError(error: unknown, table: string): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /no such table/i.test(message) && message.includes(table);
+}
+
 export class CorpusRepository implements ReferenceResolver {
   constructor(private readonly database: ContentQueryPort) {}
 
@@ -256,11 +343,8 @@ export class CorpusRepository implements ReferenceResolver {
    * is where fuzziness is allowed, and it says so in its reason label.
    */
   async searchPhrase(phrase: string, limit = MAX_CANDIDATES): Promise<readonly PhraseMatch[]> {
-    const normalized = phrase.trim().replace(/\s+/g, ' ');
-    if (!normalized || normalized.length > MAX_PHRASE_LENGTH) return [];
-    // Double-quote escaping makes the whole query one FTS5 string literal, so
-    // user input can never be interpreted as FTS operators (NEAR, OR, *).
-    const ftsPhrase = `"${normalized.replaceAll('"', '""')}"`;
+    const ftsPhrase = ftsPhraseLiteral(phrase);
+    if (ftsPhrase === null) return [];
     const result = await this.database.execute(
       `SELECT v.id AS id, v.verse_id AS verseId,
               v.translation_id AS translationId, t.code AS translationCode,
@@ -277,6 +361,40 @@ export class CorpusRepository implements ReferenceResolver {
       [ftsPhrase, limit],
     );
     return result.rows.map((row) => ({ ...mapVerse(row), bm25: num(row, 'bm25') }));
+  }
+
+  /**
+   * Which of the given phrases occur verbatim in the corpus — the existence
+   * half of searchPhrase, for a whole batch of phrases in ONE statement.
+   *
+   * Returns the indices (into `phrases`) that have at least one match,
+   * ascending. A phrase is "present" exactly when searchPhrase would return
+   * rows for it: same literal escaping, same length gate, same FTS5 MATCH;
+   * verses_fts is an external-content index over verses(id), so an FTS hit
+   * always has its verse/translation/book row. Exists so the fragment search
+   * can ask "does any fragment of this length match?" in one round trip
+   * instead of one per fragment (see searchLongestFragment).
+   */
+  async phrasesPresent(phrases: readonly string[]): Promise<readonly number[]> {
+    const probes: { index: number; literal: string }[] = [];
+    phrases.forEach((phrase, index) => {
+      const literal = ftsPhraseLiteral(phrase);
+      if (literal !== null) probes.push({ index, literal });
+    });
+    if (probes.length === 0) return [];
+    const result = await this.database.execute(
+      probes
+        .map(
+          () =>
+            'SELECT ? AS idx, EXISTS (SELECT 1 FROM verses_fts WHERE verses_fts MATCH ?) AS hit',
+        )
+        .join(' UNION ALL '),
+      probes.flatMap((probe) => [probe.index, probe.literal]),
+    );
+    return result.rows
+      .filter((row) => num(row, 'hit') > 0)
+      .map((row) => num(row, 'idx'))
+      .sort((a, b) => a - b);
   }
 
   /**
@@ -385,14 +503,7 @@ export class CorpusRepository implements ReferenceResolver {
    * artifact without the tables and behavior reverts with no engine change.
    */
   async hasSpellingIndex(): Promise<boolean> {
-    try {
-      const result = await this.database.execute(
-        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'spelling_terms'",
-      );
-      return result.rows.length > 0;
-    } catch {
-      return false;
-    }
+    return await probeOptionalTable(this.database, 'spelling_terms', false);
   }
 
   /**
@@ -403,16 +514,7 @@ export class CorpusRepository implements ReferenceResolver {
    * with no engine change — the probe IS the rollback story.
    */
   async hasPericopes(): Promise<boolean> {
-    try {
-      const table = await this.database.execute(
-        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'pericopes'",
-      );
-      if (table.rows.length === 0) return false;
-      const rows = await this.database.execute('SELECT 1 AS present FROM pericopes LIMIT 1');
-      return rows.rows.length > 0;
-    } catch {
-      return false;
-    }
+    return await probeOptionalTable(this.database, 'pericopes', true);
   }
 
   /**
@@ -460,18 +562,7 @@ export class CorpusRepository implements ReferenceResolver {
    * engine change — the probe IS the rollback story.
    */
   async hasCrossReferencePhrases(): Promise<boolean> {
-    try {
-      const table = await this.database.execute(
-        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'cross_reference_phrases'",
-      );
-      if (table.rows.length === 0) return false;
-      const rows = await this.database.execute(
-        'SELECT 1 AS present FROM cross_reference_phrases LIMIT 1',
-      );
-      return rows.rows.length > 0;
-    } catch {
-      return false;
-    }
+    return await probeOptionalTable(this.database, 'cross_reference_phrases', true);
   }
 
   /**
@@ -574,6 +665,19 @@ export class CorpusRepository implements ReferenceResolver {
   }
 }
 
+/**
+ * The FTS5 string literal for an exact-phrase search, or null when the phrase
+ * is empty or over the length gate (searchPhrase returns no rows for those,
+ * and every caller that asks "would searchPhrase match this?" must agree).
+ * Double-quote escaping makes the whole query one FTS5 string literal, so user
+ * input can never be interpreted as FTS operators (NEAR, OR, *).
+ */
+function ftsPhraseLiteral(phrase: string): string | null {
+  const normalized = phrase.trim().replace(/\s+/g, ' ');
+  if (!normalized || normalized.length > MAX_PHRASE_LENGTH) return null;
+  return `"${normalized.replaceAll('"', '""')}"`;
+}
+
 /** Longest fragment length worth searching; below this, phrases are noise. */
 const MIN_FRAGMENT_WORDS = 3;
 /** Queries longer than this skip fragment search to bound query cost. */
@@ -589,21 +693,43 @@ const MAX_FRAGMENT_QUERY_WORDS = 14;
  *
  * Longest-first with early exit: the first fragment length that matches wins,
  * so we never pay for shorter, vaguer fragments once a strong one is found.
- * Strength is computed by the caller as fragmentWords / queryWords, which
- * makes partial verbatim evidence proportional to how much of the question it
- * actually answers — a full verbatim match still earns full authority.
+ * Within one length, the leftmost matching fragment wins. Strength is
+ * computed by the caller as fragmentWords / queryWords, which makes partial
+ * verbatim evidence proportional to how much of the question it actually
+ * answers — a full verbatim match still earns full authority.
+ *
+ * Round trips are bounded by LENGTH, not by fragment count: each length is
+ * one batched existence probe (phrasesPresent) and the winner is then
+ * fetched once. An unmatched 14-word query used to issue 78 FTS statements
+ * (every fragment, longest first, plus a repeat of the whole query the caller
+ * had already tried); it now issues at most 11. The selection rule is
+ * unchanged — same winner, same rows — only the number of statements moved.
+ *
+ * `includeWholeQuery` is false for the engine's caller, which only reaches
+ * here after its own whole-query searchPhrase returned nothing; repeating
+ * that lookup was the duplicate statement.
  */
 export async function searchLongestFragment(
   repository: CorpusRepository,
   query: string,
   limit = MAX_CANDIDATES,
+  includeWholeQuery = true,
 ): Promise<PhraseFragmentResult | null> {
   const words = query.trim().split(/\s+/).filter(Boolean);
   if (words.length < MIN_FRAGMENT_WORDS || words.length > MAX_FRAGMENT_QUERY_WORDS) return null;
 
-  for (let size = words.length; size >= MIN_FRAGMENT_WORDS; size -= 1) {
+  const longest = includeWholeQuery ? words.length : words.length - 1;
+  for (let size = longest; size >= MIN_FRAGMENT_WORDS; size -= 1) {
+    const fragments: string[] = [];
     for (let start = 0; start + size <= words.length; start += 1) {
-      const fragment = words.slice(start, start + size).join(' ');
+      fragments.push(words.slice(start, start + size).join(' '));
+    }
+    const present = await repository.phrasesPresent(fragments);
+    // Leftmost first, exactly as the one-statement-per-fragment loop chose.
+    // The fetch normally succeeds on the first present index; walking the
+    // rest keeps the old rule exact even if an FTS hit had no joinable row.
+    for (const index of present) {
+      const fragment = fragments[index]!;
       const matches = await repository.searchPhrase(fragment, limit);
       if (matches.length > 0) {
         return { fragment, fragmentWords: size, queryWords: words.length, matches };
@@ -611,6 +737,15 @@ export async function searchLongestFragment(
     }
   }
   return null;
+}
+
+/** One concept_lexicon row, parsed once per engine instance (see ConceptRepository). */
+interface LexiconEntry {
+  readonly conceptId: string;
+  readonly label: string;
+  readonly phrase: string;
+  readonly phraseTokens: readonly string[];
+  readonly tokenCount: number;
 }
 
 /** A concept whose lexicon matched the query. */
@@ -682,6 +817,18 @@ export class ConceptRepository {
   constructor(private readonly database: ContentQueryPort) {}
 
   /**
+   * Per-instance caches for two reads whose answer cannot change under a
+   * running engine (the artifact is immutable; a new artifact is a new
+   * createEngine()). Same covenant as CorpusRepository.bookAliasCache: the
+   * ONE read still goes through ContentQueryPort — this only stops paying
+   * for it on every research() call. The in-flight promise is cached (not
+   * just the value) so concurrent first calls share one statement, and a
+   * rejected read is dropped so a transient failure is never remembered.
+   */
+  private lexiconCache: Promise<readonly LexiconEntry[]> | null = null;
+  private maxVotesCache: Promise<number> | null = null;
+
+  /**
    * Concepts whose lexicon phrase is fully contained in the query's tokens.
    *
    * Containment, not similarity: "hearing and doing" (tokens hear, do) fires
@@ -693,23 +840,17 @@ export class ConceptRepository {
   async matchConcepts(queryTokens: readonly string[]): Promise<readonly ConceptMatchRow[]> {
     const tokens = [...new Set(queryTokens)];
     if (tokens.length === 0) return [];
-    const result = await this.database.execute(
-      `SELECT cl.concept_id AS conceptId, c.label AS label,
-              cl.phrase AS phrase, cl.normalized AS normalized, cl.token_count AS tokenCount
-       FROM concept_lexicon cl
-       JOIN concepts c ON c.id = cl.concept_id`,
-    );
+    const lexicon = await this.readLexicon();
     const present = new Set(tokens);
     const best = new Map<string, ConceptMatchRow>();
-    for (const row of result.rows) {
-      const phraseTokens = str(row, 'normalized').split(' ').filter(Boolean);
-      if (phraseTokens.length === 0) continue;
-      if (!phraseTokens.every((token) => present.has(token))) continue;
+    for (const entry of lexicon) {
+      if (entry.phraseTokens.length === 0) continue;
+      if (!entry.phraseTokens.every((token) => present.has(token))) continue;
       const candidate: ConceptMatchRow = {
-        conceptId: str(row, 'conceptId'),
-        label: str(row, 'label'),
-        matchedPhrase: str(row, 'phrase'),
-        matchedTokenCount: num(row, 'tokenCount'),
+        conceptId: entry.conceptId,
+        label: entry.label,
+        matchedPhrase: entry.phrase,
+        matchedTokenCount: entry.tokenCount,
       };
       // Keep the most specific matching phrase per concept: a three-token
       // phrase matching is stronger evidence than a one-token one.
@@ -723,7 +864,37 @@ export class ConceptRepository {
     );
   }
 
-  /** Verses anchored by the given concepts. */
+  /** The whole concept lexicon, read once per instance in artifact row order. */
+  private readLexicon(): Promise<readonly LexiconEntry[]> {
+    if (this.lexiconCache) return this.lexiconCache;
+    const pending = this.database
+      .execute(
+        `SELECT cl.concept_id AS conceptId, c.label AS label,
+                cl.phrase AS phrase, cl.normalized AS normalized, cl.token_count AS tokenCount
+         FROM concept_lexicon cl
+         JOIN concepts c ON c.id = cl.concept_id`,
+      )
+      .then((result) =>
+        result.rows.map((row) => ({
+          conceptId: str(row, 'conceptId'),
+          label: str(row, 'label'),
+          phrase: str(row, 'phrase'),
+          phraseTokens: str(row, 'normalized').split(' ').filter(Boolean),
+          tokenCount: num(row, 'tokenCount'),
+        })),
+      );
+    this.lexiconCache = pending;
+    pending.catch(() => {
+      if (this.lexiconCache === pending) this.lexiconCache = null;
+    });
+    return pending;
+  }
+
+  /**
+   * Verses anchored by the given concepts. Same interval-join shape as
+   * expandCrossReferences, so the same `CROSS JOIN` pin: anchors drive,
+   * `verses` is probed by verse_id range. Rows and order are unchanged.
+   */
   async anchorVerses(conceptIds: readonly string[]): Promise<readonly ConceptAnchorRow[]> {
     const unique = [...new Set(conceptIds)];
     if (unique.length === 0) return [];
@@ -738,7 +909,7 @@ export class ConceptRepository {
               a.start_verse_id AS anchorStartVerseId, a.end_verse_id AS anchorEndVerseId
        FROM concept_anchors a
        JOIN concepts c ON c.id = a.concept_id
-       JOIN verses v ON v.verse_id BETWEEN a.start_verse_id AND a.end_verse_id
+       CROSS JOIN verses v ON v.verse_id BETWEEN a.start_verse_id AND a.end_verse_id
        JOIN translations t ON t.id = v.translation_id
        JOIN books b ON b.id = v.book_id
        WHERE a.concept_id IN (${placeholders})
@@ -804,6 +975,16 @@ export class ConceptRepository {
    * Bounded per seed: an unbounded expansion would let one well-connected
    * verse flood the candidate set, which is precision erosion by another
    * name.
+   *
+   * `CROSS JOIN` is SQLite's documented join-order pin, not a cartesian
+   * product: it keeps the planner from putting `verses` BEFORE the ranked
+   * edge stream, which it did in production (Cloudflare D1, 2026-10-20:
+   * one call, 15.8 s, ~35M rows examined — every verse row scanning the
+   * whole ranked set). Driving from `ranked` turns the destination interval
+   * into an `idx_verses_verse_id` range probe per edge (measured: 17.1M
+   * fullscan steps → 0; see CHANGELOG 0.14.1). The result set and its
+   * ORDER BY are unchanged — this changes how rows are found, never which
+   * rows or in what order.
    */
   async expandCrossReferences(
     fromVerseIds: readonly number[],
@@ -828,7 +1009,7 @@ export class ConceptRepository {
               v.chapter AS chapter, v.verse AS verse, v.text AS text,
               r.fromVerseId AS fromVerseId, r.sourceId AS sourceId, r.votes AS votes
        FROM ranked r
-       JOIN verses v ON v.verse_id BETWEEN r.toStart AND r.toEnd
+       CROSS JOIN verses v ON v.verse_id BETWEEN r.toStart AND r.toEnd
        JOIN translations t ON t.id = v.translation_id
        JOIN books b ON b.id = v.book_id
        WHERE r.rn <= ?
@@ -843,12 +1024,21 @@ export class ConceptRepository {
     }));
   }
 
-  /** Highest observed vote count, used to normalize vote-derived strength. */
-  async maxCrossReferenceVotes(): Promise<number> {
-    const result = await this.database.execute(
-      'SELECT COALESCE(MAX(votes), 0) AS maxVotes FROM cross_references',
-    );
-    return num(result.rows[0] ?? { maxVotes: 0 }, 'maxVotes');
+  /**
+   * Highest observed vote count, used to normalize vote-derived strength.
+   * Read once per instance (see lexiconCache): a full-table MAX that cannot
+   * change under a running engine.
+   */
+  maxCrossReferenceVotes(): Promise<number> {
+    if (this.maxVotesCache) return this.maxVotesCache;
+    const pending = this.database
+      .execute('SELECT COALESCE(MAX(votes), 0) AS maxVotes FROM cross_references')
+      .then((result) => num(result.rows[0] ?? { maxVotes: 0 }, 'maxVotes'));
+    this.maxVotesCache = pending;
+    pending.catch(() => {
+      if (this.maxVotesCache === pending) this.maxVotesCache = null;
+    });
+    return pending;
   }
 
   /**
@@ -926,14 +1116,7 @@ export class ConceptRepository {
 
   /** Whether the artifact carries cross-translation vocabulary at all. */
   async hasTranslationTokens(): Promise<boolean> {
-    try {
-      const result = await this.database.execute(
-        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'verse_translation_tokens'",
-      );
-      return result.rows.length > 0;
-    } catch {
-      return false;
-    }
+    return await probeOptionalTable(this.database, 'verse_translation_tokens', false);
   }
 
   async searchPassageTerms(
@@ -986,10 +1169,7 @@ export class ConceptRepository {
   }
 
   async hasPassageTerms(): Promise<boolean> {
-    const result = await this.database.execute(
-      "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='verse_terms'",
-    );
-    return num(result.rows[0] ?? { n: 0 }, 'n') > 0;
+    return await probeOptionalTable(this.database, 'verse_terms', false);
   }
 
   /**
@@ -1003,16 +1183,7 @@ export class ConceptRepository {
    * 0.12.0 did.
    */
   async hasCuratedAliases(): Promise<boolean> {
-    try {
-      const table = await this.database.execute(
-        "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'curated_aliases'",
-      );
-      if (table.rows.length === 0) return false;
-      const rows = await this.database.execute('SELECT 1 AS present FROM curated_aliases LIMIT 1');
-      return rows.rows.length > 0;
-    } catch {
-      return false;
-    }
+    return await probeOptionalTable(this.database, 'curated_aliases', true);
   }
 
   /**
@@ -1074,9 +1245,6 @@ export class ConceptRepository {
   }
 
   async hasConceptLayer(): Promise<boolean> {
-    const result = await this.database.execute(
-      "SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='concepts'",
-    );
-    return num(result.rows[0] ?? { n: 0 }, 'n') > 0;
+    return await probeOptionalTable(this.database, 'concepts', false);
   }
 }
