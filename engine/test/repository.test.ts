@@ -96,15 +96,34 @@ describe('capability probes', () => {
     await expect(new ConceptRepository(port).hasCuratedAliases()).resolves.toBe(false);
   });
 
-  it('the probes bind the table name as a parameter, never interpolate user input', async () => {
-    const seen: ContentScalar[][] = [];
-    const port = scriptedPort((sql, params) => {
-      if (sql.includes('sqlite_master')) seen.push([...params]);
-      return [];
-    });
-    await new CorpusRepository(port).hasSpellingIndex();
-    await new ConceptRepository(port).hasConceptLayer();
-    expect(seen).toEqual([['spelling_terms'], ['concepts']]);
+  it('every probe statement is parameterless and names its own constant table', async () => {
+    // Parameterless so a per-request consumer can serve the probes from a
+    // cache keyed by the artifact fingerprint; bound parameters defeat that.
+    const expected: Record<string, string> = {
+      hasSpellingIndex: 'spelling_terms',
+      hasPericopes: 'pericopes',
+      hasCrossReferencePhrases: 'cross_reference_phrases',
+      hasConceptLayer: 'concepts',
+      hasPassageTerms: 'verse_terms',
+      hasTranslationTokens: 'verse_translation_tokens',
+      hasCuratedAliases: 'curated_aliases',
+    };
+    for (const [name, probe] of allProbes) {
+      const seen: { sql: string; params: ContentScalar[] }[] = [];
+      const port = scriptedPort((sql, params) => {
+        seen.push({ sql: sql.replace(/\s+/g, ' ').trim(), params: [...params] });
+        return sql.includes('sqlite_master') ? [{ name: 'x' }] : [{ present: 1 }];
+      });
+      await expect(probe(port)).resolves.toBe(true);
+      const table = expected[name]!;
+      expect(seen[0]).toEqual({
+        sql: `SELECT name FROM sqlite_master WHERE type = 'table' AND name = '${table}'`,
+        params: [],
+      });
+      for (const statement of seen.slice(1)) {
+        expect(statement).toEqual({ sql: `SELECT 1 AS present FROM ${table} LIMIT 1`, params: [] });
+      }
+    }
   });
 });
 
@@ -214,5 +233,28 @@ describe('searchLongestFragment statement budget', () => {
     // Lengths 6, 5, 4 probed and missed; length 3 probed, leftmost hit ("doers of the") fetched: 4 probes + 1 fetch.
     expect(port.statements.filter((sql) => sql.includes('EXISTS'))).toHaveLength(4);
     expect(port.statements.filter((sql) => sql.includes('bm25'))).toHaveLength(1);
+  });
+
+  it('an existence hit whose fetch returns nothing falls through to the next-leftmost fragment, as the old loop did', async () => {
+    const present = new Set(['"doers of the"', '"of the word"']);
+    const port = scriptedPort((sql, params) => {
+      if (sql.includes('EXISTS')) {
+        const rows: Row[] = [];
+        for (let i = 0; i + 1 < params.length; i += 2) {
+          rows.push({ idx: params[i]!, hit: present.has(params[i + 1] as string) ? 1 : 0 });
+        }
+        return rows;
+      }
+      // The leftmost hit has no joinable row; the next one does.
+      if (params[0] === '"doers of the"') return [];
+      return [{
+        id: 1, verseId: 59001022, translationId: 1, translationCode: 'WEB', bookId: 59,
+        bookName: 'James', chapter: 1, verse: 22, text: 'But be doers of the word...', bm25: -4.2,
+      }];
+    });
+    const result = await searchLongestFragment(new CorpusRepository(port), 'be doers of the word not hearers', 200, false);
+    expect(result?.fragment).toBe('of the word');
+    expect(result?.fragmentWords).toBe(3);
+    expect(port.statements.filter((sql) => sql.includes('bm25'))).toHaveLength(2);
   });
 });

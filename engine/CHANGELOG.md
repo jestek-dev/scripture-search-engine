@@ -64,8 +64,10 @@ approval re-signed).
   `curated_aliases`, `concepts`) share one helper: table absent, or empty
   where rows are required, is `false` (the rollback story, unchanged); any
   other failure propagates, so `createEngine()` fails and is retried rather
-  than a transport blip quietly caching an engine with layers disabled. Also
-  binds the table name as a parameter.
+  than a transport blip quietly caching an engine with layers disabled. Every
+  probe statement stays a parameterless literal (no table name is assembled
+  at runtime), so a consumer that builds an engine per request can keep
+  serving the probes from a fingerprint-keyed cache of parameterless reads.
 - **Per-instance reads of immutable facts.** `maxCrossReferenceVotes()` and
   the `concept_lexicon` read behind `matchConcepts()` are fetched once per
   `ConceptRepository` (the artifact is immutable per engine instance; same

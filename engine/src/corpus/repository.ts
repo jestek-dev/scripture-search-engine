@@ -156,21 +156,61 @@ export interface CorpusMeta {
  * must fail init, so the caller retries instead of serving degraded results
  * as if they were the artifact's truth.
  */
+/**
+ * Every probe statement, written out in full as a literal. Deliberately
+ * PARAMETERLESS (the catalog statements are byte-identical to 0.14.0's): a
+ * consumer that builds an engine per request over an immutable artifact may
+ * serve parameterless reads from a fingerprint-keyed cache (Maskil's content
+ * service does), and binding the table name would turn every probe into a
+ * fresh round trip on every request. No table name is ever assembled at
+ * runtime, so nothing here can carry caller input.
+ */
+const OPTIONAL_TABLE_PROBES = {
+  spelling_terms: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'spelling_terms'",
+    rows: 'SELECT 1 AS present FROM spelling_terms LIMIT 1',
+  },
+  pericopes: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'pericopes'",
+    rows: 'SELECT 1 AS present FROM pericopes LIMIT 1',
+  },
+  cross_reference_phrases: {
+    catalog:
+      "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'cross_reference_phrases'",
+    rows: 'SELECT 1 AS present FROM cross_reference_phrases LIMIT 1',
+  },
+  verse_translation_tokens: {
+    catalog:
+      "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'verse_translation_tokens'",
+    rows: 'SELECT 1 AS present FROM verse_translation_tokens LIMIT 1',
+  },
+  verse_terms: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'verse_terms'",
+    rows: 'SELECT 1 AS present FROM verse_terms LIMIT 1',
+  },
+  curated_aliases: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'curated_aliases'",
+    rows: 'SELECT 1 AS present FROM curated_aliases LIMIT 1',
+  },
+  concepts: {
+    catalog: "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'concepts'",
+    rows: 'SELECT 1 AS present FROM concepts LIMIT 1',
+  },
+} as const;
+
+type OptionalTable = keyof typeof OPTIONAL_TABLE_PROBES;
+
 async function probeOptionalTable(
   database: ContentQueryPort,
-  table: string,
+  table: OptionalTable,
   requireRows: boolean,
 ): Promise<boolean> {
-  const present = await database.execute(
-    "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?",
-    [table],
-  );
+  const statements = OPTIONAL_TABLE_PROBES[table];
+  const present = await database.execute(statements.catalog);
   if (present.rows.length === 0) return false;
   if (!requireRows) return true;
-  // The table name is a compile-time constant from this module (never user
-  // input), so interpolating it is safe; placeholders cannot name a table.
   try {
-    const rows = await database.execute(`SELECT 1 AS present FROM ${table} LIMIT 1`);
+    const rows = await database.execute(statements.rows);
     return rows.rows.length > 0;
   } catch (error) {
     // Only "the table is not there" is a legitimate false. A rowless probe
@@ -685,12 +725,15 @@ export async function searchLongestFragment(
       fragments.push(words.slice(start, start + size).join(' '));
     }
     const present = await repository.phrasesPresent(fragments);
-    if (present.length === 0) continue;
     // Leftmost first, exactly as the one-statement-per-fragment loop chose.
-    const fragment = fragments[present[0]!]!;
-    const matches = await repository.searchPhrase(fragment, limit);
-    if (matches.length > 0) {
-      return { fragment, fragmentWords: size, queryWords: words.length, matches };
+    // The fetch normally succeeds on the first present index; walking the
+    // rest keeps the old rule exact even if an FTS hit had no joinable row.
+    for (const index of present) {
+      const fragment = fragments[index]!;
+      const matches = await repository.searchPhrase(fragment, limit);
+      if (matches.length > 0) {
+        return { fragment, fragmentWords: size, queryWords: words.length, matches };
+      }
     }
   }
   return null;
